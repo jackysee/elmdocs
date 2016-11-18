@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Queue",
+    "comment": " This Module implements a simple LIFO queue \n\n# Definition\n@docs Queue\n\nThis is based on the \n\n# Fundamentals \n@docs init, enqueue, dequeue, length\n\n# Usefull functions\n@docs foldr, foldl, map, fromList, toList\n\n",
+    "aliases": [
+      {
+        "name": "Queue",
+        "comment": " a simple queue.\n",
+        "args": [
+          "a"
+        ],
+        "type": "( List a, List a, Int )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "dequeue",
+        "comment": "Dequeues an element of the end of a queue, and also returns thel\nelement in O(1) amortized ",
+        "type": "Queue.Queue a -> ( Maybe.Maybe a, Queue.Queue a )"
+      },
+      {
+        "name": "enqueue",
+        "comment": "Enqueue an element on a queue in O(1)  ",
+        "type": "a -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold across a queue back ot front ",
+        "type": "(a -> b -> b) -> b -> Queue.Queue a -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold across a queue front ot back ",
+        "type": "(a -> b -> b) -> b -> Queue.Queue a -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " converts a queue into a list  ",
+        "type": "List a -> Queue.Queue a"
+      },
+      {
+        "name": "init",
+        "comment": " Creates an empty queue ",
+        "type": "Queue.Queue a"
+      },
+      {
+        "name": "length",
+        "comment": " Get the length(number of elements) in the queue in O(1)  ",
+        "type": "Queue.Queue a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " maps from a queue of type a to a queue containing elements of type\nb ",
+        "type": "(a -> b) -> Queue.Queue a -> Queue.Queue b"
+      },
+      {
+        "name": "toList",
+        "comment": " converts a list into a queue  ",
+        "type": "Queue.Queue a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

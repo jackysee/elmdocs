@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Architecture.Simple",
+    "comment": " This module is used for creating a simpler Signal that does not need to\nrely on Effects. In other respects, it is the same as the base Architecture\nmodule.\n\nIt is designed to work perfectly with [the Elm Architecture][arch] which\ndescribes a simple architecture pattern that makes testing and refactoring\nshockingly pleasant. Definitely read [the tutorial][arch] to get started!\n\n[arch]: https://github.com/evancz/elm-architecture-tutorial/\n\n# Start your Application\n@docs start, Config\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " The configuration has three key components:\n\n  * `model` &mdash; a big chunk of data fully describing your application.\n\n  * `view` &mdash; a way to convert your model into your desired output type.\n    It takes in two arguments. One is the model, which contains *all* the\n    information about our app. The other is an [`Address`][address] that helps\n    us handle user input. Whenever there is a click or key press, we send a\n    message to the address describing what happened and where.\n\n  * `update` &mdash; a function to update your model. Whenever an event\n    occurs, is routed through the `Address` to this update function. We take\n    in the message and the current model, then we give back a new model!\n\n[The Elm Architecture][arch] augments this basic pattern to give you all the\nmodularity you want. But since we have whole model in one place, it is\nalso really easy to support features like *save* and *undo* that can be quite\nhard in other languages.\n\n[address]: http://package.elm-lang.org/packages/elm-lang/core/2.0.1/Signal#Mailbox\n[arch]: https://github.com/evancz/elm-architecture-tutorial/\n",
+        "args": [
+          "model",
+          "action",
+          "output"
+        ],
+        "type": "{ model : model , view : Signal.Address action -> model -> output , update : action -> model -> model }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "start",
+        "comment": " This starts up your application. The following code sets up a counter\nthat can be incremented and decremented. You can read more about writing\nprograms like this [here](https://github.com/evancz/elm-architecture-tutorial/).\n\n    import Graphics.Element exposing (show, flow, down)\n    import Graphics.Input exposing (button)\n    import Architecture.Simple as Architecture\n\n    main =\n      Architecture.start { model = model, view = view, update = update }\n\n    model = 0\n\n    view address model =\n      flow down <|\n        [ button (Signal.message address Decrement) \"-\"\n        , show model\n        , button (Signal.message address Increment) \"+\"\n        ]\n\n    type Action = Increment | Decrement\n\n    update action model =\n      case action of\n        Increment -> model + 1\n        Decrement -> model - 1\n\nNotice that the program cleanly breaks up into model, update, and view.\nThis means it is super easy to test your update logic independent of any\nrendering.\n",
+        "type": "Architecture.Simple.Config model action output -> Signal.Signal output"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Architecture",
+    "comment": " This module helps you create a complex signal in a typical Elm workflow.\nIt is an abstraction based on [StartApp][start-app]. Where StartApp allows you\nto create a `Signal Html`, this package allows you to create a `Signal a`, as\nlong as you supply a function `view : Signal.Adress Action -> Model -> a`.\nIt otherwise assumes you are following [the Elm Architecture][arch] and using\n[elm-effects][]. From there it will wire everything up for you!\n\n**Be sure to [read the Elm Architecture tutorial][arch] to learn how this all\nworks!**\n\n[arch]: https://github.com/evancz/elm-architecture-tutorial\n[elm-effects]: http://package.elm-lang.org/packages/evancz/elm-effects/latest\n[start-app]: http://package.elm-lang.org/packages/evancz/start-app/latest\n\n# Start your Application\n@docs start, Config, Module\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " The configuration of an app follows the basic model / update / view pattern\nthat you see in every Elm program.\n\nThe `init` transaction will give you an initial model and create any tasks that\nare needed on start up.\n\nThe `update` and `view` fields describe how to step the model and view the\nmodel. Note that the biggest difference between this package and StartApp is\nthat the view function can produce any type, not only Html.\n\nThe `inputs` field is for any external signals you might need. If you need to\nget values from JavaScript, they will come in through a port as a signal which\nyou can pipe into your app as one of the `inputs`.\n",
+        "args": [
+          "model",
+          "action",
+          "output"
+        ],
+        "type": "{ init : ( model, Effects.Effects action ) , update : action -> model -> ( model, Effects.Effects action ) , view : Signal.Address action -> model -> output , inputs : List (Signal.Signal action) }"
+      },
+      {
+        "name": "Module",
+        "comment": " An `Module` is made up of a couple signals:\n\n  * `output` &mdash; a signal of `output` representing the current visual\n    representation of your module. This is the primary Signal intended for use\n    as the output of this package.\n\n  * `model` &mdash; a signal representing the current model. Generally you\n    will not need this one, but it is there just in case. You will know if you\n    need this.\n\n  * `tasks` &mdash; a signal of tasks that need to get run. Your app is going\n    to be producing tasks in response to all sorts of events, so this needs to\n    be hooked up to a `port` to ensure they get run.\n",
+        "args": [
+          "model",
+          "output"
+        ],
+        "type": "{ output : Signal.Signal output , model : Signal.Signal model , tasks : Signal.Signal (Task.Task Effects.Never ()) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "start",
+        "comment": " Start an application. It requires a bit of wiring once you have created an\n`Module`. It should pretty much always look like this:\n\n    app =\n        start { init = init, view = view, update = update, inputs = [] }\n\n    output =\n        app.output\n\n    port tasks : Signal (Task.Task Never ())\n    port tasks =\n        app.tasks\n\nSo once we start the `Module` we feed the output signal into our main\napplication and feed the resulting tasks into a `port` that will run them all.\n",
+        "type": "Architecture.Config model action output -> Architecture.Module model output"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

@@ -1,0 +1,76 @@
+[
+  {
+    "name": "Function.Extra",
+    "comment": " Higher-order helpers for working with functions.\n\n# Higher-order helpers\n@docs map, map2, map3, map4\n@docs apply, andThen\n@docs curry3, curry4, curry5\n@docs uncurry3, uncurry4, uncurry5\n@docs on\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Connect the result `a` of the first function to the first argument of the second function to form a pipeline.\nThen, send `x` into each function along the pipeline in order to execute it in a sequential manner.\n\nThe `(x -> ...)` signature is sometimes refered to as a *\"reader\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `andThen` to repeatedly read from the environment `x` and send the result into to the next function, which in turn reads from the environment `x` again and so forth.\n\n    (f `andThen` g `andThen` h) x == (h (g (f x) x) x)\n",
+        "type": "(x -> a) -> (a -> x -> b) -> x -> b"
+      },
+      {
+        "name": "apply",
+        "comment": " Incrementally apply more functions, similar to `map`*N* where *N* is not fixed.\n\nThe `(x -> ...)` signature is sometimes refered to as a *\"reader\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `apply` to read an arbitrary number of arguments from the same environment `x`.\n\n    (f `apply` ga `apply` gb `apply` gc) x == f x (ga x) (gb x) (gc x)\n                                           == (map4 identity f ga gb gc) x\n                                           == (identity `map` f `apply` ga `apply` gb `apply` gc) x\n\n    (f' `map` ga `apply` gb `apply` gc) x  == f' (ga x) (gb x) (gc x) x\n                                           == (map3 f' ga gb gc) x\n\nAlso notice the type signatures...\n\n    ga                                   : x -> a\n    gb                                   : x -> b\n    gc                                   : x -> c\n\n    f                                    : x -> a -> b -> c -> d\n    (f `apply` ga)                       : x -> b -> c -> d\n    (f `apply` ga `apply` gb)            : x -> c -> d\n    (f `apply` ga `apply` gb `apply` gc) : x -> d\n\n    f'                                   : a -> b -> c -> d\n    (f' `map` ga)                        : x -> b -> c -> d\n    (f' `map` ga `apply` gb)             : x -> c -> d\n    (f' `map` ga `apply` gb `apply` gc)  : x -> d\n\n",
+        "type": "(x -> a -> b) -> (x -> a) -> x -> b"
+      },
+      {
+        "name": "curry3",
+        "comment": " Change how arguments are passed to a function.\nThis splits 3-tupled arguments into three separate arguments.\n",
+        "type": "(( a, b, c ) -> x) -> a -> b -> c -> x"
+      },
+      {
+        "name": "curry4",
+        "comment": " Change how arguments are passed to a function.\nThis splits 4-tupled arguments into four separate arguments.\n",
+        "type": "(( a, b, c, d ) -> x) -> a -> b -> c -> d -> x"
+      },
+      {
+        "name": "curry5",
+        "comment": " Change how arguments are passed to a function.\nThis splits 5-tupled arguments into five separate arguments.\n",
+        "type": "(( a, b, c, d, e ) -> x) -> a -> b -> c -> d -> e -> x"
+      },
+      {
+        "name": "map",
+        "comment": " Map into a function with a fixed input `x`. This function is just an alias for `(<<)`, the function composition operator.\n\n    (f `map` g `map` h) == (f << g << h) -- Note that `map` refers to Function.map not List.map!\n\nThe `(x -> ...)` signature is sometimes refered to as a *\"reader\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `map` to transform a *\"reader\"* that produces an `a` into a *\"reader\"* that produces a `b`.\n",
+        "type": "(a -> b) -> (x -> a) -> x -> b"
+      },
+      {
+        "name": "map2",
+        "comment": " Send a single argument `x` into a binary function using two intermediate mappings.\n\n    (map2 f ga gb) x == (f (ga x) (gb x)) x\n\nThe `(x -> ...)` signatures are sometimes refered to as *\"readers\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `map2` to read two variables from the environment `x` before applying them to a binary function `f`.\n",
+        "type": "(a -> b -> c) -> (x -> a) -> (x -> b) -> x -> c"
+      },
+      {
+        "name": "map3",
+        "comment": " Send a single argument `x` into a ternary function using three intermediate mappings.\n\n    (map3 f ga gb gc) x == (f (ga x) (gb x) (gc x)) x\n\nThe `(x -> ...)` signatures are sometimes refered to as *\"readers\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `map3` to read three variables from the environment `x` before applying them to a ternary function `f`.\n",
+        "type": "(a -> b -> c -> d) -> (x -> a) -> (x -> b) -> (x -> c) -> x -> d"
+      },
+      {
+        "name": "map4",
+        "comment": " Send a single argument `x` into a quaternary function using four intermediate mappings.\nUse `apply` as an infix combinator in order to deal with a larger numbers of arguments.\n\n    (map4 f ga gb gc gd) x == (f (ga x) (gb x) (gc x) (gd x)) x\n\nThe `(x -> ...)` signatures are sometimes refered to as *\"readers\"* of `x`, where `x` represents some ancillary environment within which we would like to operate.\nThis allows `map4` to read four variables from the environment `x` before applying them to a quaternary function `f`.\n",
+        "type": "(a -> b -> c -> d -> e) -> (x -> a) -> (x -> b) -> (x -> c) -> (x -> d) -> x -> e"
+      },
+      {
+        "name": "on",
+        "comment": " Apply a binary function using a transformation on both input parameters.\n\n    (*) `on` f == \\x y -> f x * f y\n    sortBy (compare `on` fst) == sortBy (\\x y -> fst x `compare` fst y)\n",
+        "type": "(b -> b -> c) -> (a -> b) -> a -> a -> c"
+      },
+      {
+        "name": "uncurry3",
+        "comment": " Change how arguments are passed to a function.\nThis combines three arguments into a single 3-tuple.\n",
+        "type": "(a -> b -> c -> x) -> ( a, b, c ) -> x"
+      },
+      {
+        "name": "uncurry4",
+        "comment": " Change how arguments are passed to a function.\nThis combines four arguments into a single 4-tuple.\n",
+        "type": "(a -> b -> c -> d -> x) -> ( a, b, c, d ) -> x"
+      },
+      {
+        "name": "uncurry5",
+        "comment": " Change how arguments are passed to a function.\nThis combines five arguments into a single 5-tuple.\n",
+        "type": "(a -> b -> c -> d -> e -> x) -> ( a, b, c, d, e ) -> x"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

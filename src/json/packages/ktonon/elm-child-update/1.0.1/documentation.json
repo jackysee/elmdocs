@@ -1,0 +1,21 @@
+[
+  {
+    "name": "ChildUpdate",
+    "comment": " Delegates update messages to one or many children. Takes the grunt work out\nupdating a collection of children. This module exposes\n\n@docs updateOne, updateMany\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "updateMany",
+        "comment": " Delegates update messages to many children. Given a one-to-many parent to\nchild relationship as follows:\n\n    type alias Model =\n        { widgets : List Widget.Model\n        }\n\n    setWidgets : Model -> List Widget.Model -> Model\n    setWidgets model =\n        \\x -> { model | widgets = x }\n\n    type Msg\n        = WidgetMessage Widget.Id Widget.Msg\n\nUse `updateMany` to delegate updates to the child `update` function:\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        WidgetMessage id cMsg->\n            updateMany Widget.update .id .widgets setWidgets WidgetMessage id cMsg model\n",
+        "type": "(childMsg -> childModel -> ( childModel, Platform.Cmd.Cmd childMsg )) -> (childModel -> childId) -> (model -> List childModel) -> (model -> List childModel -> model) -> (childId -> childMsg -> msg) -> childId -> childMsg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "updateOne",
+        "comment": " Delegates update messages to a child. Given a one-to-one parent to child\nrelationship as follows:\n\n    type alias Model =\n        { widget : Widget.Model\n        }\n\n    setWidget : Model -> Widget.Model -> Model\n    setWidget model =\n        \\x -> { model | widget = x }\n\n    type Msg\n        = WidgetMessage Widget.Msg\n\nUse `updateOne` to delegate updates to the child `update` function:\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        WidgetMessage cMsg->\n            updateOne Widget.update .widget setWidget WidgetMessage cMsg model\n",
+        "type": "(childMsg -> childModel -> ( childModel, Platform.Cmd.Cmd childMsg )) -> (model -> childModel) -> (model -> childModel -> model) -> (childMsg -> msg) -> childMsg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,413 @@
+[
+{
+  "name": "Data.TagTree",
+  "comment": "\n\nData.TagTree\n============",
+  "aliases": [],
+  "types": [
+    {
+      "name": "TagTree",
+      "comment": "",
+      "args": [
+        "leaf",
+        "node",
+        "edge"
+      ],
+      "cases": [
+        [
+          "Leaf",
+          [
+            {
+              "tag": "var",
+              "name": "leaf"
+            }
+          ]
+        ],
+        [
+          "Node",
+          [
+            {
+              "tag": "var",
+              "name": "node"
+            },
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "List"
+              },
+              "args": [
+                {
+                  "tag": "app",
+                  "func": {
+                    "tag": "type",
+                    "name": "_Tuple2"
+                  },
+                  "args": [
+                    {
+                      "tag": "var",
+                      "name": "edge"
+                    },
+                    {
+                      "tag": "app",
+                      "func": {
+                        "tag": "type",
+                        "name": "TagTree"
+                      },
+                      "args": [
+                        {
+                          "tag": "var",
+                          "name": "leaf"
+                        },
+                        {
+                          "tag": "var",
+                          "name": "node"
+                        },
+                        {
+                          "tag": "var",
+                          "name": "edge"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "values": [
+    {
+      "name": "foldTagTree",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "leaf"
+          },
+          "out": {
+            "tag": "var",
+            "name": "a"
+          }
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "lambda",
+            "in": {
+              "tag": "var",
+              "name": "node"
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "List"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "a"
+                  }
+                ]
+              },
+              "out": {
+                "tag": "var",
+                "name": "a"
+              }
+            }
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "lambda",
+              "in": {
+                "tag": "var",
+                "name": "edge"
+              },
+              "out": {
+                "tag": "lambda",
+                "in": {
+                  "tag": "var",
+                  "name": "a"
+                },
+                "out": {
+                  "tag": "var",
+                  "name": "a"
+                }
+              }
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "TagTree"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "leaf"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "node"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "edge"
+                  }
+                ]
+              },
+              "out": {
+                "tag": "var",
+                "name": "a"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "foldTagTree'",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "leaf"
+          },
+          "out": {
+            "tag": "var",
+            "name": "a"
+          }
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "lambda",
+            "in": {
+              "tag": "var",
+              "name": "node"
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "List"
+                },
+                "args": [
+                  {
+                    "tag": "app",
+                    "func": {
+                      "tag": "type",
+                      "name": "_Tuple2"
+                    },
+                    "args": [
+                      {
+                        "tag": "var",
+                        "name": "edge"
+                      },
+                      {
+                        "tag": "var",
+                        "name": "a"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "out": {
+                "tag": "var",
+                "name": "a"
+              }
+            }
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "TagTree"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "leaf"
+                },
+                {
+                  "tag": "var",
+                  "name": "node"
+                },
+                {
+                  "tag": "var",
+                  "name": "edge"
+                }
+              ]
+            },
+            "out": {
+              "tag": "var",
+              "name": "a"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "walkModify",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "leaf"
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              },
+              {
+                "tag": "var",
+                "name": "leaf'"
+              }
+            ]
+          }
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "lambda",
+            "in": {
+              "tag": "var",
+              "name": "node"
+            },
+            "out": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "State"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "a"
+                },
+                {
+                  "tag": "var",
+                  "name": "node'"
+                }
+              ]
+            }
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "lambda",
+              "in": {
+                "tag": "var",
+                "name": "edge"
+              },
+              "out": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "State"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "a"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "edge'"
+                  }
+                ]
+              }
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "TagTree"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "leaf"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "node"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "edge"
+                  }
+                ]
+              },
+              "out": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "State"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "a"
+                  },
+                  {
+                    "tag": "app",
+                    "func": {
+                      "tag": "type",
+                      "name": "TagTree"
+                    },
+                    "args": [
+                      {
+                        "tag": "var",
+                        "name": "leaf'"
+                      },
+                      {
+                        "tag": "var",
+                        "name": "node'"
+                      },
+                      {
+                        "tag": "var",
+                        "name": "edge'"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
+]

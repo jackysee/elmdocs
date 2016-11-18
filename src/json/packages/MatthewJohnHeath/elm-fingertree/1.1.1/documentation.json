@@ -1,0 +1,299 @@
+[
+  {
+    "name": "Container",
+    "comment": " Dequeue with random access\n# Definition\n@docs Container\n\n# Create\n@docs empty, fromList\n\n# Dequeue Operations\n@docs pushFront, popFront, peekFront, pushBack, popBack, peekBack, size\n\n# Random Access\n@docs get, set, remove, insert, slice\n",
+    "aliases": [
+      {
+        "name": "Container",
+        "comment": "A container allowing constant time dequeue operations and log time access ",
+        "args": [
+          "a"
+        ],
+        "type": "Annotated.AnnotatedFingerTree a Int"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": "An empty container",
+        "type": "Container.Container a"
+      },
+      {
+        "name": "fromList",
+        "comment": "Make a container from a list",
+        "type": "List a -> Container.Container a"
+      },
+      {
+        "name": "get",
+        "comment": " Get the element at an index",
+        "type": "Int -> Container.Container a -> Maybe.Maybe a"
+      },
+      {
+        "name": "insert",
+        "comment": "Insert an element at an index moving later elements to the right",
+        "type": "Int -> a -> Container.Container a -> Maybe.Maybe (Container.Container a)"
+      },
+      {
+        "name": "peekBack",
+        "comment": "See the back element",
+        "type": "Container.Container a -> Maybe.Maybe a"
+      },
+      {
+        "name": "peekFront",
+        "comment": "See the front element",
+        "type": "Container.Container a -> Maybe.Maybe a"
+      },
+      {
+        "name": "popBack",
+        "comment": "Take from the back",
+        "type": "Container.Container a -> Container.Container a"
+      },
+      {
+        "name": "popFront",
+        "comment": "Take from the front",
+        "type": "Container.Container a -> Container.Container a"
+      },
+      {
+        "name": "pushBack",
+        "comment": "Add at the back",
+        "type": "a -> Container.Container a -> Container.Container a"
+      },
+      {
+        "name": "pushFront",
+        "comment": " Add to the front",
+        "type": "a -> Container.Container a -> Container.Container a"
+      },
+      {
+        "name": "remove",
+        "comment": "Remove the element at an index mobing later elements to the left",
+        "type": "Int -> Container.Container a -> Maybe.Maybe (Container.Container a)"
+      },
+      {
+        "name": "set",
+        "comment": "Set the element at an index",
+        "type": "Int -> a -> Container.Container a -> Maybe.Maybe (Container.Container a)"
+      },
+      {
+        "name": "size",
+        "comment": "The number of elements in the collection",
+        "type": "Container.Container a -> Int"
+      },
+      {
+        "name": "slice",
+        "comment": "Get a sub-section of an array: (slice start end array). The start is a zero-based index where we will start our slice.\nThe end is a zero-based index that indicates the end of the slice. The slice extracts up to but not including end.",
+        "type": "Int -> Int -> Container.Container a -> Container.Container a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "PriorityQueue",
+    "comment": "Purely functional priority queue\n#Definition\n@docs PriorityQueue\n#Create\n@docs empty\n# Priority queue operations\n@docs topPriority, top, pop, push\n",
+    "aliases": [
+      {
+        "name": "PriorityQueue",
+        "comment": "Persistant prirotiy queue. Constant time push and access to top. ",
+        "args": [
+          "a",
+          "comparable"
+        ],
+        "type": "Annotated.AnnotatedFingerTree (Monoid.WithAppendedZero ( a, comparable )) (Monoid.WithAppendedZero ( a, comparable ))"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " returns an empty priority queue",
+        "type": "PriorityQueue.PriorityQueue a comparable"
+      },
+      {
+        "name": "pop",
+        "comment": "Remove the element with the top priority. Returns Nothing if input was empty",
+        "type": "PriorityQueue.PriorityQueue a comparable -> Maybe.Maybe (PriorityQueue.PriorityQueue a comparable)"
+      },
+      {
+        "name": "push",
+        "comment": "Add element to priority queue",
+        "type": "comparable -> a -> PriorityQueue.PriorityQueue a comparable -> PriorityQueue.PriorityQueue a comparable"
+      },
+      {
+        "name": "top",
+        "comment": "Returns the value with the highest prority",
+        "type": "PriorityQueue.PriorityQueue a comparable -> Maybe.Maybe a"
+      },
+      {
+        "name": "topPriority",
+        "comment": "Returns the highest priority in the priority queue",
+        "type": "PriorityQueue.PriorityQueue a comparable -> Maybe.Maybe comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Annotated",
+    "comment": "Annotated finger tree\n# Definitions\n@docs AnnotatedFingerTree, Split\n\n# Create\n@docs empty, reduce\n\n# Dequeue operations\n@docs leftPeek, leftPop,leftPush, rightPeek, rightPop, rightPush\n\n# Concatanation\n@docs concat, concatWithMiddle\n\n#Splits\n@docs annotate, split\n\n#Array operations\n@docs get, set, remove, insert\n\n#Slices\n@docs before, after, upTo, from\n",
+    "aliases": [
+      {
+        "name": "AnnotatedFingerTree",
+        "comment": "Finger tree annotated by a Monoid",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "{ monoid : Monoid.Monoid b , projection : a -> b , tree : Internal.InternalFingerTree a b }"
+      },
+      {
+        "name": "Split",
+        "comment": "Like a zipper",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "{ left : Annotated.AnnotatedFingerTree a b , middle : a , right : Annotated.AnnotatedFingerTree a b }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "after",
+        "comment": "elements after measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "annotate",
+        "comment": "annotate",
+        "type": "Annotated.AnnotatedFingerTree a b -> Internal.Split a b -> Annotated.Split a b"
+      },
+      {
+        "name": "before",
+        "comment": "elements before measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "concat",
+        "comment": " concatanate",
+        "type": "Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "concatWithMiddle",
+        "comment": " concatanate trees left and right with a list in between",
+        "type": "Annotated.AnnotatedFingerTree a b -> List a -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "empty",
+        "comment": " Empty finger tree specifiying monoid and projection",
+        "type": "Monoid.Monoid b -> (a -> b) -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "from",
+        "comment": "elements after and equal to when measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "get",
+        "comment": "get element when measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Maybe.Maybe a"
+      },
+      {
+        "name": "insert",
+        "comment": "insert element before measure turns true",
+        "type": "(b -> Bool) -> a -> Annotated.AnnotatedFingerTree a b -> Maybe.Maybe (Annotated.AnnotatedFingerTree a b)"
+      },
+      {
+        "name": "leftPeek",
+        "comment": "returns the leftmost element",
+        "type": "Annotated.AnnotatedFingerTree a b -> Maybe.Maybe a"
+      },
+      {
+        "name": "leftPop",
+        "comment": "removes from left",
+        "type": "Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "leftPush",
+        "comment": "adds to left",
+        "type": "a -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "reduce",
+        "comment": "reduce",
+        "type": "Annotated.AnnotatedFingerTree a b -> b"
+      },
+      {
+        "name": "remove",
+        "comment": "remove element when measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Maybe.Maybe (Annotated.AnnotatedFingerTree a b)"
+      },
+      {
+        "name": "rightPeek",
+        "comment": "returns rightmost element",
+        "type": "Annotated.AnnotatedFingerTree a b -> Maybe.Maybe a"
+      },
+      {
+        "name": "rightPop",
+        "comment": " remove from right",
+        "type": "Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "rightPush",
+        "comment": "add to right",
+        "type": "a -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      },
+      {
+        "name": "set",
+        "comment": "set element when measure turns true",
+        "type": "(b -> Bool) -> a -> Annotated.AnnotatedFingerTree a b -> Maybe.Maybe (Annotated.AnnotatedFingerTree a b)"
+      },
+      {
+        "name": "split",
+        "comment": "Let & be the monoid operation\n  split measure aft returns the split at the leftmost \"middle\" such that ( (reduce split left ) & split.middle ) |> measure = true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Maybe.Maybe (Annotated.Split a b)"
+      },
+      {
+        "name": "upTo",
+        "comment": "elements before and equal to when measure turns true",
+        "type": "(b -> Bool) -> Annotated.AnnotatedFingerTree a b -> Annotated.AnnotatedFingerTree a b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Monoid",
+    "comment": " Module defining a monoid on a type and some functions for creatinbg them\n# Definition\n@docs Monoid, WithAppendedZero\n\n# Create\n@docs appendZero, int\n\n",
+    "aliases": [
+      {
+        "name": "Monoid",
+        "comment": "Contains a binary operator op : a -> a-> a such that op (op a b) c) = op a (op b c)\n(associativity) and an element zero of type a such that for any a' of type a\nop a' zero = op zero a' = a'",
+        "args": [
+          "a"
+        ],
+        "type": "{ zero : a, op : a -> a -> a }"
+      }
+    ],
+    "types": [
+      {
+        "name": "WithAppendedZero",
+        "comment": "Basically the same as Maybe. Adjoins a single extra eleemnt that we will use to make associtaive operators into monoid",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "appendZero",
+        "comment": "Given an associative function a->a->a extends this to a with an extra \"zero\" element to produce a monoid",
+        "type": "(a -> a -> a) -> Monoid.Monoid (Monoid.WithAppendedZero a)"
+      },
+      {
+        "name": "int",
+        "comment": "The monoid of integers with normal addition as the operation and 0 as zero ",
+        "type": "Monoid.Monoid Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

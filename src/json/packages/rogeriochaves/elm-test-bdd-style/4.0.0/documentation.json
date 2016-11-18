@@ -1,0 +1,74 @@
+[
+  {
+    "name": "ElmTestBDDStyle",
+    "comment": " BDD style functions for ElmTest\n\n# Tests\n@docs Test, Assertion, describe, it\n\n# Matchers\n@docs expect, toBe, notToBe, toBeTruthy\n\n# Property-based testing\n@docs itAlways, expectThat, isTheSameAs, forEvery\n\n",
+    "aliases": [
+      {
+        "name": "Assertion",
+        "comment": " Assertion type, use that for building custom matchers\n",
+        "args": [],
+        "type": "ElmTest.Assertion"
+      },
+      {
+        "name": "Test",
+        "comment": " The basic unit of testability.\n",
+        "args": [],
+        "type": "ElmTest.Test"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "describe",
+        "comment": " A group of related behaviours specs\n",
+        "type": "String -> List ElmTestBDDStyle.Test -> ElmTestBDDStyle.Test"
+      },
+      {
+        "name": "expect",
+        "comment": " Expectation to actually run the test, it receives\ntwo values and try to match then with a matcher\n",
+        "type": "a -> (a -> b) -> b"
+      },
+      {
+        "name": "expectThat",
+        "comment": " Generates a hundred tests with random input beginning with the initial seed 1\n",
+        "type": "(a -> b) -> ElmTestBDDStyle.Conjunction -> (a -> b) -> ElmTestBDDStyle.Conjunction -> Check.Producer.Producer a -> String -> ElmTestBDDStyle.Test"
+      },
+      {
+        "name": "forEvery",
+        "comment": " Idiomatic word helper\n",
+        "type": "ElmTestBDDStyle.Conjunction"
+      },
+      {
+        "name": "isTheSameAs",
+        "comment": " Idiomatic word helper\n",
+        "type": "ElmTestBDDStyle.Conjunction"
+      },
+      {
+        "name": "it",
+        "comment": " Describes a behaviour you expect from your code\n",
+        "type": "String -> ElmTestBDDStyle.Assertion -> ElmTestBDDStyle.Test"
+      },
+      {
+        "name": "itAlways",
+        "comment": " Adds a description to the random generated tests\n",
+        "type": "String -> (String -> ElmTestBDDStyle.Test) -> ElmTestBDDStyle.Test"
+      },
+      {
+        "name": "notToBe",
+        "comment": " Expect something not to be equals something else\n",
+        "type": "a -> a -> ElmTestBDDStyle.Assertion"
+      },
+      {
+        "name": "toBe",
+        "comment": " Expect something to be equals something else\n",
+        "type": "a -> a -> ElmTestBDDStyle.Assertion"
+      },
+      {
+        "name": "toBeTruthy",
+        "comment": " Expect something to be true\n",
+        "type": "Bool -> ElmTestBDDStyle.Assertion"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

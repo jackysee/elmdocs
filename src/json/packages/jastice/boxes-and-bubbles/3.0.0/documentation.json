@@ -1,0 +1,92 @@
+[
+  {
+    "name": "BoxesAndBubbles",
+    "comment": " The interface for the Boxes and Bubbles physics engine.\n\n# Concepts\n\n## Simulation\n\nBoxes and Bubbles implements a very simple physics simulation. It updates a list of bodies\nat each step. There is no time-normalized integration - if you run it with higher fps, \nit will run faster.\n\nSee the [example code](https://github.com/jastice/boxes-and-bubbles/blob/master/Example.elm) \nand the [example animation](http://jastice.github.io/boxes-and-bubbles/) that it produces\nfor a working usage example.\n\n## Bodies\n\nEverything in Boxes and Bubbles is a Body. A Body is a Box, or a Bubble.\n\nBodies have some properties:\n\n* `position` -- reference point and center of body\n* `velocity` -- direction and speed of movement\n* `mass` -- the mass (stored as inverseMass)\n* `restitution` -- bounciness factor: how much force is preserved on collisions\n* `shape` -- radius for Bubble, extents for Box, wrapped in an ADT.\n\nBodies can have infinite mass. Infinite mass bodies are not affected by any forces.\n\n## Forces\n\nTwo types of global forces: gravity and ambient. Both are vectors,\nso that they could point in any direction. Both can vary over time.\nAmbient force takes the mass of objects into account, while gravity does not.\n\n# Functions\n\n## Constructors and helpers\n\n@docs bubble, box, bounds\n\n## Running the simulation\n\n@docs step\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bounds",
+        "comment": " Create a bounding box made up of boxes with infinite mass.\n\n    bounds (width,height) thickness restitution center meta\n\nCreate bounds with width and height 800, 50 thick walls and 0.6 restitution and a String tag\nat the origin:\n\n    bounds (800,800) 50 0.6 (0,0) \"tag\"\n\n",
+        "type": "BoxesAndBubbles.Math2D.Vec2 -> Float -> Float -> BoxesAndBubbles.Math2D.Vec2 -> meta -> List (BoxesAndBubbles.Bodies.Body meta)"
+      },
+      {
+        "name": "box",
+        "comment": " Create a box. Mass is derived from density and size.\n    \n    box (width,height) position velocity density restitution\n\nCreate a box with width 100, height 20, density 1 and restitution 1\nat origin, moving toward the upper right:\n\n    box (100,20) 1 1 (0,0) (3,3)\n",
+        "type": "BoxesAndBubbles.Math2D.Vec2 -> Float -> Float -> BoxesAndBubbles.Math2D.Vec2 -> BoxesAndBubbles.Math2D.Vec2 -> meta -> BoxesAndBubbles.Bodies.Body meta"
+      },
+      {
+        "name": "bubble",
+        "comment": " Create a bubble. Mass is derived from density and size.\n\n    bubble radius density restitution position velocity meta\n\nCreate a bubble with radius 100 with density 1 and restitution 1\nat origin and a string \"tag\", moving toward the upper right:\n\n    bubble 100 1 1 (0,0) (3,3) \"tag\"\n",
+        "type": "Float -> Float -> Float -> BoxesAndBubbles.Math2D.Vec2 -> BoxesAndBubbles.Math2D.Vec2 -> meta -> BoxesAndBubbles.Bodies.Body meta"
+      },
+      {
+        "name": "step",
+        "comment": " Perform a step in the physics simulation. Applies forces to objects and updates them based\non their velocity and collisions. Order of bodies in input list is not preserved in the output.\n\nThe `gravity` parameter give a global force that ignores object masses, while `force` \ntakes mass into account. Since both types of forces are vectors, they can point in any direction.\nThe ambient force can be used to simulate a current, for example.\n\n    step gravity ambient bodies\n\nApply a downward gravity and sideways ambient force to bodies:\n\n    step (0,-0.2) (20,0) bodies\n",
+        "type": "BoxesAndBubbles.Math2D.Vec2 -> BoxesAndBubbles.Math2D.Vec2 -> List (BoxesAndBubbles.Bodies.Body meta) -> List (BoxesAndBubbles.Bodies.Body meta)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "BoxesAndBubbles.Engine",
+    "comment": " The actual physics implementation of Boxes and Bubbles.\n\n## Exposed functions\n\nExposes some internal functions mostly for use in the actual API \nand to let you fine-tune your application.\nPlease consult the source code to understand these functions.\nNo implication of API stability.\n\n@docs update, collide, collideWith\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "collide",
+        "comment": " Recursive collision resolution.\n\nInternal method, exposed only for your convenience. \nNo implication of API stability.\n",
+        "type": "List (BoxesAndBubbles.Bodies.Body a) -> List (BoxesAndBubbles.Bodies.Body a) -> List (BoxesAndBubbles.Bodies.Body a)"
+      },
+      {
+        "name": "collideWith",
+        "comment": " Collide a0 with all the bodies, modifying b along the way.\n\n   return (updated a0, [updated bodies])\n\n   Internal method, exposed only for your convenience. No implication of API stability.\n",
+        "type": "BoxesAndBubbles.Bodies.Body a -> List (BoxesAndBubbles.Bodies.Body a) -> List (BoxesAndBubbles.Bodies.Body a) -> List (BoxesAndBubbles.Bodies.Body a)"
+      },
+      {
+        "name": "update",
+        "comment": " Update body position with its speed and apply additional forces.\n\nMay be used to gain a more fine-grained control over what forces affect.\nNo implication of API stability.\n",
+        "type": "BoxesAndBubbles.Math2D.Vec2 -> BoxesAndBubbles.Math2D.Vec2 -> BoxesAndBubbles.Bodies.Body a -> BoxesAndBubbles.Bodies.Body a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "BoxesAndBubbles.Bodies",
+    "comment": " # Boxes and Bubbles Bodies.\nDefines bodies as used by the Boxes and Bubbles engine. You will need these data types to \ndisplay and modify bodies being calculated. For creating them, you may prefer the constructor \nfunctions in the BoxesAndBubbles module.\n\n@docs Body, Shape\n\n",
+    "aliases": [
+      {
+        "name": "Body",
+        "comment": " A rigid body in the Boxes and Bubbles universe, as used internally by the engine.\nMass is stored as inverse, because it is more convenient for calculation.\n\nType parameter `meta` can be used to attach arbitrary other information used\nby your application to bodies. For example: label, hit points, an object type ADT, or more low-level, \nan id used to associate the body with arbitrary other data via a Dict.\n",
+        "args": [
+          "meta"
+        ],
+        "type": "{ pos : BoxesAndBubbles.Math2D.Vec2 , velocity : BoxesAndBubbles.Math2D.Vec2 , inverseMass : Float , restitution : Float , shape : BoxesAndBubbles.Bodies.Shape , meta : meta }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Shape",
+        "comment": " Shape data for a body. \nA bubble is defined by its radius.\nA box is defined by its extents (half-width/half-height from the center).\nWe use half-lengths because that's what is convenient for calculation, and it's most consistent\nwith using radius for circles.\n",
+        "args": [],
+        "cases": [
+          [
+            "Box",
+            [
+              "BoxesAndBubbles.Math2D.Vec2"
+            ]
+          ],
+          [
+            "Bubble",
+            [
+              "Float"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

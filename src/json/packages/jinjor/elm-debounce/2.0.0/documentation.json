@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Debounce",
+    "comment": " The Debouncer. See the full example [here](https://github.com/jinjor/elm-debounce/blob/master/examples/Main.elm).\n\n* This module works with the Elm Architecture.\n* You can choose the strategy and define how commands are sent.\n\n# Types\n@docs Debounce, Msg\n\n# Initialize\n@docs Config, init\n\n# Strategies\n@docs Strategy, soon, soonAfter, later\n\n# Sending Commands\n@docs Send, takeLast, takeAll\n\n# Update\n@docs update, push\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Config contains the debouncing strategy and the message transformation.\n\nThis config should be constant and shared between `update` function and `push` function.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ strategy : Debounce.Strategy, transform : Debounce.Msg -> msg }"
+      },
+      {
+        "name": "Send",
+        "comment": " This function consumes values and send a command.\n\nIf you want to postpone sending, return the values back to keep them.\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "a -> List a -> ( List a, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Debounce",
+        "comment": " The state of the debouncer.\n\nIt is parameterized with the value type `a`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The messages that are used internally.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Strategy",
+        "comment": " Strategy defines the timing when commands are sent.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initialize the debouncer. Call this from your `init` function.\n",
+        "type": "Debounce.Debounce a"
+      },
+      {
+        "name": "later",
+        "comment": " Send command after becomming stable, with given delay time. (a.k.a. Debounce)\n",
+        "type": "Time.Time -> Debounce.Strategy"
+      },
+      {
+        "name": "push",
+        "comment": " Push a value into the debouncer.\n",
+        "type": "Debounce.Config msg -> a -> Debounce.Debounce a -> ( Debounce.Debounce a, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "soon",
+        "comment": " Send command as soon as it gets ready, with given rate limit. (a.k.a. Throttle)\n\nNote: The first command will be sent immidiately.\n",
+        "type": "Time.Time -> Debounce.Strategy"
+      },
+      {
+        "name": "soonAfter",
+        "comment": " Similar to `soon`, but send first command after offset time.\n",
+        "type": "Time.Time -> Time.Time -> Debounce.Strategy"
+      },
+      {
+        "name": "takeAll",
+        "comment": " Send a command using all the accumulated values.\n",
+        "type": "(a -> List a -> Platform.Cmd.Cmd msg) -> Debounce.Send a msg"
+      },
+      {
+        "name": "takeLast",
+        "comment": " Send a command using the latest value.\n",
+        "type": "(a -> Platform.Cmd.Cmd msg) -> Debounce.Send a msg"
+      },
+      {
+        "name": "update",
+        "comment": " This is the component's update function following the Elm Architecture.\n\ne.g. Saving the last value.\n```\n(debounce, cmd) =\n  Debounce.update\n    { strategy = Debounce.later (1 * second)\n    , transform = DebounceMsg\n    }\n    (Debounce.takeLast save) -- save : value -> Cmd Msg\n    msg\n    model.debounce\n```\nThe config should be constant and shared with `push` function.\n\nThe sending logic can depend on the current model. If you want to stop sending, return `Cmd.none`.\n\n",
+        "type": "Debounce.Config msg -> Debounce.Send a msg -> Debounce.Msg -> Debounce.Debounce a -> ( Debounce.Debounce a, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

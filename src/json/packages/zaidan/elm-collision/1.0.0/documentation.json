@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Collision",
+    "comment": " this module provides an implementation of the\nGilbert-Johnson-Keerthi (GJK) collision detection algorith for\nconvex objects in 2D. To deal with concave objects, simply\nbreak your larger object into smaller convex shapes.\n\nIt is very efficient, usually converging in one or two iterations.\n\n# Definitions\n@docs Pt, Mink\n\n\n# API\n@docs collision\n\n",
+    "aliases": [
+      {
+        "name": "Mink",
+        "comment": " Simple alias for boundary objects bundled with a support function\n",
+        "args": [
+          "a"
+        ],
+        "type": "( a, a -> Collision.Pt -> Maybe.Maybe Collision.Pt )"
+      },
+      {
+        "name": "Pt",
+        "comment": " Simple alias for a two dimentional point\n",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "collision",
+        "comment": " Determine if there is a collision between two objects.\nObject information is given as a pair of: a boundary representation\nof type a, and a support function for that representaion f : a -> Pt -> Pt\nwhich takes the boundary representation and a direction vector, and\nreturns the point of the boundary furthest along the direction.\nPt here is used as an alias for (Float, Float). The first argument\nto collision is max recursion depth, which might come in handy in\nthe case where you are writing your own support functions.\n\n    poly1 = [(-15,-10),(0,15),(12,-5)] \n    poly2 = [(-9,13),(6,13),(-2,22)] \n\n    collision 10 (poly1, polySupport) (poly2, polySupport) == Just True\n",
+        "type": "Int -> Collision.Mink a -> Collision.Mink b -> Maybe.Maybe Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

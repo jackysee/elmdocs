@@ -1,0 +1,256 @@
+[
+  {
+    "name": "Graphics.Render",
+    "comment": " This library provides a toolkit for rendering and manipulating\ngraphics primitives such as lines, polygons, text, images, etc.\nIt is intended primarily for projects that are too complex for\nthe manual manipulation of  an SVG or HTML5 canvas element, but too\nsimple for a fully blown graphics engine such as WebGL (a motivating\nexample would be a simple 2D game).\n\nIn theory, the structure of this library allows for multiple easily\ninterchangable backend rendering targets (i.e. SVG, HTML5 canvas), but\nthe only backend supported at present is SVG.\n\n# Forms\n@docs Form, Point\n\n# Shapes\n@docs Shape, polygon, rectangle, ellipse, circle\n\n# Lines\n@docs Line, polyline, segment\n\n# Images\n@docs image\n\n# Rendering\n@docs svg\n\n# Grouping\n@docs group\n\n# Turning Things into Forms\n\n## Shapes\n@docs solidFill, solidFillWithBorder, textureFill, textureFillWithBorder\n\n## Lines\n@docs solid, dashed, dotted\n\n## Text\n@docs plain, bold, italic, underlined\n\n## HTML\n@docs html\n\n# Modifying Forms\n@docs position, angle, size, opacity, move, rotate, scale\n\n# Custom Styling\n\n## Shapes\n@docs shape, ShapeStyle, FillStyle\n\n## Lines\n@docs line, LineStyle, LineCap, LineJoin\n\n## Text\n@docs text, TextStyle\n",
+    "aliases": [
+      {
+        "name": "Form",
+        "comment": " Anything that can be rendered on the screen. A `Form` could be a\nred circle, a line of text, or an arbitrary HTML element.\n\n    redCircle : Form\n    redCircle = circle 10 |> solidFill (rgb 255 0 0) |> position (-20,0)\n\n    blueCircle : Form\n    blueCircle = circle 10 |> solidFill (rgb 0 0 255)\n\n    circles : Form\n    circles = group [redCircle, blueCircle]\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ x : Float , y : Float , theta : Float , scale : Float , alpha : Float , form : Graphics.Render.BasicForm a }"
+      },
+      {
+        "name": "LineStyle",
+        "comment": " Speficies the styling (color, width, dashing, etc.) of a line.\n\n    -- defines a red, dashed line with a width of 5px\n    { color = rgb 255 20 20\n    , width = 5\n    , cap = Flat\n    , join = Sharp\n    , dashing = [8,4]\n    , dashOffset = 0\n    }\n",
+        "args": [],
+        "type": "{ color : Color.Color , width : Float , cap : Graphics.Render.LineCap , join : Graphics.Render.LineJoin , dashing : List Int , dashOffset : Int }"
+      },
+      {
+        "name": "Point",
+        "comment": " A 2-tuple of `Float`s representing a 2D point. `(0,0)` represents\na point in the middle of the viewport.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "ShapeStyle",
+        "comment": " Specifies the styling (color, border, etc.) of a shape.\n",
+        "args": [],
+        "type": "{ fill : Graphics.Render.FillStyle , border : Graphics.Render.LineStyle }"
+      },
+      {
+        "name": "TextStyle",
+        "comment": " Specifies the styling (color, font, weight, etc.) of text\n",
+        "args": [],
+        "type": "{ color : Color.Color , fontSize : Int , fontFamily : String , italic : Bool , bold : Bool , underlined : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "FillStyle",
+        "comment": " Describes the fill texture of a shape. It can be a solid color,\ngradient, or tiled texture.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Line",
+        "comment": " A segment of a line or curve. Only describes the shape of the line.\nPosition, color, width, etc. are all specified later.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "LineCap",
+        "comment": " Describes the cap style of a line. `Flat` capped lines have\nno endings, `Square` capped lines have flat endings that extend\nslightly past the end of the line, and `Round` capped lines have\nhemispherical endings.\n",
+        "args": [],
+        "cases": [
+          [
+            "Round",
+            []
+          ],
+          [
+            "Square",
+            []
+          ],
+          [
+            "Flat",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "LineJoin",
+        "comment": " Describes the join style of a line.\n",
+        "args": [],
+        "cases": [
+          [
+            "Smooth",
+            []
+          ],
+          [
+            "Sharp",
+            []
+          ],
+          [
+            "Bevel",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Shape",
+        "comment": " A polygon or an ellipse. Only describes the size and shape of the figure.\nPosition, color, width, etc. are all specified later.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "angle",
+        "comment": " Sets the angle of a `Form`. The argument is in radians.\n",
+        "type": "Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "bold",
+        "comment": " A line of bold text. The arguments specify the text's\nfont size, family and color respectively.\n",
+        "type": "Int -> String -> Color.Color -> String -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "circle",
+        "comment": " A circle.\n",
+        "type": "Float -> Graphics.Render.Shape"
+      },
+      {
+        "name": "dashed",
+        "comment": " The same as `solid`, except the line is dashed.\n",
+        "type": "Float -> Color.Color -> Graphics.Render.Line -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "dotted",
+        "comment": " The same as `solid`, except the line is dotted.\n",
+        "type": "Float -> Color.Color -> Graphics.Render.Line -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "ellipse",
+        "comment": " An ellipse. The arugments specify the vertical and horizontal radii,\nrespectively.\n",
+        "type": "Float -> Float -> Graphics.Render.Shape"
+      },
+      {
+        "name": "group",
+        "comment": " Takes a list of `Form`s and combines them into a single\n`Form`.\n",
+        "type": "List (Graphics.Render.Form msg) -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "html",
+        "comment": " Creates a `Form` from an arbitrary `Html` element. The\nresulting form is subject to all of the regular manipulations.\nNote that if you are compiling to SVG, then this functionality\nis not supported in Internet Explorer.\n",
+        "type": "Html.Html msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "image",
+        "comment": " An image. The arguments specify the image's width, height and url.\n",
+        "type": "Float -> Float -> String -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "italic",
+        "comment": " A line of italic text. The arguments specify the text's\nfont size, family and color respectively.\n",
+        "type": "Int -> String -> Color.Color -> String -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "line",
+        "comment": " Similar to the shape function, line allows you\nto apply any LineStyle to a Line when converting it\nto a form, giving you more fine grained control than\nother similar functions.\n",
+        "type": "Graphics.Render.Line -> Graphics.Render.LineStyle -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "move",
+        "comment": " Modifies the position of a `Form`.\n",
+        "type": "Float -> Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "opacity",
+        "comment": " Sets the opacity of a `Form`.\n",
+        "type": "Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "plain",
+        "comment": " A line of plain text. The arguments specify the text's\nfont size, family and color respectively.\n",
+        "type": "Int -> String -> Color.Color -> String -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "polygon",
+        "comment": " `polygon points` is a polygon bounded by `points`.\n",
+        "type": "List Graphics.Render.Point -> Graphics.Render.Shape"
+      },
+      {
+        "name": "polyline",
+        "comment": " `polyline points` is a polyline with vertices\nat `points`. (A polyline is a collection of connected\nline segments. It can be thought of as drawing a\n\"connect-the-dots\" line through a list of points.)\n",
+        "type": "List Graphics.Render.Point -> Graphics.Render.Line"
+      },
+      {
+        "name": "position",
+        "comment": " Sets the position of a `Form`.\n\n    -- 'circle' is now centered at (50,50)\n    circle = position (50,50) circle\n",
+        "type": "Graphics.Render.Point -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "rectangle",
+        "comment": " A rectangle. Arguments specify width and height, respectively.\n",
+        "type": "Float -> Float -> Graphics.Render.Shape"
+      },
+      {
+        "name": "rotate",
+        "comment": " Modifies the angle of a `Form`.\n",
+        "type": "Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "scale",
+        "comment": " Modifies the scale of a `Form`.\n",
+        "type": "Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "segment",
+        "comment": " `segment (x1,y1) (x2,y2)` is a line segment with\nendpoints at `(x1,y1)` and `(x2,y2)`.\n",
+        "type": "Graphics.Render.Point -> Graphics.Render.Point -> Graphics.Render.Line"
+      },
+      {
+        "name": "shape",
+        "comment": " The `*Fill` and `*FillWithBorder` functions\nallow you to add styling to your shapes and conver them\ninto forms, but sometimes those functions don't offer\nenough flexibility. What if you want a dashed border\ninstead of a solid one? Or how about a beveled join on\nthe border? For this you must turn to the shape function.\nThe `shape` function takes a `Shape` and *any* `ShapeStyle`\nand converts them into a `Form`, giving you total control\nover the styling of the shape.\n",
+        "type": "Graphics.Render.Shape -> Graphics.Render.ShapeStyle -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "size",
+        "comment": " Sets the scale of a `Form`.\n",
+        "type": "Float -> Graphics.Render.Form msg -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "solid",
+        "comment": " `solid width color line` is a solid line of width `width`\nand color `color` whose path is described by `line`.\n",
+        "type": "Float -> Color.Color -> Graphics.Render.Line -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "solidFill",
+        "comment": " Fills a shape with a solid color.\n",
+        "type": "Color.Color -> Graphics.Render.Shape -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "solidFillWithBorder",
+        "comment": " Fills a shape with a solid color and borders it with a solid line.\nArguments specify fill color, border width and border color, respectively.\n",
+        "type": "Color.Color -> Float -> Color.Color -> Graphics.Render.Shape -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "svg",
+        "comment": " Takes a `Form` and renders it to usable HTML, in this case\nin the form of an SVG element. The first two arguments determine\nthe height and width of the SVG viewbox in pixels.\n",
+        "type": "Float -> Float -> Graphics.Render.Form msg -> Html.Html msg"
+      },
+      {
+        "name": "text",
+        "comment": " Similar to `shape` and `line`, the `text` function\nwill take a string and any `TextStyle` and convert them\ninto a form. It is useful for when functions like `plain`\nand `bold` don't offer enough flexibility and you need\nmore control over the styling of your text.\n",
+        "type": "String -> Graphics.Render.TextStyle -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "textureFill",
+        "comment": " Tiles a shape with a repeated image. The arguments specify the image width,\nheight and url respectively.\n",
+        "type": "Float -> Float -> String -> Graphics.Render.Shape -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "textureFillWithBorder",
+        "comment": " Tiles a shape with a repeated image and borders it with a solid line. The\narguments specify the url width, height and url, followed by the border width and\ncolor.\n",
+        "type": "Float -> Float -> String -> Float -> Color.Color -> Graphics.Render.Shape -> Graphics.Render.Form msg"
+      },
+      {
+        "name": "underlined",
+        "comment": " A line of underlined text. The arguments specify the text's\nfont size, family and color respectively.\n",
+        "type": "Int -> String -> Color.Color -> String -> Graphics.Render.Form msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

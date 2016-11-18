@@ -1,0 +1,141 @@
+[
+  {
+    "name": "Convert.String",
+    "comment": "Convert wrappers for strings \n\n@docs attemptToInt, attemptToFloat",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attemptToFloat",
+        "comment": "\n  Try to convert a string to a float, given a default value\n  Default to the value if it failed to convert",
+        "type": "Float -> String -> Float"
+      },
+      {
+        "name": "attemptToInt",
+        "comment": "\n  Try to convert a string to an int, given a default value\n  Default to the value if it failed to convert",
+        "type": "Int -> String -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  },
+  {
+    "name": "Convert.Date",
+    "comment": "Convert wrappers for date \n\n@docs attemptFromString",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attemptFromString",
+        "comment": "\n  Try to convert a string to a date, given a default value\n  Default to the value if it failed to convert",
+        "type": "Date.Date -> String -> Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  },
+  {
+    "name": "Convert.List",
+    "comment": "Convert wrappers for list \n\n@docs attemptTail, attemptHead",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attemptHead",
+        "comment": "\n  Try to return the head of a list, returning default value if failed",
+        "type": "a -> List a -> a"
+      },
+      {
+        "name": "attemptTail",
+        "comment": "\n  Try to return the tail of a list, returning default value if failed",
+        "type": "List a -> List a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  },
+  {
+    "name": "Convert.Array",
+    "comment": "\nModule for working with arrays.\n\nCurrently provides a way of working between lists and arrays in a neater fasion.\n\n@docs nested2FromList",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "nested2FromList",
+        "comment": "\n  Convert a list of lists into an array of arrays",
+        "type": "List (List a) -> Array.Array (Array.Array a)"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  },
+  {
+    "name": "Convert",
+    "comment": "Convert aims to simplify parsing data into different data types. \n\nIdeal for simplifying the understanding required to make applications\nwhich deals with user input and data.\n\n@docs defaultResult, defaultMaybe\n\n\nInternally there are also functions that instead take default callbacks\nrather than default values\n\n@docs defaultActionResult",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultActionResult",
+        "comment": "\n    Try to use converter to convert a value and\n    return the converted value. If an err happens,\n    instead pass the message to the given function",
+        "type": "(b -> Result.Result String a) -> (String -> a) -> b -> a"
+      },
+      {
+        "name": "defaultMaybe",
+        "comment": "\n    Try to use converter to convert a value and\n    return the converted value. If nothing happens,\n    instead return a given default value.\n\n    For example, if you have a function which returns\n    a Maybe where you don't care if a failure happens,\n    you just want it to work. \n\n    firstPrime primes = defaultMaybe (List.head) 2 primes\n\n    instead of \n\n    firstPrime primes = \n      case List.head of \n        Just x -> x\n        Nothing -> 2",
+        "type": "(b -> Maybe.Maybe a) -> a -> b -> a"
+      },
+      {
+        "name": "defaultResult",
+        "comment": "\n    Try to use converter to convert a value and\n    return the converted value. If an err happens,\n    instead return a given default value",
+        "type": "(b -> Result.Result String a) -> a -> b -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  },
+  {
+    "name": "Convert.Color",
+    "comment": "\nModule for handling converting between colors and other types\n\nCurrently provides a way to allow easier transistion between Colors and tuples\nIdeal for when needed comparable for use in dicts, sets, etc of colors\n\nCreating tuples\n@docs toRgbTuple, toRgbaTuple, toHslTuple, toHslaTuple\n\nFrom tuples\n@docs fromRgbTuple, fromRgbaTuple, fromHslTuple, fromHslaTuple",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromHslTuple",
+        "comment": "\n  Convert from a hsl tuple into a color",
+        "type": "( Float, Float, Float ) -> Color.Color"
+      },
+      {
+        "name": "fromHslaTuple",
+        "comment": "\n  Convert from a hsla tuple into a color",
+        "type": "( Float, Float, Float, Float ) -> Color.Color"
+      },
+      {
+        "name": "fromRgbTuple",
+        "comment": "\n  Convert from a rgb tuple into a color",
+        "type": "( Int, Int, Int ) -> Color.Color"
+      },
+      {
+        "name": "fromRgbaTuple",
+        "comment": "\n  Convert from a rgba tuple into a color",
+        "type": "( Int, Int, Int, Float ) -> Color.Color"
+      },
+      {
+        "name": "toHslTuple",
+        "comment": "\n  Convert a color into a hsl tuple",
+        "type": "Color.Color -> ( Float, Float, Float )"
+      },
+      {
+        "name": "toHslaTuple",
+        "comment": "\n  Convert a color into a hsla tuple",
+        "type": "Color.Color -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "toRgbTuple",
+        "comment": "\n  Convert a color into a rgb tuple",
+        "type": "Color.Color -> ( Int, Int, Int )"
+      },
+      {
+        "name": "toRgbaTuple",
+        "comment": "\n  Convert a color into a rgba tuple",
+        "type": "Color.Color -> ( Int, Int, Int, Float )"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

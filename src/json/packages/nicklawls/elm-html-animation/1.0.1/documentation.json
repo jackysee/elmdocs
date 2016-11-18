@@ -1,0 +1,761 @@
+[
+  {
+    "name": "Html.Animation",
+    "comment": " This library is for animating css properties and is meant to work well with elm-html.\n\nThe easiest way to get started with this library is to check out the examples that are included with the [source code](https://github.com/mdgriffith/elm-html-animation).\n\nOnce you have the basic structure of how to use this library, you can refer to this documentation to fill any gaps.\n\n\n# Base Definitions\n@docs Animation, Action\n\n# Starting an animation\n@docs animate, queue, stagger\n\n# Creating animations\n@docs props, delay, spring, duration, easing, andThen, set\n\n# Animating Properties\n\nThese functions specify the value for a StyleProperty.\n\nAfter taking an argument, these functions have `Float -> Float -> Float` as their signature.\nThis can be understood as `ExistingStyleValue -> CurrentTime -> NewStyleValue`, where CurrentTime is between 0 and 1.\n\n@docs to, stay, add, minus\n\n# Spring Presets\n@docs noWobble, gentle, wobbly, stiff\n\n# Animating Colors\n@docs toColor, toRGB, toRGBA, toHSL, toHSLA\n\n# Render a Animation into CSS\n@docs render\n\n# Setting the starting style\n@docs init\n\n# Initial Color Formats\n@docs fromColor, rgb, rgba, hsl, hsla\n\n# Update a Style\n@docs update\n\n# Managing Effects\n@docs on, forwardTo, forwardToIndex, forwardToAll\n\n\n# Examining an animation in progress\n@docs isAnimating\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Actions to be run on an animation.\nYou won't be constructing this type directly, though it may show up in your type signatures.\n\nTo start animations you'll be using the `animate`, `queue`, and `stagger` functions\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Animation",
+        "comment": " An Animation of CSS properties.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Animate a StyleProperty by adding to its existing value\n",
+        "type": "Float -> Html.Animation.Dynamic"
+      },
+      {
+        "name": "andThen",
+        "comment": " Append another keyframe.  This is used for multistage animations.\n\nFor example, to cycle through colors, we'd use the following:\n\n      UI.animate\n              |> UI.props\n                  [ BackgroundColor\n                        UI.toRGBA 100 100 100 1.0\n                  ]\n          |> UI.andThen -- create a new keyframe\n              |> UI.duration (1*second)\n              |> UI.props\n                  [ BackgroundColor\n                        UI.toRGBA 178 201 14 1.0\n                  ]\n          |> UI.andThen\n              |> UI.props\n                  [ BackgroundColor\n                        UI.toRGBA 58 40 69 1.0\n                  ]\n          |> UI.on model.style\n",
+        "type": "Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "animate",
+        "comment": " Begin describing an animation.  This animation will cleanly interrupt any animation that is currently running.\n\n      UI.animate\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n\n",
+        "type": "Html.Animation.Action"
+      },
+      {
+        "name": "delay",
+        "comment": " Specify a delay.\nIf not specified, the default is 0.\n\n     UI.animate\n         |> UI.duration (0.4*second)\n         |> UI.delay (0.5*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n",
+        "type": "Time.Time -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "duration",
+        "comment": " Specify a duration.  This is ignored unless an easing is specified as well!  This is because spring functions (the default), have dynamically created durations.\n\nIf an easing is specified but no duration, the default duration is 350ms.\n\n     UI.animate\n         |> UI.easing (\\x -> x)  -- linear easing\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n",
+        "type": "Time.Time -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "easing",
+        "comment": " Specify an easing function.  It is expected that values should match up at the beginning and end.  So, f 0 == 0 and f 1 == 1.  The default easing is sinusoidal in-out.\n\n",
+        "type": "(Float -> Float) -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "forwardTo",
+        "comment": "  This function is used to handle the boilerplate of forwarding animation updates, and can be used in place of `on`.\n\nTo use this function, you'll need to supply a getter and a setter function for getting and setting the style model.\n\nSo, for a model like the following\n\n    type alias Model = { style : UI.Animation }\n\nAdd an action to your Action type to capture the UI.Actions.\n\n    type Action\n          = Hide\n          | Animate UI.Action\n\n\nCreate a specialized version of `forwardTo`.\n\n    onModel =\n      UI.forwardTo\n          Animate -- The action that captures UI.Action\n          .style -- style getter\n          (\\w style -> { w | style = style }) -- style setter\n\nThen, in your update function would look something like\n\n\n      Hide ->\n        UI.animate\n            |> UI.duration (5*second)\n            |> UI.props\n                [ Opacity (UI.to 0)\n                ]\n            |> onModel model\n\n      Animate uiAction ->\n        onModel model uiAction\n\n\n",
+        "type": "(Html.Animation.Action -> b) -> (a -> Html.Animation.Animation) -> (a -> Html.Animation.Animation -> a) -> a -> Html.Animation.Action -> ( a, Effects.Effects b )"
+      },
+      {
+        "name": "forwardToAll",
+        "comment": " Like `forwardToIndex`, except it applies an update to every member of the list.\nIt has the same set up as `forwardToIndex`, except:\n\nYou'll need two helper functions\n\n  onWidget =\n    UI.forwardToIndex\n        Animate\n        .style -- widget style getter\n        (\\w style -> { w | style = style }) -- widget style setter\n\n  onAllWidgets =\n      UI.forwardToAll\n          Animate\n          .style -- widget style getter\n          (\\w style -> { w | style = style }) -- widget style setter\n\n\n\nAnd your update function will look like the following\n\n    Hide ->\n      let\n        (widgets, fx) =\n            UI.animate\n               |> UI.delay ((i * 0.05) * second)\n               |> UI.spring UI.wobbly\n               |> UI.props\n                   [ Left (UI.to -70) Px\n                   ]\n              |> onAllWidgets model.widgets\n              -- apply an update to all widgets\n\n      in\n        ( { model | widgets = widgets }\n        , fx )\n\n\n    -- But, in animate, you only need to forwad to a widget based on index\n    Animate i action ->\n      let\n        (widgets, fx) =\n            onWidget i model.widgets action\n      in\n        ( { model | widgets = widgets }\n        , fx )\n\n\n\n\n",
+        "type": "(Int -> Html.Animation.Action -> b) -> (a -> Html.Animation.Animation) -> (a -> Html.Animation.Animation -> a) -> List a -> Html.Animation.Action -> ( List a, Effects.Effects b )"
+      },
+      {
+        "name": "forwardToIndex",
+        "comment": " Forward style updates to a specific element in a list that has a Animation model.\n\nFor a model like the following\n\n    type alias Model = { widgets : List Widget }\n\n    type alias Widget =\n              { style : UI.Animation\n              }\n\n    type Action\n          = Hide\n          | Animate Int UI.Action -- where Int is the index of the widget we are animating\n\nCreate a specialized version of `forwardToIndex`.\n\n    onWidget =\n      UI.forwardToIndex\n          Animate\n          .style -- widget style getter\n          (\\w style -> { w | style = style }) -- widget style setter\n\nAnd in your update function:\n\n    Hide ->\n      let\n        (widgets, fx) =\n            UI.animate\n                |> UI.duration (5*second)\n                |> UI.props\n                    [ Opacity (UI.to 0)\n                    ]\n                |> onWidget i model.widgets\n                -- Where i is the index of the widget to update.\n      in\n        ( { model | widgets = widgets }\n        , fx ) -- FX has already been `Effects.map`ped to Animate\n\n    Animate i action ->\n      let\n        (widgets, fx) =\n            onWidget i model.widgets action\n      in\n        ( { model | widgets = widgets }\n        , fx )\n\n\n",
+        "type": "(Int -> Html.Animation.Action -> b) -> (a -> Html.Animation.Animation) -> (a -> Html.Animation.Animation -> a) -> Int -> List a -> Html.Animation.Action -> ( List a, Effects.Effects b )"
+      },
+      {
+        "name": "fromColor",
+        "comment": " Specify an initial Color-based property using a Color from the elm core Color module.\n\n",
+        "type": "Color.Color -> (Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static"
+      },
+      {
+        "name": "gentle",
+        "comment": " A spring preset.\n",
+        "type": "Html.Animation.SpringProps"
+      },
+      {
+        "name": "hsl",
+        "comment": " Specify an initial Color-based property using hsl\n\n",
+        "type": "Float -> Float -> Float -> (Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static"
+      },
+      {
+        "name": "hsla",
+        "comment": " Specify an initial Color-based property using hsla\n\n",
+        "type": "Float -> Float -> Float -> Float -> (Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static"
+      },
+      {
+        "name": "init",
+        "comment": " Create an initial style for your init model.\n\n__Note__ All properties that you animate must be present in the init or else that property won't be animated.\n\n",
+        "type": "Html.Animation.Core.Style -> Html.Animation.Animation"
+      },
+      {
+        "name": "isAnimating",
+        "comment": " A helper to tell you if an animation is in progress\n",
+        "type": "Html.Animation.Animation -> Bool"
+      },
+      {
+        "name": "minus",
+        "comment": " Animate a StyleProperty by subtracting to its existing value\n",
+        "type": "Float -> Html.Animation.Dynamic"
+      },
+      {
+        "name": "noWobble",
+        "comment": " A spring preset.  Probably should be your initial goto for using springs.\n",
+        "type": "Html.Animation.SpringProps"
+      },
+      {
+        "name": "on",
+        "comment": " Apply an update to a Animation model.  This is used at the end of constructing an animation.\nHowever, you'll have an overall cleaner syntax if you use `forwardTo` to prepare a custom version of `on`.\n\n     UI.animate\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n\n",
+        "type": "Html.Animation.Animation -> Html.Animation.Action -> ( Html.Animation.Animation , Effects.Effects Html.Animation.Action )"
+      },
+      {
+        "name": "props",
+        "comment": " Specify the properties that should be animated\n\n     UI.animate\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n\n",
+        "type": "List (Html.Animation.Properties.StyleProperty Html.Animation.Dynamic) -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "queue",
+        "comment": " The same as `animate` but instead of interrupting the current animation, this will queue up after the current animation is finished.\n\n      UI.queue\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n\n",
+        "type": "Html.Animation.Action"
+      },
+      {
+        "name": "render",
+        "comment": " Render into concrete css that can be directly applied to 'style' in elm-html\n\n    div [ style (UI.render widget.style) ] [ ]\n\n",
+        "type": "Html.Animation.Animation -> List ( String, String )"
+      },
+      {
+        "name": "rgb",
+        "comment": " Specify an initial Color-based property using rgb\n\n",
+        "type": "Float -> Float -> Float -> (Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static"
+      },
+      {
+        "name": "rgba",
+        "comment": " Specify an initial Color-based property using rgba\n\n",
+        "type": "Float -> Float -> Float -> Float -> (Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Core.Static -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Properties.StyleProperty Html.Animation.Core.Static"
+      },
+      {
+        "name": "set",
+        "comment": " Apply a style immediately.  This takes a list of static style properties, meaning the no `UI.to` functions, only concrete numbers and values.\n\n\n    UI.animate\n         |> UI.duration (0.4*second)\n         |> UI.props\n             [ Opacity (UI.to 1)\n             ]\n      |> UI.andThen\n         |> UI.set\n             [ Display None\n             ]\n         |> UI.on model.style\n\n",
+        "type": "List (Html.Animation.Properties.StyleProperty Html.Animation.Core.Static) -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "spring",
+        "comment": " Animate based on spring physics.\n\nYou'll need to provide both a stiffness and a dampness to this function.\n\n__Note:__ This will cause both `duration` and `easing` to be ignored as they are now controlled by the spring.\n\n     UI.animate\n         -- |> UI.spring UI.noWobble -- set using a UI preset\n         |> UI.spring\n                { stiffness = 400\n                , damping = 28\n                }\n         |> UI.props\n             [ Left (UI.to 0) Px\n             , Opacity (UI.to 1)\n             ]\n         |> UI.on model.style\n",
+        "type": "Html.Animation.SpringProps -> Html.Animation.Action -> Html.Animation.Action"
+      },
+      {
+        "name": "stagger",
+        "comment": " Can be used to stagger animations on a list of widgets.\n\n     UI.stagger\n        (\\i ->\n           UI.animate\n             -- The delay is staggered based on list index\n             |> UI.delay (i * 0.05 * second)\n             |> UI.duration (0.3 * second)\n             |> UI.props\n                 [ Left (UI.to 200) Px\n                 ]\n          |> UI.andThen\n             |> UI.delay (2.0 * second)\n             |> UI.duration (0.3 * second)\n             |> UI.props\n                 [ Left (UI.to -50) Px\n                 ]\n        )\n        |> forwardToAllWidgets model.widgets\n\n",
+        "type": "(Float -> Float -> Html.Animation.Action) -> Html.Animation.Action"
+      },
+      {
+        "name": "stay",
+        "comment": " Keep an animation where it is!  This is useful for stacking transforms.\n",
+        "type": "Html.Animation.Dynamic"
+      },
+      {
+        "name": "stiff",
+        "comment": " A spring preset.\n",
+        "type": "Html.Animation.SpringProps"
+      },
+      {
+        "name": "to",
+        "comment": " Animate a StyleProperty to a value.\n",
+        "type": "Float -> Html.Animation.Dynamic"
+      },
+      {
+        "name": "toColor",
+        "comment": " Animate a color-based property, given a color from the Color elm module.\n\n",
+        "type": "Color.Color -> Html.Animation.ColorProperty -> Html.Animation.Properties.StyleProperty Html.Animation.Dynamic"
+      },
+      {
+        "name": "toHSL",
+        "comment": " Animate a color-based style property to an hsl color. Note: this leaves the alpha channel where it is.\n\n",
+        "type": "Float -> Float -> Float -> Html.Animation.ColorProperty -> Html.Animation.Properties.StyleProperty Html.Animation.Dynamic"
+      },
+      {
+        "name": "toHSLA",
+        "comment": " Animate a color-based style property to an hsla color.\n\n",
+        "type": "Float -> Float -> Float -> Float -> Html.Animation.ColorProperty -> Html.Animation.Properties.StyleProperty Html.Animation.Dynamic"
+      },
+      {
+        "name": "toRGB",
+        "comment": " Animate a color-based style property to an rgb color.  Note: this leaves the alpha channel where it is.\n\n     UI.animate\n            |> UI.props\n                [ BackgroundColor\n                      UI.toRGB 100 100 100\n                ]\n            |> UI.on model.style\n\n",
+        "type": "Float -> Float -> Float -> Html.Animation.ColorProperty -> Html.Animation.Properties.StyleProperty Html.Animation.Dynamic"
+      },
+      {
+        "name": "toRGBA",
+        "comment": " Animate a color-based style property to an rgba color.\n\n       UI.animate\n            |> UI.props\n                [ BackgroundColor\n                    UI.toRGBA 100 100 100 1.0\n                ]\n            |> UI.on model.style\n\n\n",
+        "type": "Float -> Float -> Float -> Float -> Html.Animation.ColorProperty -> Html.Animation.Properties.StyleProperty Html.Animation.Dynamic"
+      },
+      {
+        "name": "update",
+        "comment": " Update an animation.  This will probably only show up once in your code.\nSee any of the examples at [https://github.com/mdgriffith/elm-html-animation](https://github.com/mdgriffith/elm-html-animation)\n",
+        "type": "Html.Animation.Action -> Html.Animation.Animation -> ( Html.Animation.Animation , Effects.Effects Html.Animation.Action )"
+      },
+      {
+        "name": "wobbly",
+        "comment": " A spring preset.\n",
+        "type": "Html.Animation.SpringProps"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Html.Animation.Properties",
+    "comment": "\n\n# All Animatable Style Properties\n@docs StyleProperty, DisplayMode\n\n# Units\n@docs Length, Angle\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Angle",
+        "comment": " Units representing angles.\n",
+        "args": [],
+        "cases": [
+          [
+            "Deg",
+            []
+          ],
+          [
+            "Grad",
+            []
+          ],
+          [
+            "Rad",
+            []
+          ],
+          [
+            "Turn",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "DisplayMode",
+        "comment": " A Display value used for the display property.\nA display mode is not animated but can be set using Html.Animation.set\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Inline",
+            []
+          ],
+          [
+            "InlineBlock",
+            []
+          ],
+          [
+            "Block",
+            []
+          ],
+          [
+            "Flex",
+            []
+          ],
+          [
+            "InlineFlex",
+            []
+          ],
+          [
+            "ListItem",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Length",
+        "comment": " Units representing length.\n",
+        "args": [],
+        "cases": [
+          [
+            "Px",
+            []
+          ],
+          [
+            "Percent",
+            []
+          ],
+          [
+            "Rem",
+            []
+          ],
+          [
+            "Em",
+            []
+          ],
+          [
+            "Ex",
+            []
+          ],
+          [
+            "Ch",
+            []
+          ],
+          [
+            "Vh",
+            []
+          ],
+          [
+            "Vw",
+            []
+          ],
+          [
+            "Vmin",
+            []
+          ],
+          [
+            "Vmax",
+            []
+          ],
+          [
+            "Mm",
+            []
+          ],
+          [
+            "Cm",
+            []
+          ],
+          [
+            "In",
+            []
+          ],
+          [
+            "Pt",
+            []
+          ],
+          [
+            "Pc",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "StyleProperty",
+        "comment": " All currently animatable properties.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Prop",
+            [
+              "String",
+              "a",
+              "String"
+            ]
+          ],
+          [
+            "Display",
+            [
+              "Html.Animation.Properties.DisplayMode"
+            ]
+          ],
+          [
+            "Opacity",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Height",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Width",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Left",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Top",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Right",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Bottom",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MaxHeight",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MaxWidth",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MinHeight",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MinWidth",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Padding",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "PaddingLeft",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "PaddingRight",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "PaddingTop",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "PaddingBottom",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Margin",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MarginLeft",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MarginRight",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MarginTop",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "MarginBottom",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderWidth",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderRadius",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderTopLeftRadius",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderTopRightRadius",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderBottomLeftRadius",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BorderBottomRightRadius",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "LetterSpacing",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "LineHeight",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "BackgroundPosition",
+            [
+              "a",
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Color",
+            [
+              "a",
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "BackgroundColor",
+            [
+              "a",
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "BorderColor",
+            [
+              "a",
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "TransformOrigin",
+            [
+              "a",
+              "a",
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Matrix",
+            [
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "Matrix3d",
+            [
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "Translate",
+            [
+              "a",
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Translate3d",
+            [
+              "a",
+              "a",
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "TranslateX",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "TranslateY",
+            [
+              "a",
+              "Html.Animation.Properties.Length"
+            ]
+          ],
+          [
+            "Scale",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Scale3d",
+            [
+              "a",
+              "a",
+              "a"
+            ]
+          ],
+          [
+            "ScaleX",
+            [
+              "a"
+            ]
+          ],
+          [
+            "ScaleY",
+            [
+              "a"
+            ]
+          ],
+          [
+            "ScaleZ",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Rotate",
+            [
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "Rotate3d",
+            [
+              "a",
+              "a",
+              "a",
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "RotateX",
+            [
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "RotateY",
+            [
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "Skew",
+            [
+              "a",
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "SkewX",
+            [
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "SkewY",
+            [
+              "a",
+              "Html.Animation.Properties.Angle"
+            ]
+          ],
+          [
+            "Perspective",
+            [
+              "a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

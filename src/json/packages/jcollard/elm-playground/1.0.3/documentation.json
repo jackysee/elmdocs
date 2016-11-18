@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Playground",
+    "comment": "\nThe Playground Library is a layer that abstracts away the need to write explicit\nSignals. To get started, one provides a `Playground` record and then passes that\nrecord to `play`. \n\n## Quick Demo\n\nThe following is a quick Demo of a program that increments a number\nrepeatedly. When the space bar is pressed, the number is reset to 0.\n\n```\nimport Playground(..)\nimport Playground.Input(..)\n-- Increases an Int ~60 times per second. When the space bar is pressed, the Int\n-- resets\nupdate input state = \n  case input of\n    Key Space -> 0\n    otherwise -> state + 1\n\nrender (w, h) state = asText state\n\nmain = play { render = render, update = update, initialState = 0 }\n```\n\n## Playground Record\n\n@docs Playground\n\n## Playing a Playground\n\n@docs play, Options, defaultOptions, playWithOptions\n\n## Examples\n* Increment\n  - Watch a number increase in the center of the screen, press space bar to reset to 0.\n  - [See It Running](http://jcollard.github.io/elm/Playground/Increment.html)\n  - [Source](https://github.com/jcollard/elm-playground/blob/master/Examples/Increment.elm)\n* Ball\n  - Move the ball around the screen with the arrow keys, make it change colors with 1, 2, or 3.\n  - [See It Running!](http://jcollard.github.io/elm/Playground/Demo.html)\n  - [Source](https://github.com/jcollard/elm-playground/blob/master/Examples/Demo.elm)\n* Mario\n  - The classic Mario example using Elm Playground\n  - [See It Running!](http://jcollard.github.io/elm/Playground/Mario.html)\n  - [Source](https://github.com/jcollard/elm-playground/blob/master/Examples/Mario.elm)",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": "\n  Options that may be used when running a playground.\n\n* `debugRealWorld` If true, enables a Debug.Watch on the RealWorld when debugging in `elm-reactor`.\n\n* `debugState` If true, enables a Debug.Watch on the state of the program in `elm-reactor`.\n\n* `debugInput` If true, enables a Debug.Watch on the Input to the program in `elm-reactor`.\n\n* `traceForms` If true, traces all forms when run in `elm-reactor`.\n\n* `rate` Specify the desired frames per second to attempt to run the playground with.",
+        "args": [],
+        "type": "{ debugRealWorld : Bool , debugState : Bool , debugInput : Bool , traceForms : Bool , rate : Time }"
+      },
+      {
+        "name": "Playground",
+        "comment": "\nA Playground record defines the execution path for a program. To create one, you\nmust specify three fields: initialState, render, and update.\n\n* The `initialState` field describes the state of the Playground after it has\n  been loaded.\n\n* The `render` field is a function which describes how your state should be\n  transformed into a set of Forms that can be displayed.\n\n* The `update` field is a function that takes in the RealWorld, an Input event,\n  a State to update, and returns the updated State. All possible Inputs are \n  defined in Playground.Input. The RealWorld is defined in Playground.Input.",
+        "args": [
+          "state"
+        ],
+        "type": "{ render : RealWorld -> state -> List Form , initialState : state , update : RealWorld -> Input -> state -> state }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": "\n  The default options which can be used to easily specify which options you would like\n  to use when running with `playWithOptions`. For example, if you want to run at\n  30 frames per second and debug the state of the program, you could do the following:\n\n```\nmain = \n  let options = { defaultOptions | debugState \u003c- True\n                                 , rate \u003c- 30 }\n  in playWithOptions { render = render, update = update, initialState = 0 }\n```",
+        "type": "Options"
+      },
+      {
+        "name": "play",
+        "comment": "\nPlays a Playground with the `defaultOptions`.",
+        "type": "Playground state -> Signal Element"
+      },
+      {
+        "name": "playWithOptions",
+        "comment": "\nPlays a Playground at the specified options.",
+        "type": "Options -> Playground state -> Signal Element"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Playground.Input",
+    "comment": "\nThis module explains each type of Input that can be used in a Playground's\nupdate function.\n\n@docs RealWorld, Input",
+    "aliases": [
+      {
+        "name": "RealWorld",
+        "comment": "\nThe RealWorld record contains information about the environment of the running\nprogram.\n\n* The `top`, `right`, `bottom`, and `left` fields represent the bounding box\n  that will be rendered.\n\n* The `mouse` field is a record containing the most recent x and y positions\n  of the mouse within the rendered bounding box.",
+        "args": [],
+        "type": "{ top : Float , right : Float , bottom : Float , left : Float , mouse : { x : Float, y : Float } }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Input",
+        "comment": "\nInputs are passed to a Playground's update function. If multiple inputs are\ngenerated, the update function is called multiple times accumulating all of\nthe changes. Your update function will always be passed a Passive input and\nit is guaranteed that the Passive input will occur before all other inputs.\n\n* Tap k - Fires once when `k` is pressed\n\n* Key k - Fires every time the update function is called while `k` is pressed\n\n* MouseUp - Fires once when the left mouse button is released\n\n* MouseDown - Fires every time the update function is called while the mouse is down\n\n* Passive t - This input is always passed to the update function and expresses\n  how many milliseconds have passed since the last update was accumulated.",
+        "args": [],
+        "cases": [
+          [
+            "Tap",
+            [
+              "Keys.Key"
+            ]
+          ],
+          [
+            "Key",
+            [
+              "Keys.Key"
+            ]
+          ],
+          [
+            "MouseUp",
+            []
+          ],
+          [
+            "MouseDown",
+            []
+          ],
+          [
+            "Passive",
+            [
+              "Time"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "old"
+  }
+]

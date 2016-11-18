@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Array.MultiDim",
+    "comment": "\n\nA class for multi-dimensional arrays, which stores the number of coordinates\nat type-level.\n\nInternally, the array is represented as a 1D array, so lookups\nshould be quite fast. However, we provide a safe, clean\ninterface for multi-dimensional lookups and updates.\n\nTo create an array, use a safe-list with the array dimensions:\n\n    import List.SafeList exposing (cons, null)\n    --Creates a 4x6x2 array of zeroes\n    myArray =\n      repeat (4 `cons` 6 `cons` 2 `cons` null ) 0\n\nAccesses and updates use SafeList as well:\n\n    import List.SafeList exposing (cons, null)\n    updatedArray =\n      case get (3 `cons` 1 `cons` 1 `cons` null ) myArray of\n        Nothing -> myArray\n        Just x ->\n          set (3 `cons` 1 `cons` 1 `cons` null ) (2*x) myArray\n\nIf you ever give the wrong number of coordinates, you get a type error:\n\n    --Won't compile\n    updatedArray =\n      case get (3 `cons` 1 `cons` 1 `cons` null ) myArray of\n        Nothing -> myArray\n        Just x ->\n          set (3 `cons` 1 `cons` 1 `cons` null ) (2*x) myArray\n\nWe don't yet support any operations which change the size of the array,\nsuch as push or append. For operations like `foldl` and `foldr`,\nuse the `toFlatArray` function, then the corresponding functions\non Array.Array.\n\n#The Array type and creation functions\n@docs MultiDim, repeat, initialize\n\n#Get array info\n@docs inBounds, dims\n\n#Access and update\n@docs get, set\n\n#Convting to flat List or Array\n@docs toIndexedList, toFlatArray\n\n#Mapping functions\n@docs map, indexedMap\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "MultiDim",
+        "comment": " Opaque type for `n`-dimensional arrays containing type `a` ",
+        "args": [
+          "a",
+          "n"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "dims",
+        "comment": " Get the dimensions of an array ",
+        "type": "Array.MultiDim.MultiDim a n -> List.SafeList.SafeList Int n"
+      },
+      {
+        "name": "get",
+        "comment": " Return Just the element if all given coordinates\nare within the array's bounds. Otherwise, return nothing. ",
+        "type": "List.SafeList.SafeList Int n -> Array.MultiDim.MultiDim a n -> Maybe.Maybe a"
+      },
+      {
+        "name": "inBounds",
+        "comment": " Given array dimensions, and coordinates,\ndetermine if the coordinates are in bounds for the dimensions. ",
+        "type": "List.SafeList.SafeList Int n -> List.SafeList.SafeList Int n -> Bool"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Apply a function on every element in an array,\nwith access to the coordinates of each element. ",
+        "type": "(List.SafeList.SafeList Int n -> a -> b) -> Array.MultiDim.MultiDim a n -> Array.MultiDim.MultiDim b n"
+      },
+      {
+        "name": "initialize",
+        "comment": " Given a SafeList of array dimensions,\nand a function to generate an element for each coordinate,\ncreate a new array with the given elements ",
+        "type": "List.SafeList.SafeList Int n -> (List.SafeList.SafeList Int n -> a) -> Array.MultiDim.MultiDim a n"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function on every element in an array ",
+        "type": "(a -> b) -> Array.MultiDim.MultiDim a n -> Array.MultiDim.MultiDim b n"
+      },
+      {
+        "name": "repeat",
+        "comment": " Given a SafeList [n1, n2, ...] of array dimensions,\ncreate an n1 x n2 x ... multi-dimensional array ",
+        "type": "List.SafeList.SafeList Int n -> a -> Array.MultiDim.MultiDim a n"
+      },
+      {
+        "name": "set",
+        "comment": " Set the element at the given coordinates, if they all\nare within the array's bounds. Otherwise, return the original array. ",
+        "type": "List.SafeList.SafeList Int n -> a -> Array.MultiDim.MultiDim a n -> Array.MultiDim.MultiDim a n"
+      },
+      {
+        "name": "toFlatArray",
+        "comment": " Convert this array to a 1-dimensional array\nwith elements in lexigraphical order ",
+        "type": "Array.MultiDim.MultiDim a n -> Array.Array a"
+      },
+      {
+        "name": "toIndexedList",
+        "comment": " Generate a list of the array's elements,\npaired with their coordinates.\n ",
+        "type": "Array.MultiDim.MultiDim a n -> List ( List.SafeList.SafeList Int n, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

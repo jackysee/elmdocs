@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Update.Extra",
+    "comment": " Convenience functions for working with updates in Elm\n\n@docs andThen\n@docs filter\n@docs updateModel\n@docs addCmd\n@docs mapCmd\n@docs sequence\n@docs identity\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "addCmd",
+        "comment": " Allows you to attach a Cmd to an update pipeline.\n\nFor example:\n\n    update msg model = model ! []\n      |> andThen update AMessage\n      |> addCmd doSomethingWithASideEffect\n",
+        "type": "Platform.Cmd.Cmd msg -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "andThen",
+        "comment": " Allows update call composition. Can be used with the pipeline operator (|>)\nto chain updates.\n\nFor example:\n\n    update msg model =\n      model ! []\n        |> andThen update SomeMessage\n        |> andThen update SomeOtherMessage\n        |> andThen update (MessageWithArguments \"Hello\")\n        ...\n\nThe same can be achieved using `Update.Extra.Infix.(:>)`.\n\nFor example:\n\n    import Update.Extra.Infix exposing ((:>))\n\n    update msg model =\n      model ! []\n        :> update SomeMessage\n        :> update SomeOtherMessage\n        :> update (MessageWithArguments \"Hello\")\n",
+        "type": "(msg -> model -> ( model, Platform.Cmd.Cmd msg )) -> msg -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "filter",
+        "comment": " Allows you to conditionally trigger updates based on a predicate. Can be\nused with the pipeline operator.\n\nFor example:\n\n    update msg model =\n      case msg of\n        SomeMessage i ->\n          model ! []\n            |> filter (i > 10)\n                (    andThen update BiggerThanTen\n                  >> andThen update AnotherMessage\n                  >> andThen update EvenMoreMessages\n                )\n            |> andThen (update AlwaysTriggeredAfterPredicate)\n\nIf you want use to the pipeline operator in the nested pipeline, consider a\nlambda:\n\n    |> filter (i > 10)\n      ( \\state -> state\n          |> andThen update BiggerThanTen\n          |> andThen update AnotherMessage\n          |> andThen update EvenMoreMessages\n      )\n    |> andThen (update AlwaysTriggeredAfterPredicate)\n",
+        "type": "Bool -> (( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )) -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "identity",
+        "comment": " This implements the identity function with regards to update pipelines.  This is designed to be used\nwith the :> operator, allowing you to write elements in the pipeline that do nothing at all.\n\n    import Update.Extra as Update\n    import Update.Extra.Infix exposing ((:>))\n\n    update msg model =\n      model ! []\n        :> Update.identity\n\nThis can be useful when you want to implement paths through the update pipeline without having to create\na `Noop` Msg.  Its especially when working with `Maybe`s, where it can be awkward to use the `filter`\nfunction in a type-safe way.\n\n    import Update.Extra as Update\n    import Update.Extra.Infix exposing ((:>))\n    import Maybe.Extra exposing ((?))\n\n    type Msg\n      = UpdateName (Maybe String)\n      | SetupUser User\n\n    update msg model =\n      case msg of\n        UpdateName maybeAName ->\n          let\n            user : Maybe User\n            user =\n              Maybe.map createUser maybeAName\n          in\n          { model | user = user }\n              :> Maybe.map (update << SetupUser) user ? Update.identity\n",
+        "type": "model -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "mapCmd",
+        "comment": " Map over the Cmd in an update pipeline\n",
+        "type": "(msg -> msg_) -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg_ )"
+      },
+      {
+        "name": "sequence",
+        "comment": " Allows you to attach multiple messages to an update at once.\n\nFor example:\n\n    update msg model = model ! []\n      |> sequence update\n        [ AMessage\n        , AnotherMessage\n        , AThirdMessage\n        ]\n",
+        "type": "(msg -> model -> ( model, Platform.Cmd.Cmd msg )) -> List msg -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "updateModel",
+        "comment": " Allows you to update the model in an update pipeline.\n\nFor example\n\n    update msg model = model ! []\n      |> updateModel \\model -> { model | a = 1 }\n      |> updateModel \\model -> { model | b = 2 }\n",
+        "type": "(model -> model) -> ( model, Platform.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Update.Extra.Infix",
+    "comment": " Infix versions of functions in Update.Extra\n\n@docs (:>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": ":>",
+        "comment": " An infix version of Update.Extra.andThen.  Easy to remember because the\ncolon in the symbol represents piping two things through the chain (model and commands!).\n",
+        "type": "( model, Platform.Cmd.Cmd msg ) -> (model -> ( model, Platform.Cmd.Cmd msg )) -> ( model, Platform.Cmd.Cmd msg )",
+        "associativity": "left",
+        "precedence": 0
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

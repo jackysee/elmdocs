@@ -1,0 +1,136 @@
+[
+  {
+    "name": "Html.Widgets",
+    "comment": " Svg Widgets using Elm-html\n\n\n# Seven Segment Widget\n@docs sevenSegment,defaultSevenSegmentProperties,defaultSevenSegmentStyle, SevenSegmentProperties, SevenSegmentStyle\n\n# Segmented Bar Graph Widget\n@docs segmentedBarGraph, defaultSegmentedBarGraphProperties, defaultSegmentBarGraphStyle, SegmentedBarGraphProperties, SegmentedBarGraphStyle\n\n# Simulated Analog Meter Widget\n@docs simulatedAnalogMeter,defaultSimulatedAnalogMeterProperties,defaultSimulatedAnalogMeterStyle,SimulatedAnalogMeterProperties,SimulatedAnalogMeterStyle\n\n# Knob Widget\n@docs knob,defaultKnobProperties,defaultKnobStyle,KnobProperties,KnobStyle\n\n# Widget Variables\n@docs MeterRange, defaultMeterRangeOk, defaultMeterRangeAlert\n",
+    "aliases": [
+      {
+        "name": "KnobProperties",
+        "comment": " Properties alias for Knob\n",
+        "args": [],
+        "type": "{ value : Int , maxValue : Int , segments : Int , smallSegments : Int , rangeAngleMin : Float , rangeAngleMax : Float }"
+      },
+      {
+        "name": "KnobStyle",
+        "comment": " Style alias for Knob\n",
+        "args": [],
+        "type": "{ segmentColor : String , knobColor : String , knobPointerColor : String }"
+      },
+      {
+        "name": "MeterRange",
+        "comment": " Range alias for widgets\n",
+        "args": [],
+        "type": "{ color : String, minValue : Float, maxValue : Float }"
+      },
+      {
+        "name": "SegmentedBarGraphProperties",
+        "comment": " Property alias for Segmented Bar Graph Widget\n",
+        "args": [],
+        "type": "{ currentValue : Int , maxValue : Int , segments : Int , ranges : List Html.Widgets.MeterRange }"
+      },
+      {
+        "name": "SegmentedBarGraphStyle",
+        "comment": " Style alias for Segmented Bar Graph Widget\n",
+        "args": [],
+        "type": "{ emptyColor : String, backgroundColor : String }"
+      },
+      {
+        "name": "SevenSegmentProperties",
+        "comment": " Properties alias for Seven Segment Widget\n",
+        "args": [],
+        "type": "{ digits : String , pointIndexes : List Int , colonIndexes : List Int , isSlant : Bool , isDimmedWhenOff : Bool }"
+      },
+      {
+        "name": "SevenSegmentStyle",
+        "comment": " Style alias for Seven Segment Widget\n",
+        "args": [],
+        "type": "{ backgroundColor : String, textColor : String }"
+      },
+      {
+        "name": "SimulatedAnalogMeterProperties",
+        "comment": " Property alias for Simulated Analog Meter\n",
+        "args": [],
+        "type": "{ currentValue : Int , maxValue : Int , ranges : List Html.Widgets.MeterRange }"
+      },
+      {
+        "name": "SimulatedAnalogMeterStyle",
+        "comment": " Style alias for Simulated Analog Meter\n",
+        "args": [],
+        "type": "{ foreColor : String, backgroundColor : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultKnobProperties",
+        "comment": " Default properties for Knob\n",
+        "type": "Html.Widgets.KnobProperties"
+      },
+      {
+        "name": "defaultKnobStyle",
+        "comment": " Default style for Knob\n",
+        "type": "Html.Widgets.KnobStyle"
+      },
+      {
+        "name": "defaultMeterRangeAlert",
+        "comment": " Default meter range 'alert'\n",
+        "type": "Html.Widgets.MeterRange"
+      },
+      {
+        "name": "defaultMeterRangeOk",
+        "comment": " Default meter range 'Ok'\n",
+        "type": "Html.Widgets.MeterRange"
+      },
+      {
+        "name": "defaultSegmentBarGraphStyle",
+        "comment": " Default style for SegmentedBarGraph\n",
+        "type": "Html.Widgets.SegmentedBarGraphStyle"
+      },
+      {
+        "name": "defaultSegmentedBarGraphProperties",
+        "comment": " Default properties for SegmentedBarGraph\n",
+        "type": "Html.Widgets.SegmentedBarGraphProperties"
+      },
+      {
+        "name": "defaultSevenSegmentProperties",
+        "comment": " Default properties for SevenSegmentProperties\n",
+        "type": "Html.Widgets.SevenSegmentProperties"
+      },
+      {
+        "name": "defaultSevenSegmentStyle",
+        "comment": " Default style for SevenSegmentStyle\n",
+        "type": "Html.Widgets.SevenSegmentStyle"
+      },
+      {
+        "name": "defaultSimulatedAnalogMeterProperties",
+        "comment": " Default properties for SimulatedAnalogMeter\n",
+        "type": "Html.Widgets.SimulatedAnalogMeterProperties"
+      },
+      {
+        "name": "defaultSimulatedAnalogMeterStyle",
+        "comment": " Default style for SimulatedAnalogMeter\n",
+        "type": "Html.Widgets.SimulatedAnalogMeterStyle"
+      },
+      {
+        "name": "knob",
+        "comment": " Creates knob widget\n",
+        "type": "Html.Widgets.KnobProperties -> Html.Widgets.KnobStyle -> Svg.Svg"
+      },
+      {
+        "name": "segmentedBarGraph",
+        "comment": " Creates Segmented Bar Graph\n",
+        "type": "Html.Widgets.SegmentedBarGraphProperties -> Html.Widgets.SegmentedBarGraphStyle -> Svg.Svg"
+      },
+      {
+        "name": "sevenSegment",
+        "comment": " Creates Seven Segment Widget\n",
+        "type": "Html.Widgets.SevenSegmentProperties -> Html.Widgets.SevenSegmentStyle -> Svg.Svg"
+      },
+      {
+        "name": "simulatedAnalogMeter",
+        "comment": " Creates Simulated Analog Meter Widget\n",
+        "type": "Html.Widgets.SimulatedAnalogMeterProperties -> Html.Widgets.SimulatedAnalogMeterStyle -> Svg.Svg"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

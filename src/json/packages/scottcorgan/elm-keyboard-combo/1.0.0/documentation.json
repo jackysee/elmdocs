@@ -1,0 +1,300 @@
+[
+  {
+    "name": "Keyboard.Combo",
+    "comment": " Provides helpers to call messages on the given key combinations\n\n## Types\n\n@docs Model, Msg, KeyCombo\n\n## Setup\n\n    import Keyboard.Combo\n\n    type alias Model =\n        { combos : Keyboard.Combo.Model Msg }\n\n    type Msg\n        = Save\n        | SaveAll\n        | RandomThing\n        | ComboMsg Keyboard.Combo.Msg\n\n    keyboardCombos : List (Keyboard.Combo.KeyCombo Msg)\n    keyboardCombos =\n        [ Keyboard.Combo.combo2 ( Keyboard.Combo.control, Keyboard.Combo.s ) Save\n        , Keyboard.Combo.combo2 ( Keyboard.Combo.control, Keyboard.Combo.a ) SelectAll\n        , Keyboard.Combo.combo3 ( Keyboard.Combo.control, Keyboard.Combo.alt, Keyboard.Combo.e ) RandomThing\n        ]\n\n    init : ( Model, Cmd Msg )\n    init =\n        { combos = Keyboard.Combo.init ComboMsg keyboardCombos } ! []\n\n\n    subscriptions : Model -> Sub Msg\n    subscriptions model =\n        Keyboard.Combo.subscriptions model.combos\n\n@docs init, subscriptions, update\n\n## Combo Helpers\n\n    import Keyboard.Combo\n\n    type Msg\n        = Save\n        | SaveAll\n        | RandomThing\n\n    keyboardCombos : List (Keyboard.Combo.KeyCombo Msg)\n    keyboardCombos =\n        [ Keyboard.Combo.combo2 ( Keyboard.Combo.control, Keyboard.Combo.s ) Save\n        , Keyboard.Combo.combo2 ( Keyboard.Combo.control, Keyboard.Combo.a ) SelectAll\n        , Keyboard.Combo.combo3 ( Keyboard.Combo.control, Keyboard.Combo.alt, Keyboard.Combo.e ) RandomThing\n        ]\n\n@docs combo1, combo2, combo3, combo4\n\n## Modifiers\n\n@docs super, command, shift, control, alt, option, enter, tab, escape, space\n\n\n## Letters\n\n@docs a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z\n\n## Number Helpers\n\n@docs zero, one, two, three, four, five, six, seven, eight, nine\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Internal state that keeps track of keys currently pressed and key combos\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ keys : Keyboard.Extra.Model , combos : List (Keyboard.Combo.KeyCombo msg) , toMsg : Keyboard.Combo.Msg -> msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "KeyCombo",
+        "comment": " Combo length types\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Internal update messages\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "a",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "alt",
+        "comment": " Helper for alt key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "b",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "c",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "combo1",
+        "comment": " Helper to define a key combo of one key\n",
+        "type": "Keyboard.Extra.Key -> msg -> Keyboard.Combo.KeyCombo msg"
+      },
+      {
+        "name": "combo2",
+        "comment": " Helper to define a key combo of two keys\n",
+        "type": "( Keyboard.Extra.Key, Keyboard.Extra.Key ) -> msg -> Keyboard.Combo.KeyCombo msg"
+      },
+      {
+        "name": "combo3",
+        "comment": " Helper to define a key combo of three keys\n",
+        "type": "( Keyboard.Extra.Key, Keyboard.Extra.Key, Keyboard.Extra.Key ) -> msg -> Keyboard.Combo.KeyCombo msg"
+      },
+      {
+        "name": "combo4",
+        "comment": " Helper to define a key combo of four keys\n",
+        "type": "( Keyboard.Extra.Key , Keyboard.Extra.Key , Keyboard.Extra.Key , Keyboard.Extra.Key ) -> msg -> Keyboard.Combo.KeyCombo msg"
+      },
+      {
+        "name": "command",
+        "comment": " Helper for macOS command key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "control",
+        "comment": " Helper for control key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "d",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "e",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "eight",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "enter",
+        "comment": " Helper for enter key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "escape",
+        "comment": " Helper for escape key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "f",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "five",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "four",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "g",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "h",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "i",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize the module\n",
+        "type": "(Keyboard.Combo.Msg -> msg) -> List (Keyboard.Combo.KeyCombo msg) -> Keyboard.Combo.Model msg"
+      },
+      {
+        "name": "j",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "k",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "l",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "m",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "n",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "nine",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "o",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "one",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "option",
+        "comment": " Helper for macOS option key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "p",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "q",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "r",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "s",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "seven",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "shift",
+        "comment": " Helper for shift key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "six",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "space",
+        "comment": " Helper for space key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscribe to module key events\n",
+        "type": "Keyboard.Combo.Model parentMsg -> Platform.Sub.Sub parentMsg"
+      },
+      {
+        "name": "super",
+        "comment": " Helper for super key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "t",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "tab",
+        "comment": " Helper for tab key\n",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "three",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "two",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "u",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "update",
+        "comment": " Update the internal model\n",
+        "type": "Keyboard.Combo.Msg -> Keyboard.Combo.Model msg -> Keyboard.Combo.Model msg"
+      },
+      {
+        "name": "v",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "w",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "x",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "y",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "z",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      },
+      {
+        "name": "zero",
+        "comment": " ",
+        "type": "Keyboard.Extra.Key"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

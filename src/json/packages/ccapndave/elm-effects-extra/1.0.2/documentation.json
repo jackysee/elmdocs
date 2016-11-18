@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Effects.Extra.Infix",
+    "comment": " Infix versions of functions in Effects.Extra\n\n@docs (:>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": ":>",
+        "comment": " An infix version of Effects.Extra.pipeUpdate.  Easy to remember because the\ncolon in the symbol represents piping two things through the chain (model and effects!).\n",
+        "type": "( m, Effects.Effects a ) -> (m -> ( m, Effects.Effects a )) -> ( m, Effects.Effects a )",
+        "associativity": "left",
+        "precedence": 0
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Effects.Extra",
+    "comment": " Convenience functions for working with effects in Elm\n\n@docs pipeUpdate\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "pipeUpdate",
+        "comment": " A function allowing you to compose calls to update.  Most useful when used\nin its infix form to make an update pipeline.\n\n    import Effects.Extra.Infix exposing ((:>))\n\n    update : Action -> Model -> (Model, Effects Action)\n    update action model =\n      ComposedAction ->\n        (model, Effects.none)\n          :> update AnotherAction\n          :> update YetAnotherAction\n          :> update SubComponent.SomeAction\n\n",
+        "type": "( m, Effects.Effects a ) -> (m -> ( m, Effects.Effects a )) -> ( m, Effects.Effects a )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

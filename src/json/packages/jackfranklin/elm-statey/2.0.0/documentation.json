@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Statey",
+    "comment": " This library provides a simple state machine implementation in Elm.\n\n# Making a state machine\n@docs StateMachine, makeState, State, StateRecord\n\n# Getting the state\n@docs getState, getStates\n\n# Transitioning\n@docs transition\n\n# Errors\n@docs StateyError\n",
+    "aliases": [
+      {
+        "name": "StateMachine",
+        "comment": " A state machine contains a list of valid states, a list of transitions and a list of guards.\n\nA state machine is given a record type that it will always expect to be given. This type should be an extensible record that extends `StateRecord`:\n\n    type alias Person = StateRecord { name: String }\n\n    stateMachine : StateMachine Person\n    stateMachine =\n        { states = [ startState, tiredState, sleepState ]\n        , transitions =\n            [ ( startState, tiredState )\n            , ( tiredState, sleepState )\n            , ( sleepState, startState )\n            ]\n        , guards = []\n        }\n\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ states : List Statey.State , transitions : List ( Statey.State, Statey.State ) , guards : List (Statey.Guard a) }"
+      },
+      {
+        "name": "StateRecord",
+        "comment": " A `StateRecord` is just any record that has a `state : State` property on it. Every state machine is created with one of these as its type, and most of the functions expect to be given one.\n\nThe records that you want to use in the state machine should be based off this:\n\n    type alias Person = StateRecord { name : String }\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | state : Statey.State }"
+      }
+    ],
+    "types": [
+      {
+        "name": "State",
+        "comment": " Represents a state. This can either be a user given state, or `AnyState`,\nwhich is used in guards to denote that it applies to any state\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "StateyError",
+        "comment": " Represents an error in a state transition.\n",
+        "args": [],
+        "cases": [
+          [
+            "TransitionNotDefined",
+            []
+          ],
+          [
+            "GuardPreventedTansition",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getState",
+        "comment": " given a particular record, return the state of it. This is an alias to `.state`\ncurrently, but you should use is in case the underlying abstractions change\n\n    getState { name = \"jack\", state = startState } == startState\n\n",
+        "type": "Statey.StateRecord a -> Statey.State"
+      },
+      {
+        "name": "getStates",
+        "comment": " given a state machine, return its list of states. An alias to `.states`.\n",
+        "type": "Statey.StateMachine a -> List Statey.State"
+      },
+      {
+        "name": "makeState",
+        "comment": " Make a state from a string. This is the method you should use to create states\nfor your state machine. The string given doesn't matter, just make it relevant to\nyour application.\n\n    startState = makeState \"start\"\n",
+        "type": "String -> Statey.State"
+      },
+      {
+        "name": "transition",
+        "comment": " Transition the given record from its state to the new state. The result will\neither be an `Ok newRecord` or `Err StateyErr`.\n\n    startState = makeState \"start\"\n    middleState = makeState \"middle\"\n    endState = makeState \"end\"\n\n    stateMachine : StateMachine { name : String }\n    stateMachine =\n        { states = [ startState, middleState, endState ]\n        , transitions = [ ( startState, middleState ), ( middleState, endState ) ]\n        , guards = []\n        }\n\n    person = { name = \"Jack\", state = startState }\n\n    case transition stateMachine middleState person of\n        Ok newPerson ->\n            newPerson\n        Err err ->\n            err == GuardPreventedTansition || err == TransitionNotDefined\n",
+        "type": "Statey.StateMachine a -> Statey.State -> Statey.StateRecord a -> Result.Result Statey.StateyError (Statey.StateRecord a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

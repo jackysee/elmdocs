@@ -1,0 +1,55 @@
+[
+  {
+    "name": "List.NDet",
+    "comment": "A list-based nondeterminstic value. Also useful for carthesian product\ncombinations. Note that this is a very simple wrapper, it doesn't get rid of\nvalues that are equal.\n\n# NDet construction/deconstruction\n@docs none, some, fromList, toList\n\n# Mapping and more\n@docs map, andMap, andThen",
+    "aliases": [
+      {
+        "name": "NDet",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "List a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": "Useful for applying multiple functions to nondeterministic values:\n\n```\ntoList\n  (map (+) (fromList [1,2,3])\n     `andMap` (fromList [1,2,3]))\n== [2,3,4,3,4,5,4,5,6]\n```",
+        "type": "NDet (a -> b) -> NDet a -> NDet b"
+      },
+      {
+        "name": "andThen",
+        "comment": "Sequence some nondeterministic operations:\n\n```\nfromList [1,2,3] `andThen` \\x ->\nfromList [1,2,3] `andThen` \\y -> (x,y)\n|> toList\n== [ (1,1),(1,2),(1,3)\n   , (2,1),(2,2),(2,3)\n   , (3,1),(3,2),(3,3)\n   ]\n```",
+        "type": "NDet a -> (a -> NDet b) -> NDet b"
+      },
+      {
+        "name": "fromList",
+        "comment": "Build a nondeterministic value out of a list of possibilities.",
+        "type": "List a -> NDet a"
+      },
+      {
+        "name": "map",
+        "comment": "Apply a function to a nondeterministic value:\n\n```\n[1,2,3] |> fromList >> map ((+) 1) >> toList == [2,3,4]\n```",
+        "type": "(a -> b) -> NDet a -> NDet b"
+      },
+      {
+        "name": "none",
+        "comment": "A lack of values.",
+        "type": "NDet a"
+      },
+      {
+        "name": "some",
+        "comment": "Build a nondeterministic value out of a normal value.",
+        "type": "a -> NDet a"
+      },
+      {
+        "name": "toList",
+        "comment": "Show the nondeterministic value as a list of possibilities.",
+        "type": "NDet a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

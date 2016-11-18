@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Test.Runner.Html",
+    "comment": " HTML Runner\n\nRuns tests in a browser and reports the results in the DOM. You can bring up\none of these tests in elm-reactor to have it run and show outputs.\n\n@docs run, runWithOptions\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": " Run the test and report the results.\n\nFuzz tests use a default run count of 100, and an initial seed based on the\nsystem time when the test runs begin.\n",
+        "type": "Test.Test -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "runWithOptions",
+        "comment": " Run the test using the provided options. If `Nothing` is provided for either\n`runs` or `seed`, it will fall back on the options used in [`run`](#run).\n",
+        "type": "Maybe.Maybe Int -> Maybe.Maybe Random.Pcg.Seed -> Test.Test -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Test.Runner.Html.App",
+    "comment": " Test runner for a Html.App\n\n@docs run\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": " Run the tests and render the results as a Web page.\n",
+        "type": "Test.Runner.Html.App.RunnerOptions -> Test.Runner.Html.App.AppOptions msg model -> Test.Test -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

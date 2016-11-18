@@ -1,0 +1,65 @@
+[
+  {
+    "name": "DynamicStyle",
+    "comment": "\n# Library for simple, dynamic style effects\n\nThe goal of this library is make locally stateful, declarative CSS effects\n(e.g., :hover, :focus, etc.) as easy in Elm as they are with stylesheets.\n\nFor example, the following achieves the same effect as setting the\n:hover attribute in your stylesheet:\n\n    div (hover [(\"color\",\"blue\",\"lightblue\")]) [text \"so cool!\"]\n\nYou may user the primed versions as shorthand to provide a base list of\nstyles, like this:\n\n    div (hover'\n        [ (\"font-size\",\"20px\")\n        , (\"font-face\",\"Droid Sans Mono\")]\n        [(\"color\",\"blue\",\"lightblue\")])\n        [text \"wow\"]\n\nCompletely painless!\n\n* Note: the effects in this library consume whatever JS hooks are needed\nto achieve the effect on that element (e.g., hover consumes onmouseover and\nonmouseout, but you are still free to use onclick). If for some reason you\ndo want to do both a CSS transition and have your application respond to\nan event, you can simply make a wrapper element and hook its events.",
+    "aliases": [
+      {
+        "name": "JSEventAttribute",
+        "comment": "",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "CSSValue",
+        "comment": "",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "CSSKey",
+        "comment": "",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "cssStateEffect",
+        "comment": "\nConstruct your own stateful effects by providing a list of JavaScript hooks\nto indicate an inactive state, a hook to indicate the active state, static\nstyles, and a tuple-map for your dynamic styles.",
+        "type": "List JSEventAttribute -> JSEventAttribute -> List ( CSSKey, CSSValue ) -> List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "focus",
+        "comment": "\nChange styles when the user focuses on element. For example,\npressure [(\"border-color\",\"black\",\"blue\")] will render a black border\nnormally, but a blue border when the user focuses on the element.",
+        "type": "List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "focus'",
+        "comment": "\nShorthand to add a list of static base styles.",
+        "type": "List ( CSSKey, CSSValue ) -> List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "hover",
+        "comment": "\nChange styles when the user hovers over an element. For example,\nhover [(\"color\",\"black\",\"blue\")] will render black text normally, but\nblue text when the user hovers over the element.",
+        "type": "List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "hover'",
+        "comment": "\nShorthand to add a list of static base styles.",
+        "type": "List ( CSSKey, CSSValue ) -> List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "pressure",
+        "comment": "\nChange styles when the user pushes on element. For example,\npressure [(\"color\",\"black\",\"blue\")] will render black text normally, but\nblue text when the user pushes the mouse down on the element.",
+        "type": "List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      },
+      {
+        "name": "pressure'",
+        "comment": "\nShorthand to add a list of static base styles.",
+        "type": "List ( CSSKey, CSSValue ) -> List ( CSSKey, CSSValue, CSSValue ) -> List Attribute"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

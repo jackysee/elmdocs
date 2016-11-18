@@ -1,0 +1,319 @@
+[
+  {
+    "name": "FilepickerIO.Api.Type",
+    "comment": "Some basic schema for working with [filepicker.io](https://developers.filepicker.io)",
+    "aliases": [
+      {
+        "name": "RemoveOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ policy : Maybe String, signature : Maybe String }"
+      },
+      {
+        "name": "ConvertResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "ConvertOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ width : Maybe Int , height : Maybe Int , fit : Maybe Fit , align : Maybe Align , crop : Maybe (List Int) , format : Maybe String , filter : Maybe Filter , compress : Maybe Bool , quality : Maybe Int , rotate : Maybe Rotation , watermark : Maybe String , watermark_size : Maybe Int , watermark_position : Maybe String , policy : Maybe String , signature : Maybe String }"
+      },
+      {
+        "name": "StoreUrlResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "StoreUrlOptions",
+        "comment": "",
+        "args": [],
+        "type": "StorageOptions"
+      },
+      {
+        "name": "WriteUrlResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "WriteUrlOptions",
+        "comment": "",
+        "args": [],
+        "type": "WriteOptions"
+      },
+      {
+        "name": "WriteResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "StatOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ size : Bool , mimetype : Bool , filename : Bool , width : Bool , height : Bool , uploaded : Bool , writeable : Bool , md5 : Bool , location : Bool , path : Bool , container : Bool , policy : Maybe String , signature : Maybe String }"
+      },
+      {
+        "name": "ReadOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ base64encode : Bool , asText : Bool , cache : Bool , policy : Maybe String , signature : Maybe String }"
+      },
+      {
+        "name": "ExportResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "ExportOptions",
+        "comment": "",
+        "args": [],
+        "type": "ExportOptions_ PickerOptions"
+      },
+      {
+        "name": "ExportOptions_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | mimetype : String }"
+      },
+      {
+        "name": "PickAndStoreResults",
+        "comment": "",
+        "args": [],
+        "type": "List PickAndStoreResult"
+      },
+      {
+        "name": "PickAndStoreResult",
+        "comment": "",
+        "args": [],
+        "type": "StoreResult"
+      },
+      {
+        "name": "PickAndStoreOptions",
+        "comment": "",
+        "args": [],
+        "type": "PickAndStoreOptions_ PickerOptions"
+      },
+      {
+        "name": "PickAndStoreOptions_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | maxFiles : Int, multiple : Bool, folders : Bool }"
+      },
+      {
+        "name": "PickMultipleResults",
+        "comment": "",
+        "args": [],
+        "type": "List PickerResult"
+      },
+      {
+        "name": "PickMultipleOptions",
+        "comment": "",
+        "args": [],
+        "type": "PickMultipleOptions_ PickerOptions"
+      },
+      {
+        "name": "PickMultipleOptions_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | maxFiles : Int, folders : Bool }"
+      },
+      {
+        "name": "PickResult",
+        "comment": "",
+        "args": [],
+        "type": "PickerResult"
+      },
+      {
+        "name": "PickOptions",
+        "comment": "",
+        "args": [],
+        "type": "StoreOptions_ PickerOptions"
+      },
+      {
+        "name": "PickOptions_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | mimetypes : List String }"
+      },
+      {
+        "name": "Blob",
+        "comment": "",
+        "args": [],
+        "type": "{ url : String , filename : Maybe String , mimetype : Maybe String , size : Maybe Int , key : Maybe String , container : Maybe String , isWriteable : String , path : String }"
+      },
+      {
+        "name": "StoreResult",
+        "comment": "",
+        "args": [],
+        "type": "StoreResult_ PickerResult"
+      },
+      {
+        "name": "StoreResult_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | key : String }"
+      },
+      {
+        "name": "StoreOptions",
+        "comment": "",
+        "args": [],
+        "type": "StoreOptions_ StorageOptions"
+      },
+      {
+        "name": "StoreOptions_",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | access : Access }"
+      },
+      {
+        "name": "StorageOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ location : String , path : String , container : String , base64decode : Bool }"
+      },
+      {
+        "name": "WriteOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ base64decode : Bool , policy : Maybe String , signature : Maybe String }"
+      },
+      {
+        "name": "PickerResult",
+        "comment": "",
+        "args": [],
+        "type": "{ url : String , filename : String , mimetype : String , size : Maybe Int , isWriteable : Maybe Bool }"
+      },
+      {
+        "name": "PickerOptions",
+        "comment": "",
+        "args": [],
+        "type": "{ maxSize : Int , extensions : List String , container : String , language : String , services : List String , openTo : String , debug : Bool , mobile : Bool , policy : Maybe String , signature : Maybe String }"
+      },
+      {
+        "name": "Progress",
+        "comment": "",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [
+      {
+        "name": "Filter",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Blur",
+            []
+          ],
+          [
+            "Sharpen",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Align",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Top",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ],
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Faces",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Fit",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Clip",
+            []
+          ],
+          [
+            "Crop",
+            []
+          ],
+          [
+            "Scale",
+            []
+          ],
+          [
+            "Max",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Rotation",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Exif",
+            []
+          ],
+          [
+            "Rotation",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Access",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Public",
+            []
+          ],
+          [
+            "Private",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "old"
+  }
+]

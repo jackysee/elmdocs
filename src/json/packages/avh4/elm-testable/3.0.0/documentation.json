@@ -1,0 +1,276 @@
+[
+  {
+    "name": "Testable.TestContext",
+    "comment": " A `TestContext` allows you to manage the lifecycle of an Elm component that\nuses `Testable.Effects`.  Using `TestContext`, you can write tests that exercise\nthe entire lifecycle of your component.\n\n@docs Component, TestContext, startForTest, update\n\n# Inspecting\n@docs currentModel, assertCurrentModel, assertHttpRequest, assertNoPendingHttpRequests\n\n# Simulating Effects\n@docs resolveHttpRequest, advanceTime\n",
+    "aliases": [
+      {
+        "name": "Component",
+        "comment": " A component that can be used to create a `TestContext`\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "{ init : ( model, Testable.Cmd.Cmd msg ) , update : msg -> model -> ( model, Testable.Cmd.Cmd msg ) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "TestContext",
+        "comment": " The representation of the current state of a testable component, including\na representaiton of any pending Effects.\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "advanceTime",
+        "comment": " Simulate the passing of time\n",
+        "type": "Time.Time -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "assertCurrentModel",
+        "comment": " A convenient way to assert about the current state of the component under test\n",
+        "type": "model -> Testable.TestContext.TestContext msg model -> ElmTest.Assertion"
+      },
+      {
+        "name": "assertHttpRequest",
+        "comment": " Assert that a given Http.Request has been made by the componet under test\n",
+        "type": "Testable.Http.Request -> Testable.TestContext.TestContext msg model -> ElmTest.Assertion"
+      },
+      {
+        "name": "assertNoPendingHttpRequests",
+        "comment": " Ensure that there are no pending HTTP requests\n",
+        "type": "Testable.TestContext.TestContext msg model -> ElmTest.Assertion"
+      },
+      {
+        "name": "currentModel",
+        "comment": " Get the current state of the component under test\n",
+        "type": "Testable.TestContext.TestContext msg model -> Result.Result (List String) model"
+      },
+      {
+        "name": "resolveHttpRequest",
+        "comment": " Simulate an HTTP response\n",
+        "type": "Testable.Http.Request -> Result.Result Testable.Http.RawError Testable.Http.Response -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "startForTest",
+        "comment": " Create a `TestContext` for the given Component\n",
+        "type": "Testable.TestContext.Component msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "update",
+        "comment": " Apply an msg to the component in a given TestContext\n",
+        "type": "msg -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Testable",
+    "comment": "\n\nThis module converts Testable things into real things.\n\n# Basics\n@docs cmd, task\n\n# StartApp helpers\n@docs init, update\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "cmd",
+        "comment": " Converts a `Testable.Cmd` into a `Cmd`\n\n    Testable.Cmd.none |> Testable.cmd\n        == Cmd.none\n",
+        "type": "Testable.Cmd.Cmd msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "init",
+        "comment": " Converts a testable StartApp-style init value into a standard StartApp init value\n",
+        "type": "( model, Testable.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "task",
+        "comment": " Converts a `Testable.Task` into an `Task`\n\n    Testable.Task.succeed \"A\" |> Testable.task\n        == Task.succeed \"A\"\n",
+        "type": "Testable.Task.Task error success -> Task.Task error success"
+      },
+      {
+        "name": "update",
+        "comment": " Converts a testable StartApp-style update function into a standard StartApp update function\n",
+        "type": "(msg -> model -> ( model, Testable.Cmd.Cmd msg )) -> msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Testable.Http",
+    "comment": "\n`Testable.Http` is a replacement for the standard `Http` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.\n\n# Helpers\n@docs getRequest, ok, serverError\n\n# Encoding and Decoding\n@docs url\n\n# Fetch Strings and JSON\n@docs getString, get, post, Error\n\n# Body Values\n@docs empty, string\n\n# Arbitrary Requests\n@docs Request\n\n# Responses\n@docs Response, RawError\n",
+    "aliases": [
+      {
+        "name": "Error",
+        "comment": " The kinds of errors you typically want in practice. When you get a\nresponse but its status is not in the 200 range, it will trigger a\n`BadResponse`. When you try to decode JSON but something goes wrong,\nyou will get an `UnexpectedPayload`.\n",
+        "args": [],
+        "type": "Http.Error"
+      },
+      {
+        "name": "RawError",
+        "comment": " The things that count as errors at the lowest level. Technically, getting\na response back with status 404 is a &ldquo;successful&rdquo; response in that\nyou actually got all the information you asked for.\n\nThe `fromJson` function and `Error` type provide higher-level errors, but the\npoint of `RawError` is to allow you to define higher-level errors however you\nwant.\n",
+        "args": [],
+        "type": "Http.RawError"
+      },
+      {
+        "name": "Request",
+        "comment": " Fully specify the request you want to send. For example, if you want to\nsend a request between domains (CORS request) you will need to specify some\nheaders manually.\n\n    corsPost : Request\n    corsPost =\n        { verb = \"POST\"\n        , headers =\n            [ (\"Origin\", \"http://elm-lang.org\")\n            , (\"Access-Control-Request-Method\", \"POST\")\n            , (\"Access-Control-Request-Headers\", \"X-Custom-Header\")\n            ]\n        , url = \"http://example.com/hats\"\n        , body = empty\n        }\n",
+        "args": [],
+        "type": "Http.Request"
+      },
+      {
+        "name": "Response",
+        "comment": " All the details of the response. There are many weird facts about\nresponses which include:\n\n  * The `status` may be 0 in the case that you load something from `file://`\n  * You cannot handle redirects yourself, they will all be followed\n    automatically. If you want to know if you have gone through one or more\n    redirect, the `url` field will let you know who sent you the response, so\n    you will know if it does not match the URL you requested.\n  * You are allowed to have duplicate headers, and their values will be\n    combined into a single comma-separated string.\n\nWe have left these underlying facts about `XMLHttpRequest` as is because one\ngoal of this library is to give a low-level enough API that others can build\nwhatever helpful behavior they want on top of it.\n",
+        "args": [],
+        "type": "Http.Response"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " An empty request body, no value will be sent along.\n",
+        "type": "Testable.Http.Body"
+      },
+      {
+        "name": "get",
+        "comment": " Send a GET request to the given URL. You also specify how to decode the\nresponse.\n\n    import Json.Decode (list, string)\n\n    hats : Task Error (List String)\n    hats =\n        get (list string) \"http://example.com/hat-categories.json\"\n",
+        "type": "Json.Decode.Decoder value -> String -> Testable.Task.Task Testable.Http.Error value"
+      },
+      {
+        "name": "getRequest",
+        "comment": " A convenient way to make a `Request` corresponding to the request made by `get`\n",
+        "type": "String -> Testable.Http.Request"
+      },
+      {
+        "name": "getString",
+        "comment": " Send a GET request to the given URL. You will get the entire response as a\nstring.\n\n    hats : Task Error String\n    hats =\n        getString \"http://example.com/hat-categories.markdown\"\n",
+        "type": "String -> Testable.Task.Task Testable.Http.Error String"
+      },
+      {
+        "name": "ok",
+        "comment": " A convenient way to create a 200 OK repsonse\n",
+        "type": "String -> Result.Result Testable.Http.RawError Testable.Http.Response"
+      },
+      {
+        "name": "post",
+        "comment": " Send a POST request to the given URL, carrying the given body. You also\nspecify how to decode the response with [a JSON decoder][json].\n\n[json]: http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder\n\n    import Json.Decode (list, string)\n\n    hats : Task Error (List String)\n    hats =\n        post (list string) \"http://example.com/hat-categories.json\" empty\n",
+        "type": "Json.Decode.Decoder value -> String -> Testable.Http.Body -> Testable.Task.Task Testable.Http.Error value"
+      },
+      {
+        "name": "serverError",
+        "comment": " A convenient way to create a response representing a 500 error\n",
+        "type": "Result.Result Testable.Http.RawError Testable.Http.Response"
+      },
+      {
+        "name": "string",
+        "comment": " Provide a string as the body of the request. Useful if you need to send\nJSON data to a server that does not belong in the URL.\n\n    import Json.Decode as JS\n\n    coolestHats : Task Error (List String)\n    coolestHats =\n        post\n            (JS.list JS.string)\n            \"http://example.com/hats\"\n            (string \"\"\"{ \"sortBy\": \"coolness\", \"take\": 10 }\"\"\")\n",
+        "type": "String -> Testable.Http.Body"
+      },
+      {
+        "name": "url",
+        "comment": " Create a properly encoded URL with a [query string][qs]. The first argument is\nthe portion of the URL before the query string, which is assumed to be\nproperly encoded already. The second argument is a list of all the\nkey/value pairs needed for the query string. Both the keys and values\nwill be appropriately encoded, so they can contain spaces, ampersands, etc.\n\n[qs]: http://en.wikipedia.org/wiki/Query_string\n\n    url \"http://example.com/users\" [ (\"name\", \"john doe\"), (\"age\", \"30\") ]\n    -- http://example.com/users?name=john+doe&age=30\n",
+        "type": "String -> List ( String, String ) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Testable.Cmd",
+    "comment": "\n`Testable.Cmd` is a replacement for the core `Cmd` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Cmd` into a core `Cmd` with the `Testable` module.\n\n@docs Cmd, map, batch, none\n",
+    "aliases": [
+      {
+        "name": "Cmd",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "Testable.Internal.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "batch",
+        "comment": " ",
+        "type": "List (Testable.Cmd.Cmd msg) -> Testable.Cmd.Cmd msg"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Testable.Cmd.Cmd a -> Testable.Cmd.Cmd b"
+      },
+      {
+        "name": "none",
+        "comment": " ",
+        "type": "Testable.Cmd.Cmd never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Testable.Task",
+    "comment": "\n`Testable.Task` is a replacement for the core `Task` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Task` into a core `Task` with the `Testable` module.\n\n# Basics\n@docs Task, succeed, fail\n\n# Mapping\n@docs map\n\n# Chaining\n@docs andThen\n\n# Errors\n@docs mapError, toMaybe, toResult\n\n# Threads\n@docs sleep\n\n# Commands\n@docs perform\n",
+    "aliases": [
+      {
+        "name": "Task",
+        "comment": " Represents asynchronous effects that may fail. It is useful for stuff like\nHTTP.\nFor example, maybe we have a task with the type (`Task String User`). This means\nthat when we perform the task, it will either fail with a `String` message or\nsucceed with a `User`. So this could represent a task that is asking a server\nfor a certain user.\n",
+        "args": [
+          "error",
+          "success"
+        ],
+        "type": "Testable.Internal.Task error success"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a task and a callback. The first task will run, and if it is\nsuccessful, you give the result to the callback resulting in another task. This\ntask then gets run.\n\n    succeed 2 |> andThen (\\n -> succeed (n + 2)) == succeed 4\n\nThis is useful for chaining tasks together. Maybe you need to get a user from\nyour servers *and then* lookup their picture once you know their name.\n",
+        "type": "(a -> Testable.Task.Task x b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "fail",
+        "comment": " A task that fails immediately when run.\n\n    fail \"file not found\" : Task String a\n",
+        "type": "x -> Testable.Task.Task x a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a task.\n\n    map sqrt (succeed 9) == succeed 3\n",
+        "type": "(a -> b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "mapError",
+        "comment": " Transform the error value. This can be useful if you need a bunch of error\ntypes to match up.\n\n    type Error = Http Http.Error | WebGL WebGL.Error\n\n    getResources : Task Error Resource\n    getResources =\n        sequence [ mapError Http serverTask, mapError WebGL textureTask ]\n",
+        "type": "(x -> y) -> Testable.Task.Task x a -> Testable.Task.Task y a"
+      },
+      {
+        "name": "perform",
+        "comment": " Command the runtime system to perform a task. The most important argument\nis the `Task` which describes what you want to happen. But you also need to\nprovide functions to tag the two possible outcomes of the task. It can fail or\nsucceed, but either way, you need to have a message to feed back into your\napplication.\n",
+        "type": "(x -> msg) -> (a -> msg) -> Testable.Task.Task x a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "sleep",
+        "comment": " Make a thread sleep for a certain amount of time. The following example\nsleeps for 1 second and then succeeds with 42.\n\n    sleep 1000 |> andThen \\_ -> succeed 42\n",
+        "type": "Time.Time -> Testable.Task.Task never ()"
+      },
+      {
+        "name": "succeed",
+        "comment": " A task that succeeds immediately when run.\n\n    succeed 42    -- results in 42\n",
+        "type": "a -> Testable.Task.Task x a"
+      },
+      {
+        "name": "toMaybe",
+        "comment": " Helps with handling failure. Instead of having a task fail with some value\nof type `x` it promotes the failure to a `Nothing` and turns all successes into\n`Just` something.\n\n    toMaybe (fail \"file not found\") == succeed Nothing\n    toMaybe (succeed 42)            == succeed (Just 42)\n\nThis means you can handle the error with the `Maybe` module instead.\n",
+        "type": "Testable.Task.Task x a -> Testable.Task.Task never (Maybe.Maybe a)"
+      },
+      {
+        "name": "toResult",
+        "comment": " Helps with handling failure. Instead of having a task fail with some value\nof type `x` it promotes the failure to an `Err` and turns all successes into\n`Ok` something.\n\n    toResult (fail \"file not found\") == succeed (Err \"file not found\")\n    toResult (succeed 42)            == succeed (Ok 42)\n\nThis means you can handle the error with the `Result` module instead.\n",
+        "type": "Testable.Task.Task x a -> Testable.Task.Task never (Result.Result x a)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

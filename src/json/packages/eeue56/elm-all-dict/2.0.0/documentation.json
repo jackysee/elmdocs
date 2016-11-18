@@ -1,0 +1,271 @@
+[
+  {
+    "name": "EveryDict",
+    "comment": " A dictionary mapping unique keys to values. This dictionary can use any type as a key.\nIn the core-provided Dict, keys can only be comparable.\n\nThis little dictionary is hacky. It uses a custom toString as a hashing function - so don't use it on\nany types which have non-unique representations in strings! At the moment, it has custom support for converting functions into keys.\n\nIt's hard to imagine many cases where you would want a function as a key, but it's now possible.\n\nInsert, remove, and query operations all take *O(log n)* time. EveryDictionary\nequality with `(==)` is unreliable and should not be used.\n\n# Types\n@docs EveryDict\n\n# Build\n@docs empty, singleton, insert, update, remove\n\n# Query\n@docs isEmpty, member, get, size, eq\n\n# Combine\n@docs union, intersect, diff\n\n# Lists\n@docs keys, values, toList, fromList\n\n# Transform\n@docs map, foldl, foldr, filter, partition\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "EveryDict",
+        "comment": " A dict which works with any type which lifts the type from Core's Dict",
+        "args": [
+          "k",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "EveryDict.EveryDict k v -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary  ",
+        "type": "EveryDict.EveryDict k v"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality ",
+        "type": "EveryDict.EveryDict k v -> EveryDict.EveryDict k v -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate. ",
+        "type": "(k -> v -> Bool) -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from lowest\nkey to highest key. ",
+        "type": "(k -> v -> b -> b) -> b -> EveryDict.EveryDict k v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from highest\nkey to lowest key. ",
+        "type": "(k -> v -> b -> b) -> b -> EveryDict.EveryDict k v -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary.\nTakes a default value, and a list of key-pair tuples\n ",
+        "type": "List ( k, v ) -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`. This is useful when you are not sure if a key will be in the\ndictionary.\n\n    animals = fromList [ (\"Tom\", Cat), (\"Jerry\", Mouse) ]\n\n    get \"Tom\"   animals == Just Cat\n    get \"Mouse\" animals == Just Mouse\n    get \"Spike\" animals == Nothing\n\n",
+        "type": "k -> EveryDict.EveryDict k v -> Maybe.Maybe v"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces value when there is\na collision. ",
+        "type": "k -> v -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. ",
+        "type": "EveryDict.EveryDict k v -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a dictionary is empty.\n\n    isEmpty empty == True\n",
+        "type": "EveryDict.EveryDict k v -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary. ",
+        "type": "EveryDict.EveryDict k v -> List k"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\n",
+        "type": "(k -> a -> b) -> EveryDict.EveryDict k a -> EveryDict.EveryDict k b"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a key is in a dictionary. ",
+        "type": "k -> EveryDict.EveryDict k v -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(k -> v -> Bool) -> EveryDict.EveryDict k v -> ( EveryDict.EveryDict k v, EveryDict.EveryDict k v )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made. ",
+        "type": "k -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair. ",
+        "type": "k -> v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "size",
+        "comment": " Get the number of key-value pairs in a dict ",
+        "type": "EveryDict.EveryDict k v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs. ",
+        "type": "EveryDict.EveryDict k v -> List ( k, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If there is a collision, preference is given\nto the first dictionary. ",
+        "type": "EveryDict.EveryDict k v -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of a dictionary for a specific key with a given function. ",
+        "type": "k -> (Maybe.Maybe v -> Maybe.Maybe v) -> EveryDict.EveryDict k v -> EveryDict.EveryDict k v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary. ",
+        "type": "EveryDict.EveryDict k v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "AllDict",
+    "comment": " A dictionary mapping unique keys to values. This dictionary can use any type as a key.\nIn the core-provided Dict, keys can only be comparable.\n\nAllDict allows you to provide a custom operation for hashing keys. The ord function has a type signature of `k -> comparable`.\n\nIt's possible to define the ord function in such a way that AllDict can actually function as a DefaultDict.\n\nAn example of this might be\n\n```\nord : Action -> Int\nord action =\n  case action of\n    Run -> 0\n    Hide -> 1\n    StandStill -> 2\n    _ -> 3\n```\n\nThis will default any Action in the dictionary to 3. You can then set a default like so:\n\n```\n\nmyDict : AllDict Action String Int\nmyDict =\n  AllDict.fromList\n    ord\n    [(Noop, \"Do nothing\")]\n\n-- equal to `\"Do nothing\"`\n-- as `ord` maps anything outside of Run, Hide, StandStill\n-- to the same hash\neat =\n  myDict |>\n    AllDict.get Eat\n\n```\n\nInsert, remove, and query operations all take *O(log n)* time. AllDictionary\nequality with `(==)` is unreliable and should not be used. Instead, use AllDict.eq for element-wise comparisons,\nand AllDict.fullEq for a full comparison\n\n# Types\n@docs AllDict\n\n# Build\n@docs empty, singleton, insert, update, remove\n\n# Query\n@docs isEmpty, member, get, size, getOrd, eq, fullEq\n\n# Combine\n@docs union, intersect, diff\n\n# Lists\n@docs keys, values, toList, fromList\n\n# Transform\n@docs map, foldl, foldr, filter, partition\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "AllDict",
+        "comment": " A dict which works with any type which lifts the type from Core's Dict",
+        "args": [
+          "k",
+          "v",
+          "comparable"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary using a given ord function to calculate hashes ",
+        "type": "(k -> comparable) -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality. Does not check equality of base ",
+        "type": "AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate. ",
+        "type": "(k -> v -> Bool) -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from lowest\nkey to highest key. ",
+        "type": "(k -> v -> b -> b) -> b -> AllDict.AllDict k v comparable -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from highest\nkey to lowest key. ",
+        "type": "(k -> v -> b -> b) -> b -> AllDict.AllDict k v comparable -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary.\nTakes a default value, and a list of key-pair tuples\n ",
+        "type": "(k -> comparable) -> List ( k, v ) -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "fullEq",
+        "comment": " Base + element equality ",
+        "type": "AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable -> Bool"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`. This is useful when you are not sure if a key will be in the\ndictionary.\n\n    animals = fromList [ (\"Tom\", Cat), (\"Jerry\", Mouse) ]\n\n    get \"Tom\"   animals == Just Cat\n    get \"Mouse\" animals == Just Mouse\n    get \"Spike\" animals == Nothing\n\n",
+        "type": "k -> AllDict.AllDict k v comparable -> Maybe.Maybe v"
+      },
+      {
+        "name": "getOrd",
+        "comment": " Helper function for grabbing the default value used in the dict\n",
+        "type": "AllDict.AllDict k v comparable -> k -> comparable"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces value when there is\na collision. ",
+        "type": "k -> v -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. ",
+        "type": "AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a dictionary is empty.\n\n    isEmpty empty == True\n",
+        "type": "AllDict.AllDict k v comparable -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary. ",
+        "type": "AllDict.AllDict k v comparable -> List k"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary. ",
+        "type": "(k -> a -> b) -> AllDict.AllDict k a comparable -> AllDict.AllDict k b comparable"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a key is in a dictionary. ",
+        "type": "k -> AllDict.AllDict k v comparable -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(k -> v -> Bool) -> AllDict.AllDict k v comparable -> ( AllDict.AllDict k v comparable, AllDict.AllDict k v comparable )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made. ",
+        "type": "k -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair. ",
+        "type": "(k -> comparable) -> k -> v -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "size",
+        "comment": " Get the number of key-value pairs in a dict ",
+        "type": "AllDict.AllDict k v comparable -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs. ",
+        "type": "AllDict.AllDict k v comparable -> List ( k, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If there is a collision, preference is given\nto the first dictionary. ",
+        "type": "AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of a dictionary for a specific key with a given function. ",
+        "type": "k -> (Maybe.Maybe v -> Maybe.Maybe v) -> AllDict.AllDict k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary. ",
+        "type": "AllDict.AllDict k v comparable -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

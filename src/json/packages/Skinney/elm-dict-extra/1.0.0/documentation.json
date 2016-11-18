@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Dict.Extra",
+    "comment": " Convenience functions for working with Dict\n\n# List operations\n@docs groupBy\n\n# Manipulation\n@docs removeWhen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "groupBy",
+        "comment": " Takes a key-fn and a list, creates a Dict which maps the key returned from key-fn, to a list of matching elements.\n\n    mary = {groupId: 1, name: \"Mary\"}\n    jack = {groupId: 2, name: \"Jack\"}\n    jill = {groupId: 1, name: \"Jill\"}\n    groupBy .groupId [mary, jack, jill] == Dict.fromList [(2, [jack]), (1, [mary, jill])]\n",
+        "type": "(a -> comparable) -> List a -> Dict.Dict comparable (List a)"
+      },
+      {
+        "name": "removeWhen",
+        "comment": " Keep elements which fails to satisfy the predicate.\n    This is functionaly equivalent to `Dict.filter (not << predicate) dict`.\n\n    removeWhen (\\c v -> v == 1) Dict.fromList [(\"Mary\", 1), (\"Jack\", 2), (\"Jill\", 1)] == Dict.fromList [(\"Jack\", 2)]\n",
+        "type": "(comparable -> v -> Bool) -> Dict.Dict comparable v -> Dict.Dict comparable v"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

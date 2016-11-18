@@ -1,0 +1,126 @@
+[
+  {
+    "name": "DrunkLabel",
+    "comment": " Mistyping as a service\n\n# Model\n@docs Flags, defaultFlags, defaultTypoPool, defaultCursor, Model\n\n# Customization\n@docs Msg\n\n# Wiring\n@docs init, update, view, subscriptions\n\n# Using directly from javascript\n@docs main\n",
+    "aliases": [
+      {
+        "name": "Flags",
+        "comment": " Use Flags to pass in the initial state ",
+        "args": [],
+        "type": "{ value : String , sobriety : Float , brashness : Float , minWait : Time.Time , maxWait : Time.Time , showCursor : Bool , cursor : String , cursorBlinkInterval : Time.Time , typoPool : String , initialSeed : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " Contains the internal state of this component. Use Flags and Msg to alter state ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " You can modify the settings and sobriety on the fly by passing these messages in from the parent component.\n\nMost of these messages will cause the typist to backspace all the way to the beginning to start over.\n\n* `SetValue` changes the target value.\n* `SetSobriety` changes the accuracy percentage. It expects a value between 0 and 1.\n* `SetBrashness` changes the confidence level of the typist. The higher the value, the less likely the\ntypist is to realize they made a mistake. It expects a value between 0 and 1.\n* `SetMinWait` changes the mininum delay between each key press.\n* `SetMaxWait` changes the maximum delay between each key press.\n* `ShowCursor` changes whether the cursor is visible.\n* `SetCursor` changes the string which acts as the cursor.\n* `SetCursorBlinkInterval` changes how fast the cursor blinks\n* `SetTypoPool` changes the pool of characters from which typos are pulled\n",
+        "args": [],
+        "cases": [
+          [
+            "SetValue",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SetSobriety",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "SetBrashness",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "SetMinWait",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "SetMaxWait",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "ShowCursor",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "SetCursor",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SetCursorBlinkInterval",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "SetTypoPool",
+            [
+              "Array.Array Char"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultCursor",
+        "comment": " The default cursor character, char code 9608 ",
+        "type": "String"
+      },
+      {
+        "name": "defaultFlags",
+        "comment": " Sensible teetotaling defaults ",
+        "type": "DrunkLabel.Flags"
+      },
+      {
+        "name": "defaultTypoPool",
+        "comment": " Letters, numbers, and basic symbols ",
+        "type": "Array.Array Char"
+      },
+      {
+        "name": "init",
+        "comment": " Wire `init` into the parent components initialization function ",
+        "type": "DrunkLabel.Flags -> ( DrunkLabel.Model, Platform.Cmd.Cmd DrunkLabel.Msg )"
+      },
+      {
+        "name": "main",
+        "comment": " You can use DrunkLabel directly from javascript with the exposed main function.\n\n    var Elm = require(\"dist/elm/drunk-label.js\");\n    var node = document.getElementById(\"drunk-target\");\n\n    var flags = {\n      value: \"Hello, Elm!\",\n      sobriety: 1,\n      brashness: 0,\n      minWait: 30,\n      maxWait: 200,\n      showCursor: true,\n      cursor: \"\", // defaults to char code 9608\n      cursorBlinkInterval: 500,\n      typoPool: \"\", // defaults to ascii 48-122\n      initialSeed: Date.now()\n    };\n\n    var app = Elm.DrunkLabel.embed(node, flags);\n\nThe use of main is unnecessary when embedded in an Elm app.\n",
+        "type": "Platform.Program DrunkLabel.Flags"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Wiring for the `subscriptions` function ",
+        "type": "DrunkLabel.Model -> Platform.Sub.Sub DrunkLabel.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Wiring for the `update` function ",
+        "type": "DrunkLabel.Msg -> DrunkLabel.Model -> ( DrunkLabel.Model, Platform.Cmd.Cmd DrunkLabel.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Wiring for the `view` function ",
+        "type": "DrunkLabel.Model -> Html.Html DrunkLabel.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,292 @@
+[
+  {
+    "name": "Signal.Alt",
+    "comment": "See [Signal.Prompt](http://package.elm-lang.org/packages/rehno-lindeque/elm-signal-alt/latest/Signal-Prompt) and [Signal.Defered](http://package.elm-lang.org/packages/rehno-lindeque/elm-signal-alt/latest/Signal-Defered) for detailed documentation.\n\n#  Re-export prompt signal interface\n@docs Signal\n@docs foldl\n\n# Re-export defered signal conversion functions\n@docs prompt, defer\n\n# Re-export prompt signal interface from core\n@docs Channel, Message\n@docs constant, map, map2, map3, map4, map5, merge, mergeMany, keepIf, dropIf, keepWhen, dropWhen, dropRepeats, sampleOn, (\u003c~), (~), channel, send, subscribe",
+    "aliases": [
+      {
+        "name": "Message",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "Core.Message a"
+      },
+      {
+        "name": "Channel",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "Core.Channel a"
+      },
+      {
+        "name": "Signal",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "Prompt.Signal a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "\u003c~",
+        "comment": "",
+        "type": "(a -> b) -> Signal a -> Signal b"
+      },
+      {
+        "name": "channel",
+        "comment": "",
+        "type": "a -> Core.Channel a"
+      },
+      {
+        "name": "constant",
+        "comment": "",
+        "type": "a -> Signal a"
+      },
+      {
+        "name": "defer",
+        "comment": "",
+        "type": "Signal a -> Defered.Signal a"
+      },
+      {
+        "name": "dropIf",
+        "comment": "",
+        "type": "(a -> Bool) -> a -> Signal a -> Signal a"
+      },
+      {
+        "name": "dropRepeats",
+        "comment": "",
+        "type": "Signal a -> Signal a"
+      },
+      {
+        "name": "dropWhen",
+        "comment": "",
+        "type": "Signal Bool -> a -> Signal a -> Signal a"
+      },
+      {
+        "name": "foldl",
+        "comment": "",
+        "type": "(a -> b -> b) -> b -> Signal a -> Signal b"
+      },
+      {
+        "name": "keepIf",
+        "comment": "",
+        "type": "(a -> Bool) -> a -> Signal a -> Signal a"
+      },
+      {
+        "name": "keepWhen",
+        "comment": "",
+        "type": "Signal Bool -> a -> Signal a -> Signal a"
+      },
+      {
+        "name": "map",
+        "comment": "",
+        "type": "(a -> result) -> Signal a -> Signal result"
+      },
+      {
+        "name": "map2",
+        "comment": "",
+        "type": "(a -> b -> result) -> Signal a -> Signal b -> Signal result"
+      },
+      {
+        "name": "map3",
+        "comment": "",
+        "type": "(a -> b -> c -> result) -> Signal a -> Signal b -> Signal c -> Signal result"
+      },
+      {
+        "name": "map4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> result) -> Signal a -> Signal b -> Signal c -> Signal d -> Signal result"
+      },
+      {
+        "name": "map5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> result) -> Signal a -> Signal b -> Signal c -> Signal d -> Signal e -> Signal result"
+      },
+      {
+        "name": "merge",
+        "comment": "",
+        "type": "Signal a -> Signal a -> Signal a"
+      },
+      {
+        "name": "mergeMany",
+        "comment": "",
+        "type": "List (Signal a) -> Signal a"
+      },
+      {
+        "name": "prompt",
+        "comment": "",
+        "type": "a -> Defered.Signal a -> Signal a"
+      },
+      {
+        "name": "sampleOn",
+        "comment": "",
+        "type": "Signal a -> Signal b -> Signal b"
+      },
+      {
+        "name": "send",
+        "comment": "",
+        "type": "Core.Channel a -> a -> Core.Message"
+      },
+      {
+        "name": "subscribe",
+        "comment": "",
+        "type": "Core.Channel a -> Signal a"
+      },
+      {
+        "name": "~",
+        "comment": "",
+        "type": "Signal (a -> b) -> Signal a -> Signal b"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Signal.Alt.Internal",
+    "comment": "Internal types and functions. Don't import this unless you know what you're doing.s",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DeferedSignal",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Defered",
+            [
+              "Signal a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "apply",
+        "comment": "",
+        "type": "Signal (a -> b) -> Signal a -> Signal b"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Signal.Prompt",
+    "comment": "Prompt signals\n\n@docs Signal\n@docs foldl",
+    "aliases": [
+      {
+        "name": "Signal",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "Core.Signal a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "foldl",
+        "comment": "An alternative to `foldp` for signals that builds on the intuition carried over from `List.foldl` and `Array.foldl`.\nThis function differs from `foldp` in that the starting value is a seed as is conventional in `foldl` and `foldr`\nrather than being an initialization value as in `foldp`.",
+        "type": "(a -> b -> b) -> b -> Signal a -> Signal b"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Signal.Defered",
+    "comment": "Defered signals\n\n@docs foldl, prompt, defer",
+    "aliases": [
+      {
+        "name": "Signal",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "DeferedSignal a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defer",
+        "comment": "Defer a prompt signal, discarding the initialized value",
+        "type": "Prompt.Signal a -> Signal a"
+      },
+      {
+        "name": "foldl",
+        "comment": "Fold from the past, starting with an empty (defered) signal\n**TODO: This is not yet implemented, please don't use it.**",
+        "type": "(a -> b -> b) -> b -> Signal a -> Signal b"
+      },
+      {
+        "name": "prompt",
+        "comment": "Activate a defered signal to produce a regular (prompt) signal",
+        "type": "a -> Signal a -> Prompt.Signal a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Mouse.Defered",
+    "comment": "Defered signals for the `Mouse` module.\n\n@docs position, x, y, isDown, clicks",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "clicks",
+        "comment": "",
+        "type": "Defered.Signal ()"
+      },
+      {
+        "name": "isDown",
+        "comment": "",
+        "type": "Signal Bool"
+      },
+      {
+        "name": "position",
+        "comment": "",
+        "type": "Signal ( Int, Int )"
+      },
+      {
+        "name": "x",
+        "comment": "",
+        "type": "Defered.Signal Int"
+      },
+      {
+        "name": "y",
+        "comment": "",
+        "type": "Defered.Signal Int"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Touch.Defered",
+    "comment": "Defered signals for the `Touch` module.\n\n@docs Touch\n@docs touches, taps",
+    "aliases": [
+      {
+        "name": "Touch",
+        "comment": "",
+        "args": [],
+        "type": "Touch.Touch"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "taps",
+        "comment": "",
+        "type": "Defered.Signal { x : Int, y : Int }"
+      },
+      {
+        "name": "touches",
+        "comment": "",
+        "type": "Signal (List Touch)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "name": "ListMap",
+    "comment": " An Elm package that implements a key value store a a simple `List` of pairs.  Although this is horribly\ninefficient, it allows you to have any values as the key without having to worry about implementing\ncomparators or hash functions.\n\nUseful if you know that you aren't going to have a very long list.\n\n@docs ListMap, empty, get, set\n",
+    "aliases": [
+      {
+        "name": "ListMap",
+        "comment": " The ListMap type with a specified key and value.  The key can be any type.\n",
+        "args": [
+          "key",
+          "value"
+        ],
+        "type": "List ( key, value )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Return an empty ListMap\n",
+        "type": "ListMap.ListMap key value"
+      },
+      {
+        "name": "get",
+        "comment": " Look for the given key in the ListMap.  If the key can't be found this returns\nNothing.\n",
+        "type": "key -> ListMap.ListMap key value -> Maybe.Maybe value"
+      },
+      {
+        "name": "set",
+        "comment": " Replace or insert the given key value and return the updated ListMap.\n",
+        "type": "key -> value -> ListMap.ListMap key value -> ListMap.ListMap key value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

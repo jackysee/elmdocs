@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Tuple.Map",
+    "comment": "Just a few convenient functions for mapping over pairs.\n\n@docs mapLeft, mapRight, mapEach, mapBoth, map",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "map",
+        "comment": "Synonym for `mapBoth`.",
+        "type": "(a -> a') -> ( a, a ) -> ( a', a' )"
+      },
+      {
+        "name": "mapBoth",
+        "comment": "Apply the given function to both elements of the tuple.",
+        "type": "(a -> a') -> ( a, a ) -> ( a', a' )"
+      },
+      {
+        "name": "mapEach",
+        "comment": "Map over the tuple with two functions, one for each\nelement.",
+        "type": "(a -> a') -> (b -> b') -> ( a, b ) -> ( a', b' )"
+      },
+      {
+        "name": "mapLeft",
+        "comment": "Apply the given function to the left element, leaving the\nright unchanged.",
+        "type": "(a -> a') -> ( a, b ) -> ( a', b )"
+      },
+      {
+        "name": "mapRight",
+        "comment": "Apply the given function to the right element, leaving the\nleft unchanged.",
+        "type": "(b -> b') -> ( a, b ) -> ( a, b' )"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Array.Focus",
+    "comment": "Focus helpers for Array.\n\n# Accessors\n@docs at, updateAt",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "at",
+        "comment": "Create a focus on the element of the array at the given index\n\n    Focus.set (at 1) 0 (Array.fromList [1,2,3]) == (Array.fromList [1,0,3])",
+        "type": "Int -> Focus (Array a) (Maybe a)"
+      },
+      {
+        "name": "updateAt",
+        "comment": "Update the element at the given index\n\n    updateAt 1 (\\x -> x * x) (Array.fromList [1,2,3]) == (Array.fromList [1,4,3])",
+        "type": "Int -> (a -> a) -> Array a -> Array a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

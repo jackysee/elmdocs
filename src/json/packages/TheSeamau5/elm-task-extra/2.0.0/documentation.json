@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Task.Extra",
+    "comment": "Contains a list of convenient functions that cover common use cases\nfor tasks.\n\n# Chaining Tasks\n@docs optional, parallel\n\n# Communicating with Mailboxes\n@docs broadcast, intercept, interceptSuccess, interceptError\n\n# Make operations async\n@docs computeLazyAsync\n\n# Delay a task\n@docs delay\n\n# Looping forever\n@docs loop",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "broadcast",
+        "comment": "Sends a value to a list of addresses at once.",
+        "type": "List (Address a) -> a -> Task error ()"
+      },
+      {
+        "name": "computeLazyAsync",
+        "comment": "Compute a lazy value asynchronously and send the result to an address.",
+        "type": "Address value -> (() -> value) -> Task error ()"
+      },
+      {
+        "name": "delay",
+        "comment": "Delay a task by a given amount of time in milliseconds.",
+        "type": "Time -> Task error value -> Task error value"
+      },
+      {
+        "name": "intercept",
+        "comment": "Intercept the values computed by a task by sending them to appropriate\nan address. The address accepts a Result such as to capture both successful\nvalues and error values. The intercepted task will simply `succeed` on success\nwith the successful value and `fail` on failure with the error thus making\nthe interception process feel as though the task is unaffected.",
+        "type": "Address (Result error value) -> Task error value -> Task error value"
+      },
+      {
+        "name": "interceptError",
+        "comment": "Intercept the error value computed by a task by sending it to the given address.\nThe result task will just `fail` after being sent to the address thus making\nthe interception process feel as though the task is unaffected.",
+        "type": "Address error -> Task error value -> Task error value"
+      },
+      {
+        "name": "interceptSuccess",
+        "comment": "Intercept the successful value computed by a task by sending it to the given address.\nThe result task will just `succeed` after being sent to the address thus making\nthe interception process feel as though the task is unaffected.",
+        "type": "Address value -> Task error value -> Task error value"
+      },
+      {
+        "name": "loop",
+        "comment": "Runs a task repeatedly every given milliseconds.\n\n    loop 1000 myTask -- Runs `myTask` every second",
+        "type": "Time -> Task error value -> Task error ()"
+      },
+      {
+        "name": "optional",
+        "comment": "Similar to `Task.sequence`.\nThe difference with `Task.sequence` is that it doesn't return an `error` if\nany individual task fails. If an error is encountered, then this function will\nmarch on and perform the next task ignoring the error.",
+        "type": "List (Task x value) -> Task y (List value)"
+      },
+      {
+        "name": "parallel",
+        "comment": "Analogous to `Task.sequence`.\nSchedule a list of tasks to be performed in parallel as opposed to in series\nas is the case with `Task.sequence`.\n\n*Note that there is no guarantee that the tasks will be performed or complete\nin the order you have stated. This is why you may use the returned `ThreadID`\nfor re-ordering or consider integrating a sorting mechanism within your program.*",
+        "type": "List (Task error value) -> Task error (List ThreadID)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

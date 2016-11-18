@@ -1,0 +1,28 @@
+[
+  {
+    "name": "GetWithHeaders",
+    "comment": "This library takes from elm-http the minimum needed to\n    add HTTP headers to the request and return them from the response.\n\n# useful methods\n@docs get\n\n# super useful methods that don't really belong in this file\n@docs postJson\n\n# handy type alias\n@docs Headers",
+    "aliases": [
+      {
+        "name": "Headers",
+        "comment": "Headers are represented as a list of key-value tuples.",
+        "args": [],
+        "type": "List ( String, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "get",
+        "comment": "Given headers and a body, return an HTTP GET task\n    that produces headers and a decoded body.",
+        "type": "Json.Decode.Decoder value -> GetWithHeaders.Headers -> String -> Task.Task Http.Error ( GetWithHeaders.Headers, value )"
+      },
+      {
+        "name": "postJson",
+        "comment": "Post Json data with Content-Type set to application/json\n    You may also send and receive other headers.\n\n    Use the Json.Encode package to convert your body into Json.Value",
+        "type": "Json.Decode.Decoder value -> GetWithHeaders.Headers -> String -> Json.Decode.Value -> Task.Task Http.Error ( GetWithHeaders.Headers, value )"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

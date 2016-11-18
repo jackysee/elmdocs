@@ -1,0 +1,166 @@
+[
+  {
+    "name": "Arborist.Framework",
+    "comment": " Arborist is a test framework for asynchronous code.\n\nIt is intended for use mostly with Tasks. Tests are defined as assertions on\ntasks, which are executed in parallel and reported on the command line.\n\n# Declaring tests\n@docs Test, Tests, Name, test\n\n# Assertions\n@docs assert, pass, fail, failWith\n",
+    "aliases": [
+      {
+        "name": "Name",
+        "comment": " The name of a test. ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Tests",
+        "comment": " A list of `Test` cases. ",
+        "args": [],
+        "type": "List Arborist.Framework.Test"
+      }
+    ],
+    "types": [
+      {
+        "name": "Test",
+        "comment": " A test case, usually constructed with the `test` function. ",
+        "args": [],
+        "cases": [
+          [
+            "Test",
+            [
+              "Arborist.Framework.Name",
+              "Arborist.Assertions.Assertion"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "assert",
+        "comment": " `assert` runs a matcher against a value. All values are generally wrapped in tasks.\n\n    let\n      a = Task.succeed 7\n      b = Task.succeed 3\n      c = Task.map2 (+) a b\n    in\n      assert c (equals (Task.succeed 10))\n\nThis function is re-exported from `Arborist.Assertions` for your convenience.\n",
+        "type": "Task.Task a b -> Arborist.Matchers.Matcher a b -> Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "fail",
+        "comment": " `fail` forces the test to fail.\n\nThis function is re-exported from `Arborist.Assertions` for your convenience.\n",
+        "type": "Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "failWith",
+        "comment": " `failWith` forces the test to fail with a reason.\n\nThis function is re-exported from `Arborist.Assertions` for your convenience.\n",
+        "type": "String -> Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "pass",
+        "comment": " `pass` always passes.\n\nThis function is re-exported from `Arborist.Assertions` for your convenience.\n",
+        "type": "Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "test",
+        "comment": " Defines a test case.\n\n    test \"One plus one is most definitely two\" (\n      assert (Task.succeed (1 + 1)) (equals (Task.succeed 2))\n    )\n",
+        "type": "Arborist.Framework.Name -> Arborist.Assertions.Assertion -> Arborist.Framework.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Arborist.Matchers",
+    "comment": " Provides a set of matchers used for assertions.\n\n# Types\n@docs Matcher\n\n# Matchers\n@docs equals, isIntBetween\n@docs not'\n\n# Helpers\n\nThe helpers are generally only to be used when constructing your own matchers.\n\n@docs fails, failsWith\n@docs onFailure, sequenceMessages\n\n",
+    "aliases": [
+      {
+        "name": "Matcher",
+        "comment": " A matcher is a function that accepts a value and asserts some property about it.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "Task.Task a b -> Arborist.Assertions.Assertion"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "equals",
+        "comment": " Asserts that two values are equal.\n\n    assert (Task.succeed \"Hello!\") (equals (Task.succeed \"Hello!\"))\n",
+        "type": "Task.Task a b -> Arborist.Matchers.Matcher a b"
+      },
+      {
+        "name": "fails",
+        "comment": " Asserts that another assertion fails.\n\n    assert (assert (Task.succeed 1) (equals (Task.succeed 2))) fails\n",
+        "type": "Arborist.Matchers.Matcher Arborist.Assertions.FailureMessages ( Bool, Arborist.Assertions.FailureMessages )"
+      },
+      {
+        "name": "failsWith",
+        "comment": " Asserts that another assertion fails with specific failure messages.\n\n    assert (assert (Task.succeed True) (equals (Task.succeed False))) failsWith [\n      (\"Expected\", False),\n      (\"Actual\", True)\n    ]\n",
+        "type": "Arborist.Assertions.FailureMessages -> Arborist.Matchers.Matcher Arborist.Assertions.FailureMessages ( Bool, Arborist.Assertions.FailureMessages )"
+      },
+      {
+        "name": "isIntBetween",
+        "comment": " Asserts an integer is between two others, inclusive.\n\n    assert (Task.succeed 24) (isIntBetween (Task.succeed 12) (Task.succeed 36))\n",
+        "type": "Task.Task a Int -> Task.Task a Int -> Arborist.Matchers.Matcher a Int"
+      },
+      {
+        "name": "not'",
+        "comment": " Negates another matcher.\n\n    assert (Task.succeed 3) (not' (equals (Task.succeed 4)))\n",
+        "type": "Arborist.Matchers.Matcher a b -> Arborist.Matchers.Matcher a b"
+      },
+      {
+        "name": "onFailure",
+        "comment": " When constructing a matcher, adds failure messages.\n\nIf the matching operation results in an error, the error message is included in\nthe failure messages as the first item, with a name of \"Error\".\n\nThis function is often used with `sequenceMessages`.\n\n    equals : Task a b -> Matcher a b\n    equals expected actual =\n      Task.map2 (==) expected actual |> onFailure (sequenceMessages [\n        (\"Expected\", expected),\n        (\"Actual\", actual)\n      ])\n",
+        "type": "Task.Task a Arborist.Assertions.FailureMessages -> Task.Task a Bool -> Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "sequenceMessages",
+        "comment": " Converts a list of failure messages which have value tasks into a task of failure messages.\n\n    let\n      a = Task.succeed 1\n      b = Task.succeed 2\n    in\n      assert (sequenceMessages [(\"A\", a), (\"B\", b)]) (equals (Task.succeed [(\"A\", 1), (\"B\", 2)]))\n",
+        "type": "List ( String, Task.Task a b ) -> Task.Task never Arborist.Assertions.FailureMessages"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Arborist.Assertions",
+    "comment": " Provide a mechanism for asserting that a value (wrapped in a task)\nsuccessfully matches the behaviour outlined by the matcher.\n\n# Assertions\n\n@docs assert, pass, fail, failWith\n\n# Types\n\nThe types provided are generally to be used when constructing your own matchers.\n\n@docs Assertion, FailureMessage, FailureMessages\n",
+    "aliases": [
+      {
+        "name": "Assertion",
+        "comment": " `Assertion` is a task representing either success, failure or error.  ",
+        "args": [],
+        "type": "Task.Task Arborist.Assertions.FailureMessages ( Bool, Arborist.Assertions.FailureMessages )"
+      },
+      {
+        "name": "FailureMessage",
+        "comment": " A `FailureMessage` consists of a name and a value to be displayed on failure.  ",
+        "args": [],
+        "type": "( String, String )"
+      },
+      {
+        "name": "FailureMessages",
+        "comment": " `FailureMessages` is a list of `FailureMessage` values.  ",
+        "args": [],
+        "type": "List Arborist.Assertions.FailureMessage"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assert",
+        "comment": " `assert` runs a matcher against a value. All values are generally wrapped in tasks.\n\n    let\n      a = Task.succeed 7\n      b = Task.succeed 3\n      c = Task.map2 (+) a b\n    in\n      assert c (equals (Task.succeed 10))\n",
+        "type": "Task.Task a b -> (Task.Task a b -> Arborist.Assertions.Assertion) -> Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "fail",
+        "comment": " `fail` forces the test to fail.\n",
+        "type": "Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "failWith",
+        "comment": " `failWith` forces the test to fail with a reason.\n",
+        "type": "String -> Arborist.Assertions.Assertion"
+      },
+      {
+        "name": "pass",
+        "comment": " `pass` always passes.\n",
+        "type": "Arborist.Assertions.Assertion"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

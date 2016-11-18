@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Markov",
+    "comment": "\n\n# Building a Markov chain\n@docs StateMachine, fromInput, fromInputs, addInput\n\n# Inspecting a Markov chain\n@docs probabilities\n\n# Generators\n@docs firstState, nextState, walk\n\n",
+    "aliases": [
+      {
+        "name": "StateMachine",
+        "comment": " The `StateMachine` type holds all the needed info for the Markov chain to run.\n",
+        "args": [
+          "comparable"
+        ],
+        "type": "{ inputs : List (List comparable) , transitions : Markov.Transitions comparable , intervals : comparable -> Markov.Intervals comparable }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addInput",
+        "comment": " Train the Markov chain on some more input.\n",
+        "type": "List comparable -> Markov.StateMachine comparable -> Markov.StateMachine comparable"
+      },
+      {
+        "name": "firstState",
+        "comment": " Generate a random first state.\n",
+        "type": "Markov.StateMachine comparable -> Random.Pcg.Generator (Maybe.Maybe comparable)"
+      },
+      {
+        "name": "fromInput",
+        "comment": " Create a Markov chain with the given input.\n",
+        "type": "List comparable -> Markov.StateMachine comparable"
+      },
+      {
+        "name": "fromInputs",
+        "comment": " Create a Markov chain with the given inputs.\n",
+        "type": "List (List comparable) -> Markov.StateMachine comparable"
+      },
+      {
+        "name": "nextState",
+        "comment": " Generate a random next state given the current state.\n",
+        "type": "Markov.StateMachine comparable -> comparable -> Random.Pcg.Generator (Maybe.Maybe comparable)"
+      },
+      {
+        "name": "probabilities",
+        "comment": " Get probabilities for a given starting state.\n",
+        "type": "Markov.Transitions comparable -> comparable -> Markov.Probabilities comparable"
+      },
+      {
+        "name": "walk",
+        "comment": " Generate a random walk of max length given by the second parameter.\n",
+        "type": "Markov.StateMachine comparable -> Int -> Random.Pcg.Generator (List comparable)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

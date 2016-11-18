@@ -1,0 +1,170 @@
+[
+  {
+    "name": "Piece.Infix",
+    "comment": " Infix synonyms. \n# Operators\n@docs (<>), (+>), (>+>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "+>",
+        "comment": " (+>) = Piece.chainTo ",
+        "type": "Piece.Piece Piece.ForATime a -> (a -> Piece.Piece t a) -> Piece.Piece t a",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "<>",
+        "comment": " (<>) = Piece.followedBy ",
+        "type": "Piece.Piece Piece.ForATime a -> Piece.Piece t a -> Piece.Piece t a",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": ">+>",
+        "comment": " (>+>) f g = \\x -> f x +> g ",
+        "type": "(a -> Piece.Piece Piece.ForATime a) -> (a -> Piece.Piece t a) -> a -> Piece.Piece t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Piece",
+    "comment": " A type and functions on it for building up values as a function of time.\n\nA `Piece t a` is essentially a function `f : Time -> a` with\nan associated duration `dur` which indicates that `f` is\nmeant to be considered as a function on the\ntime interval [0, dur].\n\nThe first type paramater `t` is `ForATime` if that duration\nis some finite time and is `Forever` if `f` is to be considered\na total function.\n\nAs an example, we might have a value \n`circlePos : Piece ForATime (Float, Float)` indicating the position\nof a circle in an animation.\n\n# Formation\n@docs Piece, ForATime, Forever\n\n# Introduction\n@docs forever, for, stayFor, stayForever\n\n# Transformation\n@docs dilate, cycle, sustain, map\n\n# Composition\n@docs followedBy, chainTo\n\n# Elimination\n@docs finalValue, run, layer\n\n",
+    "aliases": [
+      {
+        "name": "Piece",
+        "comment": " ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "Piece.Internal.Piece t a"
+      }
+    ],
+    "types": [
+      {
+        "name": "ForATime",
+        "comment": " A tag type indicating that a `Piece` is defined on some bounded interval. ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Forever",
+        "comment": " A tag type indicating that a `Piece` is defined everywhere ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "chainTo",
+        "comment": " Create a sequence of two Pieces, giving the second access to the\nfinal value of the first. For example,\n\n    pos = for (3 * second) (\\t -> t * (100 / 1*second))\n          `chainTo` \\finalPos -> for (1*second) (\\t -> finalPos - t * (finalPos / 1*second))\n\nConsider using the synonym `(+>)` from `Piece.Infix`.\n",
+        "type": "Piece.Piece Piece.ForATime a -> (a -> Piece.Piece t a) -> Piece.Piece t a"
+      },
+      {
+        "name": "cycle",
+        "comment": " Repeat the given `Piece` forever. ",
+        "type": "Piece.Piece Piece.ForATime a -> Piece.Piece Piece.Forever a"
+      },
+      {
+        "name": "dilate",
+        "comment": " Speed up or slow down time by the given factor. E.g.,\n\n    dilate 0.5 s\n\nis a `Piece` which lasts twice as long as `s` and proceeds half\nas fast ",
+        "type": "Float -> Piece.Piece t a -> Piece.Piece t a"
+      },
+      {
+        "name": "finalValue",
+        "comment": " Get the last value the `Piece` takes on. ",
+        "type": "Piece.Piece Piece.ForATime a -> a"
+      },
+      {
+        "name": "followedBy",
+        "comment": " Sequence two Piece. Thinking of Pieces as functions of\ntime, s1 `followedBy` s2 is a piecewise function which acts like\n`s1` for the duration of s1 and afterwards acts like `s2` (shifted\nby the duration of `s1`). For example, we could write\n\n    for (3 * second) (\\_ -> \"hi\") `followedBy` for (1 * second) (\\_ -> \"bye\")\n\nwhich corresponds to a function of time which is `\"hi\"` for times in\nthe interval `[0, 3]` and `\"bye\"` in the interval `(3, 4]`. Consider \nusing the synonym `(<>)` from `Piece.Infix`.\n",
+        "type": "Piece.Piece Piece.ForATime a -> Piece.Piece t a -> Piece.Piece t a"
+      },
+      {
+        "name": "for",
+        "comment": " Create a `Piece` which runs for the specified duration ",
+        "type": "Time.Time -> (Time.Time -> a) -> Piece.Piece Piece.ForATime a"
+      },
+      {
+        "name": "forever",
+        "comment": " Create a total `Piece`, defined on all times. ",
+        "type": "(Time.Time -> a) -> Piece.Piece Piece.Forever a"
+      },
+      {
+        "name": "layer",
+        "comment": " Documentation forthcoming. ",
+        "type": "Signal.Signal Time.Time -> Signal.Signal (Piece.Piece Piece.ForATime a) -> Signal.Signal (List a)"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Piece.Piece t a -> Piece.Piece t b"
+      },
+      {
+        "name": "run",
+        "comment": " Convert a Signal of `Piece`s into a `Signal` by sampling using the given\n`Signal Time`. ",
+        "type": "Signal.Signal Time.Time -> Signal.Signal (Piece.Piece Piece.Forever a) -> Signal.Signal a"
+      },
+      {
+        "name": "stayFor",
+        "comment": " A constant `Piece`.\n\n    stayFor dur x = for dur (\\_ -> x)\n",
+        "type": "Time.Time -> a -> Piece.Piece Piece.ForATime a"
+      },
+      {
+        "name": "stayForever",
+        "comment": " An eternally constant `Piece` \n\n    stayForever x = forever (\\_ -> x)\n",
+        "type": "a -> Piece.Piece Piece.Forever a"
+      },
+      {
+        "name": "sustain",
+        "comment": " Turn a finite piece into a piece defined for all time by having it\n    just maintain its final value forever. ",
+        "type": "Piece.Piece Piece.ForATime a -> Piece.Piece Piece.Forever a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Piece.Internal",
+    "comment": " Internal implementation of Piece if you need access to it.\n    This is all subject to change.\n    \n@docs Duration, Piece\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Duration",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "ForATime",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "Forever",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Piece",
+        "comment": " ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "cases": [
+          [
+            "Piece",
+            [
+              "Piece.Internal.Duration",
+              "Time.Time -> a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

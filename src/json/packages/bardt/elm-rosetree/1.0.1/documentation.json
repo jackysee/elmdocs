@@ -1,0 +1,133 @@
+[
+  {
+    "name": "RoseTree",
+    "comment": " RoseTree implementation in Elm using Lazy Lists.\n\n# Definition\n@docs RoseTree\n\n# Constructors\n@docs singleton\n\n# Query a rosetree\n@docs root, children, hasChildren\n\n# Common operations\n@docs addChild\n\n# Map-reduce et al.\n@docs map, map2, andMap, map3, map4, map5, zip, zip3, zip4, zip5, flatten, flatMap, andThen, reduce, sum, product\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "RoseTree",
+        "comment": " RoseTree type.\nA rosetree is a tree with a root whose children are themselves\nrosetrees.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Rose",
+            [
+              "a",
+              "Lazy.List.LazyList (RoseTree.RoseTree a)"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addChild",
+        "comment": " Add a child to the rosetree.\n",
+        "type": "RoseTree.RoseTree a -> RoseTree.RoseTree a -> RoseTree.RoseTree a"
+      },
+      {
+        "name": "andMap",
+        "comment": " Chain mapping operations.\n",
+        "type": "RoseTree.RoseTree (a -> b) -> RoseTree.RoseTree a -> RoseTree.RoseTree b"
+      },
+      {
+        "name": "andThen",
+        "comment": " ",
+        "type": "RoseTree.RoseTree a -> (a -> RoseTree.RoseTree b) -> RoseTree.RoseTree b"
+      },
+      {
+        "name": "children",
+        "comment": " Get the children of a rosetree\n",
+        "type": "RoseTree.RoseTree a -> Lazy.List.LazyList (RoseTree.RoseTree a)"
+      },
+      {
+        "name": "flatMap",
+        "comment": " ",
+        "type": "(a -> RoseTree.RoseTree b) -> RoseTree.RoseTree a -> RoseTree.RoseTree b"
+      },
+      {
+        "name": "flatten",
+        "comment": " Flatten a rosetree of rosetrees.\n",
+        "type": "RoseTree.RoseTree (RoseTree.RoseTree a) -> RoseTree.RoseTree a"
+      },
+      {
+        "name": "hasChildren",
+        "comment": " Does the tree have children?\n",
+        "type": "RoseTree.RoseTree a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Map a function over a rosetree\n",
+        "type": "(a -> b) -> RoseTree.RoseTree a -> RoseTree.RoseTree b"
+      },
+      {
+        "name": "map2",
+        "comment": " ",
+        "type": "(a -> b -> c) -> RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c"
+      },
+      {
+        "name": "map3",
+        "comment": " ",
+        "type": "(a -> b -> c -> d) -> RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree d"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e) -> RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree d -> RoseTree.RoseTree e"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f) -> RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree d -> RoseTree.RoseTree e -> RoseTree.RoseTree f"
+      },
+      {
+        "name": "product",
+        "comment": " ",
+        "type": "RoseTree.RoseTree number -> number"
+      },
+      {
+        "name": "reduce",
+        "comment": " ",
+        "type": "(a -> b -> b) -> b -> RoseTree.RoseTree a -> b"
+      },
+      {
+        "name": "root",
+        "comment": " Get the root of a rosetree\n",
+        "type": "RoseTree.RoseTree a -> a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Make a singleton rosetree\n",
+        "type": "a -> RoseTree.RoseTree a"
+      },
+      {
+        "name": "sum",
+        "comment": " ",
+        "type": "RoseTree.RoseTree number -> number"
+      },
+      {
+        "name": "zip",
+        "comment": " ",
+        "type": "RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree ( a, b )"
+      },
+      {
+        "name": "zip3",
+        "comment": " ",
+        "type": "RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree ( a, b, c )"
+      },
+      {
+        "name": "zip4",
+        "comment": " ",
+        "type": "RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree d -> RoseTree.RoseTree ( a, b, c, d )"
+      },
+      {
+        "name": "zip5",
+        "comment": " ",
+        "type": "RoseTree.RoseTree a -> RoseTree.RoseTree b -> RoseTree.RoseTree c -> RoseTree.RoseTree d -> RoseTree.RoseTree e -> RoseTree.RoseTree ( a, b, c, d, e )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

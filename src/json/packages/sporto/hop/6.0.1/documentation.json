@@ -1,0 +1,99 @@
+[
+  {
+    "name": "Hop",
+    "comment": " Navigation and routing utilities for single page applications. See [readme](https://github.com/sporto/hop) for usage.\n\n# Consuming an URL from the browser\n@docs ingest, makeResolver\n\n# Preparing a URL for changing the browser location\n@docs output, outputFromPath\n\n# Work with an Address record\n@docs pathFromAddress, queryFromAddress\n\n# Modify the query string\n@docs addQuery, setQuery, removeQuery, clearQuery\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "addQuery",
+        "comment": "\nAdd query string values (patches any existing values) to an Address record.\n\n    addQuery query address\n\n    addQuery (Dict.Singleton \"b\" \"2\") { path = [], query = Dict.fromList [(\"a\", \"1\")] }\n\n    ==\n\n    { path = [], query = Dict.fromList [(\"a\", \"1\"), (\"b\", \"2\")] }\n\n- query is a dictionary with keys to add\n\nTo remove a key / value pair set the value to \"\"\n",
+        "type": "Hop.Types.Query -> Hop.Types.Address -> Hop.Types.Address"
+      },
+      {
+        "name": "clearQuery",
+        "comment": " Clear all query string values\n\n    clearQuery address\n",
+        "type": "Hop.Types.Address -> Hop.Types.Address"
+      },
+      {
+        "name": "ingest",
+        "comment": "\nConvert a raw url to an Address record. Use this function for 'normalizing' the URL before parsing it.\nThis conversion will take in account your basePath and hash configuration.\n\nE.g. with path routing\n\n    config =\n        { basePath = \"\"\n        , hash = False\n        }\n\n    ingest config \"http://localhost:3000/app/languages/1?k=1\"\n    -->\n    { path = [\"app\", \"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n\nE.g. with path routing and base path\n\n    config =\n        { basePath = \"/app/v1\"\n        , hash = False\n        }\n\n    ingest config \"http://localhost:3000/app/v1/languages/1?k=1\"\n    -->\n    { path = [\"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n\nE.g. with hash routing\n\n    config =\n        { basePath = \"\"\n        , hash = True\n        }\n\n    ingest config \"http://localhost:3000/app#/languages/1?k=1\"\n    -->\n    { path = [\"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n",
+        "type": "Hop.Types.Config -> String -> Hop.Types.Address"
+      },
+      {
+        "name": "makeResolver",
+        "comment": "\n`makeResolver` normalizes the URL using your config and then gives that normalised URL to your parser.\n\nUse this for creating a function to give to `Navigation.makeParser`. \nSee examples in `docs/matching-routes.md`.\n\n    Hop.makeResolver hopConfig parse\n\n`makeResolver` takes 2 arguments.\n\n### Config e.g.\n\n    { basePath = \"\"\n    , hash = False\n    }\n\n### Parse function\n\nA function that receives the normalised path and returns the result of parsing it.\n\n    parse path =\n        path\n            |> UrlParser.parse identity routes\n            |> Result.withDefault NotFoundRoute\n\nYou parse function will receive the path like this:\n\n`http://example.com/users/1` --> 'users/1/'\n\nSo it won't have a leading /, but it will have a trailing /. This is because the way UrlParse works.\n\n### Return value from resolver\n\nAfter being called with a URL the resolver will return a tuple with `(parse result, address)` e.g.\n\n    resolver =\n        Hop.makeResolver hopConfig parse\n\n    resolver \"http://example.com/index.html#/users/2\"\n\n    -->\n\n    ( UserRoute 2, { path = [\"users\", \"2\"], query = ...} )\n\n### Example\n\nA complete example looks like:\n\n    urlParser : Navigation.Parser ( Route, Address )\n    urlParser =\n        let\n            parse path =\n                path\n                    |> UrlParser.parse identity routes\n                    |> Result.withDefault NotFoundRoute\n\n            resolver =\n                Hop.makeResolver hopConfig parse\n        in\n            Navigation.makeParser (.href >> resolver)\n\n",
+        "type": "Hop.Types.Config -> (String -> result) -> String -> ( result, Hop.Types.Address )"
+      },
+      {
+        "name": "output",
+        "comment": "\nConvert an Address record to an URL to feed the browser.\nThis will take in account your basePath and hash config.\n\nE.g. with path routing\n\n    output config { path = [\"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n    -->\n    \"/languages/1?k=1\"\n\nE.g. with hash routing\n\n    output config { path = [\"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n    -->\n    \"#/languages/1?k=1\"\n",
+        "type": "Hop.Types.Config -> Hop.Types.Address -> String"
+      },
+      {
+        "name": "outputFromPath",
+        "comment": "\nConvert a string to an URL to feed the browser.\nThis will take in account your basePath and hash config.\n\nE.g. with path routing\n\n    outputFromPath config \"/languages/1?k=1\"\n    -->\n    \"/languages/1?k=1\"\n\nE.g. with path routing + basePath\n\n    outputFromPath config \"/languages/1?k=1\"\n    -->\n    \"/app/languages/1?k=1\"\n\nE.g. with hash routing\n\n    output config \"/languages/1?k=1\"\n    -->\n    \"#/languages/1?k=1\"\n",
+        "type": "Hop.Types.Config -> String -> String"
+      },
+      {
+        "name": "pathFromAddress",
+        "comment": "\nGet the path as a string from an Address record.\n\n    address = { path = [\"languages\", \"1\" ], query = Dict.singleton \"k\" \"1\" }\n\n    pathFromAddress address\n    -->\n    \"/languages/1\"\n",
+        "type": "Hop.Types.Address -> String"
+      },
+      {
+        "name": "queryFromAddress",
+        "comment": "\nGet the query as a string from an Address record.\n\n    address = { path = [\"app\"], query = Dict.singleton \"k\" \"1\" }\n\n    queryFromAddress address\n    -->\n    \"?k=1\"\n",
+        "type": "Hop.Types.Address -> String"
+      },
+      {
+        "name": "removeQuery",
+        "comment": "\nRemove one key from the query string\n\n    removeQuery key address\n",
+        "type": "String -> Hop.Types.Address -> Hop.Types.Address"
+      },
+      {
+        "name": "setQuery",
+        "comment": "\nSet the whole query string (removes any existing values).\n\n    setQuery query address\n",
+        "type": "Hop.Types.Query -> Hop.Types.Address -> Hop.Types.Address"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Hop.Types",
+    "comment": " Types used in Hop\n\n#Types\n@docs Config, Address, Query\n\n#Factories\n@docs newQuery, newAddress\n",
+    "aliases": [
+      {
+        "name": "Address",
+        "comment": " A Record that represents the current location\nIncludes a `path` and a `query`\n\n    {\n      path: List String,\n      query: Query\n    }\n",
+        "args": [],
+        "type": "{ path : List String, query : Hop.Types.Query }"
+      },
+      {
+        "name": "Config",
+        "comment": " Hop Configuration\n\n- basePath: Only for pushState routing (not hash). e.g. \"/app\".\n- hash: True for hash routing, False for pushState routing.\n\n",
+        "args": [],
+        "type": "{ basePath : String, hash : Bool }"
+      },
+      {
+        "name": "Query",
+        "comment": " A Dict that holds query parameters\n\n    Dict.Dict String String\n",
+        "args": [],
+        "type": "Dict.Dict String String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "newAddress",
+        "comment": "\nCreate an empty Address record\n",
+        "type": "Hop.Types.Address"
+      },
+      {
+        "name": "newQuery",
+        "comment": "\nCreate an empty Query record\n",
+        "type": "Hop.Types.Query"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

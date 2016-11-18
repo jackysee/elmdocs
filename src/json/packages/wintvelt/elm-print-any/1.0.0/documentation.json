@@ -1,0 +1,31 @@
+[
+  {
+    "name": "PrintAny",
+    "comment": " A tiny library for debugging purposes. \nIt prints any record to the console or to the DOM.\n\nYou can simply call `PrintAny.view myRecord` inside your `view` function,\nto print `myRecord` to the DOM.\n\nOr use `PrintAny.log myRecord` anywhere, to get a (somewhat) prettified version of the record in the console.\n\n*PS: You may not want to use this with large records. \nPerformance is not optimal. This module iterates over a\nstring version of the record, which may take long time.*\n\n# Basics\n@docs view,log\n\n# Advanced\n@docs config, viewWithConfig\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Custom configuration of output to DOM.\n\nWith the `viewWithConfig` function, you can configure\n* `Int` indentation in pixels of individual lines\n* `String` class name for rendering the `<pre>` wrapper\n\nUsage:\n\n`viewWithConfig (config 20 \"debug-record\") myRecord`\n\nPrints `record` to the DOM with the wrapper provide with class \"debug-record\",\nand each line indented with increments of 20px.\n\nThe classname allows you to style the wrapper as well as the children elements in css.\n",
+        "type": "Int -> String -> PrintAny.Config"
+      },
+      {
+        "name": "log",
+        "comment": " Prints a stylized version of any record to the DOM.\n\nSo if you have:\n```Elm\nrecord =\n  { name = \"Bill\"\n  , friends = [ \"Casey\", \"Dave\", \"Eve\", \"Fred\"]\n  , coordinates = (125,33)\n  }\n```\nThen `PrintAny.log record` will log to the console:\n```Elm\n{ name = \"Bill\"\n, friends = \n..[ \"Casey\"\n.., \"Dave\"\n.., \"Eve\"\n.., \"Fred\"\n..]\n, coordinates = \n..(125\n..,33\n..)\n}\n```\nThe function will output the original record passed, so you can do:\n\n`myNewRecord = PrintAny.log { record | item = somethingNew }`\n",
+        "type": "a -> a"
+      },
+      {
+        "name": "view",
+        "comment": " renders any record to the Dom.\nUsage:\n```Elm\nview model =\n  div []\n  [ text model.whatEverYouWant\n  , PrintAny.view model\n  ]\n```\n\nThe output is a `<pre>` element.\nInside is a set of indented `<p>` elements representing your record.\n",
+        "type": "a -> Html.Html msg"
+      },
+      {
+        "name": "viewWithConfig",
+        "comment": " renders any record to the Dom, with custom configuration.\n\nUsage:\n```Elm\nview model =\n  div []\n  [ text model.whatEverYouWant\n  , PrintAny.viewWithConfig\n      PrintAny.config 20 \"debug-record\"\n      model\n  ]\n```\n",
+        "type": "PrintAny.Config -> a -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

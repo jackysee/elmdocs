@@ -1,0 +1,52 @@
+[
+  {
+    "name": "SelectableText",
+    "comment": " A selectable text component that renders provided text and lets the \nuser select words using mouse. All the elements of the selection are assigned a \ncustomizable css class. The model contains the selected phrase in form of a\nstring to be used by the parent component.\n\n# Model\n@docs defaultOptions, Model, initialModel\n\n# Messages\n@docs Msg\n\n# View function\n@docs view\n\n# Update function\n@docs update\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The component model. The `selectedPhrase` field contains the selected phrase\nas a string which can be read by the parent component.\n",
+        "args": [],
+        "type": "{ text : SelectableText.Text , mouseOverWordNo : Maybe.Maybe SelectableText.ElementNo , selecting : Bool , selection : Maybe.Maybe SelectableText.Selection , selectedPhrase : Maybe.Maybe String , options : SelectableText.Options }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A type representing component messages. The `RenderText` message should be\nused to pass a string to be parsed and rendered by the component from the parent\ncomponent.\n\n\n    message : Msg -> Cmd Msg\n    message msg =\n      Task.perform identity identity (Task.succeed msg)\n\n    -- inside parent's update function\n    RawTextFetched rawText ->\n      model \n        ! [ message\n              <| SelectableTextMsg \n              <| SelectableText.RenderText rawText\n          ] \n\n",
+        "args": [],
+        "cases": [
+          [
+            "RenderText",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default component options:\n  - **id** = \"text\" - The HTML id attribute for the root tag\n  - **selectedElementClass** = \"selected\" - The CSS class of the selected\n  elements\n  - **placeholderText** = \"\" - A string that will be displayed until a text is\n  provided by the parent using the `RenderText` message\n  - **allowInterparagraphSelection** = True - Whether to allow the selection to\n  span across multiple paragraphs\n  - **maxSelectionLength** = Nothing - Maximal selection length in words\n",
+        "type": "SelectableText.Options"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Initializes the component. Expects user to provide a `defaultOptions`\nrecord with desired extensions.\n\n    import SelectableText exposing (defaultOptions)\n\n    selectableTextModel = \n      SelectableText.initialModel \n        { defaultOptions \n          | id = \"my-text\"\n          , placeholderText = \"Loading...\"\n          , allowInterparagraphSelection = False\n          }\n  \n",
+        "type": "SelectableText.Options -> SelectableText.Model"
+      },
+      {
+        "name": "update",
+        "comment": " The selectable text update function.\n",
+        "type": "SelectableText.Msg -> SelectableText.Model -> ( SelectableText.Model, Platform.Cmd.Cmd SelectableText.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " The selectable text view. Renders a `div` element containing the text.\n",
+        "type": "SelectableText.Model -> Html.Html SelectableText.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

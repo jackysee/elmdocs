@@ -1,0 +1,72 @@
+[
+  {
+    "name": "StickyHeader",
+    "comment": " This module provides a header components which accepts a brand and a list of links. It will react to window's scroll.\r\n\r\n# Definition\r\n@docs Model, Item, Port\r\n\r\n# Helpers\r\n@docs initialModel, Msg, view, update, subscriptions, buildItem, buildActiveItem, buildLogo\r\n\r\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Represent the header's model: attach it to your model\r\n\r\n    -- inserting header's model in your application model\r\n    type alias Model =\r\n        { headerModel: StickyHeader.Model }\r\n",
+        "args": [],
+        "type": "{ style : Animation.State , current : Float , nextGoal : Float , logo : Maybe.Maybe StickyHeader.Logo , brand : Maybe.Maybe StickyHeader.Item , links : List StickyHeader.Item , speedUp : Int , speedDown : Int , active : Maybe.Maybe Int }"
+      },
+      {
+        "name": "Port",
+        "comment": " Type of the port needed to get scroll values.\r\n    \r\n    -- declaring the port in `Ports.elm` file\r\n    -- need to import Scroll.Move\r\n\r\n    port scroll : (Move -> msg) -> Sub msg\r\n",
+        "args": [],
+        "type": "(Scroll.Move -> StickyHeader.Msg) -> Platform.Sub.Sub StickyHeader.Msg"
+      }
+    ],
+    "types": [
+      {
+        "name": "Item",
+        "comment": " An header item has this type, and is returned by helper functions.\r\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The messages being used for scroll events and header's movement. Are to be put in union with your message type.\r\n\r\n    -- extend your own messages\r\n    type Msg\r\n        = StickyHeaderMsg StickyHeader.Msg\r\n        | -- your messages\r\n\r\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "buildActiveItem",
+        "comment": " Build a Item with a title and a list of css classes to be applied\r\n\r\n    -- a header's item just showing the title\r\n    headerBrand = StickyHeader.buildActiveItem \"\" \"#home\" []\r\n",
+        "type": "String -> String -> List String -> StickyHeader.Item"
+      },
+      {
+        "name": "buildItem",
+        "comment": " Build a Item with a title and a list of css classes to be applied\r\n\r\n    -- a header's item just showing the title\r\n    headerBrand = StickyHeader.buildItem \"\" []\r\n",
+        "type": "String -> List String -> StickyHeader.Item"
+      },
+      {
+        "name": "buildLogo",
+        "comment": " Build a Logo item, givene the inner HTML that will be wrapper in a <span> element\r\n    and places on the left of the title. It takes also a list of css classes to be applied.\r\n\r\n    -- a simple logo with an image and the class 'logo' applied on it\r\n    logoImage = \r\n        headerLogo = StickyHeader.buildLogo (img [ src \"logo-elm.png\" ] []) [ \"logo\" ]\r\n",
+        "type": "Html.Html StickyHeader.Msg -> List String -> StickyHeader.Logo"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Helper function to initialize the header's model. It accepts an optional brand and a list of links.\r\n\r\n    -- initializing your model\r\n    initialModel =\r\n        let\r\n            headerBrand = StickyHeader.Item \"\" (Just \"#home\") []\r\n        in\r\n            { headerModel = StickyHeader.initialModel (Just headerBrand) [] }\r\n",
+        "type": "Maybe.Maybe StickyHeader.Logo -> Maybe.Maybe StickyHeader.Item -> List StickyHeader.Item -> StickyHeader.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Provide the subscription to the JS port which brings the scroll values.\r\n    The port named 'scroll' needs to be fed with window's scroll event.\r\n\r\n    -- insert the subscription in you subscription loop\r\n    subscriptions model =\r\n        List.map (Platform.Sub.map StickyHeaderMsg) (StickyHeader.subscriptions model.headerModel)\r\n        |> Sub.batch\r\n\r\n    -- initialize port in your javascript code\r\n    <script>\r\n        // init myApp with Elm.Main\r\n        var mountNode = document.getElementById('main');\r\n        var myApp = Elm.Main.embed(mountNode);\r\n\r\n        // get the port\r\n        var scroll = window.pageYOffset || document.body.scrollTop;\r\n\r\n        // on window's scroll, send the current values\r\n        window.onscroll = function() {\r\n            var newScroll = window.pageYOffset || document.body.scrollTop;\r\n            myApp.ports.scroll.send([scroll, newScroll]);\r\n            scroll = newScroll;\r\n        };\r\n    </script>\r\n\r\n",
+        "type": "StickyHeader.Port -> StickyHeader.Model -> List (Platform.Sub.Sub StickyHeader.Msg)"
+      },
+      {
+        "name": "update",
+        "comment": " Update function to handle the header's messages. It needs to be placed inside your application's update function.\r\n\r\n    -- handling header's messages in your application with update function\r\n    update msg model =\r\n        case msg of\r\n            StickyHeaderMsg subMsg->\r\n                let\r\n                    ( updatedModel, headerCmd ) = StickyHeader.update subMsg model.headerModel\r\n                in\r\n                    ( { model | headerModel = updatedModel }, Cmd.map StickyHeaderMsg headerCmd )\r\n",
+        "type": "StickyHeader.Msg -> StickyHeader.Model -> ( StickyHeader.Model, Platform.Cmd.Cmd a )"
+      },
+      {
+        "name": "view",
+        "comment": " Provides the Html, given an updated model.\r\n    \r\n    -- insert it in your view function\r\n    view model =\r\n        App.map StickyHeaderMsg (StickyHeader.view model.headerModel)\r\n\r\n",
+        "type": "StickyHeader.Model -> Html.Html StickyHeader.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

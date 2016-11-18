@@ -1,0 +1,30 @@
+[
+  {
+    "name": "VersionedJson",
+    "comment": " A couple of functions to ease versioning of your JSON representations.\n\nSee the README for the [examples](https://github.com/billstclair/elm-versioned-json/tree/master/examples) directory for details.\n\n# Classes\n@docs ConverterDict\n\n# Functions\n@docs encodeVersionedJson, decodeVersionedJson\n",
+    "aliases": [
+      {
+        "name": "ConverterDict",
+        "comment": " An Elm Dict mapping version numbers to decoder functions\n",
+        "args": [
+          "x"
+        ],
+        "type": "Dict.Dict Int (String -> Result.Result String x)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeVersionedJson",
+        "comment": " Decode a string saved by `encodeVersionedJson` with the relavant converter function\nfrom a dictionary you provide.\n\nIf the string is not as encoded by `encodeVersionedJson`, use the converter function\nfor version 0.\n",
+        "type": "String -> VersionedJson.ConverterDict x -> Result.Result String x"
+      },
+      {
+        "name": "encodeVersionedJson",
+        "comment": " Convert a value to a versioned Json string\n",
+        "type": "Int -> x -> (x -> String) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

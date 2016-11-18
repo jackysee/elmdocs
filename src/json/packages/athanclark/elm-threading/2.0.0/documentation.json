@@ -1,0 +1,69 @@
+[
+  {
+    "name": "Threading",
+    "comment": "\n@docs ThreadId, Threaded\n\n@docs Msg, Model, init\n\n@docs update\n\n@docs subscriptions\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " ",
+        "args": [
+          "o",
+          "a"
+        ],
+        "type": "{ threadId : Threading.ThreadId , threads : IntDict.IntDict (o -> Platform.Cmd.Cmd a) }"
+      },
+      {
+        "name": "ThreadId",
+        "comment": " ",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "Threaded",
+        "comment": "\nThe API that your ports should understand: there's no need\nto manipulate the `threadId` field; we can just pass it to our output:\n\n```js\napp.ports.getFoo.subscribe(function(threadedInput) {\n  var threadedOutput = {\n    threadId = threadedInput.threadId,\n    payload  = doSomething(threadedInput.payload)\n  };\n  app.ports.gotFoo.send(threadedOutput);\n});\n```\n",
+        "args": [
+          "x"
+        ],
+        "type": "{ threadId : Threading.ThreadId, payload : x }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": "\nTo invoke your threaded port from Elm, just use `Call` with a continuation\nfor handling the output:\n\n```elm\n-- a simple session verifier\ntype Msg\n  = HashMsg (Threading.Msg String String Msg) -- from strings to strings\n  -- | ...\n\ntype alias Model =\n  { hasher : Threading.Model String Msg\n  -- , ...\n  }\n\nupdate action model =\n  case action of\n    -- ...\n    SecurePOST data ->\n      ( -- ...\n      , Task.perform Debug.crash HashMsg <|\n          Task.succeed <| Threading.Call data <| \\hashedData ->\n            -- do something with the hashed data, where this\n               expression here should have a type `Cmd Msg`.\n      )\n```\n",
+        "args": [
+          "i",
+          "o",
+          "a"
+        ],
+        "cases": [
+          [
+            "Call",
+            [
+              "i",
+              "o -> Platform.Cmd.Cmd a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "Threading.Model o a"
+      },
+      {
+        "name": "subscriptions",
+        "comment": "\nGiven a subscription that sends `Threaded` data, we'll turn it into a subscription\nthe threading mechanism can understand. Again, as stated in `update`, you cannot\nuse the same port in multiple threading mechanisms and expect them to be isolated.\nEvery port must be unique, and should be treated as shared state in Elm.\n",
+        "type": "Platform.Sub.Sub (Threading.Threaded o) -> Platform.Sub.Sub (Threading.Msg i o a)"
+      },
+      {
+        "name": "update",
+        "comment": "\nGiven an outgoing port that can accept `Threaded` data, I'll build you a\ntraditional Elm update function, except where the command returned may\neither be another `Msg` for this threading mechanism, or an end-user `a`\nmessage; the type of the message you wish to use this component in.\n\n**Note**: this mechanism allows for multiple asynchronous javascript ports to\nbe issued with this component, but we still expect the threaded component\nto be a singleton in your entire app; if duplicate uses of a `Sub` port\nexist in your Elm app, then **all** instances will be called whenever\nit's called from javascript, thus breaking isolation. Ports should be treated\nas global variables in Elm.\n",
+        "type": "(Threading.Threaded i -> Platform.Cmd.Cmd (Threading.Msg i o a)) -> Threading.Msg i o a -> Threading.Model o a -> ( Threading.Model o a , Platform.Cmd.Cmd (Result.Result (Threading.Msg i o a) a) )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

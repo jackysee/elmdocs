@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Data.Decimal",
+    "comment": "\n\n# The datatype\n@docs Decimal\n\n# From stuff\n@docs fromInt\n@docs fromIntWithExponent\n@docs fromString\n@docs fromFloat\n@docs unsafeFromString\n\n# To stuff\n@docs toString\n@docs toFloat\n\n# Arithmetic operations\n@docs add\n@docs sub\n@docs negate\n@docs mul\n@docs fastdiv\n\n# Rounding\n@docs truncate\n@docs round\n\n# Comparing\n@docs gt\n@docs gte\n@docs eq\n@docs neq\n@docs lt\n@docs lte\n@docs compare\n\n# Misc operations\n@docs abs\n@docs getDigit\n\n# Common numbers\n@docs zero\n@docs one\n@docs minusOne\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Decimal",
+        "comment": "\nThe Decimal data type\nIt is represented as mantissa * 10 ^ exponent\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "abs",
+        "comment": "\nAbsolute value (sets the sign as positive)\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "add",
+        "comment": "\nAddition\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "compare",
+        "comment": "\nCompares two Decimals\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Basics.Order"
+      },
+      {
+        "name": "eq",
+        "comment": "\nEquals\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "fastdiv",
+        "comment": "\nFast and dirty division. Don't expect too much precision from this division. Dividing by zero is bad, and Nothing will be returned.\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Maybe.Maybe Data.Decimal.Decimal"
+      },
+      {
+        "name": "fromFloat",
+        "comment": "\nConverts a Float to a Decimal\n",
+        "type": "Float -> Maybe.Maybe Data.Decimal.Decimal"
+      },
+      {
+        "name": "fromInt",
+        "comment": "\nConverts an Int to a Decimal\n",
+        "type": "Int -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "fromIntWithExponent",
+        "comment": "\nConverts an Int to a Decimal, but specifying the exponent\n",
+        "type": "Int -> Int -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "fromString",
+        "comment": "\nConverts a String to a Maybe Decimal. The string shall be in the format [<sign>]<numbers>[.<numbers>][e<numbers>]\n",
+        "type": "String -> Maybe.Maybe Data.Decimal.Decimal"
+      },
+      {
+        "name": "getDigit",
+        "comment": "\nGets the specified digit from a Decimal. The digits are:\n0 -> units\n1 -> tens\n2 -> hundreds\nand so on\n-1 -> tenths\n-2 -> hundredths\nand so on\n",
+        "type": "Int -> Data.Decimal.Decimal -> Int"
+      },
+      {
+        "name": "gt",
+        "comment": "\nGreater than\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "gte",
+        "comment": "\nGreater than or equals\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "lt",
+        "comment": "\nLess than\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "lte",
+        "comment": "\nLess than or equals\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "minusOne",
+        "comment": "\nThe number -1\n",
+        "type": "Data.Decimal.Decimal"
+      },
+      {
+        "name": "mul",
+        "comment": "\nMultiplication\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "negate",
+        "comment": "\nChanges the sign of a Decimal\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "neq",
+        "comment": "\nNot equals\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Bool"
+      },
+      {
+        "name": "one",
+        "comment": "\nThe number 1\n",
+        "type": "Data.Decimal.Decimal"
+      },
+      {
+        "name": "round",
+        "comment": "\nRounds the Decimal to the specified decimal places\n",
+        "type": "Int -> Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "sub",
+        "comment": "\nSubstraction\n",
+        "type": "Data.Decimal.Decimal -> Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "toFloat",
+        "comment": "\nConverts a Decimal to a Float\n",
+        "type": "Data.Decimal.Decimal -> Float"
+      },
+      {
+        "name": "toString",
+        "comment": "\nConverts a Decimal to a String\n",
+        "type": "Data.Decimal.Decimal -> String"
+      },
+      {
+        "name": "truncate",
+        "comment": "\nTruncates the Decimal to the specified decimal places\n",
+        "type": "Int -> Data.Decimal.Decimal -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "unsafeFromString",
+        "comment": "\nConverts a String to a Decimal,\nbut if the string does not represent\na valid Decimal, it crashes.\nUseful for Decimal constants.\n",
+        "type": "String -> Data.Decimal.Decimal"
+      },
+      {
+        "name": "zero",
+        "comment": "\nThe number 0\n",
+        "type": "Data.Decimal.Decimal"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

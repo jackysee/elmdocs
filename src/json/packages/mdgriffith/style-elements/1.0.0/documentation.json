@@ -1,0 +1,631 @@
+[
+  {
+    "name": "Style.Elements",
+    "comment": "\n\n# Creating Elements\n\n@docs element, elementAs, svgAs, optional, optionalAs, html\n\n# Building the Stylesheet\n\n@docs build, buildAs\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "build",
+        "comment": " Same as `element` except it will render all collected styles into an embedded stylesheet.  This needs to be at the top of all your elements for them to render correctly.\n\nIf this seems unclear, check out the examples!\n\n",
+        "type": "Style.Model -> List (Html.Attribute msg) -> List ( List Style.Model.StyleDefinition, Html.Html msg ) -> Html.Html msg"
+      },
+      {
+        "name": "buildAs",
+        "comment": " ",
+        "type": "String -> Style.Model -> List (Html.Attribute msg) -> List ( List Style.Model.StyleDefinition, Html.Html msg ) -> Html.Html msg"
+      },
+      {
+        "name": "element",
+        "comment": " Turn a style into an element that can be used to build your view.  Renders as a div.\n\n",
+        "type": "Style.Model -> List (Html.Attribute msg) -> List (Style.Element msg) -> Style.Element msg"
+      },
+      {
+        "name": "elementAs",
+        "comment": " Specify an html element name to render.\n",
+        "type": "String -> Style.Model -> List (Html.Attribute msg) -> List (Style.Element msg) -> Style.Element msg"
+      },
+      {
+        "name": "html",
+        "comment": " ",
+        "type": "Html.Html msg -> Style.Element msg"
+      },
+      {
+        "name": "optional",
+        "comment": " Create an element with style variations that can be turned on/off.  The variations will stack.\n\n",
+        "type": "Style.Model -> List ( Style.Variation, Bool ) -> List (Html.Attribute msg) -> List (Style.Element msg) -> Style.Element msg"
+      },
+      {
+        "name": "optionalAs",
+        "comment": "\n",
+        "type": "String -> Style.Model -> List ( Style.Variation, Bool ) -> List (Html.Attribute msg) -> List (Style.Element msg) -> Style.Element msg"
+      },
+      {
+        "name": "svgAs",
+        "comment": " Specify an svg node to use\n",
+        "type": "String -> Style.Model -> List (Html.Attribute msg) -> List (Style.Element msg) -> Style.Element msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Style",
+    "comment": " A different take on styling.\n\nThis module is focused around composing a style.\n\n\n@docs Model, empty\n\n@docs Variation, variation\n\n\n# Layouts\n\nLayouts affect how children are arranged.  It is one of the principles of the library that layout is controlled by the parent element.\n\n@docs Layout, textLayout, tableLayout\n\n@docs Flow, flowUp, flowDown, flowRight, flowLeft\n\n@docs Alignment, alignLeft, alignRight, justify, justifyAll, alignCenter\n\n@docs VerticalAlignment, verticalCenter, verticalStretch, alignTop, alignBottom\n\n\n# Colors\n\n@docs ColorPalette\n\n\n# Float & Inline\n\n@docs Floating, floatLeft, floatRight, floatTopLeft, floatTopRight\n\n\n# Visibility\n\n@docs Visibility, hidden, opacity, transparency, visible\n\n\n# Units\n\nMost values in this library have one set of units chosen and built in to the library.\n\nHowever, `width` and `height` values can be pixels, percent, or auto.\n\n@docs percent, px, auto\n\n\n# Positioning\n\nThe coordinates for the `position` value in the style model are x and y coordinates where right and down are the positive directions, same as the standard coordinate system for svg.\n\nThese coordinates are always rendered in pixels.\n\n@docs RelativeTo, parent, currentPosition, screen\n\n@docs Anchor, topLeft, topRight, bottomLeft, bottomRight\n\n\n# A Note on Padding and Margins\n\nIn CSS `padding` and `margin` are interesting when you have a parent and a child element.  You now have two ways of specifying the spacing of the child element within the parent.  Either the `margin` on the child or the `padding` on the parent.  This causes anxiety in the developer.\n\nIn the effort of having only one good way to accomplish something, we only allow the `padding` property to be set.\n\nWe introduce the `spacing` attribute, which sets the spacing between all _child_ elements (using the margin property).\n\n> __Some exceptions__\n>\n> `inline` elements are not affected by spacing.\n>\n> Floating elements will only respect certain spacing values.\n\n\n# Padding, Spacing, and Borders\n\nPadding, spacing, and border widths are all specified by a tuple of four floats that represent (top, right, bottom, left).  These are all rendered as `px` values.\n\nThe following are convenience functions for setting these values.\n\n@docs all, top, bottom, left, right, topBottom, leftRight, leftRightAndTopBottom, allButTop, allButLeft, allButRight, allButBottom\n\n## Borderstyles\n\n\n@docs BorderStyle, solid, dotted, dashed\n\n\n# Text/Font\n\n@docs Text, Whitespace, normal, pre, preLine, preWrap, noWrap\n\n\n# Background Images\n\n@docs BackgroundImage, Repeat, repeat, repeatX, repeatY, noRepeat, round, space\n\n\n# Shadows\n\n@docs Shadow, shadow, insetShadow, textShadow, dropShadow\n\n\n# Transforms\n\n@docs Transform, translate, rotate, scale\n\n# Filters\n\n@docs Filter, filterUrl, blur, brightness, contrast, grayscale, hueRotate, invert, opacityFilter, saturate, sepia\n\n\n\n# Animations\n@docs Animation, on, onWith, animate, animateOn\n\nAnimation triggers.\n\n@docs Trigger, hover, focus, checked\n\n\n# Media Queries\n\n@docs MediaQuery, mediaQuery\n\n# Element\n@docs Element\n\n\n\n\n\n\n",
+    "aliases": [
+      {
+        "name": "Alignment",
+        "comment": " Used for specifying text alignment and the horizontal alignment of in flex layouts\n",
+        "args": [],
+        "type": "Style.Model.Alignment"
+      },
+      {
+        "name": "Anchor",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Anchor"
+      },
+      {
+        "name": "Animation",
+        "comment": " ",
+        "args": [],
+        "type": "Style.Model.Animated Style.Variation"
+      },
+      {
+        "name": "BackgroundImage",
+        "comment": " ",
+        "args": [],
+        "type": "{ src : String, position : ( Float, Float ), repeat : Style.Repeat }"
+      },
+      {
+        "name": "BorderStyle",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.BorderStyle"
+      },
+      {
+        "name": "ColorPalette",
+        "comment": "\n",
+        "args": [],
+        "type": "{ background : Color.Color , text : Color.Color , border : Color.Color }"
+      },
+      {
+        "name": "Element",
+        "comment": "\n",
+        "args": [
+          "msg"
+        ],
+        "type": "( List Style.Model.StyleDefinition, Html.Html msg )"
+      },
+      {
+        "name": "Filter",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Filter"
+      },
+      {
+        "name": "Floating",
+        "comment": " Only rendered if the parent is a textLayout.  Otherwise it will give a red visual warning.\n",
+        "args": [],
+        "type": "Style.Model.Floating"
+      },
+      {
+        "name": "Flow",
+        "comment": "\n\n",
+        "args": [],
+        "type": "{ wrap : Bool , horizontal : Style.Alignment , vertical : Style.VerticalAlignment }"
+      },
+      {
+        "name": "Layout",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Layout"
+      },
+      {
+        "name": "MediaQuery",
+        "comment": " ",
+        "args": [],
+        "type": "Style.Model.MediaQuery Style.Variation"
+      },
+      {
+        "name": "Model",
+        "comment": " The full model for a style.\n\nSome properties are mandatory makes our styles predictable.\n\n",
+        "args": [],
+        "type": "{ layout : Style.Layout , visibility : Style.Visibility , relativeTo : Style.RelativeTo , anchor : Style.Anchor , position : ( Float, Float ) , cursor : String , width : Style.Length , height : Style.Length , colors : Style.ColorPalette , spacing : ( Float, Float, Float, Float ) , padding : ( Float, Float, Float, Float ) , text : Style.Text , borderStyle : Style.BorderStyle , borderWidth : ( Float, Float, Float, Float ) , cornerRadius : ( Float, Float, Float, Float ) , backgroundImage : Maybe.Maybe Style.BackgroundImage , float : Maybe.Maybe Style.Floating , inline : Bool , shadows : List Style.Shadow , transforms : List Style.Transform , filters : List Style.Filter , properties : List ( String, String ) , animations : List Style.Animation , media : List Style.MediaQuery }"
+      },
+      {
+        "name": "RelativeTo",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.RelativeTo"
+      },
+      {
+        "name": "Repeat",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Repeat"
+      },
+      {
+        "name": "Shadow",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Shadow"
+      },
+      {
+        "name": "Text",
+        "comment": " All values are given in 'px' units except for lineHeight which is given in proportion to the fontsize.\n\nSo, a fontsize of 16 and a lineHeight of 1 means that the lineheight is going to be 16px.\n",
+        "args": [],
+        "type": "{ font : String , size : Float , lineHeight : Float , characterOffset : Maybe.Maybe Float , align : Style.Alignment , whitespace : Style.Whitespace }"
+      },
+      {
+        "name": "Transform",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Transform"
+      },
+      {
+        "name": "Trigger",
+        "comment": " ",
+        "args": [],
+        "type": "Style.Model.Trigger"
+      },
+      {
+        "name": "Variation",
+        "comment": " A `Variation` is a style where all the properties are optional.\n\nThis is used to construct animations and transitions.\n\nOnly properties that make sense in that context are present.\n\n\n",
+        "args": [],
+        "type": "{ visibility : Maybe.Maybe Style.Visibility , position : Maybe.Maybe ( Float, Float ) , cursor : Maybe.Maybe String , width : Maybe.Maybe Style.Length , height : Maybe.Maybe Style.Length , colors : Maybe.Maybe Style.ColorPalette , padding : Maybe.Maybe ( Float, Float, Float, Float ) , spacing : Maybe.Maybe ( Float, Float, Float, Float ) , text : Maybe.Maybe Style.Text , borderStyle : Maybe.Maybe Style.BorderStyle , borderWidth : Maybe.Maybe ( Float, Float, Float, Float ) , cornerRadius : Maybe.Maybe ( Float, Float, Float, Float ) , backgroundImagePosition : Maybe.Maybe ( Float, Float ) , shadows : List Style.Shadow , transforms : List Style.Transform , filters : List Style.Filter , properties : List ( String, String ) }"
+      },
+      {
+        "name": "VerticalAlignment",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.VerticalAlignment"
+      },
+      {
+        "name": "Visibility",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Visibility"
+      },
+      {
+        "name": "Whitespace",
+        "comment": " ",
+        "args": [],
+        "type": "Style.Model.Whitespace"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "alignBottom",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "alignCenter",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignLeft",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignRight",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignTop",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "all",
+        "comment": " ",
+        "type": "a -> ( a, a, a, a )"
+      },
+      {
+        "name": "allButBottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButLeft",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButRight",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButTop",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "animate",
+        "comment": " Begin an animation as soon as the elment is mounted.\n",
+        "type": "{ duration : Time.Time , easing : String , repeat : Float , steps : List ( Float, Style.Variation ) } -> Style.Animation"
+      },
+      {
+        "name": "animateOn",
+        "comment": " Begin an animation on a trigger.\n\n",
+        "type": "Style.Trigger -> { duration : Time.Time , easing : String , repeat : Float , steps : List ( Float, Style.Variation ) } -> Style.Animation"
+      },
+      {
+        "name": "auto",
+        "comment": " ",
+        "type": "Style.Length"
+      },
+      {
+        "name": "blur",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "bottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "bottomLeft",
+        "comment": " ",
+        "type": "Style.Anchor"
+      },
+      {
+        "name": "bottomRight",
+        "comment": " ",
+        "type": "Style.Anchor"
+      },
+      {
+        "name": "brightness",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "checked",
+        "comment": " ",
+        "type": "Style.Trigger"
+      },
+      {
+        "name": "contrast",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "currentPosition",
+        "comment": " ",
+        "type": "Style.RelativeTo"
+      },
+      {
+        "name": "dashed",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "dotted",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "dropShadow",
+        "comment": "\n",
+        "type": "{ offset : ( Float, Float ), blur : Float, color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "empty",
+        "comment": " ",
+        "type": "Style.Model"
+      },
+      {
+        "name": "filterUrl",
+        "comment": " ",
+        "type": "String -> Style.Filter"
+      },
+      {
+        "name": "floatLeft",
+        "comment": " Float something to the left.  Only valid in textLayouts.\n\nWill ignore any left spacing that it's parent has set for it.\n\n",
+        "type": "Style.Floating"
+      },
+      {
+        "name": "floatRight",
+        "comment": "\n\n",
+        "type": "Style.Floating"
+      },
+      {
+        "name": "floatTopLeft",
+        "comment": " Same as floatLeft, except it will ignore any top spacing that it's parent has set for it.\n\nThis is useful for floating things at the beginning of text.\n\n",
+        "type": "Style.Floating"
+      },
+      {
+        "name": "floatTopRight",
+        "comment": "\n\n",
+        "type": "Style.Floating"
+      },
+      {
+        "name": "flowDown",
+        "comment": "\n\n",
+        "type": "Style.Flow -> Style.Layout"
+      },
+      {
+        "name": "flowLeft",
+        "comment": " ",
+        "type": "Style.Flow -> Style.Layout"
+      },
+      {
+        "name": "flowRight",
+        "comment": " ",
+        "type": "Style.Flow -> Style.Layout"
+      },
+      {
+        "name": "flowUp",
+        "comment": " This is a flexbox based layout\n",
+        "type": "Style.Flow -> Style.Layout"
+      },
+      {
+        "name": "focus",
+        "comment": " ",
+        "type": "Style.Trigger"
+      },
+      {
+        "name": "grayscale",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "hidden",
+        "comment": "\n",
+        "type": "Style.Visibility"
+      },
+      {
+        "name": "hover",
+        "comment": " ",
+        "type": "Style.Trigger"
+      },
+      {
+        "name": "hueRotate",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "insetShadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ) , size : Float , blur : Float , color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "invert",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "justify",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "justifyAll",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "left",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "leftRight",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "leftRightAndTopBottom",
+        "comment": " ",
+        "type": "Float -> Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "mediaQuery",
+        "comment": " ",
+        "type": "String -> Style.Variation -> Style.MediaQuery"
+      },
+      {
+        "name": "noRepeat",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "noWrap",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "normal",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "on",
+        "comment": " Create a transition by specifying a pseudo class and the target style as a Variation.  For example to make a transition on hover, you'd do the following:\n\n```on hover { variation | colors = linkHover }```\n\nDefaults to duration 300, easing as \"ease\"\n\n",
+        "type": "Style.Trigger -> Style.Variation -> Style.Animation"
+      },
+      {
+        "name": "onWith",
+        "comment": " Set a custom duration and easing for the transition.\n\nEasings are given as strings as they would be in css:\n\nhttps://developer.mozilla.org/en-US/docs/Web/CSS/animation-timing-function\n\n",
+        "type": "Style.Trigger -> { duration : Time.Time, easing : String } -> Style.Variation -> Style.Animation"
+      },
+      {
+        "name": "opacity",
+        "comment": " A value between 0 and 1\n",
+        "type": "Float -> Style.Visibility"
+      },
+      {
+        "name": "opacityFilter",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "parent",
+        "comment": " ",
+        "type": "Style.RelativeTo"
+      },
+      {
+        "name": "percent",
+        "comment": " ",
+        "type": "Float -> Style.Length"
+      },
+      {
+        "name": "pre",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "preLine",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "preWrap",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "px",
+        "comment": " ",
+        "type": "Float -> Style.Length"
+      },
+      {
+        "name": "repeat",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "repeatX",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "repeatY",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "right",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "rotate",
+        "comment": " Units always rendered as `radians`.\n\nUse `x * deg` or `x * turn` from the standard library if you want to use a different set of units.\n",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "round",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "saturate",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "scale",
+        "comment": " ",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "screen",
+        "comment": " ",
+        "type": "Style.RelativeTo"
+      },
+      {
+        "name": "sepia",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "shadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ) , size : Float , blur : Float , color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "solid",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "space",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "tableLayout",
+        "comment": " This is the same as setting an element to `display:table`.\n\n",
+        "type": "Style.Layout"
+      },
+      {
+        "name": "textLayout",
+        "comment": " This is the only layout that allows for child elements to use `float` or `inline`.\n\nIf you try to assign a float or make an element inline that is not the child of a textLayout, the float or inline will be ignored and the element will be highlighted in red with a large warning.\n\nBesides this, all immediate children are arranged as if they were `display: block`.\n\n",
+        "type": "Style.Layout"
+      },
+      {
+        "name": "textShadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ), blur : Float, color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "top",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "topBottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "topLeft",
+        "comment": " ",
+        "type": "Style.Anchor"
+      },
+      {
+        "name": "topRight",
+        "comment": " ",
+        "type": "Style.Anchor"
+      },
+      {
+        "name": "translate",
+        "comment": " Units are always as pixels\n",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "transparency",
+        "comment": " A value between 0 and 1\n",
+        "type": "Float -> Style.Visibility"
+      },
+      {
+        "name": "variation",
+        "comment": " An empty `Variation`\n",
+        "type": "Style.Variation"
+      },
+      {
+        "name": "verticalCenter",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "verticalStretch",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "visible",
+        "comment": "\n",
+        "type": "Style.Visibility"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

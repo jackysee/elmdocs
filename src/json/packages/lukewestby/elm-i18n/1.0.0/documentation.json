@@ -1,0 +1,35 @@
+[
+  {
+    "name": "I18n",
+    "comment": " I18n helps you generate a lookup function to easily internationalize your\napplications.\n\n@docs Language, withLanguage, createLookup\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Language",
+        "comment": " Type representing a language identifier\n",
+        "args": [],
+        "cases": [
+          [
+            "Language",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "createLookup",
+        "comment": " Creates a function that can be used to lookup and interpolate a key for a\ngiven language, returning the key as the value if the language or key cannot\nbe found in the configuration\n\n    french =\n        Language \"fr-fr\"\n\n    i18nText =\n        createLookup\n            [ withLanguage\n                french\n                [ ( \"good day\", \"bonjour\" )\n                , ( \"I am {0} years old.\", \"J'ai {0} ans.\" )\n                ]\n\n    result =\n        i18nText french \"I am {0} years old.\" [ \"24\" ]\n\n    {- result == \"J'ai 24 ans.\" -}\n",
+        "type": "List ( I18n.Language, List ( String, String ) ) -> I18n.Language -> String -> List String -> String"
+      },
+      {
+        "name": "withLanguage",
+        "comment": " Combines a language and a list of entries for consumption by createLookup\n",
+        "type": "I18n.Language -> List ( String, String ) -> ( I18n.Language, List ( String, String ) )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

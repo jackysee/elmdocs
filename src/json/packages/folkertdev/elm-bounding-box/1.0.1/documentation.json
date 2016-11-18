@@ -1,0 +1,189 @@
+[
+  {
+    "name": "BoundingBox",
+    "comment": " A 2D BoundingBox type\n\n\n**Note:** Look in the `Vec2` module documentation\nhow to supply points of the correct type.\n\n# Types\n@docs BoundingBox\n\n# Construct\n@docs fromCorners, fromPoint, fromPoints, insert, insertMany\n\n# Extract\n@docs corners, center, topRight, topLeft, bottomRight, bottomLeft, width, height\n\n# Membership\n@docs contains, onOuterEdge, inside, outside, intersects\n\n# Transform\n@docs union, intersection, translate, scale\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "BoundingBox",
+        "comment": " A bounding box is defined by two points: a\nlower and an upper corner.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "bottomLeft",
+        "comment": " Get the bottom-left corner of a bounding box\n\n    fromCorners (vec2 0 10) (vec2 20 30)\n        |> bottomLeft\n        -- == vec2 0 10\n",
+        "type": "BoundingBox.BoundingBox -> Vec2.Vec2"
+      },
+      {
+        "name": "bottomRight",
+        "comment": " Get the bottom-right corner of a bounding box\n\n    fromCorners (vec2 0 10) (vec2 20 30)\n        |> bottomLeft\n        -- == vec2 20 10\n",
+        "type": "BoundingBox.BoundingBox -> Vec2.Vec2"
+      },
+      {
+        "name": "center",
+        "comment": " Get the center of a bounding box\n\n    fromCorners (vec2 0 0) (vec2 10 10)\n        |> center\n        -- == vec2 5 5\n",
+        "type": "BoundingBox.BoundingBox -> Vec2.Vec2"
+      },
+      {
+        "name": "contains",
+        "comment": " Check whether a point lies within a bounding box\n\n    bbox = fromCorners (vec2 0 0) (vec2 10 10)\n\n    contains (vec2  5  5) bbox == True\n    contains (vec2 10 10) bbox == True\n    contains (vec2 20 10) bbox == False\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox -> Bool"
+      },
+      {
+        "name": "corners",
+        "comment": " Get the lower and upper corner in a tuple\n",
+        "type": "BoundingBox.BoundingBox -> ( Vec2.Vec2, Vec2.Vec2 )"
+      },
+      {
+        "name": "fromCorners",
+        "comment": " Construct a bounding box from two vectors\n\n**Note:** `corner1 <= corner2` doesn't need to be true:\nThe lower and upper corners are calculated from the four given\nextremes.\n\n    fromCorners (vec2 0 100) (vec2 20 40)\n        |> corners\n        -- == ( vec2 0 40, vec2 20 100)\n\nThis way a BoundingBox is always valid (i.e. its\nheight and width are positive values).\n",
+        "type": "Vec2.Vec2 -> Vec2.Vec2 -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "fromPoint",
+        "comment": " Construct a bounding box from a single vertex\n\n    fromPoint (vec2 20 40)\n        |> corners\n        -- == ( vec2 20 40, vec2 20 40 )\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "fromPoints",
+        "comment": " Construct a bounding box from a list of vertices.\nThis function needs to return maybe because the input list may\nbe empty.\n",
+        "type": "List Vec2.Vec2 -> Maybe.Maybe BoundingBox.BoundingBox"
+      },
+      {
+        "name": "height",
+        "comment": " Get the width of a bounding box\n",
+        "type": "BoundingBox.BoundingBox -> Float"
+      },
+      {
+        "name": "insert",
+        "comment": " Extend a bounding box to include a vector. If\nthe vector already lies within the bounding box, nothing changes.\n\n\n    bbox = fromCorners (vec2 0 0) (vec2 10 10)\n\n    insert (vec2 20 20) bbox\n        |> corners\n        -- == ( vec2 0 0, vec2 20 20 )\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "insertMany",
+        "comment": " Extend a bounding box with a list of vertices.\n",
+        "type": "List Vec2.Vec2 -> BoundingBox.BoundingBox -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "inside",
+        "comment": " Check whether the first bounding box is contained by the second.\n\nThe boxes may still intersect at their boundaries\n\n    empty = fromCorners (vec2 0 0) (vec2 0 0)\n    other = fromCorners (vec2 0 0) (vec2 10 10)\n\n    inside empty empty == True\n    inside empty other == True\n    inside other empty == False\n",
+        "type": "BoundingBox.BoundingBox -> BoundingBox.BoundingBox -> Bool"
+      },
+      {
+        "name": "intersection",
+        "comment": " Just the overlapping area between two bounding boxes if there is one, otherwise Nothing.\n",
+        "type": "BoundingBox.BoundingBox -> BoundingBox.BoundingBox -> Maybe.Maybe BoundingBox.BoundingBox"
+      },
+      {
+        "name": "intersects",
+        "comment": " Check whether two bounding boxes have at least one point in common.\n",
+        "type": "BoundingBox.BoundingBox -> BoundingBox.BoundingBox -> Bool"
+      },
+      {
+        "name": "onOuterEdge",
+        "comment": " Check whether a vector lies on the outer edge of a bounding box\n\nUseful for implementing strict membership, for example\n\n    containsStrict : Vec2 -> BoundingBox -> Bool\n    containsStrict p b =\n        contains p b && not (onOuterEdge p b)\n\n\n    insideStrict ((BoundingBox lower upper) as u) v =\n        inside u v && not (onOuterEdge lower v || onOuterEdge upper v)\n\n    outsideStrict ((BoundingBox lower upper) as u) v =\n        outside u v && not (onOuterEdge lower v || onOuterEdge upper v)\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox -> Bool"
+      },
+      {
+        "name": "outside",
+        "comment": " Check whether the first bounding box lies outside of the second.\n\nThe boxes may still intersect at their boundaries\n",
+        "type": "BoundingBox.BoundingBox -> BoundingBox.BoundingBox -> Bool"
+      },
+      {
+        "name": "scale",
+        "comment": " Scale a bounding box component-wise by a vector\n\n    fromCorners (vec2 0 0) (vec2 10 10)\n        |> scale (vec2 2 2)\n        |> corners\n        -- == ( vec2 0 0, vec2 20 20 )\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "topLeft",
+        "comment": " Get the top-left corner of a bounding box\n\n    fromCorners (vec2 0 10) (vec2 20 30)\n        |> topLeft\n        -- == vec2 0 30\n",
+        "type": "BoundingBox.BoundingBox -> Vec2.Vec2"
+      },
+      {
+        "name": "topRight",
+        "comment": " Get the top-right corner of a bounding box\n\n    fromCorners (vec2 0 10) (vec2 20 30)\n        |> topRight\n        -- == vec2 20 30\n",
+        "type": "BoundingBox.BoundingBox -> Vec2.Vec2"
+      },
+      {
+        "name": "translate",
+        "comment": " Translate a bounding box by a vector.\n\n    fromCorners (vec2 0 0) (vec2 10 10)\n        |> translate (vec2 5 -5)\n        |> corners\n        -- == ( vec2 5 -5, vec2 15 5 )\n",
+        "type": "Vec2.Vec2 -> BoundingBox.BoundingBox -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two bounding boxes into one.\n\n    bbox1 = fromCorners (vec 0 0) (vec 10 10)\n    bbox2 = fromCorners (vec 2 2) (vec 12  5)\n\n    union bbox1 bbox2\n        |> corners\n        -- == ( vec2 0 0, vec2 12 10 )\n",
+        "type": "BoundingBox.BoundingBox -> BoundingBox.BoundingBox -> BoundingBox.BoundingBox"
+      },
+      {
+        "name": "width",
+        "comment": " Get the width of a bounding box\n",
+        "type": "BoundingBox.BoundingBox -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Vec2",
+    "comment": "\n\nCurrently, this module is a wrapper for [elm-community/elm-linear-algebra](http://package.elm-lang.org:8018/packages/elm-community/elm-linear-algebra/latest).\nIf you already use that package, the functions in this package will just work without conversion.\n\nThe elm-linear-algebra conversion functions are re-exported for convenience if you use\nsome other type to represent locations in 2D space.\n\n\n# Vec2\n@docs Vec2\n\n# Conversion\n@docs fromTuple, toTuple, fromRecord, toRecord\n\n# Extrema\n@docs minimal, maximal\n\n# Helpers\n@docs pointwise, pointwiseTuple, fold\n",
+    "aliases": [
+      {
+        "name": "Vec2",
+        "comment": " The vector type that this package uses. Currently\nequivalent to `Math.Vector.Vec2` but this may change in the future.\n",
+        "args": [],
+        "type": "Math.Vector2.Vec2"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "fold",
+        "comment": " Consider a 2-tuple as a 2-element list and\nuse foldr on it.\n",
+        "type": "(a -> b -> b) -> b -> ( a, a ) -> b"
+      },
+      {
+        "name": "fromRecord",
+        "comment": " Convert a record to a vector.\n",
+        "type": "{ x : Float, y : Float } -> Vec2.Vec2"
+      },
+      {
+        "name": "fromTuple",
+        "comment": " Convert a tuple to a vector.\n",
+        "type": "( Float, Float ) -> Vec2.Vec2"
+      },
+      {
+        "name": "maximal",
+        "comment": " Select the maximal value for each component\n",
+        "type": "Vec2.Vec2 -> Vec2.Vec2 -> Vec2.Vec2"
+      },
+      {
+        "name": "minimal",
+        "comment": " Select the minimal value for each component\n",
+        "type": "Vec2.Vec2 -> Vec2.Vec2 -> Vec2.Vec2"
+      },
+      {
+        "name": "pointwise",
+        "comment": " Apply a function pointwise to a `Vec2`.\n\n    maximal = pointwise max\n",
+        "type": "(Float -> Float -> Float) -> Vec2.Vec2 -> Vec2.Vec2 -> Vec2.Vec2"
+      },
+      {
+        "name": "pointwiseTuple",
+        "comment": " Apply a function pointwise, but let the result be a tuple.\nBecause the result is not a `Vec2`, the applied function can\nhave any return type, not just `Float`.\n",
+        "type": "(Float -> Float -> a) -> Vec2.Vec2 -> Vec2.Vec2 -> ( a, a )"
+      },
+      {
+        "name": "toRecord",
+        "comment": " Convert a vector to a record.\n",
+        "type": "Vec2.Vec2 -> { x : Float, y : Float }"
+      },
+      {
+        "name": "toTuple",
+        "comment": " Convert a vector to a tuple.\n",
+        "type": "Vec2.Vec2 -> ( Float, Float )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

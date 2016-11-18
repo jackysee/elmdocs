@@ -1,0 +1,224 @@
+[
+  {
+    "name": "Constraint.Monoid",
+    "comment": "\n@docs Monoid\n@docs nTimes\n",
+    "aliases": [
+      {
+        "name": "Monoid",
+        "comment": "\nGeneralized identity.\n",
+        "args": [
+          "a",
+          "r"
+        ],
+        "type": "Constraint.Semigroup.Semigroup a { r | identity : a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "nTimes",
+        "comment": "\nConcatenate a value `n` times.\n",
+        "type": "Int -> a -> Constraint.Constraint (Constraint.Monoid.Monoid a r) a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Constraint.Ord",
+    "comment": "\n@docs Ord\n@docs ordEither, ordList, ordMaybe\n@docs max, min\n",
+    "aliases": [
+      {
+        "name": "Ord",
+        "comment": "\nGeneralized ordering.\n",
+        "args": [
+          "a",
+          "r"
+        ],
+        "type": "{ r | compare : a -> a -> Basics.Order }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "max",
+        "comment": "\nFind the larger of two values.\n",
+        "type": "a -> a -> Constraint.Constraint (Constraint.Ord.Ord a r) a"
+      },
+      {
+        "name": "min",
+        "comment": "\nFind the smaller of two values.\n",
+        "type": "a -> a -> Constraint.Constraint (Constraint.Ord.Ord a r) a"
+      },
+      {
+        "name": "ordEither",
+        "comment": "\nIf we have an `Ord a r` and an `Ord b r`, then we can make an `Ord (Result a b) r`.\n",
+        "type": "Constraint.Ord.Ord a r -> Constraint.Ord.Ord b r -> Constraint.Ord.Ord (Result.Result a b) r"
+      },
+      {
+        "name": "ordList",
+        "comment": "\nIf we have an `Ord a r`, then we can make an `Ord (List a) r`.\n",
+        "type": "Constraint.Ord.Ord a r -> Constraint.Ord.Ord (List a) r"
+      },
+      {
+        "name": "ordMaybe",
+        "comment": "\nIf we have an `Ord a r`, then we can make an `Ord (Maybe a) r`.\n",
+        "type": "Constraint.Ord.Ord a r -> Constraint.Ord.Ord (Maybe.Maybe a) r"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Constraint.Eq",
+    "comment": "\n@docs Eq\n@docs eqEither, eqList, eqMaybe\n@docs (===), (=/=)\n",
+    "aliases": [
+      {
+        "name": "Eq",
+        "comment": "\nGeneralized equality.\n",
+        "args": [
+          "a",
+          "r"
+        ],
+        "type": "{ r | eq : a -> a -> Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "=/=",
+        "comment": "\nNegation of `(===)`.\n",
+        "type": "a -> a -> Constraint.Constraint (Constraint.Eq.Eq a r) Bool"
+      },
+      {
+        "name": "===",
+        "comment": "\nOperator alias for `eq`.\n",
+        "type": "a -> a -> Constraint.Constraint (Constraint.Eq.Eq a r) Bool"
+      },
+      {
+        "name": "eqEither",
+        "comment": "\nIf we have an `Eq a r` and an `Eq b r`, then we can make an `Eq (Result a b) r`.\n",
+        "type": "Constraint.Eq.Eq a r -> Constraint.Eq.Eq b r -> Constraint.Eq.Eq (Result.Result a b) r"
+      },
+      {
+        "name": "eqList",
+        "comment": "\nIf we have an `Eq a r`, then we can make an `Eq (List a) r`.\n",
+        "type": "Constraint.Eq.Eq a r -> Constraint.Eq.Eq (List a) r"
+      },
+      {
+        "name": "eqMaybe",
+        "comment": "\nIf we have an `Eq a r`, then we can make an `Eq (Maybe a) r`.\n",
+        "type": "Constraint.Eq.Eq a r -> Constraint.Eq.Eq (Maybe.Maybe a) r"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Constraint.Semigroup",
+    "comment": "\n@docs Semigroup\n@docs (++)\n",
+    "aliases": [
+      {
+        "name": "Semigroup",
+        "comment": "\nGeneralized concatenation.\n",
+        "args": [
+          "a",
+          "r"
+        ],
+        "type": "{ r | concat : a -> a -> a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "++",
+        "comment": "\nOperator alias for `concat`.\n",
+        "type": "a -> a -> Constraint.Constraint (Constraint.Semigroup.Semigroup a r) a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Constraint",
+    "comment": "\n@docs Constraint\n@docs (<&>), (>>=)\n@docs andThen, ap, ask, bind, constraints, map, pam, pure, run, with\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Constraint",
+        "comment": "\nThis type goes by many names: Reader, Kleisli, Function, etc.\n\nThis is simply a wrapper around `a -> b`.\n",
+        "args": [
+          "r",
+          "a"
+        ],
+        "cases": [
+          [
+            "Constraint",
+            [
+              "r -> a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "<&>",
+        "comment": "\nAn operator alias for `pam`.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "Constraint.Constraint r a -> (a -> b) -> Constraint.Constraint r b"
+      },
+      {
+        "name": ">>=",
+        "comment": "\nAn operator alias for `andThen`.\n",
+        "type": "Constraint.Constraint r a -> (a -> Constraint.Constraint r b) -> Constraint.Constraint r b"
+      },
+      {
+        "name": "andThen",
+        "comment": "\nLike `bind` but flipped.\n",
+        "type": "Constraint.Constraint r a -> (a -> Constraint.Constraint r b) -> Constraint.Constraint r b"
+      },
+      {
+        "name": "ap",
+        "comment": "\nApplies the output of a `Constraint` to the output of another `Constraint`\n",
+        "type": "Constraint.Constraint r (a -> b) -> Constraint.Constraint r a -> Constraint.Constraint r b"
+      },
+      {
+        "name": "ask",
+        "comment": "\nThreads the input directly through the output.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "Constraint.Constraint a a"
+      },
+      {
+        "name": "bind",
+        "comment": "\nSubstitutes a value in a `Constraint`.\n",
+        "type": "(a -> Constraint.Constraint r b) -> Constraint.Constraint r a -> Constraint.Constraint r b"
+      },
+      {
+        "name": "constraints",
+        "comment": "\nAn alias for `ask` that sometimes makes things easier to read.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "Constraint.Constraint a a"
+      },
+      {
+        "name": "map",
+        "comment": "\nTransforms the output with the given function.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "(a -> b) -> Constraint.Constraint r a -> Constraint.Constraint r b"
+      },
+      {
+        "name": "pam",
+        "comment": "\nLike `map` but flipped.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "Constraint.Constraint r a -> (a -> b) -> Constraint.Constraint r b"
+      },
+      {
+        "name": "pure",
+        "comment": "\nEmbeds a value in a `Constraint`.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "a -> Constraint.Constraint r a"
+      },
+      {
+        "name": "run",
+        "comment": "\nUnwraps the `Constraint` constructor.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "Constraint.Constraint r a -> r -> a"
+      },
+      {
+        "name": "with",
+        "comment": "\nLike `run` but flipped.\n\nDue to parametricity, this documentation is worthless,\nas there is exactly one implementation of this function.\n",
+        "type": "r -> Constraint.Constraint r a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

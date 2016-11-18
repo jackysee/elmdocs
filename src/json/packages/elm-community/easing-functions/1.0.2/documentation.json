@@ -1,0 +1,198 @@
+[
+  {
+    "name": "Ease",
+    "comment": " An easing function is used in animation to make a transition between two values appear more lifelike or interesting.\nEasing functions can make sliding panels or bouncing menus appear to be physical objects.\n\nAll easing functions expect inputs to be bewteen zero and one, and will typically output in that range. Easing \"in\"\nhappens at the start of the transition, easing \"out\" at the end, and \"inOut\" on both sides. The functions provided here\nare meant to match the graphical examples on [easings.net](http://easings.net/).\n\n```elm\nimport Ease\nn = 10\n\nList.map (\\i -> Ease.inQuad (i/n)) [0..n]\n> [0, 0.01, 0.04, 0.09, 0.16, 0.25, 0.36, 0.49, 0.64, 0.81, 1]\n\nList.map (\\i -> Ease.outCubic (i/n)) [0..n]\n> [0, 0.271, 0.488, 0.657, 0.784, 0.875, 0.936, 0.973, 0.992, 0.999, 1]\n```\n\n# Easing functions\n@docs Easing,\n      bezier,\n      linear,\n      inQuad, outQuad, inOutQuad,\n      inCubic, outCubic, inOutCubic,\n      inQuart, outQuart, inOutQuart,\n      inQuint, outQuint, inOutQuint,\n      inSine, outSine, inOutSine,\n      inExpo, outExpo, inOutExpo,\n      inCirc, outCirc, inOutCirc,\n      inBack, outBack, inOutBack,\n      inBounce, outBounce, inOutBounce,\n      inElastic, outElastic, inOutElastic\n\n# Combining easing functions\n@docs reverse, flip , inOut, retour\n",
+    "aliases": [
+      {
+        "name": "Easing",
+        "comment": " A type alias to make it easier to refer to easing functions.\n",
+        "args": [],
+        "type": "Float -> Float"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "bezier",
+        "comment": " A cubic bezier function using 4 parameters: x and y position of first control point, and x and y position of second control point.\n\nSee [here](http://greweb.me/glsl-transition/example/ \"glsl-transitions\") for examples or [here](http://cubic-bezier.com/ \"tester\") to test.\n",
+        "type": "Float -> Float -> Float -> Float -> Ease.Easing"
+      },
+      {
+        "name": "flip",
+        "comment": " Flip an easing function. A transition that starts fast and continues slow now starts slow and continues fast.\n\nGraphically, this flips the function around x = 0.5 and then around y = 0.5.\n",
+        "type": "Ease.Easing -> Ease.Easing"
+      },
+      {
+        "name": "inBack",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inBounce",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inCirc",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inCubic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inElastic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inExpo",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOut",
+        "comment": " Makes an easing function using two other easing functions. The first half the first `Easing` function is used, the other half the second.\n",
+        "type": "Ease.Easing -> Ease.Easing -> Ease.Easing"
+      },
+      {
+        "name": "inOutBack",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutBounce",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutCirc",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutCubic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutElastic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutExpo",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutQuad",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutQuart",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutQuint",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inOutSine",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inQuad",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inQuart",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inQuint",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "inSine",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "linear",
+        "comment": " A linear ease, equal to the identity function. Linear eases often appear mechanical and unphysical.\n",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outBack",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outBounce",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outCirc",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outCubic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outElastic",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outExpo",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outQuad",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outQuart",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outQuint",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "outSine",
+        "comment": " ",
+        "type": "Ease.Easing"
+      },
+      {
+        "name": "retour",
+        "comment": " Makes an `Easing` function go to the end first and then back to the start. A transition that starts low and goes\nhigh now starts low, goes high at halfway, and then goes low again.\n",
+        "type": "Ease.Easing -> Ease.Easing"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse an `Easing` function. If an object follows an easing function and then the reversed easing function, it\nretraces exactly the same path, backwards.\n\nGraphically, this flips the function around x = 0.5.\n",
+        "type": "Ease.Easing -> Ease.Easing"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

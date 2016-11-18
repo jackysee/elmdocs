@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Transition",
+    "comment": "A simple transition library for Elm.\n# Definition\n@docs Action, Model\n# Architecture\n@docs init, update\n# Actions\n@docs start, reverse, toggle",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": "The ratio is the value of elapsed time per duration which varies from 0 to 1.",
+        "args": [],
+        "type": "{ ratio : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": "All actions should be passed to the `update` function following the Elm Architecture.",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": "The initial ratio is 0.0.",
+        "type": "Transition.Model"
+      },
+      {
+        "name": "reverse",
+        "comment": "Start changing the `ratio` from 1 to 0.\nThe first argument is the duration between start and end.\nInterruption is not allowed during the transition.",
+        "type": "Float -> Transition.Action"
+      },
+      {
+        "name": "start",
+        "comment": "Start changing the `ratio` from 0 to 1.\nThe first argument is the duration between start and end.\nInterruption is not allowed during the transition.",
+        "type": "Float -> Transition.Action"
+      },
+      {
+        "name": "toggle",
+        "comment": "Start changing the `ratio` from 0 to 1 when current ratio is 0, from 1 to 0 when current ratio is 1.\nThe first argument is the duration between start and end.\nInterruption is not allowed during the transition.",
+        "type": "Float -> Transition.Action"
+      },
+      {
+        "name": "update",
+        "comment": "All actions should be passed to this function following the Elm Architecture.",
+        "type": "Transition.Action -> Transition.Model -> ( Transition.Model, Effects.Effects Transition.Action )"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

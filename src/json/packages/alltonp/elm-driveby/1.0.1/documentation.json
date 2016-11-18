@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Driveby",
+    "comment": " This library is for defining scripts to test simple elm web applications using phantomjs\n\n# Definition\n@docs Suite, Script, Request, Response, Command, Condition, Context, Step\n\n# Common Helpers\n@docs suite, script, serve, stub, goto, gotoLocal, click, enter, assert, textContains, textEquals\n\n",
+    "aliases": [
+      {
+        "name": "Command",
+        "comment": " A Command to execute ",
+        "args": [],
+        "type": "{ name : String, args : List String }"
+      },
+      {
+        "name": "Condition",
+        "comment": " A Condition to check ",
+        "args": [],
+        "type": "{ description : String, args : List String }"
+      },
+      {
+        "name": "Context",
+        "comment": " The Context of an executing Script ",
+        "args": [],
+        "type": "{ localPort : Int , browserId : Int , scriptId : Int , stepId : Int , updated : String }"
+      },
+      {
+        "name": "Request",
+        "comment": " A Request sent to phantomjs ",
+        "args": [],
+        "type": "{ context : Driveby.Context, step : Driveby.Step }"
+      },
+      {
+        "name": "Response",
+        "comment": " A Response sent from phantomjs ",
+        "args": [],
+        "type": "{ context : Driveby.Context, failures : List String }"
+      },
+      {
+        "name": "Script",
+        "comment": " A Script of Commands to execute ",
+        "args": [],
+        "type": "{ name : String, commands : List Driveby.Command }"
+      },
+      {
+        "name": "Step",
+        "comment": " A Step holding a Command to execute ",
+        "args": [],
+        "type": "{ id : Int, command : Driveby.Command, executed : Bool }"
+      },
+      {
+        "name": "Suite",
+        "comment": " A Suite of Scripts ",
+        "args": [],
+        "type": "{ name : String, scripts : List Driveby.Script }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assert",
+        "comment": " assert this condition ",
+        "type": "Driveby.Condition -> Driveby.Command"
+      },
+      {
+        "name": "click",
+        "comment": " click this element id ",
+        "type": "String -> Driveby.Command"
+      },
+      {
+        "name": "enter",
+        "comment": " type value into this element id ",
+        "type": "String -> String -> Driveby.Command"
+      },
+      {
+        "name": "goto",
+        "comment": " navigate to this url (for externally hosted) ",
+        "type": "String -> Driveby.Command"
+      },
+      {
+        "name": "gotoLocal",
+        "comment": " navigate to this relative path (for content hosted by 'serve') ",
+        "type": "String -> Driveby.Command"
+      },
+      {
+        "name": "script",
+        "comment": " create Script from supplied Commands ",
+        "type": "String -> List Driveby.Command -> Driveby.Script"
+      },
+      {
+        "name": "serve",
+        "comment": " serve the content under given directory path ",
+        "type": "String -> Driveby.Command"
+      },
+      {
+        "name": "stub",
+        "comment": " stub the content for the requests matching relative path ",
+        "type": "String -> String -> Driveby.Command"
+      },
+      {
+        "name": "suite",
+        "comment": " create Suite from supplied Scripts ",
+        "type": "String -> List Driveby.Script -> Driveby.Suite"
+      },
+      {
+        "name": "textContains",
+        "comment": " check element id text contains expected value ",
+        "type": "String -> String -> Driveby.Condition"
+      },
+      {
+        "name": "textEquals",
+        "comment": " check element id text equals expected value ",
+        "type": "String -> String -> Driveby.Condition"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

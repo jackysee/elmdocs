@@ -1,0 +1,274 @@
+[
+  {
+    "name": "Check.Test",
+    "comment": " This module provides integration with\n[`elm-test`](http://package.elm-lang.org/packages/deadfoxygrandpa/elm-test/latest/).\n\n# Convert to Tests\n@docs evidenceToTest\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "evidenceToTest",
+        "comment": " Convert elm-check's Evidence into an elm-test Test. You can use elm-test's\nrunners to view the results of your property-based tests, alongside the results\nof unit tests.\n",
+        "type": "Check.Evidence -> Test.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Check",
+    "comment": "\n\nA toolkit for writing property-based tests, which take the form of `Claim`s. A\n`Claim` is made using the provided domain-specific language (DSL). A single\n`Claim` can be written in one of these ways:\n\n1. claim - (string) - that - (actual) - is - (expected) - for - (producer)\n2. claim - (string) - true - (predicate) - for - (producer)\n3. claim - (string) - false - (predicate) - for - (producer)\n\n\nFor example,\n\n    claim_multiplication_identity =\n      claim\n        \"Multiplying by one does not change a number\"\n      `that`\n        (\\n -> n * 1)\n      `is`\n        identity\n      `for`\n        int\n\nSee the README for more information.\n\n*Warning: The DSL follows a very strict format. Deviating from this format will\nyield potentially unintelligible type errors. The following functions have\nhorrendous type signatures and you are better off ignoring them.*\n\n@docs claim, that, is, for, true, false\n\n# Group Claims\n@docs suite\n\n# Check a Claim\n@docs quickCheck, check\n\n# Types\n@docs Claim\n\n## Evidence\nThe results of checking a claim are given back in the types defined here. You\ncan examine them yourself, or see `Check.Test` to convert them into tests to use\nwith `elm-check`'s runners.\n@docs Evidence, UnitEvidence, SuccessOptions, FailureOptions\n",
+    "aliases": [
+      {
+        "name": "FailureOptions",
+        "comment": " FailureOptions is the concrete type returned in case evidence was found\ndisproving a Claim.\n\nFailureOptions contains:\n1. the `name` of the claim\n2. the minimal `counterExample` which serves as evidence that the claim is false\n3. the value `expected` to be returned by the claim\n4. the `actual` value returned by the claim\n5. the `seed` used in order to reproduce the results\n6. the number of checks performed\n7. the number of shrinking operations performed\n8. the original `counterExample`, `actual`, and `expected` values found prior\nto performing the shrinking operations.\n",
+        "args": [],
+        "type": "{ name : String , counterExample : String , actual : String , expected : String , original : { counterExample : String , actual : String , expected : String } , seed : Random.Seed , numberOfChecks : Int , numberOfShrinks : Int }"
+      },
+      {
+        "name": "SuccessOptions",
+        "comment": " SuccessOptions is the concrete type returned in case there is no evidence\nfound disproving a Claim.\n\nSuccessOptions contains:\n1. the `name` of the claim\n2. the number of checks performed\n3. the `seed` used in order to reproduce the check.\n",
+        "args": [],
+        "type": "{ name : String, seed : Random.Seed, numberOfChecks : Int }"
+      },
+      {
+        "name": "UnitEvidence",
+        "comment": " UnitEvidence is the concrete type returned by checking a single claim.\nA UnitEvidence can easily be converted to an assertion or can be considered\nas the result of an assertion.\n",
+        "args": [],
+        "type": "Result.Result Check.FailureOptions Check.SuccessOptions"
+      }
+    ],
+    "types": [
+      {
+        "name": "Claim",
+        "comment": " A Claim is an object that makes a claim of truth about a system.\nA claim is either a function which yields evidence regarding the claim\nor a list of such claims.\n",
+        "args": [],
+        "cases": [
+          [
+            "Claim",
+            [
+              "String",
+              "Int -> Random.Seed -> Check.Evidence"
+            ]
+          ],
+          [
+            "Suite",
+            [
+              "String",
+              "List Check.Claim"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Evidence",
+        "comment": " Evidence is the output from checking a claim or multiple claims.\n",
+        "args": [],
+        "cases": [
+          [
+            "Unit",
+            [
+              "Check.UnitEvidence"
+            ]
+          ],
+          [
+            "Multiple",
+            [
+              "String",
+              "List Check.Evidence"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "check",
+        "comment": " Check a claim and produce evidence.\n\nTo check a claim, you need to provide the number of checks to perform, and a\nrandom seed. You can set up a CI server to run through a large number of checks\nwith a randomized seed.\n\n    aggressiveCheck : Claim -> Evidence\n    aggressiveCheck =\n      check 2000 (Random.initialSeed 0xFFFF)\n",
+        "type": "Int -> Random.Seed -> Check.Claim -> Check.Evidence"
+      },
+      {
+        "name": "claim",
+        "comment": "\n",
+        "type": "String -> (a -> b) -> (a -> b) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "false",
+        "comment": " ",
+        "type": "((a -> Bool) -> (a -> Bool) -> Check.Producer.Producer a -> Check.Claim) -> (a -> Bool) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "for",
+        "comment": " ",
+        "type": "(Check.Producer.Producer a -> Check.Claim) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "is",
+        "comment": " ",
+        "type": "((a -> b) -> Check.Producer.Producer a -> Check.Claim) -> (a -> b) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "quickCheck",
+        "comment": " Quickly check a claim.\n\nThis function is very useful when checking claims in local development.\n`quickCheck` will perform 100 checks and use `Random.initialSeed 1` as the\nrandom seed.\n",
+        "type": "Check.Claim -> Check.Evidence"
+      },
+      {
+        "name": "suite",
+        "comment": " Group a list of claims into a suite. This is very useful in order to\ngroup similar claims together.\n\n    suite nameOfSuite listOfClaims\n\nSuites can be nested as deep as you like.\n\n    suite \"All tests\"\n      [ someClaim\n      , suite \"Regression tests\" listOfClaims\n      ]\n",
+        "type": "String -> List Check.Claim -> Check.Claim"
+      },
+      {
+        "name": "that",
+        "comment": " ",
+        "type": "((a -> b) -> (a -> b) -> Check.Producer.Producer a -> Check.Claim) -> (a -> b) -> (a -> b) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "true",
+        "comment": " ",
+        "type": "((a -> Bool) -> (a -> Bool) -> Check.Producer.Producer a -> Check.Claim) -> (a -> Bool) -> Check.Producer.Producer a -> Check.Claim"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Check.Producer",
+    "comment": " This is a library of `Producer`s you can use to supply values to your tests.\nYou can typically pick out which ones you need according to their types.\n\nA `Producer a` knows how to create values of type `a`. It can create them\nrandomly, and it can shrink them to more minimal values. Producers can be\nfiltered and mapped over.\n\n# Common Producers\n@docs bool, int, rangeInt, float, rangeFloat, percentage, string, maybe, result, list, array\n\n## Tuple Producers\nIf your expected and actual functions need more than one input, pass them in as a tuple.\n@docs tuple, tuple3, tuple4, tuple5\n\n# Working with Producers\n@docs Producer, filter, convert, map\n\n# Uncommon Producers\n@docs unit, order\n\n## Character Producers\n@docs char, upperCaseChar, lowerCaseChar, ascii, unicode\n\n",
+    "aliases": [
+      {
+        "name": "Producer",
+        "comment": " An Producer type is a\n[Random](http://package.elm-lang.org/packages/elm-lang/core/latest/Random)\n`Generator` paired with a shrinking strategy, or `Shrinker`. Shrinkers are defined\nin [`elm-community/shrink`](http://package.elm-lang.org/packages/elm-community/shrink/latest/).\nYou will need to be familiar with both libraries to write custom producers for your own types.\nHere is an example for a record:\n\n    type alias Position =\n        { x : Int, y : Int }\n\n\n    position : Producer Position\n    position =\n        Producer\n            (Random.map2 Position (Random.int 0 1919) (Random.int 0 1079))\n            (\\{ x, y } -> Shrink.map Position (Shrink.int x) `Shrink.andMap` (Shrink.int y))\n\nHere is an example for a union type:\n\n    type Question\n        = Name String\n        | Age Int\n\n\n    question =\n        let\n            generator =\n                Random.bool `Random.andThen` (\\b ->\n                    if b then\n                        Random.map Name string.generator\n                    else\n                        Random.map Age (Random.int 0 120)\n                 )\n\n            shrinker question =\n                case question of\n                    Name n ->\n                        Shrink.string n |> Shrink.map Name\n\n                    Age i ->\n                        Shrink.int i |> Shrink.map Age\n        in\n            Producer generator shrinker\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ generator : Random.Generator a, shrinker : Shrink.Shrinker a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "array",
+        "comment": " Given a producer of a type, create a producer of an array of that type.\nGenerates random arrays of varying length, favoring shorter arrays.\n",
+        "type": "Check.Producer.Producer a -> Check.Producer.Producer (Array.Array a)"
+      },
+      {
+        "name": "ascii",
+        "comment": " A producer for ASCII char values.\n",
+        "type": "Check.Producer.Producer Char"
+      },
+      {
+        "name": "bool",
+        "comment": " A producer for bool values.\n",
+        "type": "Check.Producer.Producer Bool"
+      },
+      {
+        "name": "char",
+        "comment": " A producer for char values. Generates random ascii chars disregarding the control\ncharacters.\n",
+        "type": "Check.Producer.Producer Char"
+      },
+      {
+        "name": "convert",
+        "comment": " Convert the output of one producer to another type. This is useful if\nyou're testing a function that expects a large model record, but you only need\nto randomize a few fields. You might do this several different ways for a single\nmodel, so you generate and shrink only the fields relevant to each test.\n\n    type alias Person =\n      { first : String, last : String, age : String }\n\n    spy : Producer Person\n    spy = convert (\\age -> Person \"James\" \"Bond\" age) .age (rangeInt 0 120)\n\nIn order for shrinking to work, you need to pass an inverse function of the\nfunction being mapped.\n",
+        "type": "(a -> b) -> (b -> a) -> Check.Producer.Producer a -> Check.Producer.Producer b"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter the values from a Producer. The resulting Producer will only generate\nrandom test values or shrunken values that satisfy the predicate. The predicate\nmust be satisfiable.\n",
+        "type": "(a -> Bool) -> Check.Producer.Producer a -> Check.Producer.Producer a"
+      },
+      {
+        "name": "float",
+        "comment": " A producer for float values. It will never produce `NaN`, `Infinity`, or `-Infinity`.\n",
+        "type": "Check.Producer.Producer Float"
+      },
+      {
+        "name": "int",
+        "comment": " A producer for int values.\n",
+        "type": "Check.Producer.Producer Int"
+      },
+      {
+        "name": "list",
+        "comment": " Given a producer of a type, create a producer of a list of that type.\nGenerates random lists of varying length, favoring shorter lists.\n",
+        "type": "Check.Producer.Producer a -> Check.Producer.Producer (List a)"
+      },
+      {
+        "name": "lowerCaseChar",
+        "comment": " A producer for lowercase char values.\n",
+        "type": "Check.Producer.Producer Char"
+      },
+      {
+        "name": "map",
+        "comment": " Map a function over an producer. This works exactly like `convert`,\nexcept it does not require an inverse function, and consequently does no\nshrinking.\n",
+        "type": "(a -> b) -> Check.Producer.Producer a -> Check.Producer.Producer b"
+      },
+      {
+        "name": "maybe",
+        "comment": " Given a producer of a type, create a producer of a maybe for that type.\n",
+        "type": "Check.Producer.Producer a -> Check.Producer.Producer (Maybe.Maybe a)"
+      },
+      {
+        "name": "order",
+        "comment": " A producer for order values.\n",
+        "type": "Check.Producer.Producer Basics.Order"
+      },
+      {
+        "name": "percentage",
+        "comment": " A producer for percentage values. Generates random floats between `0.0` and\n`1.0`.\n",
+        "type": "Check.Producer.Producer Float"
+      },
+      {
+        "name": "rangeFloat",
+        "comment": " A producer for float values within between a given minimum and maximum\nvalue, inclusive. Shrunken values will also be within the range.\n",
+        "type": "Float -> Float -> Check.Producer.Producer Float"
+      },
+      {
+        "name": "rangeInt",
+        "comment": " A producer for int values within between a given minimum and maximum value,\ninclusive. Shrunken values will also be within the range.\n",
+        "type": "Int -> Int -> Check.Producer.Producer Int"
+      },
+      {
+        "name": "result",
+        "comment": " Given producers for an error type and a success type, createa a producer for\na result.\n",
+        "type": "Check.Producer.Producer error -> Check.Producer.Producer value -> Check.Producer.Producer (Result.Result error value)"
+      },
+      {
+        "name": "string",
+        "comment": " A producer for string values. Generates random printable ascii strings whose\nlength is between 0 and 10.\n",
+        "type": "Check.Producer.Producer String"
+      },
+      {
+        "name": "tuple",
+        "comment": " Turn a tuple of producers into a producer of tuples.\n",
+        "type": "( Check.Producer.Producer a, Check.Producer.Producer b ) -> Check.Producer.Producer ( a, b )"
+      },
+      {
+        "name": "tuple3",
+        "comment": " Turn a 3-tuple of producers into a producer of 3-tuples.\n",
+        "type": "( Check.Producer.Producer a , Check.Producer.Producer b , Check.Producer.Producer c ) -> Check.Producer.Producer ( a, b, c )"
+      },
+      {
+        "name": "tuple4",
+        "comment": " Turn a 4-tuple of producers into a producer of 4-tuples.\n",
+        "type": "( Check.Producer.Producer a , Check.Producer.Producer b , Check.Producer.Producer c , Check.Producer.Producer d ) -> Check.Producer.Producer ( a, b, c, d )"
+      },
+      {
+        "name": "tuple5",
+        "comment": " Turn a 5-tuple of producers into a producer of 5-tuples.\n",
+        "type": "( Check.Producer.Producer a , Check.Producer.Producer b , Check.Producer.Producer c , Check.Producer.Producer d , Check.Producer.Producer e ) -> Check.Producer.Producer ( a, b, c, d, e )"
+      },
+      {
+        "name": "unicode",
+        "comment": " A producer for unicode char values.\n",
+        "type": "Check.Producer.Producer Char"
+      },
+      {
+        "name": "unit",
+        "comment": " A producer for the unit value. Unit is a type with only one value, commonly\nused as a placeholder.\n",
+        "type": "Check.Producer.Producer ()"
+      },
+      {
+        "name": "upperCaseChar",
+        "comment": " A producer for uppercase char values.\n",
+        "type": "Check.Producer.Producer Char"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

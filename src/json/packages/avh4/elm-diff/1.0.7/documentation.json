@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Diff",
+    "comment": " Functions to compare strings to produce a list of changes.  This is an\nimplementation of the [Hunt-McIlroy](http://en.wikipedia.org/wiki/Hunt%E2%80%93McIlroy_algorithm)\ndiff algorithm.\n\n# Types and Constructors\n@docs Change\n\n# Diffing strings\n@docs diffChars, diffLines\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Change",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "NoChange",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Changed",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Added",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Removed",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "diffChars",
+        "comment": " Diffs two strings, comparing character by charater.\n\n    diffChars \"abc\" \"aBcd\"\n      == [ NoChange \"a\", Changed \"b\" \"B\", NoChange \"c\", Added \"d\" ]\n",
+        "type": "String -> String -> List Diff.Change"
+      },
+      {
+        "name": "diffLines",
+        "comment": " Diffs two strings, comparing line by line.\n\n    original = \"\"\"Brian\n    Sohie\n    Oscar\n    Stella\n    Takis\n    \"\"\"\n\n    changed = \"\"\"BRIAN\n    Stella\n    Frosty\n    Takis\n    \"\"\"\n\n    diffLines original changed\n      == [ Changed \"Brian\\nSohie\\nOscar\\n\" \"BRIAN\\n\"\n          , NoChange \"Stella\\n\"\n          , Added \"Frosty\\n\"\n          , NoChange \"Takis\\n\"\n          ]\n",
+        "type": "String -> String -> List Diff.Change"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

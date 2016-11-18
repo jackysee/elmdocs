@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Hexagon",
+    "comment": " Create SVG hexagons with rounded corners\n\n# Definition\n@docs Point, Hexagon\n\n# Common Helpers\n@docs p, hex\n\n# Rendering\n@docs svgHexagon\n\n",
+    "aliases": [
+      {
+        "name": "Hexagon",
+        "comment": " Hexagon definition to generate SVG tags from |",
+        "args": [],
+        "type": "{ center : Hexagon.Point, rotation : Float, radius : Float }"
+      },
+      {
+        "name": "Point",
+        "comment": " Point definition to define hexagon center & corner points |",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "hex",
+        "comment": " Shortcut to create a `Hexagon` |",
+        "type": "Hexagon.Point -> Float -> Float -> Hexagon.Hexagon"
+      },
+      {
+        "name": "p",
+        "comment": " Shortcut to create a `Point` |",
+        "type": "Float -> Float -> Hexagon.Point"
+      },
+      {
+        "name": "svgHexagon",
+        "comment": " Create a SVG path for a `Hexagon` definition |",
+        "type": "List (Svg.Attribute msg) -> Hexagon.Hexagon -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

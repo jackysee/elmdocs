@@ -1,0 +1,498 @@
+[
+{
+  "name": "Control.State",
+  "comment": "",
+  "aliases": [
+    {
+      "name": "State",
+      "comment": "",
+      "args": [
+        "s",
+        "a"
+      ],
+      "type": {
+        "tag": "record",
+        "extension": null,
+        "fields": [
+          [
+            "runState",
+            {
+              "tag": "lambda",
+              "in": {
+                "tag": "var",
+                "name": "s"
+              },
+              "out": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "_Tuple2"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "a"
+                  },
+                  {
+                    "tag": "var",
+                    "name": "s"
+                  }
+                ]
+              }
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "types": [],
+  "values": [
+    {
+      "name": "bindS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "lambda",
+            "in": {
+              "tag": "var",
+              "name": "a"
+            },
+            "out": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "State"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "s"
+                },
+                {
+                  "tag": "var",
+                  "name": "b"
+                }
+              ]
+            }
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "s"
+              },
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "evalState",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "s"
+          },
+          "out": {
+            "tag": "var",
+            "name": "a"
+          }
+        }
+      }
+    },
+    {
+      "name": "execState",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "s"
+          },
+          "out": {
+            "tag": "var",
+            "name": "s"
+          }
+        }
+      }
+    },
+    {
+      "name": "fmapS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "a"
+          },
+          "out": {
+            "tag": "var",
+            "name": "b"
+          }
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "s"
+              },
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "s"
+              },
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "get",
+      "comment": "",
+      "type": {
+        "tag": "app",
+        "func": {
+          "tag": "type",
+          "name": "State"
+        },
+        "args": [
+          {
+            "tag": "var",
+            "name": "s"
+          },
+          {
+            "tag": "var",
+            "name": "s"
+          }
+        ]
+      }
+    },
+    {
+      "name": "mapMS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "a"
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "s"
+              },
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "List"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "State"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "s"
+              },
+              {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "List"
+                },
+                "args": [
+                  {
+                    "tag": "var",
+                    "name": "b"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "put",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "var",
+          "name": "s"
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple0"
+              },
+              "args": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "returnS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "var",
+          "name": "a"
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "sequenceS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "List"
+          },
+          "args": [
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "State"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "s"
+                },
+                {
+                  "tag": "var",
+                  "name": "a"
+                }
+              ]
+            }
+          ]
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "s"
+            },
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "List"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "a"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "updateS",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "lambda",
+          "in": {
+            "tag": "var",
+            "name": "a"
+          },
+          "out": {
+            "tag": "var",
+            "name": "a"
+          }
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "State"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            },
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple0"
+              },
+              "args": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+
+]

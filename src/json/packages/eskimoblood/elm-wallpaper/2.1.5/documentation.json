@@ -1,0 +1,178 @@
+[
+  {
+    "name": "WallpaperGroup.Pattern",
+    "comment": "\nCreates wallpaper group based pattern\n\n#create pattern\n@docs pattern\n@docs bounding\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bounding",
+        "comment": "\n  get the bounding box for a specific pattern group\n\n",
+        "type": "WallpaperGroup.Group.Group -> WallpaperGroup.Geom.BoundingBox.BoundingBox"
+      },
+      {
+        "name": "pattern",
+        "comment": "\n  Create pattern by passing a group the number of columns and rows and tiles.\n\n",
+        "type": "WallpaperGroup.Group.Group -> Int -> Int -> List (List { x : Float, y : Float }) -> List (List (List { x : Float, y : Float }))"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "WallpaperGroup.Group",
+    "comment": "\nThe predefined Groups according to\n[this](https://en.wikipedia.org/wiki/Wallpaper_group) Wikipedia entry\n\n@docs Group\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Group",
+        "comment": "\nCreate a pattern width the specific width and/or height.\nFor triangle shaped pattern only the width of the base line is needed.\n",
+        "args": [],
+        "cases": [
+          [
+            "P1",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P2",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "Pm",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "Pg",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "Cm",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P2mm",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P2mg",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P2gg",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "C2mm",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P4",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P4mm",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P4mg",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "P3",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "P3m1",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "P31m",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "P6",
+            [
+              "Float"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "WallpaperGroup.Geom.BoundingBox",
+    "comment": "\nBounding box of a single pattern.\n\n@docs BoundingBox\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "BoundingBox",
+        "comment": "\n  Bounding box can be a triangle oder a rect.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Triangle",
+            [
+              "{ x : Float, y : Float }",
+              "{ x : Float, y : Float }",
+              "{ x : Float, y : Float }"
+            ]
+          ],
+          [
+            "Rect",
+            [
+              "{ x : Float, y : Float }",
+              "{ x : Float, y : Float }",
+              "{ x : Float, y : Float }",
+              "{ x : Float, y : Float }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

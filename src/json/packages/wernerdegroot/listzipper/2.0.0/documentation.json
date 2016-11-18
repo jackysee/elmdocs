@@ -1,0 +1,104 @@
+[
+  {
+    "name": "List.Zipper",
+    "comment": " A zipper for `List`.\n\n# The `Zipper` type\n@docs Zipper\n\n# Constructing a `Zipper`\n@docs singleton, fromList, withDefault\n\n# Accessors\n@docs before, current, after, toList\n\n# Updating\n@docs updateBefore, update, updateAfter\n\n# Moving around\n@docs first, previous, next, last, find\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Zipper",
+        "comment": " The `Zipper` type. ",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Zipper",
+            [
+              "List a",
+              "a",
+              "List a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "after",
+        "comment": " Returns all elements after the element the `Zipper` is focussed on ",
+        "type": "List.Zipper.Zipper a -> List a"
+      },
+      {
+        "name": "before",
+        "comment": " Returns all elements before the element the `Zipper` is focussed on. ",
+        "type": "List.Zipper.Zipper a -> List a"
+      },
+      {
+        "name": "current",
+        "comment": " Returns the element the `Zipper` is currently focussed on. ",
+        "type": "List.Zipper.Zipper a -> a"
+      },
+      {
+        "name": "find",
+        "comment": " Returns a `Zipper` focussed on the first element for which the predicate returns `True` (starting from a given `Zipper`). ",
+        "type": "(a -> Bool) -> List.Zipper.Zipper a -> Maybe.Maybe (List.Zipper.Zipper a)"
+      },
+      {
+        "name": "first",
+        "comment": " Move the focus to the first element of the list. ",
+        "type": "List.Zipper.Zipper a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Construct a `Zipper` from a list. The `Zipper` will focus on the first element (if there is a first element). ",
+        "type": "List a -> Maybe.Maybe (List.Zipper.Zipper a)"
+      },
+      {
+        "name": "last",
+        "comment": " Move the focus to the last element of the list. ",
+        "type": "List.Zipper.Zipper a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "next",
+        "comment": " Move the focus to the element after the element the `Zipper` is currently focussed on (if there is such an element). ",
+        "type": "List.Zipper.Zipper a -> Maybe.Maybe (List.Zipper.Zipper a)"
+      },
+      {
+        "name": "previous",
+        "comment": " Move the focus to the element before the element the `Zipper` is currently focussed on (if there is such an element). ",
+        "type": "List.Zipper.Zipper a -> Maybe.Maybe (List.Zipper.Zipper a)"
+      },
+      {
+        "name": "singleton",
+        "comment": " Construct a `Zipper` focussed on the first element of a singleton list. ",
+        "type": "a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "toList",
+        "comment": " Reconstruct the list. ",
+        "type": "List.Zipper.Zipper a -> List a"
+      },
+      {
+        "name": "update",
+        "comment": " Update the element the `Zipper` is focussed on. ",
+        "type": "(a -> a) -> List.Zipper.Zipper a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "updateAfter",
+        "comment": " Update all elements after the element the `Zipper` is focussed on. ",
+        "type": "(List a -> List a) -> List.Zipper.Zipper a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "updateBefore",
+        "comment": " Update all elements before the element the `Zipper` is focussed on. ",
+        "type": "(List a -> List a) -> List.Zipper.Zipper a -> List.Zipper.Zipper a"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Provide an alternative when constructing a `Zipper` fails. ",
+        "type": "a -> Maybe.Maybe (List.Zipper.Zipper a) -> List.Zipper.Zipper a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

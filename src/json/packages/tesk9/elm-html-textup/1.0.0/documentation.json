@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Main",
+    "comment": " A library for going from strings to fancily-formatted Html.\n\n@docs Config, TextUpString, toHtml\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " `Config` is for defining whatever style rules you want. The only\n    requirement is that there must be a default `plain` style.\n\n```\nconfig : Config { attn1 : Css.Mixin, attn2 : Css.Mixin }\nconfig =\n    { plain = Css.fontFamily Css.cursive\n    , attn1 = Css.mixin [ Css.fontFamily Css.fantasy, Css.textTransform Css.uppercase, Css.color (Css.hex \"fff987\") ]\n    , attn2 = Css.mixin [ Css.fontFamily Css.monospace, Css.textDecoration Css.overline ]\n    }\n```\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | plain : Css.Mixin }"
+      },
+      {
+        "name": "TextUpString",
+        "comment": " `TextUpString` specifies how a specific string should be formatted.\n\n```\nconfig : Config {}\nconfig =\n    { plain = Css.fontFamily Css.cursive }\n\n\ntextUpString : TextUpString {}\ntextUpString =\n    ( \"I'm a plain string.\", .plain )\n```\n",
+        "args": [
+          "a"
+        ],
+        "type": "( String, Main.Config a -> Css.Mixin )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "toHtml",
+        "comment": " `toHtml` produces a span whose inner spans are formatted with inline styles.\n\n```\nconfig : Config { attn1 : Css.Mixin, attn2 : Css.Mixin }\nconfig =\n    { plain = Css.fontFamily Css.cursive\n    , attn1 = Css.mixin [ Css.fontFamily Css.fantasy, Css.textTransform Css.uppercase, Css.color (Css.hex \"fff987\") ]\n    , attn2 = Css.mixin [ Css.fontFamily Css.monospace, Css.textDecoration Css.overline ]\n    }\n\n\nviewHtml : Html.Html msg\nviewHtml =\n   [ ( \"I'm a plain string.\", .plain )\n   , ( \"....here are some more thoughts....\", .attn1 )\n   , ( \"Attention 2!!!\", .attn2 )\n   , ( \"blah blah blah\", .attn1 )\n   ]\n       |> toHtml config\n```\n",
+        "type": "Main.Config a -> List (Main.TextUpString a) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

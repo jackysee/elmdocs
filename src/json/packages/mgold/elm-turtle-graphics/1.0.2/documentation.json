@@ -1,0 +1,185 @@
+[
+  {
+    "name": "Turtle.Advanced",
+    "comment": " Advanced turtle drawing functions for those comfortable programming in Elm. This module is meant to be combined with\nthe simple one, so either import both `exposing (..)` or:\n\n````elm\nimport Turtle exposing (Step)\nimport Turtle.Advanced as Turtle\n````\n\nYes, this will work and place all the functions into the `Turtle` namespace.\n\n# Basics\n@docs back, stay\n\n# Shapes\n@docs ngon, circle, star\n\n# Functional Modifiers\nThese functions wrap steps with transformations that are undone afterwards, rather than leaving state with the turtle.\nThey still leak state a little, so be careful. Also, they may be made to leak less in a MINOR release.\n@docs scaled, rotated, invisibly\n\n# Atomicity\n@docs atomically\n\n# Randomness\n@docs randomly\n\n# Absolute Positioning\n@docs teleport, rotateTo\n\n# Working with Steps\n## Drawing\n@docs DrawOptions, defaultDrawOptions, drawWith\n\n## Animating\n@docs AnimateOptions, defaultAnimateOptions, animateWith\n\n## Inspecting\n@docs length, depth\n\n",
+    "aliases": [
+      {
+        "name": "AnimateOptions",
+        "comment": " Customize the `animateWith` function by supplying the initial random seed, the dimensions of the drawing, and the\nclock on which the animation progresses.\n",
+        "args": [],
+        "type": "{ seed : Random.Seed , dims : Signal.Signal ( Int, Int ) , clock : Signal.Signal () }"
+      },
+      {
+        "name": "DrawOptions",
+        "comment": " Customize the `drawWith` function by supplying the initial random seed and the dimensions of the drawing.\n",
+        "args": [],
+        "type": "{ seed : Random.Seed, dims : ( Int, Int ) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "animateWith",
+        "comment": " Animate the steps running sequentially, using the options given. Useful if `animate` isn't quite meeting your needs.\n",
+        "type": "Turtle.Advanced.AnimateOptions -> List Turtle.Step -> Signal.Signal Graphics.Element.Element"
+      },
+      {
+        "name": "atomically",
+        "comment": " The same as `make`, except when using `animate` the steps are all run together (atomically). Also considered to be a\nsingle step by `depth` and `length`. Used by the geometry helpers in this library to draw shapes immediately rather than\nwatch the turtle trace them out.\n",
+        "type": "List Turtle.Step -> Turtle.Step"
+      },
+      {
+        "name": "back",
+        "comment": " Move the turtle back a distance, without affecting the rotation. The turtle will still draw the path if the pen is\ndown.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "circle",
+        "comment": " Create a circle of the given radius, centered at the current location.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "defaultAnimateOptions",
+        "comment": " The options used for `animate`. Uses the same seed as the draw options, `Window.dimensions`, and a 5fps timer. You\ncan use a faster timer, or `Mouse.clicks`, among other things.\n",
+        "type": "Turtle.Advanced.AnimateOptions"
+      },
+      {
+        "name": "defaultDrawOptions",
+        "comment": " The options used for `draw`. Uses an arbitrary seed and the arbitrary dimensions of 1000x1000.\n",
+        "type": "Turtle.Advanced.DrawOptions"
+      },
+      {
+        "name": "depth",
+        "comment": " Determine the recursive depth of a list of Steps.\n",
+        "type": "List Turtle.Step -> Int"
+      },
+      {
+        "name": "drawWith",
+        "comment": " Draw the steps immediately, using the options given. You will usually use this with `Signal.map` to rapidly iterate\na design, change a drawing based on user input, or create a custom animation.\n",
+        "type": "Turtle.Advanced.DrawOptions -> List Turtle.Step -> Graphics.Element.Element"
+      },
+      {
+        "name": "invisibly",
+        "comment": " Run a step with the pen up, and then put it down to start drawing. Useful for moving the a new location.\n",
+        "type": "Turtle.Step -> Turtle.Step"
+      },
+      {
+        "name": "length",
+        "comment": " Determine the number of steps in a list of Steps, accounting for recursion.\n",
+        "type": "List Turtle.Step -> Int"
+      },
+      {
+        "name": "ngon",
+        "comment": " Create a regular n-gon with sides of length 50. Use `scale` or `scaled` to increase the size. The turtle begins the\nfirst edge immediately; you may want to position and rotate the turtle first.\n",
+        "type": "Int -> Turtle.Step"
+      },
+      {
+        "name": "randomly",
+        "comment": " Provide access to a random seed, and therefore, the Random library. This is much more powerful than `withRandom`\ntaking a random float, but carries with it the responsibility to pass back an unused seed. To use with a Generator, call\n`Random.generate theGenerator`.\n",
+        "type": "(Random.Seed -> ( Turtle.Step, Random.Seed )) -> Turtle.Step"
+      },
+      {
+        "name": "rotateTo",
+        "comment": " Rotate to a given angle in degrees, regardless of the old rotation.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "rotated",
+        "comment": " Rotate a step left (counterclockwise) by a given angle in degrees, and then rotate back (assuming the step itself does not change the angle.)\n",
+        "type": "Float -> Turtle.Step -> Turtle.Step"
+      },
+      {
+        "name": "scaled",
+        "comment": " Scale a step by a given factor without affecting later actions (assuming the step itself does not change the scale).\n",
+        "type": "Float -> Turtle.Step -> Turtle.Step"
+      },
+      {
+        "name": "star",
+        "comment": " Create a star polygon. The first argument specifies the number of points. The second argument specifies the ratio of\nthe exterior angle to the interior angle. A pentagram is `star 5 3` and a Star of David is `star 6 2`. This can take\nsome experimentation to get the effect you need; sometimes a star comes out as a convex polygon.\n\nEach side has length 50. Use `scale` or `scaled` to increase the size. The turtle begins the\nfirst edge immediately; you may want to position and rotate the turtle first.\n",
+        "type": "Int -> Float -> Turtle.Step"
+      },
+      {
+        "name": "stay",
+        "comment": " Tell the turtle to do nothing.\n",
+        "type": "Turtle.Step"
+      },
+      {
+        "name": "teleport",
+        "comment": " Move to a given location, regardless of the old location.\n",
+        "type": "( Float, Float ) -> Turtle.Step"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Turtle",
+    "comment": " A tiny language for teaching a virtual turtle to draw. The turtle carries a pen and draws lines as it moves.\n\nMove the turtle around by making a list of steps. Then give it to the turtle with `animate`. Like this:\n\n````elm\nimport Turtle exposing (..)\n\nsteps = [forward 20, left 90, forward 10]\nmain = animate steps\n````\n\nThe turtle starts in the middle of the page facing up (90 degrees), with the pen down using black ink.\n\n# Moving\n@docs left, right, forward\n\n# Drawing\n@docs penUp, penDown, penColor\n\n# Special\n@docs make, withRandom, scale\n\n# Running Steps\nOnce you've made a list of steps, use one of these functions to see it happen.\n@docs animate, draw\n\n# What is a Step?\n@docs Step\n\n",
+    "aliases": [
+      {
+        "name": "Step",
+        "comment": " A Step is an action that a turtle can do.\n",
+        "args": [],
+        "type": "Turtle.Core.Step"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "animate",
+        "comment": " Animate the turtle drawing, showing the each step as it moves.\n",
+        "type": "List Turtle.Step -> Signal.Signal Graphics.Element.Element"
+      },
+      {
+        "name": "draw",
+        "comment": " Run the turtle and immediately show the result. It is useful when you are\nchanging your code quickly and don't want to wait for the turtle to move.\n",
+        "type": "List Turtle.Step -> Graphics.Element.Element"
+      },
+      {
+        "name": "forward",
+        "comment": " Move the turtle forward by a certain amount. How can you make the turtle move backwards?\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "left",
+        "comment": " Turn the turtle left by a certain number of degrees.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "make",
+        "comment": " Do every step in the list. Really useful for giving names to small jobs. Think about `make star`, or making a\nfive-pointed star with `make (star 5)`.\n",
+        "type": "List Turtle.Step -> Turtle.Step"
+      },
+      {
+        "name": "penColor",
+        "comment": " Change the color of the drawing.\n",
+        "type": "Color.Color -> Turtle.Step"
+      },
+      {
+        "name": "penDown",
+        "comment": " Put the pen back down so that the turtle starts drawing again.\n",
+        "type": "Turtle.Step"
+      },
+      {
+        "name": "penUp",
+        "comment": " Lift the pen from the paper so that nothing is drawn.\n",
+        "type": "Turtle.Step"
+      },
+      {
+        "name": "right",
+        "comment": " Turn the turtle right by a certain number of degrees.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "scale",
+        "comment": " Make moving forward bigger or smaller. The numbers multiply, so doing `scale 3` and then `scale 5` is the same as\ndoing `scale 15`.\n",
+        "type": "Float -> Turtle.Step"
+      },
+      {
+        "name": "withRandom",
+        "comment": " Give a step-making function a random number between 0 and 1.\n",
+        "type": "(Float -> Turtle.Step) -> Turtle.Step"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Debounce",
+    "comment": "\nThis modules allows easy usage of debounced events from the view.\n\n# Story\n\nSay you have an elm app where a button produce a `Clicked` message:\n\n```\ntype alias Model = { ... }\ntype Msg = Clicked | ...\n\nupdate : Msg -> Model -> (Model, Cmd Msg)\nupdate msg model =\n    case msg of\n        ...\n        Clicked -> -- perform update for Clicked --\n        ...\n\nview model = ... button [ onClick Clicked ] [ text \"click me!\" ] ...\n```\n\nwith this module you will be able to change the view using a `deb : Msg -> Msg`\nfunction that will state that the `Clicked` message should be debounced.\n\n```\nview model = ... button [ onClick (deb Clicked) ] [ text \"click me!\" ] ...\n```\n\nYou will want to specify the timeout for the debounce.\nThis is usually constant, hence, it does not belongs to the model or state of the app.\n\n```\ncfg : Debounce.Config Model Msg\ncfg = ... configuration of the debounce component ...\n\ndeb : Msg -> Msg\ndeb = Debounce.debounce cfg\n```\n\nIn order to create a Debounce.Config you will need to go trough some boilerplate.\n\n1) Extend the model with `Debounce.State` (and initialize it with `Debounce.init`)\n\n```\ntype alias Model = { ... , d : Debounce.State , ... }\ninitialModel = { ... , d = Debounce.init , ... }\n-- you can choose any name for `d`\n```\n\n2) Extend Msg with a wrapper message that will be routed to Debounce module.\n\n```\ntype Msg = Clicked | Deb (Debounce.Msg Msg)\n-- you can choose any name for `Deb`\n```\n\n3) Extend `update`\n\n```\nupdate : Msg -> Model -> (Model, Cmd Msg)\nupdate msg model =\n    case msg of\n        ...\n        Clicked -> -- perform update for Clicked --\n        ...\n        Deb a ->\n            Debounce.update cfg a model\n```\n\n4) Configure the debounce component using `Debounce.config`\n\n```\ncfg : Debounce.Config Model Msg\ncfg =\n    Debounce.config\n        .d                               -- getState   : Model -> Debounce.State\n        (\\model s -> { model | d = s })  -- setState   : Debounce.State -> Model -> Debounce.State\n        Deb                              -- msgWrapper : Msg a -> Msg\n        200                              -- timeout ms : Float\n```\n\n5) Enjoy!\n\n## Debouncing messages with values (onInput)\n\nIf the message that is wanted to be debounced hold data:\n\n```\ntype Msg = UserInput String\nview model = ... input [ onInput UserInput ] [] ...\n```\n\nYou will need to use `Debounce.debounce1`\n\n```\nview model = ... input [ onInput (deb1 UserInput) ] [] ...\n\ndeb1 : (a -> Msg) -> (a -> Msg)\ndeb1 = Debounce.debounce1 cfg\n```\n\n## Debouncing messages from the update\n\nIf you want to debounce a message generated from the `update`\n\n```\nupdate msg model =\n    case msg of\n        ... s ... ->\n            ( ... , debCmd <| UserInput s )\n\n        UserInput s ->\n            ( ... , Cmd.none )\n\n        Deb a ->\n            Debounce.update cfg a model\n\ndebCmd =\n    Debounce.debounceCmd cfg\n```\n\n# Functions to create `deb` `deb1` `debCmd` nice helpers\n\n@docs debounce\n@docs debounce1\n@docs debounceCmd\n\n# Boilerplate functions\n\n@docs init\n@docs config\n@docs update\n\n# Opaque structures\n\n@docs Config\n@docs State\n@docs Msg\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": "\n  Configuration of a debounce component.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": "\n  Messages to be wrapped.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": "\n  State to be included in model.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": "\n  Creates a configured debounce component.\n",
+        "type": "(model -> Debounce.State) -> (model -> Debounce.State -> model) -> (Debounce.Msg msg -> msg) -> Float -> Debounce.Config model msg"
+      },
+      {
+        "name": "debounce",
+        "comment": "\n  Helper function for Msg without parameters.\n",
+        "type": "Debounce.Config model msg -> msg -> msg"
+      },
+      {
+        "name": "debounce1",
+        "comment": "\n  Helper function for Msg with 1 parameter.\n",
+        "type": "Debounce.Config model msg -> (a -> msg) -> a -> msg"
+      },
+      {
+        "name": "debounceCmd",
+        "comment": "\n  Helper function for deboucing a Cmd.\n",
+        "type": "Debounce.Config model msg -> msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "init",
+        "comment": "\n  Initial state for the model\n",
+        "type": "Debounce.State"
+      },
+      {
+        "name": "update",
+        "comment": "\n  Handle update messages for the debounce component.\n",
+        "type": "Debounce.Config model msg -> Debounce.Msg msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

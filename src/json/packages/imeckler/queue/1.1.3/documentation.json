@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Queue",
+    "comment": " Just a simple queue data type.\n\n# Type\n@docs Queue\n\n# Construction\n@docs empty, push\n\n# Inspection\n@docs pop\n\n# Utilities\n@docs isEmpty, length, map, toList\n",
+    "aliases": [
+      {
+        "name": "Queue",
+        "comment": " A queue is a sequence supporting O(1) appending (`push`) of a new\n    element to the back and amortizsed O(1) removal of the element at the\n    front (`pop`). ",
+        "args": [
+          "a"
+        ],
+        "type": "Queue.Internal.Queue a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " An empty queue, ready for pushin'. ",
+        "type": "Queue.Queue a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " ",
+        "type": "Queue.Queue a -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": " ",
+        "type": "Queue.Queue a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Queue.Queue a -> Queue.Queue b"
+      },
+      {
+        "name": "pop",
+        "comment": " Get the first element of the queue and the queue with the first element\n    removed. Returns nothing if the queue is empty. Amortized O(1). ",
+        "type": "Queue.Queue a -> Maybe.Maybe ( a, Queue.Queue a )"
+      },
+      {
+        "name": "push",
+        "comment": " Put the given element at the back of the given queue. O(1). ",
+        "type": "a -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "toList",
+        "comment": " A list consisting of the elements in the order in which they were put into the\n    queue (i.e., \"front to back\"). ",
+        "type": "Queue.Queue a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Queue.Internal",
+    "comment": " Internal representation of the queue type.\n\n@docs Queue\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Queue",
+        "comment": " See [this blog post](http://parametricity.com/posts/2015-02-19-animating.html). ",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Queue",
+            [
+              "List a",
+              "List a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

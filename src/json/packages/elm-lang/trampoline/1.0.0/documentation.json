@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Trampoline",
+    "comment": " A [trampoline](http://en.wikipedia.org/wiki/Tail-recursive_function#Through_trampolining)\nmakes it possible to recursively call a function without growing the stack.\n\nPopular JavaScript implementations do not perform any tail-call elimination, so\nrecursive functions can cause a stack overflow if they go too deep. Trampolines\npermit unbounded recursion despite limitations in JavaScript.\n\nThis strategy may create many intermediate closures, which is very expensive in\nJavaScript, so use this library only when it is essential that you recurse deeply.\n\n# Trampolines\n@docs Trampoline, done, jump, evaluate\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Trampoline",
+        "comment": " A computation that has been broken up into a bunch of smaller chunks. The\nprogrammer explicitly adds \"pause points\" so each chunk of computation can be\nrun without making the stack any deeper.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "done",
+        "comment": " When you do not want a computation to go through the trampoline.\n",
+        "type": "a -> Trampoline.Trampoline a"
+      },
+      {
+        "name": "evaluate",
+        "comment": " Evaluate a trampolined value in constant space. ",
+        "type": "Trampoline.Trampoline a -> a"
+      },
+      {
+        "name": "jump",
+        "comment": " When you want a computation to be delayed so that it is handled by the\ntrampoline.\n",
+        "type": "(() -> Trampoline.Trampoline a) -> Trampoline.Trampoline a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

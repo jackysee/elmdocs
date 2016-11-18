@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Test.Runner.Node",
+    "comment": " # Node Runner\n\nRuns a test and outputs its results to the console. Exit code is 0 if tests\npassed and 1 if any failed.\n\n@docs run, runWithOptions\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": " Run the test and report the results.\n\nFuzz tests use a default run count of 100, and an initial seed based on the\nsystem time when the test runs begin.\n",
+        "type": "Test.Runner.Node.Emitter Test.Runner.Node.Msg -> Test.Test -> Platform.Program Json.Encode.Value"
+      },
+      {
+        "name": "runWithOptions",
+        "comment": " Run the test using the provided options. If `Nothing` is provided for either\n`runs` or `seed`, it will fall back on the options used in [`run`](#run).\n",
+        "type": "Test.Runner.Node.Options -> Test.Runner.Node.Emitter Test.Runner.Node.Msg -> Test.Test -> Platform.Program Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

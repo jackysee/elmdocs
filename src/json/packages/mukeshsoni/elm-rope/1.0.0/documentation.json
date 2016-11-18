@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Rope",
+    "comment": "\nThis module implements the rope data structure which is used to store and manipulate large strings.\nIt's more performant and memory efficient for operations like inserting a substring into a string,\nconcatenating two strings etc.\n\n# Definition\n@docs Rope\n\n# Common Helpers\n@docs build, buildWithMaxLeafCapacity, concat, getSize, toString, atIndex, getCharAt, split, insert, delete, substr\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Rope",
+        "comment": "\nRope type is used to store strings of arbitrary length. It's implemented as a\nbinary tree. The strings themselves are stored in the leaves of the tree.\nThe intermediary nodes store weight, which help navigating the tree when trying to\nsplit the tree or perform other operations like insert another string in between or pull out a substring\nfrom the string\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "atIndex",
+        "comment": "\nReturns the character at a given index in the string encoded in the rope. Returns `Nothing`, if the index is unreachable.\n",
+        "type": "Rope.Rope -> Int -> Maybe.Maybe Char"
+      },
+      {
+        "name": "build",
+        "comment": "\nBuild a rope, give a string. Takes `maxLeafNodeCapacity` as 10 (max length of a string stored in leaf node).\n",
+        "type": "String -> Rope.Rope"
+      },
+      {
+        "name": "buildWithMaxLeafCapacity",
+        "comment": "\nLike `build`, but user can specify the max capacity of leaf node.\n",
+        "type": "Int -> String -> Rope.Rope"
+      },
+      {
+        "name": "concat",
+        "comment": "Concatenate two ropes into a single rope.",
+        "type": "Rope.Rope -> Rope.Rope -> Rope.Rope"
+      },
+      {
+        "name": "delete",
+        "comment": "\ndeletes a substring from the rope given a startIndex and the length of substring to be deleted.\nE.g. assume r is a Rope which has the string `I blamah you`, then `Rope.delete 3 3 r` will delete\n\"lam\" from the rope and return another rope which contains `i bah you`\n",
+        "type": "Int -> Int -> Rope.Rope -> Rope.Rope"
+      },
+      {
+        "name": "getCharAt",
+        "comment": "Get character at ith position in the string. If ith position doesnt' exist, return Nothing",
+        "type": "String -> Int -> Maybe.Maybe Char"
+      },
+      {
+        "name": "getSize",
+        "comment": "Returns the length of the string contained in the rope.",
+        "type": "Rope.Rope -> Int"
+      },
+      {
+        "name": "insert",
+        "comment": "\ninserts a string in the rope at the given index\n",
+        "type": "Int -> String -> Rope.Rope -> Rope.Rope"
+      },
+      {
+        "name": "split",
+        "comment": "\nSplits the rope at the given index into two ropes. Split forms the basis of insertion operation.\n",
+        "type": "Int -> Rope.Rope -> ( Rope.Rope, Rope.Rope )"
+      },
+      {
+        "name": "substr",
+        "comment": "\nfinds substring from index i for length j\n",
+        "type": "Int -> Int -> Rope.Rope -> String"
+      },
+      {
+        "name": "toString",
+        "comment": "\nReturns the string which the rope has encoded.\n",
+        "type": "Rope.Rope -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

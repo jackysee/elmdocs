@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Timer",
+    "comment": " Timer provides a fine-grained timer component for use in Elm Architecture\napps. Its resolution is as good as can be obtained using Effects.tick.\n\nSee example/Main.elm in the source for an example application that uses Timer.\n\nNote: There is a simpler solution available using just `Task.sleep`. See\nexamples/Sleep.elm for that. So this Timer package is probably over-complicated.\n\n## Steps in adding Timer to an application\n\n### Add Timer model to application model\n\n```elm\ntype alias Model = { ..., timer : Timer.Model }\n```\n\n### Initialize the timer\n\n```elm\ninit = Model ..., Timer.init\n```\n\n### Define new actions to represent timeout and timer actions\n\n```elm\ntype Action = ... | TimerAction Timer.Action | Timeout\n```\n\nThese action names are arbitrary (but must be consistent with their usage\nbelow). The former represents actions that must be forwarded to the timer\ncomponent. The latter occurs when the timer expires.\n\n### Define a Mailbox for receiving the expiration event\n\n```elm\nactionsMailbox =\n  Signal.mailbox Timeout\n```\n\n### Add the Mailbox signal to app inputs\n\n```elm\napp = StartApp.start { ..., inputs = [ actionMailbox.signal ] }\n```\n\n### Start timer as an effect in the update function\n\n```elm\nupdate action model =\n  case action of\n    ...\n    SomeTriggerAction -> ( model\n                         , Timer.start 500 |> Effects.map TimerAction\n                         )\n```\n\nThis could also be done as an effect in the app's init function.\n\n### Handle timeout as new case in the update function\n\n```elm\n    Timeout -> ( someChangeTo model, Effects.none )\n```\nThis could return some other effect if that's what is desired when timeout occurs.\n\n\n### Forward actions and effects to and from timer in update function\n\n```elm\n    TimerAction timerAction ->\n      let\n        context =\n          Signal.forwardTo actionsMailbox.address (always Timeout)\n\n        ( newTimer, timerEffect ) =\n          Timer.update context timerAction model.timer\n      in\n        ( { model | timer = newTimer }\n        , Effects.map TimerAction timerEffect\n        )\n```\n\n# Functions\n@docs init, update, start\n\n# Types\n@docs Action, Model\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The parent app must include the Timer Model in its own model.\n",
+        "args": [],
+        "type": "{ state : Timer.State, remaining : Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " The parent's update function must forward these actions to the Timer. The\ntype is opaque as the parent just forwards all timer actions the same way.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Provide a Timer model in the initial idle state.\n",
+        "type": "Timer.Model"
+      },
+      {
+        "name": "start",
+        "comment": " Start the timer, setting it to expire in the given number of\nmilliseconds. The resulting effect must be the `Action` value that forwards to\nthe timer, `TimerAction` in the examples.\n",
+        "type": "Time.Time -> Effects.Effects Timer.Action"
+      },
+      {
+        "name": "update",
+        "comment": " Update the Timer: start it, advance it by one tick, expire it.\nThe Timer reports expiration by sending to the Context.\n",
+        "type": "Timer.Context -> Timer.Action -> Timer.Model -> ( Timer.Model, Effects.Effects Timer.Action )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

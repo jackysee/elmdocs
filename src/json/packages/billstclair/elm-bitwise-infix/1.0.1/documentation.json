@@ -1,0 +1,58 @@
+[
+  {
+    "name": "BitwiseInfix",
+    "comment": " This module provides infix versions of Elm's Bitwise module functions.\nThis greatly eases conversion of existing JavaScript code.\nIntead of changing infix to prefix, just prepend a twiddle (~) \nto the operators.\n\n```Bitwise.not``` has no infix operator, since Elm doesn't provide\nsingle argument \"infix\" operators. So I named it\n```BitwiseInfix.lognot```, in honor of its Common Lisp name.\n\nIt is intended to be imported exposing (..), so that the operators can\nappear unadorned in your code.\n\nAll the operators are left associative.\n\nI mirrored the JavaScript precedences, putting the shift operators at\nlower precedence than arithmetic, but higher than comparison, and the\nothers lower than comparison.\n\n```(~<<)```, ```(~>>)```, and ```(~>>>)``` have a precedence of 5.<br/>\n```(~&)``` has a precedence of 3.<br/>\n```(~^)``` has a precedence of 2.<br/>\n```(~|)``` has a precedence of 1.\n\nExamples:\n\n```\nimport BitwiseInfix exposing (..)\n\n3 ~& 1 ~| 4 ~& 12     -- 5\n3 ~& (1 ~| 4) ~& 12   -- 0\n2 ~<< 1 ~| 2          -- 6\n2 ~<< (1 ~| 2)        -- 16\n1 ~| 2 ~^ 2 ~| 1      -- 1\n(1 ~| 2) ~^ (2 ~| 1)  -- 0\n3 ~& 1 ~^ 4 ~& 12     -- 5\n3 ~& (1 ~^ 4) ~& 12   -- 0\n9 ~>> 1 ~<< 1         -- 8\n9 ~>> (1 ~<< 1)       -- 2\n```\n\n# Functions\n@docs (~&), (~|), (~^), lognot, (~<<), (~>>), (~>>>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "lognot",
+        "comment": " Alias for Bitwise.not.\nElm does not provide \"infix\" operators with only a single argument.\nThis name let's you import BitwiseInfix exposing (..), without\nworrying about name collisions.\n",
+        "type": "Int -> Int"
+      },
+      {
+        "name": "~&",
+        "comment": " Infix for Bitwise.and ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 3
+      },
+      {
+        "name": "~<<",
+        "comment": " Infix for Bitwise.shiftLeft ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": "~>>",
+        "comment": " Infix for Bitwise.shiftRight ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": "~>>>",
+        "comment": " Infix for Bitwise.shiftRightLogical ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": "~^",
+        "comment": " Infix for Bitwise.xor ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "~|",
+        "comment": " Infix for Bitwise.or ",
+        "type": "Int -> Int -> Int",
+        "associativity": "left",
+        "precedence": 1
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

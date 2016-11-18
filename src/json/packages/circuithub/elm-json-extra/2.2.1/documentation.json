@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Json.Decode.Extra",
+    "comment": " Convenience functions for working with Json\n\n# Date\n@docs date\n\n# Incremental Decoding\n@docs apply, (|:)\n\n# Set\n@docs set\n\n# Dict\n@docs dict2\n\n# Maybe\n@docs withDefault, maybeNull\n\n# Recursively Defined Decoders\n@docs lazy\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Can be helpful when decoding large objects incrementally.\n\n    import Date (Date)\n\n    type alias User =\n      { id                : Int\n      , createdAt         : Date\n      , updatedAt         : Date\n      , deletedAt         : Maybe Date\n      , username          : Maybe String\n      , email             : Maybe String\n      , fullname          : Maybe String\n      , avatar            : Maybe String\n      , isModerator       : Bool\n      , isOrganization    : Bool\n      , isAdmin           : Bool\n      }\n\n    metaDecoder : (Int -> Date -> Date -> Maybe Date -> b) -> Decoder b\n    metaDecoder f = f\n      `map`      (\"id\"        := int)\n      `apply` (\"createdAt\" := date)\n      `apply` (\"updatedAt\" := date)\n      `apply` (\"deletedAt\" := maybe date)\n\n    userDecoder : Decoder User\n    userDecoder = metaDecoder User\n      `apply` (\"username\"          := maybe string)\n      `apply` (\"email\"             := maybe string)\n      `apply` (\"fullname\"          := maybe string)\n      `apply` (\"avatar\"            := maybe string)\n      `apply` (\"isModerator\"       := bool)\n      `apply` (\"isOrganization\"    := bool)\n      `apply` (\"isAdmin\"           := bool)\n\nThis is a shortened form of\n\n    metaDecoder : (Int -> Date -> Date -> Maybe Date -> b) -> Decoder b\n    metaDecoder f = f\n      `map`      (\"id\"        := int)\n      `andThen` \\f -> f `map` (\"createdAt\" := date)\n      `andThen` \\f -> f `map` (\"updatedAt\" := date)\n      `andThen` \\f -> f `map` (\"deletedAt\" := maybe date)\n\n    userDecoder : Decoder User\n    userDecoder = metaDecoder User\n      `andThen` \\f -> f `map` (\"username\"          := maybe string)\n      `andThen` \\f -> f `map` (\"email\"             := maybe string)\n      `andThen` \\f -> f `map` (\"fullname\"          := maybe string)\n      `andThen` \\f -> f `map` (\"avatar\"            := maybe string)\n      `andThen` \\f -> f `map` (\"isModerator\"       := bool)\n      `andThen` \\f -> f `map` (\"isOrganization\"    := bool)\n      `andThen` \\f -> f `map` (\"isAdmin\"           := bool)\n\n",
+        "type": "Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "date",
+        "comment": " Extract a date.\n\nNote that this function is not total, it will throw an exception given an incorrectly formatted date.\nSee `Date.fromString` and `Json.customDecoder`.\n\n",
+        "type": "Json.Decode.Decoder Date.Date"
+      },
+      {
+        "name": "dict2",
+        "comment": " Extract a dict using separate decoders for keys and values. ",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder v -> Json.Decode.Decoder (Dict.Dict comparable v)"
+      },
+      {
+        "name": "lazy",
+        "comment": " Enable decoders defined in terms of themselves by lazily creating them.\n\n    treeNode =\n      object2\n        instantiateTreeNode\n        (\"name\" := string)\n        (\"children\" := list (lazy (\\_ -> treeNode)))\n\n",
+        "type": "(() -> Json.Decode.Decoder a) -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "maybeNull",
+        "comment": " Extract a value that might be null. If the value is null,\nsucceed with Nothing. If the value is present but not null, succeed with\nJust that value. If the value is missing, fail.\n\n    -- Yields Nothing if middleName is null, and Just middleName if it's a string.\n    \"middleName\" := maybeNull string\n\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (Maybe.Maybe a)"
+      },
+      {
+        "name": "set",
+        "comment": " Extract a set. ",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder (Set.Set comparable)"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Try running the given decoder; if that fails, then succeed with the given\nfallback value.\n\n    -- If this field is missing or malformed, it will decode to [].\n    (\"optionalNames\" := list string)\n      |> (withDefault [])\n\n",
+        "type": "a -> Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "|:",
+        "comment": " Infix version of `apply` that makes for a nice DSL when decoding objects:\n\n    locationDecoder : Decoder Location\n    locationDecoder =\n        succeed Location\n            |: (\"id\" := int)\n            |: (\"name\" := string)\n            |: (\"address\" := string)\n            |: (\"city\" := string)\n            |: (\"state\" := string)\n\n\n    type alias Location =\n        { id : Int\n        , name : String\n        , address : String\n        , city : String\n        , state : String\n        }\n\n",
+        "type": "Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

@@ -1,0 +1,153 @@
+[
+  {
+    "name": "Data.Integer",
+    "comment": " Infinite digits integers\n# The datatype\n@docs Integer\n@docs Sign\n\n# From/To\n@docs fromInt\n@docs fromString\n@docs toString\n\n# Common operations\n@docs add\n@docs sub\n@docs negate\n@docs mul\n@docs divmod\n@docs unsafeDivmod\n@docs abs\n@docs sign\n\n# Comparison\n@docs compare\n@docs gt\n@docs gte\n@docs lt\n@docs lte\n@docs eq\n@docs neq\n@docs max\n@docs min\n\n# Common numbers\n@docs zero\n@docs one\n@docs minusOne\n\n# Internals\n@docs max_digit_value\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Integer",
+        "comment": " Integer type ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Sign",
+        "comment": " The sign of the integer ",
+        "args": [],
+        "cases": [
+          [
+            "Positive",
+            []
+          ],
+          [
+            "Negative",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "abs",
+        "comment": " Absolute value ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "add",
+        "comment": " Adds two Integers ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "compare",
+        "comment": " Compares two Integers ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Basics.Order"
+      },
+      {
+        "name": "divmod",
+        "comment": " Division and modulus ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Maybe.Maybe ( Data.Integer.Integer, Data.Integer.Integer )"
+      },
+      {
+        "name": "eq",
+        "comment": " Equals ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Makes an Integer from an Int ",
+        "type": "Int -> Data.Integer.Integer"
+      },
+      {
+        "name": "fromString",
+        "comment": " Makes an Integer from a String ",
+        "type": "String -> Maybe.Maybe Data.Integer.Integer"
+      },
+      {
+        "name": "gt",
+        "comment": " Greater than ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "gte",
+        "comment": " Greater than or equals ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "lt",
+        "comment": " Less than ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "lte",
+        "comment": " Less than or equals ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "max",
+        "comment": " Returns the largest of two Integers ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "max_digit_value",
+        "comment": " Enough to hold digit * digit without overflowing to double ",
+        "type": "Int"
+      },
+      {
+        "name": "min",
+        "comment": " Returns the smallest of two Integers ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "minusOne",
+        "comment": " Number -1 ",
+        "type": "Data.Integer.Integer"
+      },
+      {
+        "name": "mul",
+        "comment": " Multiplies two Integers ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "negate",
+        "comment": " Changes the sign of an Integer ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "neq",
+        "comment": " Not equals ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Bool"
+      },
+      {
+        "name": "one",
+        "comment": " Number 1 ",
+        "type": "Data.Integer.Integer"
+      },
+      {
+        "name": "sign",
+        "comment": " Get the sign of the integer ",
+        "type": "Data.Integer.Integer -> Data.Integer.Sign"
+      },
+      {
+        "name": "sub",
+        "comment": " Substracts the second Integer from the first ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> Data.Integer.Integer"
+      },
+      {
+        "name": "toString",
+        "comment": " Converts the Integer to a String ",
+        "type": "Data.Integer.Integer -> String"
+      },
+      {
+        "name": "unsafeDivmod",
+        "comment": " divmod that returns the pair of values, or crashes if the divisor is zero ",
+        "type": "Data.Integer.Integer -> Data.Integer.Integer -> ( Data.Integer.Integer, Data.Integer.Integer )"
+      },
+      {
+        "name": "zero",
+        "comment": " Number 0 ",
+        "type": "Data.Integer.Integer"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

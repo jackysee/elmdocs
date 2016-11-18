@@ -1,0 +1,582 @@
+[
+  {
+    "name": "Form.Input",
+    "comment": "\n@docs Input\n\n@docs baseInput, textInput, passwordInput, textArea, checkboxInput, selectInput, radioInput\n\n@docs dumpErrors\n",
+    "aliases": [
+      {
+        "name": "Input",
+        "comment": " An input renders Html from a field state and list of additional attributes.\nAll input functions using this type alias are pre-wired with event handlers.\n",
+        "args": [
+          "e",
+          "a"
+        ],
+        "type": "Form.FieldState e a -> List (Html.Attribute Form.Msg) -> Html.Html Form.Msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "baseInput",
+        "comment": " Untyped input, first param is `type` attribute.\n",
+        "type": "String -> (String -> Form.Field.Field) -> Form.Input.Input e String"
+      },
+      {
+        "name": "checkboxInput",
+        "comment": " Checkbox input.\n",
+        "type": "Form.Input.Input e Bool"
+      },
+      {
+        "name": "dumpErrors",
+        "comment": " Dump all form errors in a `<pre>` tag. Useful for debugging.\n",
+        "type": "Form.Form e o -> Html.Html msg"
+      },
+      {
+        "name": "passwordInput",
+        "comment": " Password input.\n",
+        "type": "Form.Input.Input e String"
+      },
+      {
+        "name": "radioInput",
+        "comment": " Radio input.\n",
+        "type": "String -> Form.Input.Input e String"
+      },
+      {
+        "name": "selectInput",
+        "comment": " Select input.\n",
+        "type": "List ( String, String ) -> Form.Input.Input e String"
+      },
+      {
+        "name": "textArea",
+        "comment": " Textarea.\n",
+        "type": "Form.Input.Input e String"
+      },
+      {
+        "name": "textInput",
+        "comment": " Text input.\n",
+        "type": "Form.Input.Input e String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Form",
+    "comment": " Simple forms made easy: A Dict implementation of the core `Json.Decode` API,\nwith state lifecycle and input helpers for the views.\n\n# Types\n@docs Msg, Form, FieldState\n\n# Init/update lifecyle\n@docs initial, update\n\n# Field state accessors\n@docs getFieldAsString, getFieldAsBool\n\n# Global state accessors\n@docs getFocus, isSubmitted, getErrors, getOutput, getChangedFields\n",
+    "aliases": [
+      {
+        "name": "FieldState",
+        "comment": " Field state containing all necessary data for view and update,\ncan be retrived with `Form.getFieldAsString` or `Form.getFieldAsBool`.\n\n * `path` - qualified path of the field in the form, with dots for nested fields (`field.subfield`)\n * `value` - a `Maybe` of the requested type\n * `error` - a `Maybe` of the field error\n * `liveError` - same but with added logic for live validation\n    (see [`getLiveErrorAt`](https://github.com/etaque/elm-simple-form/blob/master/src/Form.elm) impl)\n * `isDirty` - if the field content has been changed since last validation\n * `isChanged` - if the field value has changed since last init/reset\n * `hasFocus` - if the field is currently focused\n",
+        "args": [
+          "e",
+          "a"
+        ],
+        "type": "{ path : String , value : Maybe.Maybe a , error : Maybe.Maybe (Form.Error.Error e) , liveError : Maybe.Maybe (Form.Error.Error e) , isDirty : Bool , isChanged : Bool , hasFocus : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Form",
+        "comment": " Form to embed in your model. Type parameters are:\n\n * `customError` - a custom error type to extend built-in errors (set to `()` if you don't need it)\n * `output` - the type of the validation output.\n",
+        "args": [
+          "customError",
+          "output"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Form messages for `update`.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoOp",
+            []
+          ],
+          [
+            "Focus",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Blur",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Input",
+            [
+              "String",
+              "Form.Field.Field"
+            ]
+          ],
+          [
+            "Submit",
+            []
+          ],
+          [
+            "Validate",
+            []
+          ],
+          [
+            "Reset",
+            [
+              "List ( String, Form.Field.Field )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getChangedFields",
+        "comment": " Get set of changed fields.\n",
+        "type": "Form.Form e o -> Set.Set String"
+      },
+      {
+        "name": "getErrors",
+        "comment": " Get list of errors on qualified paths.\n",
+        "type": "Form.Form e o -> List ( String, Form.Error.Error e )"
+      },
+      {
+        "name": "getFieldAsBool",
+        "comment": " Get field state at path, with value as a `Bool`.\n",
+        "type": "String -> Form.Form e o -> Form.FieldState e Bool"
+      },
+      {
+        "name": "getFieldAsString",
+        "comment": " Get field state at path, with value as a `String`.\n",
+        "type": "String -> Form.Form e o -> Form.FieldState e String"
+      },
+      {
+        "name": "getFocus",
+        "comment": " Return currently focused field, if any.\n",
+        "type": "Form.Form e o -> Maybe.Maybe String"
+      },
+      {
+        "name": "getOutput",
+        "comment": " Get form output, in case of validation success.\n",
+        "type": "Form.Form e o -> Maybe.Maybe o"
+      },
+      {
+        "name": "initial",
+        "comment": " Initial form state. See `Form.Field` for initial fields, and `Form.Validate` for validation.\n",
+        "type": "List ( String, Form.Field.Field ) -> Form.Validate.Validation e output -> Form.Form e output"
+      },
+      {
+        "name": "isSubmitted",
+        "comment": " Get form submission state. Useful to show errors on unchanged fields.\n",
+        "type": "Form.Form e o -> Bool"
+      },
+      {
+        "name": "update",
+        "comment": " Update form state with the given message\n",
+        "type": "Form.Msg -> Form.Form e output -> Form.Form e output"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Form.Validate",
+    "comment": " Form validation.\n\n# Combinators\n@docs Validation, get, map, succeed, andThen, pipeTo, apply, customError, defaultValue, formatError, withCustomError\n\n# Fixed-size forms\n@docs form1, form2, form3, form4, form5, form6, form7, form8\n\n# Type extractors\n@docs string, int, float, bool, date, maybe, email, url, emptyString\n\n# Common filters\n@docs minInt, maxInt, minFloat, maxFloat, minLength, maxLength, nonEmpty, format, includedIn\n\n# Custom validations\n@docs fail, succeed, customValidation, oneOf\n",
+    "aliases": [
+      {
+        "name": "Validation",
+        "comment": " A validation is a function that takes a form field and returns a result\nbeing either a validation error or the expected object.\n",
+        "args": [
+          "customError",
+          "output"
+        ],
+        "type": "Form.Field.Field -> Result.Result (Form.Error.Error customError) output"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Apply a new validation to the result of the validation.\n\n    get \"myfield\" (int `andThen` minInt 10)\n",
+        "type": "Form.Validate.Validation e a -> (a -> Form.Validate.Validation e b) -> Form.Validate.Validation e b"
+      },
+      {
+        "name": "apply",
+        "comment": " Incremental form validation for records with more that 8 fields.\n\n    Form.succeed SomeRecord\n      `apply` (get \"foo\" string)\n      `apply` (get \"bar\" string)\n",
+        "type": "Form.Validate.Validation e (a -> b) -> Form.Validate.Validation e a -> Form.Validate.Validation e b"
+      },
+      {
+        "name": "bool",
+        "comment": " Validation a Bool.\n",
+        "type": "Form.Validate.Validation e Bool"
+      },
+      {
+        "name": "customError",
+        "comment": " Helper to create a CustomError.\n",
+        "type": "e -> Form.Error.Error e"
+      },
+      {
+        "name": "customValidation",
+        "comment": " Custom validation for your special cases.\n",
+        "type": "Form.Validate.Validation e a -> (a -> Result.Result (Form.Error.Error e) b) -> Form.Validate.Validation e b"
+      },
+      {
+        "name": "date",
+        "comment": " Validation a Date using `Date.fromString`.\n",
+        "type": "Form.Validate.Validation e Date.Date"
+      },
+      {
+        "name": "defaultValue",
+        "comment": " Rescue a failed validation with the supplied value.\n",
+        "type": "a -> Form.Validate.Validation e a -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "email",
+        "comment": " Check if the string is a valid email address.\n",
+        "type": "Form.Validate.Validation e String"
+      },
+      {
+        "name": "emptyString",
+        "comment": " Validate an empty string, otherwise failing with InvalidString.\nUseful with `oneOf` for optional fields with format validation.\n",
+        "type": "Form.Validate.Validation e String"
+      },
+      {
+        "name": "fail",
+        "comment": " A validation that always fails. Useful for contextual validation.\n",
+        "type": "Form.Error.Error e -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "float",
+        "comment": " Validation a float using `String.toFloat`.\n",
+        "type": "Form.Validate.Validation e Float"
+      },
+      {
+        "name": "form1",
+        "comment": " Validation a form with one field.\n",
+        "type": "(a -> field) -> Form.Validate.Validation e a -> Form.Validate.Validation e field"
+      },
+      {
+        "name": "form2",
+        "comment": " Validation a form with two fields.\n",
+        "type": "(a -> b -> m) -> Form.Validate.Validation e a -> Form.Validate.Validation e b -> Form.Validate.Validation e m"
+      },
+      {
+        "name": "form3",
+        "comment": " Validation a form with three fields.\n",
+        "type": "(a -> b -> c -> m) -> Form.Validate.Validation e a -> Form.Validate.Validation e b -> Form.Validate.Validation e c -> Form.Validate.Validation e m"
+      },
+      {
+        "name": "form4",
+        "comment": " Validation a form with four fields.\n",
+        "type": "(a -> b -> c -> d -> m) -> Form.Validate.Validation e a -> Form.Validate.Validation e b -> Form.Validate.Validation e c -> Form.Validate.Validation e d -> Form.Validate.Validation e m"
+      },
+      {
+        "name": "form5",
+        "comment": " Validation a form with five fields.\n",
+        "type": "(a -> b -> c -> d -> e -> m) -> Form.Validate.Validation err a -> Form.Validate.Validation err b -> Form.Validate.Validation err c -> Form.Validate.Validation err d -> Form.Validate.Validation err e -> Form.Validate.Validation err m"
+      },
+      {
+        "name": "form6",
+        "comment": " Validation a form with six fields.\n",
+        "type": "(a -> b -> c -> d -> e -> f -> m) -> Form.Validate.Validation err a -> Form.Validate.Validation err b -> Form.Validate.Validation err c -> Form.Validate.Validation err d -> Form.Validate.Validation err e -> Form.Validate.Validation err f -> Form.Validate.Validation err m"
+      },
+      {
+        "name": "form7",
+        "comment": " Validation a form with seven fields.\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> m) -> Form.Validate.Validation err a -> Form.Validate.Validation err b -> Form.Validate.Validation err c -> Form.Validate.Validation err d -> Form.Validate.Validation err e -> Form.Validate.Validation err f -> Form.Validate.Validation err g -> Form.Validate.Validation err m"
+      },
+      {
+        "name": "form8",
+        "comment": " Validation a form with eight fields.\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> m) -> Form.Validate.Validation err a -> Form.Validate.Validation err b -> Form.Validate.Validation err c -> Form.Validate.Validation err d -> Form.Validate.Validation err e -> Form.Validate.Validation err f -> Form.Validate.Validation err g -> Form.Validate.Validation err h -> Form.Validate.Validation err m"
+      },
+      {
+        "name": "format",
+        "comment": " Validates format of the string.\n",
+        "type": "Regex.Regex -> String -> Form.Validate.Validation e String"
+      },
+      {
+        "name": "formatError",
+        "comment": " Call Result.formatError on validation result.\n",
+        "type": "(Form.Error.Error e1 -> Form.Error.Error e2) -> Form.Validate.Validation e1 a -> Form.Validate.Validation e2 a"
+      },
+      {
+        "name": "get",
+        "comment": " Access the given field in the group.\n\n    get \"name\" string\n",
+        "type": "String -> Form.Validate.Validation e a -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "includedIn",
+        "comment": " Check if the string is included in the given list.\n",
+        "type": "List String -> String -> Form.Validate.Validation e String"
+      },
+      {
+        "name": "int",
+        "comment": " Validation an integer using `String.toInt`.\n",
+        "type": "Form.Validate.Validation e Int"
+      },
+      {
+        "name": "map",
+        "comment": " Map over the result of the validation.\n\n    get \"myfield\" (string |> map String.trim)\n",
+        "type": "(a -> b) -> Form.Validate.Validation e a -> Form.Validate.Validation e b"
+      },
+      {
+        "name": "maxFloat",
+        "comment": " Max value for Float.\n",
+        "type": "Float -> Float -> Form.Validate.Validation e Float"
+      },
+      {
+        "name": "maxInt",
+        "comment": " Max value for Int.\n",
+        "type": "Int -> Int -> Form.Validate.Validation e Int"
+      },
+      {
+        "name": "maxLength",
+        "comment": " Max length for String.\n",
+        "type": "Int -> String -> Form.Validate.Validation e String"
+      },
+      {
+        "name": "maybe",
+        "comment": " Transform validation result to `Maybe`, using `Result.toMaybe`.\n",
+        "type": "Form.Validate.Validation e a -> Form.Validate.Validation e (Maybe.Maybe a)"
+      },
+      {
+        "name": "minFloat",
+        "comment": " Min value for Float.\n",
+        "type": "Float -> Float -> Form.Validate.Validation e Float"
+      },
+      {
+        "name": "minInt",
+        "comment": " Min value for Int.\n",
+        "type": "Int -> Int -> Form.Validate.Validation e Int"
+      },
+      {
+        "name": "minLength",
+        "comment": " Min length for String.\n",
+        "type": "Int -> String -> Form.Validate.Validation e String"
+      },
+      {
+        "name": "nonEmpty",
+        "comment": " Fails if `String.isEmpty`.\n",
+        "type": "String -> Form.Validate.Validation e String"
+      },
+      {
+        "name": "oneOf",
+        "comment": " First successful validation wins, from left to right.\n",
+        "type": "List (Form.Validate.Validation e a) -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "pipeTo",
+        "comment": " Same as `andThen`, but flipped for piping.\n\n    int |> pipeTo (minInt 10)\n",
+        "type": "(a -> Form.Validate.Validation e b) -> Form.Validate.Validation e a -> Form.Validate.Validation e b"
+      },
+      {
+        "name": "string",
+        "comment": " Validation a String.\n",
+        "type": "Form.Validate.Validation e String"
+      },
+      {
+        "name": "succeed",
+        "comment": " A validation that always succeeds. Useful for contextual validation.\n",
+        "type": "a -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "url",
+        "comment": " Check if the string is a valid URL.\n",
+        "type": "Form.Validate.Validation e String"
+      },
+      {
+        "name": "withCustomError",
+        "comment": " Arrange that if a validation fails, it has the given custom error.\n\n    get \"customerId\" (V.int\n          `andThen` minInt 1\n          `andThen` maxInt 9999\n          |> withCustomError InvalidIdentity)\n",
+        "type": "customErr -> Form.Validate.Validation e a -> Form.Validate.Validation customErr a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Form.Error",
+    "comment": " Validation errors.\n\n@docs Error, getAt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " A validation error. See `Form.Validate.customError` for `CustomError` building.\n",
+        "args": [
+          "e"
+        ],
+        "cases": [
+          [
+            "GroupErrors",
+            [
+              "Dict.Dict String (Form.Error.Error e)"
+            ]
+          ],
+          [
+            "Empty",
+            []
+          ],
+          [
+            "InvalidString",
+            []
+          ],
+          [
+            "InvalidEmail",
+            []
+          ],
+          [
+            "InvalidUrl",
+            []
+          ],
+          [
+            "InvalidFormat",
+            []
+          ],
+          [
+            "InvalidInt",
+            []
+          ],
+          [
+            "InvalidFloat",
+            []
+          ],
+          [
+            "InvalidBool",
+            []
+          ],
+          [
+            "InvalidDate",
+            []
+          ],
+          [
+            "SmallerIntThan",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "GreaterIntThan",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SmallerFloatThan",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "GreaterFloatThan",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "ShorterStringThan",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "LongerStringThan",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "NotIncludedIn",
+            []
+          ],
+          [
+            "CustomError",
+            [
+              "e"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getAt",
+        "comment": " Get error at name, for nested errors.\n",
+        "type": "String -> Form.Error.Error e -> Maybe.Maybe (Form.Error.Error e)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Form.Field",
+    "comment": " Read and write field values.\n\n# Constructors\n@docs Field, group\n\n# Value readers\n@docs at, asString, asBool\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Field",
+        "comment": " Form field. Can either be a group of named fields, or a final field.\n",
+        "args": [],
+        "cases": [
+          [
+            "Group",
+            [
+              "Dict.Dict String Form.Field.Field"
+            ]
+          ],
+          [
+            "Text",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Textarea",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Select",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Radio",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Check",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "EmptyField",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "asBool",
+        "comment": " Get field value as boolean.\n",
+        "type": "Form.Field.Field -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "asString",
+        "comment": " Get field value as string.\n",
+        "type": "Form.Field.Field -> Maybe.Maybe String"
+      },
+      {
+        "name": "at",
+        "comment": " Get field at name, for nested forms.\n",
+        "type": "String -> Form.Field.Field -> Maybe.Maybe Form.Field.Field"
+      },
+      {
+        "name": "group",
+        "comment": " Build a group of values, for nested forms.\n",
+        "type": "List ( String, Form.Field.Field ) -> Form.Field.Field"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

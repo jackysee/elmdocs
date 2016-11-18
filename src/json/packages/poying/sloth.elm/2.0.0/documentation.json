@@ -1,0 +1,109 @@
+[
+  {
+    "name": "Sloth",
+    "comment": " Sloth is a testing framework for Elm. It is inspired from the Node.js module [Mocha](https://github.com/mochajs/mocha).\n\n#Types\n@docs Data\n\n# Creating Tests\n@docs start, describe, it, end\n\n# Operators\n@docs (=>)\n",
+    "aliases": [
+      {
+        "name": "Data",
+        "comment": " ",
+        "args": [],
+        "type": "Sloth.Data.Data"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "=>",
+        "comment": " ",
+        "type": "String -> Sloth.Suite.TestStatus -> ( String, Sloth.Suite.TestStatus )",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "describe",
+        "comment": " Open a describe block. ",
+        "type": "Sloth.Data -> String -> Sloth.Data",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "end",
+        "comment": " Close describe block(s). ",
+        "type": "Sloth.Data -> Int -> Sloth.Data",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "it",
+        "comment": " Create a test case. ",
+        "type": "Sloth.Data -> ( String, Sloth.Suite.TestStatus ) -> Sloth.Data",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "start",
+        "comment": " Create a `Data` which conatins all test cases and suites. ",
+        "type": "Sloth.Data"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Sloth.Reporters",
+    "comment": " Sloth.Reporters provides some method to render test results.\n\n@docs RenderResult\n\n@docs json, ansi\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "RenderResult",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Pass",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Fail",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "ansi",
+        "comment": " Render result as ANSI. ",
+        "type": "List ( String, Sloth.Data.Data ) -> Sloth.Reporters.RenderResult"
+      },
+      {
+        "name": "json",
+        "comment": " Render result as JSON. ",
+        "type": "List ( String, Sloth.Data.Data ) -> Sloth.Reporters.RenderResult"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Sloth.Assertion",
+    "comment": " Sloth.Assertion provides some assertion helpers.\n\n@docs shouldBe, shouldNotBe\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "shouldBe",
+        "comment": " ",
+        "type": "a -> a -> Sloth.Suite.TestStatus"
+      },
+      {
+        "name": "shouldNotBe",
+        "comment": " ",
+        "type": "a -> a -> Sloth.Suite.TestStatus"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

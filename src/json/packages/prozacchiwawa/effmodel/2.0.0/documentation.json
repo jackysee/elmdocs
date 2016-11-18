@@ -1,0 +1,56 @@
+[
+  {
+    "name": "EffModel",
+    "comment": "\n\nEffModel embodies a single value that carries both the model and accumulated\neffects for a world step in the elm architecture.\n\nThe elm architecture is nice, but a tuple of model and effect is troublesome\nto compose.  Consider the standard update function:\n\nupdate : Action -> Model -> (Model, Cmd Action)\n\nIn order to compose it, you need to destructure the result, use Cmd.batch\non the snd, and map on the first, then combine a new tuple.  EffModel replaces\nthis process and has functions that construct an effmodel either from a model\nor an update result tuple, and that produce an update result tuple from an\nEffModel.\n\nI use it extensively like this:\n\n    import EffModel as EF\n\n    handleUpdateForOneLogicalThing : Action -> EffModel Model Action -> EffModel Model Action\n    handleUpdateForOneLogicalThing action effmodel =\n        case action of\n            Increment -> effmodel |> EF.map (\\m -> { m | count = m.count + 1 })\n            Decrement ->\n                effmodel\n                -- Compose model update and an effect conveniently\n                    |> EF.map (\\m -> { m | count = m.count - 1 })\n                    |> EF.eff (Cmd.task (Task.sleep (5 * Time.second) `Task.andThen` (\\_ -> Task.succeed Increment)))\n            _ -> effmodel -- Note that you can just pass it through easily\n\n    handleUpdateForAnotherLogicalThing : Action -> EffModel Model Action -> EffModel Model Action\n\n    update : Action -> Model -> (Model, Cmd Action)\n    update action model =\n        model\n            |> wrap\n            |> handleUpdateForOneLogicalThing action\n            |> handleUpdateForAnotherLogicalThing action\n            |> unwrap\n\n# Definition\n\n@docs EffModel\n\n# Creation functions\n\n@docs wrap, wrap2\n\n# Termination\n\n@docs unwrap\n\n# Accessor\n\n@docs get\n\n# Operations\n\n@docs map, eff, effMap\n\n",
+    "aliases": [
+      {
+        "name": "EffModel",
+        "comment": "\n\nA type representing the combination of a model value and the accumulated\neffects of a chain of composed actions on a model along with emitted\neffects.\n\n",
+        "args": [
+          "model",
+          "action"
+        ],
+        "type": "{ model : model, eff : Platform.Cmd.Cmd action }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "eff",
+        "comment": "\n\nAdd an effect to the EffModel's accumulated effects.\n\n",
+        "type": "Platform.Cmd.Cmd action -> EffModel.EffModel model action -> EffModel.EffModel model action"
+      },
+      {
+        "name": "effMap",
+        "comment": "\n\nApply Cmd.map to the accumulated effects.\n\n",
+        "type": "(actionA -> actionB) -> EffModel.EffModel model actionA -> EffModel.EffModel model actionB"
+      },
+      {
+        "name": "get",
+        "comment": "\n\nGet the model from an EffModel:\n\n    case action of\n        IncrementAndNotify ->\n            effmodel\n                |> (\\effmodel -> EF.effMessage (Notify (EF.get m).count) effmodel)\n\n",
+        "type": "EffModel.EffModel model action -> model"
+      },
+      {
+        "name": "map",
+        "comment": "\n\nUpdate the model in the EffModel.\n\n",
+        "type": "(modelA -> modelB) -> EffModel.EffModel modelA action -> EffModel.EffModel modelB action"
+      },
+      {
+        "name": "unwrap",
+        "comment": "\n\nTerminate a chain of EffModel updates to yield Tuple of model, effects.\n\n",
+        "type": "EffModel.EffModel model action -> ( model, Platform.Cmd.Cmd action )"
+      },
+      {
+        "name": "wrap",
+        "comment": "\n\nWrap a model to start an EffModel chain.\n\n",
+        "type": "model -> EffModel.EffModel model action"
+      },
+      {
+        "name": "wrap2",
+        "comment": "\n\nWrap a model and previous effects (such as the result from an update) in an\nEffModel.\n\n",
+        "type": "( model, Platform.Cmd.Cmd action ) -> EffModel.EffModel model action"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

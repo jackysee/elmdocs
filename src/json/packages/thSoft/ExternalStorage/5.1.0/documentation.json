@@ -1,0 +1,90 @@
+[
+  {
+    "name": "ExternalStorage.Cache",
+    "comment": "\n# Defining a cache\n@docs Cache, create, Update",
+    "aliases": [
+      {
+        "name": "Update",
+        "comment": "A cache update command.\nIndicates that a new value has to be inserted to the cache or an existing value has to be removed from it.\n\n    port feed : Signal Cache.Update",
+        "args": [],
+        "type": "Maybe { url : String, value : Maybe Value }"
+      },
+      {
+        "name": "Cache",
+        "comment": "Stores JSON values (potentially coming from an external storage) associated with their URLs.\n\n    cache : Signal Cache",
+        "args": [],
+        "type": "Dict String Value"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "create",
+        "comment": "Maintains the state of a cache by processing an update feed.\n\n    cache = feed |> Cache.create",
+        "type": "Signal Update -> Signal Cache"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "ExternalStorage.Loader",
+    "comment": "\n# Building your model from a cache\n@docs Loaded, Remote, Error, load, loadRaw, loadList",
+    "aliases": [
+      {
+        "name": "Remote",
+        "comment": "Associates an URL to an object.\n\n    type alias Book = {\n      title: String,\n      author: Remote Writer\n    }",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | url : String }"
+      },
+      {
+        "name": "Loaded",
+        "comment": "The result of loading from a cache.\n\n    model : Signal (Loaded Library)",
+        "args": [
+          "a"
+        ],
+        "type": "Result Error (Remote a)"
+      }
+    ],
+    "types": [
+      {
+        "name": "Error",
+        "comment": "The various error cases that might happen when loading an object from a cache.\n\n    viewError url error =\n      case error of\n        NotFound { url } -> \"Loading \" ++ url\n        DecodingFailed { url, message } -> \"Can't decode \" ++ url + \": \" ++ message",
+        "args": [],
+        "cases": [
+          [
+            "NotFound",
+            [
+              "Remote {}"
+            ]
+          ],
+          [
+            "DecodingFailed",
+            [
+              "Remote { message : String }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "load",
+        "comment": "Loads a subtree of your model starting from an object.\nFinds the JSON value belonging to the given URL in the given cache,\nthen decodes it to a raw object using the given decoder,\nthen resolves the raw object to the real object using the given resolver function.\nThe raw object is like the real one regarding attributes,\nbut contains URLs instead of object references.\nThe resolver should resolve the URLs in the raw objects to real objects from the cache using their loader functions.\n\n    loadBook : Cache -> String -> Loaded Book\n    loadBook cache url = load cache rawBookDecoder resolveBook url\n\n    rawBookDecoder : Decoder RawBook\n    rawBookDecoder =\n      object2 RawBook\n        (\"title\" := string)\n        (\"author\" := string)\n\n    resolveBook : Cache -> RawBook -> Result Error Book\n    resolveBook cache rawBook =\n      let authorResult = rawBook.author |> loadWriter cache\n      in\n        authorResult |> Result.map (\\author ->\n          {\n            title = rawBook.title,\n            author = author\n          }\n        )\n\n    type alias RawBook = {\n      title: String,\n      author: String\n    }",
+        "type": "Cache -> Decoder rawObject -> (Cache -> rawObject -> Result Error object) -> String -> Loaded object"
+      },
+      {
+        "name": "loadList",
+        "comment": "Loads a list of model objects given their URLs from the given cache using an existing loader function.\n\n    resolveLibrary : Cache -> RawLibrary -> Result Error Library\n    resolveLibrary cache rawLibrary =\n      let booksResult = rawLibrary.books |> loadList cache loadBook\n      in\n        booksResult |> Result.map (\\books ->\n          {\n            books = books\n          }\n        )\n\n    type alias RawLibrary = {\n      books: List String\n    }\n\n    type alias Library = {\n      books: List (Remote Book)\n    }",
+        "type": "Cache -> (Cache -> String -> Loaded a) -> List String -> Result Error (List (Remote a))"
+      },
+      {
+        "name": "loadRaw",
+        "comment": "Loads a single model object which contains only attributes but no references to further model objects.\nFinds the JSON value belonging to the given URL in the given cache,\nthen decodes it to an object using the given decoder.\n\n    loadWriter : Cache -> String -> Loaded Writer\n    loadWriter cache url = loadRaw cache writerDecoder url\n\n    type alias Writer = {\n      name: String\n    }\n\n    writerDecoder : Decoder Writer\n    writerDecoder =\n      object1 Writer\n        (\"name\" := string)",
+        "type": "Cache -> Decoder object -> String -> Loaded object"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

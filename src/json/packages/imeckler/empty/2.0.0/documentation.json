@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Empty",
+    "comment": " Just a simple empty type.\n\n# Types\n@docs Empty\n\n# Elimination\n@docs elim, yeahRight\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Empty",
+        "comment": " It's impossible to construct a value of type `Empty`, because to do\n    so, you'd already need a value of type `Empty`!\n    \n    This type is useful for witnessing the impossibility of certain things.\n    For example, you could have a function which took a value of type\n    `Task Empty Int` which, the first type parameter to `Task` being the type\n    of errors encountered by the task, means it's impossible for that task to\n    fail. What a world we live in, eh? ",
+        "args": [],
+        "cases": [
+          [
+            "Empty",
+            [
+              "Empty.Empty"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "elim",
+        "comment": " If `Empty` is inhabited then anything is. ",
+        "type": "Empty.Empty -> a"
+      },
+      {
+        "name": "yeahRight",
+        "comment": " A synonym for `elim`. ",
+        "type": "Empty.Empty -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

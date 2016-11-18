@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Input.Number",
+    "comment": " Number input\n\n# Model\n@docs Model, init\n\n# View\n@docs input, Options, defaultOptions\n\n# Update\n@docs update\n\n# Msg\n@docs Msg\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " (TEA) Model record\nFields:\n * `value` : current value of the input element.\n * `hasFocus` : flag whether the input element has focus or not.\n",
+        "args": [],
+        "type": "{ value : String, hasFocus : Bool }"
+      },
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `id` is the id of the HTML element.\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n * `maxValue` is the maximum number value allowed in this input. Set to `Nothing` for no limit.\n * `minValue` is the minimum number value allowed in this input. Set to `Nothing` for no limit.\n",
+        "args": [],
+        "type": "{ id : String , maxLength : Maybe.Maybe Int , maxValue : Maybe.Maybe Int , minValue : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " (TEA) Opaque Msg types\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\nParams:\n * `id` (type: `String`) : The `id` of the number input element.\n\nValue:\n\n    { id = id\n    , maxLength = Nothing\n    , maxValue = Nothing\n    , minValue = Nothing\n    }\n\n",
+        "type": "String -> Input.Number.Options"
+      },
+      {
+        "name": "init",
+        "comment": " (TEA) Initial model constant\n\nValue:\n\n    { value = \"\"\n    , hasFocus = False\n    }\n\n",
+        "type": "Input.Number.Model"
+      },
+      {
+        "name": "input",
+        "comment": " (TEA) View function\n\nExample:\n\n    Input.Number.input\n        { id = \"NumberInput\"\n        , maxLength = Just 4\n        , maxValue = Nothing\n        , minValue = Nothing\n        }\n        [ class \"numberInput\"\n        ...\n        ]\n        model.numberModel\n\n",
+        "type": "Input.Number.Options -> List (Html.Attribute Input.Number.Msg) -> Input.Number.Model -> Html.Html Input.Number.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " (TEA) Update function\n\nExample:\n\n    type Msg = UpdateNumber Input.Number.Msg\n\n    update msg model =\n        case msg of\n            UpdateNumber numberMsg ->\n                { model | numberModel = Input.Number.update numberMsg model.numberModel }\n\n",
+        "type": "Input.Number.Msg -> Input.Number.Model -> Input.Number.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Input.Text",
+    "comment": " Text input\n\n# Model\n@docs Model, init\n\n# View\n@docs input, Options, defaultOptions\n\n# Update\n@docs update\n\n# Msg\n@docs Msg\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " (TEA) Model record\nFields:\n * `value` : current value of the input element.\n * `hasFocus` : flag whether the input element has focus or not.\n",
+        "args": [],
+        "type": "{ value : String, hasFocus : Bool }"
+      },
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `id` is the id of the HTML element.\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n",
+        "args": [],
+        "type": "{ id : String, maxLength : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " (TEA) Opaque Msg types\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\nParams:\n * `id` (type: `String`) : The `id` of the number input element.\n\nValue:\n\n    { id = id\n    , maxLength = Nothing\n    }\n\n",
+        "type": "String -> Input.Text.Options"
+      },
+      {
+        "name": "init",
+        "comment": " (TEA) Initial model constant\n\nValue:\n\n    { value = \"\"\n    , hasFocus = False\n    }\n\n",
+        "type": "Input.Text.Model"
+      },
+      {
+        "name": "input",
+        "comment": " (TEA) View function\n\nExample:\n\n    Input.Text.input\n        { id = \"TextInput\"\n        , maxLength = Just 4\n        }\n        [ class \"textInput\"\n        ...\n        ]\n        model.textModel\n\n",
+        "type": "Input.Text.Options -> List (Html.Attribute Input.Text.Msg) -> Input.Text.Model -> Html.Html Input.Text.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " (TEA) Update function\n\nExample:\n\n    type Msg = UpdateText Input.Text.Msg\n\n    update msg model =\n        case msg of\n            UpdateText textMsg ->\n                { model | textModel = Input.Text.update textMsg model.textModel }\n\n",
+        "type": "Input.Text.Msg -> Input.Text.Model -> Input.Text.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Dropdown",
+    "comment": " Dropdown\n\nOptions\n@docs Item, Options, defaultOptions\n\n# View\n@docs dropdown\n",
+    "aliases": [
+      {
+        "name": "Item",
+        "comment": " Item is the individual content of the dropdown.\n\n * `value` is the item value or `id`\n * `text` is the display text of the dropdown item.\n * `enabled` is a flag to indicate whether the item is enabled or disabled.\n",
+        "args": [],
+        "type": "{ value : String, text : String, enabled : Bool }"
+      },
+      {
+        "name": "Options",
+        "comment": " Options for the dropdown.\n\n * `items` is content of the dropdown.\n * `emptyItem` is the item for when the nothing is selected. Set to `Nothing` for no empty item.\n * `onChange` is the message for when the selected value in the dropdown is changed.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ items : List Dropdown.Item , emptyItem : Maybe.Maybe Dropdown.Item , onChange : Maybe.Maybe String -> msg }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default Options, will give you empty dropdown with no empty item\n",
+        "type": "(Maybe.Maybe String -> msg) -> Dropdown.Options msg"
+      },
+      {
+        "name": "dropdown",
+        "comment": " Html element.\n\nPut this in your view's Html content.\nExample:\n\n    Html.div []\n        [ Dropdown.dropdown\n            (Dropdown.defaultOptions DropdownChanged)\n            [ class \"my-dropdown\" ]\n            model.selectedDropdownValue\n        ]\n",
+        "type": "Dropdown.Options msg -> List (Html.Attribute msg) -> Maybe.Maybe String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "DefaultDict",
+    "comment": " A dictionary mapping unique keys to values. A provided default is used for when\nkeys are missing. The keys can be any comparable\ntype. This includes `Int`, `Float`, `Time`, `Char`, `String`, and tuples or\nlists of comparable types.\n\nInsert, remove, and query operations all take *O(log n)* time. DefaultDictionary\nequality with `(==)` is unreliable and should not be used.\n\n# Types\n@docs DefaultDict\n\n# Build\n@docs empty, singleton, insert, update, remove\n\n# Query\n@docs isEmpty, member, get, size, getDefault, eq, fullEq\n\n# Combine\n@docs union, intersect, diff\n\n# Lists\n@docs keys, values, toList, fromList\n\n# Transform\n@docs map, mapWithDefault, foldl, foldr, filter, partition\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DefaultDict",
+        "comment": " A default dict which lifts the type from Core's Dict",
+        "args": [
+          "k",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary with a given default value ",
+        "type": "v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality. Does not check equality of base ",
+        "type": "DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate. ",
+        "type": "(comparable -> v -> Bool) -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from lowest\nkey to highest key. ",
+        "type": "(comparable -> v -> b -> b) -> b -> DefaultDict.DefaultDict comparable v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from highest\nkey to lowest key. ",
+        "type": "(comparable -> v -> b -> b) -> b -> DefaultDict.DefaultDict comparable v -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary.\nTakes a default value, and a list of key-pair tuples\n ",
+        "type": "v -> List ( comparable, v ) -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "fullEq",
+        "comment": " Base + element equality ",
+        "type": "DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v -> Bool"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`. This is useful when you are not sure if a key will be in the\ndictionary.\n\n    animals = fromList [ (\"Tom\", Cat), (\"Jerry\", Mouse) ]\n\n    get \"Tom\"   animals == Just Cat\n    get \"Mouse\" animals == Just Mouse\n    get \"Spike\" animals == Nothing\n\n",
+        "type": "comparable -> DefaultDict.DefaultDict comparable v -> v"
+      },
+      {
+        "name": "getDefault",
+        "comment": " Helper function for grabbing the default value used in the dict\n",
+        "type": "DefaultDict.DefaultDict comparable v -> v"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces value when there is\na collision. ",
+        "type": "comparable -> v -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. ",
+        "type": "DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a dictionary is empty.\n\n    isEmpty empty == True\n",
+        "type": "DefaultDict.DefaultDict comparable v -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary. ",
+        "type": "DefaultDict.DefaultDict comparable v -> List comparable"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\nNotice that this function takes a function of type `comparable -> a -> a`,\nrather than Dict's `comparable a -> b`. If you want to provide a new default,\nsee mapWithDefault ",
+        "type": "(comparable -> a -> a) -> DefaultDict.DefaultDict comparable a -> DefaultDict.DefaultDict comparable a"
+      },
+      {
+        "name": "mapWithDefault",
+        "comment": " Like map, but allows you to provide a default value too.\nWhen mapping from type `a` to type `b`, the old default of\ntype `a` won't work as it's not possible to have `DefaultDict compareable (a|b)`\nIf this is what you want, use an `Either` type instead.\n",
+        "type": "b -> (comparable -> a -> b) -> DefaultDict.DefaultDict comparable a -> DefaultDict.DefaultDict comparable b"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a key is in a dictionary. ",
+        "type": "comparable -> DefaultDict.DefaultDict comparable v -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(comparable -> v -> Bool) -> DefaultDict.DefaultDict comparable v -> ( DefaultDict.DefaultDict comparable v , DefaultDict.DefaultDict comparable v )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made. ",
+        "type": "comparable -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair. ",
+        "type": "comparable -> v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "size",
+        "comment": " Get the number of key-value pairs in a dict ",
+        "type": "DefaultDict.DefaultDict k v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs. ",
+        "type": "DefaultDict.DefaultDict comparable v -> List ( comparable, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If there is a collision, preference is given\nto the first dictionary. ",
+        "type": "DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of a dictionary for a specific key with a given function. ",
+        "type": "comparable -> (v -> Maybe.Maybe v) -> DefaultDict.DefaultDict comparable v -> DefaultDict.DefaultDict comparable v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary. ",
+        "type": "DefaultDict.DefaultDict comparable v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Constructive.Combinators",
+    "comment": " \n# Composing Viewers\n\n@docs viewFocus, viewList, viewMaybe, viewArray\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "viewArray",
+        "comment": " Transform a viewer for a `model` into a viewer for an `Array` of `model`s,\nwith updates to individual array items automatically reflected in the entire\narray.\n\nBecause it produces an `Array view`, it often makes sense to transform the\nresult of this function into a list, and use it as the body of a `div` or `span`\nwhen `view` is `Html`.\n\n    viewCounterArray : Viewer Html Never (Array Int)\n    viewCounterArray address counters =\n        div [] (Array.toList (viewArray viewCounter address counters))\n",
+        "type": "Constructive.Action.Viewer view other model -> Constructive.Action.Viewer (Array.Array view) other (Array.Array model)"
+      },
+      {
+        "name": "viewFocus",
+        "comment": " Transform a viewer for a child into a viewer for a parent, given a\n[`Focus`](http://package.elm-lang.org/packages/evancz/focus/latest/) from the\nparent to the child.  Replacements of the child model are automatically\nreflected as replacements of the parent model:\n\n    type CounterPair = CounterPair Int Int\n\n    viewCounterPair : Viewer Html Never CounterPair\n    viewCounterPair address pair =\n      div []\n        [ focusView left viewCounter address pair\n        , focusView right viewCounter address pair\n        ]\n\n    -- Focus boilerplate\n\n    left : Focus CounterPair Int\n    left = Focus.create\n        (\\CounterPair l _ -> l)\n        (\\f (CounterPair l r) -> (f l, r))\n\n    right : Focus CounterPair Int\n    right = Focus.create\n        (\\CounterPair _ r -> r)\n        (\\f (CounterPair l r) -> (l, f r))\n",
+        "type": "Focus.Focus big small -> Constructive.Action.Viewer view other small -> Constructive.Action.Viewer view other big"
+      },
+      {
+        "name": "viewList",
+        "comment": " Transform a viewer for a `model` into a viewer for `List` of `model`s,\nwith updates to invidual list items automatically reflected in the entire list.\n\nBecause it produces a `List view`, it often makes sense to use the result of\nthis function as the body of a `div` or `span` when `view` is `Html`.\n\n    viewCounters : Viewer Html Never (List Int)\n    viewCounters address counters =\n        div [] (viewList viewCounter address counters)\n",
+        "type": "Constructive.Action.Viewer view other model -> Constructive.Action.Viewer (List view) other (List model)"
+      },
+      {
+        "name": "viewMaybe",
+        "comment": " Transform a viewer for a `model` into a viewer for a `Maybe model`,\nautomatically wrapping replacement values in `Just`\n\nBecause it produces a `Maybe view`, this function should generally be used\nin conjunction with `Maybe.withDefault`:\n\n    viewMaybe viewStreetMap address currentLocation\n      |> Maybe.withDefault (text \"Location data not available\")\n",
+        "type": "Constructive.Action.Viewer view other model -> Constructive.Action.Viewer (Maybe.Maybe view) other (Maybe.Maybe model)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Constructive.Action",
+    "comment": " A standard interface for representing and working with actions in\nelm-constructive.  The basic idea is that an elm-constructive action is\ngenerally just a simple wrapper around a complete replacement model, rather than\ninstructions for how to modify the model.\n\nActions represented in this way can take full advantage of elm-constructive's\nview composition combinators.  Non-replacement actions can be represented within\nthis framework as well, but they will simply be \"along for the ride,\" and will\nnot benefit from any combinators or composition features.\n\n# Types and definitions\n\n@docs Action, Viewer, Never\n\n# Transforming actions\n\n@docs interceptOthers, interceptReplacements, mapReplacements\n\n# Working with `Never`\n\n@docs extractReplacementModel\n",
+    "aliases": [
+      {
+        "name": "Viewer",
+        "comment": " The basic unit of view logic in elm-constructive.  A view function takes a\n`model`, produces a `view` for that model (usually `Html`), and wires up that\n`view` to send `Actions` to a particular `Address`.\n\n    viewCounter : Viewer Html Never Int\n\n    viewSharableCounter : Viewer Html Share Int\n    \n    viewToggleButton : Viewer Html Never Bool\n",
+        "args": [
+          "view",
+          "other",
+          "model"
+        ],
+        "type": "Signal.Address (Constructive.Action.Action other model) -> model -> view"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Action types which may consist of a new replacement `model`, or some\n`other` action.\n\nUse `Replace` actions to represent direct modification to the model:\n\n    -- A simple counter\n    viewCounter address count =\n      div []\n        [ button [ onClick address (Replace (count + 1)) ] [ text \"+\" ]\n        , button [ onClick address (Replace (count - 1)) ] [ text \"-\" ]\n        , text (toString count)\n        ]\n\nSometimes, one needs to send an action which cannot be represented as a\nreplacement model.  You can represent these with the `Other` tag:\n\n    -- A counter whose value can be shared on social media\n\n    type Share = ShareOnFacebook Int | ShareOnTwitter Int\n\n    viewShareableCounter : Signal.Address (Action Share Int) -> Int -> Html\n    viewShareableCounter address count =\n      div []\n        [ button [ onClick address (Replace (count + 1)) ] [ text \"+\" ]\n        , button [ onClick address (Replace (count - 1)) ] [ text \"-\" ]\n        , text (toString count)\n        , button\n          [ onClick address (Other (ShareOnFacebook count)) ]\n          [ text \"Share your counter on facebook!\" ]\n        , button\n          [ onClick address (Other (ShareOnTwitter count)) ]\n          [ text \"Share your counter on twitter!\" ]\n        ]\n\nAction types which only make use of `Replace` should use `Never` as their\n`other` type:\n\n    viewToggleButton : Signal.Address (Action Never Bool) -> Bool -> Html\n    viewToggleButton address flag =\n      if flag\n        then button [ onClick address (Replace False) ] [ text \"ON\" ]\n        else button [ onClick address (Replace True) ] [ text \"OFF\" ]\n",
+        "args": [
+          "other",
+          "model"
+        ],
+        "cases": [
+          [
+            "Replace",
+            [
+              "model"
+            ]
+          ],
+          [
+            "Other",
+            [
+              "other"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Never",
+        "comment": " An \"uninhabited\" type with no values.  This is useful for representing that\nan `Action` type consists only of `Replace` actions, and has no `Other` actions.\n\n    viewToggleButton : Viewer Html Never Bool\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "extractReplacementModel",
+        "comment": " Extract the replacement model from an `Action` which is guaranteed to be a\n`Replace` action (i.e., from an `Action` where `other` is `Never`).\n\n    extractReplcementModel (Replace \"foo\") == \"foo\"\n",
+        "type": "Constructive.Action.Action Constructive.Action.Never model -> model"
+      },
+      {
+        "name": "interceptOthers",
+        "comment": " Flatmap a function over actions with the `Other` tag, leaving `Replace`\nactions unchanged.\n\n    interceptOthers (\\ClearList -> Replace []) (Other ClearList) == Replace []\n\n    interceptOthers (\\ClearList -> Replace []) (Replace [1,2,3]) == Replace [1,2,3]\n\nThis is useful for having a child view produce an `Other` action which is then\ntransformed by the parent view into a `Replace` action for the parent model.\n\nPartial applications of `interceptOthers` are designed to work well with\n`Signal.forwardTo`\n",
+        "type": "(other1 -> Constructive.Action.Action other2 model) -> Constructive.Action.Action other1 model -> Constructive.Action.Action other2 model"
+      },
+      {
+        "name": "interceptReplacements",
+        "comment": " Flatmap a function over actions with the `Replace` tag, leaving `Other`\nactions unchanged.\n\n    interceptReplacements (\\newModel -> Replace (Just newModel)) (Replace \"foo\") == Replace (Just \"foo\")\n\n    interceptReplacements (\\newModel -> Replace (Just newModel)) (Other ClearAll) == Other ClearAll\n\nPartial applications of `interceptReplacements` are designed to work well with\n`Signal.forwardTo`\n\nAlthough the transformation function can technically produce either an `Other`\naction or a `Replace` action, in practice one usually wants it to return a\n`Replace` action.  For most purposes, you should therefore use `mapReplacements`\ninstead, which is like `interceptReplacements`, except that it always transforms\n`Replace` actions into `Replace` actions.\n",
+        "type": "(model1 -> Constructive.Action.Action other model2) -> Constructive.Action.Action other model1 -> Constructive.Action.Action other model2"
+      },
+      {
+        "name": "mapReplacements",
+        "comment": " Map a function over the new models of `Replace` actions, leaving `Other`\nactions unchanged.\n\n    mapReplacements Just (Replace \"foo\") == Replace (Just \"foo\")\n\n    mapReplacements Just (Other ClearAll) == Other ClearAll\n\nPartial applications of `mapReplacements` are designed to work well with\n`Signal.forwardTo`\n",
+        "type": "(model1 -> model2) -> Constructive.Action.Action other model1 -> Constructive.Action.Action other model2"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

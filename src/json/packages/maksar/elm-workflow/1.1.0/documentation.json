@@ -1,0 +1,117 @@
+[
+  {
+    "name": "Workflow",
+    "comment": " Workflow simulates voting process on multiple steps.\n    Each step has a threshold value.\n    To proceed to the next step, it's necessary to get threshold number of votes.\n    Power users can force skip one step.\n    User with ar least `VOTE` permission can `reject` the curren step (previous step re-starts).\n    Inactive users canot `approve` or `reject`. User can only vote once on the same step.\n\n# Definition\n@docs Workflow\n\n# Creating Workflow\n@docs init\n\n# Interactions\n@docs approve, reject\n\n# Inspecting state\n@docs finished\n",
+    "aliases": [
+      {
+        "name": "Workflow",
+        "comment": " Record representing workflow status. Consists of:\n    `stepsConfig` - array, containing step's threshold values;\n    `currentStep` integer - number of the current workflow step;\n    `votes` - array of votes on each step.\n",
+        "args": [],
+        "type": "{ stepsConfig : Array.Array Int , currentStep : Int , votes : Array.Array (GenericSet.GenericSet User.User) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "approve",
+        "comment": " Performs approve (vote) operation from given `User` on a `Workflow`.\n\n    init [ 1, 2 ] |> approve (create \"Bob\" True [VOTE]) == { stepsConfig = Array.fromList [1,2], currentStep = 1, votes = Array.fromList [Set.fromList [User { name = \"Bob\", active = True, permissions = Array.fromList [VOTE] }],Set.fromList []] }\n",
+        "type": "User.User -> Workflow.Workflow -> Workflow.Workflow"
+      },
+      {
+        "name": "finished",
+        "comment": " Returns high-level `Workflow` completion status. `Workflow` becomes completed after going through all its steps.\n",
+        "type": "Workflow.Workflow -> Bool"
+      },
+      {
+        "name": "init",
+        "comment": " Creates `Workflow` from provided list of threshold values.\n\n    init [ 1, 2 ] == { stepsConfig = Array.fromList [1,2], currentStep = 0, votes = Array.fromList [Set.fromList [],Set.fromList []] }\n",
+        "type": "List Int -> Workflow.Workflow"
+      },
+      {
+        "name": "reject",
+        "comment": " Performs reject operation from given `User` on a `Workflow`.\n",
+        "type": "User.User -> Workflow.Workflow -> Workflow.Workflow"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "User",
+    "comment": " User type, instances of which should be used in `Workflow`s\n\n# Definition\n@docs User\n\n# Creating User\n@docs create\n\n# Taking User Apart\n@docs name, active, inactive, permissions\n\n# Getting Permission for a step\n@docs permission\n\n# Comparing Users\n@docs compare\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "User",
+        "comment": " Container for all attributes, required by `Workflow` to operate. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "active",
+        "comment": " Extracts operational status from `User` instance.\n\n    active <| create \"Bob\" True [ NONE, VOTE ] == True\n",
+        "type": "User.User -> Bool"
+      },
+      {
+        "name": "compare",
+        "comment": " Compare names of the two given users, returning `Order`. No other attributes are taken into account.\n\n    compare (create \"Bob\" True [ NONE ]) (create \"Alice\" True [ NONE ]) == False\n    compare (create \"Bob\" True [ NONE ]) (create \"Bob\" False [ ]) == True\n",
+        "type": "User.User -> User.User -> Basics.Order"
+      },
+      {
+        "name": "create",
+        "comment": " Creates instance of the `User` by name, operational status, and list of Permissions for each step.\n\n    create \"Bob\" True [ NONE, VOTE ] == User \"Bob\" True Array.fromList [ NONE, VOTE ]\n",
+        "type": "String -> Bool -> List Permission.Permission -> User.User"
+      },
+      {
+        "name": "inactive",
+        "comment": " Extracts operational status from `User` instance.\n\n    inactive <| create \"Bob\" False [ NONE, VOTE ] == True\n",
+        "type": "User.User -> Bool"
+      },
+      {
+        "name": "name",
+        "comment": " Extracts name from `User` instance.\n\n    name <| create \"Bob\" True [ NONE, VOTE ] == \"Bob\"\n",
+        "type": "User.User -> String"
+      },
+      {
+        "name": "permission",
+        "comment": " Gets permission from a user to a particular step of the `Workflow`.\n    If permission wasn't found, `NONE` will be returned.\n\n    permission 0 <| create \"Bob\" True [ NONE, VOTE ] == NONE\n    permission 1 <| create \"Bob\" True [ NONE, VOTE ] == VOTE\n    permission 2 <| create \"Bob\" True [ NONE, VOTE ] == NONE\n",
+        "type": "Int -> User.User -> Permission.Permission"
+      },
+      {
+        "name": "permissions",
+        "comment": " Extracts list of `Permission`s from `User` instance.\n\n    permissions <| create \"Bob\" True [ NONE, VOTE ] == [ NONE, VOTE ]\n",
+        "type": "User.User -> List Permission.Permission"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Permission",
+    "comment": " Permission type dictating what `User` can do on particular `Workflow` step.\n\n# Definition\n@docs Permission\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Permission",
+        "comment": " User can vote (having `VOTE` permission) on particular step of the `Workflow` or completely skip the whole step\n    (having `FORCE` permission). Without any permissions (`NONE`), `User` cannot affect the `Workflow`.\n",
+        "args": [],
+        "cases": [
+          [
+            "VOTE",
+            []
+          ],
+          [
+            "FORCE",
+            []
+          ],
+          [
+            "NONE",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

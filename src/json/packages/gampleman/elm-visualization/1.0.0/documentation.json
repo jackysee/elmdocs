@@ -1,0 +1,392 @@
+[
+  {
+    "name": "Visualization.Axis",
+    "comment": " The axis component renders human-readable reference marks for scales. This\nalleviates one of the more tedious tasks in visualizing data.\n\n@docs axis, defaultOptions, Options, Orientation, RenderableScale\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options for configuring the scale:\n- `orientation`: Where to render the Axis.\n- `ticks`: Optionally pass ticks (in the domain). Defaults to `Scale.ticks`.\n- `tickFormat`: A formatting function for the tick marks. Defaults to `Scale.tickFormat`.\n- `tickCount`: How many tickmarks to approximately generate. Defaults to 10.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ orientation : Visualization.Axis.Orientation , ticks : Maybe.Maybe (List a) , tickFormat : Maybe.Maybe (a -> String) , tickCount : Int , tickSizeInner : Float , tickSizeOuter : Float , tickPadding : Float }"
+      },
+      {
+        "name": "RenderableScale",
+        "comment": " A type alias for the scale. Currently only continuous (including time) and\nquantize scales are supported.\n",
+        "args": [
+          "a",
+          "domain",
+          "range",
+          "value"
+        ],
+        "type": "Visualization.Scale.Scale { a | ticks : domain -> Int -> List value, domain : domain, tickFormat : domain -> Int -> value -> String, convert : domain -> range -> value -> Float, range : range, rangeExtent : domain -> range -> ( Float, Float ) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Orientation",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Top",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "axis",
+        "comment": " Renders an Axis based on a [Scale](Visualization-Scale).\n\n    view =\n      svg []\n        [ g [class \"axis\", transform \"translate(0, 300)\"]\n          [ Axis.axis Axis.defaultOptions myScale\n          ]\n        [\n\nRegardless of orientation, axes are always rendered at the origin. To change the\nposition of the axis with respect to the chart, specify a transform attribute on\nthe containing element.\n\nThe elements created by the axis are considered part of its public API.\nYou can apply external stylesheets or modify the generated axis elements to\ncustomize the axis appearance. An axis consists of a path element of class\n“domain” representing the extent of the scale’s domain, followed by transformed\ng elements of class “tick” representing each of the scale’s ticks. Each tick has\na line element to draw the tick line, and a text element for the tick label.\nFor example, here is a typical bottom-oriented axis:\n\n    <g fill=\"none\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"middle\">\n      <path class=\"domain\" stroke=\"#000\" d=\"M0.5,6V0.5H880.5V6\"></path>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(0,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">0.0</text>\n      </g>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(176,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">0.2</text>\n      </g>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(352,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">0.4</text>\n      </g>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(528,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">0.6</text>\n      </g>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(704,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">0.8</text>\n      </g>\n      <g class=\"tick\" opacity=\"1\" transform=\"translate(880,0)\">\n        <line stroke=\"#000\" y2=\"6\" x1=\"0.5\" x2=\"0.5\"></line>\n        <text fill=\"#000\" y=\"9\" x=\"0.5\" dy=\"0.71em\">1.0</text>\n      </g>\n    </g>\n",
+        "type": "Visualization.Axis.Options value -> Visualization.Axis.RenderableScale a domain range value -> Svg.Svg msg"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " Default options to use\n",
+        "type": "Visualization.Axis.Options a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Visualization.Scale",
+    "comment": " Scales are a convenient abstraction for a fundamental task in visualization:\nmapping a dimension of abstract data to a visual representation. Although most\noften used for position-encoding quantitative data, such as mapping a measurement\nin meters to a position in pixels for dots in a scatterplot, scales can represent\nvirtually any visual encoding, such as diverging colors, stroke widths, or symbol\nsize. Scales can also be used with virtually any type of data, such as named\ncategorical data or discrete data that requires sensible breaks.\n\nFor continuous quantitative data, you typically want a linear scale. (For time\nseries data, a time scale.) If the distribution calls for it, consider\ntransforming data using a power or log scale. A quantize scale may aid\ndifferentiation by rounding continuous data to a fixed set of discrete values;\nsimilarly, a quantile scale computes quantiles from a sample population, and a\nthreshold scale allows you to specify arbitrary breaks in continuous data.\nSeveral built-in sequential color schemes are also provided.\n\nFor discrete ordinal (ordered) or categorical (unordered) data, an ordinal scale\nspecifies an explicit mapping from a set of data values to a corresponding set\nof visual attributes (such as colors). The related band and point scales are\nuseful for position-encoding ordinal data, such as bars in a bar chart or dots\nin an categorical scatterplot. Several built-in categorical color scales are\nalso provided.\n\nScales have no intrinsic visual representation. However, most scales can generate\nand format ticks for reference marks to aid in the construction of [axes](Visualization-Axis).\n\n# General notes\n\n@docs Scale\n\n# Continuous Scales\n\n@docs ContinuousScale, linear, log, identity, ContinuousTimeScale, time\n\nContinuous scales support the following operations:\n\n@docs convert, invert, domain, range, rangeExtent, ticks, tickFormat, clamp, nice\n\n# Sequential Scales\n\nSequential scales are similar to continuous scales in that they map a continuous,\nnumeric input domain to a continuous output range. However, unlike continuous\nscales, the output range of a sequential scale is fixed by its interpolator function.\n\n@docs SequentialScale, sequential\n\nSequential scales support the following operations:\n\n@docs convert, domain, rangeExtent\n\n# Quantize Scales\n\nQuantize scales are similar to linear scales, except they use a discrete rather\nthan continuous range. The continuous input domain is divided into uniform\nsegments based on the number of values in (i.e., the cardinality of) the output\nrange. Each range value y can be expressed as a quantized linear function of the\ndomain value `x`: `y = m round(x) + b`.\n\n@docs QuantizeScale, quantize\n\nQuantize scales support the following operations:\n\n@docs convert, invertExtent, domain, range, rangeExtent, ticks, tickFormat, nice\n\n",
+    "aliases": [
+      {
+        "name": "ContinuousScale",
+        "comment": " Type alias for Continuous Scales. These map a `(Float, Float)` **domain** to a\n`(Float, Float)` **range**.\n",
+        "args": [],
+        "type": "Visualization.Scale.Scale { domain : ( Float, Float ) , range : ( Float, Float ) , convert : ( Float, Float ) -> ( Float, Float ) -> Float -> Float , invert : ( Float, Float ) -> ( Float, Float ) -> Float -> Float , ticks : ( Float, Float ) -> Int -> List Float , tickFormat : ( Float, Float ) -> Int -> Float -> String , nice : ( Float, Float ) -> Int -> ( Float, Float ) , rangeExtent : ( Float, Float ) -> ( Float, Float ) -> ( Float, Float ) }"
+      },
+      {
+        "name": "ContinuousTimeScale",
+        "comment": " This is identical to a ContinuousScale, except the domain values are Dates instead of Floats.\n",
+        "args": [],
+        "type": "Visualization.Scale.Scale { domain : ( Date.Date, Date.Date ) , range : ( Float, Float ) , convert : ( Date.Date, Date.Date ) -> ( Float, Float ) -> Date.Date -> Float , invert : ( Date.Date, Date.Date ) -> ( Float, Float ) -> Float -> Date.Date , ticks : ( Date.Date, Date.Date ) -> Int -> List Date.Date , tickFormat : ( Date.Date, Date.Date ) -> Int -> Date.Date -> String , nice : ( Date.Date, Date.Date ) -> Int -> ( Date.Date, Date.Date ) , rangeExtent : ( Date.Date, Date.Date ) -> ( Float, Float ) -> ( Float, Float ) }"
+      },
+      {
+        "name": "QuantizeScale",
+        "comment": " Type alias for quantize scales\n",
+        "args": [
+          "a"
+        ],
+        "type": "Visualization.Scale.Scale { domain : ( Float, Float ) , range : ( a, List a ) , convert : ( Float, Float ) -> ( a, List a ) -> Float -> a , invertExtent : ( Float, Float ) -> ( a, List a ) -> a -> Maybe.Maybe ( Float, Float ) , ticks : ( Float, Float ) -> ( a, List a ) -> Int -> List Float , tickFormat : ( Float, Float ) -> ( a, List a ) -> Int -> Float -> String , nice : ( Float, Float ) -> Int -> ( Float, Float ) , rangeExtent : ( Float, Float ) -> ( a, List a ) -> ( a, a ) }"
+      },
+      {
+        "name": "SequentialScale",
+        "comment": " Type alias for sequential scales\n",
+        "args": [
+          "a"
+        ],
+        "type": "Visualization.Scale.Scale { domain : ( Float, Float ) , range : Float -> a , convert : ( Float, Float ) -> (Float -> a) -> Float -> a }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Scale",
+        "comment": " This API is highly polymorphic as each scale has different functions exposed.\nThis is still done in a convenient and type-safe manner, however the cost is\na certain ugliness and complexity of the type signatures. For this reason the\nsupported functions are listed again for each category. It is best to ignore the\ntype signatures when learning about the library.\n",
+        "args": [
+          "scaleSpec"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "clamp",
+        "comment": " Enables clamping on the domain, meaning the return value of the scale is\nalways within the scale’s range.\n\n    scale = linear ( 10, 100 ) ( 50, 100 )\n    convert scale 1 == 45\n    convert (clamp scale) 1 == 50\n",
+        "type": "Visualization.Scale.Scale { a | convert : ( Float, Float ) -> range -> Float -> result } -> Visualization.Scale.Scale { a | convert : ( Float, Float ) -> range -> Float -> result }"
+      },
+      {
+        "name": "convert",
+        "comment": " Given a value from the domain, returns the corresponding value from the range.\nIf the given value is outside the domain the mapping may be extrapolated such\nthat the returned value is outside the range.\n",
+        "type": "Visualization.Scale.Scale { a | convert : domain -> range -> value -> result, domain : domain, range : range } -> value -> result"
+      },
+      {
+        "name": "domain",
+        "comment": " Retrieve the domain of the scale.\n",
+        "type": "Visualization.Scale.Scale { a | domain : domain } -> domain"
+      },
+      {
+        "name": "identity",
+        "comment": " Identity scales are a special case of linear scales where the domain and\nrange are identical; the scale and its invert method are thus the identity function.\nThese scales are occasionally useful when working with pixel coordinates, say in\nconjunction with an axis or brush.\n",
+        "type": "Visualization.Scale.ContinuousScale"
+      },
+      {
+        "name": "invert",
+        "comment": " Given a value from the range, returns the corresponding value from the domain.\nInversion is useful for interaction, say to determine the data value corresponding\nto the position of the mouse.\n",
+        "type": "Visualization.Scale.Scale { a | invert : domain -> range -> value -> result, domain : domain, range : range } -> value -> result"
+      },
+      {
+        "name": "invertExtent",
+        "comment": " Returns the extent of values in the domain for the corresponding value in the\nrange. This method is useful for interaction, say to determine the value in the\ndomain that corresponds to the pixel location under the mouse.\n",
+        "type": "Visualization.Scale.Scale { a | invertExtent : domain -> range -> value -> Maybe.Maybe ( comparable, comparable ), domain : domain, range : range } -> value -> Maybe.Maybe ( comparable, comparable )"
+      },
+      {
+        "name": "linear",
+        "comment": " Linear scales are a good default choice for continuous quantitative data\nbecause they preserve proportional differences. Each range value y can be\nexpressed as a function of the domain value x: y = mx + b.\n\n    scale = linear ( 0, 1 ) ( 50, 100 )\n    convert scale 0.5 == 75\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Visualization.Scale.ContinuousScale"
+      },
+      {
+        "name": "log",
+        "comment": " Log scales are similar to linear scales, except a logarithmic transform is\napplied to the input domain value before the output range value is computed.\nThe mapping to the range value y can be expressed as a function of the domain\nvalue x: y = m log(x) + b.\n\nAs log(0) = -∞, a log scale domain must be strictly-positive or strictly-negative;\nthe domain must not include or cross zero. A log scale with a positive domain has\na well-defined behavior for positive values, and a log scale with a negative\ndomain has a well-defined behavior for negative values. (For a negative domain,\ninput and output values are implicitly multiplied by -1.) The behavior of the\nscale is undefined if you pass a negative value to a log scale with a positive\ndomain or vice versa.\n\nThe arguments are `base`, `domain` and `range`.\n\n    scale = log 10 ( 10, 1000 ) ( 50, 100 )\n    convert scale 100 == 75\n",
+        "type": "Float -> ( Float, Float ) -> ( Float, Float ) -> Visualization.Scale.ContinuousScale"
+      },
+      {
+        "name": "nice",
+        "comment": " Returns a new scale which extends the domain so that it lands on round values.\nThe second argument is the same as you would pass to ticks.\n\n    scale = linear ( 0.5, 99 ) ( 50, 100 )\n    domain (nice scale 10) == (0, 100)\n",
+        "type": "Visualization.Scale.Scale { a | nice : domain -> Int -> domain, domain : domain } -> Int -> Visualization.Scale.Scale { a | nice : domain -> Int -> domain, domain : domain }"
+      },
+      {
+        "name": "quantize",
+        "comment": " ",
+        "type": "( Float, Float ) -> ( a, List a ) -> Visualization.Scale.QuantizeScale a"
+      },
+      {
+        "name": "range",
+        "comment": " Retrieve the range of the scale.\n",
+        "type": "Visualization.Scale.Scale { a | range : range } -> range"
+      },
+      {
+        "name": "rangeExtent",
+        "comment": " Retrieve the minimum and maximum elements from the range.\n",
+        "type": "Visualization.Scale.Scale { a | rangeExtent : domain -> range -> ( b, b ), domain : domain, range : range } -> ( b, b )"
+      },
+      {
+        "name": "sequential",
+        "comment": " ",
+        "type": "( Float, Float ) -> (Float -> a) -> Visualization.Scale.SequentialScale a"
+      },
+      {
+        "name": "tickFormat",
+        "comment": " A number format function suitable for displaying a tick value, automatically\ncomputing the appropriate precision based on the fixed interval between tick values.\nThe specified count should have the same value as the count that is used to generate the tick values.\n",
+        "type": "Visualization.Scale.Scale { a | tickFormat : domain -> Int -> value -> String, domain : domain, convert : domain -> range -> value -> b } -> Int -> value -> String"
+      },
+      {
+        "name": "ticks",
+        "comment": " The second argument controls approximately how many representative values from\nthe scale’s domain to return. A good default value 10. The returned tick values are uniformly spaced,\nhave human-readable values (such as multiples of powers of 10), and are guaranteed\nto be within the extent of the domain. Ticks are often used to display reference\nlines, or tick marks, in conjunction with the visualized data. The specified count\nis only a hint; the scale may return more or fewer values depending on the domain.\n\n    scale = linear ( 10, 100 ) ( 50, 100 )\n    ticks scale 10 == [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]\n",
+        "type": "Visualization.Scale.Scale { a | ticks : domain -> Int -> List ticks, domain : domain } -> Int -> List ticks"
+      },
+      {
+        "name": "time",
+        "comment": " Time scales are a variant of linear scales that have a temporal domain: domain\nvalues are dates rather than floats, and invert likewise returns a date.\nTime scales implement ticks based on calendar intervals, taking the pain out of\ngenerating axes for temporal domains.\n",
+        "type": "( Date.Date, Date.Date ) -> ( Float, Float ) -> Visualization.Scale.ContinuousTimeScale"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Visualization.Shape",
+    "comment": " Visualizations typically consist of discrete graphical marks, such as symbols,\narcs, lines and areas. While the rectangles of a bar chart may be easy enough to\ngenerate directly using SVG or Canvas, other shapes are complex, such as rounded\nannular sectors and centripetal Catmull–Rom splines. This module provides a\nvariety of shape generators for your convenience.\n\n**Note:** Currently only rudimentary forms are implemented.\n\n# Lines\n\n@docs line, area\n\n# Curves\n\n@docs linearCurve, monotoneInXCurve, Curve\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Curve",
+        "comment": " A curve is represented as a list of points, which a curve function can turn\ninto drawing commands.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "area",
+        "comment": " The area generator produces an area, as in an area chart. An area is defined\nby two bounding lines, either splines or polylines. Typically, the two lines\nshare the same x-values (x0 = x1), differing only in y-value (y0 and y1);\nmost commonly, y0 is defined as a constant representing zero. The first line\n(the topline) is defined by x1 and y1 and is rendered first; the second line\n(the baseline) is defined by x0 and y0 and is rendered second, with the points\nin reverse order. With a `linearCurve` curve, this produces a clockwise polygon.\n\nThe data attribute you pass in should be a `[Just ((x0, y0), (x1, y1))]`. Passing\nin `Nothing` represents gaps in the data and corresponding gaps in the area will\nbe rendered.\n\nUsually you will need to convert your data into a format supported by this function.\nFor example, if your data is a `List (Date, Float)`, you might use something like:\n\n    areaGenerator : ( Date, Float ) -> Maybe ( ( Float, Float ), ( Float, Float ) )\n    areaGenerator ( x, y ) =\n        Just ( ( Scale.convert xScale x, fst (Scale.rangeExtent yScale) ),\n               ( Scale.convert xScale x, Scale.convert yScale y ) )\n\n    areaPath : List (Date, Float) -> String\n    areaPath data =\n        List.map areaGenerator data\n            |> Shape.area Shape.linearCurve\n\nwhere `xScale` and `yScale` would be appropriate `Scale`s.\n",
+        "type": "(Visualization.Shape.Curve -> List Visualization.Path.PathSegment) -> List (Maybe.Maybe ( Visualization.Shape.Point, Visualization.Shape.Point )) -> String"
+      },
+      {
+        "name": "line",
+        "comment": " Generates a line for the given array of points which can be passed to the `d`\nattribute of the `path` SVG element. It needs to be suplied with a curve function.\nPoints accepted are `Maybe`s, Nothing represent gaps in the data and corresponding\ngaps will be rendered in the line.\n\n**Note:** A single point (surrounded by Nothing) may not be visible.\n\nUsually you will need to convert your data into a format supported by this function.\nFor example, if your data is a `List (Date, Float)`, you might use something like:\n\n    lineGenerator : ( Date, Float ) -> Maybe ( Float, Float )\n    lineGenerator ( x, y ) =\n        Just ( Scale.convert xScale x, Scale.convert yScale y )\n\n    linePath : List (Date, Float) -> String\n    linePath data =\n        List.map lineGenerator data\n            |> Shape.line Shape.linearCurve\n\nwhere `xScale` and `yScale` would be appropriate `Scale`s.\n",
+        "type": "(Visualization.Shape.Curve -> List Visualization.Path.PathSegment) -> List (Maybe.Maybe Visualization.Shape.Point) -> String"
+      },
+      {
+        "name": "linearCurve",
+        "comment": " Produces a polyline through the specified points.\n",
+        "type": "Visualization.Shape.Curve -> List Visualization.Path.PathSegment"
+      },
+      {
+        "name": "monotoneInXCurve",
+        "comment": " Produces a cubic spline that [preserves monotonicity](http://adsabs.harvard.edu/full/1990A%26A...239..443S)\nin y, assuming monotonicity in x, as proposed by Steffen in\n[A simple method for monotonic interpolation in one dimension](http://adsabs.harvard.edu/full/1990A%26A...239..443S):\n“a smooth curve with continuous first-order derivatives that passes through any\ngiven set of data points without spurious oscillations. Local extrema can occur\nonly at grid points where they are given by the data, but not in between two adjacent grid points.”\n",
+        "type": "Visualization.Shape.Curve -> List Visualization.Path.PathSegment"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Visualization.Path",
+    "comment": " This module provides an abstraction over drawing complex paths. Currently it\ncontains a function to convert this representation into a string suitable for the\n`d` attribute of the `path` SVG element. However, the ADT that powers this is\npublicly exposed and alternative renderers can be built in e.g. Canvas or WebGL.\n\nThe functions here are modeled after the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D#Paths).\n\n# Datatype\n\n@docs PathSegment, Path\n\n# Converting\n\n@docs toAttrString\n\n# DSL\n\nThe DSL can be used interchangebly with directly writing the datatype above.\n\n    begin\n      |> moveTo 30 50\n      |> lineTo 20 70\n      |> lineTo 40 23\n      |> close\n\nIs equivalent to:\n\n    [Move (30, 50), Line (20, 70), Line (40, 23), Close]\n\n@docs begin, moveTo, lineTo, close, quadraticCurveTo, bezierCurveTo, arcTo, arc, rect\n\n",
+    "aliases": [
+      {
+        "name": "Path",
+        "comment": " ",
+        "args": [],
+        "type": "List Visualization.Path.PathSegment"
+      }
+    ],
+    "types": [
+      {
+        "name": "PathSegment",
+        "comment": " A list of `PathSegment`s represents a path. These are essentially drawing\ncommands that are based on the Canvas API. For more information, see the DSL\nsection in this module.\n",
+        "args": [],
+        "cases": [
+          [
+            "Move",
+            [
+              "Visualization.Path.Point"
+            ]
+          ],
+          [
+            "Close",
+            []
+          ],
+          [
+            "Line",
+            [
+              "Visualization.Path.Point"
+            ]
+          ],
+          [
+            "QuadraticCurve",
+            [
+              "Visualization.Path.Point",
+              "Visualization.Path.Point"
+            ]
+          ],
+          [
+            "BezierCurve",
+            [
+              "Visualization.Path.Point",
+              "Visualization.Path.Point",
+              "Visualization.Path.Point"
+            ]
+          ],
+          [
+            "Arc",
+            [
+              "Visualization.Path.Point",
+              "Visualization.Path.Point",
+              "Float"
+            ]
+          ],
+          [
+            "ArcCustom",
+            [
+              "Visualization.Path.Point",
+              "Float",
+              "Float",
+              "Float",
+              "Bool"
+            ]
+          ],
+          [
+            "Rect",
+            [
+              "Visualization.Path.Point",
+              "( Float, Float )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "arc",
+        "comment": " Draws a circular arc segment with the specified center ⟨x, y⟩, radius,\nstartAngle and endAngle. If anticlockwise is true, the arc is drawn in the\nanticlockwise direction; otherwise, it is drawn in the clockwise direction.\nIf the current point is not equal to the starting point of the arc, a straight\nline is drawn from the current point to the start of the arc.\n\n    arc x y radius startAngle endAngle anticlockwise\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Bool -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "arcTo",
+        "comment": " Draws a circular arc segment with the specified radius that starts tangent\nto the line between the current point and the specified point ⟨x1, y1⟩ and ends\ntangent to the line between the specified points ⟨x1, y1⟩ and ⟨x2, y2⟩. If the\nfirst tangent point is not equal to the current point, a straight line is drawn\nbetween the current point and the first tangent point.\n\n     arcTo x1 y1 x2 y2 radius\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "begin",
+        "comment": " Start a new path. Equivalent to `[]`.\n",
+        "type": "Visualization.Path.Path"
+      },
+      {
+        "name": "bezierCurveTo",
+        "comment": " Draws a cubic Bézier segment from the current point to the specified\npoint ⟨x, y⟩, with the specified control points ⟨cpx1, cpy1⟩ and ⟨cpx2, cpy2⟩.\n\n    bezierCurveTo cpx1 cpy1 cpx2 cpy2 x y\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "close",
+        "comment": " Ends the current subpath and causes an automatic straight line to be drawn\nfrom the current point to the initial point of the current subpath.\n",
+        "type": "Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "lineTo",
+        "comment": " Draws a straight line from the current point to the specified point ⟨x, y⟩.\n",
+        "type": "Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "moveTo",
+        "comment": " Move to the specified point ⟨x, y⟩.\n",
+        "type": "Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "quadraticCurveTo",
+        "comment": " Draws a quadratic Bézier segment from the current point to the specified\npoint ⟨x, y⟩, with the specified control point ⟨cpx, cpy⟩.\n\n    quadraticCurveTo cpx cpy x y\n",
+        "type": "Float -> Float -> Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "rect",
+        "comment": " Creates a new subpath containing just the four points ⟨x, y⟩, ⟨x + w, y⟩,\n⟨x + w, y + h⟩, ⟨x, y + h⟩, with those four points connected by straight lines,\nand then marks the subpath as closed.\n\n    rect x y w h\n",
+        "type": "Float -> Float -> Float -> Float -> Visualization.Path.Path -> Visualization.Path.Path"
+      },
+      {
+        "name": "toAttrString",
+        "comment": " Transforms a path to a string that can be passed into the `d` attribute of the\n`path` SVG element.\n\n    path\n        |> moveTo 100 100\n        |> arcTo 200 100 200 200 50\n        |> arc 150 150 50 0 pi False\n        |> toAttrString\n        -- \"M100,100L150,100A50,50,0,0,1,200,150A50,50,0,1,1,100,150\"\n",
+        "type": "Visualization.Path.Path -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Visualization.List",
+    "comment": " This module exposes functions on list which are useful for the domain of data\nvisualization. Most of these work with Lists of numbers.\n\n# Statistics\n\n@docs extent, extentWith\n\n\n# Transformations\n\nMethods for transforming list and for generating new lists.\n\n@docs ticks, tickStep, range\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "extent",
+        "comment": " Returns the minimum and maximum value in the list.\n",
+        "type": "List comparable -> Maybe.Maybe ( comparable, comparable )"
+      },
+      {
+        "name": "extentWith",
+        "comment": " Returns the minimum and maximum value in the given array using comparisons\nfrom values passed by the accessor function.\n\n    data =\n      [ {name = \"John Smith\", age = 32 }\n      , {name = \"Mark Luther\", age = 45 }\n      , {name = \"Cory Jones\", age = 26 }\n      ]\n\n    extentWith .age data == Just ({name = \"Cory Jones\", age = 26 }\n                                , {name = \"Mark Luther\", age = 45 })\n\n",
+        "type": "(a -> comparable) -> List a -> Maybe.Maybe ( a, a )"
+      },
+      {
+        "name": "range",
+        "comment": " Returns a List containing an arithmetic progression, similar to the Python\nbuilt-in range. This method is often used to iterate over a sequence of\nuniformly-spaced numeric values, such as the indexes of an array or the ticks of\na linear scale. (See also [ticks](#ticks) for nicely-rounded values.)\n\nTakes a `start`, `stop` and `step` argument. The stop value is exclusive; it is not\nincluded in the result. If `step` is positive, the last element is the largest\n`start + i * step` less than `stop`; if `step` is negative, the last element is\nthe smallest `start + i * step` greater than `stop`. If the returned list would\ncontain an infinite number of values, an empty range is returned.\n\nThe arguments are not required to be integers; however, the results are more\npredictable if they are.\n",
+        "type": "number -> number -> number -> List number"
+      },
+      {
+        "name": "tickStep",
+        "comment": " Returns the difference between adjacent tick values if the same arguments\nwere passed to `ticks`: a nicely-rounded value that is a power of ten multiplied\nby 1, 2 or 5. Note that due to the limited precision of IEEE 754 floating point,\nthe returned value may not be exact decimals.\n\n    tickStep 1.9 6.4 10 == 0.5\n\n    tickStep 1.9 6 5 == 1\n",
+        "type": "Float -> Float -> Int -> Float"
+      },
+      {
+        "name": "ticks",
+        "comment": " Returns a list of approximately n + 1 uniformly-spaced, nicely-rounded\nvalues between a start and stop value (inclusive). Each value is a power of ten\nmultiplied by 1, 2 or 5. Note that due to the limited precision of IEEE 754\nfloating point, the returned values may not be exact decimals.\n\nTicks are inclusive in the sense that they may include the specified start and\nstop values if (and only if) they are exact, nicely-rounded values consistent\nwith the inferred step. More formally, each returned tick t satisfies\nstart ≤ t and t ≤ stop.\n\n    ticks 1.9 6.4 10 == [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6]\n\n    ticks 1.9 6 5 == [2, 3, 4, 5, 6]\n",
+        "type": "Float -> Float -> Int -> List Float"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

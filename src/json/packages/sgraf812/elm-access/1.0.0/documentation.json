@@ -1,0 +1,69 @@
+[
+  {
+    "name": "Access",
+    "comment": "# Access\n\nThis module has the primitives which make working with accessors a cake walk:\n\n    atIndex = accessor -- Let's pretend for the moment this exists\n    foo = accessor .foo (\\newFoo x -> { x | foo \u003c- newFoo })\n\n    manyFoos = [{ foo = { bar = 1 } }, { foo = { bar = 42 } }]\n\n    manyFoos |> set (atIndex 1 @. foo @. bar) 20 == [{ foo = 1 }, { foo = 20 }]\n    manyFoos |> get (atIndex 1 @. foo) == { bar = 1 }\n\nNotice how not only getting values out of a deep structure is now easily possible but also that updating them is now as easy!\nAs evident by the hypothetical `atIndex` accessor, this can be extended far beyond simple field access.\n\nI will provide compatible accessors in my [`Graph`](https://github.com/sgraf812/elm-graph) library, *without actually depending on this library*, just because it is such a hassle to provide\ngetters and setter for all use cases when all that is needed are some simple accessors which compose well through `@.`.\n\n## Type aliases\n@docs Accessor, Accessors'\n## Make your accessor\n@docs accessor, compose, (@.)\n## Access patterns\n@docs get, set, update",
+    "aliases": [
+      {
+        "name": "Accessor'",
+        "comment": "A type alias for the frequenst case when source and target type are the same thing.",
+        "args": [
+          "s",
+          "a"
+        ],
+        "type": "Accessor s s a a"
+      },
+      {
+        "name": "Accessor",
+        "comment": "Uhoh, here we are. Let's first make sense of the 4 type parameters! And because it's all easier with an example, study this record:\n \n    type alias HasFoo a = { foo : a }\n\nNotice how `HasFoo` is polymorphic in `a`. Nothing forbids having both `{ foo = 1 }`\n(of type `HasFoo Int` that is) and `{ foo = \"1\" }` (of type `HasFoo String`)! In fact,\nthat is the sole reason we have 4 type parameters instead of just 2 (that would be the simpler version `Accessor'`).\nIn the following we consider how we would arrange types to update the inner `foo` to its `toString` representation.\n\nNow to stab (ha) the type parameters once and for all:\n\n  - `s` - Think `HasFoo Int`: The type of structure we start with. The s is for *source*.\n  - `t` - Think `HasFoo String`: The type of structure we end up with. For the scenario of getters, this is always the same as `s`. The t is for *target*.\n  - `a` - Think `Int`, the type of the field: The type of the part of the structure we start with.\n  - `b` - Think `String`: The type of the part we end up with.\n\nSo with that inplace, let's talk about the right hand side, the function we actually alias with this!\nFirstly, **understanding and liking this is not necessary**. It is an abstraction mechanism\nwith which you only really come in touch when you provide your own complex accessors and don't want to\ndepend on functions like `accessor` which have a much simpler interface.\n\n**The reason why this is an alias rather than a new abstract data type is to give library writers the opportunity to\noffer accessors without actually depending on this library, by just providing such a matching function.**\n\nWithout further ado, I'll try to get your intuition working: An `Accessor` is a function transforming an operation\non *part* of the structure into an operation on the *whole* of that structure:\n\n    type alias Accessor s t a b =\n           (a -> (a, b))\n        -> (s -> (a, t))\n\n    type alias FooAccessor =\n           (Int -> (Int, String))\n        -> (HasFoo Int -> (Int, HasFoo String))\n\n(I added a set of parantheses and left out the `Lazy` stuff, which just complicates matters for now)\n\nConsider for a moment just the `fst` part of each pair:\n\n    (a -> a)     -> (s  -> a)\n    (Int -> Int) -> (HasFoo Int -> Int)\n                                ^ .foo\n\nWhen squinting a little, we can already see the part of the getter `s -> a`.\nNow, if we got such a function, we can just apply it to `identity` (which has the handy type `a -> a`)\nand get a hand on our getter!\n\nFocusing on to the `snd` part of each pair, we get:\n\n    (a -> b)        -> (s -> t)\n    (Int -> String) -> (HasFoo Int -> HasFoo String)\n\nSo, by passing it a function that updates part of the structure, we get back a function that updates the structure as a whole.\nNotice that only here we used types `b` and `t` (which may even collapse to the same types as `a` and `s`).\n\n**TLDR** `Accessor`s are functions which combine getters and setters into one rather daunting thing\nwhich exhibits nicer properties to work with that just getters and setters.",
+        "args": [
+          "s",
+          "t",
+          "a",
+          "b"
+        ],
+        "type": "(a -> ( a, Lazy b )) -> s -> ( a, Lazy t )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "@.",
+        "comment": "An infix synonym for `compose`. The same example using infix notation:\n\n    let x = { foo = { bar = 1 } }\n    in set (foo@.bar) 2 x == { foo = { bar = 2 } }\n\nThe syntax was carefully chosen to mirror record field access. \nYou can even use the infix synonym `^.` for `get` to get particular syntactic frauds.\nAlthough that may need some getting used to.",
+        "type": "Accessor u v s t -> Accessor s t a b -> Accessor u v a b",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "accessor",
+        "comment": "`accessor get set` constructs an accessor from a getter `get` and setter `set`.\n\n    foo : Accessor { anything | foo : a } { anything | foo : b } a b\n    foo = accessor .foo (\\newFoo x) -> { x | foo \u003c- newFoo })\n\nBecause of the way Elm's extensible records work, we just defined an accessor for the foo\nfield of all extensible records containing them.",
+        "type": "(s -> a) -> (b -> s -> t) -> Accessor s t a b"
+      },
+      {
+        "name": "allExamplesOk'_'",
+        "comment": "",
+        "type": "Bool"
+      },
+      {
+        "name": "compose",
+        "comment": "Composes two accessors (backwards), so that deep access patterns are possible.\nExample on record fields:\n\n    let x = { foo = { bar = 1 } }\n    in set (foo `compose` bar) 2 x == { foo = { bar = 2 } }\n\nSee also the composition operator `@.`.",
+        "type": "Accessor u v s t -> Accessor s t a b -> Accessor u v a b"
+      },
+      {
+        "name": "get",
+        "comment": "Get a part (type `a`) of the structure (type `s`) with the help of the accessor.\nSo if `foo` would be an `Accessor` which extracts e.g. the `foo` field of the record `x`,\nwe get `x.foo` by\n\n    let x = { foo = 1 }\n    in get foo x == x.foo",
+        "type": "Accessor s t a b -> s -> a"
+      },
+      {
+        "name": "set",
+        "comment": "Set a part (type `a`, `b`) of the structure (type `s`, `t`) with the help of the accessor.\nIt's easiest to see an example of that:\n\n    let x = { foo = 1 }\n    in set foo \"hi\" x == { x | foo \u003c- \"hi\" }\n\nNote the analogy to the built-in record update syntax.",
+        "type": "Accessor s t a b -> b -> s -> t"
+      },
+      {
+        "name": "update",
+        "comment": "Update a part (type `a`, `b`) of the structure (type `s`, `t`) with the help of the accessor.\nExample:\n\n    let x = { foo = 1 }\n    in update foo toString x == { x | foo \u003c- toString x.foo } -- x.foo == \"1\"\n\nNote the analogy to the built-in record update syntax.",
+        "type": "Accessor s t a b -> (a -> b) -> s -> t"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

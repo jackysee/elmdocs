@@ -1,0 +1,126 @@
+[
+  {
+    "name": "List.Experimental",
+    "comment": " List.Experimental is a testing playground for various List related functions. It contains functions that are experimental, unidiomatic, controversial or downright silly. This is specifically to not clutter List and List.Extra, and also have an isolated place to test crazy ideas.\n\n*Do not* use this module in production code. Try your best to come up with equivalent functionality or solve your problem in a different way, and if you fail, consider contributing to List and List.Extra packages.\n\n*Do not* import functions from this module unqualified if you do use it.\n\nThis package has the lowest possible bar for inclusion of List related functions. If you have some code that you want to publish somewhere, but not necessarily contribute to core libraries, feel absolutely free to contribute here. Treat this package as a safe sandbox. The GitHub page for ideas, suggestions, discussions, and pull requests is:\n\nhttps://github.com/sindikat/elm-list-experimental\n\n# List functions\n@docs and, or, conjunction, disjunction, lookup, filter2, filterMap2, filterM\n\n# Elements\n@docs at\n\n# Removal\n@docs removeAt, removeFirst, removeFirstBy, removeFirsts, removeFirstsBy\n\n# Set functions\n@docs difference, union, intersect, insert, differenceBy, unionBy, intersectBy, insertBy\n\n# Misc\n@docs iterate\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "and",
+        "comment": " Return the conjunction of all `Bool`s in a list. In other words, return True if all elements are True, return False otherwise. `and` is equivalent to `all identity`. Return True on an empty list.\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "at",
+        "comment": " Extract *n*th element of a list, index counts from 0.\n\n    at 1 [1,2,3] == Just 2\n    at 3 [1,2,3] == Nothing\n    at -1 [1,2,3] == Nothing\n",
+        "type": "Int -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "conjunction",
+        "comment": " Same as `and`.\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "difference",
+        "comment": " Set difference between lists.\n\n    [1,2,3] `difference` [3,4,5] == [1,2]\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "differenceBy",
+        "comment": " Generic version of difference with a custom predicate.\n",
+        "type": "(a -> a -> Bool) -> List a -> List a -> List a"
+      },
+      {
+        "name": "disjunction",
+        "comment": " Same as `or`.\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "filter2",
+        "comment": " Filter over two lists simultaneously using a custom comparison function, return a list of pairs.\n",
+        "type": "(a -> b -> Bool) -> List a -> List b -> List ( a, b )"
+      },
+      {
+        "name": "filterM",
+        "comment": " Filter that exploits the behavior of `andThen`.\n\nReturn all subsequences of a list:\n\n    filterM (\\x -> [True, False]) [1,2,3] == [[1,2,3],[1,2],[1,3],[1],[2,3],[2],[3],[]]\n\nReturn all subsequences that contain 2:\n\n    filterM (\\x -> if x==2 then [True] else [True,False]) [1,2,3] == [[1,2,3],[1,2],[2,3],[2]]\n\n",
+        "type": "(a -> List Bool) -> List a -> List (List a)"
+      },
+      {
+        "name": "filterMap2",
+        "comment": " Apply a function, which may succeed, to all values of two lists, but only keep the successes.\n",
+        "type": "(a -> b -> Maybe.Maybe c) -> List a -> List b -> List c"
+      },
+      {
+        "name": "insert",
+        "comment": " Take an element and a list and insert the element into the list at the first position where it is less than or equal to the next element. If the list is sorted before the call, the result will also be sorted.\n\n   insert 4 [1,3,5] == [1,3,4,5]\n",
+        "type": "comparable -> List comparable -> List comparable"
+      },
+      {
+        "name": "insertBy",
+        "comment": " Generic version of insert with a custom predicate.\n",
+        "type": "(a -> a -> Basics.Order) -> a -> List a -> List a"
+      },
+      {
+        "name": "intersect",
+        "comment": " Intersection between lists.\n\n   [1,2,3] `intersect` [3,4,5] == [3]\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "intersectBy",
+        "comment": " Generic version of intersect with a custom predicate.\n",
+        "type": "(a -> a -> Bool) -> List a -> List a -> List a"
+      },
+      {
+        "name": "iterate",
+        "comment": " Return a list of repeated applications of `f` to `x`.\n",
+        "type": "Int -> (a -> a) -> a -> List a"
+      },
+      {
+        "name": "lookup",
+        "comment": " Look up a key in an association list, return corresponding value, wrapped in `Just`. If no value is found, return `Nothing`. If multiple values correspond to the same key, return the first found value.\n\n    lookup 'a' [('a',1),('b',2),('c',3)] == Just 1\n    lookup 'd' [('a',1),('b',2),('c',3)] == Nothing\n    lookup 3 [(1,\"John\"),(1,\"Paul\"),(2,\"Mary\")] == Just \"John\"\n",
+        "type": "a -> List ( a, b ) -> Maybe.Maybe b"
+      },
+      {
+        "name": "or",
+        "comment": " Return the disjunction of all `Bool`s in a list. In other words, return True if any element is True, return False otherwise. `or` is equivalent to `any identity`. Return False on an empty list.\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "removeAt",
+        "comment": " Remove *n*th element of a list. If index is negative or out of bounds of the list, return the list unchanged.\n\n    removeAt 0 [1,2,3] == [2,3]\n    removeAt 3 [1,2,3] == [1,2,3]\n    removeAt -1 [1,2,3] == [1,2,3]\n",
+        "type": "Int -> List a -> List a"
+      },
+      {
+        "name": "removeFirst",
+        "comment": " Remove first occurrence of element from list.\n\n    removeFirst 2 [1,2,1,2] == [1,1,2]\n",
+        "type": "a -> List a -> List a"
+      },
+      {
+        "name": "removeFirstBy",
+        "comment": " Generic version of removeFirst with a custom predicate. For example, remove first element that is greater than 2:\n\n    removeFirstBy (>) 2 [1..4] == [1,2,4]\n",
+        "type": "(a -> a -> Bool) -> a -> List a -> List a"
+      },
+      {
+        "name": "removeFirsts",
+        "comment": " Remove first occurence of each element from list.\n\n    removeFirsts [1,2] [1,2,3,1,2,3] == [3,1,2,3]\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "removeFirstsBy",
+        "comment": " Generic version of removeFirsts with a custom predicate. For example, remove first element that evenly divides by 2, then remove first element that evenly divides by 3:\n\n    removeFirstsBy (\\a b -> a `rem` b == 0) [2,3] [5..10] == [5,7,8,10]\n",
+        "type": "(a -> a -> Bool) -> List a -> List a -> List a"
+      },
+      {
+        "name": "union",
+        "comment": " Union between lists.\n\n   [3,2,1] `union` [3,4,5] == [3,2,1,4,5]\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "unionBy",
+        "comment": " Generic version of union with a custom predicate.\n",
+        "type": "(a -> a -> Bool) -> List a -> List a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

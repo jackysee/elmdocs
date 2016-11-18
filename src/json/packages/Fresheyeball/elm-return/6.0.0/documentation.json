@@ -1,0 +1,209 @@
+[
+  {
+    "name": "Infix",
+    "comment": "\n\nElm is getting less functional, here is some relief\n@docs (<$>), (<*>), (>>=)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "<$>",
+        "comment": " map as an infix, like normal ",
+        "type": "(a -> b) -> Return.Return msg a -> Return.Return msg b",
+        "associativity": "left",
+        "precedence": 4
+      },
+      {
+        "name": "<*>",
+        "comment": " apply as an infix, like normal ",
+        "type": "Return.Return msg (a -> b) -> Return.Return msg a -> Return.Return msg b",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": ">>=",
+        "comment": " bind as an infix, like normal ",
+        "type": "Return.Return msg a -> (a -> Return.Return msg b) -> Return.Return msg b",
+        "associativity": "left",
+        "precedence": 1
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Return",
+    "comment": "\n## Type\nModeling the `update` tuple as a Monad similar to `Writer`\n@docs Return, ReturnF\n\n## Mapping\n@docs map, map2, map3, map4, map5, andMap, mapWith, mapCmd, mapBoth, dropCmd\n\n## Piping\n@docs piper, pipel, zero\n\n## Basics\n@docs singleton, andThen, (>>>), (<<<)\n\n## Write `Cmd`s\n@docs return, command, effect_\n\n## Fancy non-sense\n@docs sequence, flatten\n",
+    "aliases": [
+      {
+        "name": "Return",
+        "comment": " ",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "ReturnF",
+        "comment": " ",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "Return.Return msg model -> Return.Return msg model"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "<<<",
+        "comment": "\n\nGo point free with `andThen` chaining. Looking at the example from `andThen`\n\n```elm\nresulting : Return msg { model | bar : Int }\nresulting =\n  myReturn `andThen` foo\n           `andThen` foo\n           `andThen` foo\n```\n\nthis code roughly becomes:\n\n```elm\ndoFoo3Times : { model | bar : Int } -> Return msg { model | bar : Int }\ndoFoo3Times =\n  foo >>> foo >>> foo\n```\n",
+        "type": "(b -> Return.Return msg c) -> (a -> Return.Return msg b) -> a -> Return.Return msg c"
+      },
+      {
+        "name": ">>>",
+        "comment": " ",
+        "type": "(a -> Return.Return msg b) -> (b -> Return.Return msg c) -> a -> Return.Return msg c"
+      },
+      {
+        "name": "andMap",
+        "comment": "\nMap an `Return` into a `Return` containing a `Model` function\n",
+        "type": "Return.Return msg a -> Return.Return msg (a -> b) -> Return.Return msg b"
+      },
+      {
+        "name": "andThen",
+        "comment": "\n```elm\n-- arbitrary function to demonstrate\nfoo : Model -> Return Msg Model\nfoo ({bar} as model) =\n  -- forking logic\n  if bar < 10\n  -- that side effects may be added\n  then (model, getAjaxThing)\n  -- that the model may be updated\n  else ({model | bar = model.bar - 2 }, Cmd.none)\n```\n\nThey are now chainable with `andThen`...\n\n```elm\nresulting : Return msg { model | bar : Int }\nresulting =\n  myReturn `andThen` foo\n           `andThen` foo\n           `andThen` foo\n```\n\nHere we changed up `foo` three times, but we can use any function of\ntype `(a -> Return msg b)`.\n\nCommands will be accumulated automatically as is the case with all\nfunctions in this library.\n",
+        "type": "(a -> Return.Return msg b) -> Return.Return msg a -> Return.Return msg b"
+      },
+      {
+        "name": "command",
+        "comment": "\nAdd a `Cmd` to a `Return`, the `Model` is uneffected\n",
+        "type": "Platform.Cmd.Cmd msg -> Return.ReturnF msg model"
+      },
+      {
+        "name": "dropCmd",
+        "comment": "\nDrop the current `Cmd` and replace with an empty thunk\n",
+        "type": "Return.ReturnF msg model"
+      },
+      {
+        "name": "effect_",
+        "comment": "\nAdd a `Cmd` to a `Return` based on its `Model`, the `Model` will not be effected\n",
+        "type": "Respond.Respond msg model -> Return.ReturnF msg model"
+      },
+      {
+        "name": "flatten",
+        "comment": " ",
+        "type": "Return.Return msg (Return.Return msg model) -> Return.Return msg model"
+      },
+      {
+        "name": "map",
+        "comment": "\nTransform the `Model` the `Cmd` will be left untouched\n",
+        "type": "(a -> b) -> Return.Return msg a -> Return.Return msg b"
+      },
+      {
+        "name": "map2",
+        "comment": "\nCombine 2 `Return`s with a function\n\n```elm\nmap2\n  (\\modelA modelB -> { modelA | foo = modelB.foo })\n  retA\n  retB\n```\n",
+        "type": "(a -> b -> c) -> Return.Return msg a -> Return.Return msg b -> Return.Return msg c"
+      },
+      {
+        "name": "map3",
+        "comment": " ",
+        "type": "(a -> b -> c -> d) -> Return.Return msg a -> Return.Return msg b -> Return.Return msg c -> Return.Return msg d"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e) -> Return.Return msg a -> Return.Return msg b -> Return.Return msg c -> Return.Return msg d -> Return.Return msg e"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f) -> Return.Return msg a -> Return.Return msg b -> Return.Return msg c -> Return.Return msg d -> Return.Return msg e -> Return.Return msg f"
+      },
+      {
+        "name": "mapBoth",
+        "comment": "\nMap over both the model and the msg type of the `Return`.\nThis is useful for easily embedding a `Return` in a Union Type.\nFor example\n\n```elm\nimport Foo\n\ntype Msg = Foo Foo.Msg\ntype Model = FooModel Foo.Model\n\n...\n\nupdate : Msg -> Model -> Return Msg Model\nupdate msg model =\n   case msg of\n     Foo foo -> Foo.update foo model.foo\n      |> mapBoth Foo FooModel\n```\n",
+        "type": "(a -> b) -> (c -> d) -> Return.Return a c -> Return.Return b d"
+      },
+      {
+        "name": "mapCmd",
+        "comment": "\nMap on the `Cmd`.\n",
+        "type": "(a -> b) -> Return.Return a model -> Return.Return b model"
+      },
+      {
+        "name": "mapWith",
+        "comment": "\nTransform the `Model` of and add a new `Cmd` to the queue\n",
+        "type": "(a -> b) -> Platform.Cmd.Cmd msg -> Return.Return msg a -> Return.Return msg b"
+      },
+      {
+        "name": "pipel",
+        "comment": " ",
+        "type": "List (Return.ReturnF msg model) -> Return.ReturnF msg model"
+      },
+      {
+        "name": "piper",
+        "comment": " ",
+        "type": "List (Return.ReturnF msg model) -> Return.ReturnF msg model"
+      },
+      {
+        "name": "return",
+        "comment": "\nConstruct a new `Return` from parts\n",
+        "type": "model -> Platform.Cmd.Cmd msg -> Return.Return msg model"
+      },
+      {
+        "name": "sequence",
+        "comment": " ",
+        "type": "List (Return.Return msg model) -> Return.Return msg (List model)"
+      },
+      {
+        "name": "singleton",
+        "comment": "\nCreate a `Return` from a given `Model`\n",
+        "type": "model -> Return.Return msg model"
+      },
+      {
+        "name": "zero",
+        "comment": " ",
+        "type": "Return.ReturnF msg model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Respond",
+    "comment": "\n@docs Respond, append, sum, zero, comap\n",
+    "aliases": [
+      {
+        "name": "Respond",
+        "comment": "\nA function from a model to a Cmd.\nBasically there are times where you want to\nhave a side effect on the world if the model\nhas a certain shape. `Respond` facilitates\nthis use case.\n",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "a -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "append",
+        "comment": " ",
+        "type": "Respond.Respond msg a -> Respond.Respond msg a -> Respond.Respond msg a"
+      },
+      {
+        "name": "comap",
+        "comment": "\nAdd a function to the front\n`b -> a >> a -> Cmd msg`\n",
+        "type": "(b -> a) -> Respond.Respond msg a -> Respond.Respond msg b"
+      },
+      {
+        "name": "sum",
+        "comment": " ",
+        "type": "List (Respond.Respond msg a) -> Respond.Respond msg a"
+      },
+      {
+        "name": "zero",
+        "comment": " ",
+        "type": "Respond.Respond msg a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
