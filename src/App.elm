@@ -28,6 +28,7 @@ type alias Module =
     , aliases : List Alias
     , types : List ModuleType
     , values : List Value
+    , generatedWithElmVesion : String
     }
 
 
@@ -110,12 +111,13 @@ decodeDoc moduleName version =
 
 decodeModule : Json.Decoder Module
 decodeModule =
-    Json.map5 Module
+    Json.map6 Module
         (Json.field "name" Json.string)
         (Json.field "comment" Json.string)
         (Json.field "aliases" (Json.list decodeAlias))
         (Json.field "types" (Json.list decodeModuleType))
         (Json.field "values" (Json.list decodeValue))
+        (Json.field "generated-with-elm-version" Json.string)
 
 
 decodeAlias : Json.Decoder Alias
@@ -184,7 +186,12 @@ update msg model =
         LoadAllPackages (Err _) ->
             ( model, Cmd.none )
 
-        PinDoc _ ->
+        PinDoc (Ok doc) ->
+            ( { model | pinnedDocs = model.pinnedDocs ++ [ doc ] }
+            , Cmd.none
+            )
+
+        PinDoc (Err _) ->
             ( model, Cmd.none )
 
         NoOp ->
