@@ -1,6 +1,6 @@
 module App exposing (..)
 
-import Html exposing (Html, text, div, input, h1)
+import Html exposing (Html, text, div, input, h1, h3, br)
 import Html.Attributes exposing (class, style, value, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Json
@@ -316,11 +316,37 @@ viewModuleComment comment module_ =
 
 viewPart : Module -> String -> Html Msg
 viewPart module_ part =
-    -- let
-    --     a =
-    --         Debug.log "part" module_
-    -- in
-    text ""
+    case findFirst (\alias -> alias.name == part) module_.aliases of
+        Just alias ->
+            let
+                a =
+                    Debug.log "alias" alias
+            in
+                div []
+                    [ h3 [] <|
+                        [ text <| "type alias " ++ alias.name ++ " = "
+                        , br [] []
+                        , text <| alias.type_
+                        ]
+                            ++ List.map (\arg -> text <| " " ++ arg) alias.args
+                    , Markdown.toHtml [] alias.comment
+                    ]
+
+        Nothing ->
+            text ""
+
+
+findFirst : (a -> Bool) -> List a -> Maybe a
+findFirst predicate list =
+    case list of
+        [] ->
+            Nothing
+
+        x :: xs ->
+            if predicate x then
+                Just x
+            else
+                findFirst predicate xs
 
 
 subscriptions : Model -> Sub Msg
