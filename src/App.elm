@@ -1,95 +1,40 @@
 module App exposing (..)
 
-import Html exposing (Html, text, div)
+import Html exposing (Html, text, div, input, h1)
+import Html.Attributes exposing (class, style, value, placeholder)
+import Html.Events exposing (onClick, onInput)
 import Json.Decode as Json
 import Http
-
-
--- import Task
-
-
-type alias Package =
-    { name : String
-    , summary : String
-    , version : List String
-    }
-
-
-type alias Doc =
-    { packageName : String
-    , packageVersion : String
-    , modules : List Module
-    }
-
-
-type alias Module =
-    { name : String
-    , comment : String
-    , aliases : List Alias
-    , types : List ModuleType
-    , values : List Value
-    , generatedWithElmVesion : String
-    }
-
-
-type alias Alias =
-    { name : String
-    , comment : String
-    , args : List String
-    , type_ : String
-    }
-
-
-type alias ModuleType =
-    { name : String
-    , comment : String
-    , args : List String
-    , cases : List ( String, List String )
-    }
-
-
-type alias Value =
-    { name : String
-    , comment : String
-    , type_ : String
-    }
-
-
-type alias Model =
-    { allPackages : List Package
-    , pinnedDocs : List Doc
-    }
+import Models exposing (..)
+import Decoders exposing (..)
+import Msgs exposing (..)
+import String
+import Markdown
+import Regex
 
 
 init : Maybe Json.Value -> ( Model, Cmd Msg )
-init str =
+init storedModel =
     { allPackages = []
     , pinnedDocs = []
+    , currentDoc = Nothing
+    , searchIndex = []
+    , searchResult = []
+    , searchText = ""
+    , showDisabled = False
     }
-        ! [ getAllPackages (str == Nothing)
+        ! [ getAllPackages (storedModel == Nothing)
           ]
 
 
 getAllPackages : Bool -> Cmd Msg
 getAllPackages loadDefault =
-    --    Task.attempt LoadAllPackages
-    --        (Http.toTask <| Http.get "json/all-packages.json" decodeAllPackages)
     Http.get "json/all-packages.json" decodeAllPackages
-        |> Http.send LoadAllPackages
+        |> Http.send (LoadAllPackages loadDefault)
 
 
-decodeAllPackages : Json.Decoder (List Package)
-decodeAllPackages =
-    Json.list
-        (Json.map3 Package
-            (Json.field "name" Json.string)
-            (Json.field "summary" Json.string)
-            (Json.field "versions" (Json.list Json.string))
-        )
-
-
-getDoc : String -> String -> Cmd Msg
-getDoc moduleName version =
+getDocRequest : String -> String -> Http.Request Doc
+getDocRequest moduleName version =
     Http.get
         ("json/packages/"
             ++ moduleName
@@ -98,112 +43,284 @@ getDoc moduleName version =
             ++ "/documentation.json"
         )
         (decodeDoc moduleName version)
-        |> Http.send PinDoc
 
 
-decodeDoc : String -> String -> Json.Decoder Doc
-decodeDoc moduleName version =
-    Json.map3 Doc
-        (Json.succeed moduleName)
-        (Json.succeed version)
-        (Json.list decodeModule)
+getDocs : List ( String, String ) -> Cmd Msg
+getDocs list =
+    case list of
+        ( moduleName, version ) :: xs ->
+            getDocRequest moduleName version
+                |> Http.send (PinDoc xs)
+
+        [] ->
+            Cmd.none
 
 
-decodeModule : Json.Decoder Module
-decodeModule =
-    Json.map6 Module
-        (Json.field "name" Json.string)
-        (Json.field "comment" Json.string)
-        (Json.field "aliases" (Json.list decodeAlias))
-        (Json.field "types" (Json.list decodeModuleType))
-        (Json.field "values" (Json.list decodeValue))
-        (Json.field "generated-with-elm-version" Json.string)
+getDefaultDocs : Model -> Cmd Msg
+getDefaultDocs model =
+    getDocs
+        (model.allPackages
+            |> List.filter
+                (\p ->
+                    List.member p.name
+                        [ "elm-lang/core"
+                        , "elm-lang/http"
+                        , "elm-lang/virtual-dom"
+                        ]
+                )
+            |> List.filterMap
+                (\p ->
+                    List.head p.versions
+                        |> Maybe.map (\v -> ( p.name, v ))
+                )
+        )
 
 
-decodeAlias : Json.Decoder Alias
-decodeAlias =
-    Json.map4 Alias
-        (Json.field "name" Json.string)
-        (Json.field "comment" Json.string)
-        (Json.field "args" (Json.list Json.string))
-        (Json.field "type" Json.string)
-
-
-decodeModuleType : Json.Decoder ModuleType
-decodeModuleType =
-    Json.map4 ModuleType
-        (Json.field "name" Json.string)
-        (Json.field "comment" Json.string)
-        (Json.field "args" (Json.list Json.string))
-        (Json.field "cases" (Json.list decodeCase))
-
-
-decodeCase : Json.Decoder ( String, List String )
-decodeCase =
-    Json.list Json.value
-        |> Json.andThen
-            (\list ->
-                case list of
-                    x :: y :: [] ->
-                        let
-                            result =
-                                Result.map2 (,)
-                                    (Json.decodeValue Json.string x)
-                                    (Json.decodeValue (Json.list Json.string) y)
-                        in
-                            case result of
-                                Ok value ->
-                                    Json.succeed value
-
-                                Err err ->
-                                    Json.fail err
-
-                    _ ->
-                        Json.fail "not a case structure"
-            )
-
-
-decodeValue : Json.Decoder Value
-decodeValue =
-    Json.map3 Value
-        (Json.field "name" Json.string)
-        (Json.field "comment" Json.string)
-        (Json.field "type" Json.string)
-
-
-type Msg
-    = NoOp
-    | LoadAllPackages (Result Http.Error (List Package))
-    | PinDoc (Result Http.Error Doc)
+buildSearchIndex : List ( String, String ) -> Doc -> List ( String, String )
+buildSearchIndex list doc =
+    let
+        docIndexes =
+            doc.modules
+                |> List.concatMap
+                    (\m ->
+                        [ m.name ]
+                            ++ List.map
+                                (\name -> m.name ++ "." ++ name)
+                                (List.map .name m.aliases
+                                    ++ List.map .name m.types
+                                    ++ List.map .name m.values
+                                )
+                    )
+                |> List.map (\path -> ( path, doc.id ))
+    in
+        list ++ docIndexes
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadAllPackages (Ok list) ->
-            ( { model | allPackages = list }, Cmd.none )
-
-        LoadAllPackages (Err _) ->
+        NoOp ->
             ( model, Cmd.none )
 
-        PinDoc (Ok doc) ->
-            ( { model | pinnedDocs = model.pinnedDocs ++ [ doc ] }
+        LoadAllPackages loadDefault (Ok list) ->
+            let
+                model_ =
+                    { model | allPackages = list }
+
+                cmd_ =
+                    if loadDefault then
+                        getDefaultDocs model_
+                    else
+                        Cmd.none
+            in
+                ( model_, cmd_ )
+
+        LoadAllPackages loadDefault (Err _) ->
+            ( model, Cmd.none )
+
+        PinDoc rest (Ok doc) ->
+            ( { model
+                | pinnedDocs = model.pinnedDocs ++ [ doc ]
+                , searchIndex = buildSearchIndex model.searchIndex doc
+              }
+            , getDocs rest
+            )
+
+        PinDoc rest (Err err) ->
+            ( model, getDocs rest )
+
+        GetCurrentDocFromPackage package ->
+            case List.head package.versions of
+                Just version_ ->
+                    ( model
+                    , getDocRequest package.name version_
+                        |> Http.send (Result.map (SetCurrentDoc "") >> Result.withDefault NoOp)
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        GetCurrentDocFromId str ->
+            case String.split "#" str of
+                name :: version :: [] ->
+                    ( model
+                    , getDocRequest name version
+                        |> Http.send (Result.map (SetCurrentDoc "") >> Result.withDefault NoOp)
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        SetCurrentDoc nav doc ->
+            ( { model | currentDoc = Just ( nav, doc ) }, Cmd.none )
+
+        Search text ->
+            ( { model
+                | searchText = text
+                , searchResult =
+                    if String.isEmpty text then
+                        []
+                    else
+                        List.filter
+                            (\( path, docId ) ->
+                                String.contains
+                                    (String.toLower text)
+                                    (String.toLower path)
+                            )
+                            model.searchIndex
+              }
             , Cmd.none
             )
 
-        PinDoc (Err _) ->
-            ( model, Cmd.none )
-
-        NoOp ->
-            ( model, Cmd.none )
+        ToggleShowDisabled ->
+            ( { model | showDisabled = not model.showDisabled }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        (model.allPackages
-            |> List.map (\p -> div [] [ text p.name ])
-        )
+    div [ class "main" ]
+        [ div [ class "nav" ]
+            [ div [ class "nav-top " ]
+                [ input
+                    [ class "search-input"
+                    , onInput Search
+                    , value model.searchText
+                    , placeholder "Search..."
+                    ]
+                    []
+                ]
+            , if model.searchText /= "" then
+                if List.length model.searchResult > 0 then
+                    div [ class "nav-list nav-result" ] <|
+                        List.map
+                            (\( path, docId ) ->
+                                div
+                                    [ class "nav-item"
+                                    , onClick (GetCurrentDocFromId docId)
+                                    ]
+                                    [ text <| Debug.log "path" path ]
+                            )
+                            model.searchResult
+                else
+                    div [] [ text "No result found" ]
+              else
+                div
+                    [ class "nav-list" ]
+                    [ div [ class "nav-pinned" ] <|
+                        List.map
+                            (\d ->
+                                div
+                                    [ class "nav-item"
+                                    , onClick (SetCurrentDoc "" d)
+                                    ]
+                                    [ text <| d.packageName ++ " - " ++ d.packageVersion ]
+                            )
+                            model.pinnedDocs
+                    , div
+                        [ class "nav-packages nav-item" ]
+                        [ div
+                            [ onClick ToggleShowDisabled ]
+                            [ text <| "Disabled" ]
+                        , if model.showDisabled then
+                            div [] <|
+                                List.map
+                                    (\p ->
+                                        div
+                                            [ class "nav-item"
+                                            , onClick (GetCurrentDocFromPackage p)
+                                            ]
+                                            [ text p.name ]
+                                    )
+                                    model.allPackages
+                          else
+                            text ""
+                        ]
+                    ]
+            ]
+        , div [ class "doc" ]
+            [ case model.currentDoc of
+                Just ( path, doc ) ->
+                    div
+                        []
+                        [ if path == "" then
+                            viewDocOverview doc
+                          else
+                            viewModule path doc
+                        ]
+
+                Nothing ->
+                    text ""
+            ]
+        ]
+
+
+viewDocOverview : Doc -> Html Msg
+viewDocOverview doc =
+    div
+        [ class "doc-overview" ]
+    <|
+        [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
+            ++ List.map
+                (\m ->
+                    div
+                        [ onClick (SetCurrentDoc m.name doc) ]
+                        [ text m.name ]
+                )
+                doc.modules
+
+
+viewModule : String -> Doc -> Html Msg
+viewModule path doc =
+    let
+        module_ =
+            List.filter (\m -> String.startsWith m.name path) doc.modules |> List.head
+    in
+        case module_ of
+            Just m ->
+                div
+                    [ class "module-doc" ]
+                    [ h1 [] [ text <| m.name ]
+                    , div [] <| viewModuleComment m.comment m
+                    ]
+
+            Nothing ->
+                div [] [ text "module not found." ]
+
+
+viewModuleComment : String -> Module -> List (Html Msg)
+viewModuleComment comment module_ =
+    let
+        docs =
+            Regex.split Regex.All (Regex.regex "@docs [^\\n]*\\n") comment
+                |> List.map (Markdown.toHtml [])
+
+        matches =
+            Regex.find Regex.All (Regex.regex "@docs ([^\\n]*)\\n") comment
+
+        parts =
+            matches
+                |> List.map
+                    (\m ->
+                        m.submatches
+                            |> List.filterMap identity
+                            |> List.concatMap
+                                (\listStr ->
+                                    Regex.split Regex.All (Regex.regex ",\\s*") listStr
+                                )
+                            |> List.map (viewPart module_)
+                    )
+                |> Debug.log "matches"
+    in
+        docs
+
+
+viewPart : Module -> String -> Html Msg
+viewPart module_ part =
+    -- let
+    --     a =
+    --         Debug.log "part" module_
+    -- in
+    text ""
 
 
 subscriptions : Model -> Sub Msg
