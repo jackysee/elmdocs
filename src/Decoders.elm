@@ -54,27 +54,9 @@ decodeModuleType =
 
 decodeCase : Json.Decoder ( String, List String )
 decodeCase =
-    Json.list Json.value
-        |> Json.andThen
-            (\list ->
-                case list of
-                    x :: y :: [] ->
-                        let
-                            result =
-                                Result.map2 (,)
-                                    (Json.decodeValue Json.string x)
-                                    (Json.decodeValue (Json.list Json.string) y)
-                        in
-                            case result of
-                                Ok value ->
-                                    Json.succeed value
-
-                                Err err ->
-                                    Json.fail err
-
-                    _ ->
-                        Json.fail "not a case structure"
-            )
+    Json.map2 (,)
+        (Json.index 0 Json.string)
+        (Json.index 1 (Json.list Json.string))
 
 
 decodeValue : Json.Decoder Value

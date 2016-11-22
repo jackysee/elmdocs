@@ -41,6 +41,12 @@ type alias Module =
     }
 
 
+type Entry
+    = AliasEntry Alias
+    | ModuleTypeEntry ModuleType
+    | ValueEntry Value
+
+
 type alias Alias =
     { name : String
     , comment : String

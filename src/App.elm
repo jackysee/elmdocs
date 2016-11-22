@@ -1,6 +1,6 @@
 module App exposing (..)
 
-import Html exposing (Html, text, div, input, h1, h3, br)
+import Html exposing (Html, text, div, input, h1, h3, br, span)
 import Html.Attributes exposing (class, style, value, placeholder)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Json
@@ -11,6 +11,7 @@ import Msgs exposing (..)
 import String
 import Markdown
 import Regex
+import Dict exposing (Dict)
 
 
 init : Maybe Json.Value -> ( Model, Cmd Msg )
@@ -291,11 +292,18 @@ viewModuleComment : String -> Module -> List (Html Msg)
 viewModuleComment comment module_ =
     let
         docs =
-            Regex.split Regex.All (Regex.regex "@docs [^\\n]*\\n") comment
+            Regex.split Regex.All (Regex.regex "@docs [^\\n]*\\n") (Debug.log "comment" comment)
+                |> Debug.log "docs"
                 |> List.map (Markdown.toHtml [])
 
         matches =
             Regex.find Regex.All (Regex.regex "@docs ([^\\n]*)\\n") comment
+
+        entryDict =
+            List.map (\v -> ( v.name, AliasEntry v )) module_.aliases
+                ++ List.map (\v -> ( v.name, ModuleTypeEntry v )) module_.types
+                ++ List.map (\v -> ( v.name, ValueEntry v )) module_.values
+                |> Dict.fromList
 
         parts =
             matches
@@ -307,46 +315,122 @@ viewModuleComment comment module_ =
                                 (\listStr ->
                                     Regex.split Regex.All (Regex.regex ",\\s*") listStr
                                 )
-                            |> List.map (viewPart module_)
+                            |> List.map (viewPart module_.name entryDict)
                     )
-                |> Debug.log "matches"
     in
-        docs
+        (List.map2 (\x y -> [ x ] ++ y) docs parts |> List.concat)
+            ++ List.drop (List.length parts) docs
 
 
-viewPart : Module -> String -> Html Msg
-viewPart module_ part =
-    case findFirst (\alias -> alias.name == part) module_.aliases of
-        Just alias ->
-            let
-                a =
-                    Debug.log "alias" alias
-            in
-                div []
-                    [ h3 [] <|
-                        [ text <| "type alias " ++ alias.name ++ " = "
-                        , br [] []
-                        , text <| alias.type_
+viewPart : String -> Dict String Entry -> String -> Html Msg
+viewPart moduleName dict part =
+    case Dict.get part dict of
+        Just entry ->
+            case entry of
+                AliasEntry alias ->
+                    div [ class "entry" ]
+                        [ h3 [] <|
+                            [ div [] [ text <| "type alias " ++ alias.name ++ " = " ]
+                            , div [ class "entry-name" ] [ text <| alias.type_ ]
+                            ]
+                                ++ List.map (\arg -> text <| " " ++ arg) alias.args
+                        , Markdown.toHtml [ class "entry-comment" ] alias.comment
                         ]
-                            ++ List.map (\arg -> text <| " " ++ arg) alias.args
-                    , Markdown.toHtml [] alias.comment
-                    ]
+
+                ModuleTypeEntry tipe ->
+                    div [ class "entry" ]
+                        [ h3 [] <|
+                            [ text "type "
+                            , span [ class "entry-name" ] [ text tipe.name ]
+                            , text <| " " ++ String.join " " tipe.args
+                            ]
+                                ++ (if List.length tipe.cases > 0 then
+                                        tipe.cases |> List.indexedMap viewCase
+                                    else
+                                        [ text "" ]
+                                   )
+                        , Markdown.toHtml [ class "entry-comment" ] tipe.comment
+                        ]
+
+                ValueEntry value ->
+                    div [ class "entry" ]
+                        [ h3 [] <|
+                            [ span [ class "entry-name" ] [ text value.name ]
+                            , span [ class "value-type" ] <| viewType moduleName value.type_
+                            ]
+                        , Markdown.toHtml [ class "entry-comment" ] value.comment
+                        ]
 
         Nothing ->
             text ""
 
 
-findFirst : (a -> Bool) -> List a -> Maybe a
-findFirst predicate list =
-    case list of
-        [] ->
-            Nothing
-
-        x :: xs ->
-            if predicate x then
-                Just x
+viewCase : Int -> ( String, List String ) -> Html Msg
+viewCase i ( case_, caseArgs ) =
+    let
+        prefix =
+            if i == 0 then
+                "="
             else
-                findFirst predicate xs
+                "|"
+
+        caseStr =
+            [ prefix
+            , case_
+            , String.join " " caseArgs
+            ]
+                |> String.join " "
+    in
+        div [ class "cases" ] [ text caseStr ]
+
+
+viewType : String -> String -> List (Html Msg)
+viewType moduleName str =
+    let
+        str_ =
+            Regex.replace Regex.All (Regex.regex <| "\\s*" ++ (Regex.escape moduleName) ++ "\\.") (\_ -> "") str
+
+        list =
+            str_
+                |> String.split "->"
+                |> List.foldl
+                    (\s ( list, nestLevel ) ->
+                        let
+                            list_ =
+                                if nestLevel == 0 then
+                                    s :: list
+                                else
+                                    (List.head list
+                                        |> Maybe.map (\s_ -> s_ ++ " -> " ++ s)
+                                        |> Maybe.withDefault s
+                                    )
+                                        :: (List.tail list |> Maybe.withDefault [])
+
+                            nestLevel_ =
+                                if String.contains "(" s then
+                                    nestLevel + 1
+                                else if String.contains ")" s then
+                                    nestLevel - 1
+                                else
+                                    nestLevel
+                        in
+                            ( list_, nestLevel_ )
+                    )
+                    ( [], 0 )
+                |> Tuple.first
+                |> List.reverse
+    in
+        if String.length str_ < 64 then
+            [ span [] [ text <| " : " ++ String.join " -> " list ] ]
+        else
+            list
+                |> List.indexedMap
+                    (\i s ->
+                        if i == 0 then
+                            div [] [ text <| " : " ++ s ]
+                        else
+                            div [] [ text <| " -> " ++ s ]
+                    )
 
 
 subscriptions : Model -> Sub Msg
