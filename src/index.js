@@ -21,7 +21,7 @@ app.ports.scrollToElement.subscribe(function(id){
 
 function getStoredModel(returnUndefined) {
     var stored = window.localStorage.getItem("storeModel");
-    if(!stored && returnUndefined){
+    if((!stored || stored === "null") && returnUndefined){
         return null;
     }
     if(stored){

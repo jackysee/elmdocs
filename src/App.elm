@@ -18,7 +18,7 @@ init storeModel =
     { allPackages = []
     , pinnedDocs = storeModel |> Maybe.map .docs |> Maybe.withDefault []
     , currentDoc = Nothing
-    , searchIndex = []
+    , searchIndex = storeModel |> Maybe.map .searchIndex |> Maybe.withDefault []
     , searchResult = []
     , searchText = ""
     , showDisabled = False
@@ -127,6 +127,7 @@ update msg model =
             let
                 searchIndex =
                     List.filter (\( path, docId ) -> doc.id /= docId) model.searchIndex
+                        |> Debug.log "searchIndex"
             in
                 { model
                     | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
