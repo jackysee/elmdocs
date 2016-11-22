@@ -489,13 +489,13 @@ viewPart moduleName dict part =
                             [ div []
                                 [ text "type alias "
                                 , span [ class "entry-name" ] [ text alias.name ]
+                                , if List.length alias.args > 0 then
+                                    text <| " " ++ String.join " " alias.args
+                                  else
+                                    text ""
                                 , text " = "
                                 ]
                             , div [ class "indent" ] [ text <| alias.type_ ]
-                            , if List.length alias.args > 0 then
-                                div [ class "indent" ] [ text <| String.join " " alias.args ]
-                              else
-                                text ""
                             ]
                         , Markdown.toHtml [ class "entry-comment" ] alias.comment
                         ]
