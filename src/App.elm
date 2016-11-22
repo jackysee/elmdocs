@@ -369,7 +369,11 @@ view model =
                             ]
                         ]
                     )
-                |> Maybe.withDefault []
+                |> Maybe.withDefault
+                    [ div
+                        [ class "doc-empty-title" ]
+                        [ span [] [ text "ElmDocs" ] ]
+                    ]
             )
         ]
 
