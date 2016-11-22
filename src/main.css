@@ -16,6 +16,9 @@ body {
     align-items: stretch;
     height: 100vh;
 }
+.nav{
+    border-right: 1px solid #ccc;
+}
 .nav-top{
     height: 2rem;
     display: flex;
@@ -32,6 +35,9 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
+}
+.nav-item.is-selected{
+    background-color: #ddd;
 }
 .nav-doc-item{
     display: flex;
@@ -74,6 +80,7 @@ body {
     margin: 0.1rem;
     border: 1px solid #ccc;
     padding: 0.3rem;
+    border-radius: 3px;
 }
 
 .module-link{
@@ -97,6 +104,7 @@ body {
     margin: 0.1rem;
     border: 1px solid #ccc;
     padding: 0 0.3rem;
+    border-radius: 3px;
 }
 .doc-title{
     margin: 0;
@@ -122,6 +130,7 @@ body {
 
 .module-doc-comment code{
     font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.8rem;
     background-color: #EEE;
     display: inline-block;
     padding:0 0.2rem;

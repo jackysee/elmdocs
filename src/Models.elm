@@ -11,6 +11,7 @@ type alias Model =
     , showDisabled : Bool
     , searchPackageText : String
     , showConfirmDeleteDoc : Maybe DocId
+    , selectedIndex : Int
     }
 
 

@@ -17,3 +17,4 @@ type Msg
     | ToggleShowDisabled
     | SearchPackage String
     | SetShowConfirmDeleteDoc (Maybe DocId)
+    | SetSelectedIndex Int

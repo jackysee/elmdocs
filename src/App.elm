@@ -1,12 +1,13 @@
 port module App exposing (..)
 
 import Html exposing (Html, text, div, input, h1, h3, br, span)
-import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex)
-import Html.Events exposing (onClick, onInput)
+import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList)
+import Html.Events exposing (onClick, onInput, on, keyCode)
 import Http
 import String
 import Markdown
 import Regex
+import Json.Decode
 import Dict exposing (Dict)
 import Models exposing (..)
 import Decoders exposing (..)
@@ -24,6 +25,7 @@ init storeModel =
     , showDisabled = False
     , searchPackageText = ""
     , showConfirmDeleteDoc = Nothing
+    , selectedIndex = 0
     }
         ! [ getAllPackages (storeModel == Nothing)
           ]
@@ -127,7 +129,6 @@ update msg model =
             let
                 searchIndex =
                     List.filter (\( path, docId ) -> doc.id /= docId) model.searchIndex
-                        |> Debug.log "searchIndex"
             in
                 { model
                     | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
@@ -189,6 +190,7 @@ update msg model =
         Search text ->
             ( { model
                 | searchText = text
+                , selectedIndex = 0
                 , searchResult =
                     if String.isEmpty text then
                         []
@@ -213,6 +215,9 @@ update msg model =
         SetShowConfirmDeleteDoc docId ->
             ( { model | showConfirmDeleteDoc = docId }, Cmd.none )
 
+        SetSelectedIndex i ->
+            ( { model | selectedIndex = i }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -224,16 +229,20 @@ view model =
                     , onInput Search
                     , value model.searchText
                     , placeholder "Search..."
+                    , on "keyup" <| Json.Decode.map (inputKeyUp model) keyCode
                     ]
                     []
                 ]
             , if model.searchText /= "" then
                 if List.length model.searchResult > 0 then
                     div [ class "nav-list nav-result" ] <|
-                        List.map
-                            (\( path, docId ) ->
+                        List.indexedMap
+                            (\i ( path, docId ) ->
                                 div
-                                    [ class "nav-item"
+                                    [ classList
+                                        [ ( "nav-item", True )
+                                        , ( "is-selected", i == model.selectedIndex )
+                                        ]
                                     , onClick (GetCurrentDocFromId path docId)
                                     ]
                                     [ text <| path ]
@@ -249,10 +258,13 @@ view model =
                 div
                     [ class "nav-list" ]
                     [ div [ class "nav-pinned" ] <|
-                        List.map
-                            (\d ->
+                        List.indexedMap
+                            (\i d ->
                                 div
-                                    [ class "nav-item nav-doc-item"
+                                    [ classList
+                                        [ ( "nav-item nav-doc-item", True )
+                                        , ( "is-selected", i == model.selectedIndex )
+                                        ]
                                     , onClick (SetCurrentDoc "" d)
                                     ]
                                     [ span [ class "nav-doc-package" ] [ text d.packageName ]
@@ -365,7 +377,7 @@ view model =
                             [ if path == "" then
                                 viewDocOverview doc
                               else
-                                viewModule path doc
+                                viewModule model path doc
                             ]
                         ]
                     )
@@ -376,6 +388,35 @@ view model =
                     ]
             )
         ]
+
+
+inputKeyUp : Model -> Int -> Msg
+inputKeyUp model code =
+    if code == 40 then
+        SetSelectedIndex <|
+            if model.searchText == "" then
+                min (model.selectedIndex + 1) (List.length model.pinnedDocs - 1)
+            else
+                min (model.selectedIndex + 1) (List.length model.searchResult - 1)
+    else if code == 38 then
+        SetSelectedIndex <| max 0 (model.selectedIndex - 1)
+    else if code == 13 then
+        if model.searchText == "" then
+            findFirst
+                (\( i, _ ) -> i == model.selectedIndex)
+                (List.indexedMap (,) model.pinnedDocs)
+                |> Maybe.map (\( i, d ) -> SetCurrentDoc "" d)
+                |> Maybe.withDefault NoOp
+        else
+            findFirst
+                (\( i, _ ) -> i == model.selectedIndex)
+                (List.indexedMap (,) model.searchResult)
+                |> Maybe.map (\( i, ( path, docId ) ) -> GetCurrentDocFromId path docId)
+                |> Maybe.withDefault NoOp
+    else if code == 27 then
+        Search ""
+    else
+        NoOp
 
 
 viewDocOverview : Doc -> Html Msg
@@ -397,12 +438,16 @@ viewDocOverview doc =
                )
 
 
-viewModule : String -> Doc -> Html Msg
-viewModule path doc =
+viewModule : Model -> String -> Doc -> Html Msg
+viewModule model path doc =
     let
         module_ =
             findFirst (.name >> (==) path) doc.modules
                 |> onNothing (findFirst (\m -> String.startsWith m.name path) doc.modules)
+
+        indexes =
+            model.searchIndex
+                |> List.filter (\( _, docId ) -> docId == doc.id)
     in
         case module_ of
             Just m ->
@@ -411,7 +456,8 @@ viewModule path doc =
                     , id m.name
                     ]
                     [ h1 [] [ text <| m.name ]
-                    , div [ class "module-doc-comment" ] <| viewModuleComment m.comment m
+                    , div [ class "module-doc-comment" ]
+                        (viewModuleComment m.comment m indexes)
                     ]
 
             Nothing ->
@@ -441,15 +487,15 @@ onNothing a b =
             b
 
 
-viewModuleComment : String -> Module -> List (Html Msg)
-viewModuleComment comment module_ =
+viewModuleComment : String -> Module -> List ( String, String ) -> List (Html Msg)
+viewModuleComment comment module_ indexes =
     let
         docs =
-            Regex.split Regex.All (Regex.regex "@docs [^#]*") comment
+            Regex.split Regex.All (Regex.regex "@docs [^#]*\n\n") comment
                 |> List.map (Markdown.toHtml [])
 
         matches =
-            Regex.find Regex.All (Regex.regex "@docs ([^#]*)") comment
+            Regex.find Regex.All (Regex.regex "@docs ([^#]*)\n\n") comment
 
         entryDict =
             List.map (\v -> ( v.name, AliasEntry v )) module_.aliases
@@ -468,15 +514,15 @@ viewModuleComment comment module_ =
                                     Regex.split Regex.All (Regex.regex ",\\s*") listStr
                                 )
                             |> List.map String.trim
-                            |> List.map (viewPart module_.name entryDict)
+                            |> List.map (viewPart module_.name entryDict indexes)
                     )
     in
         (List.map2 (\x y -> [ x ] ++ y) docs parts |> List.concat)
             ++ List.drop (List.length parts) docs
 
 
-viewPart : String -> Dict String Entry -> String -> Html Msg
-viewPart moduleName dict part =
+viewPart : String -> Dict String Entry -> List ( String, String ) -> String -> Html Msg
+viewPart moduleName dict indexes part =
     case Dict.get part dict of
         Just entry ->
             case entry of
@@ -525,7 +571,7 @@ viewPart moduleName dict part =
                         ]
                         [ h3 [] <|
                             [ span [ class "entry-name" ] [ text value.name ]
-                            , span [ class "value-type " ] <| viewType moduleName value.type_
+                            , span [ class "value-type " ] <| viewType indexes moduleName value.type_
                             ]
                         , Markdown.toHtml [ class "entry-comment" ] value.comment
                         ]
@@ -553,8 +599,8 @@ viewCase i ( case_, caseArgs ) =
         div [ class "indent" ] [ text caseStr ]
 
 
-viewType : String -> String -> List (Html Msg)
-viewType moduleName str =
+viewType : List ( String, String ) -> String -> String -> List (Html Msg)
+viewType indexes moduleName str =
     let
         str_ =
             Regex.replace Regex.All (Regex.regex <| (Regex.escape moduleName) ++ "\\.") (\_ -> "") str
