@@ -1,7 +1,8 @@
 body {
   margin: 0;
+  color: #444;
   font-size: 14px;
-  font-family: sans-serif;
+  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
 }
 
@@ -17,6 +18,7 @@ body {
 }
 .nav-top{
     height: 2rem;
+    display: flex;
 }
 .nav-list{
     height: calc(100vh - 2rem);
@@ -25,46 +27,121 @@ body {
 }
 .nav-item{
     padding: 0.1rem 0.5rem;
-    width: calc(100% - 1rem);
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
+}
+.nav-doc-item{
+    display: flex;
+    justify-content: space-between;
+}
+.nav-doc-package{
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 1rem;
+}
+.nav-doc-version{
+    color: #ccc;
+}
+.nav-doc-version-action{
+    display: none;
+}
+.nav-doc-version:hover .nav-doc-version-str{
+    display: none;
+}
+.nav-doc-version:hover .nav-doc-version-action{
+    display: inline;
+}
+.nav-doc-version-remove-confirm{
+    padding-left: 0.3rem;
+}
+.confirm-danger{
+    color: red;
 }
 .nav-packages{
     color: #BBB;
 }
+.nav-package-search{
+    padding: 0.1rem;
+    height: 2rem;
+    display: flex;
+}
+.search-package-input{
+    width: 100%;
+    margin: 0.1rem;
+    border: 1px solid #ccc;
+    padding: 0.3rem;
+}
+
+.module-link{
+    cursor: pointer;
+}
 .doc{
     flex:1;
-    padding: 1.5rem;
     height: 100vh;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.doc-content{
+    flex: 1;
+    height: calc(100vh - 1rem);
+    overflow: auto;
+    padding:1.5rem;
 }
 .search-input{
     width: calc(100% - 0.2rem);
     margin: 0.1rem;
     border: 1px solid #ccc;
+    padding: 0 0.3rem;
 }
+.doc-title{
+    margin: 0;
+    width: 100%;
+    font-size: 1rem;
+    padding-left: 1.5rem;
+    line-height: 2rem;
+}
+
+
+.module-doc-comment h1{
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.module-doc-comment pre{
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 1rem;
+    overflow: auto;
+}
+
+.module-doc-comment code{
+    font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #EEE;
+    display: inline-block;
+    padding:0 0.2rem;
+}
+
 .entry{
     padding: 0.5rem 1.5rem;
 }
 
     .entry h3{
         font-weight: normal;
-        font-family: monospace;
+        font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        margin: 0.5rem 0;
     }
     .entry .entry-name{
         font-weight: bold;
     }
-    .entry .cases{
+    .entry .indent{
         padding-left: 2rem;
     }
     .entry-comment{
         margin-left: 1.5rem;
-    }
-    .entry-comment pre{
-        border: 1px solid #ccc;
-        background: #eee;
-        padding: 1rem;
-        overflow: auto;
-
     }

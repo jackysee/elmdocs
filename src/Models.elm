@@ -9,6 +9,14 @@ type alias Model =
     , searchResult : List ( String, String )
     , searchText : String
     , showDisabled : Bool
+    , searchPackageText : String
+    , showConfirmDeleteDoc : Maybe DocId
+    }
+
+
+type alias StoreModel =
+    { docs : List Doc
+    , searchIndex : List ( String, String )
     }
 
 

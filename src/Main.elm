@@ -2,12 +2,11 @@ module Main exposing (..)
 
 import App exposing (..)
 import Html
-import Json.Decode
-import Models exposing (Model)
+import Models exposing (Model, StoreModel)
 import Msgs exposing (Msg)
 
 
-main : Program (Maybe Json.Decode.Value) Model Msg
+main : Program (Maybe StoreModel) Model Msg
 main =
     Html.programWithFlags
         { view = view
