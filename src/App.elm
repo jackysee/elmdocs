@@ -443,7 +443,12 @@ viewModule model path doc =
     let
         module_ =
             findFirst (.name >> (==) path) doc.modules
-                |> onNothing (findFirst (\m -> String.startsWith m.name path) doc.modules)
+                |> onNothing
+                    (doc.modules
+                        |> List.filter (\m -> String.startsWith m.name path)
+                        |> List.sortBy (\m -> String.length path - String.length m.name)
+                        |> List.head
+                    )
 
         indexes =
             model.searchIndex
