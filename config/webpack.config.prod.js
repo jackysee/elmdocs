@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-
 const root = process.cwd();
 
 module.exports = {
@@ -86,7 +85,7 @@ module.exports = {
       }
     }),
 
-    new CopyWebpackPugin([
+    new CopyWebpackPlugin([
       {from:paths.assets, to:'assets'},
       {from:paths.json, to:'json'}
     ]),
