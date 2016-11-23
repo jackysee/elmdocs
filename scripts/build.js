@@ -23,6 +23,6 @@ webpack(config).run(function (err, stats) {
     });
 
     console.log(chalk.green('\n' + statsFormatted));
-    console.log(chalk.green('\n' + 'Production build is ready in `dist/` folder'));
+    console.log(chalk.green('\n' + 'Production build is ready in `docs/` folder'));
   }
 });

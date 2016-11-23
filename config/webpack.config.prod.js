@@ -51,7 +51,7 @@ module.exports = {
   plugins: [
 
     // Remove the content of the ./dist/ folder.
-    new CleanWebpackPlugin([ 'dist' ], {
+    new CleanWebpackPlugin([ 'docs' ], {
       root: root,
       verbose: true,
       dry: false
