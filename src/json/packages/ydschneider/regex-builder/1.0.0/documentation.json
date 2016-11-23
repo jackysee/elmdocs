@@ -1,0 +1,169 @@
+[
+  {
+    "name": "RegexBuilder.Extra",
+    "comment": " If you find yourself being too limited by [RegexBuilder](#RegexBuilder),\nthis might help you out. However, some functions in this module will likely add more parenthesis\nthan needed to the resulting expression.\n\n# Repitition\n@docs repeat, between\n\n# Laziness\nBy default, a pattern consumes as many characters as possible (greedy matching).\nUse these if you need lazy (non-greedy) matching.\n@docs maybeLazy, manyLazy, betweenLazy\n\n# Alignment\n@docs Options, defaultOptions, toRegexString, toRegex, wordBoundary, noWordBoundary\n\n# Lookahead\n@docs ifFollowedBy, ifNotFollowedBy\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " The equivalents of `^` and `$`.\n",
+        "args": [],
+        "type": "{ alignBeginning : Bool, alignEnd : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "between",
+        "comment": " `between i j pattern` will match `pattern` at least `i` and at most `j` times.\nInvalid parameters `i`, `j` will result in empty subpatterns as shown above.\n",
+        "type": "Int -> Int -> RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "betweenLazy",
+        "comment": "\n",
+        "type": "Int -> Int -> RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": "\n    defaultOptions =\n        { alignBeginning = False\n        , alignEnd = False\n        }\n",
+        "type": "RegexBuilder.Extra.Options"
+      },
+      {
+        "name": "ifFollowedBy",
+        "comment": " `a >> ifFollowedBy b` matches `a` only if it is followed by `b`, but doesn't include `b` in the match\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "ifNotFollowedBy",
+        "comment": "\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "manyLazy",
+        "comment": "\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "maybeLazy",
+        "comment": "\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "noWordBoundary",
+        "comment": "\n",
+        "type": "RegexBuilder.Pattern"
+      },
+      {
+        "name": "repeat",
+        "comment": " Repeat a `Pattern`.\nGiven a 0 or a negative number, this will result in an empty subpattern:\n\n    char 'a'\n        >> repeat -1 char'b'\n        >> char 'c'\n\n    ==\n\n    char 'a'\n        >> char 'c'\n",
+        "type": "Int -> RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "toRegex",
+        "comment": "\n",
+        "type": "RegexBuilder.Extra.Options -> RegexBuilder.Pattern -> Regex.Regex"
+      },
+      {
+        "name": "toRegexString",
+        "comment": "\n",
+        "type": "RegexBuilder.Extra.Options -> RegexBuilder.Pattern -> String"
+      },
+      {
+        "name": "wordBoundary",
+        "comment": " Matches at the beginning or end of a word.\nNote that a word is anything consisting of some of A-Z, a-z, 0-9 and underscore.\nIf you are dealing with Unicode, this might not be the behavior you want.\n",
+        "type": "RegexBuilder.Pattern"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "RegexBuilder",
+    "comment": " Build a regex from composable `Pattern`s.\n\n# Definition\n@docs Pattern\n\n# Primitives\n@docs char, exactly, oneOf, noneOf\n\n# Combinators\n@docs maybe, many, either, remember\n\n# Evaluate\n@docs toRegexString, toRegex\n\n# Character classes\n@docs anyChar, whiteSpace, noWhiteSpace, digit, noDigit\n\n",
+    "aliases": [
+      {
+        "name": "Pattern",
+        "comment": " A `Pattern` is just a function from some internal state to another,\ndescribing a regex in the process.\nThe most important part to take away from that:\nYou can **combine `Pattern`s using `>>`.**\n\n    char 'a' >> char 'b' == exactly \"ab\"\n",
+        "args": [],
+        "type": "Internal.Internal -> Internal.Internal"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "anyChar",
+        "comment": " Matches any character *except newline*.\n",
+        "type": "RegexBuilder.Pattern"
+      },
+      {
+        "name": "char",
+        "comment": " Matches a single character.\n",
+        "type": "Char -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "digit",
+        "comment": " Matches a single decimal digit.\n",
+        "type": "RegexBuilder.Pattern"
+      },
+      {
+        "name": "either",
+        "comment": " Introduce alternatives.\n\n    -- corresponds to the regex `a|b`\n    either [char 'a', char 'b']\n",
+        "type": "List RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "exactly",
+        "comment": " Matches the given string.\n",
+        "type": "String -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "many",
+        "comment": " Matches the given `Pattern` *1 or more* times.\nIf you are looking for 0 or more repetitions, combine this with maybe:\n\n    zeroOrMoreAs = maybe (many (char 'a'))\n\nNote: When you turn this combination into a String or Regex, this will be transformed into a single \"0 or more\"\noperator. So don't be afraid to use it like this!\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "maybe",
+        "comment": " Matches the given `Pattern` 0 or 1 time.\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "noDigit",
+        "comment": " Matches anything but a decimal digit.\n",
+        "type": "RegexBuilder.Pattern"
+      },
+      {
+        "name": "noWhiteSpace",
+        "comment": " Opposite of `whiteSpace`.\n",
+        "type": "RegexBuilder.Pattern"
+      },
+      {
+        "name": "noneOf",
+        "comment": " Matches none of the given characters.\n",
+        "type": "List Char -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Matches one of the given characters.\n",
+        "type": "List Char -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "remember",
+        "comment": " When working with `Match`es, you need `remember` to make subpatterns.\nI recommend using this with named `Pattern`s:\n\n    hexNumber : Pattern\n    hexNumber =\n        let\n            hexDigit =\n                either\n                    [ digit\n                    , oneOf [ 'A','B','C','D','E','F' ]\n                    ]\n        in\n            exactly \"0x\"\n                >> remember (many hexDigit)\n",
+        "type": "RegexBuilder.Pattern -> RegexBuilder.Pattern"
+      },
+      {
+        "name": "toRegex",
+        "comment": " Turn the `Pattern` into a Regex.\n",
+        "type": "RegexBuilder.Pattern -> Regex.Regex"
+      },
+      {
+        "name": "toRegexString",
+        "comment": " Gives the string representation of the given `Pattern`.\n\n    either\n        [ char 'a'\n        , char 'b'\n        ]\n        |> toRegexString\n    ==\n        \"a|b\"\n",
+        "type": "RegexBuilder.Pattern -> String"
+      },
+      {
+        "name": "whiteSpace",
+        "comment": " Matches a single white space character, including (but not limited to)\nspace, tab, form feed and line feed.\n",
+        "type": "RegexBuilder.Pattern"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
