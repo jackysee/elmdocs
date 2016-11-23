@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Jwt",
+    "comment": " Helper functions for working with Jwt tokens and authenticated CRUD APIs.\n\nThis package provides functions for reading tokens, and for using them to make\nauthenticated Http requests.\n\n# Token reading\n@docs decodeToken, isExpired\n\n# Authenticated Http requests\n@docs createRequest, send, sendCheckExpired, get, post, put, delete\n\n# `JwtError`s and Http.Error handling\n@docs JwtError, promote401, handleError, checkTokenExpirey\n\n# Logging in\n@docs authenticate\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "JwtError",
+        "comment": " The following errors are modeled\n - Any Http.Error, other than a 401\n - 401 (Unauthorized), due either to token expiry or e.g. inadequate permissions\n - issues with processing (e.g. base 64 decoding) the token, and\n - problems decoding the json data within the content of the token\n",
+        "args": [],
+        "cases": [
+          [
+            "HttpError",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "Unauthorized",
+            []
+          ],
+          [
+            "TokenExpired",
+            []
+          ],
+          [
+            "TokenNotExpired",
+            []
+          ],
+          [
+            "TokenProcessingError",
+            [
+              "String"
+            ]
+          ],
+          [
+            "TokenDecodeError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " `authenticate` creates an Http.Request based on login credentials.\n\n    submitCredentials : Model -> Cmd Msg\n    submitCredentials model =\n        E.object\n            [ (\"username\", E.string model.uname)\n            , (\"password\", E.string model.pword)\n            ]\n        |> authenticateRequest \"/sessions\" tokenStringDecoder\n",
+        "type": "String -> Json.Decode.Decoder a -> Json.Decode.Value -> Http.Request a"
+      },
+      {
+        "name": "checkTokenExpirey",
+        "comment": " Checks a token for expirey.\n",
+        "type": "String -> Task.Task Basics.Never Jwt.JwtError"
+      },
+      {
+        "name": "createRequest",
+        "comment": " createRequest creates a Http.Request with the token added to the headers, and\nsets the `withCredentials` field to True.\n",
+        "type": "String -> String -> String -> Http.Body -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "decodeToken",
+        "comment": " decodeToken parses the token, checking that it meets the Jwt standards.\n\n    decodeToken dec token\n\nIn the event of success, `decodeToken` returns an Elm record structure using the JSON Decoder.\n",
+        "type": "Json.Decode.Decoder a -> String -> Result.Result Jwt.JwtError a"
+      },
+      {
+        "name": "delete",
+        "comment": " `delete` returns a DELETE Http.Request with the token attached to the headers.\n",
+        "type": "String -> String -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "get",
+        "comment": " `get` is a replacement for `Http.get` that returns a Http.Request with the token\nattached to the headers.\n\n    getData : String -> Cmd Msg\n    getData token =\n        Jwt.get token \"/api/data\" dataDecoder\n            |> Jwt.send DataResult\n",
+        "type": "String -> String -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "handleError",
+        "comment": " Takes an Http.Error. If it is a 401 then it checks for expirey.\n",
+        "type": "String -> Http.Error -> Task.Task Basics.Never Jwt.JwtError"
+      },
+      {
+        "name": "isExpired",
+        "comment": " Checks whether a token has expired, and returns True or False, or\nany error that occurred while decoding the token.\n\nNote: This function assumes that the expiry was set in seconds and thus\nmultiplies by 1000 to compare with Javascript time (in milliseconds).\nYou may need to write a custom version if your server-side Jwt library works differently.\n",
+        "type": "Time.Time -> String -> Result.Result Jwt.JwtError Bool"
+      },
+      {
+        "name": "post",
+        "comment": " post is a replacement for `Http.post` that returns a Http.Request with the token\nattached to the headers.\n\n** Note that is important to use jsonBody to ensure that the 'application/json' is added to the headers **\n\n    postContent : Token -> Json.Decoder a -> E.Value -> String -> Request a\n    postContent token dec value url =\n        Jwt.post token url (Http.jsonBody value) (phoenixDecoder dec)\n            |> Jwt.send ContentResult\n",
+        "type": "String -> String -> Http.Body -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "promote401",
+        "comment": " Examines a 401 Unauthorized reponse, and converts the error to TokenExpired\nwhen that is the case.\n\n    getAuth : String -> String -> Json.Decoder a -> Task Never (Result JwtError a)\n    getAuth token url dec =\n        createRequest \"GET\" token url Http.emptyBody dec\n        |> toTask\n        |> Task.map Result.Ok\n        |> Task.onError (promote401 token)\n",
+        "type": "Http.Error -> Jwt.JwtError"
+      },
+      {
+        "name": "put",
+        "comment": " `put` returns a PUT Http.Request with the token attached to the headers.\n",
+        "type": "String -> String -> Http.Body -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "send",
+        "comment": " `send` replaces `Http.send`. On receipt of a 401 error, it returns a Jwt.Unauthorized.\n",
+        "type": "(Result.Result Jwt.JwtError a -> msg) -> Http.Request a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "sendCheckExpired",
+        "comment": " `sendCheckExpired` is similar to `send` but, on receiving a 401, it carries out a further check to\ndetermine whether the token has expired.\n",
+        "type": "String -> (Result.Result Jwt.JwtError a -> msg) -> Http.Request a -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

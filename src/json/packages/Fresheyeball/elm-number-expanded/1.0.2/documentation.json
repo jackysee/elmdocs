@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Number.Expanded",
+    "comment": "\nExpanded Numbers\nA number that can either be finite or infinite\n\n@docs Expanded, toExpanded, withDefault, withDefaults, map\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Expanded",
+        "comment": " Expanded number can be Positive or Negative Infinity\n",
+        "args": [
+          "number"
+        ],
+        "cases": [
+          [
+            "Finite",
+            [
+              "number"
+            ]
+          ],
+          [
+            "PosInfinity",
+            []
+          ],
+          [
+            "NegInfinity",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "map",
+        "comment": "\nNot a Functor, but still mappable\n",
+        "type": "(number -> number) -> Number.Expanded.Expanded number -> Number.Expanded.Expanded number"
+      },
+      {
+        "name": "toExpanded",
+        "comment": " ",
+        "type": "number -> Number.Expanded.Expanded number"
+      },
+      {
+        "name": "withDefault",
+        "comment": "\nGet the value out of `Expanded` providing a default for the infinite case\n",
+        "type": "a -> (number -> a) -> Number.Expanded.Expanded number -> a"
+      },
+      {
+        "name": "withDefaults",
+        "comment": "\nGet the value out of `Expanded` providing a default for the infinite cases.\nFirst argument is the default for the `PosInfinity` case, the second is for `NegInfinity`\n",
+        "type": "a -> a -> (number -> a) -> Number.Expanded.Expanded number -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

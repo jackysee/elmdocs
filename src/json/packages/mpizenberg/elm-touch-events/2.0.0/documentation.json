@@ -1,0 +1,89 @@
+[
+  {
+    "name": "SingleTouch",
+    "comment": " This module exposes types and functions\nto deal with simple single touch interactions.\n\n@docs SingleTouch, onSingleTouch\n",
+    "aliases": [
+      {
+        "name": "SingleTouch",
+        "comment": " A simple type alias for a single touch event.\n",
+        "args": [],
+        "type": "{ touchType : Touch.TouchEvent, touch : Touch.Touch }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onSingleTouch",
+        "comment": " A single touch event handler.\n\n```\nimport Touch as T\nimport SingleTouch as ST\n\ntype Msg\n  = TouchMsg T.TouchEvent T.Touch\n\nview model =\n  H.div [ ST.onSingleTouch T.TouchStart T.preventAndStop <| TouchMsg T.TouchStart ] []\n```\n",
+        "type": "Touch.TouchEvent -> Html.Events.Options -> (SingleTouch.SingleTouch -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "MultiTouch",
+    "comment": " This module exposes types and functions\nto deal with multitouch interactions.\n\n@docs MultiTouch, onMultiTouch\n",
+    "aliases": [
+      {
+        "name": "MultiTouch",
+        "comment": " Type alias for a multitouch event.\n\nThe properties `touches`, `targetTouches` and `changedTouches`\nare represented by dictionaries in which the keys are the\nunique Int identifier of the Touch interactions.\n\nTo have more info about these properties and how to use them,\nplease refer to the [Mozilla documentation]\n(https://developer.mozilla.org/en-US/docs/Web/Events/touchstart)\n",
+        "args": [],
+        "type": "{ touchType : Touch.TouchEvent , touches : Dict.Dict Int Touch.Touch , targetTouches : Dict.Dict Int Touch.Touch , changedTouches : Dict.Dict Int Touch.Touch }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onMultiTouch",
+        "comment": " An multitouch event handler.\n\n```\nimport Touch as T\nimport MultiTouch as MT\n\ntype Msg\n  = MultiTouchMsg T.TouchEvent MT.MultiTouch\n\nview model =\n  H.div [ ST.onMultiTouch T.TouchStart T.preventAndStop <| MultiTouchMsg T.TouchStart ] []\n```\n",
+        "type": "Touch.TouchEvent -> Html.Events.Options -> (MultiTouch.MultiTouch -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Touch",
+    "comment": " This module exposes types and constants\ncommon to both single and multi touch interactions.\n\n@docs TouchEvent, Touch, preventAndStop\n",
+    "aliases": [
+      {
+        "name": "Touch",
+        "comment": " A simple type alias for the clientX and clientY properties\nof a JavaScript [Touch](https://developer.mozilla.org/en-US/docs/Web/API/Touch) object.\n",
+        "args": [],
+        "type": "{ clientX : Float, clientY : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "TouchEvent",
+        "comment": " The different types of touch events.\n",
+        "args": [],
+        "cases": [
+          [
+            "TouchStart",
+            []
+          ],
+          [
+            "TouchMove",
+            []
+          ],
+          [
+            "TouchEnd",
+            []
+          ],
+          [
+            "TouchCancel",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "preventAndStop",
+        "comment": " Options to prevent default and stop propagation of an event.\n\nYou might want this options to prevent from emulating mouse events\nif you are developing an interface for both mobile and regular platforms.\n\nYou might also need this to prevent from scrolling in a touch interaction.\n",
+        "type": "Html.Events.Options"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

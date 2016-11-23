@@ -5,6 +5,7 @@ import Html.Attributes exposing (class, style, value, placeholder, id, title, ta
 import Html.Events exposing (onClick, onInput, on, keyCode)
 import Http
 import String
+import String.Extra
 import Markdown
 import Regex
 import Json.Decode
@@ -191,6 +192,11 @@ update msg model =
             ( { model
                 | searchText = text
                 , selectedIndex = 0
+                , currentDoc =
+                    if String.isEmpty text then
+                        Nothing
+                    else
+                        model.currentDoc
                 , searchResult =
                     if String.isEmpty text then
                         []
@@ -218,6 +224,18 @@ update msg model =
         SetSelectedIndex i ->
             ( { model | selectedIndex = i }, Cmd.none )
 
+        MsgBatch list ->
+            List.foldl
+                (\msg ( model, cmd ) ->
+                    let
+                        ( model_, cmd_ ) =
+                            update msg model
+                    in
+                        model_ ! [ cmd, cmd_ ]
+                )
+                ( model, Cmd.none )
+                list
+
 
 view : Model -> Html Msg
 view model =
@@ -234,136 +252,12 @@ view model =
                     []
                 ]
             , if model.searchText /= "" then
-                if List.length model.searchResult > 0 then
-                    div [ class "nav-list nav-result" ] <|
-                        List.indexedMap
-                            (\i ( path, docId ) ->
-                                div
-                                    [ classList
-                                        [ ( "nav-item", True )
-                                        , ( "is-selected", i == model.selectedIndex )
-                                        ]
-                                    , onClick (GetCurrentDocFromId path docId)
-                                    ]
-                                    [ text <| path ]
-                            )
-                            model.searchResult
-                else
-                    div [ class "nav-list nav-result" ]
-                        [ div
-                            [ class "nav-item" ]
-                            [ text "No result found" ]
-                        ]
+                viewSearchResult model
               else
                 div
                     [ class "nav-list" ]
-                    [ div [ class "nav-pinned" ] <|
-                        List.indexedMap
-                            (\i d ->
-                                div
-                                    [ classList
-                                        [ ( "nav-item nav-doc-item", True )
-                                        , ( "is-selected", i == model.selectedIndex )
-                                        ]
-                                    , onClick (SetCurrentDoc "" d)
-                                    ]
-                                    [ span [ class "nav-doc-package" ] [ text d.packageName ]
-                                    , span [ class "nav-doc-version" ]
-                                        [ div
-                                            [ class "nav-doc-version-str" ]
-                                            [ text d.packageVersion ]
-                                        , div [ class "nav-doc-version-action" ]
-                                            [ if model.showConfirmDeleteDoc == Nothing then
-                                                span
-                                                    [ class "nav-doc-version-remove"
-                                                    , onClick (SetShowConfirmDeleteDoc (Just d.id))
-                                                    ]
-                                                    [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
-                                                    ]
-                                              else if model.showConfirmDeleteDoc == Just d.id then
-                                                span
-                                                    []
-                                                    [ span
-                                                        [ class "nav-doc-version-remove-confirm confirm-danger"
-                                                        , onClick (RemoveDoc d)
-                                                        ]
-                                                        [ text "Remove" ]
-                                                    , span
-                                                        [ class "nav-doc-version-remove-confirm"
-                                                        , onClick (SetShowConfirmDeleteDoc Nothing)
-                                                        ]
-                                                        [ text "/ Cancel" ]
-                                                    ]
-                                              else
-                                                text ""
-                                            ]
-                                        ]
-                                    ]
-                            )
-                            model.pinnedDocs
-                    , div
-                        [ class "nav-packages nav-item" ]
-                        [ div
-                            [ onClick ToggleShowDisabled ]
-                            [ text <| "Disabled" ]
-                        , if model.showDisabled then
-                            div [] <|
-                                [ div [ class "nav-item nav-package-search" ]
-                                    [ input
-                                        [ class "search-package-input"
-                                        , value model.searchPackageText
-                                        , onInput SearchPackage
-                                        , placeholder "Search Package"
-                                        ]
-                                        []
-                                    ]
-                                ]
-                                    ++ (model.allPackages
-                                            |> List.filter
-                                                (\p ->
-                                                    (not <| List.member p.name (List.map .packageName model.pinnedDocs))
-                                                        && if model.searchPackageText /= "" then
-                                                            String.contains
-                                                                (String.toLower model.searchPackageText)
-                                                                (String.toLower p.name)
-                                                           else
-                                                            True
-                                                )
-                                            |> List.map
-                                                (\p ->
-                                                    div
-                                                        [ class "nav-item nav-doc-item"
-                                                        ]
-                                                        [ span
-                                                            [ class "nav-doc-package"
-                                                            , title "show doc"
-                                                            , onClick (GetCurrentDocFromPackage p)
-                                                            ]
-                                                            [ text p.name ]
-                                                        , span
-                                                            [ class "nav-doc-version" ]
-                                                          <|
-                                                            case List.head p.versions of
-                                                                Just version_ ->
-                                                                    [ span
-                                                                        [ class "nav-doc-version-str" ]
-                                                                        [ text version_ ]
-                                                                    , span
-                                                                        [ class "nav-doc-version-action"
-                                                                        , title "add to search index"
-                                                                        , onClick (AddDoc ( p.name, version_ ))
-                                                                        ]
-                                                                        [ text "Add" ]
-                                                                    ]
-
-                                                                Nothing ->
-                                                                    []
-                                                        ]
-                                                )
-                                       )
-                          else
-                            text ""
-                        ]
+                    [ viewPinnedDocs model
+                    , viewDiasabledDocs model
                     ]
             ]
         , div [ class "doc" ]
@@ -419,6 +313,153 @@ inputKeyUp model code =
         NoOp
 
 
+viewSearchResult : Model -> Html Msg
+viewSearchResult model =
+    if List.length model.searchResult > 0 then
+        div [ class "nav-list nav-result" ] <|
+            List.indexedMap
+                (\i ( path, docId ) ->
+                    div
+                        [ classList
+                            [ ( "nav-item", True )
+                            , ( "is-selected", i == model.selectedIndex )
+                            ]
+                        , onClick <|
+                            MsgBatch
+                                [ GetCurrentDocFromId path docId
+                                , SetSelectedIndex i
+                                ]
+                        ]
+                        [ text <| path ]
+                )
+                model.searchResult
+    else
+        div [ class "nav-list nav-result" ]
+            [ div
+                [ class "nav-item" ]
+                [ text "No result found" ]
+            ]
+
+
+viewPinnedDocs : Model -> Html Msg
+viewPinnedDocs model =
+    div [ class "nav-pinned" ] <|
+        List.indexedMap
+            (\i d ->
+                div
+                    [ classList
+                        [ ( "nav-item nav-doc-item", True )
+                        , ( "is-selected", i == model.selectedIndex )
+                        ]
+                    , onClick <|
+                        MsgBatch
+                            [ SetCurrentDoc "" d
+                            , SetSelectedIndex i
+                            ]
+                    ]
+                    [ span [ class "nav-doc-package" ] [ text d.packageName ]
+                    , span [ class "nav-doc-version" ]
+                        [ div
+                            [ class "nav-doc-version-str" ]
+                            [ text d.packageVersion ]
+                        , div [ class "nav-doc-version-action" ]
+                            [ if model.showConfirmDeleteDoc == Nothing then
+                                span
+                                    [ class "nav-doc-version-remove"
+                                    , onClick (SetShowConfirmDeleteDoc (Just d.id))
+                                    ]
+                                    [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
+                                    ]
+                              else if model.showConfirmDeleteDoc == Just d.id then
+                                span
+                                    []
+                                    [ span
+                                        [ class "nav-doc-version-remove-confirm confirm-danger"
+                                        , onClick (RemoveDoc d)
+                                        ]
+                                        [ text "Remove" ]
+                                    , span
+                                        [ class "nav-doc-version-remove-confirm"
+                                        , onClick (SetShowConfirmDeleteDoc Nothing)
+                                        ]
+                                        [ text "/ Cancel" ]
+                                    ]
+                              else
+                                text ""
+                            ]
+                        ]
+                    ]
+            )
+            model.pinnedDocs
+
+
+viewDiasabledDocs : Model -> Html Msg
+viewDiasabledDocs model =
+    div
+        [ class "nav-packages nav-item" ]
+        [ div
+            [ onClick ToggleShowDisabled ]
+            [ text <| "Disabled" ]
+        , if model.showDisabled then
+            div [] <|
+                [ div [ class "nav-item nav-package-search" ]
+                    [ input
+                        [ class "search-package-input"
+                        , value model.searchPackageText
+                        , onInput SearchPackage
+                        , placeholder "Search Package"
+                        ]
+                        []
+                    ]
+                ]
+                    ++ (model.allPackages
+                            |> List.filter
+                                (\p ->
+                                    (not <| List.member p.name (List.map .packageName model.pinnedDocs))
+                                        && if model.searchPackageText /= "" then
+                                            String.contains
+                                                (String.toLower model.searchPackageText)
+                                                (String.toLower p.name)
+                                           else
+                                            True
+                                )
+                            |> List.map
+                                (\p ->
+                                    div
+                                        [ class "nav-item nav-doc-item"
+                                        ]
+                                        [ span
+                                            [ class "nav-doc-package"
+                                            , title <| "show " ++ p.name
+                                            , onClick (GetCurrentDocFromPackage p)
+                                            ]
+                                            [ text p.name ]
+                                        , span
+                                            [ class "nav-doc-version" ]
+                                          <|
+                                            case List.head p.versions of
+                                                Just version_ ->
+                                                    [ span
+                                                        [ class "nav-doc-version-str" ]
+                                                        [ text version_ ]
+                                                    , span
+                                                        [ class "nav-doc-version-action"
+                                                        , title "add to search index"
+                                                        , onClick (AddDoc ( p.name, version_ ))
+                                                        ]
+                                                        [ text "Add" ]
+                                                    ]
+
+                                                Nothing ->
+                                                    []
+                                        ]
+                                )
+                       )
+          else
+            text ""
+        ]
+
+
 viewDocOverview : Doc -> Html Msg
 viewDocOverview doc =
     div
@@ -450,9 +491,16 @@ viewModule model path doc =
                         |> List.head
                     )
 
+        moduleNames =
+            List.map .name doc.modules
+
         indexes =
             model.searchIndex
-                |> List.filter (\( _, docId ) -> docId == doc.id)
+                |> List.filter
+                    (\( path, docId ) ->
+                        (docId == doc.id)
+                            && (not (List.member path moduleNames))
+                    )
     in
         case module_ of
             Just m ->
@@ -460,9 +508,12 @@ viewModule model path doc =
                     [ class "module-doc"
                     , id m.name
                     ]
-                    [ h1 [] [ text <| m.name ]
+                    [ h1 []
+                        [ span [] [ text m.name ]
+                        , div [ class "module-doc-built-with-version" ] [ text <| "Built with Elm " ++ m.generatedWithElmVesion ]
+                        ]
                     , div [ class "module-doc-comment" ]
-                        (viewModuleComment m.comment m indexes)
+                        (viewModuleComment m.comment m (buildEntryDict m) indexes)
                     ]
 
             Nothing ->
@@ -492,97 +543,118 @@ onNothing a b =
             b
 
 
-viewModuleComment : String -> Module -> List ( String, String ) -> List (Html Msg)
-viewModuleComment comment module_ indexes =
+buildEntryDict : Module -> Dict String Entry
+buildEntryDict module_ =
+    Dict.fromList <|
+        List.map (\v -> ( v.name, AliasEntry v )) module_.aliases
+            ++ List.map (\v -> ( v.name, ModuleTypeEntry v )) module_.types
+            ++ List.map (\v -> ( v.name, ValueEntry v )) module_.values
+
+
+viewModuleComment : String -> Module -> Dict String Entry -> List ( String, String ) -> List (Html Msg)
+viewModuleComment comment module_ entryDict indexes =
     let
-        docs =
-            Regex.split Regex.All (Regex.regex "@docs [^#]*\n\n") comment
-                |> List.map (Markdown.toHtml [])
-
-        matches =
-            Regex.find Regex.All (Regex.regex "@docs ([^#]*)\n\n") comment
-
-        entryDict =
-            List.map (\v -> ( v.name, AliasEntry v )) module_.aliases
-                ++ List.map (\v -> ( v.name, ModuleTypeEntry v )) module_.types
-                ++ List.map (\v -> ( v.name, ValueEntry v )) module_.values
-                |> Dict.fromList
-
-        parts =
-            matches
-                |> List.map
-                    (\m ->
-                        m.submatches
-                            |> List.filterMap identity
-                            |> List.concatMap
-                                (\listStr ->
-                                    Regex.split Regex.All (Regex.regex ",\\s*") listStr
-                                )
-                            |> List.map String.trim
-                            |> List.map (viewPart module_.name entryDict indexes)
-                    )
+        list =
+            Regex.split (Regex.AtMost 1) (Regex.regex "@docs") comment
     in
-        (List.map2 (\x y -> [ x ] ++ y) docs parts |> List.concat)
-            ++ List.drop (List.length parts) docs
+        case list of
+            x :: y :: [] ->
+                (Markdown.toHtml [] x) :: viewDocs y module_ entryDict indexes
+
+            x :: [] ->
+                [ Markdown.toHtml [] x ]
+
+            _ ->
+                []
 
 
-viewPart : String -> Dict String Entry -> List ( String, String ) -> String -> Html Msg
-viewPart moduleName dict indexes part =
-    case Dict.get part dict of
-        Just entry ->
-            case entry of
-                AliasEntry alias ->
-                    div
-                        [ class "entry"
-                        , id <| moduleName ++ "." ++ alias.name
-                        ]
-                        [ h3 [] <|
-                            [ div []
-                                [ text "type alias "
-                                , span [ class "entry-name" ] [ text alias.name ]
-                                , if List.length alias.args > 0 then
-                                    text <| " " ++ String.join " " alias.args
-                                  else
-                                    text ""
-                                , text " = "
-                                ]
-                            , div [ class "indent" ] [ text <| alias.type_ ]
-                            ]
-                        , Markdown.toHtml [ class "entry-comment" ] alias.comment
-                        ]
+viewDocs : String -> Module -> Dict String Entry -> List ( String, String ) -> List (Html Msg)
+viewDocs comment module_ entryDict indexes =
+    let
+        matches =
+            Regex.find
+                (Regex.AtMost 1)
+                (Regex.regex "^\\s*,?\\s*([^\\s,]*)((?:.|\\r?\\n)*)$")
+                comment
+                |> List.concatMap .submatches
+                |> List.filterMap identity
+                |> List.map String.trim
+    in
+        case matches of
+            x :: xs ->
+                let
+                    x_ =
+                        Regex.replace Regex.All (Regex.regex "^\\(|\\)$") (\_ -> "") x
+                in
+                    case Dict.get x_ entryDict of
+                        Just entry ->
+                            (viewPart module_.name entry indexes)
+                                :: case xs of
+                                    y :: [] ->
+                                        viewDocs y module_ entryDict indexes
 
-                ModuleTypeEntry tipe ->
-                    div
-                        [ class "entry"
-                        , id <| moduleName ++ "." ++ tipe.name
-                        ]
-                        [ h3 [] <|
-                            [ text "type "
-                            , span [ class "entry-name" ] [ text tipe.name ]
-                            , text <| " " ++ String.join " " tipe.args
-                            ]
-                                ++ (if List.length tipe.cases > 0 then
-                                        tipe.cases |> List.indexedMap viewCase
-                                    else
-                                        [ text "" ]
-                                   )
-                        , Markdown.toHtml [ class "entry-comment" ] tipe.comment
-                        ]
+                                    _ ->
+                                        []
 
-                ValueEntry value ->
-                    div
-                        [ class "entry"
-                        , id <| moduleName ++ "." ++ value.name
-                        ]
-                        [ h3 [] <|
-                            [ span [ class "entry-name" ] [ text value.name ]
-                            , span [ class "value-type " ] <| viewType indexes moduleName value.type_
-                            ]
-                        , Markdown.toHtml [ class "entry-comment" ] value.comment
-                        ]
+                        Nothing ->
+                            viewModuleComment comment module_ entryDict indexes
 
-        Nothing ->
-            text ""
+            _ ->
+                viewModuleComment comment module_ entryDict indexes
+
+
+viewPart : String -> Entry -> List ( String, String ) -> Html Msg
+viewPart moduleName entry indexes =
+    case entry of
+        AliasEntry alias ->
+            div
+                [ class "entry"
+                , id <| moduleName ++ "." ++ alias.name
+                ]
+                [ h3 [] <|
+                    [ div []
+                        [ text "type alias "
+                        , span [ class "entry-name" ] [ text alias.name ]
+                        , if List.length alias.args > 0 then
+                            text <| " " ++ String.join " " alias.args
+                          else
+                            text ""
+                        , text " = "
+                        ]
+                    , div [ class "indent" ] [ text <| replaceTypesAliasValues indexes alias.type_ ]
+                    ]
+                , Markdown.toHtml [ class "entry-comment" ] alias.comment
+                ]
+
+        ModuleTypeEntry tipe ->
+            div
+                [ class "entry"
+                , id <| moduleName ++ "." ++ tipe.name
+                ]
+                [ h3 [] <|
+                    [ text "type "
+                    , span [ class "entry-name" ] [ text tipe.name ]
+                    , text <| " " ++ String.join " " tipe.args
+                    ]
+                        ++ (if List.length tipe.cases > 0 then
+                                tipe.cases |> List.indexedMap viewCase
+                            else
+                                [ text "" ]
+                           )
+                , Markdown.toHtml [ class "entry-comment" ] tipe.comment
+                ]
+
+        ValueEntry value ->
+            div
+                [ class "entry"
+                , id <| moduleName ++ "." ++ value.name
+                ]
+                [ h3 [] <|
+                    [ span [ class "entry-name" ] [ text <| viewValueEntryName value.name ]
+                    , span [ class "value-type " ] <| viewType indexes value.type_
+                    ]
+                , Markdown.toHtml [ class "entry-comment" ] value.comment
+                ]
 
 
 viewCase : Int -> ( String, List String ) -> Html Msg
@@ -604,43 +676,27 @@ viewCase i ( case_, caseArgs ) =
         div [ class "indent" ] [ text caseStr ]
 
 
-viewType : List ( String, String ) -> String -> String -> List (Html Msg)
-viewType indexes moduleName str =
+viewValueEntryName : String -> String
+viewValueEntryName str =
+    if Regex.contains (Regex.regex "^[^a-zA-Z0-9]+$") str then
+        "(" ++ str ++ ")"
+    else
+        str
+
+
+viewType : List ( String, String ) -> String -> List (Html Msg)
+viewType indexes str =
     let
         str_ =
-            Regex.replace Regex.All (Regex.regex <| (Regex.escape moduleName) ++ "\\.") (\_ -> "") str
+            str
+                |> replaceTypesAliasValues indexes
+                |> replaceFullPathVar
     in
         if String.length str_ < 64 then
             [ span [] [ text <| " : " ++ str_ ] ]
         else
             str_
-                |> String.split "->"
-                |> List.foldl
-                    (\s ( list, nestLevel ) ->
-                        let
-                            list_ =
-                                if nestLevel == 0 then
-                                    s :: list
-                                else
-                                    (List.head list
-                                        |> Maybe.map (\s_ -> s_ ++ " -> " ++ s)
-                                        |> Maybe.withDefault s
-                                    )
-                                        :: (List.tail list |> Maybe.withDefault [])
-
-                            nestLevel_ =
-                                if String.contains "(" s then
-                                    nestLevel + 1
-                                else if String.contains ")" s then
-                                    nestLevel - 1
-                                else
-                                    nestLevel
-                        in
-                            ( list_, nestLevel_ )
-                    )
-                    ( [], 0 )
-                |> Tuple.first
-                |> List.reverse
+                |> splitTypeArgs
                 |> List.indexedMap
                     (\i s ->
                         if i == 0 then
@@ -648,6 +704,55 @@ viewType indexes moduleName str =
                         else
                             div [ class "indent" ] [ text <| " -> " ++ s ]
                     )
+
+
+splitTypeArgs : String -> List String
+splitTypeArgs str =
+    let
+        result =
+            Regex.find
+                (Regex.AtMost 1)
+                (Regex.regex "^\\s*(?:\\([^\\(\\)]*\\)|{[^{}]*}|[^(->)]*)\\s*->")
+                str
+    in
+        case result of
+            { match } :: xs ->
+                String.slice 0 (String.length match - 2) match
+                    :: (splitTypeArgs <| String.Extra.rightOf match str)
+
+            [] ->
+                [ str ]
+
+
+replaceTypesAliasValues : List ( String, String ) -> String -> String
+replaceTypesAliasValues indexes str =
+    case indexes of
+        [] ->
+            str
+
+        ( path, _ ) :: xs ->
+            let
+                str_ =
+                    Regex.replace
+                        Regex.All
+                        (Regex.regex <| Regex.escape path)
+                        (\m -> String.Extra.rightOfBack "." m.match)
+                        str
+            in
+                replaceTypesAliasValues xs str_
+
+
+replaceFullPathVar : String -> String
+replaceFullPathVar str =
+    Regex.replace Regex.All
+        (Regex.regex "(?:[a-zA-Z0-9_]+\\.)+([a-zA-Z0-9_]+)")
+        (\m ->
+            m.submatches
+                |> List.filterMap identity
+                |> List.head
+                |> Maybe.withDefault ""
+        )
+        str
 
 
 subscriptions : Model -> Sub Msg

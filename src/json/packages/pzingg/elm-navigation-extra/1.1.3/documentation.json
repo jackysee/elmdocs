@@ -1,0 +1,191 @@
+[
+  {
+    "name": "Navigation.Builder",
+    "comment": " This module provides a type which you can use to help construct a\n`UrlChange` or parse a `Location`.\n\nHowever, the `Builder` type is not really the focus of elm-route-url.\n\n* Ultimately, a `UrlChange` just requires a `String` -- you don't need to\n  use this module to construct one.\n\n* You also don't need to use this module to parse a `Location` -- there are a\n  fair number of relevant packages for that, including:\n\n    * [evancz/url-parser](http://package.elm-lang.org/packages/evancz/url-parser/latest)\n    * [Bogdanp/elm-combine](http://package.elm-lang.org/packages/Bogdanp/elm-combine/latest)\n    * [Bogdanp/elm-route](http://package.elm-lang.org/packages/Bogdanp/elm-route/latest)\n    * [etaque/elm-route-parser](http://package.elm-lang.org/packages/etaque/elm-route-parser/latest)\n    * [poyang/elm-router](http://package.elm-lang.org/packages/poying/elm-router/latest)\n    * [sporto/erl](http://package.elm-lang.org/packages/sporto/erl/latest)\n    * [sporto/hop](http://package.elm-lang.org/packages/sporto/hop/latest)\n\nSo, this module is potentially useful, but there are quite a few other\noptions you may wish to investigate.\n\nNote that you should not uri-encode anything provided to this module. That\nwill be done for you.\n\n# Initialization\n\n@docs Builder, builder\n\n# Creating or modifying history entries\n\n@docs entry, newEntry, modifyEntry\n\n# Manipulating the path\n\n@docs path, modifyPath, prependToPath, appendToPath, replacePath\n\n# Manipulating the query\n\n@docs query, modifyQuery, insertQuery, updateQuery, removeQuery, getQuery, replaceQuery\n\n# Manipulating the hash\n\n@docs hash, modifyHash, replaceHash\n\n# Conversion\n\n@docs toUrlChange, toHashChange, fromUrl, fromHash\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Builder",
+        "comment": " An opaque type which helps to build up a URL for a `URLChange`,\nor parse a `Location`.\n\nStart with [`builder`](#builder), and then use other functions to make changes.\nOr, if you have a URL, start with [`fromUrl`](#fromUrl) or [`fromHash`](#fromHash).\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "appendToPath",
+        "comment": " Add the provided list to the end of the builder's path.\n",
+        "type": "List String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "builder",
+        "comment": " Creates a default `Builder`. Start with this, then use other methods\nto build up the URL.\n\n    url : Builder\n    url =\n        builder\n        |> newEntry\n        |> appendToPath [\"home\"]\n",
+        "type": "Navigation.Builder.Builder"
+      },
+      {
+        "name": "entry",
+        "comment": " Indicates whether the `Builder` will make a new entry in the browser's\nhistory, or merely modify the current entry.\n",
+        "type": "Navigation.Builder.Builder -> Navigation.Router.HistoryEntry"
+      },
+      {
+        "name": "fromHash",
+        "comment": " Constructs a `Builder` from the hash portion of a URL.\n\n* Assumes that the hash starts with \"#!/\".\n\n* Assumes that any embedded hash is delimited with a '$' instead of a '#'.\n\n* Assumes that any embedded query parameters being with a '^' instead of\n  a '?'.\n\n",
+        "type": "String -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "fromUrl",
+        "comment": " Constructs a `Builder` from a URL.\n",
+        "type": "String -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "getQuery",
+        "comment": " Get the value for a query key.\n",
+        "type": "String -> Navigation.Builder.Builder -> Maybe.Maybe String"
+      },
+      {
+        "name": "hash",
+        "comment": " Gets the hash portion of the URL, without the \"#\".\n",
+        "type": "Navigation.Builder.Builder -> String"
+      },
+      {
+        "name": "insertQuery",
+        "comment": " Insert a key/value pair into the query. Replaces a key with the same name,\nin case of collision.\n",
+        "type": "String -> String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "modifyEntry",
+        "comment": " Modify the current entry in the browser's history.\n",
+        "type": "Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "modifyHash",
+        "comment": " Replace the hash with the result of a function applied to the current hash.\n",
+        "type": "(String -> String) -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "modifyPath",
+        "comment": " Replace the path with the result of a function which acts on\nthe current path.\n",
+        "type": "(List String -> List String) -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "modifyQuery",
+        "comment": " Replace the query with the result of a function that acts on the current query.\n",
+        "type": "(Dict.Dict String String -> Dict.Dict String String) -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "newEntry",
+        "comment": " Make a new entry in the browser's history.\n",
+        "type": "Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "path",
+        "comment": " The segments of the path. The path is represented by a list of strings.\nUltimately, they will be uri-encoded for you, and joined with a \"/\".\n",
+        "type": "Navigation.Builder.Builder -> List String"
+      },
+      {
+        "name": "prependToPath",
+        "comment": " Add the provided list to the beginning of the builder's path.\n",
+        "type": "List String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "query",
+        "comment": " The query portion of the URL. It is represented by a `Dict` of\nkey/value pairs.\n",
+        "type": "Navigation.Builder.Builder -> Dict.Dict String String"
+      },
+      {
+        "name": "removeQuery",
+        "comment": " Remove a query key.\n",
+        "type": "String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "replaceHash",
+        "comment": " Replace the hash with the provided value. Note that you should not include the \"#\".\n",
+        "type": "String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "replacePath",
+        "comment": " Sets the path to the provided list.\n",
+        "type": "List String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "replaceQuery",
+        "comment": " Replace the whole query with a different dictionary.\n",
+        "type": "Dict.Dict String String -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      },
+      {
+        "name": "toHashChange",
+        "comment": " Like [`toUrlChange`](#toUrlChange), but puts everything into the hash, prepended by \"#!\".\n\nIf your `Builder` has a hash component, we'll use '$' instead of '#' to\ndelimit the embedded hash. And, we will use '^' instead of '?' to begin\nthe query parameters.\n",
+        "type": "Navigation.Builder.Builder -> Navigation.Router.UrlChange"
+      },
+      {
+        "name": "toUrlChange",
+        "comment": " Once you've built up your URL, use this to convert it to a `UrlChange` for use with\n`RouteUrl`.\n",
+        "type": "Navigation.Builder.Builder -> Navigation.Router.UrlChange"
+      },
+      {
+        "name": "updateQuery",
+        "comment": " Update a particular query key using the given function.\n",
+        "type": "String -> (Maybe.Maybe String -> Maybe.Maybe String) -> Navigation.Builder.Builder -> Navigation.Builder.Builder"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Navigation.Router",
+    "comment": " This module provides routing for single-page apps based on changes to the\nthe browser's location. To use this module, create a `Navigation.program`\nor `Navigation.programWithFlags` in your main module, and follow the\nprotocols described here to pass state changes (that can possibly change\nthe URL shown in your browser's location bar), and location changes\n(that can either come from your program changing the location, or from\na user typing a new URL into the location bar, following a link, etc.).\n\nRouting happens in both directions\n-- that is, changes to the browser's location are translated to messages\nyour app can respond to, and changes to your app's state are translated to\nchanges in the browser's location. The net effect is to make it possible for\nthe 'back' and 'forward' buttons in the browser to do useful things, and for\nthe state of your app to be partially bookmark-able.\n\nThe router state and protocols in this module are responsible for updating\nthe browser's history and prevent infinite loops that can be could be caused\nif you are both changing the location and responding to location changes.\n\nSee the documentation on the\n[`elm-lang/navigation` package](http://package.elm-lang.org/packages/elm-lang/navigation/latest)\nfor a basic discussion of how location changes are passed to a\n`Navigation.program` and how you set up the program to create a `LocationChanged`\nmessage (Note: `LocationChanged` is just a message tag you create; you could\nname it anything you like).\n\nFor a discussion of the\ndifferences between the official module and this one, see the\n[package documentation](http://package.elm-lang.org/packages/pzingg/elm-navgiation-extra/latest).\n\n# Router State\n\nYour program is responsible for maintaining the state of the `router`, by\nkeeping a `Navigation.Router.Model` member in your program's larger model.\nThis state is used to detect whether incoming changes to your program's location\nare \"internal\" or \"external\".  Call the `Navigation.Router.init` function\nas part of the `init` function in your `Navigation.program`.\n\n@docs Model, init\n\n# Processing Location Changes\n\nYour program's `update` function must update the router's state when\nhandling the `LocationChanged` message, by calling\n`Navigation.Router.locationChanged`.  After updating your program's model,\nthe router can process any additional commands that should be performed\nwhen the URL changes, by calling `Navigation.Router.processLocation`.\n\n@docs locationChanged, processLocation\n\n# Setting Urls Based on Program State\n\nWhen any messages other than a 'LocationChanged' message are received\nby your program's `update` function, you may want changes to your model\nto be reflected in a new URL.  You do this by generating a\n`Navigation.Router.UrlChange` type that indicates what the new URL should\nbe and whether the URL should replace or modify the browser's current history.\n\nYour program's `update` function calls `Navigation.Router.urlChanged` to\nlet the router remember the URL that you are setting, so that when the\nlocation change is received later, an infinite loop is prevented.\n\n@docs UrlChange, HistoryEntry, urlChanged\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Encapsulates the router's state.  A `Navigation.Router.Model` must be\nincluded in your program's larger model.\n\n`reportedUrl` is the last Url reported to us via urlUpdate.\n\n`expectedUrlUpdates` represents how many outstanding commands we've\nsent to change the URL. We increment it when we send a command, and\ndecrement it when `urlUpdate` is called (unless it's already zero,\nof course).\n",
+        "args": [],
+        "type": "{ reportedUrl : Erl.Url, expectedUrlUpdates : Int }"
+      },
+      {
+        "name": "UrlChange",
+        "comment": " Indicates a change to be made in the URL, either creating\na new entry in the browser's history (`NewEntry`), or merely replacing the\ncurrent URL (`ModifyEntry`).\n\nThis is ultimately implemented via\n[`Navigation.newUrl`](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#newUrl) or\n[`Navigation.modifyUrl`](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#modifyUrl).\nThe reason we use this intermediate type is so that we can check whether the\nprovided string already corresponds to the current URL. In that case, we can\navoid creating a spurious duplicate entry in the browser's history.\n\nThe reason we take a `String` (rather than a more structured type) is that\nthere may be several ways you might want to build up the required URL. We\ndon't want to be prescriptive about that. However, the `String` you provide\nmust follow a couple of rules.\n\n* The `String` must already be uri-encoded.\n\n* The `String` must either start with a '/', a `?' or a '#'.\n\n    * If it starts with a '/', it will be interpreted as a full path, including\n      optional query parameters and hash.\n\n    * If it starts with a '?', then we'll assume that you want the current\n      path to stay the same -- only the query parameters and hash will change.\n\n    * If it starts with a '#', then we'll assume that you want the current\n      path and query parameters (if any) to stay the same -- only the\n      hash will change.\n\nSo, what you should *not* provide is the scheme, host, or authentication\nmethod -- that is, no \"http://elm-lang.org\". You should also not use relative\nURLs. (Let me know if you'd like relative URLs -- we might be able to do\nsomething sensible with them, but we don't yet in this version).\n\nOne way to construct a `UrlChange` in a modular way is to use the\n`RouteUrl.Builder` module. However, a variety of approaches are possible.\n",
+        "args": [],
+        "type": "{ entry : Navigation.Router.HistoryEntry, url : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HistoryEntry",
+        "comment": " Indicates whether to create a new entry in the browser's history, or merely\nmodify the current entry.\n\nOne could have used a `Bool` for this instead, but I hate remembering what\n`True` actually means.\n",
+        "args": [],
+        "cases": [
+          [
+            "NewEntry",
+            []
+          ],
+          [
+            "ModifyEntry",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initalize the router's `Model` with the initial location passed to\nyour program at startup.\n",
+        "type": "Navigation.Location -> Navigation.Router.Model"
+      },
+      {
+        "name": "locationChanged",
+        "comment": " Updates the router's `Model` when a location message has been\nreceived in the program's `update` function.\n\nParameters:\n\n* `model` is the current state of your program's `Navigation.Router.Model`\n(not the larger model of the program).\n\n* `location` is the `Navigation.Location` value received through your\nprogram's `LocationChanged` message.\n\nThe function returns a `Tuple` consisting of the updated `Navigation.Router.Model`\nand a `Bool` flag, `external`, indicating if the change was from the \"outside\",\ni.e. from the user clicking on a link, typing in the location bar,\nor following a bookmark.\n\nThis is Step 1 of procssing a location message in the `update` function.\n\nStep 2 is to update your program's larger model, keeping the new state of the\nrouter's model.\n\nStep 3 is to call `Navigation.Router.processLocation` with the `external`\nflag returned here, with your program's `update` and `location2messages`\nfunctions, the location and your program's model.\n\nHere's an example `update` implementation showing the three steps\nto handle the `LocationChanged` message:\n\n```\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        -- Location changed message\n        LocationChanged location ->\n            let\n                -- Step 1\n                ( newRouter, external ) =\n                    Router.locationChanged model.router location\n\n                -- Step 2\n                newModel =\n                    { model\n                    | history = location :: model.history\n                    , router = newRouter\n                    }\n            in\n                -- Step 3\n                Router.processLocation external\n                    update location2messages location newModel []\n\n        -- Non-location messages (see documentation below)...\n```\n",
+        "type": "Navigation.Router.Model -> Navigation.Location -> ( Navigation.Router.Model, Bool )"
+      },
+      {
+        "name": "processLocation",
+        "comment": " If the location change came from an outside source, this function\ncalls the program's `location2messages` function which generates a list\nof program messages.  Each message is processed by calling back to the\nprogram's `update` function (possibly updating the program's larger model\nand possibly creating additional commands).\n\nIf the location change came from an internally generated URL (created by\nyour program's `delta2url` function), this function just returns the\nmodel and commands passed to it, without calling the `update` function.\n\nYour program must implement the `location2messages` function.\nIt should return a list of messages that your `update` function\ncan respond to. Those messages will be fed into your app, to produce the\nchanges to the model that the new URL implies.\n\nHere's an example implementation for `location2messages`:\n\n```\nroute : UrlParser.Parser (Msg -> a) a\nroute =\n    UrlParser.map SetCount (UrlParser.s \"!\" </> UrlParser.int)\n\n\nlocation2messagesUsingUrlParser : Navigation.Location -> List Msg\nlocation2messagesUsingUrlParser location =\n    let\n        maybeMsg = UrlParser.parseHash route location\n    in\n        case maybeMsg of\n            Just msg ->\n                [ msg ]\n\n            _ ->\n                []\n```\n\nParameters for `processLocation`:\n\n* `external` is a Bool flag (as returned from `Navigation.Router.locationChanged`)\nindicating whether this is an \"outside\" location change.\n\n* `update` is your program's `update` function (which will be called recursively\nto process messages generated by your `location2messages` function).\n\n* `location2messages` is your program's `location2messages` function. See the\n[package documentation](http://package.elm-lang.org/packages/pzingg/elm-navgiation-extra/latest)\nfor a description of how your implementation should be developed.\n\n* `location` is the `Navigation.Location` record that will be passed to\n`location2messages` to generate state-changing messages.\n\n* `model` is your program's larger model (that will be updated when the\nmessages are processed).\n\n* `commands` are any other commands that should be batched when\nyour `update` function returns.\n\nThe function returns the possibly updated model and list of commands, so\nyou can use the value of this function as the return value\nof the `LocationChanged` branch of your program's `update` function.\n",
+        "type": "Bool -> (msg -> model -> ( model, Platform.Cmd.Cmd msg )) -> (Navigation.Location -> List msg) -> Navigation.Location -> model -> List (Platform.Cmd.Cmd msg) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "urlChanged",
+        "comment": " To process a change of your program's state, first create a function\n`delta2url` in your program.\n\nThen in your program's `update` function, if your model changes,\ncall `delta2url` with two parameters. The first parameter is\nthe model's previous value, and the second is the model's new value.\n\nYour `delta2url` function should return a `Just Navigation.Router.UrlChange`\nif a new URL should be displayed in the browser's location bar;\nor `Nothing` if no change to the URL is needed.\n\nThe reason we provide both the previous and current model for your\nconsideration is that sometimes you may want to do something differently\ndepending on the nature of the change in the model, not just the new value.\nFor instance, it might make the difference between using `NewEntry` or\n`ModifyEntry` to make the change.\n\nHere's an example implementation of a `delta2url` function, where\nwe just put our model's `counter` value into a URL hash:\n\n```\ndelta2url : Model -> Model -> Maybe UrlChange\ndelta2url _ current =\n    Just <|\n        { entry = NewEntry\n        , url = \"#!/\" ++ (toString current.counter)\n        }\n```\n\nNote: Do not call `delta2url` when processing a `LocationChanged` message.\nInstead use the `Navigation.Router.locationChanged` and\n`Navigation.Router.processLocation` functions described above.\n\nAfter calling `delta2url`, step two of processing a state change that\nmay result in a new URL to be added to your browser's location bar is\nto then call this function, `Navigation.Router.urlChanged`.\n\nThe `urlChanged` function will check the `urlChange` parameter against\nthe value of the last URL received by the router before setting a new one,\nso you need not worry about setting duplicate URLs -- that will be\nautomatically avoided.\n\nParameters for `urlChanged`:\n\n* `model` is the current state of your program's `Navigation.Router.Model`\n(not the larger model of the program).\n\n* `urlChange`, is the `Maybe Navigation.Router.UrlChange` value\nyou received from your program's `delta2url` function.\n\nThe function returns a `Tuple`, containing the new router state\nand possibly a `Cmd` from the elm-lang `Navigation` module\n(either `Navigation.newUrl` or `Navigation.modifUrl`).\n\nAfter calling this function, update the `router` component of your program's\nmodel with the new router state, and return the command from your\nprogram's `update` function.\n\nHere's the rest of the `update` function\n(and a sub-function `updateModelState` that is used for common processing)\nfrom the example program:\n\n```elm\nupdate : Msg -> Model -> ( Model, Cmd Msg )\nupdate msg model =\n    case msg of\n        -- Location changed message\n        LocationChanged location ->\n        -- See documentation above...\n\n        -- Non-location messages\n        _ ->\n            let\n                ( newModel, cmd, mightChangeUrl ) = updateModelState msg model\n            in\n                if mightChangeUrl then\n                    let\n                        ( newRouter, routerCmd ) =\n                            Router.urlChanged model.router (delta2url model newModel)\n                    in\n                        ( { newModel | router = newRouter }\n                        , Cmd.batch [ cmd, routerCmd ]\n                        )\n                else\n                    ( newModel, cmd )\n\n\nupdateModelState : Msg -> Model -> ( Model, Cmd Msg, Bool )\nupdateModelState msg model =\n    case msg of\n        Increment ->\n            ( { model | counter = model.counter + 1 }, Cmd.none, True )\n\n        Decrement ->\n            ( { model | counter = model.counter - 1 }, Cmd.none, True )\n\n        SetCount counter ->\n            ( { model | counter = counter }, Cmd.none, True )\n\n        _ ->\n            ( model, Cmd.none, False )\n```\n",
+        "type": "Navigation.Router.Model -> Maybe.Maybe Navigation.Router.UrlChange -> ( Navigation.Router.Model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

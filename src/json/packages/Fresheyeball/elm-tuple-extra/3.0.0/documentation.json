@@ -1,0 +1,264 @@
+[
+  {
+    "name": "Tuple4",
+    "comment": "\n# Getters\n@docs first, second, third, fourth, tail, init\n\n# Maps\n@docs map, mapFirst, mapSecond, mapThird, mapFourth, mapEach, mapAll\n\n# Swap\n@docs swirlr, swirll\n\n# Sorting\n@docs sort, sortBy, sortWith\n\n# Transform\n@docs toList\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> a"
+      },
+      {
+        "name": "fourth",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> d"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> ( a, b, c )"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(d -> x) -> ( a, b, c, d ) -> ( a, b, c, x )"
+      },
+      {
+        "name": "mapAll",
+        "comment": " ",
+        "type": "(a -> b) -> ( a, a, a, a ) -> ( b, b, b, b )"
+      },
+      {
+        "name": "mapEach",
+        "comment": " ",
+        "type": "(a -> x) -> (b -> x_) -> (c -> x__) -> (d -> x___) -> ( a, b, c, d ) -> ( x, x_, x__, x___ )"
+      },
+      {
+        "name": "mapFirst",
+        "comment": " ",
+        "type": "(a -> x) -> ( a, b, c, d ) -> ( x, b, c, d )"
+      },
+      {
+        "name": "mapFourth",
+        "comment": " ",
+        "type": "(d -> x) -> ( a, b, c, d ) -> ( a, b, c, x )"
+      },
+      {
+        "name": "mapSecond",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b, c, d ) -> ( a, x, c, d )"
+      },
+      {
+        "name": "mapThird",
+        "comment": " ",
+        "type": "(c -> x) -> ( a, b, c, d ) -> ( a, b, x, d )"
+      },
+      {
+        "name": "second",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> b"
+      },
+      {
+        "name": "sort",
+        "comment": " ",
+        "type": "( comparable, comparable, comparable, comparable ) -> ( comparable, comparable, comparable, comparable )"
+      },
+      {
+        "name": "sortBy",
+        "comment": " ",
+        "type": "(a -> comparable) -> ( a, a, a, a ) -> ( a, a, a, a )"
+      },
+      {
+        "name": "sortWith",
+        "comment": " ",
+        "type": "(a -> a -> Basics.Order) -> ( a, a, a, a ) -> ( a, a, a, a )"
+      },
+      {
+        "name": "swirll",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( c, a, b )"
+      },
+      {
+        "name": "swirlr",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( b, c, a )"
+      },
+      {
+        "name": "tail",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> ( b, c, d )"
+      },
+      {
+        "name": "third",
+        "comment": " ",
+        "type": "( a, b, c, d ) -> c"
+      },
+      {
+        "name": "toList",
+        "comment": " ",
+        "type": "( a, a, a, a ) -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Tuple3",
+    "comment": "\n# Getters\n@docs first, second, third, tail, init\n\n# Maps\n@docs map, mapFirst, mapSecond, mapThird, mapEach, mapAll\n\n# Swap\n@docs swirlr, swirll\n\n# Sorting\n@docs sort, sortBy, sortWith\n\n# Transform\n@docs toList\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " ",
+        "type": "( a, b, c ) -> a"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( a, b )"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(c -> x) -> ( a, b, c ) -> ( a, b, x )"
+      },
+      {
+        "name": "mapAll",
+        "comment": " ",
+        "type": "(a -> b) -> ( a, a, a ) -> ( b, b, b )"
+      },
+      {
+        "name": "mapEach",
+        "comment": " ",
+        "type": "(a -> x) -> (b -> x_) -> (c -> x__) -> ( a, b, c ) -> ( x, x_, x__ )"
+      },
+      {
+        "name": "mapFirst",
+        "comment": " ",
+        "type": "(a -> x) -> ( a, b, c ) -> ( x, b, c )"
+      },
+      {
+        "name": "mapSecond",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b, c ) -> ( a, x, c )"
+      },
+      {
+        "name": "mapThird",
+        "comment": " ",
+        "type": "(c -> x) -> ( a, b, c ) -> ( a, b, x )"
+      },
+      {
+        "name": "second",
+        "comment": " ",
+        "type": "( a, b, c ) -> b"
+      },
+      {
+        "name": "sort",
+        "comment": " ",
+        "type": "( comparable, comparable, comparable ) -> ( comparable, comparable, comparable )"
+      },
+      {
+        "name": "sortBy",
+        "comment": " ",
+        "type": "(a -> comparable) -> ( a, a, a ) -> ( a, a, a )"
+      },
+      {
+        "name": "sortWith",
+        "comment": " ",
+        "type": "(a -> a -> Basics.Order) -> ( a, a, a ) -> ( a, a, a )"
+      },
+      {
+        "name": "swirll",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( c, a, b )"
+      },
+      {
+        "name": "swirlr",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( b, c, a )"
+      },
+      {
+        "name": "tail",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( b, c )"
+      },
+      {
+        "name": "third",
+        "comment": " ",
+        "type": "( a, b, c ) -> c"
+      },
+      {
+        "name": "toList",
+        "comment": " ",
+        "type": "( a, a, a ) -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Tuple2",
+    "comment": "\n\n# Tuple definition\n@docs (=>)\n\n# Map\n@docs map, mapFirst, mapSecond, mapEach, mapBoth\n\n# Swap\n@docs swap\n\n# Sorting\n@docs sort, sortBy, sortWith\n\n# Transform\n@docs toList\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "=>",
+        "comment": " Define a double with infix operator. Primarily used, when defining a List\n    with key-value Tuples.\n\n    Dict.fromList\n        [ 0 => 'a'\n        , 1 => 'b'\n        , 2 => 'c'\n        ]\n",
+        "type": "a -> b -> ( a, b )"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b ) -> ( a, x )"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " ",
+        "type": "(a -> b) -> ( a, a ) -> ( b, b )"
+      },
+      {
+        "name": "mapEach",
+        "comment": " ",
+        "type": "(a -> x) -> (b -> x_) -> ( a, b ) -> ( x, x_ )"
+      },
+      {
+        "name": "mapFirst",
+        "comment": " ",
+        "type": "(a -> x) -> ( a, b ) -> ( x, b )"
+      },
+      {
+        "name": "mapSecond",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b ) -> ( a, x )"
+      },
+      {
+        "name": "sort",
+        "comment": " ",
+        "type": "( comparable, comparable ) -> ( comparable, comparable )"
+      },
+      {
+        "name": "sortBy",
+        "comment": " ",
+        "type": "(a -> comparable) -> ( a, a ) -> ( a, a )"
+      },
+      {
+        "name": "sortWith",
+        "comment": " ",
+        "type": "(a -> a -> Basics.Order) -> ( a, a ) -> ( a, a )"
+      },
+      {
+        "name": "swap",
+        "comment": " ",
+        "type": "( a, b ) -> ( b, a )"
+      },
+      {
+        "name": "toList",
+        "comment": " ",
+        "type": "( a, a ) -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

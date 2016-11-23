@@ -1,0 +1,120 @@
+[
+  {
+    "name": "Matrix.Random",
+    "comment": " This module lets you generate random Matrices.\n\n@docs matrix, matrixUsing\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "matrix",
+        "comment": " Generate a matrix with a random width and height, filled with random elements.\n\n    matrix (Random.int 1 4) (Random.int 2 5) (Random.bool)\n\nThe example above will generate you a matrix anywhere between 1-4 rows, 2-5 columns, filled with random Booleans.\n\n",
+        "type": "Random.Generator Int -> Random.Generator Int -> Random.Generator a -> Random.Generator (Matrix.Matrix a)"
+      },
+      {
+        "name": "matrixUsing",
+        "comment": " Generate a matrix of a random width and height, but whose elements are generated via a function given the location of that element in the matrix.\n\n    matrix\n      (Random.int 1 4)\n      (Random.int 1 2)\n      (\\location ->\n        if (row loc % 2 == 0) then\n          True\n        else\n          False\n      )\n\nIn the example above, if it makes a 4x2 matrix, it will be\n\n    T T T T\n    F F F F\n\n",
+        "type": "Random.Generator Int -> Random.Generator Int -> (Matrix.Location -> a) -> Random.Generator (Matrix.Matrix a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Matrix",
+    "comment": " A library for creating and using 2-D matrices/grids. Geared towards\n2-D games.\n\n# Locations\n\n@docs Location, loc, row, col\n\n# Matrices\n\n@docs Matrix\n\n## Create\n@docs matrix, square, fromList\n\n## Transform\n@docs map, mapWithLocation, flatten\n\n## Get and Set\n@docs get, set, update\n\n## Properties\n@docs colCount, rowCount\n\n## Convert to other types\n@docs toList\n\n",
+    "aliases": [
+      {
+        "name": "Location",
+        "comment": " A representation of a row number and a column number, used to locate and access elements in a matrix.\n",
+        "args": [],
+        "type": "( Int, Int )"
+      },
+      {
+        "name": "Matrix",
+        "comment": " An ordered collection of elements, all of a particular type, arranged into `m` rows and `n` columns.\n\n",
+        "args": [
+          "a"
+        ],
+        "type": "Array.Array (Array.Array a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "col",
+        "comment": " Extract the col number from a location\n\n    col (loc 3 5) == 5\n\n",
+        "type": "Matrix.Location -> Int"
+      },
+      {
+        "name": "colCount",
+        "comment": " Get the number of columns in a matrix\n",
+        "type": "Matrix.Matrix a -> Int"
+      },
+      {
+        "name": "flatten",
+        "comment": " Convert a matrix to a single list\n\n    let\n      m = fromList [[0, 1], [2, 3], [4, 5]]\n    in\n      flatten m == [0, 1, 2, 3, 4, 5]\n",
+        "type": "Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list of lists into a matrix\n\n    fromList [[1, 0], [0, 1]] == square 2 (\\l -> if row l == col l then 1 else 0)\n",
+        "type": "List (List a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "get",
+        "comment": " Get the element at a particular location\n\n    get (loc -1 1) (square 2 (\\_ -> True)) == Nothing\n\n    get (loc 1 1) (fromList [[0, 1], [2, 3]]) == Just 3\n",
+        "type": "Matrix.Location -> Matrix.Matrix a -> Maybe.Maybe a"
+      },
+      {
+        "name": "loc",
+        "comment": " Turn two integers into a location\n",
+        "type": "Int -> Int -> Matrix.Location"
+      },
+      {
+        "name": "map",
+        "comment": " Apply the function to every element in the matrix\n\n    map not (fromList [[True, False], [False, True]]) == fromList [[False, True], [True, False]]\n",
+        "type": "(a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "mapWithLocation",
+        "comment": " Apply the function to every element in the list, where the first function argument\nis the location of the element.\n\n    let\n      m = (square 2 (\\_ -> 1))\n      f location element = if row location == col location\n                            then element * 2\n                            else element\n    in\n      mapWithLocation f m == fromList [[2, 1], [1, 2]]\n\n",
+        "type": "(Matrix.Location -> a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "matrix",
+        "comment": " Initialize a new matrix of size `m x n`.\nDelegates to a function of type `Location -> a` to determine value to\nplace at each element in the matrix.\n\n    matrix 3 5 (\\location ->\n      if (isEven (row location)) then \"Hello\" else \"World\")\n\nwill give back the matrix\n\n    Hello Hello Hello Hello Hello\n    World World World World World\n    Hello Hello Hello Hello Hello\n",
+        "type": "Int -> Int -> (Matrix.Location -> a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "row",
+        "comment": " Extract the row number from a location\n\n    row (loc 3 5) == 3\n\n",
+        "type": "Matrix.Location -> Int"
+      },
+      {
+        "name": "rowCount",
+        "comment": " Get the number of rows in a matrix\n",
+        "type": "Matrix.Matrix a -> Int"
+      },
+      {
+        "name": "set",
+        "comment": " Set the element at a particular location\n\n    set (loc -1 1) 42 (square 2 (\\_ -> True)) == square 2 (\\_ -> True)\n\n    set (loc 1 1) 42 (fromList [[0, 1], [2, 3]]) == fromList [[0, 1], [2, 42]]\n",
+        "type": "Matrix.Location -> a -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "square",
+        "comment": " Create a square matrix of a certain size\n\n    square 2 (\\_ -> 'H') == H H\n                            H H\n",
+        "type": "Int -> (Matrix.Location -> a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a matrix to a list of lists\n\n    toList (fromList [[1, 0], [0, 1]]) == [[1, 0], [0, 1]]\n\n",
+        "type": "Matrix.Matrix a -> List (List a)"
+      },
+      {
+        "name": "update",
+        "comment": " Update the element at a particular location using the current value\n\n",
+        "type": "Matrix.Location -> (a -> a) -> Matrix.Matrix a -> Matrix.Matrix a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

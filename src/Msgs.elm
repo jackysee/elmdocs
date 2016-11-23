@@ -18,3 +18,4 @@ type Msg
     | SearchPackage String
     | SetShowConfirmDeleteDoc (Maybe DocId)
     | SetSelectedIndex Int
+    | MsgBatch (List Msg)
