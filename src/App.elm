@@ -2,7 +2,7 @@ port module App exposing (..)
 
 import Html exposing (Html, text, div, input, h1, h3, br, span)
 import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList)
-import Html.Events exposing (onClick, onInput, on, keyCode)
+import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions)
 import Http
 import String
 import String.Extra
@@ -201,13 +201,13 @@ update msg model =
                     if String.isEmpty text then
                         []
                     else
-                        List.filter
-                            (\( path, docId ) ->
-                                String.contains
-                                    (String.toLower text)
-                                    (String.toLower path)
-                            )
-                            model.searchIndex
+                        model.searchIndex
+                            |> List.filter
+                                (\( path, docId ) ->
+                                    String.contains
+                                        (String.toLower text)
+                                        (String.toLower path)
+                                )
               }
             , Cmd.none
             )
@@ -321,7 +321,7 @@ viewSearchResult model =
                 (\i ( path, docId ) ->
                     div
                         [ classList
-                            [ ( "nav-item", True )
+                            [ ( "nav-item nav-result-item", True )
                             , ( "is-selected", i == model.selectedIndex )
                             ]
                         , onClick <|
@@ -330,7 +330,22 @@ viewSearchResult model =
                                 , SetSelectedIndex i
                                 ]
                         ]
-                        [ text <| path ]
+                        [ span
+                            [ class "nav-result-path"
+                            , title path
+                            ]
+                            [ text <| path ]
+                          {--
+                        , span
+                            [ class "nav-result-doc" ]
+                            [ text
+                                (docId
+                                    |> String.Extra.rightOf "/"
+                                    |> String.Extra.leftOf "#"
+                                )
+                            ]
+                            --}
+                        ]
                 )
                 model.searchResult
     else
@@ -366,7 +381,7 @@ viewPinnedDocs model =
                             [ if model.showConfirmDeleteDoc == Nothing then
                                 span
                                     [ class "nav-doc-version-remove"
-                                    , onClick (SetShowConfirmDeleteDoc (Just d.id))
+                                    , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
                                     ]
                                     [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
                                     ]
@@ -375,12 +390,12 @@ viewPinnedDocs model =
                                     []
                                     [ span
                                         [ class "nav-doc-version-remove-confirm confirm-danger"
-                                        , onClick (RemoveDoc d)
+                                        , onClickInside (RemoveDoc d)
                                         ]
                                         [ text "Remove" ]
                                     , span
                                         [ class "nav-doc-version-remove-confirm"
-                                        , onClick (SetShowConfirmDeleteDoc Nothing)
+                                        , onClickInside (SetShowConfirmDeleteDoc Nothing)
                                         ]
                                         [ text "/ Cancel" ]
                                     ]
@@ -510,7 +525,9 @@ viewModule model path doc =
                     ]
                     [ h1 []
                         [ span [] [ text m.name ]
-                        , div [ class "module-doc-built-with-version" ] [ text <| "Built with Elm " ++ m.generatedWithElmVesion ]
+                        , div
+                            [ class "module-doc-built-with-version" ]
+                            [ text <| "Built with Elm " ++ m.generatedWithElmVesion ]
                         ]
                     , div [ class "module-doc-comment" ]
                         (viewModuleComment m.comment m (buildEntryDict m) indexes)
@@ -541,6 +558,15 @@ onNothing a b =
 
         _ ->
             b
+
+
+onClickInside : Msg -> Html.Attribute Msg
+onClickInside msg =
+    onWithOptions "click"
+        { stopPropagation = True
+        , preventDefault = True
+        }
+        (Json.Decode.succeed msg)
 
 
 buildEntryDict : Module -> Dict String Entry
