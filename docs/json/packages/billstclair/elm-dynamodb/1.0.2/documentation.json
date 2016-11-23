@@ -1,0 +1,220 @@
+[
+  {
+    "name": "DynamoBackend",
+    "comment": " This module provides an Elm backend to Amazon's DynamoDB.\n\nBy itself, in pure Elm, you can only access a simulation of the Dynamo\ndatabase, with key/value pairs that persist only for the current\nsession. The README for the GitHub archive tells how to hook up the\nJavaScript via ports to your application, and how to configure\nDynamoDB via Amazon's Web Services console for use with\n`DynamoBackend`.\n\nThere is a simple example that clearly illustrates the difference\nbetween the pure-Elm simulator and the real Amazon backend.\n\n`DynamoBackend` targets a single DynamoDB table with three\nattributes. It enables use of that table by multiple Amazon accounts,\nwith each account's data insulated from the others. It also allows\nmultiple different applications to store their data in that one\nbackend table, without interference.\n\nThe data store is a simple key/value store, mapping a string key to\nstring data. I expect that one common use will be to JSON encode\nstate, and store it by key. I built it to do that for my application.\n\nThe one drawback of Amazon's authentication mechanism that I was not\nable to work around is that a login session lasts only one hour. Each\nhour, your users will have to click on the \"OK\" button in the login\ndialog, to renew the session. I consider this to be a bug on Amazon's\npart.\n\n# Classes\n@docs Profile, Properties, StringDict, DynamoServerInfo, ResultDispatcher\n@docs Database, SimDb, DynamoDb\n@docs ErrorType, Error\n\n# Functions\n@docs formatError, getProp, setProp, removeProp, removeProps, mergeProps\n@docs makeDynamoDb, makeSimulatedDb, isRealDatabase, makeMsgCmd\n@docs installLoginScript, login, retry, put, remove, get, scan, logout\n@docs partialLogout, update\n\n",
+    "aliases": [
+      {
+        "name": "DynamoDb",
+        "comment": " Properties for a real `Dynamo` backend `Database`.\n\n`serverInfo` - The ServerInfo record sent in as the startup \"flags\" from\nthe JavaScript.\n\n`getProperties` - Your Model must contain a `Properties` list that the\n`DynamoBackend` code can use to store state. This function extracts that\nlist from your `Model`.\n\n`setProperties` - Set the `Properties` list in your `Model`.\n\n`backendPort` - your outgoing backend `port` to the JavaScript code.\n\n`backendMsg` - Create a message as if it came from the incoming backend\nport to the JavaScript code.\n\n`dispatcher` - The record of functions to call for return data from the\nbackend JavaScript.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ serverInfo : DynamoBackend.DynamoServerInfo , getProperties : model -> DynamoBackend.Properties , setProperties : DynamoBackend.Properties -> model -> model , backendPort : DynamoBackend.Properties -> Platform.Cmd.Cmd msg , backendMsg : DynamoBackend.Properties -> msg , dispatcher : DynamoBackend.ResultDispatcher model msg }"
+      },
+      {
+        "name": "DynamoServerInfo",
+        "comment": " This record is sent to Elm as the \"flags\" argument from the\nstartup code. It is stored internally by the JavaScript backend code,\nand isn't used by any of the Elm code, except that you store it in\nyour Dynamo database. Can be useful for debugging (though I'm tempted\nto leave it solely in the JavaScript code).\n\nThe properties are setup in Amazon's AWS Console for DynamoDB, and are\nstored in a JavaScript file that you create.\n\nThis is not secret information. It simply identifies your application\nand the table you use to store your key/value pairs.\n",
+        "args": [],
+        "type": "{ clientId : String , tableName : String , appName : String , roleArn : String , providerId : String , awsRegion : String }"
+      },
+      {
+        "name": "Error",
+        "comment": " DynamoBackend.update returns errors in an `Error` record.\n",
+        "args": [],
+        "type": "{ errorType : DynamoBackend.ErrorType, message : String }"
+      },
+      {
+        "name": "Profile",
+        "comment": " The application-level result of a successful login\n",
+        "args": [],
+        "type": "{ email : String, name : String, userId : String }"
+      },
+      {
+        "name": "Properties",
+        "comment": " The communication through the ports to the backend JavaScript\nhappens with `Properties` lists, lists of string pairs.\n",
+        "args": [],
+        "type": "List ( String, String )"
+      },
+      {
+        "name": "ResultDispatcher",
+        "comment": " When results return from the backend, they are passed to one of\nthese functions that you provide.\n\n`DynamoBackend.login` gives results to the `ResultDispatcher.login`\nfunction.\n\n`DynamoBackend.get` gives results to the `ResultDispatcher.get`\nfunction.\n\n`DynamoBackend.put` and `DynamoBackend.remove` give results to the\n`ResultDispatcher.put` function.\n\n`DynamoBackend.scan` gives results to the `ResultDispatcher.scan`\nfunction.\n\n`DynamoBackend.logout` results to the `ResultDispatcher.logout`\nfunction.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ login : DynamoBackend.Profile -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg ) , get : String -> Maybe.Maybe String -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg ) , put : String -> Maybe.Maybe String -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg ) , scan : List String -> List String -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg ) , logout : DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg ) }"
+      },
+      {
+        "name": "SimDb",
+        "comment": " Properties for a simulated backend `Database`.\n\n`profile` - A fake login `Profile`.\n\n`getDict` - Return from your `Model` an Elm `Dict` in which the\nsimulator can store its key/value pairs.\n\n`setDict` - Set the dictionary in your `Model`.\n\n`simulatedPort` - This simulates the return port from the real\nbackend. `DynamoBackend.makeMsgCmd` is often useful for turning one of\nyour messages into a `Cmd`.\n\n`dispatcher` - The `ResultDispatcher` that will handle the values returned\nthrough the `simulatedPort`.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ profile : DynamoBackend.Profile , getDict : model -> DynamoBackend.StringDict , setDict : DynamoBackend.StringDict -> model -> model , simulatedPort : DynamoBackend.Properties -> Platform.Cmd.Cmd msg , dispatcher : DynamoBackend.ResultDispatcher model msg }"
+      },
+      {
+        "name": "StringDict",
+        "comment": " An Elm `Dict` mapping `String` keys to `String` values.\n\nYou need to provide one of these in your Model for the simulated\nbackend.\n",
+        "args": [],
+        "type": "Dict.Dict String String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Database",
+        "comment": " The generic type for a `Simulated` or `Dynamo` database\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ErrorType",
+        "comment": " Errors that can be returned in the errorType property of an Error\nrecord.\n\n`AccessExpired` - Happens when your Amazon login session expires. Your\napplication needs to call `DynamoBackend.login` again to establish a new\nsession.\n\n`FetchProfileError` - denotes a problem in turning an access token into a\nprofile.\n\n`AccessTokenError` - Either Amazon didn't return the state arg when\nlogging in, or a cross-site forgery made the state sent not match the\nstate received.\n\n`InternalError` - denotes a bug in the `DynamoBackend` code. Shouldn't\nhappen.\n\n`ReturnedProfileError` - Means that Amazon's return for profile lookup\nwas missing the email, name, or userId.\n\n`AwsError` - An error was returned by the Amazon AWS JavaScript\nlibrary. Usually denotes a network problem.\n\n`Other` - Shouldn't happen. Means that that the backend code neglected\nto tag an error with an \"errorType\".\n\n",
+        "args": [],
+        "cases": [
+          [
+            "FetchProfileError",
+            []
+          ],
+          [
+            "AccessTokenError",
+            []
+          ],
+          [
+            "InternalError",
+            []
+          ],
+          [
+            "ReturnedProfileError",
+            []
+          ],
+          [
+            "AccessExpired",
+            [
+              "DynamoBackend.Properties"
+            ]
+          ],
+          [
+            "AwsError",
+            [
+              "String",
+              "String",
+              "Bool"
+            ]
+          ],
+          [
+            "Other",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "formatError",
+        "comment": " Format an `Error` record as a string\n",
+        "type": "DynamoBackend.Error -> String"
+      },
+      {
+        "name": "get",
+        "comment": " Call this to get the value for a key from the database.\nThe `userId` comes from the `Profile` record.\n\n`get userId key database`\n",
+        "type": "String -> String -> DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getProp",
+        "comment": " Lookup a key in a `Properties` list. Return `Nothing` if its not\nthere, or `Just value` if it is.\n",
+        "type": "String -> DynamoBackend.Properties -> Maybe.Maybe String"
+      },
+      {
+        "name": "installLoginScript",
+        "comment": " The Amazon login code attaches a script to the `<div>` with an id of\n`\"amazon-root\"`. Your view code needs to create that `<div>`. Call this\nwhen your application starts to attach the login script. It will\nauto-login if a recent session in the same browser has not yet\nexpired.\n",
+        "type": "DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "isRealDatabase",
+        "comment": " Return `True` if the argument is a real datbase (the result of\ncalling `makeDynamoDb`) or `False` if it is simulated (from\n`makeSimulatedDb`).\n",
+        "type": "DynamoBackend.Database model msg -> Bool"
+      },
+      {
+        "name": "login",
+        "comment": " Call this when the user clicks on your \"login\" button, or\nwhen you get an `AccessExpired` error.\n",
+        "type": "DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "logout",
+        "comment": " Call this to logout from Amazon.\nClears all state the could be used to create a session.\n",
+        "type": "DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "makeDynamoDb",
+        "comment": " Create a real `Dynamo` backend `Database`.\n\nThe arguments become the properties of the returned (wrapped) `DynamoDb` record.\n",
+        "type": "DynamoBackend.DynamoServerInfo -> (model -> DynamoBackend.Properties) -> (DynamoBackend.Properties -> model -> model) -> (DynamoBackend.Properties -> Platform.Cmd.Cmd msg) -> (DynamoBackend.Properties -> msg) -> DynamoBackend.ResultDispatcher model msg -> DynamoBackend.Database model msg"
+      },
+      {
+        "name": "makeMsgCmd",
+        "comment": " Wrap a message as a `Cmd`.\n",
+        "type": "msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "makeSimulatedDb",
+        "comment": " Create a simulated backend `Database`.\n\nThe arguments become the properties of the returned (wrapped) `SimDb` record.\n",
+        "type": "DynamoBackend.Profile -> (model -> DynamoBackend.StringDict) -> (DynamoBackend.StringDict -> model -> model) -> (DynamoBackend.Properties -> Platform.Cmd.Cmd msg) -> DynamoBackend.ResultDispatcher model msg -> DynamoBackend.Database model msg"
+      },
+      {
+        "name": "mergeProps",
+        "comment": " Merge two `Properties` lists.\n\nIf both contain a value for the same key, use the value from the first\nlist (`from`).\n\n`mergeProps from to`\n",
+        "type": "DynamoBackend.Properties -> DynamoBackend.Properties -> DynamoBackend.Properties"
+      },
+      {
+        "name": "partialLogout",
+        "comment": " For testing. Invalidates the saved access tokens\n",
+        "type": "DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "put",
+        "comment": " Call this to store a key/value pair in the database.\nThe `userId` comes from the `Profile` record.\n\n`put userId key value database`\n",
+        "type": "String -> String -> String -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "remove",
+        "comment": " Call this to remove a key/value pair from the database.\nThe `userId` comes from the `Profile` record.\n\n`remove userId key database`\n",
+        "type": "String -> String -> DynamoBackend.Database model msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "removeProp",
+        "comment": " Remove the property for a key from a `Properties` list.\n",
+        "type": "String -> DynamoBackend.Properties -> DynamoBackend.Properties"
+      },
+      {
+        "name": "removeProps",
+        "comment": " Remove a list of keys from a `Properties` list.\n",
+        "type": "List String -> DynamoBackend.Properties -> DynamoBackend.Properties"
+      },
+      {
+        "name": "retry",
+        "comment": " Call this to retry an operation that got an AccessExpired error\n",
+        "type": "DynamoBackend.Database model msg -> DynamoBackend.Properties -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "scan",
+        "comment": " Call this to scan the database for all keys. If `fetchValues` is\n`True`, will also return values.\n\nThe `userId` comes from the `Profile` record.\n\n`scan fetchValues userId database`\n",
+        "type": "Bool -> String -> DynamoBackend.Database model msg -> model -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "setProp",
+        "comment": " Set the value for a key to a value in a `Properties` list.\n\n`setProp key value properties`\n",
+        "type": "String -> String -> DynamoBackend.Properties -> DynamoBackend.Properties"
+      },
+      {
+        "name": "update",
+        "comment": " This handles the `Properties` that are sent back from the backend\nJavaScript (real or simulated). Your application needs to map that\ncommand to a message, and handle that message by calling\n`DynamoBackend.update`, and then process the resulting `Err` or `Ok`\nvalue. Before returning, it will usually call one of the functions in\nthe database's `ResultSetDispatcher`.\n",
+        "type": "DynamoBackend.Properties -> DynamoBackend.Database model msg -> model -> Result.Result DynamoBackend.Error ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

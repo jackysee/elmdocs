@@ -1,0 +1,740 @@
+[
+{
+  "name": "Data.Vec2",
+  "comment": "",
+  "aliases": [
+    {
+      "name": "Vec2",
+      "comment": "",
+      "args": [],
+      "type": {
+        "tag": "app",
+        "func": {
+          "tag": "type",
+          "name": "Vec2Ext"
+        },
+        "args": [
+          {
+            "tag": "record",
+            "extension": null,
+            "fields": []
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vec2Ext",
+      "comment": "",
+      "args": [
+        "a"
+      ],
+      "type": {
+        "tag": "record",
+        "extension": {
+          "tag": "var",
+          "name": "a"
+        },
+        "fields": [
+          [
+            "x",
+            {
+              "tag": "type",
+              "name": "Float"
+            }
+          ],
+          [
+            "y",
+            {
+              "tag": "type",
+              "name": "Float"
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "types": [],
+  "values": [
+    {
+      "name": "addVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "addVec2",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Vec2"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "type",
+            "name": "Vec2"
+          },
+          "out": {
+            "tag": "type",
+            "name": "Vec2"
+          }
+        }
+      }
+    },
+    {
+      "name": "crossVecMag",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "type",
+            "name": "Float"
+          }
+        }
+      }
+    },
+    {
+      "name": "distance",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "type",
+            "name": "Float"
+          }
+        }
+      }
+    },
+    {
+      "name": "distanceSquared",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "type",
+            "name": "Float"
+          }
+        }
+      }
+    },
+    {
+      "name": "dotVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "type",
+            "name": "Float"
+          }
+        }
+      }
+    },
+    {
+      "name": "extractVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Vec2"
+        }
+      }
+    },
+    {
+      "name": "fromIntPair",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "_Tuple2"
+          },
+          "args": [
+            {
+              "tag": "type",
+              "name": "Int"
+            },
+            {
+              "tag": "type",
+              "name": "Int"
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Vec2"
+        }
+      }
+    },
+    {
+      "name": "magSquared",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Float"
+        }
+      }
+    },
+    {
+      "name": "magnitude",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Float"
+        }
+      }
+    },
+    {
+      "name": "midVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "minimumDist",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "Vec2Ext"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "b"
+                }
+              ]
+            },
+            "out": {
+              "tag": "record",
+              "extension": null,
+              "fields": [
+                [
+                  "r",
+                  {
+                    "tag": "type",
+                    "name": "Float"
+                  }
+                ],
+                [
+                  "offset",
+                  {
+                    "tag": "type",
+                    "name": "Float"
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "negVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "origin",
+      "comment": "",
+      "type": {
+        "tag": "type",
+        "name": "Vec2"
+      }
+    },
+    {
+      "name": "rotVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Float"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "scaleVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Float"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "a"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "subVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          },
+          "out": {
+            "tag": "app",
+            "func": {
+              "tag": "type",
+              "name": "Vec2Ext"
+            },
+            "args": [
+              {
+                "tag": "var",
+                "name": "b"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "sumVec",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "List"
+          },
+          "args": [
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "Vec2Ext"
+              },
+              "args": [
+                {
+                  "tag": "var",
+                  "name": "a"
+                }
+              ]
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Vec2"
+        }
+      }
+    },
+    {
+      "name": "vecTranslate",
+      "comment": "",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Vec2Ext"
+          },
+          "args": [
+            {
+              "tag": "var",
+              "name": "a"
+            }
+          ]
+        },
+        "out": {
+          "tag": "type",
+          "name": "Transform2D"
+        }
+      }
+    }
+  ]
+}
+
+]

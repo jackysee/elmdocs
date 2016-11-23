@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Dispatch",
+    "comment": " Dispatch multiple messages in response to a single `Html.Event`.\n\n## Dispatch\n\n@docs forward\n@docs update\n\n## Events\n\n@docs on\n@docs onWithOptions\n\n## Configuration\n\nThese are tailored for writing UI component libraries\nwith stateful components, such as `elm-mdl`. These are mostly useful\nonly if you want to have an API where users specify\noptions as lists of things and we want to accumulate event-handlers\nfor various events.\n\nTo see how they are used in [elm-mdl](http://package.elm-lang.org/packages/debois/elm-mdl/latest) see [collecting the handlers](https://github.com/vipentti/elm-mdl/blob/78ab6b6dc0a8e5044a06d2a3c07fa7d900093585/src/Material/Options/Internal.elm#L70-L73) and [adding them as attributes](https://github.com/vipentti/elm-mdl/blob/78ab6b6dc0a8e5044a06d2a3c07fa7d900093585/src/Material/Options/Internal.elm#L112-L125)\n\n@docs Config, defaultConfig, setDecoder, getDecoder, setMsg, toAttributes\n@docs add\n@docs clear\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Dispatch configuration type\n ",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add an event-handler to the current configuration\n ",
+        "type": "String -> Maybe.Maybe Html.Events.Options -> Json.Decode.Decoder msg -> Dispatch.Config msg -> Dispatch.Config msg"
+      },
+      {
+        "name": "clear",
+        "comment": " Clear event handlers in current configuration\n",
+        "type": "Dispatch.Config msg -> Dispatch.Config msg"
+      },
+      {
+        "name": "defaultConfig",
+        "comment": " Empty configuration\n ",
+        "type": "Dispatch.Config msg"
+      },
+      {
+        "name": "forward",
+        "comment": " Maps messages to commands\n",
+        "type": "List msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDecoder",
+        "comment": " Get the Dispatch message constructor\n",
+        "type": "Dispatch.Config msg -> Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg)"
+      },
+      {
+        "name": "on",
+        "comment": " Dispatch multiple decoders for a single event.\n ",
+        "type": "String -> (List msg -> msg) -> List (Json.Decode.Decoder msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onWithOptions",
+        "comment": " Dispatch multiple decoders for a single event.\nOptions apply to the whole event.\n ",
+        "type": "String -> (List msg -> msg) -> Html.Events.Options -> List (Json.Decode.Decoder msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "setDecoder",
+        "comment": " Tell Dispatch how to convert a list of decoders into a decoder for a single message.\n",
+        "type": "(Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) -> Dispatch.Config msg -> Dispatch.Config msg"
+      },
+      {
+        "name": "setMsg",
+        "comment": " Tell Dispatch how to convert a list of messages into a single message. Alternative\nto `setDecoder`.\n",
+        "type": "(List msg -> msg) -> Dispatch.Config msg -> Dispatch.Config msg"
+      },
+      {
+        "name": "toAttributes",
+        "comment": " Returns a list of `Html.Attribute` containing handlers that\ndispatch multiple decoders on a single `Html.Event`\n ",
+        "type": "Dispatch.Config msg -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "update",
+        "comment": " Runs the given `update` on all the messages and\nreturns the updated model including batching of\nany commands returned by running the `update`.\n",
+        "type": "(msg -> model -> ( model, Platform.Cmd.Cmd obs )) -> List msg -> model -> ( model, Platform.Cmd.Cmd obs )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

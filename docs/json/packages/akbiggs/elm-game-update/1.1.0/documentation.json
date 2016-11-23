@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Game.Update",
+    "comment": " When updating a component in a game, frequently you will want to have some state\nfor representing the death/destruction of the component. `Game.Update` offers you\nconvenient operations for chaining together update functions that have side-effects\nand could kill the object, representing the alive state as `Just object` and\nthe death state as `Nothing`.\n\n# Types\n\n@docs Result, Update\n\n# Constructors\n\n@docs returnAlive, returnMaybe, returnDead, fromEffects\n\n# Running Updates\n\n@docs runOnMaybe, runIf\n\n# Chaining Updates\n\n@docs andThen\n\n# Filtering results\n\n@docs filterAlive\n",
+    "aliases": [
+      {
+        "name": "Result",
+        "comment": " A `Result a effect` represents the result from updating component of\ntype `a` with side-effects of type `effect`. The component might be dead\nor alive after this update has occurred.\n\nA `Result a effect` is equivalent to an `Effects (Maybe a) effect` from\n[elm-effects](http://package.elm-lang.org/packages/akbiggs/elm-effects), which means\nthat you can chain and handle effects from it using the operations from that package.\n",
+        "args": [
+          "a",
+          "effect"
+        ],
+        "type": "Effects.Effects (Maybe.Maybe a) effect"
+      },
+      {
+        "name": "Update",
+        "comment": " An `Update a effect` represents a function that takes a component\nof type `a` and produces an updated version of that component with side-effects\nof type `effect`. The component might be dead or alive after this update has\noccurred.\n",
+        "args": [
+          "a",
+          "effect"
+        ],
+        "type": "a -> Game.Update.Result a effect"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Takes the result from one update and runs another update function on it\nif the object in the result is still alive. However, if the object is dead,\nthe update will not occur and no additional side-effects will be added to\nthe result. This is useful when you want to run a bunch of functions on an object,\nany of which could kill the object.\n",
+        "type": "Game.Update.Result a effect -> Game.Update.Update a effect -> Game.Update.Result a effect"
+      },
+      {
+        "name": "filterAlive",
+        "comment": " Take a bunch of update results and filter out the ones that are still alive.\nTo preserve the effects from the dead objects, the effects are all batched together\ninto a single list instead of being kept as separate lists.\n",
+        "type": "List (Game.Update.Result a effect) -> Effects.Effects (List a) effect"
+      },
+      {
+        "name": "fromEffects",
+        "comment": " Takes an `Effects` object and converts it to an update result,\nreporting that the value is alive.\n",
+        "type": "Effects.Effects a effect -> Game.Update.Result a effect"
+      },
+      {
+        "name": "returnAlive",
+        "comment": " Takes a value and returns a `Result` with no side-effects\nindicating that the object is still alive.\n",
+        "type": "a -> Game.Update.Result a effect"
+      },
+      {
+        "name": "returnDead",
+        "comment": " Returns a result with no side-effects indicating a dead object.\n",
+        "type": "Game.Update.Result a effect"
+      },
+      {
+        "name": "returnMaybe",
+        "comment": " Takes a `Maybe` and returns a `Result` with no side-effects indicating that the object is\nalive if the `Maybe` has a value, otherwise dead.\n",
+        "type": "Maybe.Maybe a -> Game.Update.Result a effect"
+      },
+      {
+        "name": "runIf",
+        "comment": " Runs an update on an alive object if the condition is true. Otherwise, returns\na `Result` indicating that the object is alive.\n",
+        "type": "Bool -> Game.Update.Update a effect -> a -> Game.Update.Result a effect"
+      },
+      {
+        "name": "runOnMaybe",
+        "comment": " Updates an object if the object is alive(the `Maybe` has a value).\nOtherwise, returns a `Result` with no side-effects indicating the object is dead.\n",
+        "type": "Game.Update.Update a effect -> Maybe.Maybe a -> Game.Update.Result a effect"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

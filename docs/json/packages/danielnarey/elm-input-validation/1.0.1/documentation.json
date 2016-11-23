@@ -1,0 +1,92 @@
+[
+  {
+    "name": "InputValidation",
+    "comment": " ## Type-validation for user input from text, numeric, and custom fields\n\nThis library provides a consistent way of handling type-validation for user\ninput. The type of input expected is specified when constructing an input\nelement in the Elm program's view, and the corresponding reader function is\ncalled when program updates in response to input. If the input does not match\nthe expected type, or the reader function called does not correspond to the type\nexpected, an error results.\n\n# Value Representation\n@docs TypedInput\n\n# Capturing Input\n@docs captureOnInput\n\n# Reading Input with Type Validation\n@docs readStringInput, readIntInput, readFloatInput, readBoolInput\n@docs readCustomInput\n\n# Reading Input without Type Validation\n@docs readInputAsString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "TypedInput",
+        "comment": " Represents a JavaScript value with a type specification.\n\n`BoolInput` requires an expression that takes a string and returns a `Bool`.\n`CustomInput` requires a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder).\n`Fail` captures no input and may be used for error handling.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "StringInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "IntInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "FloatInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "BoolInput",
+            [
+              "String -> Bool",
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "CustomInput",
+            [
+              "Json.Decode.Decoder a",
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "Fail",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "captureOnInput",
+        "comment": " Capture input from a field as `TypedInput`\n\n    type Msg\n      = Name (TypedInput a)\n    ...\n\n    input [ type' \"text\", captureOnInput Name StringInput ] []\n\n",
+        "type": "(InputValidation.TypedInput a -> msg) -> (Json.Decode.Value -> InputValidation.TypedInput a) -> Html.Attribute msg"
+      },
+      {
+        "name": "readBoolInput",
+        "comment": " Decode a `BoolInput` value as a string, then pass the string to a custom\nexpression that will return a `Bool`; return an error message if the string\ndecoder fails or if the argument is a type other than `BoolInput`.\n\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String Bool"
+      },
+      {
+        "name": "readCustomInput",
+        "comment": " Decode a `CustomInput` value with a custom `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder);\nreturn an error message if the decoder fails or if the argument is a type other\nthan `CustomInput`.\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String a"
+      },
+      {
+        "name": "readFloatInput",
+        "comment": " Decode a `FloatInput` value as a string, then attempt to convert the string\nto a `Float`; return an error message if the string decoder fails, if type\nconversion fails, or if the argument is a type other than `FloatInput`.\n\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String Float"
+      },
+      {
+        "name": "readInputAsString",
+        "comment": " Decode any `TypedInput` value as a string, or return an error message if the\ndecoder fails. Useful for debugging.\n\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String String"
+      },
+      {
+        "name": "readIntInput",
+        "comment": " Decode an `IntInput` value as an string, then attempt to convert the string\nto an `Int`; return an error message if the string decoder fails, if type\nconversion fails, or if the argument is a type other than `IntInput`.\n\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String Int"
+      },
+      {
+        "name": "readStringInput",
+        "comment": " Decode a `StringInput` value as a string; return an error message if the\ndecoder fails or if the argument is a type other than `StringInput`.\n\n",
+        "type": "InputValidation.TypedInput a -> Result.Result String String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

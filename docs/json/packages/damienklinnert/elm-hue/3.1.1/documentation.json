@@ -1,0 +1,256 @@
+[
+  {
+    "name": "Hue",
+    "comment": " Control your Philips Hue devices with Elm!\n\nCheck the [README for a general introduction into this module](http://package.elm-lang.org/packages/damienklinnert/elm-hue/latest/).\n\n# Bridge\n\n## Referencing the Bridge\n@docs BridgeReference, bridgeRef\n\n# Lights\n\n## Referencing Lights\n@docs LightReference, lightRef\n\n## Querying Light Details\n@docs listLights, listLightsWithStates, LightDetails\n\n## Retrieving Light State\n@docs getLightState, LightState, LightEffect, Alert\n\n## Updating Light State\n@docs updateLight, LightUpdate, turnOn, turnOff, brightness, hue, saturation, colorTemperature, singleAlert, loopedAlert, noEffect, colorLoopEffect, transition\n",
+    "aliases": [
+      {
+        "name": "LightDetails",
+        "comment": " Details about a light like identifier, software version and bulb type.\n",
+        "args": [],
+        "type": "{ id : String , name : String , uniqueId : String , luminaireUniqueId : Maybe.Maybe String , bulbType : String , modelId : String , manufacturerName : Maybe.Maybe String , softwareVersion : String }"
+      },
+      {
+        "name": "LightState",
+        "comment": " Describes the current state of a light.\n\n - `on`: is this light turned on?\n - `brightness`: a range from `1` (minimal brightness) to `254` (maximal brightness)\n - `hue`: a range from `0` to `65535`, with both of them resulting in red, `25500` in green and\n   `46920` in blue\n - `saturation`: range from `0` (white) to `254` (fully colored)\n - `colorTemperature`: The Mired Color temperature\n - `reachable`: is the light reachable?\n",
+        "args": [],
+        "type": "{ on : Bool , brightness : Int , hue : Int , saturation : Int , effect : Hue.LightEffect , colorTemperature : Int , alert : Hue.Alert , reachable : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Alert",
+        "comment": " A temporary change to a light's state.\n\n - `NoAlert`: Disable any existing alerts.\n - `SingleAlert`: The light will perform a single, smooth transition up to a higher brightness and\n   back to the original again.\n - `LoopedAlert`: The light will perform multiple, smooth transitions up to a higher brightness and\n   back to the original again for a period of `15` seconds.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoAlert",
+            []
+          ],
+          [
+            "SingleAlert",
+            []
+          ],
+          [
+            "LoopedAlert",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "BridgeReference",
+        "comment": " Used to identify and reference a particular bridge.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "LightEffect",
+        "comment": " A light can have the `ColorLoopEffect` enabled, which means that the light will cycle through\nall hues, while keeping brightness and saturation values.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoLightEffect",
+            []
+          ],
+          [
+            "ColorLoopEffect",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "LightReference",
+        "comment": " Used to identify and reference a particular light.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "LightUpdate",
+        "comment": "\n  A `LightUpdate` describes a single change to a light's state. To actually perform a `LightUpdate`,\n  pass a list of updates to the `updateLight` function.\n\n  To describe a `1s` transition to a bright red, you can specify:\n\n      [ turnOn, transition 10, hue 0, brightness 254 ]\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "bridgeRef",
+        "comment": " Create a reference to a bridge by providing the bridge base url and your username.\n\n    bridgeRef \"http://192.168.1.1\" \"A2iasDJs123fi793uiSh\"\n\nIf you don't yet know the bridge base url or your username,\n[check the readme for detailed instructions](http://package.elm-lang.org/packages/damienklinnert/elm-hue/latest/).\n",
+        "type": "String -> String -> Hue.BridgeReference"
+      },
+      {
+        "name": "brightness",
+        "comment": " Set light to the given brightness.\n\nThe brightness can range from `1` (minimal brightness) to `254` (maximal brightness).\nA brightness of `1` doesn't turn the light off. Use `turnOff` instead.\n",
+        "type": "Int -> Hue.LightUpdate"
+      },
+      {
+        "name": "colorLoopEffect",
+        "comment": " Sets the colorloop effect on the light.\n\nThe light will cycle through all hues, while keeping brightness and saturation values.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "colorTemperature",
+        "comment": " Set the Mired Color temperature of the light.\n\nA light should be capable of a value of `153` (6500K) to `500` (2000K).\n",
+        "type": "Int -> Hue.LightUpdate"
+      },
+      {
+        "name": "getLightState",
+        "comment": " Get the state for a given light.\n",
+        "type": "Hue.LightReference -> Task.Task Hue.Errors.BridgeReferenceError (Result.Result (List Hue.Errors.GenericError) Hue.LightState)"
+      },
+      {
+        "name": "hue",
+        "comment": " Set light to the given hue value.\n\nImagine arranging all colors around a circle (a color wheel). On that circle, a value of `0` will\nresult in red, `25500` in green and `46920` in blue. Values in between result in mixed colors,\ne.g. `10710` being yellow. When the value reaches `65535`, you've reached the starting point on the\ncircle, so you'll get red again.\n",
+        "type": "Int -> Hue.LightUpdate"
+      },
+      {
+        "name": "lightRef",
+        "comment": " Create a reference to a light by specifying it's bridge and id.\n\nThe id can be obtained by calling `listLights` and looking at the `id` field.\n\nTo create a reference to the light with id `\"2\"`, you can do:\n\n    lightRef myBridge \"2\"\n",
+        "type": "Hue.BridgeReference -> String -> Hue.LightReference"
+      },
+      {
+        "name": "listLights",
+        "comment": " List details about all lights connected to a particular bridge.\n",
+        "type": "Hue.BridgeReference -> Task.Task Hue.Errors.BridgeReferenceError (Result.Result (List Hue.Errors.GenericError) (List Hue.LightDetails))"
+      },
+      {
+        "name": "listLightsWithStates",
+        "comment": " List details about all lights connected to a particular bridge. Includes the current state of every light.\n",
+        "type": "Hue.BridgeReference -> Task.Task Hue.Errors.BridgeReferenceError (Result.Result (List Hue.Errors.GenericError) (List ( Hue.LightDetails, Hue.LightState )))"
+      },
+      {
+        "name": "loopedAlert",
+        "comment": " The light will perform multiple, smooth transitions up to a higher brightness and back to the\noriginal again for a period of `15` seconds.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "noEffect",
+        "comment": " Turn off all effects on the light.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "saturation",
+        "comment": " Set light to the given saturation.\n\nThe saturation can range from `0` (minimally saturated, white) to `254` (fully colored).\n",
+        "type": "Int -> Hue.LightUpdate"
+      },
+      {
+        "name": "singleAlert",
+        "comment": " The light will perform a single, smooth transition up to a higher brightness and back to the\noriginal again.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "transition",
+        "comment": " Specify the duration for the transition between the light's current and updated state.\n\nA value of `1` will create a `100ms` transition, a value of `10` will create a `1s` transition.\n\nThe default is `4` (`400ms`).\n",
+        "type": "Int -> Hue.LightUpdate"
+      },
+      {
+        "name": "turnOff",
+        "comment": " Turn light off.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "turnOn",
+        "comment": " Turn light on.\n",
+        "type": "Hue.LightUpdate"
+      },
+      {
+        "name": "updateLight",
+        "comment": " Apply a list of `LightUpdate`s to a particular light.\n\nThe following command will transition a light to a bright red:\n\n    updateLight lightRef [ turnOn, transition 10, hue 0, brightness 254 ]\n\nIf the command is successfully sent to the bridge and there are no bridge errors, then `Result.Ok` is returned.\n",
+        "type": "Hue.LightReference -> List Hue.LightUpdate -> Task.Task Hue.Errors.BridgeReferenceError (Result.Result (List Hue.Errors.UpdateLightError) ())"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Hue.Errors",
+    "comment": " Hue Bridge Errors\n\n@docs BridgeReferenceError\n\n## Generic Hue API Errors\n\n@docs ErrorDetails, GenericError\n\n## Command Specific Hue API Errors\n\n@docs UpdateLightError\n",
+    "aliases": [
+      {
+        "name": "ErrorDetails",
+        "comment": " Details about a Hue API error\n\n    ErrorDetails 201 \"/lights/1/state/bri\" \"parameter, bri, is not modifiable. Device is set to off.\"\n",
+        "args": [],
+        "type": "{ id : Int, address : String, description : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "BridgeReferenceError",
+        "comment": " Error that occurs preventing proper communication with the bridge.\n\n    case error of\n        UnauthorizedUser info ->\n            Debug.log (\"Needs authorization to use \" ++ info.address) msg\n\n        _ ->\n            Debug.log \"Network error\" msg\n",
+        "args": [],
+        "cases": [
+          [
+            "Timeout",
+            []
+          ],
+          [
+            "NetworkError",
+            []
+          ],
+          [
+            "UnauthorizedUser",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "GenericError",
+        "comment": " General Hue API error that can be returned from the bridge after a command.\n    \n    case error of\n        ResourceNotAvailable err ->\n            Debug.log (\"Resource error: \" ++ err.description ++ \" \" ++ err.details) msg\n\n        _ ->\n            Debug.log \"Error occurred\" msg\n",
+        "args": [],
+        "cases": [
+          [
+            "GenericError",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ],
+          [
+            "ResourceNotAvailable",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ],
+          [
+            "ItemLimit",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ],
+          [
+            "PortalRequired",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ],
+          [
+            "InternalError",
+            [
+              "Hue.Errors.ErrorDetails"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "UpdateLightError",
+        "comment": " Hue API error that can be returned after a `updateLight` command.\nGeneral `GenericError` errors can be returned, as well as a `DeviceTurnedOff` error if the device updating is off.\n\n    case error of\n        UpdateLightError genericError ->\n            case genericError of\n                _ ->\n                    Debug.log \"Generic error occurred. Can handle more specific errors if needed.\" msg\n\n        DeviceTurnedOff lightRef offError ->\n            Debug.log \"Device is turned off.\" msg\n",
+        "args": [],
+        "cases": [
+          [
+            "UpdateLightError",
+            [
+              "Hue.Errors.GenericError"
+            ]
+          ],
+          [
+            "DeviceTurnedOff",
+            [
+              "String",
+              "Hue.Errors.ErrorDetails"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

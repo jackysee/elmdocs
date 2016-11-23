@@ -1,0 +1,200 @@
+[
+  {
+    "name": "Encoding.URL",
+    "comment": " Support for URL encoding and decoding.\n\n# Standard URL Encoding\n@docs encode, decode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Proper URL decoding. ",
+        "type": "String -> String"
+      },
+      {
+        "name": "encode",
+        "comment": " Proper URL encoding. ",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Encoding.Integral",
+    "comment": " Encoding and decoding facilities for integral integrals. This is mostly intended for machine\nencodings, so there are no frills in place for pretty printing and the like. This is used by the\nEncoding.URL module.\n\n# Digits configurations.\n@docs hexDigits, octDigits, binDigits, decDigits\n\n# Arbitrary Encoding\n@docs encodeBasePadded, encodeBase\n\n# Encode With Padding\n@docs encodeHexPadded, encodeOctPadded, encodeBinPadded, encodeDecPadded\n\n# Encode\n@docs encodeHex, encodeOct, encodeBin, encodeDec\n\n# Arbitrary Decoding\n@docs decodeBase\n\n# Decode\n@docs decodeHex, decodeOct, decodeBin, decodeDec\n\n# Character Groups\n@docs digitChars, hexChars, octChars, binChars, decChars\n\n# Regex\n@docs regexSourceBase, regexSourceHex, regexSourceOct, regexSourceBin, regexSourceDec, regexBase, regexHex, regexOct, regexBin, regexDec\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "binChars",
+        "comment": " List of characters appearing in binary numbers. ",
+        "type": "List Char"
+      },
+      {
+        "name": "binDigits",
+        "comment": " Digits configuration for binary integrals. ",
+        "type": "List String"
+      },
+      {
+        "name": "decChars",
+        "comment": " List of characters appearing in decimal numbers. ",
+        "type": "List Char"
+      },
+      {
+        "name": "decDigits",
+        "comment": " Digits configuration for decimal integrals. ",
+        "type": "List String"
+      },
+      {
+        "name": "decodeBase",
+        "comment": " Decode a integral using a given digits configuration. ",
+        "type": "List String -> String -> Maybe.Maybe Int"
+      },
+      {
+        "name": "decodeBin",
+        "comment": " Decode a binary encoded integral using the default `binDigits` configuration. ",
+        "type": "String -> Maybe.Maybe Int"
+      },
+      {
+        "name": "decodeDec",
+        "comment": " Decode a decimal encoded integral using the default `decDigits` configuration. ",
+        "type": "String -> Maybe.Maybe Int"
+      },
+      {
+        "name": "decodeHex",
+        "comment": " Decode a hexadecimal encoded integral using the default `hexDigits` configuration. ",
+        "type": "String -> Maybe.Maybe Int"
+      },
+      {
+        "name": "decodeOct",
+        "comment": " Decode an octal encoded integral using the default `octDigits` configuration. ",
+        "type": "String -> Maybe.Maybe Int"
+      },
+      {
+        "name": "digitChars",
+        "comment": " A list of the unique digit characters possible in an integral with the given digits configuration. ",
+        "type": "List String -> List Char"
+      },
+      {
+        "name": "encodeBase",
+        "comment": " Encode using a given digits configuration without padding. ",
+        "type": "List String -> number -> String"
+      },
+      {
+        "name": "encodeBasePadded",
+        "comment": " Encode using a given digits configuration and minimum length padding. The remaining digits will\nbe taken up by zeroes. ",
+        "type": "List String -> Int -> number -> String"
+      },
+      {
+        "name": "encodeBin",
+        "comment": " Encode a binary integral without padding using a the default `binDigits` configuration. ",
+        "type": "number -> String"
+      },
+      {
+        "name": "encodeBinPadded",
+        "comment": " Encode a binary integral with padding using a the default `binDigits` configuration. ",
+        "type": "Int -> number -> String"
+      },
+      {
+        "name": "encodeDec",
+        "comment": " Encode a decimal integral without padding using a the default `decDigits` configuration. ",
+        "type": "number -> String"
+      },
+      {
+        "name": "encodeDecPadded",
+        "comment": " Encode a decimal integral with padding using a the default `decDigits` configuration. ",
+        "type": "Int -> number -> String"
+      },
+      {
+        "name": "encodeHex",
+        "comment": " Encode a hexadecimal integral without padding using a the default `hexDigits` configuration. ",
+        "type": "number -> String"
+      },
+      {
+        "name": "encodeHexPadded",
+        "comment": " Encode a hexadecimal integral with padding using a the default `hexDigits` configuration. ",
+        "type": "Int -> number -> String"
+      },
+      {
+        "name": "encodeOct",
+        "comment": " Encode an octal integral without padding using a the default `octDigits` configuration. ",
+        "type": "number -> String"
+      },
+      {
+        "name": "encodeOctPadded",
+        "comment": " Encode an octal integral with padding using a the default `octDigits` configuration. ",
+        "type": "Int -> number -> String"
+      },
+      {
+        "name": "hexChars",
+        "comment": " List of characters appearing in hexadecimal numbers. ",
+        "type": "List Char"
+      },
+      {
+        "name": "hexDigits",
+        "comment": " Digits configuration for hexadecimal integrals. ",
+        "type": "List String"
+      },
+      {
+        "name": "octChars",
+        "comment": " List of characters appearing in octal numbers. ",
+        "type": "List Char"
+      },
+      {
+        "name": "octDigits",
+        "comment": " Digits configuration for octal integrals. ",
+        "type": "List String"
+      },
+      {
+        "name": "regexBase",
+        "comment": " Match an encoded integral using the given digits configuration. ",
+        "type": "List String -> Regex.Regex"
+      },
+      {
+        "name": "regexBin",
+        "comment": " Match an encoded binary integral. ",
+        "type": "Regex.Regex"
+      },
+      {
+        "name": "regexDec",
+        "comment": " Match an encoded decimal integral. ",
+        "type": "Regex.Regex"
+      },
+      {
+        "name": "regexHex",
+        "comment": " Match an encoded hexadecimal integral. ",
+        "type": "Regex.Regex"
+      },
+      {
+        "name": "regexOct",
+        "comment": " Match an encoded octal integral. ",
+        "type": "Regex.Regex"
+      },
+      {
+        "name": "regexSourceBase",
+        "comment": " Regex that matches an encoded integral using the given digits configuration. ",
+        "type": "List String -> String"
+      },
+      {
+        "name": "regexSourceBin",
+        "comment": " MRegex that matches an encoded binary integral. ",
+        "type": "String"
+      },
+      {
+        "name": "regexSourceDec",
+        "comment": " MRegex that matches an encoded decimal integral. ",
+        "type": "String"
+      },
+      {
+        "name": "regexSourceHex",
+        "comment": " MRegex that matches an encoded hexadecimal integral. ",
+        "type": "String"
+      },
+      {
+        "name": "regexSourceOct",
+        "comment": " MRegex that matches an encoded octal integral. ",
+        "type": "String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

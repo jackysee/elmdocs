@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Collision",
+    "comment": " Detect collisions between rigid three-dimensional objects. The process goes like this:\n\n1. Start with a set of triangular faces that describe the shape of an object.\n\n2. Use `create` to convert the list of faces into a `Bounds` value. Creating the bounds can be time-consuming, so you will want to do this before you start the time loop.\n\n3. If you want to create your bounds ahead of time, you can `encode` them to JSON and `decode` them later.\n\n4. Once your simulation/game is running, test for collisions using `collide`.\n\nThis module will not work for 2D objects.\n\n# Collision Detection\n@docs Face, face, Bounds, create, empty, Body, collide\n\n# Working with JSON\n@docs encode, decode\n\n# Debugging\n\nChances are you won't need to use the functions below. They are used by the Collision Visualizer. You can use them along with the `Collision.Tree` module to examine the collision trees.\n\n@docs BoundingBox, collisionMap\n",
+    "aliases": [
+      {
+        "name": "Body",
+        "comment": " An object that is positioned and oriented in three-dimensional space. The bounds of the object are given in the body's reference frame. The `Frame` type is defined in [nphollon/geo3d](package.elm-lang.org/packages/nphollon/geo3d/latest/Frame).\n\nBefore testing for a collision, we use the position and orientation to move the bounds into the world's reference frame. This way, we can move our objects through the world, but we don't have to re-compute the bounds (as long as the object does not change shape).\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | frame : Frame.Frame, bounds : Collision.Bounds }"
+      },
+      {
+        "name": "BoundingBox",
+        "comment": " An oriented bounding box. A, B, and C are the radiuses, or half-widths, of the box along its X, Y, and Z axes, respectively. The frame describes the placement of the bounding box relative to the body's reference frame.\n",
+        "args": [],
+        "type": "{ a : Float, b : Float, c : Float, frame : Frame.Frame }"
+      },
+      {
+        "name": "Bounds",
+        "comment": " The boundary data for an object, stored as an OBBTree.\n",
+        "args": [],
+        "type": "Collision.Tree.Tree Collision.BoundingBox Collision.Face"
+      },
+      {
+        "name": "Face",
+        "comment": " A triangle. The surface of your colliding objects is described by a collection of triangular faces. The `Vector` type is defined in [nphollon/geo3d](package.elm-lang.org/packages/nphollon/geo3d/latest/Vector).\n",
+        "args": [],
+        "type": "{ p : Vector.Vector, q : Vector.Vector, r : Vector.Vector }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "collide",
+        "comment": " Determine whether two bodies collide.\n",
+        "type": "Collision.Body b -> Collision.Body b' -> Bool"
+      },
+      {
+        "name": "collisionMap",
+        "comment": " Given two bodies, A and B, return the set of tree coordinates where the bounding tree of A collides with the bounding tree of B. This gives you an inkling of how the collision algorithm works. In general, boxes that collide with boxes or leaves on the same level are hits, and leaves that collide with leafs are hits.\n\nIf A has a bounding box at (1, 2), and it collides with a bounding box in B at (1, 4), then `collisionMap a b` will include (1, 2), and `collisionMap b a` will include (1, 4).\n\nIf A has a leaf at (3, 0), and it collides with a leaf in B at (4, 2), then `collisionMap a b` will include (3, 0), and `collisionMap b a` will include (4, 2).\n\nCheck out the Collision Visualizer to see this function in action.\n\nFor more information about how the tree coordinates work, see `Collision.Tree`.\n",
+        "type": "Collision.Body b -> Collision.Body b' -> Set.Set ( Int, Int )"
+      },
+      {
+        "name": "create",
+        "comment": " Generate the bounding tree for an object. The list of faces defines the surface.\n\nThe overall time to build the OBBTree is O(n log^2 n), where n is the number of faces.\n",
+        "type": "List Collision.Face -> Collision.Bounds"
+      },
+      {
+        "name": "decode",
+        "comment": " A JSON decoder for an OBBTree encoded with the above function.\n",
+        "type": "Json.Decode.Decoder Collision.Bounds"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty bounding tree. This will not collide with anything.\n",
+        "type": "Collision.Bounds"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode an OBBTree as JSON.\n",
+        "type": "Collision.Bounds -> Json.Encode.Value"
+      },
+      {
+        "name": "face",
+        "comment": " Create a triangular face, given the positions of its three vertexes. The vertexes can be given in any order.\n",
+        "type": "Vector.Vector -> Vector.Vector -> Vector.Vector -> Collision.Face"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Collision.Tree",
+    "comment": " This module defines the tree structure used in the `Bounds` type. You don't need to import this module if you are just doing collision detection. But you may find it useful for debugging.\n\nWe identify nodes in the tree using a two-dimensional coordinate system. The first coordinate measures distance from the root node. The second coordinate measures how far \"from the left\" the node is. So the root node is at (0,0), its two children are (1,0) and (1,1), their children are (2,0) through (2,3), and so on.\n\n# Definition\n\n@docs Tree\n\n# Inspecting\n\n@docs depth, leaves, internals, subtreeAt, toTheLeft, toTheRight\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Tree",
+        "comment": " A binary tree type. The the internal nodes can store differently-typed data than the leaf nodes.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": [
+          [
+            "Leaf",
+            [
+              "b"
+            ]
+          ],
+          [
+            "Node",
+            [
+              "a",
+              "Collision.Tree.Tree a b",
+              "Collision.Tree.Tree a b"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "depth",
+        "comment": " Return the maximum depth of the tree.\n\n    depth (Leaf 1) == 1\n    depth (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5)) == 3\n",
+        "type": "Collision.Tree.Tree a b -> Int"
+      },
+      {
+        "name": "internals",
+        "comment": " Return of list of internal node values, tagged with tree coordinates.\n\n    internals (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5))\n      == [ ((0,0), 1), ((1,0), 2) ]\n",
+        "type": "Collision.Tree.Tree a b -> List ( ( Int, Int ), a )"
+      },
+      {
+        "name": "leaves",
+        "comment": " Return a list of leaf values, tagged with tree coordinates.\n\n    leaves (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5))\n      == [ ((2,0), 3), ((2,1), 4), ((1,1), 5) ]\n",
+        "type": "Collision.Tree.Tree a b -> List ( ( Int, Int ), b )"
+      },
+      {
+        "name": "subtreeAt",
+        "comment": " Return the subtree of a given tree, whose root node is at the given coordinates. If the coordinates are out of bounds, return the nearest ancestor.\n\n    subtreeAt (1,0) (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5))\n      == Node 2 (Leaf 3) (Leaf 4)\n\n    subtreeAt (2,1) (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5))\n      == Leaf 4\n\n    subtreeAt (2,3) (Node 1 (Node 2 (Leaf 3) (Leaf 4)) (Leaf 5))\n      == Leaf 5\n",
+        "type": "( Int, Int ) -> Collision.Tree.Tree a b -> Collision.Tree.Tree a b"
+      },
+      {
+        "name": "toTheLeft",
+        "comment": " Given a pair of tree coordinates, return the coordinates of the left child node.\n\n    toTheLeft (0,0) == (1,0)\n    toTheLeft (1,1) == (2,2)\n    toTheLeft (4,7) == (5,14)\n",
+        "type": "( Int, Int ) -> ( Int, Int )"
+      },
+      {
+        "name": "toTheRight",
+        "comment": " Given a pair of tree coordinates, return the coordinates of the right child node.\n\n    toTheRight (0,0) == (1,1)\n    toTheRight (1,1) == (2,3)\n    toTheRight (4,7) == (5,15)\n",
+        "type": "( Int, Int ) -> ( Int, Int )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

@@ -1,0 +1,157 @@
+[
+  {
+    "name": "Stage",
+    "comment": "A type and functions on it for building up values as a function of time.\n\nA `Stage t a` is essentially a function `f : Time -> a` with\nan associated duration `dur` which indicates that `f` is\nmeant to be considered as a function on the\ntime interval [0, dur].\n\nThe first type paramater `t` is `ForATime` if that duration\nis some finite time and is `Forever` if `f` is to be considered\na total function.\n\nAs an example, we might have a value \n`circlePos : Stage ForATime (Float, Float)` indicating the position\nof a circle in an animation.\n\n# Formation\n@docs Stage, ForATime, Forever\n\n# Introduction\n@docs forever, for, stayFor, stayForever\n\n# Transformation\n@docs dilate, cycle, sustain, map\n\n# Composition\n@docs followedBy, chainTo\n\n# Elimination\n@docs finalValue, run",
+    "aliases": [
+      {
+        "name": "Stage",
+        "comment": "",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "I.Stage t a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "chainTo",
+        "comment": "Create a sequence of two stages, giving the second access to the\nfinal value of the first. For example,\n\n    pos = for (3 * second) (\\t -> t * (100 / 1*second))\n          `chainTo` \\finalPos -> for (1*second) (\\t -> finalPos - t * (finalPos / 1*second))\n\nConsider using the synonym `(+>)` from `Stage.Infix`.",
+        "type": "Stage ForATime a -> (a -> Stage t a) -> Stage t a"
+      },
+      {
+        "name": "cycle",
+        "comment": "Repeat the given `Stage` forever.",
+        "type": "Stage ForATime a -> Stage Forever a"
+      },
+      {
+        "name": "dilate",
+        "comment": "Speed up or slow down time by the given factor. E.g.,\n\n    dilate 0.5 s\n\nis a `Stage` which lasts twice as long as `s` and proceeds half\nas fast",
+        "type": "Float -> Stage t a -> Stage t a"
+      },
+      {
+        "name": "endToEnd",
+        "comment": "Create a signal by chaining together Stages end-to-end.\n    The first argument (perhaps should be a -> Stage Forever a)",
+        "type": "Stage Forever a -> Signal (Stage ForATime a) -> Signal Time -> Signal a"
+      },
+      {
+        "name": "finalValue",
+        "comment": "Get the last value the `Stage` takes on.",
+        "type": "Stage ForATime a -> a"
+      },
+      {
+        "name": "followedBy",
+        "comment": "Sequence two stages. Thinking of stages as functions of\ntime, s1 `followedBy` s2 is a piecewise function which acts like\n`s1` for the duration of s1 and afterwards acts like `s2` (shifted\nby the duration of `s1`). For example, we could write\n\n    for (3 * second) (\\_ -> \"hi\") `followedBy` for (1 * second) (\\_ -> \"bye\")\n\nwhich corresponds to a function of time which is `\"hi\"` for times in\nthe interval `[0, 3]` and `\"bye\"` in the interval `(3, 4]`. Consider \nusing the synonym `(\u003c>)` from `Stage.Infix`.",
+        "type": "Stage ForATime a -> Stage t a -> Stage t a"
+      },
+      {
+        "name": "for",
+        "comment": "Create a `Stage` which runs for the specified duration",
+        "type": "Time -> (Time -> a) -> Stage ForATime a"
+      },
+      {
+        "name": "forever",
+        "comment": "Create a total `Stage`, defined on all times.",
+        "type": "(Time -> a) -> Stage Forever a"
+      },
+      {
+        "name": "map",
+        "comment": "",
+        "type": "(a -> b) -> Stage t a -> Stage t b"
+      },
+      {
+        "name": "run",
+        "comment": "Convert a Signal of `Stage`s into a `Signal` by sampling using the given\n`Signal Time`.",
+        "type": "Signal Time -> Signal (Stage Forever a) -> Signal a"
+      },
+      {
+        "name": "stayFor",
+        "comment": "A constant `Stage`.\n\n    stayFor dur x = for dur (\\_ -> x)",
+        "type": "Time -> a -> Stage ForATime a"
+      },
+      {
+        "name": "stayForever",
+        "comment": "An eternally constant `Stage` \n\n    stayForever x = forever (\\_ -> x)",
+        "type": "a -> Stage Forever a"
+      },
+      {
+        "name": "sustain",
+        "comment": "",
+        "type": "Stage ForATime a -> Stage Forever a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Stage.Infix",
+    "comment": "Infix synonyms. \n# Operators\n@docs (\u003c>), (+>), (>+>)",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "+>",
+        "comment": "(+>) = Stage.chainTo",
+        "type": "Stage ForATime a -> (a -> Stage t a) -> Stage t a",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "\u003c>",
+        "comment": "(\u003c>) = Stage.followedBy",
+        "type": "Stage ForATime a -> Stage t a -> Stage t a",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": ">+>",
+        "comment": "(>+>) f g = \\x -> f x +> g",
+        "type": "(a -> Stage ForATime a) -> (a -> Stage t a) -> a -> Stage t a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Stage.Internal",
+    "comment": "Internal implementation of Stage if you need access to it.\n    This is all subject to change.",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Stage",
+        "comment": "",
+        "args": [
+          "t",
+          "a"
+        ],
+        "cases": [
+          [
+            "Stage",
+            [
+              "Duration",
+              "Time -> a"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Duration",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "ForATime",
+            [
+              "Time"
+            ]
+          ],
+          [
+            "Forever",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "old"
+  }
+]

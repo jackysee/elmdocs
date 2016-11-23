@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Expect",
+    "comment": " Determining whether tests pass or fail.\n\n## Quick Reference\n\n* [`equal`](#equal) `(arg2 == arg1)`\n* [`notEqual`](#notEqual) `(arg2 /= arg1)`\n* [`lessThan`](#lessThan) `(arg2 < arg1)`\n* [`atMost`](#atMost) `(arg2 <= arg1)`\n* [`greaterThan`](#greaterThan) `(arg2 > arg1)`\n* [`atLeast`](#atLeast) `(arg2 >= arg1)`\n* [`true`](#true) `(arg == True)`\n* [`false`](#false) `(arg == False)`\n\n## Basic Expectations\n\n@docs Expectation, equal, notEqual\n\n## Comparisons\n\n@docs lessThan, atMost, greaterThan, atLeast\n\n## Booleans\n\n@docs true, false\n\n## Customizing\n\n@docs pass, fail, onFail, getFailure\n",
+    "aliases": [
+      {
+        "name": "Expectation",
+        "comment": " The result of a single test run: either a [`pass`](#pass) or a\n[`fail`](#fail).\n",
+        "args": [],
+        "type": "Test.Expectation.Expectation"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "atLeast",
+        "comment": " Passes if the second argument is greater than or equal to the first.\n\n    Expect.atLeast -2 (List.length [])\n\n    -- Passes because (0 >= -2) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because (0 >= 3) is False\n    List.length []\n        |> Expect.atLeast 3\n\n    {-\n\n    0\n    ╷\n    │ Expect.atLeast\n    ╵\n    3\n\n    -}\n",
+        "type": "comparable -> comparable -> Expect.Expectation"
+      },
+      {
+        "name": "atMost",
+        "comment": " Passes if the second argument is less than or equal to the first.\n\n    Expect.atMost 1 (List.length [])\n\n    -- Passes because (0 <= 1) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because (0 <= -3) is False\n    List.length []\n        |> Expect.atMost -3\n\n    {-\n\n    0\n    ╷\n    │ Expect.atMost\n    ╵\n    -3\n\n    -}\n",
+        "type": "comparable -> comparable -> Expect.Expectation"
+      },
+      {
+        "name": "equal",
+        "comment": " Passes if the arguments are equal.\n\n    Expect.equal 0 (List.length [])\n\n    -- Passes because (0 == 0) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because the expected value didn't split the space in \"Betty Botter\"\n    String.split \" \" \"Betty Botter bought some butter\"\n        |> Expect.equal [ \"Betty Botter\", \"bought\", \"some\", \"butter\" ]\n\n    {-\n\n    [ \"Betty\", \"Botter\", \"bought\", \"some\", \"butter\" ]\n    ╷\n    │ Expect.equal\n    ╵\n    [ \"Betty Botter\", \"bought\", \"some\", \"butter\" ]\n\n    -}\n",
+        "type": "a -> a -> Expect.Expectation"
+      },
+      {
+        "name": "fail",
+        "comment": " Fails with the given message.\n\n    import Json.Decode exposing (decodeString, int)\n    import Test exposing (test)\n    import Expect\n\n\n    test \"Json.Decode.int can decode the number 42.\" <|\n        \\() ->\n            case decodeString int \"42\" of\n                Ok _ ->\n                    Expect.pass\n\n                Err err ->\n                    Expect.fail err\n",
+        "type": "String -> Expect.Expectation"
+      },
+      {
+        "name": "false",
+        "comment": " Passes if the argument is 'False', and otherwise fails with the given message.\n\n    Expect.false \"Expected the list not to be empty.\" (List.isEmpty [ 42 ])\n\n    -- Passes because (List.isEmpty [ 42 ]) is False\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because (List.isEmpty []) is True\n    List.isEmpty []\n        |> Expect.false \"Expected the list not to be empty.\"\n\n    {-\n\n    Expected the list not to be empty.\n\n    -}\n",
+        "type": "String -> Bool -> Expect.Expectation"
+      },
+      {
+        "name": "getFailure",
+        "comment": " Return `Nothing` if the given [`Expectation`](#Expectation) is a [`pass`](#pass).\n\nIf it is a [`fail`](#fail), return a record containing the failure message,\nalong with the given inputs if it was a fuzz test. (If no inputs were involved,\nthe record's `given` field will be `\"\"`).\n\nFor example, if a fuzz test generates random integers, this might return\n`{ message = \"it was supposed to be positive\", given = \"-1\" }`\n\n    getFailure (Expect.fail \"this failed\")\n    -- Just { message = \"this failed\", given = \"\" }\n\n    getFailure (Expect.pass)\n    -- Nothing\n",
+        "type": "Expect.Expectation -> Maybe.Maybe { given : String, message : String }"
+      },
+      {
+        "name": "greaterThan",
+        "comment": " Passes if the second argument is greater than the first.\n\n    Expect.greaterThan -2 List.length []\n\n    -- Passes because (0 > -2) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because (0 > 1) is False\n    List.length []\n        |> Expect.greaterThan 1\n\n    {-\n\n    0\n    ╷\n    │ Expect.greaterThan\n    ╵\n    1\n\n    -}\n",
+        "type": "comparable -> comparable -> Expect.Expectation"
+      },
+      {
+        "name": "lessThan",
+        "comment": " Passes if the second argument is less than the first.\n\n    Expect.lessThan 1 (List.length [])\n\n    -- Passes because (0 < 1) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because (0 < -1) is False\n    List.length []\n        |> Expect.lessThan -1\n\n\n    {-\n\n    0\n    ╷\n    │ Expect.lessThan\n    ╵\n    -1\n\n    -}\n",
+        "type": "comparable -> comparable -> Expect.Expectation"
+      },
+      {
+        "name": "notEqual",
+        "comment": " Passes if the arguments are not equal.\n\n    Expect.notEqual 11 (90 + 10)\n\n    -- Passes because (11 /= 100) is True\n\nFailures only show one value, because the reason for the failure was that\nboth arguments were equal.\n\n    -- Fails because (100 /= 100) is False\n    (90 + 10)\n        |> Expect.notEqual 100\n\n    {-\n\n    100\n    ╷\n    │ Expect.notEqual\n    ╵\n    100\n\n    -}\n",
+        "type": "a -> a -> Expect.Expectation"
+      },
+      {
+        "name": "onFail",
+        "comment": " If the given expectation fails, replace its failure message with a custom one.\n\n    \"something\"\n        |> Expect.equal \"something else\"\n        |> Expect.onFail \"thought those two strings would be the same\"\n",
+        "type": "String -> Expect.Expectation -> Expect.Expectation"
+      },
+      {
+        "name": "pass",
+        "comment": " Always passes.\n\n    import Json.Decode exposing (decodeString, int)\n    import Test exposing (test)\n    import Expect\n\n\n    test \"Json.Decode.int can decode the number 42.\" <|\n        \\() ->\n            case decodeString int \"42\" of\n                Ok _ ->\n                    Expect.pass\n\n                Err err ->\n                    Expect.fail err\n",
+        "type": "Expect.Expectation"
+      },
+      {
+        "name": "true",
+        "comment": " Passes if the argument is 'True', and otherwise fails with the given message.\n\n    Expect.true \"Expected the list to be empty.\" (List.isEmpty [])\n\n    -- Passes because (List.isEmpty []) is True\n\nFailures resemble code written in pipeline style, so you can tell\nwhich argument is which:\n\n    -- Fails because List.isEmpty returns False, but we expect True.\n    List.isEmpty [ 42 ]\n        |> Expect.true \"Expected the list to be empty.\"\n\n    {-\n\n    Expected the list to be empty.\n\n    -}\n",
+        "type": "String -> Bool -> Expect.Expectation"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

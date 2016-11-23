@@ -1,0 +1,76 @@
+[
+  {
+    "name": "LoadAssets",
+    "comment": "A library providing some utilites for loading a large number of resources\nof different types from a remote origin using HTTP,\nand querying how many of them are loaded.\n\n# Single assets\n@docs Asset, toAsset \n\n# Asset groups loaded together\n@docs Status, toStatus\n\n# Unsafely extracting from Http.request\n@docs fromResponseOrFail",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Status",
+        "comment": "\nStructure holding the load status of a number of assets",
+        "args": [],
+        "cases": [
+          [
+            "InProgress",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Complete",
+            []
+          ],
+          [
+            "Failed",
+            [
+              "List ( Int, String )"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Asset",
+        "comment": "\nGeneric type for any asset which is loaded remotely.",
+        "args": [],
+        "cases": [
+          [
+            "AssetLoading",
+            []
+          ],
+          [
+            "AssetLoaded",
+            []
+          ],
+          [
+            "AssetFailed",
+            [
+              "( Int, String )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "failStrings",
+        "comment": "",
+        "type": "List Asset -> List ( Int, String )"
+      },
+      {
+        "name": "fromResponseOrFail",
+        "comment": "\nGet a value from an HTTP request.\nThis is only safe to call if the asset being retrieved\nis in a load group that has evaluated to `Success`",
+        "type": "Http.Response a -> a"
+      },
+      {
+        "name": "toAsset",
+        "comment": "\nConvert a response of any type to an `Asset`",
+        "type": "Http.Response a -> Asset"
+      },
+      {
+        "name": "toStatus",
+        "comment": "\nGiven a number of assets, generate their load status us a group.\nUseful for progress bars and loading screens.",
+        "type": "List Asset -> Status"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

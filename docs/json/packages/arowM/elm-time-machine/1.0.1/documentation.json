@@ -1,0 +1,55 @@
+[
+  {
+    "name": "TimeMachine",
+    "comment": " This module empower any model to undo/redo feature in the elm architecture way.\n\n# Types\n\n@docs TimeMachine\n\n# Operators for a crew of the time machine\n\n@docs succeed\n@docs modify\n@docs putOff\n\n# Operators to steer the time machine\n\n@docs undo\n@docs mayUndo\n@docs redo\n@docs mayRedo\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "TimeMachine",
+        "comment": " Main data type to hold time machine state.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "mayRedo",
+        "comment": " Same as `undo` but returns `Nothing` if there is no future state.\n",
+        "type": "TimeMachine.TimeMachine a -> Maybe.Maybe (TimeMachine.TimeMachine a)"
+      },
+      {
+        "name": "mayUndo",
+        "comment": " Same as `undo` but returns `Nothing` if there is no past state.\n",
+        "type": "TimeMachine.TimeMachine a -> Maybe.Maybe (TimeMachine.TimeMachine a)"
+      },
+      {
+        "name": "modify",
+        "comment": " The way to edit crew (i.e., model in the `TimeMachine`) from outside of the time machine.\n",
+        "type": "(a -> a) -> TimeMachine.TimeMachine a -> TimeMachine.TimeMachine a"
+      },
+      {
+        "name": "putOff",
+        "comment": " The way to put the crew off.\n",
+        "type": "(a -> b) -> TimeMachine.TimeMachine a -> b"
+      },
+      {
+        "name": "redo",
+        "comment": " A function to get future state of the model.\nIf no more future state exists, just returns as it is.\n",
+        "type": "TimeMachine.TimeMachine a -> TimeMachine.TimeMachine a"
+      },
+      {
+        "name": "succeed",
+        "comment": " The `succeed` just put a model into the time machine.\nThis is the first step if you want to enable the model to undo/redo.\n",
+        "type": "a -> TimeMachine.TimeMachine a"
+      },
+      {
+        "name": "undo",
+        "comment": " A function to get past state of the model.\nIf no more past state exists, just returns as it is.\n",
+        "type": "TimeMachine.TimeMachine a -> TimeMachine.TimeMachine a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

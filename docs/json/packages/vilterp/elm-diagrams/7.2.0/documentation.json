@@ -1,0 +1,982 @@
+[
+  {
+    "name": "Diagrams.Layout",
+    "comment": " A utility for laying out variable-width diagrams.\n\nTODO: generalize to vertical\n\n# Types\n@docs FlexDiagram, Width, LayoutRow\n\n# Layout\n@docs layout\n\n# Primitives\n@docs spring, block, expando, strut\n\n# Helpers\n@docs centered, flexLeft, flexRight, flexCenter, flexAll, hrule\n\n",
+    "aliases": [
+      {
+        "name": "LayoutRow",
+        "comment": "",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "List (Diagrams.Layout.FlexDiagram t a)"
+      },
+      {
+        "name": "Width",
+        "comment": "",
+        "args": [],
+        "type": "Float"
+      }
+    ],
+    "types": [
+      {
+        "name": "FlexDiagram",
+        "comment": " A diagram which can vary its width -- e.g. a spacer or a video\nplayer timeline. ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "block",
+        "comment": " A fixed-size diagram. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Layout.FlexDiagram t a"
+      },
+      {
+        "name": "centered",
+        "comment": " A row in which the given diagram will stay centered. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "expando",
+        "comment": " A diagram which has a minimum width, but can be drawn at any width >= that. ",
+        "type": "Diagrams.Layout.Width -> (Diagrams.Layout.Width -> Diagrams.Type.Diagram t a) -> Diagrams.Layout.FlexDiagram t a"
+      },
+      {
+        "name": "flexAll",
+        "comment": " A row containing a diagram which fills the full width of the row. ",
+        "type": "(Diagrams.Layout.Width -> Diagrams.Type.Diagram t a) -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "flexCenter",
+        "comment": " A row in which the given diagrams will stay glued to the left and right:\nthe center is flexible. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "flexLeft",
+        "comment": " A row in which the given diagram will stay glued to the right:\nthe left side is flexible. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "flexRight",
+        "comment": " A row in which the given diagram will stay glued to the left:\nthe right side is flexible. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "hrule",
+        "comment": " Horizontal rule, with given vertical padding on top and bottom.\n(Kind of like the `<hr/>` element in HTML) ",
+        "type": "Graphics.Collage.LineStyle -> Float -> Diagrams.Layout.LayoutRow t a"
+      },
+      {
+        "name": "layout",
+        "comment": " Given a list of rows of where some of the diagrams in each row\ncan have variable width, stack the rows vertically and decide the width of each\ndiagram such that the width of the whole thing is minimized. ",
+        "type": "List (Diagrams.Layout.LayoutRow t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "spring",
+        "comment": " An invisible spacer which will expand horizontally as far as possible. ",
+        "type": "Diagrams.Layout.FlexDiagram t a"
+      },
+      {
+        "name": "strut",
+        "comment": " A fixed-width spacer. ",
+        "type": "Diagrams.Layout.Width -> Diagrams.Layout.FlexDiagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Debug",
+    "comment": " Utilities for debugging alignment issues, etc.\n\n@docs showBBox, showOrigin\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "showBBox",
+        "comment": " Draw a red dot box around a diagram. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "showOrigin",
+        "comment": " Draw a red dot at `(0, 0)` in the diagram's local vector space. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Pad",
+    "comment": " Surround diagrams with padding.\n\n@docs padSpecific, pad, background, outlineBox\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "background",
+        "comment": " Put a rectangle behind the given diagram, matching its bounding box. ",
+        "type": "Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "outlineBox",
+        "comment": " Draw a box around the given diagram ",
+        "type": "Graphics.Collage.LineStyle -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "pad",
+        "comment": " Return given diagram surrounded by given padding on all sides. ",
+        "type": "Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "padSpecific",
+        "comment": " Given four numbers up, down, left, and right, put an invisible spacer\nbehind the given diagram, changing its envelope. ",
+        "type": "Float -> Float -> Float -> Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Interact",
+    "comment": " An abstraction for making diagrams which change as a function of the mouse.\n\nAttach `ActionSet`s (see `Diagrams.Actions`) to diagrams with `Core.tagWithActions`;\nthen use `interactFold` or `update` to process mouse interaction. Mouse state (what \nis being clicked on, etc) is wrapped up inside an `InteractionState` value.\n\n`updateModel` can be used to push in updates from external sources.\n\nLook at GraphEditor for an example. (TODO: better docs / tutorial; explore using\nMailboxes to push out updates)\n\n# Function Types\n@docs RenderFunc, UpdateFunc\n\n# Interaction\n@docs InteractionState, MouseState, initInteractState\n@docs initMouseState, interactFold, update, updateModel\n@docs processMouseEvent\n\n",
+    "aliases": [
+      {
+        "name": "InteractionState",
+        "comment": "",
+        "args": [
+          "m",
+          "t",
+          "a"
+        ],
+        "type": "{ mouseState : Diagrams.Interact.MouseState t a , diagram : Diagrams.Type.Diagram t a , modelState : m , renderFunc : Diagrams.Interact.RenderFunc m t a , updateFunc : Diagrams.Interact.UpdateFunc m a }"
+      },
+      {
+        "name": "MouseState",
+        "comment": "",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "{ isDown : Bool , overPickedTags : List (Diagrams.Interact.PickedTag t a) , overPathsOnMouseDown : Maybe.Maybe (List (List t)) }"
+      },
+      {
+        "name": "RenderFunc",
+        "comment": "",
+        "args": [
+          "m",
+          "t",
+          "a"
+        ],
+        "type": "m -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "UpdateFunc",
+        "comment": "",
+        "args": [
+          "m",
+          "a"
+        ],
+        "type": "a -> m -> m"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initInteractState",
+        "comment": "",
+        "type": "Diagrams.Interact.UpdateFunc m a -> Diagrams.Interact.RenderFunc m t a -> m -> Diagrams.Interact.InteractionState m t a"
+      },
+      {
+        "name": "initMouseState",
+        "comment": "",
+        "type": "Diagrams.Interact.MouseState t a"
+      },
+      {
+        "name": "interactFold",
+        "comment": " One top-level interface to this module. Given\n- how to update the state (type `m`) given an action (type `a`),\n- how to render a diagram given the state,\n- and how to compute the location of the collage on screen from the window dimensions,\nReturn a signal of diagrams.\n\nSince it returns a signal, you should only use it if this is the top-level interaction of your app; i.e.\nyou aren't making a component that's nestable inside others as in the Elm Architecture. To make a component,\nuse `update` to build an update function.\n",
+        "type": "Diagrams.Interact.UpdateFunc m a -> Diagrams.Interact.RenderFunc m t a -> Diagrams.Wiring.CollageLocFunc -> m -> Signal.Signal (Diagrams.Type.Diagram t a)"
+      },
+      {
+        "name": "processMouseEvent",
+        "comment": " Given diagram with mouse state (`MouseDiagram`), mouse event, and dimensions of collage, return\nnew `MouseDiagram` with list of actions triggered by this mouse event. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Interact.MouseState t a -> Diagrams.Wiring.PrimMouseEvent -> ( Diagrams.Interact.MouseState t a, List a )"
+      },
+      {
+        "name": "update",
+        "comment": " Function to update the interaction state, given an event (probably from `Diagrams.Wiring`'s `makeUpdateStream`)\n-- the other top-level interface. ",
+        "type": "( Diagrams.Wiring.CollageLocation, Diagrams.Wiring.PrimMouseEvent ) -> Diagrams.Interact.InteractionState m t a -> Diagrams.Interact.InteractionState m t a"
+      },
+      {
+        "name": "updateModel",
+        "comment": "",
+        "type": "(m -> m) -> Diagrams.Interact.InteractionState m t a -> Diagrams.Interact.InteractionState m t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Align",
+    "comment": "\n# Relative Positioning\n@docs beside, above, atop, hcat, vcat, zcat\n\n# Moving the origin\n@docs alignLeft, alignRight, alignTop, alignBottom, alignCenter, hAlign, vAlign\n\n# Aligning lists of diagrams\n@docs HAlign, VAlign, hcatA, vcatA\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "HAlign",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "LeftA",
+            []
+          ],
+          [
+            "RightA",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "VAlign",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "TopA",
+            []
+          ],
+          [
+            "BottomA",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "above",
+        "comment": " Given two diagrams a and b, place b to the right of a, such that their origins\nare on a horizontal line and their envelopes touch. The origin of the new diagram\nis the origin of a. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "alignBottom",
+        "comment": " Translate a diagram such that the origin is on the bottom edge of the bounding box ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "alignCenter",
+        "comment": " Translate a diagram such that the envelope in all directions is equal ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "alignLeft",
+        "comment": " Translate a diagram such that the origin is on the left edge of the bounding box ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "alignRight",
+        "comment": " Translate a diagram such that the origin is on the right edge of the bounding box ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "alignTop",
+        "comment": " Translate a diagram such that the origin is on the top edge of the bounding box ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "atop",
+        "comment": " Given two diagrams a and b, stack a on top of b in the \"out of page\" axis,\nso a occludes b. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "beside",
+        "comment": " Given two diagrams a and b, place b to the right of a, such that their origins\nare on a horizontal line and their envelopes touch. The origin of the new diagram\nis the origin of a. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "hAlign",
+        "comment": " Choose alignLeft or alignRight based on the given `HAlign`. ",
+        "type": "Diagrams.Align.HAlign -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "hcat",
+        "comment": " Place a list of Diagrams next to each other, such that\ntheir origins are along a horizontal line. The first element in the list will\nbe on the left; the last on the right. ",
+        "type": "List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "hcatA",
+        "comment": " Align a list of diagrams along a horizontal line according to the\ngiven `VAlign`. ",
+        "type": "Diagrams.Align.VAlign -> List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "vAlign",
+        "comment": " Choose alignTop or alignBottom based on the given `VAlign`. ",
+        "type": "Diagrams.Align.VAlign -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "vcat",
+        "comment": " Place a list of Diagrams next to each other, such that\ntheir origins are along a vertical line. The first element in the list will\nbe on the top; the last on the bottom. ",
+        "type": "List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "vcatA",
+        "comment": " Align a list of diagrams along a vertical line according to the\ngiven `HAlign`. ",
+        "type": "Diagrams.Align.HAlign -> List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "zcat",
+        "comment": " Place a list of diagrams on top of each other, with their origin points\nstacked on the \"out of page\" axis. The first diagram in the list is on top.\nThis is the same as the `group`. ",
+        "type": "List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Bezier",
+    "comment": " Generate bezier paths as lists of points.\nAdapted from [this gist](https://gist.github.com/irrwitz/968b9762819974c92c9f).\n\n@docs bezier\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bezier",
+        "comment": " Given four points a, cp1, cp2, b, return path diagram which is a bezier\ncurve from a to b, using cp1 and cp2 as control points. ",
+        "type": "Diagrams.Geom.Point -> Diagrams.Geom.Point -> Diagrams.Geom.Point -> Diagrams.Geom.Point -> Graphics.Collage.LineStyle -> Diagrams.Type.Diagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Query",
+    "comment": " Retreive information about laid-out diagrams.\n\n# Pick\n@docs pick, PickTree\n\n# Get Coordinates\n@docs getCoords, TagPath\n",
+    "aliases": [
+      {
+        "name": "TagPath",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "List a"
+      }
+    ],
+    "types": [
+      {
+        "name": "PickTree",
+        "comment": " Result of `pick`: tree representing the subtree of the Diagram the\ngiven point is over.\n\n- Leaf nodes mean the mouse is over a primitive shape (rect, text, etc)\n- Tag nodes mean the child of this pickTree is under that tag.\n- Layers mean that the mouse is over two overlapping diagrams. The\n  pick trees for these diagrams are given in a list starting with the\n  one on top. ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "cases": [
+          [
+            "PickLayers",
+            [
+              "List (Diagrams.Query.PickTree t a)"
+            ]
+          ],
+          [
+            "PickLeaf",
+            []
+          ],
+          [
+            "PickTag",
+            [
+              "{ tag : t , offset : Diagrams.Geom.Point , actionSet : Diagrams.Actions.ActionSet t a , child : Diagrams.Query.PickTree t a }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getCoords",
+        "comment": " Try to find a subDiagram t at the given tag path. If it is found,\nreturn `Just` the coordinates of its origin relative to the origin of this diagram.\nIf it isn't found, return `Nothing`. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Query.TagPath t -> Maybe.Maybe Diagrams.Geom.Point"
+      },
+      {
+        "name": "pick",
+        "comment": " Given a diagram and a point (e.g. of the mouse), return a `PickTree`, which represents\nwhat subtree of the diagram that point is currently over. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Geom.Point -> Maybe.Maybe (Diagrams.Query.PickTree t a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Envelope",
+    "comment": "\n@docs envelope, width, height, boundingBox\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "boundingBox",
+        "comment": " Box formed by taking the envelope in all directions. ",
+        "type": "Diagrams.Type.Diagram t a -> Diagrams.Geom.BBox"
+      },
+      {
+        "name": "envelope",
+        "comment": " Given a diagram and a Direction, return the distance in that direction from the origin\nto the closest line perpendicular to that direction which doesn't intersect the content of\nthe diagram. See the [Haskell diagrams docs][hd] for a visual explanation.\n\n [hd]: http://projects.haskell.org/diagrams/doc/manual.html#envelopes-and-local-vector-spaces\n",
+        "type": "Diagrams.Geom.Direction -> Diagrams.Type.Diagram t a -> Float"
+      },
+      {
+        "name": "height",
+        "comment": "",
+        "type": "Diagrams.Type.Diagram t a -> Float"
+      },
+      {
+        "name": "width",
+        "comment": "",
+        "type": "Diagrams.Type.Diagram t a -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.FullWindow",
+    "comment": " Utilities for when you just want to get a diagram on the whole screen.\n\nSee `Diagrams.Wiring` docs for more info on `CollageLocation`s.\n\n@docs fullWindowCollageLocFunc, fullWindowCollageLoc, fullWindowUpdates, fullWindowMain, fullWindowView\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fullWindowCollageLoc",
+        "comment": " Signal of full-window collage locations, updating as the window size changes. ",
+        "type": "Signal.Signal Diagrams.Wiring.CollageLocation"
+      },
+      {
+        "name": "fullWindowCollageLocFunc",
+        "comment": " A location function which always returns a `CollageLocation` in the middle of the window,\nfilling the whole window. ",
+        "type": "Diagrams.Wiring.CollageLocFunc"
+      },
+      {
+        "name": "fullWindowMain",
+        "comment": " The easiest way to get a diagram on the screen:\n\n    main = fullWindowMain (rect 10 10 (justFill <| Solid Color.orange))\n",
+        "type": "Diagrams.Type.Diagram t a -> Signal.Signal Graphics.Element.Element"
+      },
+      {
+        "name": "fullWindowUpdates",
+        "comment": " Signal of location and mouse updates for when diagram is filling the whole screen. ",
+        "type": "Signal.Signal ( Diagrams.Wiring.CollageLocation, Diagrams.Wiring.PrimMouseEvent )"
+      },
+      {
+        "name": "fullWindowView",
+        "comment": "",
+        "type": "( Int, Int ) -> Diagrams.Type.Diagram t a -> Graphics.Element.Element"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Core",
+    "comment": " Diagrams is a library built on top of `Graphics.Collage` which allows you to\nconstruct graphics by laying out elements relative to each other.\n\nA Diagram is represented as a tree of elements, where the leaves are primitive\nshapes like rectangles, circles, paths and text and the nodes are transformations\nlike translation, rotation, and scaling.\n\nThere are also `Group` nodes. These have multiple children which are transformed\nsimultaneously by the transformations above them.\n\n[Sierpinski triangle example](https://gist.github.com/vilterp/9966fd18de8d9b282ade)\n\nLastly, there are `Tag` nodes which just hold a child Diagram t and a value of type a;\nthese exist solely to identify a subdiagram, for the purposes of (a) specifying a tag\npath and getting the coordinates it was positioned at (the `getCoords` function) or\n(b) given a point, find what subtree it is over (the `pick` function).\n\nUsing signals to compose `pick` with mouse clicks, you can create a signal of\nclicked-on elements. Folding this with the application state and re-rendering, you\ncan make an interface which is responsive to the mouse without channels.\n\nThe library is based on the excellent [Diagrams][hd] library for Haskell, which\nhas a nice [visual tutorial][hd-tut]. Things are named slightly differently, and this\nversion is missing a lot of features and generality.\n\nWith v5.0 the functionality has been split into many modules to make it more manageable;\nthis [graph of their dependencies][mod-graph] may be helpful. Not sure if a `Prelude` module\nwhich exports everything is a good idea.\n\n [hd]: http://projects.haskell.org/diagrams/\n [hd-tut]: http://projects.haskell.org/diagrams/doc/quickstart.html\n [mod-graph]: https://docs.google.com/drawings/d/1_321XRPhfP8t0u747QhNwR_PiibVHroxcioLq-vHdq8/edit\n\n# Constructors\n@docs circle, rect, path, polygon, text, spacer, transform, group, tag, tagWithActions, ngon, eqTriangle\n\n# Basic Transforms\n@docs move, moveX, moveY, scale, rotate\n\n# Rendering\n@docs render\n\n# Composition Utilities\n@docs empty, vspace, hspace, vline, hline\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "circle",
+        "comment": " Circle with a given radius and fill, centered on the local origin. ",
+        "type": "Float -> Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "empty",
+        "comment": "",
+        "type": "Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "eqTriangle",
+        "comment": " equilateral triangle with given side length & fill/stroke style ",
+        "type": "Float -> Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "group",
+        "comment": " Group a list of Diagrams in to one. Elements will be stacked with local origins\non top of one another. This is the same as `zcat`. The first diagram in the list is on top. ",
+        "type": "List (Diagrams.Type.Diagram t a) -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "hline",
+        "comment": " Horizontal line of given width and line style ",
+        "type": "Float -> Graphics.Collage.LineStyle -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "hspace",
+        "comment": " Horizontal spacer of width w ",
+        "type": "Float -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "move",
+        "comment": " Translate given diagram by (x, y). Origin of resulting diagram is the same. ",
+        "type": "( Float, Float ) -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "moveX",
+        "comment": "",
+        "type": "Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "moveY",
+        "comment": "",
+        "type": "Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "ngon",
+        "comment": " regular polygon with number of sides, side length, & fill/stroke style ",
+        "type": "Int -> Float -> Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "path",
+        "comment": " Unclosed path made of this list of points, laid out relative to the local origin. ",
+        "type": "List Diagrams.Geom.Point -> Graphics.Collage.LineStyle -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "polygon",
+        "comment": "",
+        "type": "List Diagrams.Geom.Point -> Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "rect",
+        "comment": " Rectangle with given width, height, and fill, centered on the local origin. ",
+        "type": "Float -> Float -> Diagrams.FillStroke.FillStroke -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "render",
+        "comment": "",
+        "type": "Diagrams.Type.Diagram t a -> Graphics.Collage.Form"
+      },
+      {
+        "name": "rotate",
+        "comment": " Rotate the given diagram counterclockwise. Angle specified in radians. ",
+        "type": "Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "scale",
+        "comment": "",
+        "type": "Float -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "spacer",
+        "comment": " Spacer with given width and height; renders as transparent. ",
+        "type": "Float -> Float -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "tag",
+        "comment": " Return a Tag node with the given Diagram as its sole child. Adding this to the \ndiagram tree is useful for picking and getting coordinates. ",
+        "type": "t -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "tagWithActions",
+        "comment": " Return a Tag node with the given Diagram as its sole child, holding both\na tag and an action set. ",
+        "type": "t -> Diagrams.Actions.ActionSet t a -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "text",
+        "comment": " Text with given style, centered vertically and horizontally on the local origin. ",
+        "type": "Text.Style -> String -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "transform",
+        "comment": " Translate, rotate, or scale a given diagram. The transformed diagram has the\nsame origin. ",
+        "type": "Diagrams.Geom.Transform -> Diagrams.Type.Diagram t a -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "vline",
+        "comment": " Vertical line of given height and line style ",
+        "type": "Float -> Graphics.Collage.LineStyle -> Diagrams.Type.Diagram t a"
+      },
+      {
+        "name": "vspace",
+        "comment": " Vertical spacer of height h ",
+        "type": "Float -> Diagrams.Type.Diagram t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Type",
+    "comment": "\n@docs Diagram\n",
+    "aliases": [
+      {
+        "name": "Diagram",
+        "comment": " A diagram. See `Diagrams.Core` for constructor functions. ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "Diagrams.RealType.Diagram t a"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Actions",
+    "comment": " ActionSets can be attached to diagrams with `Core.tagWithActions`, and used\nwith module `Diagrams.Interact`. Build them with e.g.\n    \n    { emptyActionSet | click = Just <| keepBubbling <| \\(MouseEvent evt) -> SomeAction evt.offset }\n\n(Will probably think of helpers to make this more concise later). See the `Diagrams.Interact` docs\nand the GraphEditor example for more info on how to use actions, including how bubbling works.\n\n# Types\n@docs ActionSet, MouseEvent, PickPath, PickPathElem, EventToAction\n\n# Helpers\n@docs emptyActionSet, keepBubbling, stopBubbling, mousePosAtPath\n",
+    "aliases": [
+      {
+        "name": "ActionSet",
+        "comment": "",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "{ click : Maybe.Maybe (Diagrams.Actions.EventToAction t a) , mouseEnter : Maybe.Maybe (Diagrams.Actions.EventToAction t a) , mouseLeave : Maybe.Maybe (Diagrams.Actions.EventToAction t a) , mouseMove : Maybe.Maybe (Diagrams.Actions.EventToAction t a) , mouseDown : Maybe.Maybe (Diagrams.Actions.EventToAction t a) , mouseUp : Maybe.Maybe (Diagrams.Actions.EventToAction t a) }"
+      },
+      {
+        "name": "EventToAction",
+        "comment": " Given an event, return (a) an action resulting from that event, and (b) whether to stop this\nmouse event from \"bubbling up\" to handlers higher up the tree. ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "type": "Diagrams.Actions.MouseEvent t a -> ( List a, Bool )"
+      },
+      {
+        "name": "PickPath",
+        "comment": "",
+        "args": [
+          "t"
+        ],
+        "type": "List (Diagrams.Actions.PickPathElem t)"
+      },
+      {
+        "name": "PickPathElem",
+        "comment": "",
+        "args": [
+          "t"
+        ],
+        "type": "{ tag : t, offset : Diagrams.Geom.Point }"
+      }
+    ],
+    "types": [
+      {
+        "name": "MouseEvent",
+        "comment": " Path: list of (tag, offset) from bottom of tree to top.\nOffset: offset at lowest level in tree. ",
+        "args": [
+          "t",
+          "a"
+        ],
+        "cases": [
+          [
+            "MouseEvent",
+            [
+              "{ offset : Diagrams.Geom.Point, path : Diagrams.Actions.PickPath t }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "emptyActionSet",
+        "comment": "",
+        "type": "Diagrams.Actions.ActionSet t a"
+      },
+      {
+        "name": "keepBubbling",
+        "comment": "",
+        "type": "(Diagrams.Actions.MouseEvent t a -> List a) -> Diagrams.Actions.EventToAction t a"
+      },
+      {
+        "name": "mousePosAtPath",
+        "comment": "",
+        "type": "Diagrams.Actions.MouseEvent t a -> List t -> Maybe.Maybe Diagrams.Geom.Point"
+      },
+      {
+        "name": "stopBubbling",
+        "comment": "",
+        "type": "(Diagrams.Actions.MouseEvent t a -> List a) -> Diagrams.Actions.EventToAction t a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Wiring",
+    "comment": " Functions and types for getting a (possibly interactive) diagram onto the screen.\n\n# Types\n@docs CollageLocation, PrimMouseEvent, PrimMouseEvtType, CollageLocFunc\n\n# Functions\n@docs makeUpdateStream, mouseEvents, offsetMousePos\n\n# Input Signals\n@docs floatMousePos, floatWindowDims, toPoint\n",
+    "aliases": [
+      {
+        "name": "CollageLocFunc",
+        "comment": " Given window size, where on screen and how big is your collage? ",
+        "args": [],
+        "type": "Diagrams.Geom.Dims -> Diagrams.Wiring.CollageLocation"
+      },
+      {
+        "name": "CollageLocation",
+        "comment": " Position of a rectangle on the screen in which a diagram will be drawn (as a `Graphics.Collage`).\nOffset is difference between top left of screen and top left of collage, increasing right and down. ",
+        "args": [],
+        "type": "Diagrams.Geom.OffsetDimsBox"
+      },
+      {
+        "name": "PrimMouseEvent",
+        "comment": "",
+        "args": [],
+        "type": "( Diagrams.Wiring.PrimMouseEvtType, Diagrams.Geom.Point )"
+      }
+    ],
+    "types": [
+      {
+        "name": "PrimMouseEvtType",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "MouseUpEvt",
+            []
+          ],
+          [
+            "MouseDownEvt",
+            []
+          ],
+          [
+            "MouseMoveEvt",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "floatMousePos",
+        "comment": "",
+        "type": "Signal.Signal Diagrams.Geom.Point"
+      },
+      {
+        "name": "floatWindowDims",
+        "comment": "",
+        "type": "Signal.Signal Diagrams.Geom.Dims"
+      },
+      {
+        "name": "makeUpdateStream",
+        "comment": " Given collage location function, return stream of (collage location, mouse event)\npairs, where mouse coordinates are relative to the center of the collage at its present\nlocation, and increasing up and to the right. ",
+        "type": "Diagrams.Wiring.CollageLocFunc -> Signal.Signal ( Diagrams.Wiring.CollageLocation, Diagrams.Wiring.PrimMouseEvent )"
+      },
+      {
+        "name": "mouseEvents",
+        "comment": " Given a signal of collage locations, return a signal of mouse events offset from the\ncenter of that location. ",
+        "type": "Signal.Signal Diagrams.Wiring.CollageLocation -> Signal.Signal Diagrams.Wiring.PrimMouseEvent"
+      },
+      {
+        "name": "offsetMousePos",
+        "comment": " Given the position of the top-left of a collage (from the top-left of the screen; coords increasing right and down)\nand the dimensions of the collage, return a signal of the mouse position relative to the center of that collage,\nand increasing up and to the right instead of down and to the right. ",
+        "type": "Diagrams.Wiring.CollageLocation -> Diagrams.Geom.Point -> Diagrams.Geom.Point"
+      },
+      {
+        "name": "toPoint",
+        "comment": "",
+        "type": "( Int, Int ) -> Diagrams.Geom.Point"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.Geom",
+    "comment": " Geometry utilities used by the rest of the library.\n\n# Transforms\n@docs Transform, applyTrans, invertTrans\n\n# Points\n@docs Point, magnitude, pointAdd, pointNegate, pointSubtract\n\n# Boxes\n@docs BBox, OffsetDimsBox, Dims, bbox2offsetDims, pointInside\n\n# Other\n@docs lerp, Direction, directionAngle\n",
+    "aliases": [
+      {
+        "name": "BBox",
+        "comment": " Bounding box ",
+        "args": [],
+        "type": "{ up : Float, down : Float, left : Float, right : Float }"
+      },
+      {
+        "name": "Dims",
+        "comment": " Dimensions ",
+        "args": [],
+        "type": "{ width : Float, height : Float }"
+      },
+      {
+        "name": "OffsetDimsBox",
+        "comment": " A box defined by its offset and dimensions ",
+        "args": [],
+        "type": "{ offset : ( Float, Float ), dims : Diagrams.Geom.Dims }"
+      },
+      {
+        "name": "Point",
+        "comment": "",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Direction",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            []
+          ],
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Transform",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Translate",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "Rotate",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Scale",
+            [
+              "Float"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "applyTrans",
+        "comment": "",
+        "type": "Diagrams.Geom.Transform -> Diagrams.Geom.Point -> Diagrams.Geom.Point"
+      },
+      {
+        "name": "bbox2offsetDims",
+        "comment": "",
+        "type": "Diagrams.Geom.BBox -> Diagrams.Geom.OffsetDimsBox"
+      },
+      {
+        "name": "directionAngle",
+        "comment": " Given a direction, return an angle in radians. ",
+        "type": "Diagrams.Geom.Direction -> Float"
+      },
+      {
+        "name": "invertTrans",
+        "comment": "",
+        "type": "Diagrams.Geom.Transform -> Diagrams.Geom.Transform"
+      },
+      {
+        "name": "lerp",
+        "comment": " linear interpolation. To map x from interval (imin, imax) to (omin, omax), use:\n\n    lerp (omin, omax) (imin, imax) x\n\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Float -> Float"
+      },
+      {
+        "name": "magnitude",
+        "comment": "",
+        "type": "Diagrams.Geom.Point -> Float"
+      },
+      {
+        "name": "pointAdd",
+        "comment": "",
+        "type": "Diagrams.Geom.Point -> Diagrams.Geom.Point -> Diagrams.Geom.Point"
+      },
+      {
+        "name": "pointInside",
+        "comment": "",
+        "type": "Diagrams.Geom.Point -> Diagrams.Geom.OffsetDimsBox -> Bool"
+      },
+      {
+        "name": "pointNegate",
+        "comment": "",
+        "type": "Diagrams.Geom.Point -> Diagrams.Geom.Point"
+      },
+      {
+        "name": "pointSubtract",
+        "comment": "",
+        "type": "Diagrams.Geom.Point -> Diagrams.Geom.Point -> Diagrams.Geom.Point"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Diagrams.FillStroke",
+    "comment": " Construct fills and strokes for diagrams.\n\n# Types\n@docs FillStroke, FillStyle\n\n# Constructors\n@docs justFill, justStroke, fillAndStroke, invisible, justSolidFill, withAlpha, defaultStroke, halfStrokeWidth\n",
+    "aliases": [
+      {
+        "name": "FillStroke",
+        "comment": "",
+        "args": [],
+        "type": "{ fill : Maybe.Maybe Diagrams.FillStroke.FillStyle , stroke : Maybe.Maybe Graphics.Collage.LineStyle }"
+      }
+    ],
+    "types": [
+      {
+        "name": "FillStyle",
+        "comment": " literally a copy of Graphics.Collage.FillStyle, cuz it's no longer exported ",
+        "args": [],
+        "cases": [
+          [
+            "Solid",
+            [
+              "Color.Color"
+            ]
+          ],
+          [
+            "Texture",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Grad",
+            [
+              "Color.Gradient"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultStroke",
+        "comment": "",
+        "type": "Graphics.Collage.LineStyle"
+      },
+      {
+        "name": "fillAndStroke",
+        "comment": "",
+        "type": "Diagrams.FillStroke.FillStyle -> Graphics.Collage.LineStyle -> Diagrams.FillStroke.FillStroke"
+      },
+      {
+        "name": "halfStrokeWidth",
+        "comment": "",
+        "type": "Diagrams.FillStroke.FillStroke -> Float"
+      },
+      {
+        "name": "invisible",
+        "comment": "",
+        "type": "Diagrams.FillStroke.FillStroke"
+      },
+      {
+        "name": "justFill",
+        "comment": "",
+        "type": "Diagrams.FillStroke.FillStyle -> Diagrams.FillStroke.FillStroke"
+      },
+      {
+        "name": "justSolidFill",
+        "comment": "",
+        "type": "Color.Color -> Diagrams.FillStroke.FillStroke"
+      },
+      {
+        "name": "justStroke",
+        "comment": "",
+        "type": "Graphics.Collage.LineStyle -> Diagrams.FillStroke.FillStroke"
+      },
+      {
+        "name": "withAlpha",
+        "comment": "",
+        "type": "Float -> Color.Color -> Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

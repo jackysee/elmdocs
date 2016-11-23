@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Stateful",
+    "comment": "# Stateful\n\nThis library enables stateful computations, e.g. functions which, besides returning a value, can read and modify hidden state values.\n\nThink of a random generator which produces a random value but needs to read and modify a seed value.\n\n# Primitives\n@docs Stateful, return, run, get, put, modify\n# Composition\n@docs map, andMap, andThen, sequence",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": "`andMap` can lift a function returned by stateful computation to a function between stateful computations instead. This generalizes `map` to functions with more than one argument:\n\n    (+) `map` get `andMap` get\n\nThis will lift `(+)` to work on stateful computations (here it's `get` twice). It's similar to `Signal.~` as `map` is to `Signal.\u003c~`.\nI find this more convenient than providing `mapN` functions.",
+        "type": "Stateful s (a -> b) -> Stateful s a -> Stateful s b"
+      },
+      {
+        "name": "andThen",
+        "comment": "`andThen` allows to chain computations depending on their return values.\n`andThen stateful f` produces a stateful computation which, when run, will ask `f` with the return value of `stateful` for a follow-up computation which will then operate on the updated state.",
+        "type": "Stateful s a -> (a -> Stateful s b) -> Stateful s b"
+      },
+      {
+        "name": "get",
+        "comment": "`get` is a stateful computation which evaluates to the curren state. This is useful to read out the state without breaking the abstraction boundary of the `Stateful` type.",
+        "type": "Stateful s s"
+      },
+      {
+        "name": "map",
+        "comment": "`map f stateful` applies `f` to the return value of `stateful` upon evaluation and returns that value.",
+        "type": "(a -> b) -> Stateful s a -> Stateful s b"
+      },
+      {
+        "name": "modify",
+        "comment": "`modify modifier` is a stateful computation which asks `modifier` for a replacement for the current state. It's like a `get` followed by a `put`.",
+        "type": "(s -> s) -> Stateful s ()"
+      },
+      {
+        "name": "put",
+        "comment": "`put newState` is a stateful computation which replaces the current state with `newState` and evaluates to nothing interesting.",
+        "type": "s -> Stateful s ()"
+      },
+      {
+        "name": "return",
+        "comment": "`return val` creates a new (not so) stateful computation which simply evaluates to `val` when run and doesn't access the state in any way.",
+        "type": "a -> Stateful s a"
+      },
+      {
+        "name": "run",
+        "comment": "`run state seed` runs `stateful` starting on the initial state `seed`. The computation is evaluated to something of type `a` and also spits out the updated state variable.",
+        "type": "Stateful s a -> s -> ( a, s )"
+      },
+      {
+        "name": "sequence",
+        "comment": "`sequence statefuls` chains the list of stateful computations `statefuls` into a single stateful computation returning all intermediate return values as a list.\nIt passes the state value through each computation and feeds the follow-up with the modified state.\n\nTo illustrate that with the auto-incrementing column ID generator from the README:\n\n    nextId : Stateful Int Int\n    nextId =\n      Stateful.get `Stateful.andThen` \\id ->\n      Stateful.put (id + 1) `Stateful.andThen` \\_ ->\n      Stateful.return id\n\n    threeIds : List Int\n    threeIds =\n      fst \u003c| Stateful.run\n        (Stateful.sequence\n          [ nextId\n          , nextId\n          , nextId\n          ])\n        3\n    -- threeIds = [3, 4, 5]",
+        "type": "List (Stateful s a) -> Stateful s (List a)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

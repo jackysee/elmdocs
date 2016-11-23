@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Codec.JsonTape.Encode",
+    "comment": " This module provides JSON encoder of a directory tree.\n\n@docs dirTree\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dirTree",
+        "comment": " JSON encoder to json-tape format.\n",
+        "type": "Codec.JsonTape.DirTree -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Codec.JsonTape.Decode",
+    "comment": " This module provides JSON decoder of a directory tree.\n\n@docs dirTree\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dirTree",
+        "comment": " JSON decoder of json-tape format.\n",
+        "type": "Json.Decode.Decoder Codec.JsonTape.DirTree"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Codec.JsonTape",
+    "comment": " This module describes data structures representing files and directories and functions for manipulating them.\n\n# Data structure\n@docs DirTree\n\n# File manipulation\n@docs getObject, readFileRaw, readFile\n\n# Helpers\n@docs getName\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DirTree",
+        "comment": " Data structure representing a directory tree.\n",
+        "args": [],
+        "cases": [
+          [
+            "Dir",
+            [
+              "{ name : Codec.JsonTape.FileName , contents : List Codec.JsonTape.DirTree }"
+            ]
+          ],
+          [
+            "File",
+            [
+              "{ name : Codec.JsonTape.FileName, file : String }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getName",
+        "comment": " Auxilliary function for circumventing the type system.\n",
+        "type": "Codec.JsonTape.DirTree -> Codec.JsonTape.FileName"
+      },
+      {
+        "name": "getObject",
+        "comment": " Traverse the directory tree along path and return the seeked object.\n",
+        "type": "Codec.JsonTape.Path -> Codec.JsonTape.DirTree -> Result.Result String Codec.JsonTape.DirTree"
+      },
+      {
+        "name": "readFile",
+        "comment": " Traverse the directory tree along path and return the content of the found file after base64 decoding it.\n",
+        "type": "Codec.JsonTape.Path -> Codec.JsonTape.DirTree -> Result.Result String String"
+      },
+      {
+        "name": "readFileRaw",
+        "comment": " Traverse the directory tree along path and return the content of the found file.\n",
+        "type": "Codec.JsonTape.Path -> Codec.JsonTape.DirTree -> Result.Result String String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

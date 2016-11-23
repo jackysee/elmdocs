@@ -1,0 +1,121 @@
+[
+  {
+    "name": "PackageInfo",
+    "comment": " Types and JSON helpers for loading and manipulating the contents of an\nelm-package.json file\n\n# Types\n@docs PackageInfo, Dependency\n\n# JSON\n@docs decoder, encoder\n",
+    "aliases": [
+      {
+        "name": "Dependency",
+        "comment": " A dependency of a package, by name and version constraints\n",
+        "args": [],
+        "type": "{ name : String , versionRange : PackageInfo.VersionRange.VersionRange }"
+      },
+      {
+        "name": "PackageInfo",
+        "comment": " All data that can be found in an elm-package.json file\n",
+        "args": [],
+        "type": "{ version : PackageInfo.Version.Version , summary : String , repository : String , license : String , sourceDirectories : List String , exposedModules : List String , dependencies : List PackageInfo.Dependency , elmVersion : PackageInfo.VersionRange.VersionRange , nativeModules : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decoder",
+        "comment": " A decoder for the contents of an elm-package.json file\n",
+        "type": "Json.Decode.Decoder PackageInfo.PackageInfo"
+      },
+      {
+        "name": "encoder",
+        "comment": " An encoder to generate the JSON expected to be in an elm-package.json file\nfrom the PackageInfo type\n",
+        "type": "PackageInfo.PackageInfo -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "PackageInfo.VersionRange",
+    "comment": " A type and functions for managing version range constraint expressions found\nin an elm-package.json file\n\n# Type\n@docs VersionRange\n\n# Creation\n@docs enclosing\n\n# Comparison\n@docs contains\n\n# Strings\n@docs toString, fromString\n\n# JSON\n@docs decoder, encoder\n",
+    "aliases": [
+      {
+        "name": "VersionRange",
+        "comment": " Represents the contents of a version range constraint, expressed as\n\"X1.Y1.Z1 <= v < X2.Y2.Z2\" in an elm-package.json file\n",
+        "args": [],
+        "type": "{ minimum : PackageInfo.Version.Version , maximum : PackageInfo.Version.Version }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "contains",
+        "comment": " Determine whether the given Version falls inside of the given VersionRange\n",
+        "type": "PackageInfo.Version.Version -> PackageInfo.VersionRange.VersionRange -> Bool"
+      },
+      {
+        "name": "decoder",
+        "comment": " Decode a JSON string of the format \"X1.Y1.Z1 <= v < X2.Y2.Z2\" as a\nVersionRange\n",
+        "type": "Json.Decode.Decoder PackageInfo.VersionRange.VersionRange"
+      },
+      {
+        "name": "enclosing",
+        "comment": " Create a VersionRange that starts at the given Version and ends at the next\nhighest major version from the given Version\n",
+        "type": "PackageInfo.Version.Version -> PackageInfo.VersionRange.VersionRange"
+      },
+      {
+        "name": "encoder",
+        "comment": " Encode a VersionRange as a JSON string with the format\n\"X1.Y1.Z1 <= v < X2.Y2.Z2\"\n",
+        "type": "PackageInfo.VersionRange.VersionRange -> Json.Encode.Value"
+      },
+      {
+        "name": "fromString",
+        "comment": " Parse a VersionRange from a string with the format\n\"X1.Y1.Z1 <= v < X2.Y2.Z2\"\n",
+        "type": "String -> Result.Result String PackageInfo.VersionRange.VersionRange"
+      },
+      {
+        "name": "toString",
+        "comment": " Convert an existing VersionRange back into a string with the format\n\"X1.Y1.Z1 <= v < X2.Y2.Z2\"\n",
+        "type": "PackageInfo.VersionRange.VersionRange -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "PackageInfo.Version",
+    "comment": " A type and functions for managing SemVer version strings found in an\nelm-package.json file\n\n# Type\n@docs Version\n\n# Comparison\n@docs compare\n\n# Strings\n@docs toString, fromString\n\n# JSON\n@docs decoder, encoder\n",
+    "aliases": [
+      {
+        "name": "Version",
+        "comment": " Represents the contents of a SemVer version\n",
+        "args": [],
+        "type": "{ major : Int, minor : Int, patch : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "compare",
+        "comment": " Assess whether a given version is greater than the other based on the SemVer\nscheme.\n",
+        "type": "PackageInfo.Version.Version -> PackageInfo.Version.Version -> Basics.Order"
+      },
+      {
+        "name": "decoder",
+        "comment": " Parse a JSON string of format X.Y.Z as a Version\n",
+        "type": "Json.Decode.Decoder PackageInfo.Version.Version"
+      },
+      {
+        "name": "encoder",
+        "comment": " Convert a Version back into a JSON string value\n",
+        "type": "PackageInfo.Version.Version -> Json.Encode.Value"
+      },
+      {
+        "name": "fromString",
+        "comment": " Parse a Version from a string X.Y.Z, where X is the major version, Y is the\nminor version, and Z is the patch version. Subversions of format X.Y.Z-alpha.1\nare not supported.\n",
+        "type": "String -> Result.Result String PackageInfo.Version.Version"
+      },
+      {
+        "name": "toString",
+        "comment": " Convert a value of type Version back into a string with the format X.Y.Z\n",
+        "type": "PackageInfo.Version.Version -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

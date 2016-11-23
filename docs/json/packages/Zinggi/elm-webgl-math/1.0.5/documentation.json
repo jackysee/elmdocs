@@ -1,0 +1,826 @@
+[
+  {
+    "name": "Matrix4",
+    "comment": " This module deals mostly with 3D transformation matrices.\n\nWe can represent a transformation of a 3D vector as a multiplication with a 4x4 matrix\nby writing the vector in homogeneous coordinates.\n\nHere are a few useful links if you want to understand the math behind this library.\n\nhttp://learnopengl.com/#!Getting-started/Transformations\nhttp://www.codinglabs.net/article_world_view_projection_matrix.aspx\nhttp://www.euclideanspace.com/maths/geometry/affine/index.htm\n\n\n@docs Float4x4, Mat4\n\n## General operations\n\n@docs map, map2, foldl, foldr\n\n## General math\n\n@docs identity, fromRows, fromColumns\n\n@docs add, sub, mul, elementWiseMul, mulByConst, transpose, mulVector\n\n\n## Transformation matrices\nA transformation matrix represents an arbitrary transform on a 3d vector.\nTo transform a 3d vector v, we multiply it with a 4x4 transformation matrix M.\nTo do that we need to write v in homogeneous coordinates,\nthen transform the result back to normal coordinates.\n\n        |v|   |v'|\n    M * |1| = |w |,\n    res = v'/w\n\nThese transformations can be chained, e.g. you can apply several transformations in series.\nNote that to understand how a vector will be transformed, it helps to read it backwards:\n\n    T*R*S*v\n\nMeans that `v` will be scaled by the matrix `S`, then rotated by `R` and finally translated by `T`.\n\n\n@docs transform\n\n\n### Affine transformations\nThese represent a transform that preserves shapes, e.g. translations, rotations and scaling.\nThese are composed of a 3x3 rotation and scale matrix M and a translation vector t:\n\n    |M t|\n    |0 1|\n\n@docs makeRotate, makeScale, makeTranslate, makeTransform\n@docs rotate, scale, translate, transformBy\n\nTODO: does it make sense for these to be post multiplied?\n    This means that currently these operations will be done before doing the transform,\n    meaning they will act as local transformations.\n    However this makes creating a composed transformation weird,\n    as the order of operations might be counter-intuitive!\n    E.g. `identity |> translate |> rotate` actually corresponds to `I*T*R`\n    which means rotate first, then translate.\n\n@docs makeLookAt, makeBasis\n\n#### Operations on affine transforms\nThese can speed up some calculations, but are only correct if actually used with affine transforms.\n\n@docs transformAffine, mulAffine, inverseRigidBodyTransform\n\n\n### Cameras\nCameras can also be represented as a transformation matrix.\n**NOTE**: These transforms are generally **not** affine transforms!\n\nCamera projection matrices map their view of the scene into a 2x2x2 cube.\nMath heavy reference: http://www.songho.ca/opengl/gl_projectionmatrix.html\n\n@docs makeFrustum, makePerspective, makeOrtho, makeOrtho2d\n\n\n## Other\n\n@docs maxNorm, almostEqual\n\n",
+    "aliases": [
+      {
+        "name": "Float4x4",
+        "comment": " ",
+        "args": [],
+        "type": "Matrix4.Mat4 Float"
+      },
+      {
+        "name": "Mat4",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( Vector4.Vec4 a, Vector4.Vec4 a, Vector4.Vec4 a, Vector4.Vec4 a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " `A + B`\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "almostEqual",
+        "comment": "\nThis checks whether `|A - B| <= eps`.\n\n    almostEqual eps a b\n\nThis is useful for testing, see the tests of this library for how this makes testing easy.\n\nSince any definition of a norm can be used for this, it uses the simple `maxNorm`\n",
+        "type": "Float -> Matrix4.Float4x4 -> Matrix4.Float4x4 -> Bool"
+      },
+      {
+        "name": "elementWiseMul",
+        "comment": " Element wise multiplication. Also called Hadamard product, Schur product or entrywise product.\n\n    A .* B\n\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "foldl",
+        "comment": " ",
+        "type": "(elem -> acc -> acc) -> acc -> Matrix4.Mat4 elem -> acc"
+      },
+      {
+        "name": "foldr",
+        "comment": " ",
+        "type": "(elem -> acc -> acc) -> acc -> Matrix4.Mat4 elem -> acc"
+      },
+      {
+        "name": "fromColumns",
+        "comment": "\n    fromColumns a b c d == transpose (a,b,c,d)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "fromRows",
+        "comment": "\n    fromRows a b c d == (a,b,c,d)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "identity",
+        "comment": " The identity matrix. This is also a valid transformation matrix which doesn't do anything.\n\n    I = |1 0 0 0|\n        |0 1 0 0|\n        |0 0 1 0|\n        |0 0 0 1|\n\n",
+        "type": "Matrix4.Float4x4"
+      },
+      {
+        "name": "inverseRigidBodyTransform",
+        "comment": "\nCalculate the inverse of a rigid body transform.\nThis a special form of affine transform, that is only composed of\nrotations and translations.\n\n    | R t |^-1 = | R^T -R^T*t |\n    | 0 1 |      | 0    1     |\n\nIt's usually easier and faster to just do the construction of the matrix you want to invert in reverse, e.g.\n\n    inverseRigidBodyTransform (makeRotate 1.2 (0,1,0)) == makeRotate -1.2 (0,1,0)\n    inverseRigidBodyTransform (makeScale (2,3,1)) == makeScale (1/2,1/3,1)\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeBasis",
+        "comment": "\nCreate an affine transform from 3 orthogonal (perpendicular) vectors.\nMake sure xAxis yAxis zAxis are really orthonormal,\notherwise you won't get an affine transform!\nOnly use this if you know what you are doing.\n\n    makeBasis (1, 0, 0) (0, 1, 0) (0, 0, 1) == identity\n\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeFrustum",
+        "comment": " Creates a matrix for a projection frustum.\n\n    makeFrustum left right bottom top znear zfar\n\nhttp://www.songho.ca/opengl/gl_projectionmatrix.html\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Float -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeLookAt",
+        "comment": "\nCreate a transform that makes a 3D object look at the target.\nVery often used with cameras to make them look at a target.\nThe up vector is usually (0, 1, 0), e.g. the y-axis. (some people also use the z-axis)\n\n    makeLookAt cameraPosition target (0, 1, 0)\n\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeOrtho",
+        "comment": " This creates an orthographic projection.\n\n    makeOrtho left right bottom top znear zfar\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Float -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeOrtho2d",
+        "comment": " Same as `makeOrtho`, but with `znear = -1` and `zfar = 1` set.\n\n    makeOrtho2d left right bottom top\n",
+        "type": "Float -> Float -> Float -> Float -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makePerspective",
+        "comment": " Creates a matrix for a perspective projection.\n\n    makePerspective fovy aspect znear zfar\n\nfovy - field of view in the y axis, in degrees\naspect - aspect ratio\nznear - the near z distance of the projection\nzfar - the far z distance of the projection\n",
+        "type": "Float -> Float -> Float -> Float -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeRotate",
+        "comment": " Creates a rotation matrix `R`.\nThis represents a rotation of `angle` degrees (in radians)\naround the vector specified by `axis`.\nThe rotation is specified according to the right hand rule.\n",
+        "type": "Float -> Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeScale",
+        "comment": " Create a scale matrix `S`.\n",
+        "type": "Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeTransform",
+        "comment": " Creates an affine transform given a translation, a scale, a rotation and a pivot vector.\nThe pivot is the 'center' of the rotation and scaling operation.\n\n    makeTransform translation scale angle rotationAxis pivot\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float -> Vector3.Float3 -> Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "makeTranslate",
+        "comment": " Create a translation matrix `T`\n",
+        "type": "Vector3.Float3 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Matrix4.Mat4 a -> Matrix4.Mat4 b"
+      },
+      {
+        "name": "map2",
+        "comment": " ",
+        "type": "(a -> b -> c) -> Matrix4.Mat4 a -> Matrix4.Mat4 b -> Matrix4.Mat4 c"
+      },
+      {
+        "name": "maxNorm",
+        "comment": " The max norm. This is the biggest element of a matrix.\nUseful for fuzz testing.\n",
+        "type": "Matrix4.Float4x4 -> Float"
+      },
+      {
+        "name": "mul",
+        "comment": " `A*B`\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "mulAffine",
+        "comment": " Multiply two affine transforms. Same as `mul` but a bit faster.\nOnly correct if used with an affine transform!\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "mulByConst",
+        "comment": " `a*A`\n",
+        "type": "Float -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "mulVector",
+        "comment": " `A*v`\n",
+        "type": "Matrix4.Float4x4 -> Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "rotate",
+        "comment": "\nRotate an affine transform by an angle along the given axis.\n",
+        "type": "Float -> Vector3.Float3 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "scale",
+        "comment": "\nScale an affine transform with the given vector.\nSame as `M*makeScale(s)`\n",
+        "type": "Vector3.Float3 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "sub",
+        "comment": " `A - B`\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "transform",
+        "comment": " Transform a vector by an arbitrary transformation matrix.\nIn math terms, we do:\n\n    |v'| = A*|v|  v'/w\n    |w |     |1|,\n\n",
+        "type": "Matrix4.Float4x4 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "transformAffine",
+        "comment": " Same as `transform`, but a bit faster. Only correct if used with an affine transform!\n",
+        "type": "Matrix4.Float4x4 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "transformBy",
+        "comment": " Transform a vector by the transformation specified in the parameters\n\n    transformBy translation scale angle rotationAxis pivot v\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float -> Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "translate",
+        "comment": "\nTranslate an affine transform by the given vector.\nSame as `M*makeTranslate(t)`\n",
+        "type": "Vector3.Float3 -> Matrix4.Float4x4 -> Matrix4.Float4x4"
+      },
+      {
+        "name": "transpose",
+        "comment": " The transpose.\nFlips a matrix along it's diagonal.\n\n`A^T`\n",
+        "type": "Matrix4.Float4x4 -> Matrix4.Float4x4"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Vector4",
+    "comment": "\n@docs Float4, Vec4\n\n@docs fromV3, setX, setY, setZ, setW, getX, getY, getZ, getW, map, map2, foldl, foldr\n\n@docs add, sub, negate, scale, divideBy\n\n@docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle\n",
+    "aliases": [
+      {
+        "name": "Float4",
+        "comment": " ",
+        "args": [],
+        "type": "Vector4.Vec4 Float"
+      },
+      {
+        "name": "Vec4",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( a, a, a, a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " `v + w`\n\n    add (2,4,1,-2) (3,-6,2,1) == (5,-2,3,-1)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "angle",
+        "comment": " The angle between two vectors. The angle is in radians.\n\n`acos((v dot w)/(|v|*|w|))`\n\n    angle (-1,-1,2,0) (2,2,2,0) == pi/2    -- or 90°\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Float"
+      },
+      {
+        "name": "directionFromTo",
+        "comment": " A unit vector pointing from `v` to `w`\n\n`(w - v)/|w - v|`\n\n    directionFromTo (5,1,2,4) (7,5,3,6) == (2/5,4/5,1/5,2/5)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "distance",
+        "comment": " Calculates the distance from `v` to `w`.\n\n`|v - w| = |w - v|`\n\n    distance (7,5,3,6) (5,1,2,4) == 5\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Float"
+      },
+      {
+        "name": "distanceSquared",
+        "comment": " The squared distance. This is slightly faster.\n\n`|v - w|^2`\n\n    distanceSquared (3,0,2,1) (0,2,4,1) == 17\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Float"
+      },
+      {
+        "name": "divideBy",
+        "comment": " `v/a`\n\n    divideBy (3/2) (3,12,6,9) == (2,8,4,6)\n",
+        "type": "Float -> Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "dot",
+        "comment": " `v dot w`\n\nThe **dot product** of two vectors. Also called **scalar product** or **inner product**.\n\nIt links the length and angle of two vectors.\n\n`v dot w = |v|*|w|*cos(phi)`\n\n    dot (1,2,2,3) (3,3,2,2) == 1*3 + 2*3 + 2*2 + 3*2 == 19\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Float"
+      },
+      {
+        "name": "foldl",
+        "comment": "\n    foldl (\\elem acc -> acc + elem^2) 0 (2,4,1,2) == 25\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector4.Vec4 elem -> acc"
+      },
+      {
+        "name": "foldr",
+        "comment": "\n    foldr (::) [] (1,2,3,5) == [1,2,3,5]\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector4.Vec4 elem -> acc"
+      },
+      {
+        "name": "fromV3",
+        "comment": "\n    fromV3 (1,2,3) 1 == (1,2,3,1)\n",
+        "type": "Vector3.Vec3 a -> a -> Vector4.Vec4 a"
+      },
+      {
+        "name": "getW",
+        "comment": " ",
+        "type": "Vector4.Vec4 a -> a"
+      },
+      {
+        "name": "getX",
+        "comment": " ",
+        "type": "Vector4.Vec4 a -> a"
+      },
+      {
+        "name": "getY",
+        "comment": " ",
+        "type": "Vector4.Vec4 a -> a"
+      },
+      {
+        "name": "getZ",
+        "comment": " ",
+        "type": "Vector4.Vec4 a -> a"
+      },
+      {
+        "name": "length",
+        "comment": " The length of a vector. Also known as magnitude or norm.\n\n`|v| = sqrt(v dot v)`\n\n    length (2,4,1,2) == sqrt (2^2+4^2+1^2+2^2) == 5\n",
+        "type": "Vector4.Float4 -> Float"
+      },
+      {
+        "name": "lengthSquared",
+        "comment": " The squared length. This is cheaper to calculate,\nso if you only need to compare lengths you can use this instead of the length.\n\n`|v|^2 = v dot w`\n\n    lengthSquared (3,4,1,2) == 3^2+4^2+1^2+2^2 == 30\n",
+        "type": "Vector4.Float4 -> Float"
+      },
+      {
+        "name": "map",
+        "comment": "\n    map (\\x -> x^2) (1,2,3,4) == (1,4,9,16)\n",
+        "type": "(a -> b) -> Vector4.Vec4 a -> Vector4.Vec4 b"
+      },
+      {
+        "name": "map2",
+        "comment": "\n    map2 (<) (2,1,4,2) (3,2,1,6) == (True, True, False, True)\n",
+        "type": "(a -> b -> c) -> Vector4.Vec4 a -> Vector4.Vec4 b -> Vector4.Vec4 c"
+      },
+      {
+        "name": "negate",
+        "comment": " `-v`\n\n    negate (2,-1,5,1) == (-2,1,-5,-1)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "normalize",
+        "comment": " Normalizes a vector. This will give you a unit vector (e.g. with length 1) in the same direction as `v`.\n\n`v/|v|`\n\n    normalize (2,4,1,2) == (2/5,4/5,1/5,2/5)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "scale",
+        "comment": " `a*v`\n\n    scale (3/2) (4,2,6,10) == (6,3,9,15)\n",
+        "type": "Float -> Vector4.Float4 -> Vector4.Float4"
+      },
+      {
+        "name": "setW",
+        "comment": " ",
+        "type": "a -> Vector4.Vec4 a -> Vector4.Vec4 a"
+      },
+      {
+        "name": "setX",
+        "comment": " ",
+        "type": "a -> Vector4.Vec4 a -> Vector4.Vec4 a"
+      },
+      {
+        "name": "setY",
+        "comment": " ",
+        "type": "a -> Vector4.Vec4 a -> Vector4.Vec4 a"
+      },
+      {
+        "name": "setZ",
+        "comment": " ",
+        "type": "a -> Vector4.Vec4 a -> Vector4.Vec4 a"
+      },
+      {
+        "name": "sub",
+        "comment": " `v - w`\n\n    sub (4,6,1,2) (3,-1,-4,4) == (1,7,5,-2)\n",
+        "type": "Vector4.Float4 -> Vector4.Float4 -> Vector4.Float4"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Matrix3",
+    "comment": " This will have some more functions soon.\nCurrently it's missing 2D transformation functions.\n\n@docs Mat3, Float3x3\n\n@docs map, map2\n\n@docs identity, add, sub, mul, mulVector, transpose, elementWiseMul\n\n@docs transform\n\n",
+    "aliases": [
+      {
+        "name": "Float3x3",
+        "comment": " ",
+        "args": [],
+        "type": "Matrix3.Mat3 Float"
+      },
+      {
+        "name": "Mat3",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( Vector3.Vec3 a, Vector3.Vec3 a, Vector3.Vec3 a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " `A + B`\n",
+        "type": "Matrix3.Float3x3 -> Matrix3.Float3x3 -> Matrix3.Float3x3"
+      },
+      {
+        "name": "elementWiseMul",
+        "comment": " `A .* B`\n",
+        "type": "Matrix3.Float3x3 -> Matrix3.Float3x3 -> Matrix3.Float3x3"
+      },
+      {
+        "name": "identity",
+        "comment": " The identity matrix\n\n    I = |1 0 0|\n        |0 1 0|\n        |0 0 1|\n",
+        "type": "Matrix3.Float3x3"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Matrix3.Mat3 a -> Matrix3.Mat3 b"
+      },
+      {
+        "name": "map2",
+        "comment": " ",
+        "type": "(a -> b -> c) -> Matrix3.Mat3 a -> Matrix3.Mat3 b -> Matrix3.Mat3 c"
+      },
+      {
+        "name": "mul",
+        "comment": " `A*B`\n",
+        "type": "Matrix3.Float3x3 -> Matrix3.Float3x3 -> Matrix3.Float3x3"
+      },
+      {
+        "name": "mulVector",
+        "comment": " `A*v`\n",
+        "type": "Matrix3.Float3x3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "sub",
+        "comment": " `A - B`\n",
+        "type": "Matrix3.Float3x3 -> Matrix3.Float3x3 -> Matrix3.Float3x3"
+      },
+      {
+        "name": "transform",
+        "comment": "\n    |v'| = A*|v|  v'/w\n    |w |     |1|,\n",
+        "type": "Matrix3.Float3x3 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "transpose",
+        "comment": " `A^T`\n",
+        "type": "Matrix3.Float3x3 -> Matrix3.Float3x3"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Vector3",
+    "comment": "\n@docs Float3, Vec3\n\n@docs fromV2, setX, setY, setZ, getX, getY, getZ, map, map2, foldl, foldr\n\n@docs add, sub, negate, scale, divideBy\n\n@docs dot, cross, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle, project, reject\n",
+    "aliases": [
+      {
+        "name": "Float3",
+        "comment": " ",
+        "args": [],
+        "type": "Vector3.Vec3 Float"
+      },
+      {
+        "name": "Vec3",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( a, a, a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " `v + w`\n\n    add (2,4,1) (3,-6,2) == (5,-2,3)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "angle",
+        "comment": " The angle between two vectors. The angle is in radians.\n\n`acos((v dot w)/(|v|*|w|))`\n\n    angle (-1,-1,2) (2,2,2) == pi/2    -- or 90°\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float"
+      },
+      {
+        "name": "cross",
+        "comment": " `v cross w`\n\nThe **cross product** of two vectors. Also called **vector product**.\n\n`v cross w` is a vector that is perpendicular to both `v` and `w`\nand therefore normal to the plane containing them.\n\nThe length of `v cross w` is equal to the area of the parallelogram spanned by `v` and `w`.\n\n`|v cross w| = |v|*|w|*sin(phi)`\n\n    cross (2,1,3) (4,5,-3) == (1*(-3) - 3*5, 3*4 - 2*(-3), 2*5 - 1*4) == (-18, 18, 6)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "directionFromTo",
+        "comment": " A unit vector pointing from `v` to `w`\n\n`(w - v)/|w - v|`\n\n    directionFromTo (5,1,2) (9,3,6) == (2/3,1/3,2/3)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "distance",
+        "comment": " Calculates the distance from `v` to `w`.\n\n`|v - w| = |w - v|`\n\n    distance (2,0,4) (0,4,0) == 6\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float"
+      },
+      {
+        "name": "distanceSquared",
+        "comment": " The squared distance. This is slightly faster.\n\n`|v - w|^2`\n\n    distanceSquared (3,0,2) (0,4,1) == 26\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float"
+      },
+      {
+        "name": "divideBy",
+        "comment": " `v/a`\n\n    divideBy (1/2) (2,1,3) == (4,2,6)\n",
+        "type": "Float -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "dot",
+        "comment": " `v dot w`\n\nThe **dot product** of two vectors. Also called **scalar product** or **inner product**.\n\nIt links the length and angle of two vectors.\n\n`v dot w = |v|*|w|*cos(phi)`\n\n    dot (1,2,2) (3,3,2) == 1*3 + 2*3 + 2*2 == 13\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Float"
+      },
+      {
+        "name": "foldl",
+        "comment": "\n    foldl (*) 1 (2,4,1) == 8\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector3.Vec3 elem -> acc"
+      },
+      {
+        "name": "foldr",
+        "comment": "\n    foldr max 0 (1,12,-5) == 12\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector3.Vec3 elem -> acc"
+      },
+      {
+        "name": "fromV2",
+        "comment": "\n    fromV2 (1,2) 3 == (1,2,3)\n",
+        "type": "Vector2.Vec2 a -> a -> Vector3.Vec3 a"
+      },
+      {
+        "name": "getX",
+        "comment": " ",
+        "type": "Vector3.Vec3 a -> a"
+      },
+      {
+        "name": "getY",
+        "comment": " ",
+        "type": "Vector3.Vec3 a -> a"
+      },
+      {
+        "name": "getZ",
+        "comment": " ",
+        "type": "Vector3.Vec3 a -> a"
+      },
+      {
+        "name": "length",
+        "comment": " The length of a vector. Also known as magnitude or norm.\n\n`|v| = sqrt(v dot v)`\n\n    length (4,2,4) == sqrt (4^2+2^2+4^2) == 6\n",
+        "type": "Vector3.Float3 -> Float"
+      },
+      {
+        "name": "lengthSquared",
+        "comment": " The squared length. This is cheaper to calculate,\nso if you only need to compare lengths you can use this instead of the length.\n\n`|v|^2 = v dot w`\n\n    lengthSquared (3,4,1) == 3^2+4^2+1^2 == 26\n",
+        "type": "Vector3.Float3 -> Float"
+      },
+      {
+        "name": "map",
+        "comment": "\n    map sqrt (1,4,9) == (1,2,3)\n",
+        "type": "(a -> b) -> Vector3.Vec3 a -> Vector3.Vec3 b"
+      },
+      {
+        "name": "map2",
+        "comment": "\n    map2 (/) (4,9,12) (2,3,4) == (2,3,3)\n",
+        "type": "(a -> b -> c) -> Vector3.Vec3 a -> Vector3.Vec3 b -> Vector3.Vec3 c"
+      },
+      {
+        "name": "negate",
+        "comment": " `-v`\n\n    negate (2,-1,5) == (-2,1,-5)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "normalize",
+        "comment": " Normalizes a vector. This will give you a unit vector (e.g. with length 1) in the same direction as `v`.\n\n`v/|v|`\n\n    normalize (4,2,4) == (2/3,1/3,2/3)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "project",
+        "comment": " The projection of `v` onto `w`.\n\n`(v dot w)/|w| * w/|w|`\n\n    project (2,1,0) (4,0,0) == (2,0,0)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "reject",
+        "comment": " The rejection of `v` onto `w`. This is always perpendicular to the projection.\n\n`v - (project v w)`\n\n    reject (2,1,0) (4,0,0) == (0,1,0)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "scale",
+        "comment": " `a*v`\n\n    scale (1/2) (4,2,6) == (2,1,3)\n",
+        "type": "Float -> Vector3.Float3 -> Vector3.Float3"
+      },
+      {
+        "name": "setX",
+        "comment": " ",
+        "type": "a -> Vector3.Vec3 a -> Vector3.Vec3 a"
+      },
+      {
+        "name": "setY",
+        "comment": " ",
+        "type": "a -> Vector3.Vec3 a -> Vector3.Vec3 a"
+      },
+      {
+        "name": "setZ",
+        "comment": " ",
+        "type": "a -> Vector3.Vec3 a -> Vector3.Vec3 a"
+      },
+      {
+        "name": "sub",
+        "comment": " `v - w`\n\n    sub (4,6,1) (3,-1,-4) == (1,7,5)\n",
+        "type": "Vector3.Float3 -> Vector3.Float3 -> Vector3.Float3"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Matrix2",
+    "comment": "\n@docs Float2x2, Mat2\n\n## General operations\n\n@docs map, map2, foldl, foldr\n\n## Math\n\n@docs identity, fromRows, fromColumns\n\n@docs add, sub, mul, elementWiseMul, mulByConst, transpose, mulVector\n\n## Other\n\n@docs almostEqual, maxNorm\n\n",
+    "aliases": [
+      {
+        "name": "Float2x2",
+        "comment": " ",
+        "args": [],
+        "type": "Matrix2.Mat2 Float"
+      },
+      {
+        "name": "Mat2",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( Vector2.Vec2 a, Vector2.Vec2 a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Matrix addition.\n\n    |a b|   |e f|   |a+e b+f|\n    |c d| + |g h| = |c+g d+h|\n",
+        "type": "Matrix2.Float2x2 -> Matrix2.Float2x2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "almostEqual",
+        "comment": "\nThis checks whether `|A - B| < eps`.\n\n    almostEqual eps a b\n\nThis is useful for testing, see the tests of this library for how this makes testing easy.\n\nSince any definition of a norm can be used for this, it uses the simple `maxNorm`\n",
+        "type": "Float -> Matrix2.Float2x2 -> Matrix2.Float2x2 -> Bool"
+      },
+      {
+        "name": "elementWiseMul",
+        "comment": " Element wise multiplication. Also called Hadamard product, Schur product or entrywise product.\n\n    |a b|    |e f|   |ae bf|\n    |c d| .* |g h| = |cg dh|\n",
+        "type": "Matrix2.Float2x2 -> Matrix2.Float2x2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "foldl",
+        "comment": " ",
+        "type": "(elem -> acc -> acc) -> acc -> Matrix2.Mat2 elem -> acc"
+      },
+      {
+        "name": "foldr",
+        "comment": " ",
+        "type": "(elem -> acc -> acc) -> acc -> Matrix2.Mat2 elem -> acc"
+      },
+      {
+        "name": "fromColumns",
+        "comment": " Construct a matrix from columns.\n\n    fromColumns (1,2) (3,4) == ((1,3),(2,4))\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "fromRows",
+        "comment": " Construct a matrix from rows.\n\n    fromRows (1,2) (3,4) == ((1,2),(3,4))\n\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "identity",
+        "comment": " The identity matrix.\n\n    I = |1 0|\n        |0 1|\n\n    I*A = A = A*I\n",
+        "type": "Matrix2.Float2x2"
+      },
+      {
+        "name": "map",
+        "comment": "\n    elementsSquared = map (\\x -> x^2)\n",
+        "type": "(a -> b) -> Matrix2.Mat2 a -> Matrix2.Mat2 b"
+      },
+      {
+        "name": "map2",
+        "comment": "\n    elementWiseDivision = map2 (/)\n",
+        "type": "(a -> b -> c) -> Matrix2.Mat2 a -> Matrix2.Mat2 b -> Matrix2.Mat2 c"
+      },
+      {
+        "name": "maxNorm",
+        "comment": " The max norm. This is the biggest element of a matrix.\nUseful for fuzz testing.\n",
+        "type": "Matrix2.Float2x2 -> Float"
+      },
+      {
+        "name": "mul",
+        "comment": " Matrix multiplication.\n\n`A*B`\n",
+        "type": "Matrix2.Float2x2 -> Matrix2.Float2x2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "mulByConst",
+        "comment": " `a*A`\nMultiply a matrix by a constant\n",
+        "type": "Float -> Matrix2.Float2x2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "mulVector",
+        "comment": " Matrix-vector multiplication.\n\n          |a b| |x|   |ax+by|\n    A*v = |c d|*|y| = |cx+dy|\n",
+        "type": "Matrix2.Float2x2 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "sub",
+        "comment": " Matrix subtraction.\n\n`A - B`\n",
+        "type": "Matrix2.Float2x2 -> Matrix2.Float2x2 -> Matrix2.Float2x2"
+      },
+      {
+        "name": "transpose",
+        "comment": " The transpose.\nFlips a matrix along it's diagonal.\n\n    |a b|T  |a c|\n    |c d| = |b d|\n\n",
+        "type": "Matrix2.Float2x2 -> Matrix2.Float2x2"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Vector2",
+    "comment": "\n@docs Float2, Vec2\n\n@docs setX, setY, getX, getY, map, map2, foldl, foldr\n\n@docs add, sub, negate, scale, divideBy\n\n@docs dot, length, lengthSquared, normalize, directionFromTo, distance, distanceSquared, angle, project, reject\n",
+    "aliases": [
+      {
+        "name": "Float2",
+        "comment": " ",
+        "args": [],
+        "type": "Vector2.Vec2 Float"
+      },
+      {
+        "name": "Vec2",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( a, a )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " `v + w`\n\n    add (1,2) (4,5) == (5,7)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "angle",
+        "comment": " The angle between two vectors. The angle is in radians.\n\n`acos((v dot w)/(|v|*|w|))`\n\n    angle (1,0) (2,2) == pi/4    -- or 45°\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Float"
+      },
+      {
+        "name": "directionFromTo",
+        "comment": " A unit vector pointing from `v` to `w`\n\n`(w - v)/|w - v|`\n\n    directionFromTo (5,1) (8,5) == (3/5,4/5)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "distance",
+        "comment": " Calculates the distance from `v` to `w`.\n\n`|v - w| = |w - v|`\n\n    distance (3,0) (0,4) == 5\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Float"
+      },
+      {
+        "name": "distanceSquared",
+        "comment": " The squared distance. This is slightly faster.\n\n`|v - w|^2`\n\n    distanceSquared (3,0) (0,4) == 25\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Float"
+      },
+      {
+        "name": "divideBy",
+        "comment": " `v/a`\n\n    divideBy 4 (12,16) == (3,4)\n",
+        "type": "Float -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "dot",
+        "comment": " `v dot w`\n\nThe **dot product** of two vectors. Also called **scalar product** or **inner product**.\n\nIt links the length and angle of two vectors.\n\n`v dot w = |v|*|w|*cos(phi)`\n\n    dot (1,2) (3,2) == 1*3 + 2*2 == 7\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Float"
+      },
+      {
+        "name": "foldl",
+        "comment": "\n    foldl (+) 0 (2,4) == 6\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector2.Vec2 elem -> acc"
+      },
+      {
+        "name": "foldr",
+        "comment": "\n    foldr (-) 0 (1,12) == -11\n",
+        "type": "(elem -> acc -> acc) -> acc -> Vector2.Vec2 elem -> acc"
+      },
+      {
+        "name": "getX",
+        "comment": " ",
+        "type": "Vector2.Vec2 a -> a"
+      },
+      {
+        "name": "getY",
+        "comment": " ",
+        "type": "Vector2.Vec2 a -> a"
+      },
+      {
+        "name": "length",
+        "comment": " The length of a vector. Also known as magnitude or norm.\n\n`|v| = sqrt(v dot v)`\n\n    length (3,4) == sqrt(3^2+4^2) == 5\n",
+        "type": "Vector2.Float2 -> Float"
+      },
+      {
+        "name": "lengthSquared",
+        "comment": " The squared length. This is cheaper to calculate,\nso if you only need to compare lengths you can use this instead of the length.\n\n`|v|^2 = v dot w`\n\n    lengthSquared (3,4) == 3^2+4^2 == 25\n",
+        "type": "Vector2.Float2 -> Float"
+      },
+      {
+        "name": "map",
+        "comment": "\n    map ((+) 1) (2,3) == (3,4)\n",
+        "type": "(a -> b) -> Vector2.Vec2 a -> Vector2.Vec2 b"
+      },
+      {
+        "name": "map2",
+        "comment": "\n    map2 (*) (2,4) (3,2) == (6,8)\n",
+        "type": "(a -> b -> c) -> Vector2.Vec2 a -> Vector2.Vec2 b -> Vector2.Vec2 c"
+      },
+      {
+        "name": "negate",
+        "comment": " `-v`\n\n    negate (2,-4) == (-2,4)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "normalize",
+        "comment": " Normalizes a vector. This will give you a unit vector (e.g. with length 1) in the same direction as `v`.\n\n`v/|v|`\n\n    normalize (3,4) == (3/5,4/5)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "project",
+        "comment": " The projection of `v` onto `w`.\n\n`(v dot w)/|w| * w/|w|`\n\n    project (2,1) (4,0) == (2,0)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "reject",
+        "comment": " The rejection of `v` onto `w`. This is always perpendicular to the projection.\n\n`v - (project v w)`\n\n    reject (2,1) (4,0) == (0,1)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "scale",
+        "comment": " `a*v`\n\n    scale 3 (2,3) = (6,9)\n",
+        "type": "Float -> Vector2.Float2 -> Vector2.Float2"
+      },
+      {
+        "name": "setX",
+        "comment": " ",
+        "type": "a -> Vector2.Vec2 a -> Vector2.Vec2 a"
+      },
+      {
+        "name": "setY",
+        "comment": " ",
+        "type": "a -> Vector2.Vec2 a -> Vector2.Vec2 a"
+      },
+      {
+        "name": "sub",
+        "comment": " `v - w`\n\n    sub (3,1) (-3,8) == (6,-7)\n",
+        "type": "Vector2.Float2 -> Vector2.Float2 -> Vector2.Float2"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

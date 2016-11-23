@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Validate",
+    "comment": " Convenience functions for validating data.\n\n# Validating a subject\n@docs Validator, ifBlank, ifNotInt, ifEmptyDict, ifEmptySet, ifInvalid, ifNothing, ifInvalidEmail\n\n\n# Combining validators\n@docs all, any, eager\n",
+    "aliases": [
+      {
+        "name": "Validator",
+        "comment": " A `Validator` is a function which takes a subject and returns a list of errors\ndescribing anything invalid about that subject.\n\nAn empty error list means the subject was valid.\n",
+        "args": [
+          "error",
+          "subject"
+        ],
+        "type": "subject -> List error"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Run each of the given validators, in order, and return their concatenated\nerror lists.\n",
+        "type": "List (Validate.Validator error subject) -> Validate.Validator error subject"
+      },
+      {
+        "name": "any",
+        "comment": " Return `True` if none of the given validators returns any errors for the given\nsubject, and `False` if any validator returns one or more errors.\n",
+        "type": "List (Validate.Validator error subject) -> subject -> Bool"
+      },
+      {
+        "name": "eager",
+        "comment": " Run each of the given validators, in order, stopping after the first error\nand returning it. If no errors are encountered, return `Nothing`.\n",
+        "type": "List (Validate.Validator error subject) -> subject -> Maybe.Maybe error"
+      },
+      {
+        "name": "ifBlank",
+        "comment": " Return an error if the given `String` is empty, or if it contains only\nwhitespace characters.\n",
+        "type": "error -> Validate.Validator error String"
+      },
+      {
+        "name": "ifEmptyDict",
+        "comment": " Return an error if the given `Dict` is empty.\n",
+        "type": "error -> Validate.Validator error (Dict.Dict comparable v)"
+      },
+      {
+        "name": "ifEmptySet",
+        "comment": " Return an error if the given `Set` is empty.\n",
+        "type": "error -> Validate.Validator error (Set.Set comparable)"
+      },
+      {
+        "name": "ifInvalid",
+        "comment": " Return an error if the given predicate returns `True` for the given\nsubject.\n",
+        "type": "(subject -> Bool) -> error -> Validate.Validator error subject"
+      },
+      {
+        "name": "ifInvalidEmail",
+        "comment": " Return an error if the given email string is malformed.\n",
+        "type": "error -> Validate.Validator error String"
+      },
+      {
+        "name": "ifNotInt",
+        "comment": " Return an error if the given `String` cannot be parsed as an `Int`.\n",
+        "type": "error -> Validate.Validator error String"
+      },
+      {
+        "name": "ifNothing",
+        "comment": " Return an error if given a `Maybe` that is `Nothing`.\n",
+        "type": "error -> Validate.Validator error (Maybe.Maybe a)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

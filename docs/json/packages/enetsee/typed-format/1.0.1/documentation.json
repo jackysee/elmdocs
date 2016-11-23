@@ -1,0 +1,88 @@
+[
+  {
+    "name": "TypedFormat",
+    "comment": " This library helps you turn data into nicely formatted strings\nin a type-safe manner.\n\nThe API deliberately mirrors [url-parser](https://github.com/evancz/url-parser)\nwhich is based on the same idea (see references).\n\n# Basic formatters (not a real word)\n@docs Format, s, bool, char, string, int, float\n\n# Custom formatters\n@docs custom, prettyFloat, simplePrettyFloat, currency, simpleCurrency\n\n# Combining Formatters\n@docs (<++>)\n\n# Apply Formatter\n@docs sprintf\n\n#References\nThe library is based on the final representation of the `Printer` type from\nOleg Kiselyov's [Formatted Printer Parsers](http://okmij.org/ftp/tagless-final/course/PrintScanF.hs)\n\nThe [url-parser](https://github.com/evancz/url-parser) library is based on the\ncorresponding `Scanner` type.\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Format",
+        "comment": " A `Format` is a way of constructing type-safe `printf` functions.\n\nThe type `b` corresponds to the type of the argument your formatter will expect\nwhen applied with `sprintf`.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "<++>",
+        "comment": " Combine formatters. It can be used to combine very simple building blocks\nlike this:\n\n  hello : Format a (String -> a)\n  hello =\n    s \"hello \" <++> string\n\nSo we can say hello to whoever we want. It can also be used to put together\narbitrarily complex parsers, so you *could* say something like this too:\n\n  doubleHello : Format a (String -> String -> a)\n  doubleHello =\n      hello <++> hello\n\n",
+        "type": "TypedFormat.Format b c -> TypedFormat.Format a b -> TypedFormat.Format a c",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": "bool",
+        "comment": " A formater for `Bool`s\n",
+        "type": "TypedFormat.Format a (Bool -> a)"
+      },
+      {
+        "name": "char",
+        "comment": " A formater for `Char`s\n",
+        "type": "TypedFormat.Format a (Char -> a)"
+      },
+      {
+        "name": "currency",
+        "comment": " Formatter to pretty-print a `Float` representing a currency amount.\nThe arguments are:\n- symbol :  currency symbol\n- abbreviateUnits : indicate whether standard abbreviations for currency amounts should be used\n- isAccouting : indicate whether a '+' should be prefixed for positive amounts\n- sep : character to use a seprator (e.g. ','' in '1,000.00')\n- decimalPoint : character to be used for decimal points\n",
+        "type": "String -> Bool -> Bool -> Char -> Char -> TypedFormat.Format a (Float -> a)"
+      },
+      {
+        "name": "custom",
+        "comment": " Allows you to create a formatter using a custom function to turn your\ntype into a string. `prettyFloat`, `simplePrettyFloat`, `currency` and\n`simpleCurrency` are all examples.\n",
+        "type": "(b -> String) -> TypedFormat.Format a (b -> a)"
+      },
+      {
+        "name": "float",
+        "comment": " A formater for `Float`s\n",
+        "type": "TypedFormat.Format a (Float -> a)"
+      },
+      {
+        "name": "int",
+        "comment": " A formater for `Int`s\n",
+        "type": "TypedFormat.Format a (Int -> a)"
+      },
+      {
+        "name": "prettyFloat",
+        "comment": " Formatter to pretty-print a `Float`.\nThe arguments are as follows:\n- prefix : an optional prefix string, appearing before any leading sign (+/-)\n- suffix : an optional suffix string, appearing after the number\n- showPos : indicate whether a '+' should be prefixed for positive numbers\n- sep : character to use a seprator (e.g. ','' in '1,000.00')\n- decimalPoint : character to be used for decimal points\n- decimalPlace : the numer of decimal places to print\n",
+        "type": "Maybe.Maybe String -> Maybe.Maybe String -> Bool -> Char -> Char -> Int -> TypedFormat.Format a (Float -> a)"
+      },
+      {
+        "name": "s",
+        "comment": " A formater to add string literals\n",
+        "type": "String -> TypedFormat.Format a a"
+      },
+      {
+        "name": "simpleCurrency",
+        "comment": " Formatter to pretty-print a `Float` representing a currency amount\nusing default settings.\n",
+        "type": "String -> TypedFormat.Format a (Float -> a)"
+      },
+      {
+        "name": "simplePrettyFloat",
+        "comment": " Formatter to pretty-print a `Float` using default settings.\n",
+        "type": "Int -> TypedFormat.Format a (Float -> a)"
+      },
+      {
+        "name": "sprintf",
+        "comment": " Apply your formatter creating a function which expects arguments matching\nthe formatter. For example, given the formatter:\n\n  myFormatter : Format a (String -> Int -> a)\n  myFormatter =\n      s \"Using \" <++> string <++> s \" makes me \" <++> int <++> s \"% more productive.\"\n\n, we can apply `sprintf` to get the function:\n\n  myFormat : String -> Int -> String\n  myFormat =\n      sprintf myFormatter\n\n",
+        "type": "TypedFormat.Format String b -> b"
+      },
+      {
+        "name": "string",
+        "comment": " A formater for `String`s\n",
+        "type": "TypedFormat.Format a (String -> a)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

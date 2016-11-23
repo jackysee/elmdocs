@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Number.Format",
+    "comment": "\n@docs pretty, prettyInt\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "pretty",
+        "comment": " A (de facto?) standard pretty formatting for numbers.\n\n    pretty 2 ',' '.' 81601710123.338023  == \"81,601,710,123.34\"\n    pretty 3 ' ' '.' 81601710123.338023  == \"81 601 710 123.338\"\n    pretty 3 ' ' '.' -81601710123.338023 == \"-81 601 710 123.34\"\n\n* Numbers are rounded to the nearest printable digit\n* Digits before the decimal are grouped into spans of three and separated by a seperator character\n",
+        "type": "Int -> Char -> Char -> Float -> String"
+      },
+      {
+        "name": "prettyInt",
+        "comment": " A (de facto?) standard pretty formatting for numbers.\nThis version of the function operates on integers instead of floating point values.\nIn future `pretty` may be used on both integers as well as floating point values and this function\nwill be deprecated.\n\n    prettyInt ',' 81601710123  == \"81,601,710,123\"\n    prettyInt ' ' 81601710123  == \"81 601 710 123\"\n    prettyInt ' ' -81601710123 == \"-81 601 710 123\"\n\n* Digits are grouped into spans of three and separated by a seperator character\n",
+        "type": "Char -> Int -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

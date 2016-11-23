@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Kintail.InputWidget",
+    "comment": " Functions for creating input widgets of the general form `a -> Html a`. You\nshould use `Html.map` to convert the produced messages to the message type used\nby your app, and the new value should generally be stored in your model and fed\nback in to the `view` function. This means that the value emitted from a given\nfragment of HTML will generally become the input value used to create that same\nfragment of HTML the next time your `view` function is called.\n\n@docs checkbox, radioButton, lineEdit, comboBox, slider\n\n## Advanced\n\n@docs custom\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "checkbox",
+        "comment": " Create a `<input type=\"checkbox\">` element with the given attributes and\ncurrent value, and which produces `Bool` messages with the new value whenever\nthe checkbox is clicked.\n\nSee the [Embedding.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/Embedding.elm)\nexample for sample usage.\n",
+        "type": "List (Html.Attribute Bool) -> Bool -> Html.Html Bool"
+      },
+      {
+        "name": "comboBox",
+        "comment": " Create a `<select>` element with the given attributes. The `<select>`\nelement will be populated by `<option>` elements defined by the given list of\nvalues, converted to text using the given function. The final given value is the\none that should be displayed as selected. A message will be sent with the newly\nselected value whenever the selection is changed, either via keyboard or click.\n\nNote that the currently selected value should be one of the values in the list,\nand the list should not contain any duplicates. Otherwise it is possible that\neither no values or more than one value will be marked as `selected` in the\nresulting HTML.\n\nSee the [ComboBox.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/ComboBox.elm)\nexample for sample usage.\n",
+        "type": "List (Html.Attribute a) -> (a -> String) -> List a -> a -> Html.Html a"
+      },
+      {
+        "name": "custom",
+        "comment": " Create a custom input widget from `view` and `update` functions of the same\nform as used in standard Elm Architecture programs.\n\nThe `view` function should accept as input the current value to display, and\nproduce a fragment of HTML displaying that value that produces messages of some\narbitrary type of your choice. The `update` function should accept a message of\nthat type and the current value, and return an updated value. When called as\n\n    InputWidget.custom { view = view, update = update }\n\nthis function will then return a function in the standard form `a -> Html a`.\nNote that regardless of the message type used internally by `view` and `update`,\nthe only messages produced by the returned view function will be 'new value'\nmessages of type `a`.\n\nSee the [Custom.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/Custom.elm)\nexample for sample usage.\n",
+        "type": "{ view : a -> Html.Html msg, update : msg -> a -> a } -> a -> Html.Html a"
+      },
+      {
+        "name": "lineEdit",
+        "comment": " Create a simple `<input>` element with the given attributes and text to\ndisplay. A message will be sent with the updated text whenever the text is\nedited.\n\nSee the [Validation.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/Validation.elm)\nexample for sample usage.\n",
+        "type": "List (Html.Attribute String) -> String -> Html.Html String"
+      },
+      {
+        "name": "radioButton",
+        "comment": " Create a `<input type=\"radio\">` element with the given attributes. When the\nradio button is checked, it will send a message equal to the first given value;\nit will be displayed as currently checked if the two given values are equal to\neach other.\n\nTo create a set of mutually-exclusive radio buttons (the usual case), call this\nfunction multiple times, passing a different first value each time (the value to\nbe selected if that radio button is clicked) but the same second value (the\ncurrently selected value). This way, only the radio button whose value matches\nthe currently selected value will be displayed as checked. When any other radio\nbutton is clicked, it will emit a message equal to its specific value, so that\nyou can update the currently selected value to that value.\n\nSee the [RadioButton.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/RadioButton.elm)\nexample for sample usage.\n",
+        "type": "List (Html.Attribute a) -> a -> a -> Html.Html a"
+      },
+      {
+        "name": "slider",
+        "comment": " Create a `<range>` element with the given attributes, bounds, step size and\ncurrent value. A message will be sent with the updated value whenever the slider\nis dragged.\n\nSee the [Slider.elm](https://github.com/kintail/input-widget/blob/1.0.6/examples/Slider.elm)\nexample for sample usage.\n",
+        "type": "List (Html.Attribute Float) -> { min : Float, max : Float, step : Float } -> Float -> Html.Html Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

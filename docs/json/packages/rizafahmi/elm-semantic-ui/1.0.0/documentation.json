@@ -1,0 +1,86 @@
+[
+  {
+    "name": "SemanticUi",
+    "comment": " Elm bindings for Semantic UI using a declarative API and useful\nabstractions.\n\n# Rendering\n\n@docs Element, render\n\n# Styling\n\n@docs Size, size\n\n# Elements\n\n## Button\n\n@docs Button, button, button'\n\n",
+    "aliases": [
+      {
+        "name": "Button",
+        "comment": " The button state driving the visual appearance. ",
+        "args": [],
+        "type": "{ text : String, size : SemanticUi.Size }"
+      },
+      {
+        "name": "Element",
+        "comment": " An element defines a control. A control has a `state` and a function to\nturn this state into an `Html` object. ",
+        "args": [
+          "a"
+        ],
+        "type": "{ state : a, render : a -> Html.Html }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Size",
+        "comment": " Some elements might have different sizes. ",
+        "args": [],
+        "cases": [
+          [
+            "Mini",
+            []
+          ],
+          [
+            "Tiny",
+            []
+          ],
+          [
+            "Small",
+            []
+          ],
+          [
+            "Medium",
+            []
+          ],
+          [
+            "Large",
+            []
+          ],
+          [
+            "Big",
+            []
+          ],
+          [
+            "Huge",
+            []
+          ],
+          [
+            "Massive",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "button",
+        "comment": " A button with a text. ",
+        "type": "String -> SemanticUi.Element SemanticUi.Button"
+      },
+      {
+        "name": "button'",
+        "comment": " A button with an empty text. ",
+        "type": "SemanticUi.Element SemanticUi.Button"
+      },
+      {
+        "name": "render",
+        "comment": " Create the `Html` for a Semantic UI `Element`.\n\n    button \"click\" |> render\n",
+        "type": "SemanticUi.Element a -> Html.Html"
+      },
+      {
+        "name": "size",
+        "comment": " Adjust the size of an element.\n\n    button \"click\" |> size Huge\n ",
+        "type": "SemanticUi.Size -> SemanticUi.Element (SemanticUi.Sized a) -> SemanticUi.Element (SemanticUi.Sized a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

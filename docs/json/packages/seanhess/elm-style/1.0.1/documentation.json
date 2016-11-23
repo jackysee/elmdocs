@@ -1,0 +1,959 @@
+[
+  {
+    "name": "Style",
+    "comment": " Functions to combine and compose for reusable inline styles\n\n# Style\n@docs Style\n\n# Background\n@docs background, backgroundColor, backgroundImage, backgroundPosition, backgroundSize, backgroundRepeat, backgroundAttachment, linearGradient, radialGradient, noRepeat, repeat, repeatX, repeatY\n\n# Values\n@docs px, pc, em, color', deg, rad, url\n\n# Border\n@docs border, borderColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopColor, borderStyle, borderBottomStyle, borderLeftStyle, borderRightStyle, borderTopStyle, borderWidth, borderBottomWidth, borderLeftWidth, borderRightWidth, borderTopWidth, borderRadius, borderBottomRadius, borderLeftRadius, borderRightRadius, borderTopRadius, dashed, dotted, double, groove, ridge, solid\n\n# Outline\n@docs outline, outlineColor, outlineStyle, outlineWidth\n\n# Cursor\n@docs cursor\n\n# Dimensions\n@docs height, width, maxHeight, maxWidth, minHeight, minWidth, dimensions\n\n# Display\n@docs display, block, inlineBlock, table, tableCell, fixed, flex', inlineTable, runIn, hidden, visible, inlineFlex, listItem, tableCaption, tableColumn, tableColumnGroup, tableFooterGroup, tableHeaderGroup, tableRow, tableRowGroup\n\n# Positioning\n@docs position, bottom, left, right, top, clip, overflow, zIndex, absolute, relative, static, inline, block, scroll\n\n# Align\n@docs verticalAlign, baseline, center, textAlign, left', right'\n\n# Flex\n@docs flex, flexDirection, flexWrap, flexFlow, justifyContent, alignItems, alignContent, order, flexGrow, flexShrink, flexBasis, alignSelf, column, columnReverse, flexEnd, flexStart, justify, row, rowReverse, spaceAround, spaceBetween, wrap, wrapReverse\n\n# Float\n@docs float, clear, both, left', right'\n\n# Margin\n@docs margin, marginBottom, marginTop, marginLeft, marginRight\n\n# Padding\n@docs padding, paddingBottom, paddingTop, paddingLeft, paddingRight\n\n# Font\n@docs fontFamily, fontSize, fontStyle, fontVariant, fontWeight, italic, smallCaps\n\n# Text\n@docs color, direction, letterSpacing, lineHeight, textAlign, textDecoration, textIndent, unicodeBidi, whiteSpace, wordSpacing, bidiOverride, embed, justify, direction, rtl, ltr, nowrap, oblique, pre, preLine, preWrap, overline, underline, lineThrough\n\n# List Style\n@docs listStyleImage, listStylePosition, listStyleType, inside, outside, lineThrough\n\n# Shadow\n@docs boxShadow, textShadow, inset, outset\n\n# Transform\n@docs transform, translate, translate3d, perspective, rotate, rotate3d, scale, scale3d, skew, matrix\n\n# Generic\n@docs auto, none, normal\n\n# Prefixing\n@docs PrefixSet, prefixSet, prefixName, prefixValue\n\n",
+    "aliases": [
+      {
+        "name": "PrefixSet",
+        "comment": " Prefixes for the various browsers. This is handled by the property functions for you ",
+        "args": [],
+        "type": "{ ms : String , moz : String , o : String , webkit : String , default : String }"
+      },
+      {
+        "name": "Style",
+        "comment": " Alias for inline styles\n\n    myContainer : List Style\n    myContainer =\n      [ width (pc 100)\n      , height (pc 100)\n      , fontFamily \"sans-serif\"\n      ]\n",
+        "args": [],
+        "type": "( String, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "absolute",
+        "comment": " absolute ",
+        "type": "String"
+      },
+      {
+        "name": "alignContent",
+        "comment": " align-content ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "alignItems",
+        "comment": " align-items ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "alignSelf",
+        "comment": " align-self ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "auto",
+        "comment": " auto ",
+        "type": "String"
+      },
+      {
+        "name": "background",
+        "comment": " background ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundAttachment",
+        "comment": " background-attachment ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundColor",
+        "comment": " background-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundImage",
+        "comment": " background-image ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundPosition",
+        "comment": " background-position ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundRepeat",
+        "comment": " background-repeat ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "backgroundSize",
+        "comment": " background-size ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "baseline",
+        "comment": " baseline ",
+        "type": "String"
+      },
+      {
+        "name": "bidiOverride",
+        "comment": " bidi-override ",
+        "type": "String"
+      },
+      {
+        "name": "block",
+        "comment": " block ",
+        "type": "String"
+      },
+      {
+        "name": "border",
+        "comment": " border ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderBottomColor",
+        "comment": " border-bottom-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderBottomRadius",
+        "comment": " border-bottom-radius ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderBottomStyle",
+        "comment": " border-bottom-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderBottomWidth",
+        "comment": " border-bottom-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderColor",
+        "comment": " border-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderLeftColor",
+        "comment": " border-left-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderLeftRadius",
+        "comment": " border-left-radius ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderLeftStyle",
+        "comment": " border-left-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderLeftWidth",
+        "comment": " border-left-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderRadius",
+        "comment": " border-radius ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderRightColor",
+        "comment": " border-right-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderRightRadius",
+        "comment": " border-right-radius ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderRightStyle",
+        "comment": " border-right-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderRightWidth",
+        "comment": " border-right-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderStyle",
+        "comment": " border-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderTopColor",
+        "comment": " border-top-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderTopRadius",
+        "comment": " border-top-radius ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderTopStyle",
+        "comment": " border-top-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderTopWidth",
+        "comment": " border-top-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "borderWidth",
+        "comment": " border-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "both",
+        "comment": " both ",
+        "type": "String"
+      },
+      {
+        "name": "bottom",
+        "comment": " bottom ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "boxShadow",
+        "comment": " box-shadow ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "center",
+        "comment": " center ",
+        "type": "String"
+      },
+      {
+        "name": "clear",
+        "comment": " clear ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "clip",
+        "comment": " clip ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "color",
+        "comment": " color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "color'",
+        "comment": " color' ",
+        "type": "Color.Color -> String"
+      },
+      {
+        "name": "column",
+        "comment": " column ",
+        "type": "String"
+      },
+      {
+        "name": "columnReverse",
+        "comment": " column-reverse ",
+        "type": "String"
+      },
+      {
+        "name": "cursor",
+        "comment": " cursor ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "dashed",
+        "comment": " dashed ",
+        "type": "String"
+      },
+      {
+        "name": "deg",
+        "comment": " deg ",
+        "type": "number -> String"
+      },
+      {
+        "name": "dimensions",
+        "comment": " deminsions ",
+        "type": "(number -> String) -> List number -> String"
+      },
+      {
+        "name": "direction",
+        "comment": " direction ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "display",
+        "comment": " display ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "dotted",
+        "comment": " dotted ",
+        "type": "String"
+      },
+      {
+        "name": "double",
+        "comment": " double ",
+        "type": "String"
+      },
+      {
+        "name": "em",
+        "comment": " em ",
+        "type": "number -> String"
+      },
+      {
+        "name": "embed",
+        "comment": " embed ",
+        "type": "String"
+      },
+      {
+        "name": "fixed",
+        "comment": " fixed ",
+        "type": "String"
+      },
+      {
+        "name": "flex",
+        "comment": " flex ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flex'",
+        "comment": " flex ",
+        "type": "String"
+      },
+      {
+        "name": "flexBasis",
+        "comment": " flex-basis ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flexDirection",
+        "comment": " flex-direction ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flexEnd",
+        "comment": " flex-end ",
+        "type": "String"
+      },
+      {
+        "name": "flexFlow",
+        "comment": " flex-flow ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flexGrow",
+        "comment": " flex-grow ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flexShrink",
+        "comment": " flex-shrink ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "flexStart",
+        "comment": " flex-start ",
+        "type": "String"
+      },
+      {
+        "name": "flexWrap",
+        "comment": " flex-wrap ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "float",
+        "comment": " float ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "fontFamily",
+        "comment": " font-family ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "fontSize",
+        "comment": " font-size ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "fontStyle",
+        "comment": " font-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "fontVariant",
+        "comment": " font-variant ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "fontWeight",
+        "comment": " font-weight ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "groove",
+        "comment": " groove ",
+        "type": "String"
+      },
+      {
+        "name": "height",
+        "comment": " height ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "hidden",
+        "comment": " hidden ",
+        "type": "String"
+      },
+      {
+        "name": "inline",
+        "comment": " inline ",
+        "type": "String"
+      },
+      {
+        "name": "inlineBlock",
+        "comment": " inline-block ",
+        "type": "String"
+      },
+      {
+        "name": "inlineFlex",
+        "comment": " inline-flex ",
+        "type": "String"
+      },
+      {
+        "name": "inlineTable",
+        "comment": " inline-table ",
+        "type": "String"
+      },
+      {
+        "name": "inset",
+        "comment": " inset ",
+        "type": "String"
+      },
+      {
+        "name": "inside",
+        "comment": " inside ",
+        "type": "String"
+      },
+      {
+        "name": "italic",
+        "comment": " italic ",
+        "type": "String"
+      },
+      {
+        "name": "justify",
+        "comment": " justify ",
+        "type": "String"
+      },
+      {
+        "name": "justifyContent",
+        "comment": " justify-content ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "left",
+        "comment": " left ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "left'",
+        "comment": " left' ",
+        "type": "String"
+      },
+      {
+        "name": "letterSpacing",
+        "comment": " letter-spacing ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "lineHeight",
+        "comment": " line-height ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "lineThrough",
+        "comment": " line-through ",
+        "type": "String"
+      },
+      {
+        "name": "linearGradient",
+        "comment": " linear-gradient(45deg, #FFF, #000) ",
+        "type": "number -> List Color.Color -> String"
+      },
+      {
+        "name": "listItem",
+        "comment": " list-item ",
+        "type": "String"
+      },
+      {
+        "name": "listStyleImage",
+        "comment": " list-style-image ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "listStylePosition",
+        "comment": " list-style-position ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "listStyleType",
+        "comment": " list-style-type ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "ltr",
+        "comment": " ltr ",
+        "type": "String"
+      },
+      {
+        "name": "margin",
+        "comment": " margin ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "marginBottom",
+        "comment": " margin-bottom ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "marginLeft",
+        "comment": " margin-left ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "marginRight",
+        "comment": " margin-right ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "marginTop",
+        "comment": " margin-top ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "matrix",
+        "comment": " matrix ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "maxHeight",
+        "comment": " max-height ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "maxWidth",
+        "comment": " max-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "minHeight",
+        "comment": " min-height ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "minWidth",
+        "comment": " min-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "noRepeat",
+        "comment": " no-repeat ",
+        "type": "String"
+      },
+      {
+        "name": "none",
+        "comment": " none ",
+        "type": "String"
+      },
+      {
+        "name": "normal",
+        "comment": " normal ",
+        "type": "String"
+      },
+      {
+        "name": "nowrap",
+        "comment": " nowrap ",
+        "type": "String"
+      },
+      {
+        "name": "oblique",
+        "comment": " oblique ",
+        "type": "String"
+      },
+      {
+        "name": "order",
+        "comment": " order ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "outline",
+        "comment": " outline ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "outlineColor",
+        "comment": " outline-color ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "outlineStyle",
+        "comment": " outline-style ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "outlineWidth",
+        "comment": " outline-width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "outset",
+        "comment": " outset ",
+        "type": "String"
+      },
+      {
+        "name": "outside",
+        "comment": " outside ",
+        "type": "String"
+      },
+      {
+        "name": "overflow",
+        "comment": " overflow ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "overline",
+        "comment": " overline ",
+        "type": "String"
+      },
+      {
+        "name": "padding",
+        "comment": " padding ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "paddingBottom",
+        "comment": " padding-bottom ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "paddingLeft",
+        "comment": " padding-left ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "paddingRight",
+        "comment": " padding-right ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "paddingTop",
+        "comment": " padding-top ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "pc",
+        "comment": " pc ",
+        "type": "number -> String"
+      },
+      {
+        "name": "perspective",
+        "comment": " perspective ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "position",
+        "comment": " position ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "pre",
+        "comment": " pre ",
+        "type": "String"
+      },
+      {
+        "name": "preLine",
+        "comment": " pre-line ",
+        "type": "String"
+      },
+      {
+        "name": "preWrap",
+        "comment": " pre-wrap ",
+        "type": "String"
+      },
+      {
+        "name": "prefixName",
+        "comment": " generate the correct style with prefix ",
+        "type": "Style.PrefixSet -> String -> Style.Style"
+      },
+      {
+        "name": "prefixSet",
+        "comment": " construct a prefix set for the given browser ",
+        "type": "String -> Style.PrefixSet"
+      },
+      {
+        "name": "prefixValue",
+        "comment": " get the prefix for the browser  ",
+        "type": "Style.PrefixSet -> String"
+      },
+      {
+        "name": "px",
+        "comment": " px ",
+        "type": "number -> String"
+      },
+      {
+        "name": "rad",
+        "comment": " rad ",
+        "type": "number -> String"
+      },
+      {
+        "name": "radialGradient",
+        "comment": " radial-gradient(#FFF, #000) ",
+        "type": "List Color.Color -> String"
+      },
+      {
+        "name": "relative",
+        "comment": " relative ",
+        "type": "String"
+      },
+      {
+        "name": "repeat",
+        "comment": " repeat ",
+        "type": "String"
+      },
+      {
+        "name": "repeatX",
+        "comment": " repeat-x ",
+        "type": "String"
+      },
+      {
+        "name": "repeatY",
+        "comment": " repeat-y ",
+        "type": "String"
+      },
+      {
+        "name": "ridge",
+        "comment": " ridge ",
+        "type": "String"
+      },
+      {
+        "name": "right",
+        "comment": " right ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "right'",
+        "comment": " right' ",
+        "type": "String"
+      },
+      {
+        "name": "rotate",
+        "comment": " rotate ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "rotate3d",
+        "comment": " rotate3d ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "row",
+        "comment": " row ",
+        "type": "String"
+      },
+      {
+        "name": "rowReverse",
+        "comment": " row-reverse ",
+        "type": "String"
+      },
+      {
+        "name": "rtl",
+        "comment": " rtl ",
+        "type": "String"
+      },
+      {
+        "name": "runIn",
+        "comment": " run-in ",
+        "type": "String"
+      },
+      {
+        "name": "scale",
+        "comment": " scale ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "scale3d",
+        "comment": " scale3d ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "scroll",
+        "comment": " scroll ",
+        "type": "String"
+      },
+      {
+        "name": "skew",
+        "comment": " skew ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "smallCaps",
+        "comment": " small-caps ",
+        "type": "String"
+      },
+      {
+        "name": "solid",
+        "comment": " solid ",
+        "type": "String"
+      },
+      {
+        "name": "spaceAround",
+        "comment": " space-around ",
+        "type": "String"
+      },
+      {
+        "name": "spaceBetween",
+        "comment": " space-between ",
+        "type": "String"
+      },
+      {
+        "name": "static",
+        "comment": " static ",
+        "type": "String"
+      },
+      {
+        "name": "table",
+        "comment": " table ",
+        "type": "String"
+      },
+      {
+        "name": "tableCaption",
+        "comment": " table-caption ",
+        "type": "String"
+      },
+      {
+        "name": "tableCell",
+        "comment": " table-cell ",
+        "type": "String"
+      },
+      {
+        "name": "tableColumn",
+        "comment": " table-column ",
+        "type": "String"
+      },
+      {
+        "name": "tableColumnGroup",
+        "comment": " table-column-group ",
+        "type": "String"
+      },
+      {
+        "name": "tableFooterGroup",
+        "comment": " table-footer-group ",
+        "type": "String"
+      },
+      {
+        "name": "tableHeaderGroup",
+        "comment": " table-header-group ",
+        "type": "String"
+      },
+      {
+        "name": "tableRow",
+        "comment": " table-row ",
+        "type": "String"
+      },
+      {
+        "name": "tableRowGroup",
+        "comment": " table-row-group ",
+        "type": "String"
+      },
+      {
+        "name": "textAlign",
+        "comment": " text-align ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "textDecoration",
+        "comment": " text-decoration ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "textIndent",
+        "comment": " text-indent ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "textShadow",
+        "comment": " text-shadow ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "top",
+        "comment": " top ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "transform",
+        "comment": " transform ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "translate",
+        "comment": " translate ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "translate3d",
+        "comment": " translate3d ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "underline",
+        "comment": " underline ",
+        "type": "String"
+      },
+      {
+        "name": "unicodeBidi",
+        "comment": " unicode-bidi ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "url",
+        "comment": " url(path) ",
+        "type": "String -> String"
+      },
+      {
+        "name": "verticalAlign",
+        "comment": " vertical-align ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "visible",
+        "comment": " visible ",
+        "type": "String"
+      },
+      {
+        "name": "whiteSpace",
+        "comment": " white-space ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "width",
+        "comment": " width ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "wordSpacing",
+        "comment": " word-spacing ",
+        "type": "String -> Style.Style"
+      },
+      {
+        "name": "wrap",
+        "comment": " wrap ",
+        "type": "String"
+      },
+      {
+        "name": "wrapReverse",
+        "comment": " wrap-reverse ",
+        "type": "String"
+      },
+      {
+        "name": "zIndex",
+        "comment": " z-index ",
+        "type": "String -> Style.Style"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

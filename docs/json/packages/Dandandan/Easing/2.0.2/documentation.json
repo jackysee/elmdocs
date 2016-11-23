@@ -1,0 +1,249 @@
+[
+  {
+    "name": "Easing",
+    "comment": "`Easing` is a library for working creating simple animations with easing functions. Easing functions interpolate a value over time. This can be a value of any type, including numbers, points and colors.\r\n\r\nYou can find graphical examples of easing functions on [easings.net](http://easings.net/ \"Easings\").\r\n\r\n```elm\r\nsampleAnimation : Time -> Float\r\nsampleAnimation currentTime =\r\n    ease easeInCubic float 0 10 second currentTime\r\n\r\n{- Transition from blue to red using custom `Easing` function -}\r\ncustomAnimation : Time -> Color\r\ncustomAnimation currentTime =\r\n    ease (\\x -> x ^ 2.4) color blue red second currentTime\r\n\r\n{- Animate between 0 and 5 with the easeInOutQuad Easing -}\r\nanimation1 : Time -> Float\r\nanimation1 currentTime =\r\n    ease easeInOutQuad number 0 5 second currentTime\r\n\r\n{- Animation with bezier curve -}\r\nbezierAnimation : Time -> Float\r\nbezierAnimation currentTime =\r\n    ease (bezier 0.65 0.06 0.99 0) number 0 5 second currentTime\r\n\r\n{- Create your own Interpolation functions -}\r\nvec : Interpolation Vec3\r\nvec from to value =\r\n    from `add` ((to `sub` from) `scale` value)\r\n\r\n{- Use your Easing and Interpolation functions -}\r\nvec3movement : Time -> Vec3\r\nvec3movement currentTime =\r\n    ease easeInQuad vec (vec3 0 0 0) (vec3 10 10 10) (3 * second) currentTime\r\n```\r\n\r\n# Easing\r\n@docs ease\r\n\r\n# Interpolation and Animation\r\n@docs Interpolation, Animation\r\n\r\n# Interpolation functions\r\n@docs float, point2d, point3d, color, pair\r\n\r\n#Easing function manipulation\r\n@docs cycle, invert, retour, inOut, flip\r\n\r\n# Easing functions\r\n@docs Easing,\r\n      bezier,\r\n      linear,\r\n      easeInQuad, easeOutQuad, easeInOutQuad,\r\n      easeInCubic, easeOutCubic, easeInOutCubic,\r\n      easeInQuart, easeOutQuart, easeInOutQuart,\r\n      easeInQuint, easeOutQuint, easeInOutQuint,\r\n      easeInSine, easeOutSine, easeInOutSine,\r\n      easeInExpo, easeOutExpo, easeInOutExpo,\r\n      easeInCirc, easeOutCirc, easeInOutCirc,\r\n      easeInBack, easeOutBack, easeInOutBack,\r\n      easeInBounce, easeOutBounce, easeInOutBounce,\r\n      easeInElastic, easeOutElastic, easeInOutElastic",
+    "aliases": [
+      {
+        "name": "Animation",
+        "comment": "An `Animation` is a function that returns a value given a duration and the current time.",
+        "args": [
+          "a"
+        ],
+        "type": "Time.Time -> Time.Time -> a"
+      },
+      {
+        "name": "Easing",
+        "comment": "Type alias for Easing functions.",
+        "args": [],
+        "type": "Float -> Float"
+      },
+      {
+        "name": "Interpolation",
+        "comment": "An interpolation of two values using a Float value.\r\n\r\n    float : Interpolation Float\r\n    float from to v = from + (from - to) * v",
+        "args": [
+          "a"
+        ],
+        "type": "a -> a -> Float -> a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "bezier",
+        "comment": "A cubic bezier function using 4 parameters: x and y position of first control point, and x and y position of second control point.\r\n\r\nSee [here](http://greweb.me/glsl-transition/example/ \"glsl-transitions\") for examples or [here](http://cubic-bezier.com/ \"tester\") to test.",
+        "type": "Float -> Float -> Float -> Float -> Easing.Easing"
+      },
+      {
+        "name": "color",
+        "comment": "Interpolation of two colors",
+        "type": "Easing.Interpolation Color.Color"
+      },
+      {
+        "name": "cycle",
+        "comment": "Repeats an `Animation` infinitely\r\n\r\n    rotate : Time -> Float\r\n    rotate = cycle (ease linear float 0 360) second",
+        "type": "Easing.Animation a -> Easing.Animation a"
+      },
+      {
+        "name": "ease",
+        "comment": "Compute an animation using the parameters.\r\n      Parameters are: an `Easing` function, an `Interpolation` function, a `from` value, a `to` value, the duration of the transition and the elapsed time.\r\n\r\n      ease linear float 0 20 second 0 == 0\r\n\r\n      ease linear float 0 20 second second == 20\r\n\r\n      ease linear color blue red second second == red",
+        "type": "Easing.Easing -> Easing.Interpolation a -> a -> a -> Time.Time -> Time.Time -> a"
+      },
+      {
+        "name": "easeInBack",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInBounce",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInCirc",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInCubic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInElastic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInExpo",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutBack",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutBounce",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutCirc",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutCubic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutElastic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutExpo",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutQuad",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutQuart",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutQuint",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInOutSine",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInQuad",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInQuart",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInQuint",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeInSine",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutBack",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutBounce",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutCirc",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutCubic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutElastic",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutExpo",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutQuad",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutQuart",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutQuint",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "easeOutSine",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "flip",
+        "comment": "Flips an `Easing` function. A transition that looks like /, now looks like \\\\.",
+        "type": "Easing.Easing -> Easing.Easing"
+      },
+      {
+        "name": "float",
+        "comment": "Interpolation of two Floats",
+        "type": "Easing.Interpolation Float"
+      },
+      {
+        "name": "inOut",
+        "comment": "Makes an Easing function using two `Easing` functions. The first half the first `Easing` function is used, the other half the second.",
+        "type": "Easing.Easing -> Easing.Easing -> Easing.Easing"
+      },
+      {
+        "name": "invert",
+        "comment": "Inverts an `Easing` function. A transition that starts fast and continues slow now starts slow and continues fast.",
+        "type": "Easing.Easing -> Easing.Easing"
+      },
+      {
+        "name": "linear",
+        "comment": "",
+        "type": "Easing.Easing"
+      },
+      {
+        "name": "pair",
+        "comment": "Interpolation of a pair",
+        "type": "Easing.Interpolation a -> Easing.Interpolation ( a, a )"
+      },
+      {
+        "name": "point2d",
+        "comment": "Interpolation of two points in 2D",
+        "type": "Easing.Interpolation { x : Float, y : Float }"
+      },
+      {
+        "name": "point3d",
+        "comment": "Interpolation of two points in 3D",
+        "type": "Easing.Interpolation { x : Float, y : Float, z : Float }"
+      },
+      {
+        "name": "retour",
+        "comment": "Makes an `Easing` function go to the end first and then back to the start. A transition that looks like /, now looks like /\\\\.",
+        "type": "Easing.Easing -> Easing.Easing"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Hexagons.Grid",
+    "comment": " A naive grid storage for hexagons: `Dict Int (Dict Int a)`\n\n# Types\n@docs Grid, Row, Tile\n\n# Finders\n@docs get, list, getPoint\n\n# Modifiers\n@docs set, delete\n",
+    "aliases": [
+      {
+        "name": "Grid",
+        "comment": " A grid is a Dict of rows\n",
+        "args": [
+          "a"
+        ],
+        "type": "Dict.Dict Int (Hexagons.Grid.Row a)"
+      },
+      {
+        "name": "Row",
+        "comment": " A row is a Dict of values\n",
+        "args": [
+          "a"
+        ],
+        "type": "Dict.Dict Int a"
+      },
+      {
+        "name": "Tile",
+        "comment": " A tile has coords and some content\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ content : a, coords : Hexagons.Axial }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "delete",
+        "comment": " Remove content from those axial coordinates within grid\n",
+        "type": "Hexagons.Axial -> Hexagons.Grid.Grid a -> Hexagons.Grid.Grid a"
+      },
+      {
+        "name": "get",
+        "comment": " Find eventual content in grid on those axial coordinates\n",
+        "type": "Hexagons.Grid.Grid a -> Hexagons.Axial -> Maybe.Maybe a"
+      },
+      {
+        "name": "getPoint",
+        "comment": " Given an hexagonal grid definition (radius and grid),\nwhat's in the hexagon holding this point?\n",
+        "type": "Float -> Hexagons.Grid.Grid a -> Hexagons.Point -> Maybe.Maybe a"
+      },
+      {
+        "name": "list",
+        "comment": " Produce a list of all tiles within grid\n",
+        "type": "Hexagons.Grid.Grid a -> List (Hexagons.Grid.Tile a)"
+      },
+      {
+        "name": "set",
+        "comment": " Add or update content to grid on those axial coordinates\n",
+        "type": "a -> Hexagons.Axial -> Hexagons.Grid.Grid a -> Hexagons.Grid.Grid a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Hexagons",
+    "comment": " Suite of functions for hexagonal grid computing, focused on horizontal grids (\"pointy topped\" hexagons) with axial coordinate system.\n\nSee http://www.redblobgames.com/grids/hexagons for reference.\n\n# Types\n@docs Axial, Point\n\n# Conversions\n@docs dims, axialToPoint, pointToAxial\n\n# Measuring\n@docs axialDistance\n\n# Drawing\n@docs axialLine, axialRange\n",
+    "aliases": [
+      {
+        "name": "Axial",
+        "comment": " Axial coordinates of an hexagon with a grid\n",
+        "args": [],
+        "type": "( Int, Int )"
+      },
+      {
+        "name": "Point",
+        "comment": " Point on screen (pixel)\n",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "axialDistance",
+        "comment": " Distance between two axial coordinates\n",
+        "type": "Hexagons.Axial -> Hexagons.Axial -> Int"
+      },
+      {
+        "name": "axialLine",
+        "comment": " List all hexagons composing a line between two hexagons.\n\nSee [Line Drawing](http://www.redblobgames.com/grids/hexagons/#line-drawing) on Red Blob Games\n",
+        "type": "Hexagons.Axial -> Hexagons.Axial -> List Hexagons.Axial"
+      },
+      {
+        "name": "axialRange",
+        "comment": " List all hexagons within given distance of this one.\n\nSee [Range](http://www.redblobgames.com/grids/hexagons/#range) on Red Blob Games\n",
+        "type": "Hexagons.Axial -> Int -> List Hexagons.Axial"
+      },
+      {
+        "name": "axialToPoint",
+        "comment": " Given hex radius and axial coords, return pixel coords of its center\n",
+        "type": "Float -> Hexagons.Axial -> Hexagons.Point"
+      },
+      {
+        "name": "dims",
+        "comment": " Given radius, returns width and height of hexagon\n",
+        "type": "Float -> ( Float, Float )"
+      },
+      {
+        "name": "pointToAxial",
+        "comment": " Given hex radius and pixel coords, returns corresponding axial coords\n",
+        "type": "Float -> Hexagons.Point -> Hexagons.Axial"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

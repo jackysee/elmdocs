@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Time.Timestamp",
+    "comment": " This module lets you wrap your component such, that incoming messages will\nbe transparently decorated with timestamps.\n\n@docs Model, Message, update, subscriptions, view\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Wraps the essential parts of another component.\n\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "{ model : model , update : ( msg, Time.Time ) -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Message",
+        "comment": " A wrapper for messages that might carry a timestamp. If it doesn't a command\nis issued to get one that does and carries the same inner message.\n\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "Timed",
+            [
+              "Time.Time",
+              "msg"
+            ]
+          ],
+          [
+            "Untimed",
+            [
+              "msg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "subscriptions",
+        "comment": " The subscription for the wrapped component.\n\n",
+        "type": "Time.Timestamp.Model msg model -> Platform.Sub.Sub (Time.Timestamp.Message msg)"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the inner model given a wrapped message.\n\n",
+        "type": "Time.Timestamp.Message msg -> Time.Timestamp.Model msg model -> ( Time.Timestamp.Model msg model , Platform.Cmd.Cmd (Time.Timestamp.Message msg) )"
+      },
+      {
+        "name": "view",
+        "comment": " Render the component.\n\n",
+        "type": "Time.Timestamp.Model msg model -> Html.Html (Time.Timestamp.Message msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

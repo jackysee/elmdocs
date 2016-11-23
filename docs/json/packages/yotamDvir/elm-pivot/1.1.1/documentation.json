@@ -1,0 +1,310 @@
+[
+  {
+    "name": "Pivot",
+    "comment": " A pivot is a list upgraded with a center and sides. However, a pivot\ncan never be empty, so it is better to think of it an upgraded cons list.\n\nIn this library, we suffix functions with letters to denote their context,\nas follows.\n\n* The __C__enter\n* Both __S__ides\n* The __L__eft side\n* The __R__ight side\n* __A__ll the members\n\nThis way you can guess a function's name easily.\nSee the different `map*` functions.\n\nFor example, `getL` gets the left side of a pivot.\n\n# Type\n@docs Pivot\n\n# To & Fro\nSo you want to use a pivot? Better know how to create one, and get stuff back!\n\n## Create\n@docs fromList, fromCons, pure\n\n## Get\n@docs getC, getL, getR, getA, hasL, hasR\n\n# Movement\nHandle the position of the center.\nThese functions do not mutate the underlying list.\nThat is, if you apply functions from here and then apply `getA`,\nyou'd get the same thing you would by applying `getA` beforehand.\n\n## Position\n@docs lengthL, lengthR, lengthA\n\n## Momentum\n@docs goR, goL, goBy, goTo, goToStart, goToEnd\n\n## Find\n@docs firstWith, lastWith, findR, findL, findCR, findCL\n\n# Modify\nNow we start seeing functions that can actually change the underlying list.\n\n## Set\n@docs setC, setL, setR\n\n## Add\n@docs addL, addR, addGoL, addGoR\n\n## Remove\nRemoving is not guaranteed to work,\nfor the simple reason that a pivot cannot be empty.\n@docs removeGoL, removeGoR\n\n## Switch\nSwitch places with other members.\n@docs switchL, switchR\n\n## Sort\n@docs sort, sortWith\n\n# Maps\nLists can be mapped over, and so can pivots.\nHowever, since a pivot is made up of three distinct objects at any time,\nit makes sense that you may want to apply different transformations to\nthe different objects.\n\n## Maps\n@docs mapCLR, mapCRL, mapCS, mapA\n\n## Constraint Maps\nIf you want to map only over some of the pivot,\nthen you must retain the type.\n@docs mapC, mapS, mapL, mapR\n\n## As a whole\nSome `List a -> List a` functions cannot be made from `a -> a` functions.\nThis is why these maps may be of importance.\nJust add `'` to a `map*` function to use functions on lists instead of values.\n@docs mapCLR', mapCRL', mapCS', mapS', mapL', mapR'\n\n## Special\n@docs zip, apply\n\n# Utilities\n@docs reverse, mirror, mirrorM, assert, withRollback\n",
+    "aliases": [
+      {
+        "name": "Pivot",
+        "comment": " Pivot is an opaque data type.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Pivot.Types.Pivot a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addGoL",
+        "comment": " Add a member to the left of the center and immediately move left.\nWe know that `addL >> goL` cannot really fail, but it still results in a\n`Maybe` type. This avoids this issue.\n\n    addGoL >> Just == addL >> goL\n",
+        "type": "a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "addGoR",
+        "comment": " Add a member to the right of the center and immediately move right.\n",
+        "type": "a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "addL",
+        "comment": " Add a member to the left of the center\n",
+        "type": "a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "addR",
+        "comment": " Add a member to the right of the center\n",
+        "type": "a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "apply",
+        "comment": " Apply functions in a pivot on values in another Pivot.\nThe center gets applied to the center,\nand each side gets applied to each side.\nBut how does a list of functions get applied on a list of values?\nWell, each function maps over the complete list of values,\nand then all the lists created from these applications are concatinated.\n\n    mapCLR onC onL onR == (pure onC |> setL [onL] |> setR [onR] |> apply)\n",
+        "type": "Pivot.Pivot (a -> b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "assert",
+        "comment": " Takes a pivot full of possible values, and realizes it only if all\nthe values are real. That is, if all the values are `Just a`, then we get\n`Just (Pivot a)`. Otherwise, we get `Nothing`.\nThis is great for composing with the different map functions.\nFor example, you could define\n\n    mapAM : (a -> Maybe b) -> Pivot a -> Maybe (Pivot b)\n    mapAM f = mapA f >> assert\n",
+        "type": "Pivot.Pivot (Maybe.Maybe a) -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "findCL",
+        "comment": " Like `findL`, but checks the center first as well.\n\n_Fails if and only if there are no such members._\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "findCR",
+        "comment": " Like `findR`, but checks the center first as well.\n\n_Fails if and only if there are no such members._\n\n    firstWith == \\pred -> goToStart >> findCR pred\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "findL",
+        "comment": " Find the first member to the center's left satisfying some predicate.\n\n_Fails if and only if there are no such members._\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "findR",
+        "comment": " Find the first member to the center's right satisfying some predicate.\n\n_Fails if and only if there are no such members._\n\n    findR ((==) 3) (fromCons 1 [2..4]) == (pure 3 |> setL [1, 2] |> setR [4])\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "firstWith",
+        "comment": " Find the first member of a pivot satisfying some predicate.\n\n_Fails if and only if there are no such members._\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "fromCons",
+        "comment": " Like `fromList`, but by specifying the center explicitly, it cannot fail.\n\n    getC (fromCons \"well\" [\"hello\", \"world\"]) == \"well\"\n    getL (fromCons \"well\" [\"hello\", \"world\"]) == []\n    getR (fromCons \"well\" [\"hello\", \"world\"]) == [\"hello\", \"world\"]\n    Just (fromCons 1 [2..4]) == fromList [1..4]\n",
+        "type": "a -> List a -> Pivot.Pivot a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Make a pivot from a list with empty left side.\n\n_Fails if and only if the list given is empty._\n\n    fromList [] == Nothing\n",
+        "type": "List a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "getA",
+        "comment": " Make the pivot into a list.\n",
+        "type": "Pivot.Pivot a -> List a"
+      },
+      {
+        "name": "getC",
+        "comment": " Get the center member.\n\n    pure >> getC == identity\n",
+        "type": "Pivot.Pivot a -> a"
+      },
+      {
+        "name": "getL",
+        "comment": " Get the left side list.\n",
+        "type": "Pivot.Pivot a -> List a"
+      },
+      {
+        "name": "getR",
+        "comment": " Get the right side list.\n",
+        "type": "Pivot.Pivot a -> List a"
+      },
+      {
+        "name": "goBy",
+        "comment": " Move right by some number of steps. Negative number moves left instead.\n\n_Fails if and only if the movement goes out of bounds._\n",
+        "type": "Int -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "goL",
+        "comment": " Move one step left.\n\n_Fails if and only if the left side is empty._\n\n    goL (fromCons 1 [2..4]) == Nothing\n    withRollback goL (fromCons 1 [2..4]) == fromCons 1 [2..4]\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "goR",
+        "comment": " Move one step right.\n\n_Fails if and only if the right side is empty._\n\nTip: You can avoid the failure using `withRollback`,\nand instead have a possible no-op. See __Utilities__.\n\n    fromCons 1 [2..4] |> goR /= Nothing\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "goTo",
+        "comment": " Go to a specific position from the left. Starts with 0.\n\n_Fails if and only if the position given doesn't exist._\n",
+        "type": "Int -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "goToEnd",
+        "comment": " Go to starting position.\n\n    goToEnd >> lengthR == 0\n",
+        "type": "Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "goToStart",
+        "comment": " Go to starting position.\n\n    goToStart >> lengthL == 0\n",
+        "type": "Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "hasL",
+        "comment": " Check if the left side is not empty.\n",
+        "type": "Pivot.Pivot a -> Bool"
+      },
+      {
+        "name": "hasR",
+        "comment": " Check if the right side is not empty.\n",
+        "type": "Pivot.Pivot a -> Bool"
+      },
+      {
+        "name": "lastWith",
+        "comment": " Find the last member of a pivot satisfying some predicate.\n\n_Fails if and only if there are no such members._\n",
+        "type": "(a -> Bool) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "lengthA",
+        "comment": " Length of the pivot.\n\n    lengthA == \\p -> lengthL p + 1 + lengthR p\n",
+        "type": "Pivot.Pivot a -> Int"
+      },
+      {
+        "name": "lengthL",
+        "comment": " Position from the left side. Starts with 0.\n",
+        "type": "Pivot.Pivot a -> Int"
+      },
+      {
+        "name": "lengthR",
+        "comment": " Position from the right side. Starts with 0.\n",
+        "type": "Pivot.Pivot a -> Int"
+      },
+      {
+        "name": "mapA",
+        "comment": " Like `mapCS`, but you provide one function for all members.\nThis is exactly like `List.map` for the underlying list.\n\n    mapA ((==) 3) (fromCons 1 [2..4]) == fromCons False [False, True, False]\n",
+        "type": "(a -> b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapC",
+        "comment": " Like `mapA`, but only the center is affected.\n",
+        "type": "(a -> a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapCLR",
+        "comment": " Provide functions that control what happens to the center,\nthe left members and the right member separately,\nand get a function that acts on pivots.\n",
+        "type": "(a -> b) -> (a -> b) -> (a -> b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapCLR'",
+        "comment": " Like `mapCLR`, but the functions for the left and right act on the\nlists as a whole, and not on each member separately.\n",
+        "type": "(a -> b) -> (List a -> List b) -> (List a -> List b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapCRL",
+        "comment": " Like `mapCLR`, but provide the function for the right before the left.\n",
+        "type": "(a -> b) -> (a -> b) -> (a -> b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapCRL'",
+        "comment": " See `mapCLR'`.\n",
+        "type": "(a -> b) -> (List a -> List b) -> (List a -> List b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapCS",
+        "comment": " Like `mapCLR`, but you provide one function for both sides.\n",
+        "type": "(a -> b) -> (a -> b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapCS'",
+        "comment": " See `mapCLR'`.\n",
+        "type": "(a -> b) -> (List a -> List b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mapL",
+        "comment": " Like `mapA`, but only the left is affected.\n",
+        "type": "(a -> a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapL'",
+        "comment": " See `mapCLR'`.\n",
+        "type": "(List a -> List a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapR",
+        "comment": " Like `mapA`, but only the right is affected.\n",
+        "type": "(a -> a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapR'",
+        "comment": " See `mapCLR'`.\n",
+        "type": "(List a -> List a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapS",
+        "comment": " Like `mapA`, but the center is __not__ affected.\n",
+        "type": "(a -> a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mapS'",
+        "comment": " See `mapCLR'`.\n",
+        "type": "(List a -> List a) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "mirror",
+        "comment": " Reverse a function's notion of left and right.\nUsed in many of this library's functions under the hood\n",
+        "type": "(Pivot.Pivot a -> Pivot.Pivot b) -> Pivot.Pivot a -> Pivot.Pivot b"
+      },
+      {
+        "name": "mirrorM",
+        "comment": " Reverse a possibly-failing-function's notion of left and right.\nUsed in many of this library's functions under the hood\n",
+        "type": "(Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot b)) -> Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot b)"
+      },
+      {
+        "name": "pure",
+        "comment": " Like `fromCons`, but without the list. That is, we specify only the center.\n\n    pure == flip fromCons []\n",
+        "type": "a -> Pivot.Pivot a"
+      },
+      {
+        "name": "removeGoL",
+        "comment": " Replace center with member nearest to the left.\n\n_Fails if and only if left side is empty._\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "removeGoR",
+        "comment": " Replace center with member nearest to the right.\n\n_Fails if and only if right side is empty._\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse a pivot, like a list. You could also think of it as mirroring\nleft and right.\n",
+        "type": "Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "setC",
+        "comment": " Replace the center.\n",
+        "type": "a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "setL",
+        "comment": " Replace the left.\n",
+        "type": "List a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "setR",
+        "comment": " Replace the right.\n",
+        "type": "List a -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort a pivot while keeping the center as center.\n\nIt does not simply sort each side separately!\n\n    sort >> getA == getA >> List.sort\n    getC == sort >> getC\n",
+        "type": "Pivot.Pivot comparable -> Pivot.Pivot comparable"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Like `sort`, but with a costum comparator.\n\n    sort == sortWith compare\n",
+        "type": "(a -> a -> Basics.Order) -> Pivot.Pivot a -> Pivot.Pivot a"
+      },
+      {
+        "name": "switchL",
+        "comment": " Switch places with member nearest to the left\n\n_Fails if and only if left side is empty_\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "switchR",
+        "comment": " Switch places with member nearest to the right\n\n_Fails if and only if right side is empty_\n",
+        "type": "Pivot.Pivot a -> Maybe.Maybe (Pivot.Pivot a)"
+      },
+      {
+        "name": "withRollback",
+        "comment": " Replace a possibly-failing-function with a possibly-does-nothing-function.\nFor example, if you try to `goR` a pivot,\nyou may fail since there is nothing to the right.\nBut if you `withRollback goR` a pivot,\nthe worst that could happen is that nothing happens.\n\nUse it, don't abuse it. That is, only use it when it makes sense to ignore\na failure, or when you are __certain__ a possibly-failing-function cannot\nreally fail. For example,\n\n    addGoR == addR >> withRollback goR\n\nIt might be useful to define infix operators as such.\n\n    (!>) = flip withRollback\n    infixl 0 !>\n\n    (<!) = withRollback\n    infixr 0 <!\n\n    goR <! pvt == withRollback goR pvt\n",
+        "type": "(a -> Maybe.Maybe a) -> a -> a"
+      },
+      {
+        "name": "zip",
+        "comment": " Adds indices to the values.\nBased internally on `List.indexedMap`.\n",
+        "type": "Pivot.Pivot a -> Pivot.Pivot ( Int, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

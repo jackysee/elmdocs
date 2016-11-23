@@ -1,0 +1,53 @@
+[
+  {
+    "name": "FontImport",
+    "comment": "\n\n## Helpers for importing Google Fonts\n\n# Font Family Representation\n@docs FontFamily\n\n# Constructing a Font Family\n@docs newFontFamily, withVariants, addVariant, withSubsets, addSubset\n\n# Importing from Google Fonts\n@docs toImportDirective, toStyleNode\n\n",
+    "aliases": [
+      {
+        "name": "FontFamily",
+        "comment": " Represents a family of fonts that may have multiple variants and character\nsubsets. Used to construct import directives for Google Fonts.\n",
+        "args": [],
+        "type": "{ name : String, variants : List String, subsets : List String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addSubset",
+        "comment": " Add a new character subset to a font family, *retaining* any existing\nsubsets\n",
+        "type": "String -> FontImport.FontFamily -> FontImport.FontFamily"
+      },
+      {
+        "name": "addVariant",
+        "comment": " Add a new variant to a font family, *retaining* any existing variants\n",
+        "type": "String -> FontImport.FontFamily -> FontImport.FontFamily"
+      },
+      {
+        "name": "newFontFamily",
+        "comment": " Initialize a new font family; the string argument provides the font name\n",
+        "type": "String -> FontImport.FontFamily"
+      },
+      {
+        "name": "toImportDirective",
+        "comment": " Given a list of `FontFamily` records, generate an import directive\ncontaining an API query that will retreive the specified families/variants\nfrom Google Fonts\n",
+        "type": "List FontImport.FontFamily -> String"
+      },
+      {
+        "name": "toStyleNode",
+        "comment": " Given a list of `FontFamily` records, generate a `<style>` node containing\nan import directive that will retreive the specified families/variants\nfrom Google Fonts.\n",
+        "type": "List FontImport.FontFamily -> Html.Html msg"
+      },
+      {
+        "name": "withSubsets",
+        "comment": " Add a list of character subsets (e.g., \"cyrillic\") to a font family,\n*replacing* any existing subsets\n",
+        "type": "List String -> FontImport.FontFamily -> FontImport.FontFamily"
+      },
+      {
+        "name": "withVariants",
+        "comment": " Add a list of variants to a font family, *replacing* any existing variants\n",
+        "type": "List String -> FontImport.FontFamily -> FontImport.FontFamily"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

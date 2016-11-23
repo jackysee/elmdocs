@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Date.CalendarWeeks",
+    "comment": " This library deals with calculations regardings calendar weeks, i.e.\nit can tell you which calendar weeks are present in a given year, which\ncalendar week corresponds to a certain date, etc.\n\nCalendar week numbering depends on which calendar system you are using.\nThe three main systems, all of which are supported by this library are ISO-8601,\nthe Islamic system, and the North American system.\n\nISO-8601 is the most common system in Europe and Asia. It defines the first\ncalendar week of a year to be the one containing January 4th. Days of the week\nrange from Monday to Sunday. ISO-8601 defines a format for week and date\nstrings which are also supported by this library.\n\nThe Islamic system defines the first calendar week of a year to be the one\ncontaining January 1st. Its week days range from Saturday to Friday.\n\nSimilarly, the North American system (which besides in the US and Canada is \nused in China, Japan, Israel, South Africa, and most of Latin America) \nalso starts with January 1st but the days of the week range from Sunday to\nSaturday.\n\n# Types, Constructors and Deconstructors\n@docs CWSystem, CalendarWeek, cwFromYearAndWeek, cwYear, cwWeek\n\n# Lists of days and calendar weeks per year\n\nOne use case of this library is to get a combination of dates in a year\nand calendar weeks, or the other way round: calendar weeks in a year\nwith the corresponding dates.\n\n@docs daysInYearWithCalendarWeek, calendarWeeksWithDaysInYear, calendarWeeksInYear\n\n# Determining calendar weeks and corresponding days\n\nAnother use case is that you have a date and want to determine the\ncorresponding calendar week, or the other way round: you have a calendar\nweek and want to determine which days are part of it.\n\n@docs whichCalendarWeek, daysInCalendarWeek, weekDays\n\n# ISO-8601\n\nISO-8601 defines string formats for calendar weeks and dates based\non calendar weeks and the day of the week. This library supports converting\nboth to and from these string formats.\n\n@docs toISO8601WeekString, fromISO8601WeekString, toISO8601WeekDateString, fromISO8601WeekDateString\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CWSystem",
+        "comment": " A data type for the possible calendar week systems for use in this library.\n\nFor their definition, please refer to the Wikipedia page on\nweek numbering (https://en.wikipedia.org/wiki/Week#Week_numbering).\n",
+        "args": [],
+        "cases": [
+          [
+            "ISO8601",
+            []
+          ],
+          [
+            "Islamic",
+            []
+          ],
+          [
+            "NorthAmerican",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CalendarWeek",
+        "comment": " A data type to represent a calendar week, i.e. a year and week number.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "calendarWeeksInYear",
+        "comment": " Given a CWSystem and a year, produces a list of tuples of CalendarWeek and\na list of corresponding Dates from that year.\nNote that unlike with calendarWeeksWithDaysInYear, this might mean that some\ndates from this calendar year are not present in the list of dates.\n",
+        "type": "Date.CalendarWeeks.CWSystem -> Int -> List ( Date.CalendarWeeks.CalendarWeek, List Date.Date )"
+      },
+      {
+        "name": "calendarWeeksWithDaysInYear",
+        "comment": " Given a CWSystem and a year, produce a list of calendar weeks and a\ncorresponding list of days in those calendar weeks. The result contains\nall calendar weeks which contain days from the given year, which might\ninclude calendar weeks (and thus also dates) belonging to the year before\nor after. I.e.,\n\n    Maybe.map (\\(cw, _) -> toISO8601WeekString cw) <|\n        List.head <| calendarWeeksWithDaysInYear ISO8601 2016\n\nevaluates to\n\n    Just \"2015-W53\"\n\nSimilarly,\n\n    Maybe.map (\\(cw, _) -> toISO8601WeekString cw) <|\n        List.Extra.last <| calendarWeeksWithDaysInYear ISO8601 2018\n\nevaluates to\n\n    Just \"2019-W01\"\n",
+        "type": "Date.CalendarWeeks.CWSystem -> Int -> List ( Date.CalendarWeeks.CalendarWeek, List Date.Date )"
+      },
+      {
+        "name": "cwFromYearAndWeek",
+        "comment": " Given a year and week number, construct a CalendarWeek.\n\n    cwFromYearAndWeek 2016 51\n",
+        "type": "Int -> Int -> Date.CalendarWeeks.CalendarWeek"
+      },
+      {
+        "name": "cwWeek",
+        "comment": " Given a CalendarWeek, extract the month.\n\n    cwMonth <| cwFromYearAndWeek 2016 51 == 51\n",
+        "type": "Date.CalendarWeeks.CalendarWeek -> Int"
+      },
+      {
+        "name": "cwYear",
+        "comment": " Given a CalendarWeek, extract the year.\n\n    cwYear <| cwFromYearAndWeek 2016 51 == 2016\n",
+        "type": "Date.CalendarWeeks.CalendarWeek -> Int"
+      },
+      {
+        "name": "daysInCalendarWeek",
+        "comment": " Given a CWSystem and a CalendarWeek, return a list of dates in that\ncalendar week.\n\n    daysInCalendarWeek ISO8601 (cwFromYearAndWeek 2016 1)\n    |> List.map (\\d -> (Date.month d, Date.day d))\n\nevaluates to\n\n    [(Jan,4),(Jan,5),(Jan,6),(Jan,7),(Jan,8),(Jan,9),(Jan,10)]\n\n\nWhile\n\n    daysInCalendarWeek NorthAmerican (cwFromYearAndWeek 2016 1)\n    |> List.map (\\d -> (Date.month d, Date.day d))\n\nevaluates to\n\n    [(Dec,27),(Dec,28),(Dec,29),(Dec,30),(Dec,31),(Jan,1),(Jan,2)]\n\nAnd\n\n    daysInCalendarWeek Islamic (cwFromYearAndWeek 2016 1)\n    |> List.map (\\d -> (Date.month d, Date.day d))\n\nevaluates to\n\n    [(Dec,26),(Dec,27),(Dec,28),(Dec,29),(Dec,30),(Dec,31),(Jan,1)]\n",
+        "type": "Date.CalendarWeeks.CWSystem -> Date.CalendarWeeks.CalendarWeek -> List Date.Date"
+      },
+      {
+        "name": "daysInYearWithCalendarWeek",
+        "comment": " Given a CWSystem and a year, produce a list of tuples of\ndate and corresponding CalendarWeek for each day of the year.\n\n    let\n        dateToString d =\n            toString (Date.month d) ++ \" \" ++ toString (Date.day d)\n    in\n       daysInYearWithCalendarWeek ISO8601 2016 |>\n       List.map (\\(d, cw) -> (dateToString d) ++ \": \"\n                          ++ (toISO8601WeekString cw)) |>\n       List.take 5\n\nevaluates to\n\n    [\"Jan 1: 2015-W53\",\"Jan 2: 2015-W53\",\"Jan 3: 2015-W53\",\n    \"Jan 4: 2016-W01\",\"Jan 5: 2016-W01\"]\n",
+        "type": "Date.CalendarWeeks.CWSystem -> Int -> List ( Date.Date, Date.CalendarWeeks.CalendarWeek )"
+      },
+      {
+        "name": "fromISO8601WeekDateString",
+        "comment": " Given an ISO8601 week date string of format YYYY-Www-d or YYYYWwwd,\nreturn a Just Date if parsing succeeds or Nothing if it fails.\n",
+        "type": "String -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "fromISO8601WeekString",
+        "comment": " Given an ISO8601 week string of format YYYY-Www or YYYYWww,\nreturn a Just CalendarWeek if parsing succeeds or Nothing if it fails.\n",
+        "type": "String -> Maybe.Maybe Date.CalendarWeeks.CalendarWeek"
+      },
+      {
+        "name": "toISO8601WeekDateString",
+        "comment": " Given a Date, convert it into an ISO8601 week date string of\nformat YYYY-Www-d.\n\n    Maybe.map (toISO8601WeekDateString)\n        (Result.toMaybe <| Date.fromString \"1979/06/26\")\n\nevaluates to\n\n    Just \"1979-W26-2\"\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "toISO8601WeekString",
+        "comment": " Given a CalendarWeek, convert it into an ISO8601 week string of\nformat YYYY-Www.\n\n    (toISO8601WeekString <| cwFromYearAndWeek 2016 3) == \"2016-W03\"\n",
+        "type": "Date.CalendarWeeks.CalendarWeek -> String"
+      },
+      {
+        "name": "weekDays",
+        "comment": " Given a CWSystem, produces the seven weekdays in the order applicable\nfor that calendar week system.\n",
+        "type": "Date.CalendarWeeks.CWSystem -> List Date.Day"
+      },
+      {
+        "name": "whichCalendarWeek",
+        "comment": " Given a CWSystem and a date, return the CalendarWeek that contains this date.\n    Maybe.map (cwWeek << whichCalendarWeek ISO8601)\n        (Result.toMaybe <| Date.fromString \"2016/03/14\") == Just 11\n    Maybe.map (cwWeek << whichCalendarWeek Islamic d)\n        (Result.toMaybe <| Date.fromString \"2016/03/14\") == Just 12\n",
+        "type": "Date.CalendarWeeks.CWSystem -> Date.Date -> Date.CalendarWeeks.CalendarWeek"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

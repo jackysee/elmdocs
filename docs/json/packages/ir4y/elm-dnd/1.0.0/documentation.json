@@ -1,0 +1,64 @@
+[
+  {
+    "name": "DnD",
+    "comment": " This library allow you to simple build grate ui with drag-and-drop.\n    It is astracting you from mouse events and other low level staff.\n    You can operate high livel things such as draggable and droppable areas.\n\n# Draggable type\n@docs Draggable\n\n#Helper to get information about draggable object\n@docs atDroppable, getMeta\n\n#Message type\n@docs Msg\n\n#Subscriptions\n@docs subscriptions\n\n#update function\n@docs update\n\n#viwe helpers\n@docs draggable, droppable, dragged\n\n",
+    "aliases": [
+      {
+        "name": "Draggable",
+        "comment": " Type of Draggable object it could be Nothing or Just object\n    It is parametrized by the type of meta information.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Maybe.Maybe { meta : a, position : Mouse.Position, atDroppable : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Inner messages, you should pass them to DnD.update at your update function\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "atDroppable",
+        "comment": " Helper that allow you to check if draggable object over valid droppable area\n",
+        "type": "DnD.Draggable a -> Bool"
+      },
+      {
+        "name": "draggable",
+        "comment": " View wrapper for draggable object, you could drag object wraped by this helper\n",
+        "type": "(DnD.Msg a -> m) -> a -> List (Html.Attribute m) -> List (Html.Html m) -> Html.Html m"
+      },
+      {
+        "name": "dragged",
+        "comment": " View helper for draggable object, it drows html of dragged object under your mouse in process of drag\n",
+        "type": "DnD.Draggable a -> (a -> Html.Html m) -> Html.Html m"
+      },
+      {
+        "name": "droppable",
+        "comment": " View helper for droppable area, you could drop object to this area,\n    after that your ondrop command will fire\n",
+        "type": "(DnD.Msg a -> m) -> List (Html.Attribute m) -> List (Html.Html m) -> Html.Html m"
+      },
+      {
+        "name": "getMeta",
+        "comment": " Helper that allow you to get meta information from draggable object\n",
+        "type": "DnD.Draggable a -> Maybe.Maybe a"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscriptions alow you to get drop event\n",
+        "type": "(a -> m) -> (DnD.Msg a -> m) -> DnD.Draggable a -> Platform.Sub.Sub m"
+      },
+      {
+        "name": "update",
+        "comment": " Update function handle all low level staff\n",
+        "type": "DnD.Msg a -> DnD.Draggable a -> DnD.Draggable a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

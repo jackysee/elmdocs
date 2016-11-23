@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Perspective",
+    "comment": "\nEmbed and compose Views\n\nBasics\n@docs View, elim, empty\n\nMaps\n@docs map, mapModel, mapMsg\n\nSlip in a value\n@docs first, second\n\nFail\n@docs failModel, failMsg\n\nFunction Msg\n@docs sproodle\n",
+    "aliases": [
+      {
+        "name": "View",
+        "comment": "\nThe standard TEA view function\nas a type.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "model -> Html.Html msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "elim",
+        "comment": "\nEliminate a Result\n(bundled here since its common with above functions)\n",
+        "type": "(a -> b) -> (c -> b) -> Result.Result a c -> b"
+      },
+      {
+        "name": "empty",
+        "comment": "\nFully generic View, fits in everywhere\n",
+        "type": "Perspective.View a b"
+      },
+      {
+        "name": "failModel",
+        "comment": "\nTransform a View such that, passing an `Err` blanks the view.\n",
+        "type": "Perspective.View a b -> Perspective.View (Result.Result c a) (Result.Result c b)"
+      },
+      {
+        "name": "failMsg",
+        "comment": " Included for completeness\n",
+        "type": "Perspective.View a b -> Perspective.View (Result.Result a c) (Result.Result b c)"
+      },
+      {
+        "name": "first",
+        "comment": "\nPass a value through to the msg,\non the right hand side of a tuple\n",
+        "type": "Perspective.View a b -> Perspective.View ( a, c ) ( b, c )"
+      },
+      {
+        "name": "map",
+        "comment": "\nOne usage of `map` not\nto overlook, embeding a sub View\n\n```\ntype Msg = Sub SubMsg\n\ntype SubMsg = Inc | Dec\n\ntype alias Model = { sub : Int }\n\nsubView : Int -> Html SubMsg\n\nview : Model -> Html Msg\nview = div []\n  [ h1 [] [text \"Foo\"]\n  , map .sub Sub subView ]\n```\n",
+        "type": "(a -> b) -> (c -> d) -> Perspective.View b c -> Perspective.View a d"
+      },
+      {
+        "name": "mapModel",
+        "comment": "\nPre process the model\n",
+        "type": "(a -> b) -> Perspective.View b msg -> Perspective.View a msg"
+      },
+      {
+        "name": "mapMsg",
+        "comment": "\nPost process the msg\n",
+        "type": "(b -> c) -> Perspective.View a b -> Perspective.View a c"
+      },
+      {
+        "name": "second",
+        "comment": "\nPass a value through to the msg,\non the left hand side of a tuple\n",
+        "type": "Perspective.View a b -> Perspective.View ( c, a ) ( c, b )"
+      },
+      {
+        "name": "sproodle",
+        "comment": "\nHandle Html that fires functions.\n(Haskell calls this uncurry',\nthere is no way I'm calling this thing uncurry,\nits sproodle)\n",
+        "type": "Perspective.View a (b -> c) -> Perspective.View ( a, b ) c"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

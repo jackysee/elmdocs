@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Form.Infix",
+    "comment": " Form validation infix operators.\n\n@docs (:=), (?=), (|:)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": ":=",
+        "comment": " Infix version of `get`.\n\n    \"name\" := string\n",
+        "type": "String -> Form.Validate.Validation e a -> Form.Validate.Validation e a"
+      },
+      {
+        "name": "?=",
+        "comment": " Access given field, wrapped in a `maybe` (Nothing if error).\n\n    \"hobby\" ?= string\n",
+        "type": "String -> Form.Validate.Validation e a -> Form.Validate.Validation e (Maybe.Maybe a)"
+      },
+      {
+        "name": "|:",
+        "comment": " Infix version of `apply`:\n\nForm.succeed SomeRecord\n|: (\"foo\" := string)\n|: (\"bar\" := string)\n\n",
+        "type": "Form.Validate.Validation e (a -> b) -> Form.Validate.Validation e a -> Form.Validate.Validation e b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

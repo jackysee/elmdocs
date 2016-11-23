@@ -1,0 +1,185 @@
+[
+  {
+    "name": "Random.Pcg.Interop",
+    "comment": " Provides a function to create a PCG seed from a seed in the core library.\nThis is useful for library writers who need a splittable or most robust PRNG but\ndon't want to require client code to use the PCG implementation.\n\n```elm\nimport Random\nimport Random.Pcg\nimport Random.Pcg.Interop as Random.Pcg\n```\n\n@docs fission\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fission",
+        "comment": " Use the core library's random seed to produce a PCG random seed.\n\nIt seems that the package website doesn't show modules in type annotations, so here it is in full:\n\n    fission : Random.Generator (Random.Pcg.Seed)\n\n",
+        "type": "Random.Generator Random.Pcg.Seed"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Random.Pcg",
+    "comment": " Generate psuedo-random numbers and values, by constructing\n[generators](#Generator) for them. There are a bunch of basic generators like\n[`bool`](#bool) and [`int`](#int) that you can build up into fancier generators\nwith functions like [`list`](#list) and [`map`](#map).\n\nYou run a `Generator` by calling the [`step`](#step) function, which\nalso takes a random [`Seed`](#Seed), and passes back a new seed. You should\nnever use the same seed twice because you will get the same result! If you need\nrandom values over time, you should store the most recent seed in your model.\nAlternatively, use [`generate`](#generate) to obtain random values from the Elm\nruntime.\n\nThis is an implementation of [PCG](http://www.pcg-random.org/) by M. E. O'Neil,\nand is not cryptographically secure.\n\n# Getting Started\n@docs initialSeed, step, generate\n\n# Basic Generators\n@docs Generator, bool, int, float, oneIn, sample\n\n# Combining Generators\n@docs pair, list, maybe, choice, choices, frequency\n\n# Custom Generators\n@docs constant, map, map2, map3, map4, map5, andMap, andThen, filter\n\n# Working With Seeds\n@docs Seed, independentSeed, fastForward, toJson, fromJson\n\n# Constants\n@docs minInt, maxInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Generator",
+        "comment": " A `Generator` is like a recipe for generating certain random values. So a\n`Generator Int` describes how to generate integers and a `Generator String`\ndescribes how to generate strings.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Seed",
+        "comment": " A `Seed` is the source of randomness in the whole system. It hides the\ncurrent state of the random number generator.\n\nGenerators, not seeds, are the primary data structure for generating random\nvalues. Generators are much easier to chain and combine than functions that take\nand return seeds. Creating and managing seeds should happen \"high up\" in your\nprogram.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Map over any number of generators.\n\n    randomPerson : Generator Person\n    randomPerson =\n      person `map` genFirstName\n          `andMap` genLastName\n          `andMap` genBirthday\n          `andMap` genPhoneNumber\n          `andMap` genAddress\n          `andMap` genEmail\n",
+        "type": "Random.Pcg.Generator (a -> b) -> Random.Pcg.Generator a -> Random.Pcg.Generator b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Chain random operations by providing a callback that accepts a\nrandomly-generated value. The random value can be used to drive more randomness.\n\nThe argument order matches `andThen`s from core, but requires the use of `flip`\nto match `map` or work with `|>` chains.\n\nThis example shows how we can use `andThen` to generate a list of random values\n*and* random length. Then we use `map` to apply a stateless function to that\nlist. Assume we already have `genName : Generator String` defined.\n\n    authors : Generator String\n    authors =\n      int 1 5 -- number of authors\n      |> (flip andThen) (\\i -> list i genName)\n      |> map (\\ns ->\n        case ns of\n          [n] ->\n            \"Author: \" ++ n\n          n::ns ->\n            \"Authors: \" ++ String.join \", \" ns ++ \" and \" ++ n\n          [] ->\n            \"This can't happen\"\n        )\n\nIf you find yourself calling `constant` in every branch of the callback, you can\nprobably use `map` instead.\n",
+        "type": "Random.Pcg.Generator a -> (a -> Random.Pcg.Generator b) -> Random.Pcg.Generator b"
+      },
+      {
+        "name": "bool",
+        "comment": " Create a generator that produces boolean values with equal probability. This\nexample simulates flipping three coins and checking if they're all heads.\n\n    threeHeads : Generator Bool\n    threeHeads =\n      map3 (\\a b c -> a && b && c) bool bool bool\n",
+        "type": "Random.Pcg.Generator Bool"
+      },
+      {
+        "name": "choice",
+        "comment": " Choose between two values with equal probability.\n\n    type Flip = Heads | Tails\n\n    coinFlip : Generator Flip\n    coinFlip =\n      choice Heads Tails\n",
+        "type": "a -> a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "choices",
+        "comment": " Create a generator that chooses a generator from a list of generators\nwith equal probability.\n\n**Warning:** Do not pass an empty list or your program will crash! In practice\nthis is usually not a problem since you pass a list literal.\n",
+        "type": "List (Random.Pcg.Generator a) -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "constant",
+        "comment": " Create a generator that always produces the value provided. This is useful\nwhen creating complicated chained generators and you need to handle a simple\ncase. It's also useful for the base case of recursive generators.\n",
+        "type": "a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "fastForward",
+        "comment": " Fast forward a seed the given number of steps, which may be negative (the\nseed will be \"rewound\"). This allows a single seed to serve as a random-access\nlookup table of random numbers. (To be sure no one else uses the seed, use\n`step independentSeed` to split off your own.)\n\n    diceRollTable : Int -> Int\n    diceRollTable i =\n      fastForward i mySeed |> step (int 1 6) |> fst\n",
+        "type": "Int -> Random.Pcg.Seed -> Random.Pcg.Seed"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter a generator so that all generated values satisfy the given predicate.\n\n    evens : Generator Int\n    evens =\n      filter (\\i -> i % 2 == 0) (int minInt maxInt)\n\n**Warning:** If the predicate is unsatisfiable, the generator will not terminate, your\napplication will hang with an infinite loop, and you will be sad. You should\nalso avoid predicates that are merely very difficult to satisfy.\n\n    badCrashingGenerator =\n      filter (\\_ -> False) anotherGenerator\n\n    verySlowGenerator =\n      filter (\\i -> i % 2000 == 0) (int minInt maxInt)\n",
+        "type": "(a -> Bool) -> Random.Pcg.Generator a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "float",
+        "comment": " Generate floats in a given range. The following example is a generator\nthat produces numbers between 0 and 1.\n\n    probability : Generator Float\n    probability =\n      float 0 1\n",
+        "type": "Float -> Float -> Random.Pcg.Generator Float"
+      },
+      {
+        "name": "frequency",
+        "comment": " Create a generator that chooses a generator from a list of generators\nbased on the provided weight. The likelihood of a given generator being\nchosen is its weight divided by the total weight (which doesn't have to equal 1).\n\n**Warning:** Do not pass an empty list or your program will crash! In practice\nthis is usually not a problem since you pass a list literal.\n",
+        "type": "List ( Float, Random.Pcg.Generator a ) -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "fromJson",
+        "comment": " A JSON decoder that can recover seeds encoded using `toJson`. Alternatively,\npass an integer to create a seed using `initialSeed`.\n\n    Json.Decode.decodeValue fromJson (toJson mySeed) == Ok mySeed\n",
+        "type": "Json.Decode.Decoder Random.Pcg.Seed"
+      },
+      {
+        "name": "generate",
+        "comment": " Create a Command that will generate random values according to the supplied\n`Generator`.\n\nThink of this function as an alternative to `step`, since they both provide a\nway to actually get the random values that you want. This function frees you\nfrom worrying about seeds entirely, but as a tradeoff, you get your random\nvalues asynchronously, in their own Message. Additionally, due to constraints on\nthird-party packages, it's possible that multiple commands sent at the same\nmoment will return the same values.\n\nYou can also think of this function as an alternative to `independentSeed`,\nsince they both allow you to use randomness in deeply nested components. In the\ncase of this function, it's through sending Commands up the chain that you have\nto set up anyway.\n",
+        "type": "(a -> msg) -> Random.Pcg.Generator a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "independentSeed",
+        "comment": " A generator that produces a seed that is independent of any other seed in\nthe program. These seeds will generate their own unqiue sequences of random\nvalues. They are useful when you need an unknown amount of randomness *later*\nbut can request only a fixed amount of randomness *now*.\n\nLet's say you write a component that uses some randomness to initialize itself\nand then never needs randomness again. You can easily write a `Generator\nComponent` by mapping over the generators it needs. But if component requires\nrandomness after initialization, it should keep its own independent seed, which\nit can get by mapping over *this* generator.\n\n    type alias Component = { seed : Seed }\n\n    genComponent : Generator Component\n    genComponent = map Component independentSeed\n\nIf you have a lot of components, you can initialize them like so:\n\n    genComponents : List (Seed -> a) -> Generator (List a)\n    genComponents constructors =\n        list (List.length constructors) independentSeed\n            |> map (List.map2 (<|) constructors)\n\nThe independent seeds are extremely likely to be distinct for all practical\npurposes. However, it is not proven that there are no pathological cases.\n",
+        "type": "Random.Pcg.Generator Random.Pcg.Seed"
+      },
+      {
+        "name": "initialSeed",
+        "comment": " Initialize the state of the random number generator. The input should be\na randomly chosen 32-bit integer. You can generate and copy random integers to\ncreate a reproducible psuedo-random generator.\n\n    $ node\n    > Math.floor(Math.random()*0xFFFFFFFF)\n    227852860\n\n    -- Elm\n    seed0 : Seed\n    seed0 = initialSeed 227852860\n\nAlternatively, you can generate the random integers on page load and pass them\nthrough a port. The program will be different every time.\n\n    -- Elm\n    port randomSeed : Int\n\n    seed0 : Seed\n    seed0 = initialSeed randomSeed\n\n    -- JS\n    Elm.ModuleName.fullscreen(\n      { randomSeed: Math.floor(Math.random()*0xFFFFFFFF) })\n\nEither way, you should initialize a random seed only once. After that, whenever\nyou use a seed, you'll get another one back.\n",
+        "type": "Int -> Random.Pcg.Seed"
+      },
+      {
+        "name": "int",
+        "comment": " Generate 32-bit integers in a given range, inclusive.\n\n    int 0 10   -- an integer between zero and ten\n    int -5 5   -- an integer between -5 and 5\n\n    int minInt maxInt  -- an integer in the widest range feasible\n\nThis function *can* produce values outside of the range [[`minInt`](#minInt),\n[`maxInt`](#maxInt)] but sufficient randomness is not guaranteed.\n\n*Performance note:* This function will be ~1.5x faster if the range (i.e. `max - min + 1`) is a power of two. The\neffect will only be noticable if you are generating tens of thousands of random integers.\n\n",
+        "type": "Int -> Int -> Random.Pcg.Generator Int"
+      },
+      {
+        "name": "list",
+        "comment": " Create a list of random values of a given length.\n\n    floatList : Generator (List Float)\n    floatList =\n        list 10 (float 0 1)\n\n    intList : Generator (List Int)\n    intList =\n        list 5 (int 0 100)\n\n    intPairs : Generator (List (Int, Int))\n    intPairs =\n        list 10 <| pair (int 0 100) (int 0 100)\n",
+        "type": "Int -> Random.Pcg.Generator a -> Random.Pcg.Generator (List a)"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the values produced by a generator using a stateless function as a\ncallback.\n\nThese examples show how to generate letters based on a basic integer generator.\n\n    lowercaseLetter : Generator Char\n    lowercaseLetter =\n      map (\\n -> Char.fromCode (n + 97)) (int 0 25)\n\n    uppercaseLetter : Generator Char\n    uppercaseLetter =\n      map (\\n -> Char.fromCode (n + 65)) (int 0 25)\n\n",
+        "type": "(a -> b) -> Random.Pcg.Generator a -> Random.Pcg.Generator b"
+      },
+      {
+        "name": "map2",
+        "comment": " Combine two generators. This is useful when you have a function with two\narguments that both need to be given random inputs.\n\n    pointInCircle : Float -> Generator (Float, Float)\n    pointInCircle radius =\n      let\n        r = float 0 radius\n        theta = map degrees (float 0 360)\n      in\n        map2 (curry fromPolar) r theta\n\n",
+        "type": "(a -> b -> c) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c"
+      },
+      {
+        "name": "map3",
+        "comment": " Combine three generators. This could be used to produce random colors.\n\n    rgb : Generator Color.Color\n    rgb =\n      map3 Color.rgb (int 0 255) (int 0 255) (int 0 255)\n\n    hsl : Generator Color.Color\n    hsl =\n      map3 Color.hsl (map degrees (float 0 360)) (float 0 1) (float 0 1)\n",
+        "type": "(a -> b -> c -> d) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d"
+      },
+      {
+        "name": "map4",
+        "comment": " Combine four generators. This could be used to produce random transparent\ncolors.\n\n    rgba : Generator Color.Color\n    rgba =\n      map4 Color.rgba (int 0 255) (int 0 255) (int 0 255) (float 0 1)\n",
+        "type": "(a -> b -> c -> d -> e) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e"
+      },
+      {
+        "name": "map5",
+        "comment": " Combine five generators.\n",
+        "type": "(a -> b -> c -> d -> e -> f) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e -> Random.Pcg.Generator f"
+      },
+      {
+        "name": "maxInt",
+        "comment": " The maximum value for randomly generated 32-bit ints.\n",
+        "type": "Int"
+      },
+      {
+        "name": "maybe",
+        "comment": " Produce `Just` a value on `True`, and `Nothing` on `False`.\n\nYou can use `bool` or `oneIn n` for the first argument.\n",
+        "type": "Random.Pcg.Generator Bool -> Random.Pcg.Generator a -> Random.Pcg.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "minInt",
+        "comment": " The minimum value for randomly generated 32-bit ints.\n",
+        "type": "Int"
+      },
+      {
+        "name": "oneIn",
+        "comment": " Produce `True` one-in-n times on average.\n\nDo not pass a value less then one to this function.\n\n    flippedHeads = oneIn 2\n    rolled6 = oneIn 6\n    criticalHit = oneIn 20\n",
+        "type": "Int -> Random.Pcg.Generator Bool"
+      },
+      {
+        "name": "pair",
+        "comment": " Create a pair of random values. A common use of this might be to generate\na point in a certain 2D space. Imagine we have a collage that is 400 pixels\nwide and 200 pixels tall.\n\n    randomPoint : Generator (Int,Int)\n    randomPoint =\n        pair (int -200 200) (int -100 100)\n\n",
+        "type": "Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator ( a, b )"
+      },
+      {
+        "name": "sample",
+        "comment": " Given a list, choose an element uniformly at random. `Nothing` is only\nproduced if the list is empty.\n\n    type Direction = North | South | East | West\n\n    direction : Generator Direction\n    direction =\n      sample [North, South, East, West]\n        |> map (Maybe.withDefault North)\n\n",
+        "type": "List a -> Random.Pcg.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "step",
+        "comment": " Generate a random value as specified by a given `Generator`, using a `Seed`\nand returning a new one.\n\nIn the following example, we are trying to generate numbers between 0 and 100\nwith the `int 0 100` generator. Each time we call `generate` we need to provide\na seed. This will produce a random number and a *new* seed to use if we want to\nrun other generators later.\n\n    (x, seed1) = step (int 0 100) seed0\n    (y, seed2) = step (int 0 100) seed1\n    (z, seed3) = step (int 0 100) seed2\n    [x, y, z] -- [85, 0, 38]\n\nNotice that we use different seeds on each line. This is important! If you reuse\nthe same seed, you get the same results.\n\n    (x, _) = step (int 0 100) seed0\n    (y, _) = step (int 0 100) seed0\n    (z, _) = step (int 0 100) seed0\n    [x,y,z] -- [85, 85, 85]\n\nAs you can see, threading seeds through many calls to `step` is tedious and\nerror-prone. That's why this library includes many functions to build more\ncomplicated generators, allowing you to call `step` only a small number of\ntimes.\n\nOur example is best written as:\n\n    (xs, newSeed) = step (list 3 <| int 0 100) seed0\n    xs -- [85, 0, 38]\n\n",
+        "type": "Random.Pcg.Generator a -> Random.Pcg.Seed -> ( a, Random.Pcg.Seed )"
+      },
+      {
+        "name": "toJson",
+        "comment": " Serialize a seed as a [JSON\nvalue](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Encode#Value)\nto be sent out a port, stored in local storage, and so on. The seed can be\nrecovered using `fromJson`.\n\nDo not inspect or change the resulting JSON value.\n",
+        "type": "Random.Pcg.Seed -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Iterator",
+    "comment": " An `Iterator a` can be thought of as a function `Int -> a` along with\nan `Int` indicating its \"length\". It's a simple data type supporting mapping,\nconcatenation, and most importantly, folding in constant space with early return.\n\n# Type\n@docs Iterator\n\n# Introduction\n@docs upTil, range, fromArray, fromList\n\n# Transformation\n@docs map, concat, concatMap, indexedMap\n\n# Elimination\n@docs fold, Status, foldWhile, find, findMany, all, and\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Iterator",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Status",
+        "comment": " This type helps us control early return from a fold. ",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Finished",
+            [
+              "a"
+            ]
+          ],
+          [
+            "KeepGoing",
+            [
+              "a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Check if `all` element in your sequence satisfy the given property. ",
+        "type": "(a -> Bool) -> Iterator.Iterator a -> Bool"
+      },
+      {
+        "name": "and",
+        "comment": " Check if all values are true. ",
+        "type": "Iterator.Iterator Bool -> Bool"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate an iterator of iterators. ",
+        "type": "Iterator.Iterator (Iterator.Iterator a) -> Iterator.Iterator a"
+      },
+      {
+        "name": "concatMap",
+        "comment": "\n    concatMap f = concat << map f\n",
+        "type": "(a -> Iterator.Iterator b) -> Iterator.Iterator a -> Iterator.Iterator b"
+      },
+      {
+        "name": "find",
+        "comment": " `find` the first element in your sequence satisfying the given property. ",
+        "type": "(a -> Bool) -> Iterator.Iterator a -> Maybe.Maybe a"
+      },
+      {
+        "name": "findMany",
+        "comment": " Find the at most `k` first elements in the sequence satisfying the given property. ",
+        "type": "Int -> (a -> Bool) -> Iterator.Iterator a -> List a"
+      },
+      {
+        "name": "fold",
+        "comment": " Folds until the bitter end. ",
+        "type": "(a -> b -> b) -> b -> Iterator.Iterator a -> b"
+      },
+      {
+        "name": "foldWhile",
+        "comment": " `foldWhile` allows you to fold, returning early if you like, in constant space (stack or otherwise).\nSuppose for example that we'd like to find the first element in a sequence of `a`'s satisfying some property\n`p : a -> Bool`. We can express this as a fold over our sequence (assuming it supports some notion of `fold`) as\n\n    fold (\\x r -> if p x then Just x else r) Nothing\n\nbut we would like for this fold to return early with the first `x` satisfying `p`.\nSo, we have foldWhile which stops folding once a `Finished x` value is found. We\ncan thus express `find : (a -> Bool) -> Iterator a -> Maybe a` as\n\n    find f = foldWhile (\\x _ -> if f x then Finished (Just x) else KeepGoing Nothing)\n               (KeepGoing Nothing)\n\n",
+        "type": "(a -> b -> Iterator.Status b) -> Iterator.Status b -> Iterator.Iterator a -> b"
+      },
+      {
+        "name": "fromArray",
+        "comment": " ",
+        "type": "Array.Array a -> Iterator.Iterator a"
+      },
+      {
+        "name": "fromList",
+        "comment": " ",
+        "type": "List a -> Iterator.Iterator a"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " ",
+        "type": "(Int -> a -> b) -> Iterator.Iterator a -> Iterator.Iterator b"
+      },
+      {
+        "name": "map",
+        "comment": " Map over the values of the iterator. ",
+        "type": "(a -> b) -> Iterator.Iterator a -> Iterator.Iterator b"
+      },
+      {
+        "name": "range",
+        "comment": " `range start stop` is conceptually the sequence\n\n    [start, start + 1,...,stop]\n",
+        "type": "Int -> Int -> Iterator.Iterator Int"
+      },
+      {
+        "name": "upTil",
+        "comment": " `upTil n f` is conceptually the sequence \n\n    [f 0, f 1,..., f (n - 1)]\n",
+        "type": "Int -> (Int -> a) -> Iterator.Iterator a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

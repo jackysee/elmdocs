@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Every",
+    "comment": "\n\nThis component will continually issue / poll an action / message\nfor some given amount of time, determined by a function you provide\nthe system.\n\n\n## Polling State\n\n@docs Model, init\n\n\n## Polling Invocation\n\n@docs Msg\n\n\n## Polling Enactment\n\n@docs update, waitingFor\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": "\nThe state of the loop. Note that `soFar` is a block-like metric: it doesn't\nchange dynamically over the duration of time, but is rather the last-known\ninput to the new duration function.\n",
+        "args": [
+          "b"
+        ],
+        "type": "{ threadId : Int, data : b, stop : Bool, soFar : Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The type of messages you can send to poll:\n- start again, debouncing and adjusting the data\n- adjust the data stored and optionally debounce\n- stop all threads\n",
+        "args": [
+          "b"
+        ],
+        "cases": [
+          [
+            "Start",
+            [
+              "b -> b"
+            ]
+          ],
+          [
+            "Adjust",
+            [
+              "{ modify : b -> b, reset : Bool }"
+            ]
+          ],
+          [
+            "Stop",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "b -> Every.Model b"
+      },
+      {
+        "name": "update",
+        "comment": "\nGiven a method to compute the duration to wait until the next action is issued\n(calculated from the total time elapsed `total -> delay`), and the main action to\nissue, build an updating component.\n\nAlso notice that this does not fire immediately.\n",
+        "type": "(b -> Time.Time -> Time.Time) -> (b -> Platform.Cmd.Cmd a) -> Every.Msg b -> Every.Model b -> ( Every.Model b , Platform.Cmd.Cmd (Result.Result a (Every.Msg b)) )"
+      },
+      {
+        "name": "waitingFor",
+        "comment": "\nGiven the duration function and the current state, give the total time that is currently being\nwaited. Note that this is assuming there hasn't been a manipulation of the data stored since the\nlast issued tick.\n",
+        "type": "(b -> Time.Time -> Time.Time) -> Every.Model b -> Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

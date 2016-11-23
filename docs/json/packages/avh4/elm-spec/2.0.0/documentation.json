@@ -1,0 +1,119 @@
+[
+  {
+    "name": "Spec.Runner.Console",
+    "comment": " Run a test suite as a command-line script.\n\n# Run\n@docs run\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": " Turn the pass/fail status of a `Spec` into a `String`, `Debug.log` that\n    result, and exit.\n",
+        "type": "Spec.Spec -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Spec.Assertions",
+    "comment": " Assertions for testing assertions.  These functions are used for testing the\n`Spec` package itself.  You probably will not need these unless you are writing\ncustom assertions and want to write unit tests for your assertion functions.\n\n# Asserting failure\n@docs shouldFail, shouldFailWithMessage\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "shouldFail",
+        "comment": " Assert that a Spec should fail\n",
+        "type": "Spec.Spec -> Spec.Spec"
+      },
+      {
+        "name": "shouldFailWithMessage",
+        "comment": " Assert that a Spec should fail with a specific method.\n    TODO Provide implementation for Group specs.\n",
+        "type": "String -> Spec.Spec -> Spec.Spec"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Spec",
+    "comment": " Functions for writing simple unit tests.\n\n# Defining specs\n@docs describe, it, passes, shouldEqual, shouldEqualString, shouldContain\n\n@docs Spec, Failure\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Failure",
+        "comment": " Type representing a failed state and information to diagnose the failure.\n",
+        "args": [],
+        "cases": [
+          [
+            "Message",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Diff",
+            [
+              "String",
+              "List Diff.Change"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Spec",
+        "comment": " Type describing a test case or group of test cases, and more specifically\n    their pass/fail status.\n",
+        "args": [],
+        "cases": [
+          [
+            "Group",
+            [
+              "String",
+              "List Spec.Spec"
+            ]
+          ],
+          [
+            "Pass",
+            []
+          ],
+          [
+            "Fail",
+            [
+              "Spec.Failure"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "describe",
+        "comment": " Designate a group of test cases.\n",
+        "type": "String -> List Spec.Spec -> Spec.Spec"
+      },
+      {
+        "name": "it",
+        "comment": " Another way to designate a group of test cases; usually used when nesting\n    a subgroup inside a `describe`, to read more idiomatically.\n",
+        "type": "String -> List Spec.Spec -> Spec.Spec"
+      },
+      {
+        "name": "passes",
+        "comment": " Determine whether a spec or group of specs have passed.\n",
+        "type": "Spec.Spec -> Bool"
+      },
+      {
+        "name": "shouldContain",
+        "comment": " Asserts that one `String` contains another.\n",
+        "type": "String -> String -> Spec.Spec"
+      },
+      {
+        "name": "shouldEqual",
+        "comment": " Asserts that two values are equal\n",
+        "type": "a -> a -> Spec.Spec"
+      },
+      {
+        "name": "shouldEqualString",
+        "comment": " Asserts that two `String` values are equal.\n",
+        "type": "String -> String -> Spec.Spec"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

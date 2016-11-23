@@ -1,0 +1,2488 @@
+[
+  {
+    "name": "Bootstrap.Html",
+    "comment": " Shorthand for Bootstrap Html.\n\n# Conventions\nThis package follows somewhat similar conventions to those used in [Html.Shorthand](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest).\nOne major difference is that idiomatic elements such as `panelDefault'` are frequently composites consisting of multiple elements.\n\n# CSS\n\n## Overview\n* Containers\n@docs container_,containerFluid_\n\n## Grid system\n* Media queries\n* Grid options\n* Ex: Stacked-to-horizontal\n* Ex: Fluid container\n* Ex: Mobile and desktop\n* Ex: Mobile, tablet, desktop\n* Ex: Column wrapping\n* Responsive column resets\n* Offsetting columns\n* Nesting columns\n* Column ordering\n* Less mixins and variables\n@docs row_,colXs_,colSm_,colMd_,colLg_,colXsOffset_,colSmOffset_,colMdOffset_,colLgOffset_\n\n## Typography\n* Headings\n* Body copy\n* Inline text elements\n* Alignment classes\n* Transformation classes\n* Abbreviations\n* Addresses\n* Blockquotes\n* Lists\n\n## Code\n* Inline\n* User input\n* Basic block\n* Variables\n* Sample output\n\n## Tables\n* Basic example\n* Striped rows\n@docs tableStriped', tableStriped_, tableBodyStriped', tableBodyStriped_\n* Bordered table\n* Hover rows\n* Condensed table\n* Contextual classes\n* Responsive tables\n\n## Forms\n* Basic example\n* Inline form\n* Horizontal form\n* Supported controls\n* Static control\n* Focus state\n* Disabled state\n* Readonly state\n* Validation states\n* Control sizing\n* Help text\n@docs formGroup_\n\n## Buttons\n* Options\n* Sizes\n* Active state\n* Disabled state\n* Button tags\n@docs BtnParam, btnParam\n@docs btnDefault', btnDefault_, btnXsDefault', btnXsDefault_, btnSmDefault', btnSmDefault_, btnLgDefault', btnLgDefault_\n@docs btnPrimary', btnPrimary_, btnXsPrimary', btnXsPrimary_, btnSmPrimary', btnSmPrimary_, btnLgPrimary', btnLgPrimary_\n@docs btnSuccess', btnSuccess_, btnXsSuccess', btnXsSuccess_, btnSmSuccess', btnSmSuccess_, btnLgSuccess', btnLgSuccess_\n@docs btnInfo', btnInfo_, btnXsInfo', btnXsInfo_, btnSmInfo', btnSmInfo_, btnLgInfo', btnLgInfo_\n@docs btnWarning', btnWarning_, btnXsWarning', btnXsWarning_, btnSmWarning', btnSmWarning_, btnLgWarning', btnLgWarning_\n@docs btnDanger', btnDanger_, btnXsDanger', btnXsDanger_, btnSmDanger', btnSmDanger_, btnLgDanger', btnLgDanger_\n@docs btnSubmitPrimary', btnSubmitPrimary_, btnSubmitXsPrimary', btnSubmitXsPrimary_, btnSubmitSmPrimary', btnSubmitSmPrimary_, btnSubmitLgPrimary', btnSubmitLgPrimary_\n\n## Images\n* Responsive images\n* Image shapes\n\n## Helper classes\n* Contextual colors\n* Contextual backgrounds\n* Close icon\n* Carets\n* Quick floats\n* Center content blocks\n* Clearfix\n* Showing and hiding content\n* Screen reader and keyboard navigation content\n* Image replacement\n@docs skipNavigation_\n\n## Responsive utilities\n* Available classes\n* Print classes\n* Test cases\n\n# Components\n\n## Glyphicons\nGlyphicons Halflings are normally not available for free, but their creator has made them available for [Bootstrap](http://getbootstrap.com/components/#glyphicons) free of cost. As a thank you, please include a link back to [Glyphicons](http://glyphicons.com/) whenever possible.\n\n@docs glyphiconPlusSign_,glyphiconAsterisk_,glyphiconPlus_,glyphiconEuro_,glyphiconMinus_\n@docs glyphiconCloud_,glyphiconEnvelope_,glyphiconPencil_,glyphiconGlass_,glyphiconMusic_\n@docs glyphiconSearch_,glyphiconHeart_,glyphiconStar_,glyphiconStarEmpty_,glyphiconUser_\n@docs glyphiconFilm_,glyphiconThLarge_,glyphiconTh_,glyphiconThList_,glyphiconOk_,glyphiconRemove_\n@docs glyphiconZoomIn_,glyphiconZoomOut_,glyphiconOff_,glyphiconSignal_,glyphiconCog_\n@docs glyphiconTrash_,glyphiconHome_,glyphiconFile_,glyphiconTime_,glyphiconRoad_\n@docs glyphiconDownloadAlt_,glyphiconDownload_,glyphiconUpload_,glyphiconInbox_\n@docs glyphiconPlayCircle_,glyphiconRepeat_,glyphiconRefresh_,glyphiconListAlt_,glyphiconLock_\n@docs glyphiconFlag_,glyphiconHeadphones_,glyphiconVolumeOff_,glyphiconVolumeDown_\n@docs glyphiconVolumeUp_,glyphiconQrcode_,glyphiconBarcode_,glyphiconTag_,glyphiconTags_\n@docs glyphiconBook_,glyphiconBookmark_,glyphiconPrint_,glyphiconCamera_,glyphiconFont_\n@docs glyphiconBold_,glyphiconItalic_,glyphiconTextHeight_,glyphiconTextWidth_,glyphiconAlignLeft_\n@docs glyphiconAlignCenter_,glyphiconAlignRight_,glyphiconAlignJustify_,glyphiconList_\n@docs glyphiconIndentLeft_,glyphiconIndentRight_,glyphiconFacetimeVideo_,glyphiconPicture_\n@docs glyphiconMapMarker_,glyphiconAdjust_,glyphiconTint_,glyphiconEdit_,glyphiconShare_\n@docs glyphiconCheck_,glyphiconMove_,glyphiconStepBackward_,glyphiconFastBackward_\n@docs glyphiconBackward_,glyphiconPlay_,glyphiconPause_,glyphiconStop_,glyphiconForward_\n@docs glyphiconFastForward_,glyphiconStepForward_,glyphiconEject_,glyphiconChevronLeft_\n@docs glyphiconChevronRight_,glyphiconPlusSign_,glyphiconMinusSign_,glyphiconRemoveSign_\n@docs glyphiconOkSign_,glyphiconQuestionSign_,glyphiconInfoSign_,glyphiconScreenshot_\n@docs glyphiconRemoveCircle_,glyphiconOkCircle_,glyphiconBanCircle_,glyphiconArrowLeft_\n@docs glyphiconArrowRight_,glyphiconArrowUp_,glyphiconArrowDown_,glyphiconShareAlt_\n@docs glyphiconResizeFull_,glyphiconResizeSmall_,glyphiconExclamationSign_,glyphiconGift_\n@docs glyphiconLeaf_,glyphiconFire_,glyphiconEyeOpen_,glyphiconEyeClose_,glyphiconWarningSign_\n@docs glyphiconPlane_,glyphiconCalendar_,glyphiconRandom_,glyphiconComment_,glyphiconMagnet_\n@docs glyphiconChevronUp_,glyphiconChevronDown_,glyphiconRetweet_,glyphiconShoppingCart_\n@docs glyphiconFolderClose_,glyphiconFolderOpen_,glyphiconResizeVertical_\n@docs glyphiconResizeHorizontal_,glyphiconHdd_,glyphiconBullhorn_,glyphiconBell_\n@docs glyphiconCertificate_,glyphiconThumbsUp_,glyphiconThumbsDown_,glyphiconHandRight_\n@docs glyphiconHandLeft_,glyphiconHandUp_,glyphiconHandDown_,glyphiconCircleArrowRight_\n@docs glyphiconCircleArrowLeft_,glyphiconCircleArrowUp_,glyphiconCircleArrowDown_,glyphiconGlobe_\n@docs glyphiconWrench_,glyphiconTasks_,glyphiconFilter_,glyphiconBriefcase_,glyphiconFullscreen_\n@docs glyphiconDashboard_,glyphiconPaperclip_,glyphiconHeartEmpty_,glyphiconLink_,glyphiconPhone_\n@docs glyphiconPushpin_,glyphiconUsd_,glyphiconGbp_,glyphiconSort_,glyphiconSortByAlphabet_\n@docs glyphiconSortByAlphabetAlt_,glyphiconSortByOrder_,glyphiconSortByOrderAlt_\n@docs glyphiconSortByAttributes_,glyphiconSortByAttributesAlt_,glyphiconUnchecked_,glyphiconExpand_\n@docs glyphiconCollapseDown_,glyphiconCollapseUp_,glyphiconLogIn_,glyphiconFlash_,glyphiconLogOut_\n@docs glyphiconNewWindow_,glyphiconRecord_,glyphiconSave_,glyphiconOpen_,glyphiconSaved_\n@docs glyphiconImport_,glyphiconExport_,glyphiconSend_,glyphiconFloppyDisk_,glyphiconFloppySaved_\n@docs glyphiconFloppyRemove_,glyphiconFloppySave_,glyphiconFloppyOpen_,glyphiconCreditCard_\n@docs glyphiconTransfer_,glyphiconCutlery_,glyphiconHeader_,glyphiconCompressed_,glyphiconEarphone_\n@docs glyphiconPhoneAlt_,glyphiconTower_,glyphiconStats_,glyphiconSdVideo_,glyphiconHdVideo_\n@docs glyphiconSubtitles_,glyphiconSoundStereo_,glyphiconSoundDolby_,glyphiconSound51_\n@docs glyphiconSound61_,glyphiconSound71_,glyphiconCopyrightMark_,glyphiconRegistrationMark_\n@docs glyphiconCloudDownload_,glyphiconCloudUpload_,glyphiconTreeConifer_,glyphiconTreeDeciduous_\n\n@docs glyphiconPlusSign',glyphiconAsterisk',glyphiconPlus',glyphiconEuro',glyphiconMinus'\n@docs glyphiconCloud',glyphiconEnvelope',glyphiconPencil',glyphiconGlass',glyphiconMusic'\n@docs glyphiconSearch',glyphiconHeart',glyphiconStar',glyphiconStarEmpty',glyphiconUser'\n@docs glyphiconFilm',glyphiconThLarge',glyphiconTh',glyphiconThList',glyphiconOk',glyphiconRemove'\n@docs glyphiconZoomIn',glyphiconZoomOut',glyphiconOff',glyphiconSignal',glyphiconCog'\n@docs glyphiconTrash',glyphiconHome',glyphiconFile',glyphiconTime',glyphiconRoad'\n@docs glyphiconDownloadAlt',glyphiconDownload',glyphiconUpload',glyphiconInbox'\n@docs glyphiconPlayCircle',glyphiconRepeat',glyphiconRefresh',glyphiconListAlt',glyphiconLock'\n@docs glyphiconFlag',glyphiconHeadphones',glyphiconVolumeOff',glyphiconVolumeDown'\n@docs glyphiconVolumeUp',glyphiconQrcode',glyphiconBarcode',glyphiconTag',glyphiconTags'\n@docs glyphiconBook',glyphiconBookmark',glyphiconPrint',glyphiconCamera',glyphiconFont'\n@docs glyphiconBold',glyphiconItalic',glyphiconTextHeight',glyphiconTextWidth',glyphiconAlignLeft'\n@docs glyphiconAlignCenter',glyphiconAlignRight',glyphiconAlignJustify',glyphiconList'\n@docs glyphiconIndentLeft',glyphiconIndentRight',glyphiconFacetimeVideo',glyphiconPicture'\n@docs glyphiconMapMarker',glyphiconAdjust',glyphiconTint',glyphiconEdit',glyphiconShare'\n@docs glyphiconCheck',glyphiconMove',glyphiconStepBackward',glyphiconFastBackward'\n@docs glyphiconBackward',glyphiconPlay',glyphiconPause',glyphiconStop',glyphiconForward'\n@docs glyphiconFastForward',glyphiconStepForward',glyphiconEject',glyphiconChevronLeft'\n@docs glyphiconChevronRight',glyphiconPlusSign',glyphiconMinusSign',glyphiconRemoveSign'\n@docs glyphiconOkSign',glyphiconQuestionSign',glyphiconInfoSign',glyphiconScreenshot'\n@docs glyphiconRemoveCircle',glyphiconOkCircle',glyphiconBanCircle',glyphiconArrowLeft'\n@docs glyphiconArrowRight',glyphiconArrowUp',glyphiconArrowDown',glyphiconShareAlt'\n@docs glyphiconResizeFull',glyphiconResizeSmall',glyphiconExclamationSign',glyphiconGift'\n@docs glyphiconLeaf',glyphiconFire',glyphiconEyeOpen',glyphiconEyeClose',glyphiconWarningSign'\n@docs glyphiconPlane',glyphiconCalendar',glyphiconRandom',glyphiconComment',glyphiconMagnet'\n@docs glyphiconChevronUp',glyphiconChevronDown',glyphiconRetweet',glyphiconShoppingCart'\n@docs glyphiconFolderClose',glyphiconFolderOpen',glyphiconResizeVertical'\n@docs glyphiconResizeHorizontal',glyphiconHdd',glyphiconBullhorn',glyphiconBell'\n@docs glyphiconCertificate',glyphiconThumbsUp',glyphiconThumbsDown',glyphiconHandRight'\n@docs glyphiconHandLeft',glyphiconHandUp',glyphiconHandDown',glyphiconCircleArrowRight'\n@docs glyphiconCircleArrowLeft',glyphiconCircleArrowUp',glyphiconCircleArrowDown',glyphiconGlobe'\n@docs glyphiconWrench',glyphiconTasks',glyphiconFilter',glyphiconBriefcase',glyphiconFullscreen'\n@docs glyphiconDashboard',glyphiconPaperclip',glyphiconHeartEmpty',glyphiconLink',glyphiconPhone'\n@docs glyphiconPushpin',glyphiconUsd',glyphiconGbp',glyphiconSort',glyphiconSortByAlphabet'\n@docs glyphiconSortByAlphabetAlt',glyphiconSortByOrder',glyphiconSortByOrderAlt'\n@docs glyphiconSortByAttributes',glyphiconSortByAttributesAlt',glyphiconUnchecked',glyphiconExpand'\n@docs glyphiconCollapseDown',glyphiconCollapseUp',glyphiconLogIn',glyphiconFlash',glyphiconLogOut'\n@docs glyphiconNewWindow',glyphiconRecord',glyphiconSave',glyphiconOpen',glyphiconSaved'\n@docs glyphiconImport',glyphiconExport',glyphiconSend',glyphiconFloppyDisk',glyphiconFloppySaved'\n@docs glyphiconFloppyRemove',glyphiconFloppySave',glyphiconFloppyOpen',glyphiconCreditCard'\n@docs glyphiconTransfer',glyphiconCutlery',glyphiconHeader',glyphiconCompressed',glyphiconEarphone'\n@docs glyphiconPhoneAlt',glyphiconTower',glyphiconStats',glyphiconSdVideo',glyphiconHdVideo'\n@docs glyphiconSubtitles',glyphiconSoundStereo',glyphiconSoundDolby',glyphiconSound51'\n@docs glyphiconSound61',glyphiconSound71',glyphiconCopyrightMark',glyphiconRegistrationMark'\n@docs glyphiconCloudDownload',glyphiconCloudUpload',glyphiconTreeConifer',glyphiconTreeDeciduous'\n\n## Dropdowns\n* Alignment\n* Headers\n* Divider\n* Disabled menu items\n\n\n## Button groups\n* Button toolbar\n* Sizing\n* Nesting\n* Vertical variation\n* Justified button groups\n\n\n## Button dropdowns\nSee [elm-bootstrap-dropdown](https://github.com/circuithub/elm-bootstrap-dropdown)\n\n\n## Input groups\n* Basic example\n* Sizing\n* Checkbox and radios addons\n* Button addons\n* Buttons with dropdowns\n* Segmented buttons\n\n## Navs\n* Tabs\n* Pills\n* Justified\n* Disabled links\n* Using dropdowns\n\n\n## Navbar\n* Default navbar\n* Brand image\n* Forms\n* Buttons\n* Text\n* Non-nav links\n* Component alignment\n* Fixed to top\n* Fixed to bottom\n* Static top\n* Inverted navbar\n@docs navbar', navbarDefault', navbarHeader_\n\n## Breadcrumbs\n\n## Pagination\n* Default pagination\n* Pager\n\n## Labels\n\n## Badges\n\n## Jumbotron\n\n## Page header\n\n## Thumbnails\n* Default example\n* Custom content\n\n## Alerts\n* Examples\n* Dismissible alerts\n* Links in alerts\n\n## Progress bars\n* Basic example\n* With label\n* Low percentages\n* Contextual alternatives\n* Striped\n* Animated\n* Stacked\n\n## Media object\n* Default media\n* Media list\n\n## List group\n* Basic example\n* Badges\n* Linked items\n* Disabled items\n* Contextual classes\n* Custom content\n\n## Panels\n* Basic example\n* Panel with heading\n* Contextual alternatives\n* With tables\n* With list groups\n@docs panelDefault_,panelHeading_,panelBody_\n@docs panelTitle_, panelDefault'\n\n## Responsive embed\n@docs embedResponsive16x9_,embedResponsive4x3_\n\n## Wells\n@docs well_,wellSm_,wellLg_\n\n",
+    "aliases": [
+      {
+        "name": "BtnParam",
+        "comment": " Optional parameters for bootstrap buttons.\n\n* `icon` - an icon for the button (see `glyphicon`s)\n* `label` - a text label for the button\n* `tooltip` - some hover-over tooltip text for the button\n\nSee also [BtnParam](http://package.elm-lang.org/packages/circuithub/elm-bootstrap-html/latest/Bootstrap-Html-Internal#BtnParam)\n\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Bootstrap.Html.Internal.BtnParam msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "btnDanger'",
+        "comment": " btnDanger' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnDanger_",
+        "comment": " btnDanger_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnDefault'",
+        "comment": " btnDefault' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnDefault_",
+        "comment": " btnDefault_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnInfo'",
+        "comment": " btnInfo' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnInfo_",
+        "comment": " btnInfo_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgDanger'",
+        "comment": " btnLgDanger' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgDanger_",
+        "comment": " btnLgDanger_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgDefault'",
+        "comment": " btnLgDefault' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgDefault_",
+        "comment": " btnLgDefault_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgInfo'",
+        "comment": " btnLgInfo' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgInfo_",
+        "comment": " btnLgInfo_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgPrimary'",
+        "comment": " btnLgPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgPrimary_",
+        "comment": " btnLgPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgSuccess'",
+        "comment": " btnLgSuccess' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgSuccess_",
+        "comment": " btnLgSuccess_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgWarning'",
+        "comment": " btnLgWarning' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnLgWarning_",
+        "comment": " btnLgWarning_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnParam",
+        "comment": " Default parameters for a button. Use this to select only one or two options.\n\n    { btnParam\n    | label <- Just \"This button doesn't have an icon or a tooltip\"\n    }\n\n",
+        "type": "Bootstrap.Html.BtnParam msg"
+      },
+      {
+        "name": "btnPrimary'",
+        "comment": " btnPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnPrimary_",
+        "comment": " btnPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmDanger'",
+        "comment": " btnSmDanger' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmDanger_",
+        "comment": " btnSmDanger_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmDefault'",
+        "comment": " btnSmDefault' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmDefault_",
+        "comment": " btnSmDefault_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmInfo'",
+        "comment": " btnSmInfo' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmInfo_",
+        "comment": " btnSmInfo_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmPrimary'",
+        "comment": " btnSmPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmPrimary_",
+        "comment": " btnSmPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmSuccess'",
+        "comment": " btnSmSuccess' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmSuccess_",
+        "comment": " btnSmSuccess_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmWarning'",
+        "comment": " btnSmWarning' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSmWarning_",
+        "comment": " btnSmWarning_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitLgPrimary'",
+        "comment": " btnSubmitLgPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitLgPrimary_",
+        "comment": " btnSubmitLgPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitPrimary'",
+        "comment": " btnSubmitPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitPrimary_",
+        "comment": " btnSubmitPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitSmPrimary'",
+        "comment": " btnSubmitSmPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitSmPrimary_",
+        "comment": " btnSubmitSmPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitXsPrimary'",
+        "comment": " btnSubmitXsPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSubmitXsPrimary_",
+        "comment": " btnSubmitXsPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSuccess'",
+        "comment": " btnSuccess' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnSuccess_",
+        "comment": " btnSuccess_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnWarning'",
+        "comment": " btnWarning' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnWarning_",
+        "comment": " btnWarning_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsDanger'",
+        "comment": " btnXsDanger' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsDanger_",
+        "comment": " btnXsDanger_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsDefault'",
+        "comment": " btnXsDefault' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsDefault_",
+        "comment": " btnXsDefault_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsInfo'",
+        "comment": " btnXsInfo' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsInfo_",
+        "comment": " btnXsInfo_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsPrimary'",
+        "comment": " btnXsPrimary' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsPrimary_",
+        "comment": " btnXsPrimary_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsSuccess'",
+        "comment": " btnXsSuccess' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsSuccess_",
+        "comment": " btnXsSuccess_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsWarning'",
+        "comment": " btnXsWarning' ",
+        "type": "Html.Shorthand.ClassString -> Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btnXsWarning_",
+        "comment": " btnXsWarning_ ",
+        "type": "Bootstrap.Html.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "colLgOffset_",
+        "comment": " colLgOffset_ ",
+        "type": "Int -> Int -> Int -> Int -> Int -> Int -> Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colLg_",
+        "comment": " colLg_ ",
+        "type": "Int -> Int -> Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colMdOffset_",
+        "comment": " colMdOffset_ ",
+        "type": "Int -> Int -> Int -> Int -> Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colMd_",
+        "comment": " colMd_ ",
+        "type": "Int -> Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colSmOffset_",
+        "comment": " colSmOffset_ ",
+        "type": "Int -> Int -> Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colSm_",
+        "comment": " colSm_ ",
+        "type": "Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colXsOffset_",
+        "comment": " colXsOffset_ ",
+        "type": "Int -> Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "colXs_",
+        "comment": " colXs_ ",
+        "type": "Int -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "containerFluid_",
+        "comment": " containerFluid_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "container_",
+        "comment": " container_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "embedResponsive16x9_",
+        "comment": " embedResponsive16x9_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "embedResponsive4x3_",
+        "comment": " embedResponsive4x3_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "formGroup_",
+        "comment": " formGroup_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAdjust'",
+        "comment": " glyphiconAdjust' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAdjust_",
+        "comment": " glyphiconAdjust_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignCenter'",
+        "comment": " glyphiconAlignCenter' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignCenter_",
+        "comment": " glyphiconAlignCenter_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignJustify'",
+        "comment": " glyphiconAlignJustify' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignJustify_",
+        "comment": " glyphiconAlignJustify_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignLeft'",
+        "comment": " glyphiconAlignLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignLeft_",
+        "comment": " glyphiconAlignLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignRight'",
+        "comment": " glyphiconAlignRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAlignRight_",
+        "comment": " glyphiconAlignRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowDown'",
+        "comment": " glyphiconArrowDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowDown_",
+        "comment": " glyphiconArrowDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowLeft'",
+        "comment": " glyphiconArrowLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowLeft_",
+        "comment": " glyphiconArrowLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowRight'",
+        "comment": " glyphiconArrowRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowRight_",
+        "comment": " glyphiconArrowRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowUp'",
+        "comment": " glyphiconArrowUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconArrowUp_",
+        "comment": " glyphiconArrowUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconAsterisk'",
+        "comment": " glyphiconAsterisk' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconAsterisk_",
+        "comment": " glyphiconAsterisk_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBackward'",
+        "comment": " glyphiconBackward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBackward_",
+        "comment": " glyphiconBackward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBanCircle'",
+        "comment": " glyphiconBanCircle' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBanCircle_",
+        "comment": " glyphiconBanCircle_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBarcode'",
+        "comment": " glyphiconBarcode' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBarcode_",
+        "comment": " glyphiconBarcode_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBell'",
+        "comment": " glyphiconBell' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBell_",
+        "comment": " glyphiconBell_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBold'",
+        "comment": " glyphiconBold' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBold_",
+        "comment": " glyphiconBold_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBook'",
+        "comment": " glyphiconBook' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBook_",
+        "comment": " glyphiconBook_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBookmark'",
+        "comment": " glyphiconBookmark' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBookmark_",
+        "comment": " glyphiconBookmark_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBriefcase'",
+        "comment": " glyphiconBriefcase' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBriefcase_",
+        "comment": " glyphiconBriefcase_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconBullhorn'",
+        "comment": " glyphiconBullhorn' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconBullhorn_",
+        "comment": " glyphiconBullhorn_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCalendar'",
+        "comment": " glyphiconCalendar' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCalendar_",
+        "comment": " glyphiconCalendar_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCamera'",
+        "comment": " glyphiconCamera' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCamera_",
+        "comment": " glyphiconCamera_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCertificate'",
+        "comment": " glyphiconCertificate' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCertificate_",
+        "comment": " glyphiconCertificate_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCheck'",
+        "comment": " glyphiconCheck' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCheck_",
+        "comment": " glyphiconCheck_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronDown'",
+        "comment": " glyphiconChevronDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronDown_",
+        "comment": " glyphiconChevronDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronLeft'",
+        "comment": " glyphiconChevronLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronLeft_",
+        "comment": " glyphiconChevronLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronRight'",
+        "comment": " glyphiconChevronRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronRight_",
+        "comment": " glyphiconChevronRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronUp'",
+        "comment": " glyphiconChevronUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconChevronUp_",
+        "comment": " glyphiconChevronUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowDown'",
+        "comment": " glyphiconCircleArrowDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowDown_",
+        "comment": " glyphiconCircleArrowDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowLeft'",
+        "comment": " glyphiconCircleArrowLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowLeft_",
+        "comment": " glyphiconCircleArrowLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowRight'",
+        "comment": " glyphiconCircleArrowRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowRight_",
+        "comment": " glyphiconCircleArrowRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowUp'",
+        "comment": " glyphiconCircleArrowUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCircleArrowUp_",
+        "comment": " glyphiconCircleArrowUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloud'",
+        "comment": " glyphiconCloud' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloudDownload'",
+        "comment": " glyphiconCloudDownload' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloudDownload_",
+        "comment": " glyphiconCloudDownload_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloudUpload'",
+        "comment": " glyphiconCloudUpload' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloudUpload_",
+        "comment": " glyphiconCloudUpload_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCloud_",
+        "comment": " glyphiconCloud_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCog'",
+        "comment": " glyphiconCog' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCog_",
+        "comment": " glyphiconCog_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCollapseDown'",
+        "comment": " glyphiconCollapseDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCollapseDown_",
+        "comment": " glyphiconCollapseDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCollapseUp'",
+        "comment": " glyphiconCollapseUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCollapseUp_",
+        "comment": " glyphiconCollapseUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconComment'",
+        "comment": " glyphiconComment' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconComment_",
+        "comment": " glyphiconComment_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCompressed'",
+        "comment": " glyphiconCompressed' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCompressed_",
+        "comment": " glyphiconCompressed_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCopyrightMark'",
+        "comment": " glyphiconCopyrightMark' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCopyrightMark_",
+        "comment": " glyphiconCopyrightMark_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCreditCard'",
+        "comment": " glyphiconCreditCard' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCreditCard_",
+        "comment": " glyphiconCreditCard_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconCutlery'",
+        "comment": " glyphiconCutlery' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconCutlery_",
+        "comment": " glyphiconCutlery_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconDashboard'",
+        "comment": " glyphiconDashboard' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconDashboard_",
+        "comment": " glyphiconDashboard_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconDownload'",
+        "comment": " glyphiconDownload' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconDownloadAlt'",
+        "comment": " glyphiconDownloadAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconDownloadAlt_",
+        "comment": " glyphiconDownloadAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconDownload_",
+        "comment": " glyphiconDownload_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEarphone'",
+        "comment": " glyphiconEarphone' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEarphone_",
+        "comment": " glyphiconEarphone_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEdit'",
+        "comment": " glyphiconEdit' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEdit_",
+        "comment": " glyphiconEdit_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEject'",
+        "comment": " glyphiconEject' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEject_",
+        "comment": " glyphiconEject_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEnvelope'",
+        "comment": " glyphiconEnvelope' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEnvelope_",
+        "comment": " glyphiconEnvelope_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEuro'",
+        "comment": " glyphiconEuro' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEuro_",
+        "comment": " glyphiconEuro_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconExclamationSign'",
+        "comment": " glyphiconExclamationSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconExclamationSign_",
+        "comment": " glyphiconExclamationSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconExpand'",
+        "comment": " glyphiconExpand' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconExpand_",
+        "comment": " glyphiconExpand_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconExport'",
+        "comment": " glyphiconExport' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconExport_",
+        "comment": " glyphiconExport_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEyeClose'",
+        "comment": " glyphiconEyeClose' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEyeClose_",
+        "comment": " glyphiconEyeClose_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconEyeOpen'",
+        "comment": " glyphiconEyeOpen' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconEyeOpen_",
+        "comment": " glyphiconEyeOpen_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFacetimeVideo'",
+        "comment": " glyphiconFacetimeVideo' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFacetimeVideo_",
+        "comment": " glyphiconFacetimeVideo_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFastBackward'",
+        "comment": " glyphiconFastBackward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFastBackward_",
+        "comment": " glyphiconFastBackward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFastForward'",
+        "comment": " glyphiconFastForward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFastForward_",
+        "comment": " glyphiconFastForward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFile'",
+        "comment": " glyphiconFile' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFile_",
+        "comment": " glyphiconFile_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFilm'",
+        "comment": " glyphiconFilm' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFilm_",
+        "comment": " glyphiconFilm_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFilter'",
+        "comment": " glyphiconFilter' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFilter_",
+        "comment": " glyphiconFilter_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFire'",
+        "comment": " glyphiconFire' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFire_",
+        "comment": " glyphiconFire_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFlag'",
+        "comment": " glyphiconFlag' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFlag_",
+        "comment": " glyphiconFlag_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFlash'",
+        "comment": " glyphiconFlash' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFlash_",
+        "comment": " glyphiconFlash_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyDisk'",
+        "comment": " glyphiconFloppyDisk' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyDisk_",
+        "comment": " glyphiconFloppyDisk_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyOpen'",
+        "comment": " glyphiconFloppyOpen' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyOpen_",
+        "comment": " glyphiconFloppyOpen_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyRemove'",
+        "comment": " glyphiconFloppyRemove' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppyRemove_",
+        "comment": " glyphiconFloppyRemove_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppySave'",
+        "comment": " glyphiconFloppySave' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppySave_",
+        "comment": " glyphiconFloppySave_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppySaved'",
+        "comment": " glyphiconFloppySaved' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFloppySaved_",
+        "comment": " glyphiconFloppySaved_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFolderClose'",
+        "comment": " glyphiconFolderClose' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFolderClose_",
+        "comment": " glyphiconFolderClose_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFolderOpen'",
+        "comment": " glyphiconFolderOpen' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFolderOpen_",
+        "comment": " glyphiconFolderOpen_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFont'",
+        "comment": " glyphiconFont' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFont_",
+        "comment": " glyphiconFont_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconForward'",
+        "comment": " glyphiconForward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconForward_",
+        "comment": " glyphiconForward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconFullscreen'",
+        "comment": " glyphiconFullscreen' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconFullscreen_",
+        "comment": " glyphiconFullscreen_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconGbp'",
+        "comment": " glyphiconGbp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconGbp_",
+        "comment": " glyphiconGbp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconGift'",
+        "comment": " glyphiconGift' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconGift_",
+        "comment": " glyphiconGift_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconGlass'",
+        "comment": " glyphiconGlass' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconGlass_",
+        "comment": " glyphiconGlass_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconGlobe'",
+        "comment": " glyphiconGlobe' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconGlobe_",
+        "comment": " glyphiconGlobe_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandDown'",
+        "comment": " glyphiconHandDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandDown_",
+        "comment": " glyphiconHandDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandLeft'",
+        "comment": " glyphiconHandLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandLeft_",
+        "comment": " glyphiconHandLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandRight'",
+        "comment": " glyphiconHandRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandRight_",
+        "comment": " glyphiconHandRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandUp'",
+        "comment": " glyphiconHandUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHandUp_",
+        "comment": " glyphiconHandUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHdVideo'",
+        "comment": " glyphiconHdVideo' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHdVideo_",
+        "comment": " glyphiconHdVideo_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHdd'",
+        "comment": " glyphiconHdd' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHdd_",
+        "comment": " glyphiconHdd_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeader'",
+        "comment": " glyphiconHeader' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeader_",
+        "comment": " glyphiconHeader_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeadphones'",
+        "comment": " glyphiconHeadphones' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeadphones_",
+        "comment": " glyphiconHeadphones_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeart'",
+        "comment": " glyphiconHeart' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeartEmpty'",
+        "comment": " glyphiconHeartEmpty' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeartEmpty_",
+        "comment": " glyphiconHeartEmpty_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHeart_",
+        "comment": " glyphiconHeart_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconHome'",
+        "comment": " glyphiconHome' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconHome_",
+        "comment": " glyphiconHome_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconImport'",
+        "comment": " glyphiconImport' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconImport_",
+        "comment": " glyphiconImport_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconInbox'",
+        "comment": " glyphiconInbox' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconInbox_",
+        "comment": " glyphiconInbox_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconIndentLeft'",
+        "comment": " glyphiconIndentLeft' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconIndentLeft_",
+        "comment": " glyphiconIndentLeft_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconIndentRight'",
+        "comment": " glyphiconIndentRight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconIndentRight_",
+        "comment": " glyphiconIndentRight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconInfoSign'",
+        "comment": " glyphiconInfoSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconInfoSign_",
+        "comment": " glyphiconInfoSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconItalic'",
+        "comment": " glyphiconItalic' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconItalic_",
+        "comment": " glyphiconItalic_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconLeaf'",
+        "comment": " glyphiconLeaf' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconLeaf_",
+        "comment": " glyphiconLeaf_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconLink'",
+        "comment": " glyphiconLink' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconLink_",
+        "comment": " glyphiconLink_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconList'",
+        "comment": " glyphiconList' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconListAlt'",
+        "comment": " glyphiconListAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconListAlt_",
+        "comment": " glyphiconListAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconList_",
+        "comment": " glyphiconList_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconLock'",
+        "comment": " glyphiconLock' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconLock_",
+        "comment": " glyphiconLock_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconLogIn'",
+        "comment": " glyphiconLogIn' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconLogIn_",
+        "comment": " glyphiconLogIn_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconLogOut'",
+        "comment": " glyphiconLogOut' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconLogOut_",
+        "comment": " glyphiconLogOut_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMagnet'",
+        "comment": " glyphiconMagnet' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMagnet_",
+        "comment": " glyphiconMagnet_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMapMarker'",
+        "comment": " glyphiconMapMarker' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMapMarker_",
+        "comment": " glyphiconMapMarker_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMinus'",
+        "comment": " glyphiconMinus' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMinusSign'",
+        "comment": " glyphiconMinusSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMinusSign_",
+        "comment": " glyphiconMinusSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMinus_",
+        "comment": " glyphiconMinus_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMove'",
+        "comment": " glyphiconMove' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMove_",
+        "comment": " glyphiconMove_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconMusic'",
+        "comment": " glyphiconMusic' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconMusic_",
+        "comment": " glyphiconMusic_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconNewWindow'",
+        "comment": " glyphiconNewWindow' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconNewWindow_",
+        "comment": " glyphiconNewWindow_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconOff'",
+        "comment": " glyphiconOff' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconOff_",
+        "comment": " glyphiconOff_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconOk'",
+        "comment": " glyphiconOk' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconOkCircle'",
+        "comment": " glyphiconOkCircle' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconOkCircle_",
+        "comment": " glyphiconOkCircle_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconOkSign'",
+        "comment": " glyphiconOkSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconOkSign_",
+        "comment": " glyphiconOkSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconOk_",
+        "comment": " glyphiconOk_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconOpen'",
+        "comment": " glyphiconOpen' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconOpen_",
+        "comment": " glyphiconOpen_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPaperclip'",
+        "comment": " glyphiconPaperclip' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPaperclip_",
+        "comment": " glyphiconPaperclip_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPause'",
+        "comment": " glyphiconPause' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPause_",
+        "comment": " glyphiconPause_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPencil'",
+        "comment": " glyphiconPencil' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPencil_",
+        "comment": " glyphiconPencil_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPhone'",
+        "comment": " glyphiconPhone' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPhoneAlt'",
+        "comment": " glyphiconPhoneAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPhoneAlt_",
+        "comment": " glyphiconPhoneAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPhone_",
+        "comment": " glyphiconPhone_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPicture'",
+        "comment": " glyphiconPicture' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPicture_",
+        "comment": " glyphiconPicture_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlane'",
+        "comment": " glyphiconPlane' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlane_",
+        "comment": " glyphiconPlane_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlay'",
+        "comment": " glyphiconPlay' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlayCircle'",
+        "comment": " glyphiconPlayCircle' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlayCircle_",
+        "comment": " glyphiconPlayCircle_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlay_",
+        "comment": " glyphiconPlay_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlus'",
+        "comment": " glyphiconPlus' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlusSign'",
+        "comment": " glyphiconPlusSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlusSign_",
+        "comment": " glyphiconPlusSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPlus_",
+        "comment": " glyphiconPlus_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPrint'",
+        "comment": " glyphiconPrint' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPrint_",
+        "comment": " glyphiconPrint_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconPushpin'",
+        "comment": " glyphiconPushpin' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconPushpin_",
+        "comment": " glyphiconPushpin_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconQrcode'",
+        "comment": " glyphiconQrcode' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconQrcode_",
+        "comment": " glyphiconQrcode_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconQuestionSign'",
+        "comment": " glyphiconQuestionSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconQuestionSign_",
+        "comment": " glyphiconQuestionSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRandom'",
+        "comment": " glyphiconRandom' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRandom_",
+        "comment": " glyphiconRandom_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRecord'",
+        "comment": " glyphiconRecord' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRecord_",
+        "comment": " glyphiconRecord_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRefresh'",
+        "comment": " glyphiconRefresh' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRefresh_",
+        "comment": " glyphiconRefresh_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRegistrationMark'",
+        "comment": " glyphiconRegistrationMark' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRegistrationMark_",
+        "comment": " glyphiconRegistrationMark_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemove'",
+        "comment": " glyphiconRemove' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemoveCircle'",
+        "comment": " glyphiconRemoveCircle' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemoveCircle_",
+        "comment": " glyphiconRemoveCircle_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemoveSign'",
+        "comment": " glyphiconRemoveSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemoveSign_",
+        "comment": " glyphiconRemoveSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRemove_",
+        "comment": " glyphiconRemove_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRepeat'",
+        "comment": " glyphiconRepeat' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRepeat_",
+        "comment": " glyphiconRepeat_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeFull'",
+        "comment": " glyphiconResizeFull' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeFull_",
+        "comment": " glyphiconResizeFull_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeHorizontal'",
+        "comment": " glyphiconResizeHorizontal' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeHorizontal_",
+        "comment": " glyphiconResizeHorizontal_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeSmall'",
+        "comment": " glyphiconResizeSmall' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeSmall_",
+        "comment": " glyphiconResizeSmall_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeVertical'",
+        "comment": " glyphiconResizeVertical' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconResizeVertical_",
+        "comment": " glyphiconResizeVertical_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRetweet'",
+        "comment": " glyphiconRetweet' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRetweet_",
+        "comment": " glyphiconRetweet_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconRoad'",
+        "comment": " glyphiconRoad' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconRoad_",
+        "comment": " glyphiconRoad_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSave'",
+        "comment": " glyphiconSave' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSave_",
+        "comment": " glyphiconSave_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSaved'",
+        "comment": " glyphiconSaved' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSaved_",
+        "comment": " glyphiconSaved_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconScreenshot'",
+        "comment": " glyphiconScreenshot' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconScreenshot_",
+        "comment": " glyphiconScreenshot_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSdVideo'",
+        "comment": " glyphiconSdVideo' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSdVideo_",
+        "comment": " glyphiconSdVideo_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSearch'",
+        "comment": " glyphiconSearch' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSearch_",
+        "comment": " glyphiconSearch_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSend'",
+        "comment": " glyphiconSend' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSend_",
+        "comment": " glyphiconSend_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconShare'",
+        "comment": " glyphiconShare' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconShareAlt'",
+        "comment": " glyphiconShareAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconShareAlt_",
+        "comment": " glyphiconShareAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconShare_",
+        "comment": " glyphiconShare_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconShoppingCart'",
+        "comment": " glyphiconShoppingCart' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconShoppingCart_",
+        "comment": " glyphiconShoppingCart_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSignal'",
+        "comment": " glyphiconSignal' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSignal_",
+        "comment": " glyphiconSignal_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSort'",
+        "comment": " glyphiconSort' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAlphabet'",
+        "comment": " glyphiconSortByAlphabet' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAlphabetAlt'",
+        "comment": " glyphiconSortByAlphabetAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAlphabetAlt_",
+        "comment": " glyphiconSortByAlphabetAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAlphabet_",
+        "comment": " glyphiconSortByAlphabet_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAttributes'",
+        "comment": " glyphiconSortByAttributes' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAttributesAlt'",
+        "comment": " glyphiconSortByAttributesAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAttributesAlt_",
+        "comment": " glyphiconSortByAttributesAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByAttributes_",
+        "comment": " glyphiconSortByAttributes_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByOrder'",
+        "comment": " glyphiconSortByOrder' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByOrderAlt'",
+        "comment": " glyphiconSortByOrderAlt' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByOrderAlt_",
+        "comment": " glyphiconSortByOrderAlt_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSortByOrder_",
+        "comment": " glyphiconSortByOrder_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSort_",
+        "comment": " glyphiconSort_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound51'",
+        "comment": " glyphiconSound51' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound51_",
+        "comment": " glyphiconSound51_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound61'",
+        "comment": " glyphiconSound61' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound61_",
+        "comment": " glyphiconSound61_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound71'",
+        "comment": " glyphiconSound71' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSound71_",
+        "comment": " glyphiconSound71_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSoundDolby'",
+        "comment": " glyphiconSoundDolby' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSoundDolby_",
+        "comment": " glyphiconSoundDolby_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSoundStereo'",
+        "comment": " glyphiconSoundStereo' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSoundStereo_",
+        "comment": " glyphiconSoundStereo_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStar'",
+        "comment": " glyphiconStar' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStarEmpty'",
+        "comment": " glyphiconStarEmpty' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStarEmpty_",
+        "comment": " glyphiconStarEmpty_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStar_",
+        "comment": " glyphiconStar_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStats'",
+        "comment": " glyphiconStats' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStats_",
+        "comment": " glyphiconStats_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStepBackward'",
+        "comment": " glyphiconStepBackward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStepBackward_",
+        "comment": " glyphiconStepBackward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStepForward'",
+        "comment": " glyphiconStepForward' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStepForward_",
+        "comment": " glyphiconStepForward_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconStop'",
+        "comment": " glyphiconStop' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconStop_",
+        "comment": " glyphiconStop_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconSubtitles'",
+        "comment": " glyphiconSubtitles' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconSubtitles_",
+        "comment": " glyphiconSubtitles_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTag'",
+        "comment": " glyphiconTag' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTag_",
+        "comment": " glyphiconTag_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTags'",
+        "comment": " glyphiconTags' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTags_",
+        "comment": " glyphiconTags_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTasks'",
+        "comment": " glyphiconTasks' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTasks_",
+        "comment": " glyphiconTasks_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTextHeight'",
+        "comment": " glyphiconTextHeight' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTextHeight_",
+        "comment": " glyphiconTextHeight_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTextWidth'",
+        "comment": " glyphiconTextWidth' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTextWidth_",
+        "comment": " glyphiconTextWidth_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTh'",
+        "comment": " glyphiconTh' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconThLarge'",
+        "comment": " glyphiconThLarge' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconThLarge_",
+        "comment": " glyphiconThLarge_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconThList'",
+        "comment": " glyphiconThList' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconThList_",
+        "comment": " glyphiconThList_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTh_",
+        "comment": " glyphiconTh_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconThumbsDown'",
+        "comment": " glyphiconThumbsDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconThumbsDown_",
+        "comment": " glyphiconThumbsDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconThumbsUp'",
+        "comment": " glyphiconThumbsUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconThumbsUp_",
+        "comment": " glyphiconThumbsUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTime'",
+        "comment": " glyphiconTime' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTime_",
+        "comment": " glyphiconTime_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTint'",
+        "comment": " glyphiconTint' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTint_",
+        "comment": " glyphiconTint_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTower'",
+        "comment": " glyphiconTower' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTower_",
+        "comment": " glyphiconTower_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTransfer'",
+        "comment": " glyphiconTransfer' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTransfer_",
+        "comment": " glyphiconTransfer_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTrash'",
+        "comment": " glyphiconTrash' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTrash_",
+        "comment": " glyphiconTrash_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTreeConifer'",
+        "comment": " glyphiconTreeConifer' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTreeConifer_",
+        "comment": " glyphiconTreeConifer_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconTreeDeciduous'",
+        "comment": " glyphiconTreeDeciduous' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconTreeDeciduous_",
+        "comment": " glyphiconTreeDeciduous_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconUnchecked'",
+        "comment": " glyphiconUnchecked' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconUnchecked_",
+        "comment": " glyphiconUnchecked_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconUpload'",
+        "comment": " glyphiconUpload' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconUpload_",
+        "comment": " glyphiconUpload_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconUsd'",
+        "comment": " glyphiconUsd' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconUsd_",
+        "comment": " glyphiconUsd_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconUser'",
+        "comment": " glyphiconUser' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconUser_",
+        "comment": " glyphiconUser_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeDown'",
+        "comment": " glyphiconVolumeDown' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeDown_",
+        "comment": " glyphiconVolumeDown_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeOff'",
+        "comment": " glyphiconVolumeOff' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeOff_",
+        "comment": " glyphiconVolumeOff_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeUp'",
+        "comment": " glyphiconVolumeUp' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconVolumeUp_",
+        "comment": " glyphiconVolumeUp_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconWarningSign'",
+        "comment": " glyphiconWarningSign' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconWarningSign_",
+        "comment": " glyphiconWarningSign_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconWrench'",
+        "comment": " glyphiconWrench' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconWrench_",
+        "comment": " glyphiconWrench_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconZoomIn'",
+        "comment": " glyphiconZoomIn' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconZoomIn_",
+        "comment": " glyphiconZoomIn_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "glyphiconZoomOut'",
+        "comment": " glyphiconZoomOut' ",
+        "type": "Html.Shorthand.ClassString -> Html.Html msg"
+      },
+      {
+        "name": "glyphiconZoomOut_",
+        "comment": " glyphiconZoomOut_ ",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "navbar'",
+        "comment": " navbar' ",
+        "type": "Html.Shorthand.ClassString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarDefault'",
+        "comment": " navbarDefault' ",
+        "type": "Html.Shorthand.ClassString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarHeader_",
+        "comment": " navbarHeader_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelBody_",
+        "comment": " panelBody_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelDefault'",
+        "comment": " A panel with the [default style](http://getbootstrap.com/components/#panels-heading).\n\n    import Html\n    import Html.Shorthand exposing (..)\n\n    type Action = NoOp | NewProject\n\n    actions : Mailbox Action\n    actions = Signal.mailbox NoOp\n\n    section'\n    { class = \"\"\n    , id = \"projects\"\n    }\n    [ panelDefault' \"My Projects\"               -- The heading\n      [ ( { icon = Just glyphiconPlusSign')     -- Optional buttons to the right of the heading\n          , label = Just \"New project\"\n          , tooltip = Just \"Create a new project\"\n          }\n        , (actions.address, NewProject)\n        )\n      ]\n      [ p_                                      -- Body contents\n        [ text \"Contents of the panel\"\n        ]\n      ]\n    ]\n",
+        "type": "Html.Shorthand.TextString -> List ( Bootstrap.Html.BtnParam msg, msg ) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelDefault_",
+        "comment": " panelDefault_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelHeading_",
+        "comment": " panelHeading_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelTitle_",
+        "comment": " panelTitle_ ",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "row_",
+        "comment": " row_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "skipNavigation_",
+        "comment": " Accessibility - Skip navigation\n\n    body_\n    [ skipNavigation' \"Skip to main content\"\n    , -- ...\n    , sectionc \"container\" \"content\"\n      [ -- ...\n      ]\n    ]\n\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "tableBodyStriped'",
+        "comment": " A table with striped `tbody`s instead of rows. See [Can we have multiple &lt;tbody&gt; in same &lt;table&gt;?](http://stackoverflow.com/questions/3076708/can-we-have-multiple-tbody-in-same-table)\n",
+        "type": "Html.Shorthand.ClassString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tableBodyStriped_",
+        "comment": "\n    import Html exposing (text)\n    import Html.Shorthand exposing (..)\n\n    tableBodyStriped_\n    [ thead_\n      [ th' {class = \"text-left\"} [ text  \"Item #\" ]\n      , th' {class = \"text-left\"} [ text \"Long Description\" ]\n      , th' {class = \"text-right\"} [ text \"Units\" ]\n      , th' {class = \"text-right\"} [ text \"Price\" ]\n      ]\n    , tbody_\n      [ tr_\n        [ td_ [ text \"X\" ]\n        , td_ [ text \"This is an X\"]\n        , td_ [ text \"55\"]\n        , td_ [ text \"$ 100\"]\n        ]\n      , tr_\n        [ Html.td [Html.colspan 4] [ text \"Comments....\" ]\n        ]\n      ]\n    , tbody_\n      [ tr_\n        [ td_ [ text \"Y\" ]\n        , td_ [ text \"This is an Y\"]\n        , td_ [ text \"3\"]\n        , td_ [ text \"$ 10\"]\n        ]\n      , tr_\n        [ Html.td [Html.colspan 4] [ text \"Comments....\" ]\n        ]\n      ]\n    ]\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tableStriped'",
+        "comment": " A table with [striped rows](http://getbootstrap.com/css/#tables-striped)\n",
+        "type": "Html.Shorthand.ClassString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tableStriped_",
+        "comment": "\n    import Html exposing (..)\n    import Html.Shorthand exposing (..)\n    import Bootstrap.Html exposing (..)\n\n    view : Html msg\n    view = tableStriped_\n      [ thead_\n        [ th' {class = \"text-left\"} [ text  \"Item #\" ]\n        , th' {class = \"text-left\"} [ text \"Long Description\" ]\n        , th' {class = \"text-right\"} [ text \"Units\" ]\n        , th' {class = \"text-right\"} [ text \"Price\" ]\n        ]\n      , tbody_\n        [ tr_\n          [ td_ [ text \"X\" ]\n          , td_ [ text \"This is an X\"]\n          , td_ [ text \"55\"]\n          , td_ [ text \"$ 100\"]\n          ]\n        , tr_\n          [ td_ [ text \"Y\" ]\n          , td_ [ text \"This is an Y\"]\n          , td_ [ text \"3\"]\n          , td_ [ text \"$ 10\"]\n          ]\n        ]\n      ]\n\n    main : Html msg\n    main = view\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "wellLg_",
+        "comment": " wellLg_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "wellSm_",
+        "comment": " wellSm_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "well_",
+        "comment": " well_ ",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Bootstrap.Html.Internal",
+    "comment": " Internals for Bootstrap.Html See [Bootstrap.Html](http://package.elm-lang.org/packages/circuithub/elm-bootstrap-html/latest/Bootstrap-Html)\n\n@docs BtnParam, btnc, btncNoevent, colOffset\n",
+    "aliases": [
+      {
+        "name": "BtnParam",
+        "comment": " Button parameters\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ icon : Maybe.Maybe (Html.Html msg) , label : Maybe.Maybe Html.Shorthand.TextString , tooltip : Maybe.Maybe String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "btnc",
+        "comment": " Helper for creating buttons\n",
+        "type": "Html.Shorthand.ClassString -> String -> Bootstrap.Html.Internal.BtnParam msg -> msg -> Html.Html msg"
+      },
+      {
+        "name": "btncNoevent",
+        "comment": " Same as `btnc`, but without an event (used for submit buttons)\n",
+        "type": "Html.Shorthand.ClassString -> String -> Bootstrap.Html.Internal.BtnParam msg -> Html.Html msg"
+      },
+      {
+        "name": "colOffset",
+        "comment": " Create a class string for the `col-__-__ col-__-offset-__` pattern\n",
+        "type": "String -> Int -> Int -> Html.Shorthand.ClassString"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

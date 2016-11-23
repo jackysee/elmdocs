@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Keyframes.Easing",
+    "comment": "\nEasing functions for keyframes animation.\nStolen from Robert Penner's easing formulas http://gizma.com/easing/\n#Easing\n@docs Easing\n#ease\n@docs ease\n#linear\n@docs linear\n#easeInQuad\n@docs easeInQuad\n#easeOutQuad\n@docs easeOutQuad\n#easeInOutQuad\n@docs easeInOutQuad\n#easeInCubic\n@docs easeInCubic\n#easeOutCubic\n@docs easeOutCubic\n#easeInOutCubic\n@docs easeInOutCubic\n#easeInQuart\n@docs easeInQuart\n#easeOutQuart\n@docs easeOutQuart\n#easeInOutQuart\n@docs easeInOutQuart\n#easeInQuint\n@docs easeInQuint\n#easeOutQuint\n@docs easeOutQuint\n#easeInOutQuint\n@docs easeInOutQuint\n#easeInSine\n@docs easeInSine\n#easeOutSine\n@docs easeOutSine\n#easeInOutSine\n@docs easeInOutSine\n#easeInExpo\n@docs easeInExpo\n#easeOutExpo\n@docs easeOutExpo\n#easeInOutExpo\n@docs easeInOutExpo\n#easeInCirc\n@docs easeInCirc\n#easeOutCirc\n@docs easeOutCirc\n#easeInOutCirc\n@docs easeInOutCirc\n",
+    "aliases": [
+      {
+        "name": "Easing",
+        "comment": "\nRepresents an easing function. An easing function takes 5 arguments:\n\ncurrentTime - a float from 0 to 1(inclusive) representing the current progress of the animation\n\ntotalTime - total time of an animation, always 1\n\nprogressRatio - same as currentTime\n\nvalue - the initial value to be eased\n\nchange - the diff between initial value and the value at currentTime\n",
+        "args": [],
+        "type": "Keyframes.Time -> Keyframes.Time -> Float -> Float -> Float -> Float"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "ease",
+        "comment": "Takes an easing function and an animation and returns the eased animation",
+        "type": "Keyframes.Easing.Easing -> Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInCirc",
+        "comment": "Ease in circularly",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInCubic",
+        "comment": "Ease in cubically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInExpo",
+        "comment": "Ease in exponentially",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutCirc",
+        "comment": "Ease in and out circularly",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutCubic",
+        "comment": "Ease in and out cubically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutExpo",
+        "comment": "Ease in and out exponentially",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutQuad",
+        "comment": "Ease in and out quadratically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutQuart",
+        "comment": "Ease in and out quartically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutQuint",
+        "comment": "Ease in and out quintically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInOutSine",
+        "comment": "Ease in and out sinusoidally",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInQuad",
+        "comment": "Ease in quadratically\n\n    transition \"width\" \"1px\" \"100px\" |> easeInQuad\n    --returns an animation of width from 1px to 100px that is eased in quadratically\n",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInQuart",
+        "comment": "Ease in quartically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInQuint",
+        "comment": "Ease in quintically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeInSine",
+        "comment": "Ease in sinusoidally",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutCirc",
+        "comment": "Ease in circularly",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutCubic",
+        "comment": "Ease out cubically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutExpo",
+        "comment": "Ease out exponentially",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutQuad",
+        "comment": "Ease out quadratically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutQuart",
+        "comment": "Ease out quartically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutQuint",
+        "comment": "Ease out quintically",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "easeOutSine",
+        "comment": "Ease out sinusoidally",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "linear",
+        "comment": "Linear easing, i.e. no easing. This is in truth an identity function.",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Keyframes",
+    "comment": "\nKeyframes is a truly functional animation library.\n\nIt treats animations as functions of time over state,\nallowing for complex yet easy combinations\nof those via higher order functions.\n\nWe define time as range of floats [0, 1], zero being the beginning of the animation and 1\nits end. This way, we can abstract animations from physical time and apply them for any duration.\n\nWe define state as a list of (String, String) tuples, first member being an identifier,\nand second member being its value. For example:\n\n     myStyle = [(\"width\", \"0\"), (\"opacity\", \"0\")]\n     myOtherStyle = [(\"marioX\", \"0\", (\"marioY\", \"0\")]\n\nAnd an animation is just a function that takes time(floats from 0 to 1)\nand for any given value returns a state, thus, by consecutively calling\nan animation with a certain step we can animate virtually anything.\n\n#State\n@docs State\n#Time\n@docs Time\n#Animation\n@docs Animation\n#Timestamp\n@docs Timestamp\n#tween\n@docs tween\n#transition\n@docs transition\n#ensure\n@docs ensure\n#ensureProperty\n@docs ensureProperty\n#reverse\n@docs reverse\n#chain\n@docs chain\n#linger\n@docs linger\n#foreshadow\n@docs foreshadow\n#imposePresence\n@docs imposePresence\n#toAndFrom\n@docs toAndFrom\n#repeat\n@docs repeat\n#merge\n@docs merge\n#play\n@docs play\n#playOnce\n@docs playOnce\n#playInfinitely\n@docs playInfinitely\n",
+    "aliases": [
+      {
+        "name": "Animation",
+        "comment": "A function of Time over State",
+        "args": [],
+        "type": "Keyframes.Time -> Keyframes.State"
+      },
+      {
+        "name": "State",
+        "comment": "A list of (String, String) tuples, first member being an identifier,\nand second member being its value. For example:\n\n    myStyle = [(\"width\", \"0\"), (\"opacity\", \"0\")]\n    myOtherStyle = [(\"marioX\", \"0\", (\"marioY\", \"0\")]\n",
+        "args": [],
+        "type": "List ( String, String )"
+      },
+      {
+        "name": "Time",
+        "comment": "A float from 0 to 1, inclusive, 0 representing the beginning of an animation an 1 its end",
+        "args": [],
+        "type": "Float"
+      },
+      {
+        "name": "Timestamp",
+        "comment": "A tuple (Time, Animation), used for chaining",
+        "args": [],
+        "type": "( Keyframes.Time, Keyframes.Animation )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "chain",
+        "comment": "Chains animations, given their time of start in the new animation\n\n    fadeIn : Animation\n    fadeOut : Animation\n    blink = chain[\n            (0, fadeIn),--fadeIn will start at 0\n            (0.5, fadeOut),--fadeOut will end at .5, and from here fadeOut will start\n        ]\n",
+        "type": "List Keyframes.Timestamp -> Keyframes.Animation"
+      },
+      {
+        "name": "ensure",
+        "comment": "Given a state, will create an animation that always returns that state.\nUseful for stuff like _transformOrigin_\n\n    ensure [(\"transformOrigin\", \"(0, 0)\")]\n    --same as transition \"transformOrigin\" \"(0, 0)\" \"(0, 0)\"\n    --or tween [(\"transformOrigin\", \"(0, 0)\")] [(\"transformOrigin\", \"(0, 0)\")]\n",
+        "type": "Keyframes.State -> Keyframes.Animation"
+      },
+      {
+        "name": "ensureProperty",
+        "comment": "Give a property name and its value, will return an animation that always returns (property, value)\n\n    ensureProperty \"width\" \"100px\"\n    --same as ensure[(\"width\", \"100px\")]\n",
+        "type": "String -> String -> Keyframes.Animation"
+      },
+      {
+        "name": "foreshadow",
+        "comment": "Persists the initial state of an animation for a given time before running the actual animation",
+        "type": "Keyframes.Time -> Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "imposePresence",
+        "comment": "Given the time of start and end of an animation(relative to the resulting animation),\npersists the initial and final state of the argument animation\n\n    blur = transition \"opacity\" \"1\" \"0.5\"\n    blurWithDelay = imposePresence 0.25 0.75 blur\n    --the target will stay opaque until one quarter of the animation\n    --then, it will fade to 0.5 opacity until three quarters of animation's duration\n    --after that, it will state at 0.5 opacity until the end of the animation\n",
+        "type": "Keyframes.Time -> Keyframes.Time -> Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "linger",
+        "comment": "Persists the last state of an animation for a given time\n\n    fadeOut = transition \"opacity\" \"1\" \"0\"\n    fadeOutAndStayThatWay = linger 0.5 animation\n    --the target will fade until the middle of the animation, that it will retain its latest opacity until the end\n\n",
+        "type": "Keyframes.Time -> Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "merge",
+        "comment": "Merges animations\n\n    collapseWidth = transition \"width\" \"100%\" \"1%\"\n    collapseHeight = transition \"height\" \"100%\" \"1%\"\n    shrink = merge [collapseWidth, collapseHeight]\n    --same as tween [(\"width\", \"100%\"), (\"height\", \"100%\")] [(\"width\", \"1%\"), (\"height\", \"1%\")]\n\n",
+        "type": "List Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "play",
+        "comment": "Plays an animation in real time\n\n    --play totalTime animation currentTime\n\n    main =\n        let\n            animation = transition \"opacity\" \"1\" \"0\" |> play 500.0 --play for 500ms\n            div' time = div [animation time] [text \"testing\"]\n        in Signal.constant True |> fpsWhen 60 |> Signal.foldp (+) 0 |> Signal.map div'\n\n",
+        "type": "Keyframes.Time -> Keyframes.Animation -> Keyframes.Time -> Keyframes.State"
+      },
+      {
+        "name": "playInfinitely",
+        "comment": "Plays an animation infinitely, in loops\n\n    playInfinitely loopDuration animation timeSinceStart\n",
+        "type": "Keyframes.Time -> Keyframes.Animation -> Keyframes.Time -> Keyframes.State"
+      },
+      {
+        "name": "playOnce",
+        "comment": "Same as _play_, but clamps _currentTime_ between _0_ and _1_(inclusive)\n\n    playOnce totalTime animation currentTime\n",
+        "type": "Keyframes.Time -> Keyframes.Animation -> Keyframes.Time -> Keyframes.State"
+      },
+      {
+        "name": "repeat",
+        "comment": "Repeats an animation\n\n    blink : Animation\n    blink4times = repeat 4 blink\n\n",
+        "type": "Int -> Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "reverse",
+        "comment": "Reverses an animation\n\n    fadeIn = transition \"opacity\" \"0\" \"1\"\n    fadeOut = reverse fadeIn\n\n",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "toAndFrom",
+        "comment": "A combination of _chain_ and _reverse._\n\n    fadeOut = transition \"opacity\" \"1\" \"0\"\n    blink = toAndFrom fadeOut\n",
+        "type": "Keyframes.Animation -> Keyframes.Animation"
+      },
+      {
+        "name": "transition",
+        "comment": "Given a property name and two values for it, will return an animation\nthat bridges those two values\n\n    transition \"width\" \"1px\" \"100px\"\n    --same as tween [(\"width\", \"1px\")] [\"width\", \"100px\"])\n",
+        "type": "String -> String -> String -> Keyframes.Animation"
+      },
+      {
+        "name": "tween",
+        "comment": "Given two states, will return an animation that bridges them\n\n    myAnimation = tween [(\"opacity\", \"0\")] [(\"opacity\", \"1\")]\n",
+        "type": "Keyframes.State -> Keyframes.State -> Keyframes.Animation"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

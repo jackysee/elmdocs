@@ -1,0 +1,41 @@
+[
+  {
+    "name": "MultiwayTreeUtil",
+    "comment": " A set of utility function to work with multiway tree\n\n# Traverse\n@docs flatten, traverse, traverseFrom\n\n# Lookup\n@docs forestLookup, treeLookup, lca\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "flatten",
+        "comment": " Flattens the tree resulting with list of all node values\n",
+        "type": "MultiwayTree.Tree a -> List a"
+      },
+      {
+        "name": "forestLookup",
+        "comment": " Lookup for specified node in a disjoint tree set\n",
+        "type": "a -> MultiwayTree.Forest a -> Maybe.Maybe (MultiwayTreeZipper.Zipper a)"
+      },
+      {
+        "name": "lca",
+        "comment": " Finds the lowest common ancestor in a disjoint tree set\n",
+        "type": "a -> a -> MultiwayTree.Forest a -> Maybe.Maybe a"
+      },
+      {
+        "name": "traverse",
+        "comment": " Performs a traverse of zipper resulting with a list of node values\n",
+        "type": "MultiwayTreeZipper.Zipper a -> List a"
+      },
+      {
+        "name": "traverseFrom",
+        "comment": " Performs a traverse of zipper starting from given node.\n",
+        "type": "Maybe.Maybe a -> MultiwayTreeZipper.Zipper a -> List a"
+      },
+      {
+        "name": "treeLookup",
+        "comment": " Lookup for specified node in a tree\n",
+        "type": "a -> MultiwayTree.Tree a -> Maybe.Maybe (MultiwayTreeZipper.Zipper a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

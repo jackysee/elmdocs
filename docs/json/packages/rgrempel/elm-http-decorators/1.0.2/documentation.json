@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Http.Decorators",
+    "comment": " This module supplies several functions which you can use to decorate\n`Http.send` in order to create a function with additional behaviour. You can\napply the decorators to individual uses of `Http.send` -- for example:\n\n    addCacheBuster Http.send Http.defaultSettings\n        { verb = \"GET\"\n        , headers = []\n        , url = Http.url \"/api/account\" []\n        , body = Http.empty\n        }\n\nAlternatively, you can compose a decorated function and use it repeatedly, e.g.\n\n    specialSend : Settings -> Request -> Task RawError Response\n    specialSend = addCacheBuster Http.send\n\nThe definition of something like `specialSend` is left for client code, so that\nyou can mix and match whichever decorators you need. You could conceivably also\nwant to partially apply `Http.defaultSettings` (or your own defaultSettings).\nThus, one combination which can be useful is as follows:\n\n    verySpecialSend : Request -> Task Error Response\n    verySpecialSend = interpretStatus << addCacheBuster Http.send Http.defaultSettings\n\nYou could then call `verySpecialSend` like this:\n\n    verySpecialSend\n        { verb = \"GET\"\n        , headers = []\n        , url = Http.url \"/api/account\" []\n        , body = Http.empty\n        }\n\n... and, of course, you could still provide an `andThen`, `map`, `mapError`, `onError` etc.\nto do any further work that might be needed with the `Http.Error` or `Http.Result`.\n\nAlternatively, if the `Settings` need to vary at each call-site, you can do something\nlike this:\n\n    lessSpecialSend : Settings -> Request -> Task Error Response\n    lessSpecialSend settings = interpretStatus << addCacheBuster Http.send settings\n\nNote that some of this is redundant if you are using `Http.fromJson` anyway, since\n`Http.fromJson` already does the equivalent of `promoteError` and `interpretStatus`.\n\n@docs addCacheBuster, promoteError, interpretStatus\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "addCacheBuster",
+        "comment": " Decorates `Http.send` so that a 'cache busting' parameter will always be\nadded to the URL -- e.g. '?cacheBuster=219384729384', where the number is\nderived from the current time.  The purpose of doing this would be to help\ndefeat any caching that might otherwise take place at some point between the\nclient and server.\n",
+        "type": "(Http.Settings -> Http.Request -> Task.Task Http.RawError Http.Response) -> Http.Settings -> Http.Request -> Task.Task Http.RawError Http.Response"
+      },
+      {
+        "name": "interpretStatus",
+        "comment": " Decorates the result of `Http.send` so that responses with a status code\nwhich is outside of the 2XX range are processed as `BadResponse` errors (to be\nfurther handled via `Task.onError` or `Task.mapError` etc.), rather than as\nsuccessful responses (to be further handled by `Task.andThen` or `Task.map`\netc.).  This may be useful in cases where you are not using `Http.fromJson` and\nyou do not need to distinguish amongst different types of successful status\ncode.\n\nNote that this automatically also applies `promoteError`, so you do not need to\napply that decorator as well.\n",
+        "type": "Task.Task Http.RawError Http.Response -> Task.Task Http.Error Http.Response"
+      },
+      {
+        "name": "promoteError",
+        "comment": " Decorates the result of `Http.send` so that the error type is `Http.Error`\nrather than `Http.RawError`. This may be useful in cases where you are not\nusing `Http.fromJson`, and your API prefers to deal with `Http.Error` rather\nthan `Http.RawError`.\n\nPay attention to return types when composing this decorator with other\ndecorators.  For intance, if used in conjunction with `addCacheBuster`, you\nwould need to apply `addCacheBuster` first.  E.g.\n\n    -- Good\n    promoteError << addCacheBuster Http.send Http.defaultSettings\n\n    -- Bad\n    addCacheBuster promoteError << Http.send Http.defaultSettings\n",
+        "type": "Task.Task Http.RawError Http.Response -> Task.Task Http.Error Http.Response"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "PageVisibility",
+    "comment": "\n\n# Page Visibility\n@docs Visibility, visibility, isHidden, isVisible\n\n# Changes\n@docs visibilityChanges\n\n# Low Level\n@docs onVisibilityChange\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Visibility",
+        "comment": " Value describing whether the page is hidden or visible.\n",
+        "args": [],
+        "cases": [
+          [
+            "Visible",
+            []
+          ],
+          [
+            "Hidden",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "isHidden",
+        "comment": " Is the page hidden?\n",
+        "type": "Task.Task x Bool"
+      },
+      {
+        "name": "isVisible",
+        "comment": " Is the page visible?\n",
+        "type": "Task.Task x Bool"
+      },
+      {
+        "name": "onVisibilityChange",
+        "comment": " A normal user should never need this. This should only be useful if you are\ncreating an effect manager that needs to track page visibility for some reason.\nThe boolean value is from calling `isHidden`.\n\nThis task never completes. Use `Process.spawn` and `Process.kill` to run it in\na separate process and kill it when it is no longer needed.\n",
+        "type": "(Bool -> Task.Task Basics.Never ()) -> Task.Task x Basics.Never"
+      },
+      {
+        "name": "visibility",
+        "comment": " Get the current page visibility.\n",
+        "type": "Task.Task x PageVisibility.Visibility"
+      },
+      {
+        "name": "visibilityChanges",
+        "comment": " Subscribe to any visibility changes. You will get updates about the current\nvisibility.\n",
+        "type": "(PageVisibility.Visibility -> msg) -> Platform.Sub.Sub msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

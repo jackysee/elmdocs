@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Component.App",
+    "comment": " These functions help you define a `main` value as required by all Elm applications.\n\n@docs program, beginnerProgram\n\n# Wrap program in some `Html`\n\nIf you want to wrap your top level component in some `Html` with out\nintroducing a new component then try something like this:\n\n    import Html exposing (Html)\n    import Html.Attributes\n    import Component.App\n    import CounterList\n\n    main =\n        Component.App.beginnerProgram\n            { init = CounterList.init\n            , view = view\n            , update = CounterList.update\n            }\n\n\n    view : (CounterList.Msg -> msg) -> CounterList.Model -> Html msg\n    view tag model =\n        Html.div [ style ] [ CounterList.view tag model ]\n\n\n    style : Html.Attribute msg\n    style =\n        Html.Attributes.style\n            [ ( \"maxWidth\", \"300px\" )\n            , ( \"margin\", \"0px auto\" )\n            ]\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "beginnerProgram",
+        "comment": " If you have no need for commands or subscriptions then you can use this\nsimpler function, something like this:\n\n    import TopLevelComponent\n\n    main =\n      Update.App.beginnerProgram\n        { init = TopLevelComponent.init\n        , view = TopLevelComponent.view\n        , update = TopLevelComponent.update\n        }\n",
+        "type": "{ init : model , update : msg -> model -> Component.Update.Action msg model , view : (msg -> msg) -> model -> Html.Html msg } -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "program",
+        "comment": " Your main elm file will likely contain something like this:\n\n    import TopLevelComponent\n\n    main =\n      Update.App.program\n        { init = TopLevelComponent.init\n        , view = TopLevelComponent.view\n        , update = TopLevelComponent.update\n        , subscriptions = TopLevelComponent.subscriptions\n        }\n",
+        "type": "{ init : model , update : msg -> model -> Component.Update.Action msg model , view : (msg -> msg) -> model -> Html.Html msg , subscriptions : (msg -> msg) -> model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Component.Update",
+    "comment": " Building blocks for writing component update functions.\n\n# Update functions\n\nComponent update functions have the following type signature:\n\n    import Component.Update as Update\n\n    update : Msg -> Model -> Update.Action Msg Model\n\n# Update actions\n\nComponent update functions, on receipt of a message, can do a combination of:\n\n    * Update the component's `model`,\n    * Forward messages to a child `component` or list of `components`,\n    * Return an `event` to the parent component,\n    * Request a command (`cmd`) to be performed,\n    * Inject an additional message (`msg`) through the update function, or\n    * **ignore** the message.\n\n@docs Action\n\n# Simple actions\n\n@docs ignore, model, event, eventIgnored, cmd, msg\n\n# Combinations of actions\n\n@docs modelAndEvent\n\n# Child components\n\nMessages addressed to components can be processed by calling `component` or\n`components`, these will process any child component's actions and feed any\nevents back into your update function.\n\n@docs component, components\n\n# Application support\n\n@docs program\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Represents the actions an update function may perform.\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "cmd",
+        "comment": " Request an command is performed.\n\n    Update.cmd (WebSocket.send \"ws://echo.websocket.org\" \"Message to be sent\")\n",
+        "type": "Platform.Cmd.Cmd msg -> Component.Update.Action msg model"
+      },
+      {
+        "name": "component",
+        "comment": " Forward messages to a child component.\n\n    import Counter\n    import Component.Update as Update\n\n    type Msg\n        = Top Counter.Msg\n        | Bottom Counter.Msg\n\n    type alias Model =\n        { top : Counter.Model\n        , bottom : Counter.Model\n        }\n\n    update : Msg -> Model -> Update.Action Msg Model\n    update msg' model =\n        case msg' of\n            Top msg ->\n                Update.component msg model.top (Top) (\\x -> { model | top = x }) Counter.update\n\n            Bottom msg ->\n                Update.component msg model.bottom (Bottom) (\\x -> { model | bottom = x }) Counter.update\n",
+        "type": "msg -> model -> (msg -> msg') -> (model -> model') -> (msg -> model -> Component.Update.Action msg model) -> Component.Update.Action msg' model'"
+      },
+      {
+        "name": "components",
+        "comment": " Forward messages to a list of child components.\n\n    import Counter\n    import Component.Update as Update\n\n    type Msg = Counter Int Counter.Msg\n\n    type alias Model =\n        { counters : List ( Int, Counter.Model )\n        }\n\n    update : Msg -> Model -> Update.Action Msg Model\n    update msg' model =\n        case msg' of\n            Counter id msg ->\n                Update.components id msg model.counters (Counter id) (\\x -> { model | counters = x }) Counter.update\n",
+        "type": "id -> msg -> List ( id, model ) -> (msg -> msg') -> (List ( id, model ) -> model') -> (msg -> model -> Component.Update.Action msg model) -> Component.Update.Action msg' model'"
+      },
+      {
+        "name": "event",
+        "comment": " Return an event to the parent component.\n\nYour `Msg` union type will be divided into private component messages and\nevent messages returned to the parent component.\n\n    module Button exposing (Msg, init, update, view)\n\n    import Html\n    import Html.Events\n    import Component.Update as Update\n\n    type Msg\n        = Click\n        | ClickEvent\n\n    init = ()\n\n    update msg model =\n        case msg of\n            Click ->\n                -- start animations, check if enabled ...\n                Update.event ClickEvent\n\n            ClickEvent ->\n                Update.eventIgnored\n",
+        "type": "msg -> Component.Update.Action msg model"
+      },
+      {
+        "name": "eventIgnored",
+        "comment": " Used to document that the message was an event intended for the parent\ncomponent, but the parent component did not process the message and passed\nit back to your component.\n\nSee above example for `event`.\n",
+        "type": "Component.Update.Action msg model"
+      },
+      {
+        "name": "ignore",
+        "comment": " Used to indicate that no action is to be performed.\n\nUseful as a placeholder until some update code is written.\n",
+        "type": "Component.Update.Action msg model"
+      },
+      {
+        "name": "model",
+        "comment": " Update the model\n\n    case msg of\n        Increment\n            Update.model { model | counter = model.counter + 1 }\n\n",
+        "type": "model -> Component.Update.Action msg model"
+      },
+      {
+        "name": "modelAndEvent",
+        "comment": " Update the model and return an event to the parent component.\n\nSee `model` and `event` for usage suggestions.\n",
+        "type": "model -> msg -> Component.Update.Action msg model"
+      },
+      {
+        "name": "msg",
+        "comment": " Inject a message back into the update function.\n\nUseful for renaming common events that come from multiple child components.\n\n    case msg of\n        SearchButton Button.ClickEvent ->\n            Update.msg StartSearch\n\n        SearchTextBox TextBox.EnterPressedEvent ->\n            Update.msg StartSearch\n\n        StartSearch ->\n            ...\n\n        ...\n",
+        "type": "msg -> Component.Update.Action msg model"
+      },
+      {
+        "name": "program",
+        "comment": " Utility function used by `Component.App.program` to convert a top level\ncomponent update function to one suitable for `Html.App.program`.\n",
+        "type": "(msg -> model -> Component.Update.Action msg model) -> msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

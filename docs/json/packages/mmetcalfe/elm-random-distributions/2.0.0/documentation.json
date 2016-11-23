@@ -1,0 +1,76 @@
+[
+  {
+    "name": "Random.Distributions",
+    "comment": " This library provides non-uniform distributions for the core Random library.\n\n# Generators\n@docs normal\n\n# Distribution functions\n@docs normalCumulative\n@docs normalDensity\n@docs normalDensityInverse\n@docs normalQuantile\n@docs erf\n@docs erfc\n@docs erfinv\n@docs probit\n\n# Other functions\n@docs quantile\n\n## Ziggurat algorithm\n\nHelper functions implementing the [Ziggurat\nalgorithm](https://en.wikipedia.org/wiki/Ziggurat_algorithm).\n\n@docs ziggurat\n@docs zigguratTables\n@docs zigguratX1\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "erf",
+        "comment": " The error function\nApproximation with a maximal error of 1.2*10^-7.\n\nDirectly from wikipedia:\nhttps://en.wikipedia.org/wiki/Error_function#Numerical_approximation\n\n    \\begin{align}\n    \\tau = {} & t\\cdot\\exp\\left(-x^2-1.26551223+1.00002368 t+0.37409196 t^2+0.09678418 t^3\\right.\\\\\n    & \\left.{}-0.18628806 t^4+0.27886807 t^5-1.13520398 t^6+1.48851587\\cdot t^7\\right. \\\\\n    & \\left.{}-0.82215223 t^8+0.17087277 t^9\\right)\n    \\end{align}\n",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "erfc",
+        "comment": " The complimentary error function.\nApproximation with a maximal error of 1.2*10^-7.\n",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "erfinv",
+        "comment": " The inverse of the error function.\n\nImplementation [from wikipedia](https://en.wikipedia.org/wiki/Error_function#Approximation_with_elementary_functions)\n",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "normal",
+        "comment": " Generate samples from a standard normal distribution.\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "normalCumulative",
+        "comment": " The cumulative distribution function of a normal distribution.\n\nImplemented using [the error function](https://en.wikipedia.org/wiki/Normal_distribution#Cumulative_distribution_function).\n\n    y = normalCumulative mu sigma x\n\n",
+        "type": "Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "normalDensity",
+        "comment": " The probability density function for a normal distribution.\n\n    y = normalDensity mu sigma x\n\n",
+        "type": "Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "normalDensityInverse",
+        "comment": " The inverse of the density function for a normal distribution.\n\n    x = normalDensityInverse mu sigma y\n\n",
+        "type": "Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "normalQuantile",
+        "comment": " The quantile function for a normal distribution with the given mean and standard deviation\n\ni.e. the inverse of the cumulative distribution function of the normal\ndistribution.\n\n    q = normalQuantile mu sigma p\n\nImplementation using the probit function [from Wikipedia](https://en.wikipedia.org/wiki/Normal_distribution#Quantile_function).\n",
+        "type": "Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "probit",
+        "comment": " The probit function.\n\nThe quantile function for the standard normal distribution (i.e. the inverse of\nthe cumulative distribution function of the standard normal distribution).\n\nImplemented using the inverse error function [as described on Wikipedia](https://en.wikipedia.org/wiki/Probit#Computation)\n",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "quantile",
+        "comment": " Produces sample quantiles of the xs corresponding to the given probabilities.\n\n    quantile samples probs\n\nBased on the [corresponding R function](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/quantile.html).\n\n`probs` is assumed to be a sorted list of probabilities.\n",
+        "type": "List Float -> List Float -> List Float"
+      },
+      {
+        "name": "ziggurat",
+        "comment": " Implement the [Ziggurat algorithm](https://en.wikipedia.org/wiki/Ziggurat_algorithm) for one-sided distributions.\n\n    oneSidedNormalGenerator =\n      let\n        n = numLayers\n        pdfFunc = normalDensity 0 1\n        invPdfFunc = normalDensityInverse 0 1\n        cdfFunc = standardNormalCumulative\n        x1 = zigguratX1 n pdfFunc invPdfFunc cdfFunc\n        y1 = pdfFunc x1\n        listTables = zigguratTables n y1 layerArea pdfFunc invPdfFunc\n        tables = Array.fromList listTables\n        tailGen = zigguratNormalTail x1\n      in\n        ziggurat tables pdfFunc tailGen\n\n",
+        "type": "Array.Array ( Float, Float ) -> (Float -> Float) -> Random.Generator Float -> Random.Generator Float"
+      },
+      {
+        "name": "zigguratTables",
+        "comment": " Generate the ziggurat tables.\n\nhttps://en.wikipedia.org/wiki/Ziggurat_algorithm#Generating_the_tables\n\n    tables = zigguratTables numLayers y1 layerArea pFunc invPFunc\n    (xs, ys) = List.unzip tables\n\n",
+        "type": "Int -> Float -> Float -> (Float -> Float) -> (Float -> Float) -> List ( Float, Float )"
+      },
+      {
+        "name": "zigguratX1",
+        "comment": " Find x1 and A for a given table size, density function, and inverse density\nfunction.\n\nhttps://en.wikipedia.org/wiki/Ziggurat_algorithm#Finding_x1_and_A\n\n    x1 = zigguratX1 n pdfFunc invPdfFunc cdfFunc\n\n",
+        "type": "Int -> (Float -> Float) -> (Float -> Float) -> (Float -> Float) -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

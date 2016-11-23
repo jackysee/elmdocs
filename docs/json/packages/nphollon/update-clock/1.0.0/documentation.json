@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Clock",
+    "comment": " Clock is designed to work with [elm-lang/animation-frame](package.elm-lang.org/packages/elm-lang/animation-frame/latest/AnimationFrame). Your model will get consistently-paced updates, despite fluctuations in frame diffs.\n\n@docs Clock, withPeriod, setPeriod, update\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Clock",
+        "comment": " A clock.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "setPeriod",
+        "comment": " Change a clock's period to the given value.\n",
+        "type": "Time.Time -> Clock.Clock -> Clock.Clock"
+      },
+      {
+        "name": "update",
+        "comment": " Called like so:\n\n    update up diff clock model\n\nThe diff is a real-time diff, such as what is given by AnimationFrame.diffs. This function will pass the diff to the clock. If the diff causes the clock's counter to increment, then `up` will be called with the counter and the model.\n",
+        "type": "(Int -> a -> a) -> Time.Time -> Clock.Clock -> a -> ( Clock.Clock, a )"
+      },
+      {
+        "name": "withPeriod",
+        "comment": " Create a clock that updates with the given real-time period.\n\n    withDelta 0.1 -- calls the tick function ten times per second\n",
+        "type": "Time.Time -> Clock.Clock"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

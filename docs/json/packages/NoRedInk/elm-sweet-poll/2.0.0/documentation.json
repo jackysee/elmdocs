@@ -1,0 +1,79 @@
+[
+  {
+    "name": "SweetPoll",
+    "comment": "\n\n# Configuration\n@docs Config, defaultConfig\n\n# Elm Artchitecture\n@docs Model, Action, init, update\n\n# Record Extension Component\n@docs ComponentModel, componentUpdate\n",
+    "aliases": [
+      {
+        "name": "ComponentModel",
+        "comment": " Model type for using the NoRedInk/elm-api-components pattern\n",
+        "args": [
+          "base",
+          "data"
+        ],
+        "type": "{ base | sweetPoll : SweetPoll.Model data }"
+      },
+      {
+        "name": "Config",
+        "comment": " ",
+        "args": [
+          "data"
+        ],
+        "type": "{ url : String , decoder : Json.Decode.Decoder data , delay : Time.Time , samesBeforeDelay : Int , delayMultiplier : Float , maxDelay : Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " ",
+        "args": [
+          "data"
+        ],
+        "cases": [
+          [
+            "PollSuccess",
+            [
+              "data"
+            ]
+          ],
+          [
+            "PollFailure",
+            [
+              "Testable.Http.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Model",
+        "comment": " Private state of the SweetPoll component\n",
+        "args": [
+          "data"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "componentUpdate",
+        "comment": " Update function for using the NoRedInk/elm-api-components pattern\n",
+        "type": "SweetPoll.Action data -> SweetPoll.ComponentModel base data -> ( SweetPoll.ComponentModel base data , Testable.Cmd.Cmd (SweetPoll.Action data) )"
+      },
+      {
+        "name": "defaultConfig",
+        "comment": " Default configuration for SweetPoll\n",
+        "type": "Json.Decode.Decoder data -> String -> SweetPoll.Config data"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "SweetPoll.Config data -> ( SweetPoll.Model data, Testable.Cmd.Cmd (SweetPoll.Action data) )"
+      },
+      {
+        "name": "update",
+        "comment": " The SweetPoll StartApp-style update function\n",
+        "type": "SweetPoll.Action data -> SweetPoll.Model data -> ( SweetPoll.Model data, Testable.Cmd.Cmd (SweetPoll.Action data) )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

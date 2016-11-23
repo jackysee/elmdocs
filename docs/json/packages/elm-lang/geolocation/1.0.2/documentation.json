@@ -1,0 +1,103 @@
+[
+  {
+    "name": "Geolocation",
+    "comment": " Find out about where a user’s device is located. [Geolocation API][geo].\n\n[geo]: https://developer.mozilla.org/en-US/docs/Web/API/Geolocation\n\n# Location\n@docs Location, Altitude, Movement\n\n# Subscribe to Changes\n@docs changes\n\n# Get Current Location\n@docs now, Error\n\n# Options\n@docs nowWith, Options, defaultOptions\n\n# Low-level Helpers\n\nThere are very few excuses to use this. Any normal user should be using\n`changes` instead.\n\n@docs watch, watchWith\n\n",
+    "aliases": [
+      {
+        "name": "Altitude",
+        "comment": " The altitude in meters relative to sea level is held in `value`. The `accuracy` field\ndescribes how accurate `value` is, also in meters.\n",
+        "args": [],
+        "type": "{ value : Float, accuracy : Float }"
+      },
+      {
+        "name": "Location",
+        "comment": " All available details of the device's current location in the world.\n\n  * `latitude` &mdash; the latitude in decimal degrees.\n  * `longitude` &mdash; the longitude in decimal degrees.\n  * `accuracy` &mdash; the accuracy of the latitude and longitude, expressed in meters.\n  * `altitude` &mdash; altitude information, if available.\n  * `movement` &mdash; information about how the device is moving, if available.\n  * `timestamp` &mdash; the time that this location reading was taken in milliseconds.\n",
+        "args": [],
+        "type": "{ latitude : Float , longitude : Float , accuracy : Float , altitude : Maybe.Maybe Geolocation.Altitude , movement : Maybe.Maybe Geolocation.Movement , timestamp : Time.Time }"
+      },
+      {
+        "name": "Options",
+        "comment": " There are a couple options you can mess with when requesting location data.\n\n  * `enableHighAccuracy` &mdash; When enabled, the device will attempt to provide\n    a more accurate location. This can result in slower response times or\n    increased power consumption (with a GPS chip on a mobile device for example).\n    When disabled, the device can take the liberty to save resources by responding\n    more quickly and/or using less power.\n  * `timeout` &mdash; Requesting a location can take time, so you have the option\n    to provide an upper bound in milliseconds on that wait.\n  * `maximumAge` &mdash; This API can return cached locations. If this is set\n    to `Just 400` you may get cached locations as long as they were read in the\n    last 400 milliseconds. If this is `Nothing` then the device must attempt\n    to retrieve the current location every time.\n",
+        "args": [],
+        "type": "{ enableHighAccuracy : Bool , timeout : Maybe.Maybe Int , maximumAge : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " The `now` and `watch` functions may fail for a variaty of reasons.\n\n    * The user may reject the request to use their location.\n    * It may be impossible to get a location.\n    * If you set a timeout in the `Options` the request may just take too long.\n\nIn each case, the browser will provide a string with additional information.\n",
+        "args": [],
+        "cases": [
+          [
+            "PermissionDenied",
+            [
+              "String"
+            ]
+          ],
+          [
+            "LocationUnavailable",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Timeout",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Movement",
+        "comment": " Describes the motion of the device. If the device is not moving, this will\njust be `Static`. If the device is moving, you will see the `speed` in meters\nper second and the `degreesFromNorth` in degrees.\n\n\n**Note:** The `degreesFromNorth` value goes clockwise: 0° represents true\nnorth, 90° is east, 180° is south, 270° is west, etc.\n",
+        "args": [],
+        "cases": [
+          [
+            "Static",
+            []
+          ],
+          [
+            "Moving",
+            [
+              "{ speed : Float, degreesFromNorth : Float }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "changes",
+        "comment": " Subscribe to any location changes. You will only receive updates if the\nuser is moving around.\n",
+        "type": "(Geolocation.Location -> msg) -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " The options you will want in 99% of cases. This will get you faster\nresults, less battery drain, no surprise failures due to timeouts, and no\nsurprising cached results.\n\n    { enableHighAccuracy = False\n    , timeout = Nothing\n    , maximumAge = Nothing\n    }\n",
+        "type": "Geolocation.Options"
+      },
+      {
+        "name": "now",
+        "comment": " Request the location of the user’s device.\n\nOn the first request, the user will need to give permission to access this\ninformation. This task will block until they make a choice. If they do not\ngive permission, the task will result in a `PermissionDenied` error.\n",
+        "type": "Task.Task Geolocation.Error Geolocation.Location"
+      },
+      {
+        "name": "nowWith",
+        "comment": " Same as `now` but you can customize exactly how locations are reported.\n",
+        "type": "Geolocation.Options -> Task.Task Geolocation.Error Geolocation.Location"
+      },
+      {
+        "name": "watch",
+        "comment": " This is a low-level API that is used to define things like `changes`.\nIt is really only useful if you need to make an effect manager of your own.\nI feel this will include about 5 people ever.\n\nYou provide two functions. One two take some action on movement and one to\ntake some action on failure. The resulting task will just block forever,\nreporting to these two functions. If you would like to kill a `watch` task,\ndo something like this:\n\n    import Process\n    import Task\n\n    killWatch =\n      Process.spawn (watch onMove onError)\n        |> Task.andThen Process.kill\n\n",
+        "type": "(Geolocation.Location -> Task.Task Basics.Never ()) -> (Geolocation.Error -> Task.Task Basics.Never ()) -> Task.Task x Basics.Never"
+      },
+      {
+        "name": "watchWith",
+        "comment": " Same as `watch` but you can customize exactly how locations are reported.\n",
+        "type": "Geolocation.Options -> (Geolocation.Location -> Task.Task Basics.Never ()) -> (Geolocation.Error -> Task.Task Basics.Never ()) -> Task.Task x Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

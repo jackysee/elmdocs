@@ -1,0 +1,347 @@
+[
+{
+  "name": "DraggableForm",
+  "comment": "This package is used to create and update drag and drop forms that can\nbe moved around a canvas.\n\n# Models\n@docs Model, DraggableForm\n\n# Updating\n@docs Action, update\n\n# Viewing\n@docs render\n\n# Model Helpers\n@docs createCircle, createSquare",
+  "aliases": [
+    {
+      "name": "DraggableForm",
+      "comment": "The DraggableForm consists of a Graphics.Collage.Form that represents the\nactual Form to be rendered, an id (forms with the same id will be dragged\naround together), a position on the canvas, and a function that can be used\nto determine if a point on the canvas is inside that form. There are helper\nmethods below for creating DraggableForms of common shapes.",
+      "args": [],
+      "type": {
+        "tag": "record",
+        "extension": null,
+        "fields": [
+          [
+            "form",
+            {
+              "tag": "type",
+              "name": "Form"
+            }
+          ],
+          [
+            "id",
+            {
+              "tag": "type",
+              "name": "Int"
+            }
+          ],
+          [
+            "isPointInside",
+            {
+              "tag": "lambda",
+              "in": {
+                "tag": "app",
+                "func": {
+                  "tag": "type",
+                  "name": "_Tuple2"
+                },
+                "args": [
+                  {
+                    "tag": "type",
+                    "name": "Int"
+                  },
+                  {
+                    "tag": "type",
+                    "name": "Int"
+                  }
+                ]
+              },
+              "out": {
+                "tag": "lambda",
+                "in": {
+                  "tag": "app",
+                  "func": {
+                    "tag": "type",
+                    "name": "_Tuple2"
+                  },
+                  "args": [
+                    {
+                      "tag": "type",
+                      "name": "Int"
+                    },
+                    {
+                      "tag": "type",
+                      "name": "Int"
+                    }
+                  ]
+                },
+                "out": {
+                  "tag": "type",
+                  "name": "Bool"
+                }
+              }
+            }
+          ],
+          [
+            "position",
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple2"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                },
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Model",
+      "comment": "The Model consists of a List of DraggableForms and the id of the currently\nselected form.\n\n    { forms = [ draggableForm ], selectedId = Nothing }",
+      "args": [],
+      "type": {
+        "tag": "record",
+        "extension": null,
+        "fields": [
+          [
+            "forms",
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "List"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "DraggableForm"
+                }
+              ]
+            }
+          ],
+          [
+            "selectedId",
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "Maybe"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Action",
+      "comment": "Actions describing the ways the model can be updated. Generally,\nMoveSelected will follow the mouse position, ChangeSelected will be sent the\nmouse location when the mouse is clicked, and UnselectAll will be sent when\nthe mouse is released",
+      "args": [],
+      "cases": [
+        [
+          "MoveSelected",
+          [
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple2"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                },
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            }
+          ]
+        ],
+        [
+          "ChangeSelection",
+          [
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple2"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                },
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            }
+          ]
+        ],
+        [
+          "UnselectAll",
+          []
+        ]
+      ]
+    }
+  ],
+  "values": [
+    {
+      "name": "createCircle",
+      "comment": "Can be used to create a circle DraggableForm. Takes the Color of the\ncircle, the radius, the starting position, and the id.\n\n    createCircle Color.blue 100 (0, 0) 1",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Color"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "type",
+            "name": "Float"
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple2"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                },
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "type",
+                "name": "Int"
+              },
+              "out": {
+                "tag": "type",
+                "name": "DraggableForm"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "createSquare",
+      "comment": "Can be used to create a square DraggableForm. Takes the Color of the\nsquare, the side length, the starting position, and the id.\n\n    createSquare Color.blue 100 (0, 0) 1",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Color"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "type",
+            "name": "Float"
+          },
+          "out": {
+            "tag": "lambda",
+            "in": {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "_Tuple2"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Int"
+                },
+                {
+                  "tag": "type",
+                  "name": "Int"
+                }
+              ]
+            },
+            "out": {
+              "tag": "lambda",
+              "in": {
+                "tag": "type",
+                "name": "Int"
+              },
+              "out": {
+                "tag": "type",
+                "name": "DraggableForm"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "render",
+      "comment": "The render function takes a Model and returns the List Form to be rendered\nin the collage by the client. The forms will have been moved to their correct\npositions and ordered with the most recently moved forms on \"top\".\n\n    collage width height \u003c| render model",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Model"
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "List"
+          },
+          "args": [
+            {
+              "tag": "type",
+              "name": "Form"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "update",
+      "comment": "The update function takes one of the Actions and a Model and returns the\nnew model.\n\n    update UnselectAll model",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Action"
+        },
+        "out": {
+          "tag": "lambda",
+          "in": {
+            "tag": "type",
+            "name": "Model"
+          },
+          "out": {
+            "tag": "type",
+            "name": "Model"
+          }
+        }
+      }
+    }
+  ]
+}
+
+]

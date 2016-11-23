@@ -1,0 +1,73 @@
+[
+  {
+    "name": "QueryString",
+    "comment": " This module exposes functions for working with query strings.\n\nYou can manipulate `QueryString`s:\n\n    > empty\n    |   |> add \"a\" \"hello\"\n    |   |> add \"a\" \"goodbye\"\n    |   |> add \"b\" \"1\"\n    |   |> render\n    \"?a=hello&a=goodbye&b=1\" : String\n\nAnd you can parse and extract their parameters:\n\n    > let\n    |   qs = parse \"?a=1&a=2&a=test&b=hello\"\n    |   a = qs |> many int \"a\"\n    |   b = qs |> one string \"b\" |> Maybe.withDefault \"goodbye\"\n    | in\n    |   (a, b)\n    ([1, 2], \"hello\")\n\n## Types\n@docs QueryString\n\n## Constructing QueryStrings\n@docs parse, empty\n\n## Manipulating parameters\n@docs render, add, remove, filter\n\n## Extracting parameters\n@docs all, one, many\n\n### Parsers\n@docs string, int\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "QueryString",
+        "comment": " Represents a parsed query string.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add a value to a key.\n\n    > parse \"?a=1&b=a&a=c\"\n    |   |> add \"a\" \"2\"\n    |   |> render\n    \"?a=2&a=1&a=c&b=a\" : String\n\n    > parse \"?a=1&b=a&a=c\"\n    |   |> add \"d\" \"hello\"\n    |   |> render\n    \"?a=1&a=c&b=a&d=hello\" : String\n\n",
+        "type": "String -> String -> QueryString.QueryString -> QueryString.QueryString"
+      },
+      {
+        "name": "all",
+        "comment": " Retrieve all of the values for a given key.\n\n    > parse \"?a=1&a=2\"\n    |   |> all \"a\"\n    [\"1\",\"2\"] : List String\n\n    > parse \"?a=1&a=2\"\n    |   |> all \"b\"\n    [] : List String\n\n",
+        "type": "String -> QueryString.QueryString -> List String"
+      },
+      {
+        "name": "empty",
+        "comment": " Construct an empty QueryString.\n",
+        "type": "QueryString.QueryString"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter a key's values.\n\n    > parse \"?a=1&b=a&a=c\"\n    |   |> filter \"a\" ((==) \"1\")\n    |   |> render\n    \"?a=1&b=a\" : String\n\n",
+        "type": "String -> (String -> Bool) -> QueryString.QueryString -> QueryString.QueryString"
+      },
+      {
+        "name": "int",
+        "comment": " A Parser that accepts any integer.\n",
+        "type": "Combine.Parser s Int"
+      },
+      {
+        "name": "many",
+        "comment": " Retrieve zero or more values for some key. Values are funneled\nthrough the given parser before being returned.\n\n    > parse \"?a=1&a=c&a=2\"\n    |   |> many int \"a\"\n    [1,2] : List Int\n\n",
+        "type": "Combine.Parser () a -> String -> QueryString.QueryString -> List a"
+      },
+      {
+        "name": "one",
+        "comment": " Retrieve a single value for a given key. Values are funneled through\nthe given parser before being returned.\n\n    > parse \"?a=1&a=2\"\n    |   |> one string \"a\"\n    Just \"2\" : Maybe.Maybe String\n\n    > parse \"?a=1&a=2\"\n    |   |> one int \"a\"\n    Just 2 : Maybe.Maybe Int\n\n    > parse \"?a=1&a=c\"\n    |   |> one int \"a\"\n    Just 1 : Maybe.Maybe Int\n\n",
+        "type": "Combine.Parser () a -> String -> QueryString.QueryString -> Maybe.Maybe a"
+      },
+      {
+        "name": "parse",
+        "comment": " Turn a String into a QueryString. The initial `?` is optional.\n\n    > parse \"\"\n    QueryString (Dict.fromList []) : QueryString\n\n    > parse \"?a=1&b=c&a=2\"\n    QueryString (Dict.fromList [(\"a\",[\"1\",\"2\"]),(\"b\",[\"c\"])])\n        : QueryString\n\n    > parse \"a=1&b=c&a=2\"\n    QueryString (Dict.fromList [(\"a\",[\"1\",\"2\"]),(\"b\",[\"c\"])])\n        : QueryString\n\n",
+        "type": "String -> QueryString.QueryString"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key.\n\n    > parse \"?a=1&b=a&a=c\"\n    |   |> remove \"a\"\n    |   |> render\n    \"?b=a\" : String\n\n    > parse \"?a=1&b=a&a=c\"\n    |   |> remove \"c\"\n    |   |> render\n    \"?a=1&a=c&b=a\" : String\n\n",
+        "type": "String -> QueryString.QueryString -> QueryString.QueryString"
+      },
+      {
+        "name": "render",
+        "comment": " Render a QueryString to a String.\n\n    > render (parse \"?a=1&b=a&a=c\")\n    \"?a=1&a=c&b=a\" : String\n\n",
+        "type": "QueryString.QueryString -> String"
+      },
+      {
+        "name": "string",
+        "comment": " A Parser that accepts any string.\n",
+        "type": "Combine.Parser s String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

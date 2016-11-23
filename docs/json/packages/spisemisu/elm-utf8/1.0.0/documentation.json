@@ -1,0 +1,21 @@
+[
+  {
+    "name": "UTF8",
+    "comment": " Library to encode / decode between multi-byte Unicode characters and UTF-8\nmultiple single-byte character encoding. Ported from: (c) [Chris\nVeness](http://www.movable-type.co.uk).\n\n# UTF-8 to Unicode\n\n@docs toMultiByte\n\n# Unicode to UTF-8\n\n@docs toSingleByte\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toMultiByte",
+        "comment": " Encode multi-byte Unicode string into utf-8 multiple single-byte characters\n(BMP / basic multilingual plane only).\n\nChars in range U+0080 - U+07FF are encoded in 2 chars, U+0800 - U+FFFF in 3\nchars.\n\n    toMultiByte \"Ã¦ Ã¸ Ã¥ Ã±\"\n        == \"æ ø å ñ\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "toSingleByte",
+        "comment": " Decode utf-8 encoded string back into multi-byte Unicode characters.\n\n    toSingleByte \"æ ø å ñ\"\n        == \"Ã¦ Ã¸ Ã¥ Ã±\"\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

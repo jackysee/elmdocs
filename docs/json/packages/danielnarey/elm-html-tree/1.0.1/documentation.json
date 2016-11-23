@@ -1,0 +1,194 @@
+[
+  {
+    "name": "HtmlTree.Modify",
+    "comment": " ## Apply a modify function to every node of an `HtmlTree` matching a criterion\n\nThis package module provides functions for modifying the internal nodes of an\n`HtmlTree`. Nodes may be selected for modification by id, tag, class, or\nattribute value, or you can modify all nodes in the tree.\n\n@docs matchingId, matchingTag, matchingClass, matchingAttrValue, allNodes\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "allNodes",
+        "comment": " Apply the modify function to every node in the tree\n\n      page\n        |> Modify.allNodes\n          ( addAttribute (\"hidden\", \"True\") )\n\n",
+        "type": "(HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "matchingAttrValue",
+        "comment": " Given a tuple containing an attribute name and value and a modify function,\napply the modify function to every node in the tree whose element has a matching\nvalue for the named attribute.\n\n      page\n        |> Modify.matchingAttrValue (\"disabled\", \"True\")\n          ( addAttribute (\"disabled\", \"False\") )\n\n",
+        "type": "( String, String ) -> (HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "matchingClass",
+        "comment": " Given a string representing a class name and a modify function, apply the\nmodify function to every node in the tree whose element has a matching class\nassignment.\n\n      page\n        |> Modify.matchingClass \"button\"\n          ( addClass \"large-button\" )\n",
+        "type": "String -> (HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "matchingId",
+        "comment": " Given an `id` string and a modify function, apply the modify function to\nevery node in the tree whose element has a matching `id`. Note that HTML\nelements should be assigned unique `id` strings, so in theory the modify\nfunction should only be applied to one node.\n\n    welcomeMessage =\n      \"Hello, World!\"\n        |> textWrapper \"p\"\n        |> withId \"messageText\"\n        |> (\\n -> [n])\n        |> container \"div\"\n\n    welcomeMessage\n      |> Modify.matchingId \"messageText\"\n        ( withText \"Hello, Universe!\" )\n\n",
+        "type": "String -> (HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "matchingTag",
+        "comment": " Given a string representing an HTML tag and a modify function, apply the\nmodify function to every node in the tree whose element has a matching HTML tag.\n\n      page\n        |> Modify.matchingTag \"button\"\n          ( addAttribute (\"disabled\", \"True\") )\n",
+        "type": "String -> (HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "HtmlTree",
+    "comment": "\n\n## An alternative syntax for generating HTML in Elm\n\n`HtmlTree` is an alternative syntax for generating HTML, built on top of the\nstandard `Html` and `VirtualDom` packages. This syntax enables a\n[\"pipeline\"](https://en.wikipedia.org/wiki/Pipeline_%28software%29)\napproach to HTML specification, and its implementation allows for downstream\nmodification of view components — something that is not possible when working\nwith the standard API. Once constructed, view components may be passed to modify\nfunctions as data, encouraging a design pattern for updating a program's view\nthat may result in more intuitive and readable code.\n\n\n# HTML DOM Representation\n@docs HtmlTree\n\n# Rendering an `HtmlTree` to standard `Html`\n@docs assembleHtml\n\n# Constructing `HtmlTree` nodes\n@docs leaf, textWrapper, container, opaque\n\n# Adding Text to a Node\n@docs withText, appendText, prependText, textAsMarkdown\n\n# Adding Attributes and Event Handlers to a Node\n@docs withAttributes, addAttribute, withActions, addAction, withObserver\n\n# Adding an Id Attribute, Class Names, and Style Declarations to a Node\n@docs withId, withClasses, addClass, removeClass, withStyles, addStyle\n\n# Modifying a Node's HTML tag\n@docs withTag\n\n# Replacing, Appending, or Prepending Child Nodes\n@docs withChildren, appendChild, prependChild\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "HtmlTree",
+        "comment": " Represents a node in the DOM tree that may have some children or\nno children\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "Opaque",
+            [
+              "Html.Html msg"
+            ]
+          ],
+          [
+            "Leaf",
+            [
+              "Internal.HtmlElement.HtmlElement msg"
+            ]
+          ],
+          [
+            "Stem",
+            [
+              "Internal.HtmlElement.HtmlElement msg",
+              "List (HtmlTree.HtmlTree msg)"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addAction",
+        "comment": " Add a new action to the element at the root node of an `HtmlTree`. If a new\n*action-message* pair has the same *action* as an existing one, the new\n*message* replaces the old one; otherwise, existing *action-message* pairs are\nretained.\n\n    myTextElement\n      |> addAction (\"click\", HideMessage)\n\n",
+        "type": "( String, msg ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "addAttribute",
+        "comment": " Add a new attribute (*name-value* pair) to the element at the root\nnode of an `HtmlTree`. If the new attribute has the same *name* as an existing\nattribute, the new *value* replaces the old one; otherwise, existing attributes\nare retained.\n\n    welcomeMessage\n      |> addAttribute (\"id\", \"welcomeMessage\")\n",
+        "type": "( String, String ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "addClass",
+        "comment": " Add a new class assignment to the element at the root node of an `HtmlTree`,\n*retaining* any existing class assignments\n\n    welcomeMessage\n        |> addClass \"align-center\"\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "addStyle",
+        "comment": " Add a new style declaration (*proprty-value* pair) to the element at the root\nnode of an `HtmlTree`. If a new declaration has the same *property* as an\nexisting declaration, the new *value* replaces the old one; otherwise, existing\nstyle declarations are retained.\n\n    welcomeMessage\n        |> addStyle (\"text-align\", \"center\")\n",
+        "type": "( String, String ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "appendChild",
+        "comment": " Add a child node to the root node of an `HtmlTree`, *appended\nafter* any existing children.\n\n    fruit =\n      [ \"apple\"\n      , \"banana\"\n      , \"orange\"\n      ]\n        |> List.map textWrapper \"li\"\n        |> container \"ul\"\n\n    fruit\n      |> appendChild (\"watermelon\" |> textWrapper \"li\")\n\n    --> <ul>\n          <li>apple</li>\n          <li>banana</li>\n          <li>orange</li>\n          <li>watermelon</li>\n        </ul>\n",
+        "type": "HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "appendText",
+        "comment": " Add new text to the element at the root node of an `HtmlTree`, *appended\nafter* any existing text.\n\n    welcomeMessage\n        |> appendText \"!!\"\n\n    --> <p>Hello, World!!!</p>\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "assembleHtml",
+        "comment": " Convert an `HtmlTree` containing one or more nodes to standard `Html`\n(an alias for `VirtualDom.Node`). This function must be called on the\nroot node of your `HtmlTree` in order for the tree to be rendered in your Elm\nprogram's view.\n",
+        "type": "HtmlTree.HtmlTree msg -> Html.Html msg"
+      },
+      {
+        "name": "container",
+        "comment": " Initialize an `HtmlTree` node that has children, but has no attributes and\nno text.\n\n    \"Hello, World!\"\n      |> textWrapper \"p\"\n      |> container \"div\"\n\n    --> <div><p>Hello, World!</p></div>\n",
+        "type": "String -> List (HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "leaf",
+        "comment": " Initialize an `HtmlTree` node with no attributes, no text, and no children.\n\n    leaf \"br\"\n\n    --> <br>\n",
+        "type": "String -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "opaque",
+        "comment": " Convert a standard `Html` node to an opaque `HtmlTree` (\"opaque\" because its\ninternal attributes and children will not be accessible to modify functions).\n\nThis feature is included so that `HtmlTree` can be used flexibly with other\npackages that generate standard `Html`, but it should be used with caution\nbecause the presence of opaque nodes limits the functionality of the `HtmlTree`\npackage. Constructor and modify functions called on opaque nodes will return\nthe node without modification.\n",
+        "type": "Html.Html msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "prependChild",
+        "comment": " Add a child node to the root node of an `HtmlTree`, *prepended\nbefore* any existing children.\n\n    fruit\n      |> prependChild (\"watermelon\" |> textWrapper \"li\")\n\n    --> <ul>\n          <li>watermelon</li>\n          <li>apple</li>\n          <li>banana</li>\n          <li>orange</li>\n        </ul>\n\n",
+        "type": "HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "prependText",
+        "comment": " Add new text to the element at the root node of an `HtmlTree`, *prepended\nbefore* any existing text.\n\n    welcomeMessage\n        |> prependText \"#\"\n\n    --> <p>#Hello, World!</p>\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "removeClass",
+        "comment": " Remove a class name from the element at the root node of an `HtmlTree`\n\n    welcomeMessage\n      |> removeClass \"large-text\"\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "textAsMarkdown",
+        "comment": " Flag the text at the root node of an `HtmlTree` as\n[markdown](https://en.wikipedia.org/wiki/Markdown); when\n`assembleHtml` is called, the text will be rendered using\n[`Markdown.toHtml`](package.elm-lang.org/packages/evancz/elm-markdown/latest/Markdown#toHtml)\n",
+        "type": "HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "textWrapper",
+        "comment": " Initialize an `HtmlTree` node that contains text, but has no attributes and\nno children.\n\n    \"Hello, World!\"\n      |> textWrapper \"p\"\n\n    --> <p>Hello, World!</p>\n",
+        "type": "String -> String -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withActions",
+        "comment": " Add a list of actions to the element at the root node of an `HtmlTree`,\n*replacing* any existing actions. Actions must be encoded as *action-message*\npairs. As defined here, \"actions\" include all events that __do not__ capture\nform input. Following the typical pattern of an Elm program, a \"message\" is a\nuser-defined type that tells the program what updates to perform on the model\nvia pattern matching. Note that the action name should be given as a string\nwithout the \"on\" prefix.\n\n    \"Click here and see what happens!\"\n      |> textWrapper \"p\"\n      |> withAttributes\n        [ (\"hidden\", toString model) ]\n      |> withActions\n        [ (\"click\", HideMessage) ]\n\nSee [examples/Buttons.elm](https://github.com/danielnarey/elm-html-tree/tree/master/examples)\nfor a full working example.\n",
+        "type": "List ( String, msg ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withAttributes",
+        "comment": " Add a list of attributes (*name-value* pairs) to the element at the root\nnode of an `HtmlTree`, *replacing* any existing attributes\n\n    welcomeMessage\n      |> withAttributes\n        [ (\"id\", \"welcomeMessage\")\n        , (\"title\", \"Hello again!\")\n        ]\n",
+        "type": "List ( String, String ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withChildren",
+        "comment": " Add child nodes to the root node of an `HtmlTree`, *replacing* any existing\nchildren, and return the result. One use of this function is to convert a\n`Leaf` to a `Stem`, which is helpful when nesting text elements.\n\n    \"Hello, world!\"\n      |> textWrapper \"p\"\n      |> withChildren\n        [ leaf \"br\"\n        , \"Awesome!\" |> textWrapper \"strong\"\n        ]\n      |> container \"div\"\n\n    --> <div><p>Hello, world!<br><strong>Awesome!</strong></p></div>\n",
+        "type": "List (HtmlTree.HtmlTree msg) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withClasses",
+        "comment": " Add a list of class names to the element at the root node of an `HtmlTree`,\n*replacing* any existing class assignments\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withClasses\n          [ \"large-text\"\n          , \"align-center\"\n          ]\n",
+        "type": "List String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withId",
+        "comment": " Convenience function to add an `id` attribute to the root element of an\n`HtmlTree`. Calls `addAttribute`.\n\n    welcomeMessage\n      |> withId \"welcomeMessage\"\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withObserver",
+        "comment": " Add an observer to the element at the root node of an `HtmlTree`, encoded as\nan [`Html.Attribute`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#Attribute).\nAn \"observer\" differs from an \"action\" in that it captures one or more input\nvalues, and so requires a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nto read that input. The built-in observers in the `Html.Events` package\nare\n[`onInput`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onInput)\nand\n[`onCheck`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onCheck).\nCustom observers may be created using the\n[`Html.Events.on`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#on)\nfunction, which takes an\n[event name](http://www.w3schools.com/jsref/dom_obj_event.asp) (as a string,\nwithout the \"on\" prefix) and a\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nas arguments.\n\n    leaf \"input\"\n      |> withAttributes\n        [ (\"type\", \"checkbox\")\n        , (\"checked\", toString model)\n        ]\n      |> withObserver (Events.onCheck Checked)\n\nSee\n[examples/Checkboxes.elm](https://github.com/danielnarey/elm-html-tree/tree/master/examples)\nand\n[examples/RadioButtons.elm](https://github.com/danielnarey/elm-html-tree/tree/master/examples)\nfor full working examples.\n",
+        "type": "Html.Attribute msg -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withStyles",
+        "comment": " Add a list of style declarations (*name-value* pairs) to the element at the\nroot node of an `HtmlTree`, *replacing* any existing styles. Style declarations\nadded in this way are defined via the element's `style` attribute, which means\nthey override style declarations assigned to tag, class, and id selectors in\nglobal stylesheets.\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withStyles\n          [ (\"font-size\", \"2em\")\n          , (\"text-align\", \"center\")\n          ]\n\nSee my\n[Stylesheet](http://package.elm-lang.org/packages/danielnarey/elm-stylesheet/latest/Stylesheet)\npackage for a more general approach to defining CSS rules and generating a\nglobal stylesheet in Elm.\n",
+        "type": "List ( String, String ) -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withTag",
+        "comment": " Modify the HTML tag of the element at the root node of an `HtmlTree`.\nReplaces the existing tag.\n\n    welcomeMessage\n      |> withTag \"span\"\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "withText",
+        "comment": " Add text to the element at the root node of an `HtmlTree`, *replacing*\nany existing text\n\n    welcomeMessage =\n      leaf \"p\"\n        |> withText \"Hello, World!\"\n\n    --> <p>Hello, World!</p>\n\n    welcomeMessage\n      |> withText \"Hello, Universe!\"\n\n    --> <p>Hello, Universe!</p>\n",
+        "type": "String -> HtmlTree.HtmlTree msg -> HtmlTree.HtmlTree msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

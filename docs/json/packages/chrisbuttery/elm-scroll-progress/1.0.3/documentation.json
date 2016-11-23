@@ -1,0 +1,58 @@
+[
+  {
+    "name": "ScrollProgress",
+    "comment": " ScrollProgress functions and Msg.\n\n# Model\n@docs Model, ScrollAttributes, initialModel\n\n# Message\n@docs Msg\n\n# Update function\n@docs update, calculateProgress\n\n# View function\n@docs view\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " A type representing a model.\n",
+        "args": [],
+        "type": "{ progress : Int , color : Maybe.Maybe String , from : Maybe.Maybe String , to : Maybe.Maybe String }"
+      },
+      {
+        "name": "ScrollAttributes",
+        "comment": " A type representing the arrtibutes we're expecting 'on scroll'.\n",
+        "args": [],
+        "type": "{ scrollTop : Int, targetScrollHeight : Int, clientHeight : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A union type representing The Elm Architect's `Msg`\n",
+        "args": [],
+        "cases": [
+          [
+            "Progress",
+            [
+              "ScrollProgress.ScrollAttributes"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "calculateProgress",
+        "comment": " A function to calculate the percentage an element has been scrolled\n",
+        "type": "ScrollProgress.ScrollAttributes -> Int"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Initalize the model\n",
+        "type": "ScrollProgress.Model"
+      },
+      {
+        "name": "update",
+        "comment": " The Elm Architect's update function.\n",
+        "type": "ScrollProgress.Msg -> ScrollProgress.Model -> ( ScrollProgress.Model, Platform.Cmd.Cmd ScrollProgress.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " A view function that will render the scroll progress ekement.\n",
+        "type": "ScrollProgress.Model -> Html.Html ScrollProgress.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

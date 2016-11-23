@@ -1,0 +1,35 @@
+[
+  {
+    "name": "StartApp",
+    "comment": " This module helps you start your application in a typical Elm workflow.\nIt assumes you are following [the Elm Architecture][arch] and using\n[elm-effects][]. From there it will wire everything up for you!\n\n**Be sure to [read the Elm Architecture tutorial][arch] to learn how this all\nworks!**\n\n[arch]: https://github.com/evancz/elm-architecture-tutorial\n[elm-effects]: http://package.elm-lang.org/packages/evancz/elm-effects/latest\n\n# Start your Application\n@docs start, Config, App\n\n",
+    "aliases": [
+      {
+        "name": "App",
+        "comment": " An `App` is made up of a couple signals:\n\n  * `model` &mdash; a signal representing the current model. Generally you\n    will not need this one, but it is there just in case. You will know if you\n    need this.\n\n  * `tasks` &mdash; a signal of tasks that need to get run. Your app is going\n    to be producing tasks in response to all sorts of events, so this needs to\n    be hooked up to a `port` to ensure they get run.\n",
+        "args": [
+          "model",
+          "action"
+        ],
+        "type": "{ model : Signal.Signal model , tasks : Signal.Signal (Task.Task Effects.Never ()) , address : Signal.Address action }"
+      },
+      {
+        "name": "Config",
+        "comment": " The configuration of an app follows the basic model / update / view pattern\nthat you see in every Elm program.\n\nThe `init` transaction will give you an initial model and create any tasks that\nare needed on start up.\n\nThe `update` describe how to step over the model based on requests coming in\n\nThe `inputs` field is for any external signals you might need. If you need to\nget values from JavaScript, they will come in through a port as a signal which\nyou can pipe into your app as one of the `inputs`.\n",
+        "args": [
+          "model",
+          "action"
+        ],
+        "type": "{ init : ( model, Effects.Effects action ) , update : action -> model -> ( model, Effects.Effects action ) , inputs : List (Signal.Signal action) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "start",
+        "comment": " Start an application. It requires a bit of wiring once you have created an\n`App`. It should pretty much always look like this:\n\n    app =\n        start { init = init, update = update, inputs = [] }\n\n    port tasks : Signal (Task.Task Never ())\n    port tasks =\n        app.tasks\n\nSo once we start the `App` we feed the resulting\ntasks into a `port` that will run them all.\n",
+        "type": "StartApp.Config model action -> StartApp.App model action"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

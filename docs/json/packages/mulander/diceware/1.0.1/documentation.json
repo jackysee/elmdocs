@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Diceware",
+    "comment": " This module provides lookup methods for the\ndefault Diceware dictionary of 7776 words.\nThe list is obtained from http://world.std.com/~reinhold/diceware.html\nwhich also provides a description of the\nDiceware password generation method.\n\n# Obtaining inputs\nInputs for the Diceware lookup consist of 5 dice\nthrows producing values between 1 to 6 inclusive,\nout of those results a key is formed used to look\nup a word from the dictionary.\n\nFor example if we performed 5 throws with results\n1,1,6,3,2 we would construct the key 11632 which\ncorresponds to the world `allis` in the dictionary.\n\nIn order to reduce the possiblity of incorrect input\nthis library expects the throws to be encoded as\ntuples of 5 integers so the above becomes\n\n    (1,1,6,3,2)\n\nwhich can be used with the provided lookupWord\n\n    lookupWord (1,1,6,3,2) == \"allis\"\n\nSince Diceware is used to generate passphrases used\nto protect accounts, GPG keys and other potentially\nsensitive data the source of inputs is important.\n\nElm (as of version 0.17) doesn't ship with a cryptographically\nsecure random number generator hence this library is not\ngenerating the sequences and expects library consumers to\nprovide a secure source.\n\nThe recommended approach is creating a javascript port\nthat uses the browsers crypto.getRandomValues()\n\n# Dictionary lookup\n@docs lookupWord\n\n# Creating passphrases\n@docs passphrase\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "lookupWord",
+        "comment": " Lookup a word in the default Diceware dictionary.\nThe input must be a tuple of 5 integers with values\nbetween 1 and 6 inclusive. Values outside of the\nrange will cause a lookup failure and will result\nin Debug.crash being called.\n\n    lookupWord (1,2,3,4,5) == \"apathy\"\n",
+        "type": "( Int, Int, Int, Int, Int ) -> String"
+      },
+      {
+        "name": "passphrase",
+        "comment": " Create a passphrase from a provided list of inputs.\nThe inputs must be a List of tuples of 5 integers with\nvalues between 1 and 6 inclusive. Values outside of the\nrange will cause a lookup failure and will result in\nDebug.crash being called.\n\nThe separator decides how the resulting passhprase\nis delimited.\n\n    passphrase \"-\" [ (1,2,3,4,5)\n                   , (2,3,2,4,5)\n                   , (5,6,6,2,3)\n                   ] == \"apathy-dodge-tense\"\n\n",
+        "type": "String -> List ( Int, Int, Int, Int, Int ) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

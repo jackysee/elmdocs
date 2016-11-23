@@ -1,0 +1,83 @@
+[
+  {
+    "name": "TransitRouter",
+    "comment": "\nDrop-in router with transitions for animated, single page apps. See README for usage.\n\n# Types\n@docs WithRoute, TransitRouter, Action, Config\n\n# Actions\n@docs actions, empty, init, update\n\n# Views\n@docs getRoute, getTransition, pushPathAddress\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Config record for router behaviour:\n * `mountRoute`: what should be the result of a route update (previous route, new route, model) on your model & effects\n * `getDurations`: durations for `Enter` (before `routeUpdate`) and `Exit` (after) phases, same params as `mountRoute`\n * `actionWrapper`: wrapper for router actions into your own action type, to be consistent with `mountRoute` result\n * `routeDecoder`: to transform a path to a route (see `etaque/elm-route-decoder`)\n ",
+        "args": [
+          "route",
+          "action",
+          "model"
+        ],
+        "type": "{ mountRoute : route -> route -> TransitRouter.WithRoute route model -> Response.Response (TransitRouter.WithRoute route model) action , getDurations : route -> route -> TransitRouter.WithRoute route model -> ( Float, Float ) , actionWrapper : TransitRouter.Action route -> action , routeDecoder : String -> route }"
+      },
+      {
+        "name": "WithRoute",
+        "comment": " Type extension for the model. ",
+        "args": [
+          "route",
+          "model"
+        ],
+        "type": "{ model | transitRouter : TransitRouter.TransitRouter route }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Router actions, wrap it in you own Action type. ",
+        "args": [
+          "route"
+        ],
+        "cases": []
+      },
+      {
+        "name": "TransitRouter",
+        "comment": " State of the router. ",
+        "args": [
+          "route"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "actions",
+        "comment": " Signal for path updates, feed your app with this as input. ",
+        "type": "Signal.Signal (TransitRouter.Action route)"
+      },
+      {
+        "name": "empty",
+        "comment": " Empty state for model initialisation (route should render nothing, like EmptyRoute). ",
+        "type": "route -> TransitRouter.TransitRouter route"
+      },
+      {
+        "name": "getRoute",
+        "comment": " Get current route from model ",
+        "type": "TransitRouter.WithRoute route model -> route"
+      },
+      {
+        "name": "getTransition",
+        "comment": " Get current transition from model.\nSee etaque/elm-transit for transition handling.\n",
+        "type": "TransitRouter.WithRoute route model -> Transit.Transition"
+      },
+      {
+        "name": "init",
+        "comment": " Start the router with this config and an initial path. Returns host's model and action. ",
+        "type": "TransitRouter.Config route action model -> String -> TransitRouter.WithRoute route model -> Response.Response (TransitRouter.WithRoute route model) action"
+      },
+      {
+        "name": "pushPathAddress",
+        "comment": " Address for path updates. Can be used to create a click handler:\n\n    clickTo : String -> List Attribute\n    clickTo path =\n      [ href path\n      , onWithOptions\n          \"click\"\n          { stopPropagation = True, preventDefault = True }\n          Json.value\n          (\\_ -> message TransitRouter.pushPathAddress path)\n      ]\n ",
+        "type": "Signal.Address String"
+      },
+      {
+        "name": "update",
+        "comment": " Update the router with this config, for a given action. Returns host's model and action. ",
+        "type": "TransitRouter.Config route action model -> TransitRouter.Action route -> TransitRouter.WithRoute route model -> Response.Response (TransitRouter.WithRoute route model) action"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

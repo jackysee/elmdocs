@@ -1,0 +1,169 @@
+[
+  {
+    "name": "Matrix.Extra",
+    "comment": " Extra methods for Matricies\n\n# Element-wise computation\n@docs add, subtract, hadamard, power\n\n# Syntax aliases\n@docs (.*), (.^)\n\n# Interacting with other cells\n@docs neighbours, indexedNeighbours, diagonals, neighboursFour\n\n@docs prettyPrint\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": ".*",
+        "comment": "\nelement wise multiplication\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      },
+      {
+        "name": ".^",
+        "comment": "\nelement wise power\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      },
+      {
+        "name": "add",
+        "comment": "\nadd two matricies together element by element and return the result\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      },
+      {
+        "name": "diagonals",
+        "comment": "\nGet the diagonal-neighbours of a point (x, y) in the matrix\nIf on edge, then no wrapping happens - they are excluded\n",
+        "type": "Int -> Int -> Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "hadamard",
+        "comment": "\ntake the product of every corresponding element in two matricies and return the result\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      },
+      {
+        "name": "indexedNeighbours",
+        "comment": "\nGet the neighbours of a point (x, y) in the matrix\nIf on edge, then no wrapping happens - they are excluded\n",
+        "type": "Int -> Int -> Matrix.Matrix a -> List ( ( Int, Int ), a )"
+      },
+      {
+        "name": "neighbours",
+        "comment": "\nGet the neighbours of a point (x, y) in the matrix\nIf on edge, then no wrapping happens - they are excluded\n",
+        "type": "Int -> Int -> Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "neighboursFour",
+        "comment": "\nGet the non-diagonal neighbours of a point (x, y) in the matrix\nIf on edge, then no wrapping happens - they are excluded\n",
+        "type": "Int -> Int -> Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "power",
+        "comment": "\nelement-wise power of elements\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      },
+      {
+        "name": "prettyPrint",
+        "comment": "\nPrint out a matrix into a table\n",
+        "type": "Matrix.Matrix a -> Html.Html msg"
+      },
+      {
+        "name": "subtract",
+        "comment": "\nsubtract two matricies together element by element and return the result\n",
+        "type": "Matrix.Matrix number -> Matrix.Matrix number -> Maybe.Maybe (Matrix.Matrix number)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Matrix",
+    "comment": "\nA matrix implemention for Elm.\nInternally it uses a flat array for speed reasons.\n\n# The matrix type\n\n@docs Matrix\n\n# Creating a matrix\n\n@docs repeat, fromList, empty\n\n# Get matrix dimensions\n\n@docs height, width\n\n# Dealing with individual elements\n\n@docs get, set, update\n\n# Appending to an Matrix\n\n@docs concatVertical, concatHorizontal\n\n# Get rows/columns\n\n@docs getRow, getColumn\n\n# Applying functions\n@docs filter, map, map2, indexedMap, toIndexedArray\n",
+    "aliases": [
+      {
+        "name": "Matrix",
+        "comment": "\n  Matrix a has a given size, and data contained within\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ size : ( Int, Int ), data : Array.Array a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "concatHorizontal",
+        "comment": " Append a matrix to another matrix horizontally and return the result. Return Nothing if the heights don't match ",
+        "type": "Matrix.Matrix a -> Matrix.Matrix a -> Maybe.Maybe (Matrix.Matrix a)"
+      },
+      {
+        "name": "concatVertical",
+        "comment": " Append a matrix to another matrix vertically and return the result. Return Nothing if the widths don't match ",
+        "type": "Matrix.Matrix a -> Matrix.Matrix a -> Maybe.Maybe (Matrix.Matrix a)"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty matrix ",
+        "type": "Matrix.Matrix a"
+      },
+      {
+        "name": "filter",
+        "comment": "\n  Keep only elements that return `True` when passed to the given function f\n",
+        "type": "(a -> Bool) -> Matrix.Matrix a -> Array.Array a"
+      },
+      {
+        "name": "fromList",
+        "comment": "\n  Create a matrix from a list of lists.\n  If the lists within the list are not consistently sized, return `Nothing`\n  Otherwise return a matrix with the size as the size of the outer and nested lists\n",
+        "type": "List (List a) -> Maybe.Maybe (Matrix.Matrix a)"
+      },
+      {
+        "name": "get",
+        "comment": "\n  Get a value from a given `x y` and return `Just v` if it exists\n  Otherwise `Nothing`\n",
+        "type": "Int -> Int -> Matrix.Matrix a -> Maybe.Maybe a"
+      },
+      {
+        "name": "getColumn",
+        "comment": " Get a row at a given i\n",
+        "type": "Int -> Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "getRow",
+        "comment": " Get a row at a given j\n",
+        "type": "Int -> Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "height",
+        "comment": " Height of a given matrix ",
+        "type": "Matrix.Matrix a -> Int"
+      },
+      {
+        "name": "indexedMap",
+        "comment": "\n  Apply a function, taking the `x, y` of every element in the matrix\n",
+        "type": "(Int -> Int -> a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "map",
+        "comment": "\n  Apply a function of every element in the matrix\n",
+        "type": "(a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "map2",
+        "comment": " Apply a function to two matricies at once\n",
+        "type": "(a -> b -> c) -> Matrix.Matrix a -> Matrix.Matrix b -> Maybe.Maybe (Matrix.Matrix c)"
+      },
+      {
+        "name": "repeat",
+        "comment": "\n  Create a matrix of a given size `x y` with a default value of `v`\n",
+        "type": "Int -> Int -> a -> Matrix.Matrix a"
+      },
+      {
+        "name": "set",
+        "comment": "\n  Set a value at a given `i, j` in the matrix and return the new matrix\n  If the `i, j` is out of bounds then return the unmodified matrix\n",
+        "type": "Int -> Int -> a -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "toIndexedArray",
+        "comment": " Convert a matrix to an indexed array\n",
+        "type": "Matrix.Matrix a -> Array.Array ( ( Int, Int ), a )"
+      },
+      {
+        "name": "update",
+        "comment": "\n  Update an element at `x, y` with the given update function\n  If out of bounds, return the matrix unchanged\n",
+        "type": "Int -> Int -> (a -> a) -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "width",
+        "comment": " Width of a given matrix ",
+        "type": "Matrix.Matrix a -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

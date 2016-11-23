@@ -1,0 +1,158 @@
+[
+  {
+    "name": "List.SafeList",
+    "comment": "\nThis module provides a form of list which encode their length\nin their type, using the TypeNats library. For example:\n\n    someLength3 : List.SafeList Int (OnePlus (OnePlus (OnePlus (Zero))) )\n    someLength3 = 2 `cons` 3 `cons` 4 `cons` null\n\nList whose length doesn't match their type are forbidden.\nFor example:\n\n    --Gives type mismatch\n    badLength3 : SafeList Int (OnePlus (OnePlus  (Zero)) )\n    badLength3 = 2 `cons` 3 `cons` 4 `cons` null\n\nBecause Elm doesn't have GADTs or DataKinds, it's impossible\nto pattern match on SafeLists. Instead, we provide an \"uncons\"\nfunction, which splits a list which we know to be non-empty\ninto its head and tail.\n\nFor example:\n\n    sumFirstLast =\n      let\n        (h1, t1) = uncons someLength3\n        (_, t2) = uncons t1\n        (h3, t3) = uncons t2\n        tailCheck : SafeList Int Zero\n        tailCheck = t3\n      in\n        h1 + h3\n\nThis notation is awkward, so it's assumed this library\nwill be used on small lists only.\n\n\nAs well, many functions on List.List have been ported over,\nthough filter, foldl and foldr are notably absent, as they\ndo not preserve the length of the list.\n\nBecause Elm is not a higher-kinded language, it is not generally\npossible to use this library when you don't know your list size in advance,\nunless only generic functions like `map` are used.\n\n# Our main type and pseudo-constructors\n@docs SafeList, null, cons\n\n# In lieu of pattern matching:\n@docs uncons, toList, fromList\n\n# The usual map functions\n@docs map, map2, map3, map4, map5, unzip\n\n# Length-preserving fold-like functions\n@docs mapl, mapr, reverseMapr, scanl\n\n# Functions for non-empty lists\n@docs maximum, minimum, head, tail, last\n\n# Utility functions\n@docs  member, reverse, all, any\n\n#Length-preserving sorting functions\n@docs sort, sortBy, sortWith\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "SafeList",
+        "comment": " A list with length encoded in its type,\nsupporting a restricted set of operations.\n",
+        "args": [
+          "a",
+          "n"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "all",
+        "comment": " ",
+        "type": "(a -> Bool) -> List.SafeList.SafeList a n -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " ",
+        "type": "(a -> Bool) -> List.SafeList.SafeList a n -> Bool"
+      },
+      {
+        "name": "cons",
+        "comment": " Given a new element and a list of length n, make a list of length n+1.\nHas the same infix precedence as (::)\n",
+        "type": "a -> List.SafeList.SafeList a n -> List.SafeList.SafeList a (TypeNat.OnePlus n)",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": "fromList",
+        "comment": " Given a some SafeList, try to convert\na normal list into a SafeList of the same length\n",
+        "type": "List.SafeList.SafeList a n -> List b -> Maybe.Maybe (List.SafeList.SafeList b n)"
+      },
+      {
+        "name": "head",
+        "comment": " SafeList way to get the first element of a list\n",
+        "type": "List.SafeList.SafeList a (TypeNat.OnePlus n) -> a"
+      },
+      {
+        "name": "last",
+        "comment": " SafeList way to get the last element of a list\n",
+        "type": "List.SafeList.SafeList a (TypeNat.OnePlus n) -> a"
+      },
+      {
+        "name": "map",
+        "comment": " Works as List.map\n",
+        "type": "(a -> b) -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n"
+      },
+      {
+        "name": "map2",
+        "comment": " ",
+        "type": "(a -> b -> c) -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n -> List.SafeList.SafeList c n"
+      },
+      {
+        "name": "map3",
+        "comment": " ",
+        "type": "(a -> b -> c -> d) -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n -> List.SafeList.SafeList c n -> List.SafeList.SafeList d n"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e) -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n -> List.SafeList.SafeList c n -> List.SafeList.SafeList d n -> List.SafeList.SafeList e n"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f) -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n -> List.SafeList.SafeList c n -> List.SafeList.SafeList d n -> List.SafeList.SafeList e n -> List.SafeList.SafeList f n"
+      },
+      {
+        "name": "mapl",
+        "comment": "\nGiven a mapping function and an initial context value,\ntraverse the list left to right, applying our map function with the previously\ncomputed context as argument.\nGeneral folds don't preserve the length of a list, so we use\nthis restricted form of a fold.\n",
+        "type": "(( a, c ) -> ( b, c )) -> c -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n"
+      },
+      {
+        "name": "mapr",
+        "comment": "\nGiven a mapping function and an initial context value,\ntraverse the list right to left, applying our map function with the previously\ncomputed context as argument.\nGeneral folds don't preserve the length of a list, so we use\nthis restricted form of a fold.\n",
+        "type": "(( a, c ) -> ( b, c )) -> c -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n"
+      },
+      {
+        "name": "maximum",
+        "comment": " Given a list of comparable containing at least one element,\n  return its largest element\n",
+        "type": "List.SafeList.SafeList comparable (TypeNat.OnePlus n) -> comparable"
+      },
+      {
+        "name": "member",
+        "comment": "\nLength-preserving list functions, identical to operations on List.List\n",
+        "type": "a -> List.SafeList.SafeList a n -> Bool"
+      },
+      {
+        "name": "minimum",
+        "comment": " Given a list of comparable containing at least one element,\nreturn its smallest element\n",
+        "type": "List.SafeList.SafeList comparable (TypeNat.OnePlus n) -> comparable"
+      },
+      {
+        "name": "null",
+        "comment": " A list of length 0\n",
+        "type": "List.SafeList.SafeList a TypeNat.Zero"
+      },
+      {
+        "name": "reverse",
+        "comment": " ",
+        "type": "List.SafeList.SafeList a n -> List.SafeList.SafeList a n"
+      },
+      {
+        "name": "reverseMapr",
+        "comment": "\nLike mapr, but the resulting elements are in reverse order.\nGenerally faster than mapr, use this when order doesn't matter.\n",
+        "type": "(( a, c ) -> ( b, c )) -> c -> List.SafeList.SafeList a n -> List.SafeList.SafeList b n"
+      },
+      {
+        "name": "scanl",
+        "comment": "\nJust like List.scanl, except we now have a guarantee that we increase the list lenght\nby exactly one, since we always put our initial value in the list.\n",
+        "type": "(a -> b -> b) -> b -> List.SafeList.SafeList a n -> List.SafeList.SafeList b (TypeNat.OnePlus n)"
+      },
+      {
+        "name": "sort",
+        "comment": " Just like List.sort, but with a guarantee that length is preserved\n",
+        "type": "List.SafeList.SafeList comparable n -> List.SafeList.SafeList comparable n"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Sort based on comparable representatives\n",
+        "type": "(a -> comparable) -> List.SafeList.SafeList a n -> List.SafeList.SafeList a n"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Sort based on an arbitrary comparison of elements\n",
+        "type": "(a -> a -> Basics.Order) -> List.SafeList.SafeList a n -> List.SafeList.SafeList a n"
+      },
+      {
+        "name": "tail",
+        "comment": " SafeList way to remove the first element of a list\n",
+        "type": "List.SafeList.SafeList a (TypeNat.OnePlus n) -> List.SafeList.SafeList a n"
+      },
+      {
+        "name": "toList",
+        "comment": " Drop type-level information about this list\n",
+        "type": "List.SafeList.SafeList a n -> List a"
+      },
+      {
+        "name": "uncons",
+        "comment": " Split a non-empty list into a head and a tail\n",
+        "type": "List.SafeList.SafeList a (TypeNat.OnePlus n) -> ( a, List.SafeList.SafeList a n )"
+      },
+      {
+        "name": "unzip",
+        "comment": " ",
+        "type": "List.SafeList.SafeList ( a, b ) n -> ( List.SafeList.SafeList a n, List.SafeList.SafeList b n )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

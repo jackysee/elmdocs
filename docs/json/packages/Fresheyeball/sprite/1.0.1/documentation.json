@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Sprite",
+    "comment": "\nA few simple things for Sprite rendering with elm-html.\n\nUsage is intended to be via the `sprite` function generating\nstyles for `Html.Attributes.style`. For example\n\n```\nnode\n    \"sprite\"\n    [ style (sprite s) ]\n    []\n```\n\n@docs Sprite, Dope, sprite, advance, advanceClamp\n\n",
+    "aliases": [
+      {
+        "name": "Dope",
+        "comment": "\nThe ordered frame coordinates representing an animation\n",
+        "args": [],
+        "type": "Array.Array ( Int, Int )"
+      },
+      {
+        "name": "Sprite",
+        "comment": "\nA sprite sheet\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | sheet : String, rows : Int, columns : Int, size : ( Int, Int ), frame : Int, dope : Sprite.Dope }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "advance",
+        "comment": "\nMove the sprite forward one frame, such that it will loop when it reaches the end\n",
+        "type": "Sprite.Sprite a -> Sprite.Sprite a"
+      },
+      {
+        "name": "advanceClamp",
+        "comment": "\nMove the sprite forward one frame, such that it will stop when it reaches the end\n",
+        "type": "Sprite.Sprite a -> Sprite.Sprite a"
+      },
+      {
+        "name": "sprite",
+        "comment": "\nProcess a sprite into styles for application with\n`elm-html`. Styles place the sprite sheet as a `background-image`\nand animate by altering the `background-position`. `height`, `width`\nare used for sizing, along with `display:block` for custom nodes.\n",
+        "type": "Sprite.Sprite a -> List ( String, String )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

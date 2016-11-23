@@ -1,0 +1,41 @@
+[
+  {
+    "name": "String.Addons",
+    "comment": " Additional functions for working with Strings\n\n## Modifying\n\n@docs toSentenceCase, toTitleCase\n\n## Replacing\n\n@docs replace, replaceSlice\n\n## Splitting\n\n@docs break, softBreak\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "break",
+        "comment": " Breaks a string into a list of strings of maximum the provided size.\n\n    break 10 \"The quick brown fox\" == [\"The quick \", \"brown fox\"]\n    break 2 \"\" == [\"\"]\n\n",
+        "type": "Int -> String -> List String"
+      },
+      {
+        "name": "replace",
+        "comment": " Replace all occurrences of the search string with the substitution string.\n\n    replace \"Mary\" \"Sue\" \"Hello, Mary\" == \"Hello, Sue\"\n\n",
+        "type": "String -> String -> String -> String"
+      },
+      {
+        "name": "replaceSlice",
+        "comment": " Replace text within a portion of a string given a substitution\nstring, a start index and an end index.\n\n    replaceSlice \"Sue\" 4 6 \"Hi, Bob\" == \"Hi, Sue\"\n    replaceSlice \"elephants\" 0  6 \"snakes on a plane!\" == \"elephants on a plane!\"\n    replaceSlice \"under\" 7  9 \"snakes on a plane!\" == \"snakes under a plane!\"\n\n",
+        "type": "String -> Int -> Int -> String -> String"
+      },
+      {
+        "name": "softBreak",
+        "comment": " Breaks a string into a list of strings of maximum the provided size,\nwithout cutting words at the edge.\n\n    softBreak 6 \"The quick brown fox\" == [\"The quick\", \" brown\", \" fox\"]\n\n",
+        "type": "Int -> String -> List String"
+      },
+      {
+        "name": "toSentenceCase",
+        "comment": " Make a string's first character uppercase\n\n    toSentenceCase \"this is a phrase\" == \"This is a phare\"\n    toSentenceCase \"hello, world\" == \"Hello, world\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "toTitleCase",
+        "comment": " Uppercase the first character of each word in a string\n\n    toTitleCase \"this is a phrase\" == \"This Is A Phrase\"\n    toTitleCase \"hello, world\" == \"Hello, World\"\n\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

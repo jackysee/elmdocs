@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Jwt",
+    "comment": " Helper functions for Jwt tokens.\n\nThis package provides functions for reading tokens, and for using them to make\nauthenticated Http requests.\n\n# Token reading\n@docs decodeToken, isExpired\n\n# Authenticated Http requests\n@docs authenticate, createRequest, get, get_, post, put, promote401\n\n# Errors\n@docs JwtError\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "JwtError",
+        "comment": " We distinguish between various errors\n - From Http.Error. We pass these straight through unless using `promote401`,\n - 401 (Unauthorized) errors, due either to token expiry or some other reason\n - issues with processing (e.g. base 64 decoding) the token, and\n - problems decoding the json data within the content of the token\n",
+        "args": [],
+        "cases": [
+          [
+            "HttpError",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "TokenExpired",
+            []
+          ],
+          [
+            "TokenNotAccepted",
+            []
+          ],
+          [
+            "TokenProcessingError",
+            [
+              "String"
+            ]
+          ],
+          [
+            "TokenDecodeError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " `authenticate` is a standard Http POST method containing login credentials, and using\na json decoder to extract the returned token.\n\n    submitCredentials : Model -> Cmd Msg\n    submitCredentials model =\n        E.object\n            [ (\"username\", E.string model.uname)\n            , (\"password\", E.string model.pword)\n            ]\n        |> authenticate Auth \"/sessions\" tokenStringDecoder\n",
+        "type": "(Result.Result Http.Error a -> msg) -> String -> Json.Decode.Decoder a -> Json.Decode.Value -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "createRequest",
+        "comment": " createRequest creates a Http.Request with the token added to the headers, and\nsets the `withCredentials` field to True.\n",
+        "type": "String -> Jwt.Token -> String -> Json.Decode.Decoder a -> Http.Body -> Http.Request a"
+      },
+      {
+        "name": "decodeToken",
+        "comment": " decodeToken parses the token, checking that it meets the Jwt standards.\n\n    decodeToken dec token\n\nIn the event of success, `decodeToken` returns an Elm record structure using the JSON Decoder.\n",
+        "type": "Json.Decode.Decoder a -> Jwt.Token -> Result.Result Jwt.JwtError a"
+      },
+      {
+        "name": "get",
+        "comment": " `get` is a replacement for `Http.get` that returns a Http.Request with the token\nattached the headers.\n\n    Task.perform\n        PostFail PostSucess\n        (get token dataDecoder \"/api/data\")\n",
+        "type": "Jwt.Token -> String -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "get_",
+        "comment": " `get_` takes the same parameters as `get`, but returns a `Task` where a 401 Unauthorized error\ndue to token expiry has been converted into a `TokenExpired`.\n\n    update ... =\n    GetResult (Result.Err err) ->\n        case err of\n            Jwt.TokenExpired ->\n                { model | msg = \"Token expired\" } ! []\n            _ ->\n                { model | msg = toString err } ! []\n\n    [...]\n    tryToken : String -> Cmd Msg\n    tryToken token =\n        Jwt.get_ token \"/api/data\" dataDecoder\n        |> Task.perform GetResult\n",
+        "type": "Jwt.Token -> String -> Json.Decode.Decoder a -> Task.Task Basics.Never (Result.Result Jwt.JwtError a)"
+      },
+      {
+        "name": "isExpired",
+        "comment": " `Checks whether a token has expired, and returns True or False, or\nany error that occurred while decoding the token.\n\nNote: This function assumes that the expiry was set in seconds and thus\nmultiplies by 1000 to compare with Javascript time (in milliseconds).\nYou may need to write a custom version if your server-side Jwt library works differently.\n",
+        "type": "Time.Time -> Jwt.Token -> Result.Result Jwt.JwtError Bool"
+      },
+      {
+        "name": "post",
+        "comment": " post is a replacement for `Http.post` that attaches a provided Jwt token\nto the headers.\n",
+        "type": "(Result.Result Http.Error a -> msg) -> Jwt.Token -> Json.Decode.Decoder a -> String -> Http.Body -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "promote401",
+        "comment": " Examines a 401 Unauthorized reponse, and converts the error to TokenExpired\nwhen that is the case.\n\n    getAuth : Token -> String -> Json.Decoder a -> Task Never (Result JwtError a)\n    getAuth token url dec =\n        createRequest \"GET\" token url dec Http.emptyBody\n        |> toTask\n        |> Task.map Result.Ok\n        |> Task.onError (promote401 token)\n",
+        "type": "Jwt.Token -> Http.Error -> Task.Task Basics.Never (Result.Result Jwt.JwtError a)"
+      },
+      {
+        "name": "put",
+        "comment": " `put` provides `Http.put` with the token attached to the headers.\n",
+        "type": "(Result.Result Http.Error a -> msg) -> Jwt.Token -> Json.Decode.Decoder a -> String -> Http.Body -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

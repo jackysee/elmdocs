@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Lexer",
+    "comment": " An easy to use lexer written using `Bogdanp/elm-combine` that provides a sufficient backbone for use\nwith LR(k) combinator generators, or as a standalone for simpler higher order pattern matching.\n\n# Types\n@docs Lexer, Lexeme, Class\n\n# Construction\n@docs lexer, class, parserClass, combinatorClass\n\n# Lexing\n@docs lex\n\n# Primitive\n@docs pattern, interpret\n\n",
+    "aliases": [
+      {
+        "name": "Lexeme",
+        "comment": " A lexeme, including the original string token, the interpreted lexeme, the index of\noccurrence, and the length. ",
+        "args": [
+          "lex"
+        ],
+        "type": "{ token : String, lexeme : lex, index : Int, length : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Class",
+        "comment": " A lexeme class, consisting of a regex pattern and a transducer that will interpret the token\nand spit out an associated lexeme. ",
+        "args": [
+          "lex"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Lexer",
+        "comment": " A lexer. ",
+        "args": [
+          "lex"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "class",
+        "comment": " Create a new lexeme class from a Javascript style regex and an function to interpret a lexeme\nfrom the matched token. ",
+        "type": "String -> (String -> Result.Result (List String) lex) -> Lexer.Class lex"
+      },
+      {
+        "name": "combinatorClass",
+        "comment": " In the case that you wish to use a more advanced combinator in place of a pattern, you may do that\nwith this class. You can use this to create more powerful abstractions in your lexeme output.\n\n_DEPRECIATED_\n",
+        "type": "Combine.Parser String -> (String -> Result.Result (List String) lex) -> Lexer.Class lex"
+      },
+      {
+        "name": "interpret",
+        "comment": " Interpret a token. ",
+        "type": "Lexer.Class lex -> String -> Result.Result (List String) lex"
+      },
+      {
+        "name": "lex",
+        "comment": " Lex a string, producing a list of errors (if any) and a list of lexemes. ",
+        "type": "Lexer.Lexer lex -> String -> ( List String, List (Lexer.Lexeme lex) )"
+      },
+      {
+        "name": "lexer",
+        "comment": " Create a lexer from a list of lexeme classes. ",
+        "type": "List (Lexer.Class lex) -> Lexer.Lexer lex"
+      },
+      {
+        "name": "parserClass",
+        "comment": " Use a combinator parser directly. The form of the lexeme itself may be turing recognizable in\nthis case. In this sense you are no longer strictly \"lexing\", but the output still provides the\ntypical useful token metadata for Lexeme record list produced the top level alternation. ",
+        "type": "Combine.Parser lex -> Lexer.Class lex"
+      },
+      {
+        "name": "pattern",
+        "comment": " Get the pattern of a class. Note that this will return the empty string in the case that a\ncombinator is used instead. ",
+        "type": "Lexer.Class lex -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "AdorableAvatars",
+    "comment": " Simple, elegant and adorable avatars provided by\n[http://avatars.adorable.io](http://avatars.adorable.io/).\n\n# Urls\n@docs buildUrl\n\n# View Helpers\n@docs img\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "buildUrl",
+        "comment": " Builds a url to an adorable avatar from *size* and *identifier*.\n\n    buildUrl 128 \"foobar\" == \"https://api.adorable.io/avatars/128/foobar\"\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "img",
+        "comment": " View helper for creating an img node.\n\n    basic =\n        img [] 128 \"foobar\"\n\n    withAttributes =\n        img [ class \"round-img\", alt \"Foobars avatar\" ] 128 \"foobar\"\n",
+        "type": "List (Html.Attribute msg) -> Int -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

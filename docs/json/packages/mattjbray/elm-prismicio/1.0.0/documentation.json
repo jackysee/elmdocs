@@ -1,0 +1,504 @@
+[
+  {
+    "name": "Prismic",
+    "comment": " An Elm SDK for [Prismic.io](https://prismic.io).\n\n# Initialisation\n@docs init\n\n# Making a request\n@docs api, form, bookmark, submit, collectResponses\n\n# Customising the request\n@docs ref, query, none\n\n# Predicates\n@docs at, atL, any, fulltext\n\n# Types\n\n## Models\n@docs Url, Model, ModelWithApi, Model'\n\n## Errors\n@docs PrismicError\n\n## Api\n@docs Api, RefProperties, Ref, Form, FormField, FieldType, Experiments\n\n## Requests\n@docs Predicate, Request\n\n## Response\n@docs Response\n\n## Documents\n\n### Default document\n@docs DefaultDocType, DocumentField, decodeDefaultDocType\n\n### Custom documents\n\nYou can create your own Elm types to represent your documents using the\nfollowing components.\n\n#### Structured Text\n@docs StructuredText, StructuredTextElement, SimpleStructuredTextField, SimpleStructuredTextType, Span, SpanType\n\n#### Image\n@docs ImageViews, ImageView, ImageDimensions\n\n#### Embed\n@docs Embed, EmbedRich, EmbedVideo\n\n#### Link\n@docs Link, DocumentReference\n\n### Custom document decoders\n\n@docs decodeStructuredText\n@docs decodeImageViews\n@docs decodeLink\n@docs decodeEmbed\n\n## Viewing documents\n@docs structuredTextAsHtml\n@docs defaultLinkResolver\n\n### `StructuredText` helpers\n@docs getTitle, getFirstImage, getFirstParagraph, getText, getTexts\n",
+    "aliases": [
+      {
+        "name": "Api",
+        "comment": " The `Api` for your Prismic repository.\n\nYour app can look things up in this if you need to (for example, to resolve\nlinks using the bookmarks `Dict`).\n",
+        "args": [],
+        "type": "{ refs : List Prismic.RefProperties , bookmarks : Dict.Dict String String , types : Dict.Dict String String , tags : List String , version : String , forms : Dict.Dict String Prismic.Form , oauthInitiate : String , oauthToken : String , license : String , experiments : Prismic.Experiments }"
+      },
+      {
+        "name": "DefaultDocType",
+        "comment": " A default document type.\n\nNormally you will want to define your own document types and decoders.\n",
+        "args": [],
+        "type": "Dict.Dict String (Dict.Dict String (List Prismic.DocumentField))"
+      },
+      {
+        "name": "DocumentReference",
+        "comment": " A referenced to a Prismic document.\n",
+        "args": [],
+        "type": "{ id : String , slug : String , tags : List String , linkedDocumentType : String }"
+      },
+      {
+        "name": "EmbedRich",
+        "comment": " Rich embed elements.\n",
+        "args": [],
+        "type": "{ authorName : String , authorUrl : Prismic.Url , cacheAge : String , embedUrl : Prismic.Url , height : Maybe.Maybe Int , html : String , providerName : String , providerUrl : Prismic.Url , title : String , url : Prismic.Url , version : String , width : Int }"
+      },
+      {
+        "name": "EmbedVideo",
+        "comment": " Video embed elements.\n",
+        "args": [],
+        "type": "{ authorName : String , authorUrl : Prismic.Url , embedUrl : Prismic.Url , height : Int , html : String , providerName : String , providerUrl : Prismic.Url , thumbnailHeight : Int , thumbnailUrl : Prismic.Url , thumbnailWidth : Int , title : String , version : String , width : Int }"
+      },
+      {
+        "name": "Experiments",
+        "comment": " TODO: Experiments are not Strings.  Fill out this type.\n",
+        "args": [],
+        "type": "{ draft : List String, running : List String }"
+      },
+      {
+        "name": "Form",
+        "comment": " Properties representing a Prismic form.\n\nThese are used to construct a default query.\n",
+        "args": [],
+        "type": "{ method : String , enctype : String , action : Prismic.Url , fields : Dict.Dict String Prismic.FormField , rel : Maybe.Maybe String , name : Maybe.Maybe String }"
+      },
+      {
+        "name": "FormField",
+        "comment": " A field in a Prismic form.\n\nThese are combined to construct query parameters for the eventual Http request.\n",
+        "args": [],
+        "type": "{ fieldType : Prismic.FieldType , multiple : Bool , default : Maybe.Maybe String }"
+      },
+      {
+        "name": "ImageDimensions",
+        "comment": " Dimensions of an image view.\n",
+        "args": [],
+        "type": "{ width : Int, height : Int }"
+      },
+      {
+        "name": "ImageView",
+        "comment": " Properties for a single image view.\n",
+        "args": [],
+        "type": "{ alt : Maybe.Maybe String , copyright : Maybe.Maybe String , url : Prismic.Url , dimensions : Prismic.ImageDimensions }"
+      },
+      {
+        "name": "ImageViews",
+        "comment": " A collection of image views.\n",
+        "args": [],
+        "type": "{ main : Prismic.ImageView , views : Dict.Dict String Prismic.ImageView }"
+      },
+      {
+        "name": "Model",
+        "comment": " This is the main user-facing type for elm-prismicio's internal state.\n\nThe `Api` is represented as `Maybe Api`, because we may not have fetched it yet.\n",
+        "args": [],
+        "type": "Prismic.Model' (Maybe.Maybe Prismic.Api)"
+      },
+      {
+        "name": "Model'",
+        "comment": " The generic `Model'` type, where the `Api` is represented by a type parameter.\n\nYou will be using the specialised `Model` type in user code.\n",
+        "args": [
+          "api"
+        ],
+        "type": "{ api : api , url : Prismic.Url , nextRequestId : Int , cache : Dict.Dict String Json.Decode.Value }"
+      },
+      {
+        "name": "ModelWithApi",
+        "comment": " This variation of the Model type is returned by `api`, when we know we have successfully retreived the `Api`.\n\nIt is used internally by elm-prismicio.\n",
+        "args": [],
+        "type": "Prismic.Model' Prismic.Api"
+      },
+      {
+        "name": "RefProperties",
+        "comment": " Properties representing a Prismic ref.\n\nMost of the time you will be working with the `master` ref, which is added to\nall requests by default.\n",
+        "args": [],
+        "type": "{ id : String , ref : Prismic.Ref , label : String , isMasterRef : Bool }"
+      },
+      {
+        "name": "Request",
+        "comment": " Represents a Prismic request.\n",
+        "args": [],
+        "type": "{ action : Prismic.Url, ref : Prismic.Ref, q : String }"
+      },
+      {
+        "name": "Response",
+        "comment": " Represents a Prismic response.\n\nThis type is parameterized by `docType`, which is determined by the `Decoder`\nyou pass to `submit`.\n",
+        "args": [
+          "docType"
+        ],
+        "type": "{ license : String , nextPage : Maybe.Maybe Prismic.Url , page : Int , prevPage : Maybe.Maybe Prismic.Url , results : List (Prismic.SearchResult docType) , resultsPerPage : Int , resultsSize : Int , totalPages : Int , totalResultsSize : Int , version : String }"
+      },
+      {
+        "name": "SimpleStructuredTextField",
+        "comment": " \"Simple\" `StructuredText` elements, such as headings and paragraphs.\n",
+        "args": [],
+        "type": "{ fieldType : Prismic.SimpleStructuredTextType , text : String , spans : List Prismic.Span }"
+      },
+      {
+        "name": "Span",
+        "comment": " `Span`s are nested within \"simple\" `StructuredText` elements.\n",
+        "args": [],
+        "type": "{ start : Int, end : Int, spanType : Prismic.SpanType }"
+      },
+      {
+        "name": "StructuredText",
+        "comment": " `StructuredText` is a list of `StructuredTextElement`s.\n",
+        "args": [],
+        "type": "List Prismic.StructuredTextElement"
+      }
+    ],
+    "types": [
+      {
+        "name": "DocumentField",
+        "comment": " A field in the `DefaultDocType`.\n",
+        "args": [],
+        "cases": [
+          [
+            "Text",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StructuredText",
+            [
+              "Prismic.StructuredText"
+            ]
+          ],
+          [
+            "Select",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Color",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Image",
+            [
+              "Prismic.ImageViews"
+            ]
+          ],
+          [
+            "Number",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Date",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Link",
+            [
+              "Prismic.Link"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Embed",
+        "comment": " Embed elements.\n",
+        "args": [],
+        "cases": [
+          [
+            "EVideo",
+            [
+              "Prismic.EmbedVideo"
+            ]
+          ],
+          [
+            "ERich",
+            [
+              "Prismic.EmbedRich"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "FieldType",
+        "comment": " The type of values for a Prismic form field.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Link",
+        "comment": " Links to other documents or to the web.\n",
+        "args": [],
+        "cases": [
+          [
+            "DocumentLink",
+            [
+              "Prismic.DocumentReference",
+              "Bool"
+            ]
+          ],
+          [
+            "WebLink",
+            [
+              "Prismic.Url"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Predicate",
+        "comment": " The type representing Prismic query predicates.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "PrismicError",
+        "comment": " The possible errors elm-prismicio raises.\n",
+        "args": [],
+        "cases": [
+          [
+            "FormDoesNotExist",
+            [
+              "String"
+            ]
+          ],
+          [
+            "RefDoesNotExist",
+            [
+              "String"
+            ]
+          ],
+          [
+            "BookmarkDoesNotExist",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FetchApiError",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "SubmitRequestError",
+            [
+              "Http.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Ref",
+        "comment": " A type to disambiguate `Ref`s from other `String`s.\n",
+        "args": [],
+        "cases": [
+          [
+            "Ref",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "SimpleStructuredTextType",
+        "comment": " Types of \"simple\" `StructuredText` elements.\n",
+        "args": [],
+        "cases": [
+          [
+            "Heading1",
+            []
+          ],
+          [
+            "Heading2",
+            []
+          ],
+          [
+            "Heading3",
+            []
+          ],
+          [
+            "Paragraph",
+            []
+          ],
+          [
+            "ListItem",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "SpanType",
+        "comment": " Types of spans.\n",
+        "args": [],
+        "cases": [
+          [
+            "Em",
+            []
+          ],
+          [
+            "Strong",
+            []
+          ],
+          [
+            "Hyperlink",
+            [
+              "Prismic.Link"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "StructuredTextElement",
+        "comment": " An element of `StructuredText`.\n",
+        "args": [],
+        "cases": [
+          [
+            "SSimple",
+            [
+              "Prismic.SimpleStructuredTextField"
+            ]
+          ],
+          [
+            "SImage",
+            [
+              "Prismic.ImageView"
+            ]
+          ],
+          [
+            "SEmbed",
+            [
+              "Prismic.Embed"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Url",
+        "comment": " Disambiguate `Url`s from `String`s\n",
+        "args": [],
+        "cases": [
+          [
+            "Url",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "any",
+        "comment": " Match documents having any of `values` at `fragment`.\n",
+        "type": "String -> List String -> Prismic.Predicate"
+      },
+      {
+        "name": "api",
+        "comment": " Go and fetch the Prismic API, if it has not already been fetched. You must\nstart every Prismic request with this function.\n",
+        "type": "Prismic.Model -> Task.Task Prismic.PrismicError Prismic.ModelWithApi"
+      },
+      {
+        "name": "at",
+        "comment": " Match documents having `value` at `fragment`.\n",
+        "type": "String -> String -> Prismic.Predicate"
+      },
+      {
+        "name": "atL",
+        "comment": " Match documents having a list of `values` at `fragment`.\n",
+        "type": "String -> List String -> Prismic.Predicate"
+      },
+      {
+        "name": "bookmark",
+        "comment": " Convenience function for fetching a bookmarked document.\n",
+        "type": "String -> Task.Task Prismic.PrismicError Prismic.ModelWithApi -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi )"
+      },
+      {
+        "name": "collectResponses",
+        "comment": " The `submit` `Task` returns an updated Prismic `Model` with the request and\nresponse cached.\n\nIn your app's `update` function, you should merge this with the existing cache\nusing `collectResponses`.\n",
+        "type": "Prismic.Model -> Prismic.Model -> Prismic.Model"
+      },
+      {
+        "name": "decodeDefaultDocType",
+        "comment": " Decode a result to a `DefaultDocType`.\n",
+        "type": "Json.Decode.Decoder Prismic.DefaultDocType"
+      },
+      {
+        "name": "decodeEmbed",
+        "comment": " Decode an `Embed` field.\n",
+        "type": "Json.Decode.Decoder Prismic.Embed"
+      },
+      {
+        "name": "decodeImageViews",
+        "comment": " Decode an `ImageField`.\n",
+        "type": "Json.Decode.Decoder Prismic.ImageViews"
+      },
+      {
+        "name": "decodeLink",
+        "comment": " Decode a `Link`.\n",
+        "type": "Json.Decode.Decoder Prismic.Link"
+      },
+      {
+        "name": "decodeStructuredText",
+        "comment": " Decode some `StructuredText`.\n",
+        "type": "Json.Decode.Decoder Prismic.StructuredText"
+      },
+      {
+        "name": "defaultLinkResolver",
+        "comment": " Provide a default URL for `linkedDocuments`:\n\n    Url \"documents/doc.id/doc.slug\"\n",
+        "type": "Prismic.DocumentReference -> Prismic.Url"
+      },
+      {
+        "name": "form",
+        "comment": " Choose a form on which to base the rest of the Prismic request.\n",
+        "type": "String -> Task.Task Prismic.PrismicError Prismic.ModelWithApi -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi )"
+      },
+      {
+        "name": "fulltext",
+        "comment": " Match documents with a full text search at `fragment`.\n",
+        "type": "String -> String -> Prismic.Predicate"
+      },
+      {
+        "name": "getFirstImage",
+        "comment": " Get the first image out of some `StructuredText`, if there is one.\n",
+        "type": "Prismic.StructuredText -> Maybe.Maybe Prismic.ImageView"
+      },
+      {
+        "name": "getFirstParagraph",
+        "comment": " Get the first paragraph out of some `StructuredText`, if there is one.\n",
+        "type": "Prismic.StructuredText -> Maybe.Maybe Prismic.StructuredTextElement"
+      },
+      {
+        "name": "getText",
+        "comment": " Get the contents of a single `StructuredText` element as a `String`.\n",
+        "type": "Prismic.StructuredTextElement -> String"
+      },
+      {
+        "name": "getTexts",
+        "comment": " Get the contents of a some `StructuredText` as a `String`.\n",
+        "type": "Prismic.StructuredText -> String"
+      },
+      {
+        "name": "getTitle",
+        "comment": " Get the first title out of some `StructuredText`, if there is one.\n",
+        "type": "Prismic.StructuredText -> Maybe.Maybe Prismic.StructuredTextElement"
+      },
+      {
+        "name": "init",
+        "comment": " Initialise the Prismic model with the URL for your Prismic repository. Save\nthis in your application's Model somewhere.\n\n    type alias Model =\n        { prismic : Prismic.Model }\n\n    init =\n        { prismic =\n            Prismic.init (Url \"https://lesbonneschoses.prismic.io/api\")\n        }\n",
+        "type": "Prismic.Url -> Prismic.Model"
+      },
+      {
+        "name": "none",
+        "comment": " Pass the request through unmodified.\n\nUseful for conditionally adding a query.\n",
+        "type": "Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.Model' api ) -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.Model' api )"
+      },
+      {
+        "name": "query",
+        "comment": " Override a Form's default query.\n\nSee the section on `Predicate`s below for how to construct a `Predicate`.\n",
+        "type": "List Prismic.Predicate -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi ) -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi )"
+      },
+      {
+        "name": "ref",
+        "comment": " Override a Form's default ref\n",
+        "type": "String -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi ) -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi )"
+      },
+      {
+        "name": "structuredTextAsHtml",
+        "comment": " Render some `StructuredText` as HTML.\n\nYou must supply a `linkResolver` to resolve any links in the `StructuredText`.\nIf you don't care about this, you can use the `defaultLinkResolver`.\n",
+        "type": "(Prismic.DocumentReference -> Prismic.Url) -> Prismic.StructuredText -> List (Html.Html msg)"
+      },
+      {
+        "name": "submit",
+        "comment": " Submit the request.\n\nPass this function a `Json.Decoder` to decode each document in the response into\nyour own Elm type, or use `decodeDefaultDocType`.\n",
+        "type": "Json.Decode.Decoder docType -> Task.Task Prismic.PrismicError ( Prismic.Request, Prismic.ModelWithApi ) -> Task.Task Prismic.PrismicError ( Prismic.Response docType, Prismic.Model )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

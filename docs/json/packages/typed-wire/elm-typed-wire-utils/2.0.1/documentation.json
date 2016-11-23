@@ -1,0 +1,118 @@
+[
+  {
+    "name": "TypedWire",
+    "comment": " Helper functions for defining typed-wire json representations\n\n# Maybe\n@docs encMaybe\n\n# Bytes\n@docs AsBase64, decAsBase64, encAsBase64\n\n# Date\n@docs Date, toStdDate, fromStdDate, decDate, encDate\n\n# Time\n@docs Time, toStdTime, fromStdTime, decTime, encTime\n\n# DateTime\n@docs DateTime, toStdDateTime, fromStdDateTime, decDateTime, encDateTime\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "AsBase64",
+        "comment": " bytes represented as base64 ",
+        "args": [],
+        "cases": [
+          [
+            "AsBase64",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Date",
+        "comment": " typed wire date primitive ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "DateTime",
+        "comment": " typed wire datetime primitive ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Time",
+        "comment": " typed wire time primitive ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "decAsBase64",
+        "comment": " json base64 string decoder ",
+        "type": "Json.Decode.Decoder TypedWire.AsBase64"
+      },
+      {
+        "name": "decDate",
+        "comment": " json date decoder ",
+        "type": "Json.Decode.Decoder TypedWire.Date"
+      },
+      {
+        "name": "decDateTime",
+        "comment": " json datetime decoder ",
+        "type": "Json.Decode.Decoder TypedWire.DateTime"
+      },
+      {
+        "name": "decTime",
+        "comment": " json time decoder ",
+        "type": "Json.Decode.Decoder TypedWire.Time"
+      },
+      {
+        "name": "encAsBase64",
+        "comment": " json base64 string encoder ",
+        "type": "TypedWire.AsBase64 -> Json.Encode.Value"
+      },
+      {
+        "name": "encDate",
+        "comment": " json date encoder ",
+        "type": "TypedWire.Date -> Json.Encode.Value"
+      },
+      {
+        "name": "encDateTime",
+        "comment": " json datetime encoder ",
+        "type": "TypedWire.DateTime -> Json.Encode.Value"
+      },
+      {
+        "name": "encMaybe",
+        "comment": " json encoder for maybes ",
+        "type": "(a -> Json.Encode.Value) -> Maybe.Maybe a -> Json.Encode.Value"
+      },
+      {
+        "name": "encTime",
+        "comment": " json time encoder ",
+        "type": "TypedWire.Time -> Json.Encode.Value"
+      },
+      {
+        "name": "fromStdDate",
+        "comment": " convert elm date to typed wire date ",
+        "type": "Date.Date -> TypedWire.Date"
+      },
+      {
+        "name": "fromStdDateTime",
+        "comment": " convert elm date to typed wire datetime ",
+        "type": "Date.Date -> TypedWire.Date"
+      },
+      {
+        "name": "fromStdTime",
+        "comment": " convert elm time to typed wire time ",
+        "type": "Time.Time -> TypedWire.Time"
+      },
+      {
+        "name": "toStdDate",
+        "comment": " convert typed wire date to elm date ",
+        "type": "TypedWire.Date -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "toStdDateTime",
+        "comment": " convert typed wire datetime to elm date ",
+        "type": "TypedWire.DateTime -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "toStdTime",
+        "comment": " convert typed wire time to elm time ",
+        "type": "TypedWire.Time -> Maybe.Maybe Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

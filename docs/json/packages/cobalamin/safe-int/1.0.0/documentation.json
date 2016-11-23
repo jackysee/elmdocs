@@ -1,0 +1,78 @@
+[
+  {
+    "name": "SafeInt",
+    "comment": " This module is a way of explicitly representing invalid integers so that you can ensure they don't propagate to weird places in your application (for instance the view). It achieves this by internally modelling which numbers are valid integers and which aren't, and returning a `Maybe Int` from the `get` function. So in effect, you always need to explicitly handle invalid calculations at the end of a calculation chain.\n\n# Creating and retrieving\n@docs SafeInt, fromInt, get\n\n# Calculations\n@docs (+!), (-!), (*!), (//!), (%!), (^!)\n\n# Wrapping your own functions\n@docs map, map2, andThen, invalid\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "SafeInt",
+        "comment": " A type representing an explicitly valid or invalid `Int`\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "%!",
+        "comment": " A safe version of `(%)`\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "*!",
+        "comment": " A safe version of `(*)`\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "+!",
+        "comment": " A safe version of `(+)`\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "-!",
+        "comment": " A safe version of `(-)`\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "//!",
+        "comment": " A safe version of `(//)`\n\nSee the following GitHub issues as to what this treats as invalid:\n\n- https://github.com/elm-lang/core/issues/590\n- https://github.com/elm-lang/core/issues/92\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "^!",
+        "comment": " A safe version of `(^)`\n\nSee the following GitHub issues as to what this treats as invalid:\n\n- https://github.com/elm-lang/core/issues/194\n",
+        "type": "SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "andThen",
+        "comment": " Put a `SafeInt` through a function that takes a valid `Int` value and returns a new `SafeInt`.\n\nThis is useful when you want to make advanced decisions about a calculation that is not in this library, and might lead to invalid results. It's especially useful when you chain two `andThen`s together to check one of two values in a binary operation, e.g. dividing by zero can be made safe like this.\n\n    cantBe2Here : Int -> SafeInt\n    cantBe2Here x =\n        if x == 2 then\n            invalid\n        else\n            fromInt x\n\n    aSafeInt : SafeInt\n    aSafeInt = fromInt 42\n\n    result = someSafeInt `andThen` cantBe2Here\n",
+        "type": "SafeInt.SafeInt -> (Int -> SafeInt.SafeInt) -> SafeInt.SafeInt"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Creates a new `SafeInt` based on an `Int` value.\n",
+        "type": "Int -> SafeInt.SafeInt"
+      },
+      {
+        "name": "get",
+        "comment": " Try to retrieve a valid `Int` from a `SafeInt`. Returns a `Just` value if the wrapped integer is valid, `Nothing` if it is invalid.\n",
+        "type": "SafeInt.SafeInt -> Maybe.Maybe Int"
+      },
+      {
+        "name": "invalid",
+        "comment": " A value representing an invalid `Int`.\n\nThis is largely only useful when writing your own calculations with `andThen` and you want to be able to say \"this would be an invalid `Int`\" yourself. See the `andThen` docs for an example.\n",
+        "type": "SafeInt.SafeInt"
+      },
+      {
+        "name": "map",
+        "comment": " Use a function operating on one `Int` value with one `SafeInt`.\n",
+        "type": "(Int -> Int) -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      },
+      {
+        "name": "map2",
+        "comment": " Use a function operating on two `Int` values with two `SafeInt`s.\n\nMost safe operators in this library (`(+!)`, `(-!)`, etc.) are implemented in terms of `map2`, which can give you an idea of what it does:\n\n    (+!) = map2 (+)\n",
+        "type": "(Int -> Int -> Int) -> SafeInt.SafeInt -> SafeInt.SafeInt -> SafeInt.SafeInt"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

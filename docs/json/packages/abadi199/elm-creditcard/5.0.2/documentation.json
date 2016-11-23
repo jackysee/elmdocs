@@ -1,0 +1,247 @@
+[
+  {
+    "name": "CreditCard.View",
+    "comment": " View related functions\n\n# Form View\n@docs form\n\n# Card View\n@docs cardView\n\n# Individual Fields View\n@docs numberInput, nameInput, monthInput, yearInput, ccvInput\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "cardView",
+        "comment": " A view function that will render the credit card.\n\nThis view will renders the credit card information such as the number, full name, expiration month/year, ccv, and the card logo.\n\nThis component also provide a card flipping animation for flipping back and forth between the front and back side of the card when displaying CCV number.\nSome type of card has CCV printed on the front side of the card, in this case, the flipping animation will not be performed.\n\nTo use this view, just include this function as part of your view function. This will render the card as svg element.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.Components.Card.cardView model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "ccvInput",
+        "comment": " A view function that will render the input field for credit card CCV/CVC number.\n\nTo use this view, just include this function as part of your view function. The input field will only accept numeric input with maximum length of 4.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.ccvInput \"CCVInput\" model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "String -> CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "form",
+        "comment": " A view function that will render the whole form fields including the card.\n\nTo use this view, just include this function as part of your view function.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.form model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "monthInput",
+        "comment": " A view function that will render the input field for credit card expiration month.\n\nTo use this view, just include this function as part of your view function. The input field will only accept numeric input with maximum value of 12.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.monthInput \"MonthInput\" model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "String -> CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "nameInput",
+        "comment": " A view function that will render the input field for full name.\n\nTo use this view, just include this function as part of your view function.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.nameInput \"NameInput\" model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "String -> List (Html.Attribute Input.Text.Msg) -> CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "numberInput",
+        "comment": " A view function that will render the input field for credit card number.\n\nTo use this view, just include this function as part of your view function.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.numberInput \"Number\" model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "String -> CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      },
+      {
+        "name": "yearInput",
+        "comment": " A view function that will render the input field for credit card expiration year.\n\nTo use this view, just include this function as part of your view function. The input field will only accept numeric input.\n\nExample:\n\n    form []\n        [ Html.App.map CreditCardMsg (CreditCard.View.yearInput \"YearInput\" model.creditCardModel)\n        , button [] [ text \"Checkout \"]\n        ]\n\n",
+        "type": "String -> CreditCard.Model.Model CreditCard.Update.Msg -> Html.Html CreditCard.Update.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "CreditCard.Update",
+    "comment": " Update functions and Msg.\n\n# Message\n@docs Msg\n\n# Update functions\n@docs update\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A union type representing The Elm Architect's `Msg`\n",
+        "args": [],
+        "cases": [
+          [
+            "NoOp",
+            []
+          ],
+          [
+            "UpdateNumber",
+            [
+              "Input.Number.Msg"
+            ]
+          ],
+          [
+            "UpdateName",
+            [
+              "Input.Text.Msg"
+            ]
+          ],
+          [
+            "UpdateExpirationMonth",
+            [
+              "Input.Number.Msg"
+            ]
+          ],
+          [
+            "UpdateExpirationYear",
+            [
+              "Input.Number.Msg"
+            ]
+          ],
+          [
+            "UpdateCCV",
+            [
+              "Input.Number.Msg"
+            ]
+          ],
+          [
+            "Flip",
+            [
+              "Bool"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "update",
+        "comment": " The Elm Architect's update function.\n",
+        "type": "CreditCard.Update.Msg -> CreditCard.Model.Model CreditCard.Update.Msg -> ( CreditCard.Model.Model CreditCard.Update.Msg , Platform.Cmd.Cmd CreditCard.Update.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "CreditCard.Model",
+    "comment": " Model types and all related helper functions\n\n# Model\n@docs Model, Field, Styles,  CardInfo,  CardType\n\n# Styling and Formatting\n@docs Options, CardStyle, CCVPosition, NumberFormat\n\n# Helper Functions\n@docs init, defaultOptions\n",
+    "aliases": [
+      {
+        "name": "CardInfo",
+        "comment": " A type representing the card information.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ cardType : CreditCard.Model.CardType , validLength : List Int , numberFormat : CreditCard.Model.NumberFormat , cardStyle : CreditCard.Model.CardStyle msg , ccvPosition : CreditCard.Model.CCVPosition }"
+      },
+      {
+        "name": "CardStyle",
+        "comment": " A type representing the card style.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ background : { attributes : List (Svg.Attribute msg) , svg : List (Svg.Svg msg) , defs : List (Svg.Svg msg) } , textColor : String , lightTextColor : String , darkTextColor : String }"
+      },
+      {
+        "name": "Field",
+        "comment": " A type representing an input field with specific type.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ id : String , label : Maybe.Maybe String , value : Maybe.Maybe a , hasFocus : Bool }"
+      },
+      {
+        "name": "Model",
+        "comment": " A type representing the Credit Card model.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ options : CreditCard.Model.Options , number : CreditCard.Model.Field String , name : CreditCard.Model.Field String , expirationMonth : CreditCard.Model.Field String , expirationYear : CreditCard.Model.Field String , ccv : CreditCard.Model.Field String , cardInfo : Maybe.Maybe (CreditCard.Model.CardInfo msg) , flipped : Maybe.Maybe Bool }"
+      },
+      {
+        "name": "NumberFormat",
+        "comment": " A type representing the format of the number by specifying the size of each group.\ne.g: `[4, 4, 5]` will format the number to be XXXX XXXX XXXXX\n",
+        "args": [],
+        "type": "List Int"
+      },
+      {
+        "name": "Options",
+        "comment": " A type representing the configurable options for the form.\n",
+        "args": [],
+        "type": "{ showLabel : Bool, blankChar : Char }"
+      },
+      {
+        "name": "Styles",
+        "comment": " A type representing the form style.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ cardStyle : CreditCard.Model.CardStyle msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "CCVPosition",
+        "comment": " A union type representing the position of the CCV\n",
+        "args": [],
+        "cases": [
+          [
+            "Front",
+            []
+          ],
+          [
+            "Back",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CardType",
+        "comment": " A union type representing the credit card type.\n",
+        "args": [],
+        "cases": [
+          [
+            "Unknown",
+            []
+          ],
+          [
+            "Visa",
+            []
+          ],
+          [
+            "Mastercard",
+            []
+          ],
+          [
+            "Amex",
+            []
+          ],
+          [
+            "Discover",
+            []
+          ],
+          [
+            "DinersClubCarteBlanche",
+            []
+          ],
+          [
+            "DinersClubInternational",
+            []
+          ],
+          [
+            "JCB",
+            []
+          ],
+          [
+            "Laser",
+            []
+          ],
+          [
+            "Maestro",
+            []
+          ],
+          [
+            "VisaElectron",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " The default `Options` value\n",
+        "type": "CreditCard.Model.Options"
+      },
+      {
+        "name": "init",
+        "comment": " Initalize the model by passing in the `Options`\n",
+        "type": "CreditCard.Model.Options -> CreditCard.Model.Model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

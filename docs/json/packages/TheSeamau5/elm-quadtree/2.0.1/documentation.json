@@ -1,0 +1,164 @@
+[
+  {
+    "name": "QuadTree",
+    "comment": "QuadTree implementation in Elm.\n\n# Bounding Boxes\n@docs boundingBox, intersectBoundingBoxes, width, height, halfWidth, halfHeight, center\n\n# Bounded Extensible Type\n@docs Bounded\n\n# QuadTree\n@docs QuadTree, emptyQuadTree\n\n# Properties\n@docs getMaxSize, getBoundingBox, length\n\n# Inserting items\n@docs insert, insertMany\n\n# Removing items\n@docs remove\n\n# Updating items\n@docs update\n\n# Querying\n@docs findItems, getAllItems\n\n# Applying functions\n@docs apply, map, mapSafe\n\n# Reset a QuadTree\n@docs reset",
+    "aliases": [
+      {
+        "name": "Bounded",
+        "comment": "Extend this record type in order to use the QuadTree.",
+        "args": [
+          "a"
+        ],
+        "type": "{ boundingBox : BoundingBox }"
+      },
+      {
+        "name": "BoundingBox",
+        "comment": "",
+        "args": [],
+        "type": "{ horizontal : Interval, vertical : Interval }"
+      }
+    ],
+    "types": [
+      {
+        "name": "QuadTree",
+        "comment": "QuadTree type. Keeps its elements in the leaves and\n    keeps track of the maximum number of items that\n    can be inserted in each leaf.",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Leaf",
+            [
+              "BoundingBox",
+              "Int",
+              "Array.Array a"
+            ]
+          ],
+          [
+            "Node",
+            [
+              "BoundingBox",
+              "QuadTree a",
+              "QuadTree a",
+              "QuadTree a",
+              "QuadTree a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "apply",
+        "comment": "Apply a function, that takes an item and an array of items\n    and returns an item, to a quadTree. This function is\n    a useful helper for collision detection and response\n    where the input function updates an object after colliding\n    it with an array of objects.",
+        "type": "(a -> Array.Array a -> a) -> QuadTree a -> QuadTree a"
+      },
+      {
+        "name": "applySafe",
+        "comment": "Safe version of apply. Automatically calls reset after applying\n    the function on the quadTree.",
+        "type": "(Bounded a -> Array.Array (Bounded a) -> Bounded a) -> QuadTree (Bounded a) -> QuadTree (Bounded a)"
+      },
+      {
+        "name": "boundingBox",
+        "comment": "Construct a bounding box.\n\n    boundingBox minX maxX minY maxY",
+        "type": "Float -> Float -> Float -> Float -> BoundingBox"
+      },
+      {
+        "name": "center",
+        "comment": "Get the center of a bounding box.",
+        "type": "BoundingBox -> { x : Float, y : Float }"
+      },
+      {
+        "name": "emptyQuadTree",
+        "comment": "Construct an empty QuadTree given a bounding box and\n    a maxSize. The maxSize limits the number of elements\n    that each leaf of the QuadTree can hold.",
+        "type": "BoundingBox -> Int -> QuadTree a"
+      },
+      {
+        "name": "findItems",
+        "comment": "Find all items in the quadTree which share a leaf with the given\n    item or would share a leaf with the given item were the item in\n    the quadTree. Useful for finding items close to the given item.",
+        "type": "Bounded a -> QuadTree (Bounded a) -> Array.Array (Bounded a)"
+      },
+      {
+        "name": "getAllItems",
+        "comment": "Get all items from a quadTree. Conserves duplicates.",
+        "type": "QuadTree a -> Array.Array a"
+      },
+      {
+        "name": "getBoundingBox",
+        "comment": "Get the bounding box of a quadTree.",
+        "type": "QuadTree a -> BoundingBox"
+      },
+      {
+        "name": "getMaxSize",
+        "comment": "Get the maxSize of a quadTree.",
+        "type": "QuadTree a -> Int"
+      },
+      {
+        "name": "halfHeight",
+        "comment": "Get the half-height of a bounding box.",
+        "type": "BoundingBox -> Float"
+      },
+      {
+        "name": "halfWidth",
+        "comment": "Get the half-width of a bounding box.",
+        "type": "BoundingBox -> Float"
+      },
+      {
+        "name": "height",
+        "comment": "Get the height of a bounding box.",
+        "type": "BoundingBox -> Float"
+      },
+      {
+        "name": "insert",
+        "comment": "Insert an item into a quadTree.",
+        "type": "Bounded a -> QuadTree (Bounded a) -> QuadTree (Bounded a)"
+      },
+      {
+        "name": "insertMany",
+        "comment": "Insert an array of items into a quadTree.",
+        "type": "Array.Array (Bounded a) -> QuadTree (Bounded a) -> QuadTree (Bounded a)"
+      },
+      {
+        "name": "intersectBoundingBoxes",
+        "comment": "Function to determine if two bounding boxes intersect.",
+        "type": "BoundingBox -> BoundingBox -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": "Find the number of items in a quadTree. If elements are\n    duplicated in different leaves, they will be counted\n    multiple times.",
+        "type": "QuadTree a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": "The good 'ol map function.\n    Maps a function over a quadTree and returns a new quadTree.\n    Note: If your function modifies in any way the items'\n    bounding boxes, consider using `mapSafe` or calling reset\n    after you are done as the quadTree may have items in the\n    wrong place. This function doesn't do the clean-up\n    automatically. If you want such functionality, use `mapSafe`.",
+        "type": "(a -> b) -> QuadTree a -> QuadTree b"
+      },
+      {
+        "name": "mapSafe",
+        "comment": "Version of `map` where the quadTree is reset\n    automatically after applying the function.",
+        "type": "(Bounded a -> Bounded b) -> QuadTree (Bounded a) -> QuadTree (Bounded b)"
+      },
+      {
+        "name": "remove",
+        "comment": "Remove an item from a quadTree and return the new quadTree.\n    If an item is found in multiple leaves, then the item will\n    be removed from all leaves.",
+        "type": "a -> QuadTree a -> QuadTree a"
+      },
+      {
+        "name": "reset",
+        "comment": "Reset a quadTree. This function gets all items\n    in a quadTree and pours them\n    into an empty quadTree. Useful if the items in\n    the quadTree find themselves in the wrong\n    leaves.",
+        "type": "QuadTree (Bounded a) -> QuadTree (Bounded a)"
+      },
+      {
+        "name": "update",
+        "comment": "Update an item in a quadTree. This is useful if you just want to\n    update a single item. This removes the item from the quadTree,\n    applies the given updateFunction, and then inserts the updated\n    item into the quadTree.",
+        "type": "(Bounded a -> Bounded a) -> Bounded a -> QuadTree (Bounded a) -> QuadTree (Bounded a)"
+      },
+      {
+        "name": "width",
+        "comment": "Get the width of a bounding box.",
+        "type": "BoundingBox -> Float"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

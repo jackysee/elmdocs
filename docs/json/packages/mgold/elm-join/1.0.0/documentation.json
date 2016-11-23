@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Join",
+    "comment": "A Join is a set of data that changes at discrete moments. A join tracks items that are entering the set, exiting the\nset, or updating from one value to another. Elements are tracked across updates not by equality but by index or a key\nfunction.\n\nYou can use this library to transition between views of data. For example, some data points might transition away as\nthey're filtered out, while others will smoothly change size or position. The enter-update-exit pattern has been very\nsuccessful in [D3](http://d3js.org/). Here, we've removed the DOM entirely; BYO rendering pipeline.\n\n## The Join Type\n@docs Join\n\n## Create\n@docs create, empty\n\n## Update\n@docs update, updateBy\n\n## Edit\n@docs edit",
+    "aliases": [
+      {
+        "name": "Join",
+        "comment": "The `Join` type consists of three lists. The enter list contains elements that were not part of the set prior to the\nlast update. The exit list contains elements that were part of the set before the last update but are not anymore. The\nupdate list tracks the old and new values (in that order) of elements the have stayed in the set.\n\nYou'll typically create joins with the functions below, but access the lists using normal Elm record accessors.",
+        "args": [
+          "a"
+        ],
+        "type": "{ enter : List a, update : List ( a, a ), exit : List a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "create",
+        "comment": "Create a join, with the provided elements entering and no elements updating or exiting.",
+        "type": "List a -> Join.Join a"
+      },
+      {
+        "name": "edit",
+        "comment": "Edit the update and enter lists together. Entering items will have `Nothing` while updating values will have `Just`\ntheir old value. This distinction is used to split the list once you're done with it, so typically you'll treat the\nfirst element as read-only. You can use this function to map over or sort all values currently in the set.",
+        "type": "(List ( Maybe.Maybe a, a ) -> List ( Maybe.Maybe a, a )) -> Join.Join a -> Join.Join a"
+      },
+      {
+        "name": "empty",
+        "comment": "Create a join with no elements.",
+        "type": "Join.Join a"
+      },
+      {
+        "name": "update",
+        "comment": "Update a join with new elements, which are matched to the old elements by index.",
+        "type": "List a -> Join.Join a -> Join.Join a"
+      },
+      {
+        "name": "updateBy",
+        "comment": "Update a join with new elements, which are matched to the old elements by a key function. The key function should\nreturn a *unique* value for all items in the new list, and in the old enter and update lists together. Looking up an id\nin a record works well.",
+        "type": "(a -> comparable) -> List a -> Join.Join a -> Join.Join a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

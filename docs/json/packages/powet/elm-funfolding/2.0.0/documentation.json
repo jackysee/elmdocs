@@ -1,0 +1,36 @@
+[
+  {
+    "name": "FunFolding",
+    "comment": " This library contains high-order functions for folding a list of functions together. [foldlFun](#foldlFun) uses a accumulator function which is used to compose all the functions provided with the function list.\n\n# funFolding\n\nas an example, imagine you want to filter a list of integers [-100..100] using the following predicates:\n  - (\\x->x/=0)\n  - (\\x->x>(-20))\n  - (\\x->x<20)\n  - (\\x->(rem x 10) == 0)\n\nThe expected result is : [-10,10]\n\nWe foldl all the predicates using the (&&) operator, the outcome is a single predicate function that we use in [List.filter](http://package.elm-lang.org/packages/elm-lang/core/latest/List#filter)\n\nThe folding function that we use is defined by:\n\n    andN : List (a->Bool) -> a -> Bool\n    andN =\n      foldlFun (&&) False\n\nthis function can be used the following way:\n\n    test \"Compare with 4 predicates\" <|\n        \\() ->\n         let           \n           fun = andN [ (\\x->x/=0)\n                      , (\\x->x>(-20))\n                      , (\\x->x<20)\n                      , (\\x->(rem x 10) == 0)\n                      ]\n           result = List.filter fun [-100..100]\n           expected = [-10,10]\n         in\n           (Expect.equal result expected)\n\n# base functions\n@docs foldlFun, foldlFun2\n\n# specialized functions\n@docs compareN, andN ,orN \n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andN",
+        "comment": " [andN](#andN) folds a list of predicates using the && operator. [andN](#andN) and [orN](#orN) can be combined together.\n\n    fun = andN [ (\\x->x/=0)\n               , (\\x->x>(-20))\n               , (\\x->x<20)\n               , (\\x->(rem x 10) == 0)\n               ]\n    result = List.filter fun [-100..100]\n    expected = [-10,10]\n",
+        "type": "List (a -> Bool) -> a -> Bool"
+      },
+      {
+        "name": "compareN",
+        "comment": " [compareN](#compareN) folds a list of 'compare' function in such a way that left that left most compares have a bigger weight that the right most compares.\n\n    type alias Person = { name: String\n                        , age : Int\n                        , adr : String\n\n    louis id age adr = Person\n                      (\"Louis\"++(toString id))\n                      age\n                      ((toString adr))}\n\n     fun = compareN [ (\\x y -> compare x.name y.name)\n                    , (\\x y -> compare x.age y.age)\n                    , (\\x y -> compare x.adr y.adr)\n                    ]\n                             \n     sortedList = List.sortWith fun [ louis 2 1 1                                               \n                                    , louis 1 2 2\n                                    , louis 1 1 1\n                                    , louis 1 2 3                                                \n                                    , louis 2 1 2\n                                    , louis 1 2 2\n                                    ]\n     expected = [ louis 1 1 1\n                , louis 1 2 2\n                , louis 1 2 2\n                , louis 1 2 3\n                , louis 2 1 1\n                , louis 2 1 2\n                ]\n",
+        "type": "List (a -> a -> Basics.Order) -> a -> a -> Basics.Order"
+      },
+      {
+        "name": "foldlFun",
+        "comment": " [foldlFun](#foldlFun) folds a list of functions using composition function.\nThe composition function can be ssen as the accumulator function.\nAs an Example , the [andN](#andN) function is defined by :\n \n    andN : List (a->Bool) -> a -> Bool\n    andN = foldlFun (&&) False\n\n",
+        "type": "(a -> a -> a) -> a -> List (b -> a) -> b -> a"
+      },
+      {
+        "name": "foldlFun2",
+        "comment": " [foldlFun2](#foldlFun2) folds a list of two parameters functions using a composition function.\nThe composition function can be ssen as the accumulator function.\n As an Example , the [compareN](#compareN) function is defined by :\n\n    compareN : List (a->a->Order)->a->a->Order\n    compareN = foldlFun2 andOrder EQ\n",
+        "type": "(a -> a -> a) -> a -> List (b -> b -> a) -> b -> b -> a"
+      },
+      {
+        "name": "orN",
+        "comment": " [orN](#orN) folds a list of predicates using the || operator. [andN](#andN) and [orN](#orN) can be combined together.\n\n    fun = orN [(\\x->x==0), (\\x->x<(-99)), (\\x->x>99) ]\n    result = List.filter fun [-100..100]\n    expected = [-100,0,100]\n",
+        "type": "List (a -> Bool) -> a -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

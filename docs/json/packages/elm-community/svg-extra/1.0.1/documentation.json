@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Svg.Extra",
+    "comment": " Convenience functionality on\n[`Svg`](http://package.elm-lang.org/packages/elm-lang/svg/latest/Svg#Svg)\n\n@docs static\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "static",
+        "comment": " Embedding static svg.\n\nThe type argument\n[`Never`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#Never)\nin `Svg Never` tells us that the svg has no event handlers attached,\nit will not generate any messages. We may want such static svg to be\nembedded into or combined with arbitrary other svg, while using types\nto enforce the staticness. That is what this function provides.\n\n*Note:* To call this function, the argument need not be literally of type\n`Svg Never`. It suffices if it is a fully polymorphic (in the message type)\n`Svg` value. For example, this works: `static (Svg.text \"abcdef\")`.\n",
+        "type": "Svg.Svg Basics.Never -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

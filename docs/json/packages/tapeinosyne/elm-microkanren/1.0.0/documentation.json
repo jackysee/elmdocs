@@ -1,0 +1,181 @@
+[
+  {
+    "name": "MicroKanren.Operators",
+    "comment": " Infix operators for μKanren\n\n@docs (++), (>>=), (===), (≡)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "++",
+        "comment": " Infix alias of `mplus`. ",
+        "type": "MicroKanren.Stream a -> MicroKanren.Stream a -> MicroKanren.Stream a"
+      },
+      {
+        "name": "===",
+        "comment": " Infix alias of `identical`. ",
+        "type": "MicroKanren.Term a -> MicroKanren.Term a -> MicroKanren.Goal a"
+      },
+      {
+        "name": ">>=",
+        "comment": " Infix alias of `bind`. ",
+        "type": "MicroKanren.Stream a -> MicroKanren.Goal a -> MicroKanren.Stream a"
+      },
+      {
+        "name": "≡",
+        "comment": " Unicode alias of `identical`. ",
+        "type": "MicroKanren.Term a -> MicroKanren.Term a -> MicroKanren.Goal a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "MicroKanren",
+    "comment": " μKanren provides a minimal, independent core for relational programming in Elm,\nas described by Hemann and Friedmann in [µKanren: A Minimal Functional Core\nfor Relational Programming](http://webyrd.net/scheme-2013/papers/HemannMuKanren2013.pdf).\n\nThis module only provides a barebones typed foundation upon which it is possible\nto build larger languages in the [miniKanren family](http://www.minikanren.org),\nand lacks much of the convenience user-facing libraries rightfully require.\n\n## Terms of a μKanren Program\n@docs Var, Term, Substitution\n\n### Traversing and Manipulating Substitutions\n@docs walk, extend, unify\n\n## Creating and Manipulating Streams\n@docs State\n@docs Stream, mzero\n@docs Goal, unit\n@docs mplus, bind\n\n## Goal Constructors\n@docs callFresh, identical, conjoin, disjoin\n",
+    "aliases": [
+      {
+        "name": "Goal",
+        "comment": " A goal to be pursued within the received state.\nA successful goal returns a non-empty stream, containing the states which satisfied it. ",
+        "args": [
+          "a"
+        ],
+        "type": "MicroKanren.State a -> MicroKanren.Stream a"
+      },
+      {
+        "name": "State",
+        "comment": " A state encapsulates the substitution `s`, which encompasses current variable-term bindings,\nand the counter `c`, which represents the index of the next unbound (“fresh”) logic variable. ",
+        "args": [
+          "a"
+        ],
+        "type": "{ s : MicroKanren.Substitution a, c : MicroKanren.Var }"
+      },
+      {
+        "name": "Substitution",
+        "comment": " A dictionary of variable-term bindings. ",
+        "args": [
+          "a"
+        ],
+        "type": "Dict.Dict MicroKanren.Var (MicroKanren.Term a)"
+      },
+      {
+        "name": "Var",
+        "comment": " The `Var` type is an index (or counter),\nused to track the results of logic operations. ",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [
+      {
+        "name": "Stream",
+        "comment": " A potentially infinite sequence of states.\n\nA stream may be:\n  - empty;\n  - mature, when the head is a state that has already been computed;\n  - immature, when the head is a thunk containing a delayed computation.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Empty",
+            []
+          ],
+          [
+            "Immature",
+            [
+              "() -> MicroKanren.Stream a"
+            ]
+          ],
+          [
+            "Mature",
+            [
+              "MicroKanren.State a",
+              "MicroKanren.Stream a"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Term",
+        "comment": " The terms on which a μKanren program operates.\n\nThree variants are established:\n  - `LVar`, the identifier of a logic variable; effectively a term-level `Var`\n    acting as a reference.\n  - `LVal`, which wraps some value of type `a` for use by logic operations.\n  - `Pair`, two terms of the same type `a`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "LVar",
+            [
+              "MicroKanren.Var"
+            ]
+          ],
+          [
+            "LVal",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Pair",
+            [
+              "MicroKanren.Term a",
+              "MicroKanren.Term a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "bind",
+        "comment": " Invoke a goal on each element of the given stream,\nand interleave the resulting streams. ",
+        "type": "MicroKanren.Stream a -> MicroKanren.Goal a -> MicroKanren.Stream a"
+      },
+      {
+        "name": "callFresh",
+        "comment": " Create a goal which introduces a new logic variable for use by another goal. ",
+        "type": "(MicroKanren.Term a -> MicroKanren.Goal a) -> MicroKanren.Goal a"
+      },
+      {
+        "name": "conjoin",
+        "comment": " Create a goal which succeeds if the second goal is achievable within the stream\ngenerated by the first goal.\n\nEffectively a binary conjunction of goals. ",
+        "type": "MicroKanren.Goal a -> MicroKanren.Goal a -> MicroKanren.Goal a"
+      },
+      {
+        "name": "disjoin",
+        "comment": " Create a goal which succeeds if either of the received goals are achieved.\n\nEffectively a binary disjunction of goals. ",
+        "type": "MicroKanren.Goal a -> MicroKanren.Goal a -> MicroKanren.Goal a"
+      },
+      {
+        "name": "extend",
+        "comment": " Extend the substitution with a new variable-term binding. ",
+        "type": "MicroKanren.Var -> MicroKanren.Term a -> MicroKanren.Substitution a -> MicroKanren.Substitution a"
+      },
+      {
+        "name": "identical",
+        "comment": " Create a goal which succeeds if the two terms unify in the received state. ",
+        "type": "MicroKanren.Term a -> MicroKanren.Term a -> MicroKanren.Goal a"
+      },
+      {
+        "name": "mplus",
+        "comment": " Merge two streams by interleaving their states, so that infinite streams\nwill not prevent finite streams from yielding their state. ",
+        "type": "MicroKanren.Stream a -> MicroKanren.Stream a -> MicroKanren.Stream a"
+      },
+      {
+        "name": "mzero",
+        "comment": " An alias for the empty stream. ",
+        "type": "MicroKanren.Stream a"
+      },
+      {
+        "name": "unify",
+        "comment": " Unify two terms in the received substitution `s`,\npotentially extending it.\n\n- `LVar` variables unify when they refer to the same index,\n  i.e. they are the same variable. `s` is returned unchanged..\n- `LVal` values unify when they are equivalent under Elm's native `(==)`.\n  `s` is returned unchanged.\n- Pairs unify when their terms unify pairwise.\n- Finally, an `LVar` variable and an `LVal` value unify under an extended substitution `s1`,\n  where they form a new binding.\n\nIf unification fails, `Nothing` is returned.\n",
+        "type": "MicroKanren.Term a -> MicroKanren.Term a -> MicroKanren.Substitution a -> Maybe.Maybe (MicroKanren.Substitution a)"
+      },
+      {
+        "name": "unit",
+        "comment": " The trivial goal, which lifts the state into a mature stream\nwhose only element is that state. ",
+        "type": "MicroKanren.Goal a"
+      },
+      {
+        "name": "walk",
+        "comment": " Given a `LVar`, traverse the substitution and return its value.\nIf the given term cannot be found, or is not a variable, the term itself is returned. ",
+        "type": "MicroKanren.Term a -> MicroKanren.Substitution a -> MicroKanren.Term a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

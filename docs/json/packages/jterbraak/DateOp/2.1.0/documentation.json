@@ -1,0 +1,280 @@
+[
+  {
+    "name": "Date.Op",
+    "comment": "This module can be used for easier interoperability between string and date object.\n\n# Format\n@docs format, formatWithDict\n\n# Parse\n@docs parse, parseWithDict\n\n# Types\n@docs Token, TokenParser, TokenFormater, TokenParser, TokenRegex, TokenDict\n\n# Constants\n@docs baseTokens, extTokens, stdTokens\n\n# Localize\n@docs localize\n\n-",
+    "aliases": [
+      {
+        "name": "TokenDict",
+        "comment": "A TokenDict is a special Dictionary that contains all the information and functions to format and parse dates.\n-",
+        "args": [],
+        "type": "Dict.Dict Token ( TokenFormater, Maybe ( TokenRegex, TokenParser ) )"
+      },
+      {
+        "name": "TokenRegex",
+        "comment": "This is just an alias of a String. It signifies a pattern that matches an aspect of a date in a string.\n-",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "TokenFormater",
+        "comment": "A TokenFormatter is a function that formats one aspect of a date.\n-",
+        "args": [],
+        "type": "Date -> String"
+      },
+      {
+        "name": "TokenParser",
+        "comment": "A TokenParser is a function that takes a String and returns a TimeStampFragment.\n-",
+        "args": [],
+        "type": "String -> TimeStamp.TimeStampFragment"
+      },
+      {
+        "name": "Token",
+        "comment": "A token is a Symbol or group of Symbols that signify a formatted time to be inserted or parsed\n-",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "baseTokens",
+        "comment": "This is a standard TokenDict. With this object it is possible to format and parse most strings.\nIt does not contain any localization information. Use localize for that. The tokens are based on the \nformat specified for the date() function in PHP. Characters can be escape by prefixing them with '/'.\n\nFor more information check [here.](http://php.net/manual/en/function.date.php)\n\nimplements from date(): d, j, m, Y, G, H, i, s, u\nnot implemented from date(): D, j, l, S, z, W, F, M, t, L, o, B\n-",
+        "type": "TokenDict"
+      },
+      {
+        "name": "createRegexString",
+        "comment": "This creates a pattern for a regular expression to be used in formatting and parsing.\n-",
+        "type": "TokenDict -> String"
+      },
+      {
+        "name": "escapeString",
+        "comment": "",
+        "type": "String"
+      },
+      {
+        "name": "extTokens",
+        "comment": "Another TokenDict to extend the base with patterns that won't directly map to a TimeStamp. These tokens can not be used with the parser.\n\nimplements: a, A, w, N, g, h, y\n-",
+        "type": "TokenDict"
+      },
+      {
+        "name": "extendTokenDict",
+        "comment": "This function can be used to extend a TokenDict with user-defined tokens.\n-",
+        "type": "TokenDict -> TokenDict -> TokenDict"
+      },
+      {
+        "name": "format",
+        "comment": "Format takes a string and a date and returns a formatted date as a string. The string has to contain tokens as specified in stdToken.\n\n    formatISO = format \"Y-m-dTH:i:s\"\n    --formatISO (Date.fromTime 0) results in 1970-1-1T01:00:00 \n    \nTo escape a character prefix it with a '/'.\n-",
+        "type": "String -> Date -> String"
+      },
+      {
+        "name": "formatToken",
+        "comment": "Used to format a found token in a string. It looks for the token in a TokenDict and applies its TokenFormater function.\nIf it notices a prefix of '/' it will just return the matched token wihthout the prefix.",
+        "type": "TokenDict -> Date -> Regex.Match -> String"
+      },
+      {
+        "name": "formatWithDict",
+        "comment": "This is the format function with the ability to specify the TokenDict. This can be useful to extend the functionality or apply localization.",
+        "type": "TokenDict -> String -> Date -> String"
+      },
+      {
+        "name": "indexOf",
+        "comment": "",
+        "type": "compareable -> List compareable -> Int -> Maybe Int"
+      },
+      {
+        "name": "localize",
+        "comment": "Function to add localized content to a TokenDict. The first argument should map a Date.Month to a short representation.\nThe second argument should map to a long representation. The third should map days of the week to Strings. The last argument \ncontains the TokenDict to be localized. This is commonly stdTokens. The package provides some localizations in the Locale\nmodules.\n\nimplements: F,M,D\n-",
+        "type": "(Date.Month -> String) -> (Date.Month -> String) -> (Date.Day -> String) -> TokenDict -> TokenDict"
+      },
+      {
+        "name": "parse",
+        "comment": "Parses a string according to the given pattern and maybe returns a date.\n\n    parse \"Y-m-d\" \"2015-06-16\"\n\nThis Returns a Maybe Date with the year, month and day set to the information in the string. The time will be zeroed out.\n\n    parse \"m\" \"03\"\n    \nThis will parse only the month. Note however that the year will be set to 1970 and the day to the first of the month.\n\nWARNING: If the string parses correct but contains out of range values the date may be set to the same value as Date.fromTime 0\n-",
+        "type": "String -> String -> Maybe Date"
+      },
+      {
+        "name": "parseWithDict",
+        "comment": "This function much like formatWithDict takes a TokenDict to parse a string to a date.\n-",
+        "type": "TokenDict -> String -> String -> Maybe Date"
+      },
+      {
+        "name": "stdTokens",
+        "comment": "",
+        "type": "TokenDict"
+      },
+      {
+        "name": "transformPattern",
+        "comment": "Replaces tokens in a pattern with a TokenRegex. It also returns a list of TokenParsers for the used tokens.\nOnly works with tokens from baseTokens.\n-",
+        "type": "TokenDict -> String -> ( String, List TokenParser )"
+      },
+      {
+        "name": "transformToken",
+        "comment": "Replaces the match with either a Regex pattern or the escaped symbol.\n-",
+        "type": "TokenDict -> Regex.Match -> String"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Date.StartOf",
+    "comment": "This module provides functions to easily calculate the start of a period of time.\n-",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "day",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "hour",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "minute",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "month",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "second",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "week",
+        "comment": "",
+        "type": "Date -> Date"
+      },
+      {
+        "name": "year",
+        "comment": "",
+        "type": "Date -> Date"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Date.TimeStamp",
+    "comment": "\nUtility functions used by Date.Op but may be of some use.\n\n# Utils\n@docs fromMonth, fromWeekDay\n\n# Convert\n@docs toIsoDate, toDate\n\n# Build TimeStamp\n@docs TimeStamp, fromDate, fromFragment, stdTimeStamp, fromFragmentWithTimeStamp\n\n# Build TimeFragment\n@docs TimeStampFragment, union, emptyTimeStampFragment\n\n-",
+    "aliases": [
+      {
+        "name": "TimeStampFragment",
+        "comment": "This type is used to describe zero or more aspects of a TimeStamp.\n-",
+        "args": [],
+        "type": "{ year : Maybe Int , month : Maybe Int , day : Maybe Int , hour : Maybe Int , minute : Maybe Int , second : Maybe Int , millisecond : Maybe Int }"
+      },
+      {
+        "name": "TimeStamp",
+        "comment": "This type is used to hold the information gathered by the parser and can be easily converted to a Date.\n-",
+        "args": [],
+        "type": "{ year : Int , month : Int , day : Int , hour : Int , minute : Int , second : Int , millisecond : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "emptyTimeStamp",
+        "comment": "",
+        "type": "TimeStamp"
+      },
+      {
+        "name": "emptyTimeStampFragment",
+        "comment": "Creates a empty fragment\n-",
+        "type": "TimeStampFragment"
+      },
+      {
+        "name": "fromDate",
+        "comment": "Creates a TimeStamp from a date.\n-",
+        "type": "Date.Date -> TimeStamp"
+      },
+      {
+        "name": "fromFragment",
+        "comment": "Creates a TimeStamp from a TimeStampFragment. If the fragment does not \ndescribe an aspect the information from stdTimeStamp is used instead.\n-",
+        "type": "TimeStampFragment -> TimeStamp"
+      },
+      {
+        "name": "fromFragmentWithTimeStamp",
+        "comment": "Creates a TimeStamp from a TimeStampFragment. If the fragment does not \ndescribe an aspect the information from the provided TimeStamp is used instead.\n-",
+        "type": "TimeStamp -> TimeStampFragment -> TimeStamp"
+      },
+      {
+        "name": "fromMonth",
+        "comment": "Converts a Month used in Date to an Int.\n-",
+        "type": "Date.Month -> Int"
+      },
+      {
+        "name": "fromWeekDay",
+        "comment": "Converts a weekday used in Date to an Int. The range is 0 to 6 and starts with Monday.\n-",
+        "type": "Date.Day -> Int"
+      },
+      {
+        "name": "stdTimeStamp",
+        "comment": "A standard TimeStamp used to fill empty aspects of a TimeStampFragment at conversion.\n-",
+        "type": "TimeStamp"
+      },
+      {
+        "name": "toDate",
+        "comment": "This is kind of an ugly hack to guarantee that a tuple gets converted to a date as the tuple constructor of Date is not available yet.\n-",
+        "type": "TimeStamp -> Date.Date"
+      },
+      {
+        "name": "toIsoDate",
+        "comment": "Used by to toDate to convert to a date.\n-",
+        "type": "TimeStamp -> String"
+      },
+      {
+        "name": "union",
+        "comment": "Combines two fragments. Values from the base(first argument) are given precedence.\n-",
+        "type": "TimeStampFragment -> TimeStampFragment -> TimeStampFragment"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Date.Locale.NL",
+    "comment": "This module adds Dutch names for months and weekdays.\n\n# Extend\n@docs localize\n-",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "localize",
+        "comment": "",
+        "type": "Date.Op.TokenDict -> Date.Op.TokenDict"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Date.Locale.DE",
+    "comment": "This module adds German names for months and weekdays.\n\n# Extend\n@docs localize\n-",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "localize",
+        "comment": "",
+        "type": "Date.Op.TokenDict -> Date.Op.TokenDict"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Date.Locale.EN",
+    "comment": "This module adds English names for months and weekdays.\n\n# Extend\n@docs localize\n-",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "localize",
+        "comment": "",
+        "type": "Date.Op.TokenDict -> Date.Op.TokenDict"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

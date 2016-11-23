@@ -1,0 +1,56 @@
+[
+  {
+    "name": "IntRange",
+    "comment": "The library provides fold*/map* to the range of numbers without consuming memory.\n\nIntRange.fold*/map* can be used as a replacement of List.fold*/map* on a list of consecutive Int values.\n\nUsing those method reduces memory when iterate on a list which have vast numbers of element and don't use the list after iterate.\n\nFor example,\n\n          import IntRange (to)\n          import IntRange\n          Import List\n\n          IntRange.foldl (+) 0 (0 `to` 100000000) -- Can be calculated without consuming less memory.\n          List.foldl (+) 0 [0..100000000] -- Require memory for the list which length is 100000000.\n\nBoth of List.foldl and IntRange.foldl don't consume call stack, but List.foldl allocate memory for the list whose length is 100000000. In contrast, IntRange.fold requires relatively less memory. It can be used like counter variable of loop.\n\n# Create IntRange\n@docs to\n\n# Iteration\n@docs foldl, foldr, map, map2\n\n# Convert\n@docs toList",
+    "aliases": [],
+    "types": [
+      {
+        "name": "IntRange",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "IntRange",
+            [
+              "Int",
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "foldl",
+        "comment": "Reduce a range from the left: `(foldl (::) [] (1 `to` 3) == [3,2,1])`",
+        "type": "(Int -> b -> b) -> b -> IntRange -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": "Reduce a range from the right: `(foldr (+) 0 (1 `to` 3) == 6)`",
+        "type": "(Int -> b -> b) -> b -> IntRange -> b"
+      },
+      {
+        "name": "map",
+        "comment": "Apply a function to every Int numbers in a list: `(map (\\it->it*2) (1 `to` 3) == [2,4,6])`",
+        "type": "(Int -> a) -> IntRange -> List a"
+      },
+      {
+        "name": "map2",
+        "comment": "Combine a list and an IntRange, combining them with the given function.\nIf one list is longer, the extra elements are dropped.\n\n      map2 (+) [1,2,3] (1 `to` 4) == [2,4,6]",
+        "type": "(a -> Int -> c) -> List a -> IntRange -> List c"
+      },
+      {
+        "name": "to",
+        "comment": "Create range from two Ints. The range starts with first one and\n    ends with second one. Both of values are included in the range.\n    In the other word (InRange start end) include both of start and end.",
+        "type": "Int -> Int -> IntRange"
+      },
+      {
+        "name": "toList",
+        "comment": "Convert IntRange to List of Int(List Int).",
+        "type": "IntRange -> List Int"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

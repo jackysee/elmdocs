@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Cart",
+    "comment": " A tiny library for shopping carts. It supports any Product types to add into a cart.\nThe ```price``` function is required for cart and item subtotal calculation.\n\n# Types\n@docs Item, Cart\n\n# Modifying Cart contents\n@docs add, inc, dec, remove, changeQty\n\n# Cart operations\n@docs cart, subtotal, qty\n\n# Cart Item operations\n@docs itemSubtotal\n\n",
+    "aliases": [
+      {
+        "name": "Cart",
+        "comment": " Cart is a list of Items.\n",
+        "args": [
+          "a"
+        ],
+        "type": "List (Cart.Item a)"
+      },
+      {
+        "name": "Item",
+        "comment": " Item record is a counter of added products into the cart.\n\n    type alias Product = { id : Int, price : Float }\n    item = { product = { id = 1, price = 10.0 }, qty = 1 }\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ product : a, qty : Int, date_added : Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add the product to the cart. Time of adding is specified as a parameter.\n\n    type alias Product = { id : Int, price : Float }\n\n    add (Product 1 10.0) cart 12345 ==\n      [{ product = { id = 1, price = 10.0 }, qty = 1, date_added = 12345 }]\n",
+        "type": "a -> Cart.Cart a -> Time.Time -> Cart.Cart a"
+      },
+      {
+        "name": "cart",
+        "comment": " Return an empty cart.\n\n    cart == []\n",
+        "type": "List (Cart.Item a)"
+      },
+      {
+        "name": "changeQty",
+        "comment": " Change the product quantity in the cart. Returns new Cart Ok result or Err.\n\n    type alias Product = { id : Int, price : Float }\n    p = Product 1 10.0\n    c = inc p (add p cart 12345)\n\n    changeQty p 10 cart == Ok [{ product = { id = 1, price = 10.0 }, qty = 10, date_added = 12345 }]\n    changeQty p 0 cart == Ok []\n    changeQty p -1 cart == Error \"Wrong negative quantuty used\"\n",
+        "type": "a -> Int -> Cart.Cart a -> Result.Result String (Cart.Cart a)"
+      },
+      {
+        "name": "dec",
+        "comment": " Decrease quantity of the product in the cart.\n\n    type alias Product = { id : Int, price : Float }\n    p = Product 1 10.0\n    c = inc p (add p cart 12345)\n\n    c == [{ product = { id = 1, price = 10.0 }, qty = 2, date_added = 12345 }]\n\n    dec p c == [{ product = { id = 1, price = 10.0 }, qty = 1 }]\n    dec p (dec p c) == []\n",
+        "type": "a -> Cart.Cart a -> Cart.Cart a"
+      },
+      {
+        "name": "inc",
+        "comment": " Increase quantity of the product in the cart.\n\n    type alias Product = { id : Int, price : Float }\n    p = Product 1 10.0\n\n    c = add p cart 12345\n    c == [{ product = { id = 1, price = 10.0 }, qty = 1, date_added = 12345 }]\n\n    inc p c == [{ product = { id = 1, price = 10.0 }, qty = 2, date_added = 12345 }]\n",
+        "type": "a -> Cart.Cart a -> Cart.Cart a"
+      },
+      {
+        "name": "itemSubtotal",
+        "comment": " Get the item subtotal with the given price function required for getting price of the product.\n\n    type alias Product = { id : Int, price : Float }\n\n    itemSubtotal .price (item <| Product 1 10.0) == 10.0\n",
+        "type": "(a -> Float) -> Cart.Item a -> Float"
+      },
+      {
+        "name": "qty",
+        "comment": " Get a quantity of all products in the cart.\n\n    type alias Product = { id : Int, price : Float }\n\n    qty (cart add <| Product 1 10.0 ) == 1\n",
+        "type": "Cart.Cart a -> Int"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove the product from the cart.\n\n    type alias Product = { id : Int, price : Float }\n    p = Product 1 10.0\n    c = add p cart 12345\n    c == [{ product = { id = 1, price = 10.0 }, qty = 1, date_added = 12345 }]\n    remove p c == []\n",
+        "type": "a -> Cart.Cart a -> Cart.Cart a"
+      },
+      {
+        "name": "subtotal",
+        "comment": " Get subtotal of the cart with the given price function for getting price of stored products in the cart.\n\n    type alias Product = { id : Int, price : Float }\n    p = Product 1 10.0\n    subtotal .price (inc p (add p cart 12345)) == 20.0\n\n",
+        "type": "(a -> Float) -> Cart.Cart a -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

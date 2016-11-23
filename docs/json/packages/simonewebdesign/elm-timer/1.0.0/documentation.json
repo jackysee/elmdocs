@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Timer",
+    "comment": " This module provides a simple timer that you can easily integrate in your Elm app.\nIt's even easier if you are following the [the Elm Architecture][arch] and using\n[start-app][].\n\n[arch]: https://github.com/evancz/elm-architecture-tutorial\n[start-app]: http://package.elm-lang.org/packages/evancz/start-app/latest/\n\n# Types\n@docs Model, Action\n\n# Functions\n@docs init, init', view, update\n\n# Signals\n@docs tick, countdown\n\n# Extras\n@docs addLeadingZero, clock\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Type alias that represents the internal value of a timer.\nIt's basically just a simple counter.\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " A type that you can use to update the timer.\nA `Tick` moves forward, a `Tock` goes backwards.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addLeadingZero",
+        "comment": " Adds a leading zero to a number *only if* it's a single digit.\n\n    addLeadingZero 0 == \"0\"\n    addLeadingZero 1 == \"01\"\n    addLeadingZero 12 == \"12\"\n",
+        "type": "number -> String"
+      },
+      {
+        "name": "clock",
+        "comment": " A counter that increments every second.\n",
+        "type": "Signal.Signal Timer.Model"
+      },
+      {
+        "name": "countdown",
+        "comment": " A `Signal` that tells a `Timer` to step backwards.\nUse this if you want a timer that goes to the past.\nThis will have no effect if the time is already expired (00:00).\n",
+        "type": "Signal.Signal Timer.Action"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize a timer.\n",
+        "type": "Timer.Model"
+      },
+      {
+        "name": "init'",
+        "comment": " Initialize a timer with a starting value, in seconds.\n\n    Timer.init' (round Time.hour)\n\n    -- or, if you like magic numbers\n    Timer.init' 3600\n",
+        "type": "Timer.Model -> Timer.Model"
+      },
+      {
+        "name": "tick",
+        "comment": " A `Signal` that tells a `Timer` to step forward.\nUse this if you want a timer that goes to the future.\n",
+        "type": "Signal.Signal Timer.Action"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the model.\nThis is how you can forward actions to a timer using the Elm Architecture:\n\n    TimerAction subAction ->\n      ( { model | timer = Timer.update subAction model.timer }\n      , Effects.none\n      )\n",
+        "type": "Timer.Action -> Timer.Model -> Timer.Model"
+      },
+      {
+        "name": "view",
+        "comment": " Provides a way to display the timer, in a format that\nlooks like 01:30 (always with leading zeros).\n\n    Timer.view (Timer.init 30) -- will return \"00:30\"\n",
+        "type": "Timer.Model -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

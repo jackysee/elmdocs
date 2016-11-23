@@ -1,0 +1,1961 @@
+[
+  {
+    "name": "Pylon.DB.Filter",
+    "comment": " A binding for ElmTextSearch and Pylon.DB.Group.\n\n# Types\n@docs Filter, FilterFeedback, Document\n\n# Construction\n@docs filter\n\n# Query\n@docs filterQuery, filterQueryIf\n\n# Getters\n@docs getFilterQuery, getFilterResults, getLastFilterResults\n\n# Group Mirroring\n@docs filterMirror, filterMirror'\n\n# Update\n@docs filterInputOne\n\n# Dispatch\n@docs filterSync, filterAsyncAs, filterAsync\n",
+    "aliases": [
+      {
+        "name": "Document",
+        "comment": " Represents the getters for a document type used by a filter. ",
+        "args": [
+          "doctype"
+        ],
+        "type": "{ ref : doctype -> String , fields : List ( doctype -> String, Float ) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Filter",
+        "comment": " A document filter. ",
+        "args": [
+          "doctype"
+        ],
+        "cases": []
+      },
+      {
+        "name": "FilterFeedback",
+        "comment": " FilterFeedback for a filter containing results. These will be matched to the current state by\nsequence number, so old search results will not overwrite a newer query. ",
+        "args": [
+          "doctype"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "filter",
+        "comment": " Create a new filter from a document description. ",
+        "type": "Pylon.DB.Filter.Document doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterAsync",
+        "comment": " Filter asynchronously. When executed, the resulting task will send update(s) to the provided filter feedback address. ",
+        "type": "Signal.Address (List (Pylon.DB.Filter.FilterFeedback doctype)) -> Pylon.DB.Filter.Filter doctype -> ( Pylon.DB.Filter.Filter doctype , List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "filterAsyncAs",
+        "comment": " Filter asynchronously with a forwarding address. ",
+        "type": "(List (Pylon.DB.Filter.FilterFeedback doctype) -> List action) -> Signal.Address (List action) -> Pylon.DB.Filter.Filter doctype -> ( Pylon.DB.Filter.Filter doctype , List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "filterInputOne",
+        "comment": " Handle a filter result. This may update the latest field to reflect the latest results\ncontinuously, even if the sequence numbers do not match. If they do, the existing filter will be\nentirely replaced by the result one since the index cannot have changed since then. ",
+        "type": "Pylon.DB.Filter.FilterFeedback doctype -> Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterMirror",
+        "comment": " Synchronize the document store with the contents of a DB group. ",
+        "type": "(String -> rectype -> doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterMirror'",
+        "comment": " Synchronize the document store with the contents of a mirror. ",
+        "type": "(String -> rectype -> doctype) -> Pylon.DB.Mirror.Mirror rectype -> Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterQuery",
+        "comment": " Set a new query string. ",
+        "type": "String -> Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterQueryIf",
+        "comment": " Set a new query conditionally. ",
+        "type": "(String -> Bool) -> String -> Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "filterSync",
+        "comment": " Filter synchronously. The results are immediately available in the resulting Filter. ",
+        "type": "Pylon.DB.Filter.Filter doctype -> Pylon.DB.Filter.Filter doctype"
+      },
+      {
+        "name": "getFilterQuery",
+        "comment": " Get the latest filter query. ",
+        "type": "Pylon.DB.Filter.Filter doctype -> String"
+      },
+      {
+        "name": "getFilterResults",
+        "comment": " Get the current filter results. ",
+        "type": "Pylon.DB.Filter.Filter doctype -> Pylon.Resource.Resource String (List ( doctype, Float ))"
+      },
+      {
+        "name": "getLastFilterResults",
+        "comment": " Get the latest filter results. ",
+        "type": "Pylon.DB.Filter.Filter doctype -> Maybe.Maybe (List ( doctype, Float ))"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB.Mirror",
+    "comment": " A binding for ElmTextSearch and Pylon.DB.Group.\n\n# Types\n@docs Mirror\n\n# Construction\n@docs mirror\n\n# Getters\n@docs getRef, getChangedRef, refs, changedRefs, deltas, isEmpty, isChangedEmpty\n\n# Mirroring\n@docs each, eachDelta, refresh, resynch, attach, attachSynch, attachDelta, attachFilterSynch, attachFilterDelta\n\n# Dataflow\n@docs forward, forwardPast, filterForward, sort, filterSort, multiSort, flatten\n\n# Control\n@docs inject, commit, commitSorted\n\n# Group Binding\n@docs bindMirror, bindMirrorRaw, groupMirror, groupMirror, groupMirrorSynch, dataGroupMirror, dataGroupMirrorSynch\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Mirror",
+        "comment": " A document mirror. ",
+        "args": [
+          "doctype"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "attach",
+        "comment": " Mirror a DB group. Depreciated alias for attachDelta. ",
+        "type": "(String -> rectype -> doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "attachDelta",
+        "comment": " Apply the currently pending set of group deltas to a mirror. ",
+        "type": "(String -> rectype -> doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "attachFilterDelta",
+        "comment": " Apply the currently pending set of group deltas to a mirror, excluding any key-record pairs that produce Nothing instead of Just a document. ",
+        "type": "(String -> rectype -> Maybe.Maybe doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "attachFilterSynch",
+        "comment": " Reflect the entire group working set in a mirror, excluding any key-record pairs that produce Nothing instead of Just a document. ",
+        "type": "(String -> rectype -> Maybe.Maybe doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "attachSynch",
+        "comment": " Reflect the entire group working set in a mirror. ",
+        "type": "(String -> rectype -> doctype) -> Pylon.DB.Group.Group (Pylon.DB.Data rectype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "bindMirror",
+        "comment": "  ",
+        "type": "(Signal.Address (List subfeedback) -> Maybe.Maybe ElmFire.Location -> String -> doctype -> subbinding) -> Pylon.DB.Mirror.Mirror doctype -> Signal.Address (List subfeedback) -> Maybe.Maybe ElmFire.Location -> String -> subbinding"
+      },
+      {
+        "name": "bindMirrorRaw",
+        "comment": "  ",
+        "type": "(Pylon.DB.Group.GroupConfig subfeedback subbinding -> String -> doctype -> subbinding) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> String -> subbinding"
+      },
+      {
+        "name": "changedRefs",
+        "comment": " Get the pending reference dictionary. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Dict.Dict String doctype"
+      },
+      {
+        "name": "commit",
+        "comment": " Accept the current changes. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "commitSorted",
+        "comment": " Accept the current changes recursively in a mirror of type `Mirror (Mirror doctype)`. ",
+        "type": "Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype) -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype)"
+      },
+      {
+        "name": "dataGroupMirror",
+        "comment": " ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Group.GroupConfig (Pylon.DB.Feedback v) (Pylon.DB.Binding v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "dataGroupMirrorSynch",
+        "comment": " ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Group.GroupConfig (Pylon.DB.Feedback v) (Pylon.DB.Binding v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "deltas",
+        "comment": " Get the deltas used to change the reference dictionary. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Dict.Dict String (List ( Pylon.Resource.Resource Pylon.DB.DBError doctype , Pylon.Resource.Resource Pylon.DB.DBError doctype ))"
+      },
+      {
+        "name": "each",
+        "comment": " Do something to each member of a mirror. Useful for acting on nested mirrors, for example, deep resynch. ",
+        "type": "(doctype -> doctype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "eachDelta",
+        "comment": " Do something to each member of a mirror that has changed. Useful for acting on nested mirrors, for example, commiting a sorted mirror. ",
+        "type": "(doctype -> doctype) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "filterForward",
+        "comment": " Forward deltas from one mirror to another selectively by using a filter. ",
+        "type": "(String -> doctype -> Maybe.Maybe doctype') -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype' -> Pylon.DB.Mirror.Mirror doctype'"
+      },
+      {
+        "name": "filterSort",
+        "comment": " Sort the documents in a mirror in to buckets, ignoring the items whose key/document pairs yield\nNothing. If fsort produces `Just key'`, then the document will be placed in to the mirror represeting\nthe bucket at `key'`. ",
+        "type": "(String -> doctype -> Maybe.Maybe String) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype) -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype)"
+      },
+      {
+        "name": "flatten",
+        "comment": " Flatten a sorted mirror `Mirror (Mirror doctype)`. This takes a policy function\n\n    fDeltaFlatten bucketKey subKey maybeItem maybeTarget =\n\nwhere fDeltaFlatten specifies how to modify the flattened item when a key is removed or added and\nfEmpty initializes an item corresponding to a new key in the output mirror.\n",
+        "type": "(String -> String -> Maybe.Maybe doctype -> Maybe.Maybe doctype' -> Maybe.Maybe doctype') -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype) -> Pylon.DB.Mirror.Mirror doctype' -> Pylon.DB.Mirror.Mirror doctype'"
+      },
+      {
+        "name": "forward",
+        "comment": " Forward deltas from one mirror to another. ",
+        "type": "(String -> doctype -> doctype') -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype' -> Pylon.DB.Mirror.Mirror doctype'"
+      },
+      {
+        "name": "forwardPast",
+        "comment": " Forward deltas, accounting for the previous output for the same key. This allows something\nconceptually similar to folding in to the past of the output mirror, so unlike forward and sort, it\nrepresents a user defined stateful update of the output mirror. ",
+        "type": "(String -> doctype -> Maybe.Maybe doctype' -> Maybe.Maybe doctype') -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype' -> Pylon.DB.Mirror.Mirror doctype'"
+      },
+      {
+        "name": "getChangedRef",
+        "comment": " Get the pending reference at a particular key. ",
+        "type": "String -> Pylon.DB.Mirror.Mirror doctype -> Pylon.Resource.Resource Pylon.DB.DBError doctype"
+      },
+      {
+        "name": "getRef",
+        "comment": " Get the current working reference at a particular key. ",
+        "type": "String -> Pylon.DB.Mirror.Mirror doctype -> Pylon.Resource.Resource Pylon.DB.DBError doctype"
+      },
+      {
+        "name": "groupMirror",
+        "comment": " Use this in place of groupSubscription to synchronize the group's keys to a mirror. ",
+        "type": "subtype -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupMirrorSynch",
+        "comment": " Use this in place of groupSubscription to synchronize the group's keys to a mirror. ",
+        "type": "subtype -> (subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "inject",
+        "comment": " Inject a change. This can be used to manually control mirror sources in the case that they\nare not derived from some DB.Group. ",
+        "type": "String -> Pylon.Resource.Resource Pylon.DB.DBError doctype -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "isChangedEmpty",
+        "comment": " ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Bool"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Bool"
+      },
+      {
+        "name": "mirror",
+        "comment": " Create a new mirror from a document description. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "multiSort",
+        "comment": " Sort the documents in a mirror in to any arbitrary number of buckets per document. The sorting\nfunction will result in a list of strings. If the list is empty the document is ignored. If the list\nis not empty, then the given document will be mirrored in the bucket mirrors at the given keys. ",
+        "type": "(String -> doctype -> List String) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype) -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype)"
+      },
+      {
+        "name": "refresh",
+        "comment": " Forcibly refresh the mirrored data for a particular key. ",
+        "type": "List String -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "refs",
+        "comment": " Get the current working reference dictionary. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Dict.Dict String doctype"
+      },
+      {
+        "name": "resynch",
+        "comment": " Emit all known values as deltas. This will cause any that forwards from this mirror and any\ngroup that uses this mirror as a controller by deltas will be brought up to date. ",
+        "type": "Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror doctype"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort the documents in a mirror in to buckets. ",
+        "type": "(String -> doctype -> String) -> Pylon.DB.Mirror.Mirror doctype -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype) -> Pylon.DB.Mirror.Mirror (Pylon.DB.Mirror.Mirror doctype)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB.Legacy.Group",
+    "comment": " This is being kept in a seperate legacy module where it will not clutter things. Since a lot\nof code is based on it for now, it is being kept intact. Do not use this module if you are not already\nheavily invested in an existing project that uses these.\n\n@docs bindingGroupTo, dataRebasedBinding, dataSubBinding, forwardingGroupTo, groupDataSubscriber, groupRebasedBinding, groupRebasedDataSubscriber, groupSubBinding, groupSubscriber, orderGroupBy, sendingGroupTo\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bindingGroupTo",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nConstruct a new incomplete group binding from a ElmFire Firebase location. ",
+        "type": "ElmFire.Location -> Pylon.DB.Legacy.Group.GroupBinding subfeedback"
+      },
+      {
+        "name": "dataRebasedBinding",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nRebased binding uses the key of the discovered item to get a child at a diffeent location than\nthat of the group binding. A good example would be a subscription that tracks a group of users,\nbut actually pulls data from a global profiles list. ",
+        "type": "ElmFire.Location -> Pylon.DB.Config v -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Feedback v) -> String -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "dataSubBinding",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nA convenience function which makes it a little bit easier to declare a sub-binding function for\nconcrete data. Note that if you are using the `groupDataSubscriber` convenience function, then this\nis already invoked internally, making the task of bindin a group of concrete records even easier. ",
+        "type": "Pylon.DB.Config v -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Feedback v) -> String -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "forwardingGroupTo",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nProvide an address for group feedback actions with a transformation function for forwarding. If\nthis is not applied to the binding, no feedback will be recieved. ",
+        "type": "(List (Pylon.DB.Group.GroupFeedback subfeedback) -> List action) -> Signal.Address (List action) -> Pylon.DB.Legacy.Group.GroupBinding subfeedback -> Pylon.DB.Legacy.Group.GroupBinding subfeedback"
+      },
+      {
+        "name": "groupDataSubscriber",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nConvenience function that makes it easier to bind a `Group (DB.Data v)`. ",
+        "type": "Pylon.DB.Config v -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Feedback v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupRebasedBinding",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nRebased binding for nested groups. ",
+        "type": "ElmFire.Location -> ElmFire.OrderOptions -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Group.GroupFeedback subfeedback') -> String -> Pylon.DB.Legacy.Group.GroupBinding subfeedback'"
+      },
+      {
+        "name": "groupRebasedDataSubscriber",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nConvenience function that makes it easier to bind a `Group (DB.Data v)`. ",
+        "type": "ElmFire.Location -> Pylon.DB.Config v -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Feedback v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupSubBinding",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nA convenience function which makes it a little bit easier to declare a sub-binding function for\nnested groups. ",
+        "type": "ElmFire.OrderOptions -> Pylon.DB.Legacy.Group.GroupBinding (Pylon.DB.Group.GroupFeedback subfeedback') -> String -> Pylon.DB.Legacy.Group.GroupBinding subfeedback'"
+      },
+      {
+        "name": "groupSubscriber",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nThis is the old subscription primitive, and is quite a bit more limited. For testing purposes,\nit has been implemented in terms of `groupIntegrate` and `groupSubscription`. `groupIntegrate` is\nmuch more powerful, and takes a list of \"sourcing\" functions like `groupSubscription`. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (subbinding -> subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (Pylon.DB.Legacy.Group.GroupBinding subfeedback -> String -> subbinding) -> Pylon.DB.Legacy.Group.GroupBinding subfeedback -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "orderGroupBy",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nGive an ordering for the group subscription's internal query. Note that this _will not order the\nresulting key-value dictionary_, but it is still useful because it will have an effect on which\nresults are produced by the Firebase API in the event that limiting is used, which is the case for\nmost practical applications. ",
+        "type": "ElmFire.OrderOptions -> Pylon.DB.Legacy.Group.GroupBinding subfeedback -> Pylon.DB.Legacy.Group.GroupBinding subfeedback"
+      },
+      {
+        "name": "sendingGroupTo",
+        "comment": " DEPRECIATED, removed in 6.0.0\n\nProvide an address for group feedback actions. If this is not applied to the binding, no feedback\nwill be recieved. ",
+        "type": "Signal.Address (List (Pylon.DB.Group.GroupFeedback subfeedback)) -> Pylon.DB.Legacy.Group.GroupBinding subfeedback -> Pylon.DB.Legacy.Group.GroupBinding subfeedback"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB.Meta",
+    "comment": " Subscribe to metadata about connectivity, timestamp offset, and authentication using the\nsame easy to understand pattern set forth in `Pylon.DB`.\n\n# Types\n@docs MetaFeedback, MetaBinding, MetaData\n\n# Special Server Metadata Binding\n@docs nilMetaData, metaBindingTo, metaSendingTo, metaForwardingTo, metaInputOne, metaInput, metaSubscribe\n\n# Getters\n@docs getTimestampOffset, getConnectionStatus, getAuthenticationStatus\n\n# Etc.\n@docs serverTimestampPlaceholder\n\n",
+    "aliases": [
+      {
+        "name": "MetaBinding",
+        "comment": " Server metadata binding. ",
+        "args": [],
+        "type": "{ address : Signal.Address (List Pylon.DB.Meta.MetaFeedback) , location : ElmFire.Location }"
+      },
+      {
+        "name": "MetaData",
+        "comment": " Server metadata record. ",
+        "args": [],
+        "type": "{ timeStampOffset : Pylon.Resource.Resource Pylon.DB.DBError Time.Time , isConnected : Pylon.Resource.Resource Pylon.DB.DBError Bool , authentication : Pylon.Resource.Resource Pylon.DB.DBError ElmFire.Auth.Authentication , subscriptions : Pylon.DB.Meta.MetaSubscriptions }"
+      }
+    ],
+    "types": [
+      {
+        "name": "MetaFeedback",
+        "comment": " Feedback for the the server metadata subscription. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getAuthenticationStatus",
+        "comment": " Get the resource representing the current authentication status to the server. ",
+        "type": "Pylon.DB.Meta.MetaData -> Pylon.Resource.Resource Pylon.DB.DBError ElmFire.Auth.Authentication"
+      },
+      {
+        "name": "getConnectionStatus",
+        "comment": " Get the resource representing the current connection status to the server. ",
+        "type": "Pylon.DB.Meta.MetaData -> Pylon.Resource.Resource Pylon.DB.DBError Bool"
+      },
+      {
+        "name": "getTimestampOffset",
+        "comment": " Get the resource representing the current timestamp offset to the server. ",
+        "type": "Pylon.DB.Meta.MetaData -> Pylon.Resource.Resource Pylon.DB.DBError Time.Time"
+      },
+      {
+        "name": "metaBindingTo",
+        "comment": " Create a metadata binding for a firebase location. Should be the root location. ",
+        "type": "ElmFire.Location -> Pylon.DB.Meta.MetaBinding"
+      },
+      {
+        "name": "metaForwardingTo",
+        "comment": " Add an address to a metadata binding with a forwarding function. ",
+        "type": "(List Pylon.DB.Meta.MetaFeedback -> List action) -> Signal.Address (List action) -> Pylon.DB.Meta.MetaBinding -> Pylon.DB.Meta.MetaBinding"
+      },
+      {
+        "name": "metaInput",
+        "comment": " Server metadata list update function. ",
+        "type": "List Pylon.DB.Meta.MetaFeedback -> Pylon.DB.Meta.MetaData -> Pylon.DB.Meta.MetaData"
+      },
+      {
+        "name": "metaInputOne",
+        "comment": " Server metadata single update function. ",
+        "type": "Pylon.DB.Meta.MetaFeedback -> Pylon.DB.Meta.MetaData -> Pylon.DB.Meta.MetaData"
+      },
+      {
+        "name": "metaSendingTo",
+        "comment": " Add an address to a metadata binding. Unless you do this, feedback will go to a hidden internal\ndrain. ",
+        "type": "Signal.Address (List Pylon.DB.Meta.MetaFeedback) -> Pylon.DB.Meta.MetaBinding -> Pylon.DB.Meta.MetaBinding"
+      },
+      {
+        "name": "metaSubscribe",
+        "comment": " Subscribe to the server metadata at your root Firebase location. ",
+        "type": "Pylon.DB.Meta.MetaBinding -> Pylon.DB.Meta.MetaData -> ( Pylon.DB.Meta.MetaData, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "nilMetaData",
+        "comment": " Empty metadata record. A metadata record should always be initialized to this. ",
+        "type": "Pylon.DB.Meta.MetaData"
+      },
+      {
+        "name": "serverTimestampPlaceholder",
+        "comment": " A placeholder for encoding the server timestamp. ",
+        "type": "Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB.Group",
+    "comment": " Nested data. The typing is done such that one can arbitrarily nest groups, trivial data records,\nor even a compatible API fitting the same pattern such that this system is easily extensible.\n\n# Core Types\n@docs GroupFeedback, GroupConfig, Group\n\n# Nesting Convenience Types\n@docs GroupFeedback2, GroupFeedback3, GroupFeedback4, GroupConfig2, GroupConfig3, GroupConfig4, Group2, Group3, Group4\n\n# Configuration\n@docs groupConfigBinding, groupConfig, groupConfigForward, groupConfigSelf, groupConfigSelfForward, groupConfigRebind, groupConfigRebindSelf, groupConfigGetAddress, groupConfigGetSubAddress, groupConfigLocation, groupConfigDefaultLocation, groupConfigMaybeLocation, groupConfigPathLocation, groupConfigInputKey, groupConfigPopKey, groupConfigTopKey, groupConfigGetPath, groupConfigSetPath, groupConfigNoLocation, groupConfigParentLocation, groupConfigSubLocation, groupConfigRootLocation, groupConfigHasLocation, groupConfigGetLocation, groupConfigLocationOr\n\n# Inspect Subfeedback\n@docs getGroupSubFeedbackKey, extractGroupSubFeedbackKeys, getGroupSubFeedback, getGroupSubFeedbackPair, extractGroupSubFeedbackPairs\n\n# Direct Group Inquiry\n@docs getGroupCurrentData, getGroupDeltaData, getGroupNextData, getGroupResDeltas, getGroupResDeltaList, getGroupDataResDeltas, getGroupDataResDeltaList, groupResDeltaFoldL, groupResDeltaFoldR, groupDataResDeltaFoldL, groupDataResDeltaFoldR, groupDeriveDeltaFoldL, groupDeriveDeltaFoldR, groupDeriveSub, getGroupSub, getGroupSubData\n\n\n# Direct Group Manipulation\n\nYou can use these functions to perform nested operations on groups directly. You will need this\nfunctionality to write new items in to a group. Take care, however, that you _do not try to remove\nitems form the group by using `groupRemoveSub` directly._ To effect the remote data, you must\ninvoke the operations provided by `Pylon.DB`.\n\n@docs groupUpdateSub, groupDoSub, groupDoEachSub, groupAddSub, groupSetSub, groupRemoveSub\n\n# Group Constructors\n@docs newGroup, voidGroup\n\n# Raw Group Operations\n\nThese expose the raw group interface, and all it's power. Nesting them is painstaking, though\nvery robust, so one might wish to use the `groupNested*` family of operations for nested groups up\nup to four levels deep. For the possibility of arbitrary depth tries, please wait for Pylon 8. The\ngroup resource tag from `Scaffold` (old version) proved to function exactly like this, with a\nworking public example. The tradeoff would of course be a weaker type flexibility in exchange for\nmuch stronger structural flexibility. Expect `DynamicGroup` as part of Pylon 8. Pylon 7 will be\nthoroughly documented and examples made before we get around to this.\n\n@docs groupInputOne, groupInput, cancelGroup, resetGroup, cancelAndResetGroup, groupIntegrate\n\n# Group Transforms\n\nWhen dealing with a nested group, it can be quite a boilerplate mess to get things out dynamically.\nIt is much easier to do what you want with a flat group. For example. If I have a nested group\n`Group (Group (Data MyRecord))` representing collections of records from a selection of different\nsources in the database, I can flatten that nested group in to a regular data group `Group (Data MyRecord)`\nusing the `pathMerge` function to control the ordering of the results as well. I could then use a\nMirror to generate a meaningful representation and display it to the user. This can handle a LOT of\ndata because everything is a stream of deltas.\n\n@docs flatten, commitGroupDeltas\n\n# Data Group Operations\n@docs groupDataInputOne, groupDataInput, cancelDataGroup, cancelAndResetDataGroup, groupDataIntegrate\n\n# Nested Group Operations\n\nSometimes a plain group of data is not deep enough. This family of functions operates on nested\ngroup records up to four levels deep, which should be good enough for most ordinary use cases. In\nthe case that you want (a) to account for a variable depth trie or (b) more levels in general,\nplease wait for the release of DynamicGroup with Pylon 8.\n\n@docs groupInputOne2, groupInput2, cancelGroup2, cancelAndResetGroup2, groupIntegrate2, groupInputOne3, groupInput3, cancelGroup3, cancelAndResetGroup3, groupIntegrate3, groupInputOne4, groupInput4, cancelGroup4, cancelAndResetGroup4, groupIntegrate4\n\n# Builtin Group Controllers\n\nSee also the `Pylon.DB.Mirror` module for a controller that manages subscriptions of sub data or\nsub groups by synchronizing to a mirror.\n\n@docs groupSubscription\n\n",
+    "aliases": [
+      {
+        "name": "Group",
+        "comment": " Nestable group record. ",
+        "args": [
+          "subtype"
+        ],
+        "type": "{ dataDelta : Dict.Dict String ( subtype, Pylon.DB.Group.GroupDelta ) , data : Pylon.Resource.Resource Pylon.DB.DBError (Dict.Dict String subtype) , addSubscription : Pylon.Resource.Resource Pylon.DB.DBError ElmFire.Subscription , removeSubscription : Pylon.Resource.Resource Pylon.DB.DBError ElmFire.Subscription , currentLocation : Maybe.Maybe ElmFire.Location }"
+      },
+      {
+        "name": "Group2",
+        "comment": " Nested group record, depth 2. ",
+        "args": [
+          "subtype"
+        ],
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Group.Group subtype)"
+      },
+      {
+        "name": "Group3",
+        "comment": " Nested group record, depth 3. ",
+        "args": [
+          "subtype"
+        ],
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Group.Group2 subtype)"
+      },
+      {
+        "name": "Group4",
+        "comment": " Nested group record, depth 4. ",
+        "args": [
+          "subtype"
+        ],
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Group.Group3 subtype)"
+      },
+      {
+        "name": "GroupConfig2",
+        "comment": " Nested group configuration, depth 2. ",
+        "args": [
+          "subfeedback",
+          "subbinding"
+        ],
+        "type": "Pylon.DB.Group.GroupConfig (Pylon.DB.Group.GroupFeedback subfeedback) (Pylon.DB.Group.GroupConfig subfeedback subbinding)"
+      },
+      {
+        "name": "GroupConfig3",
+        "comment": " Nested group configuration, depth 3. ",
+        "args": [
+          "subfeedback",
+          "subbinding"
+        ],
+        "type": "Pylon.DB.Group.GroupConfig (Pylon.DB.Group.GroupFeedback2 subfeedback) (Pylon.DB.Group.GroupConfig2 subfeedback subbinding)"
+      },
+      {
+        "name": "GroupConfig4",
+        "comment": " Nested group configuration, depth 4. ",
+        "args": [
+          "subfeedback",
+          "subbinding"
+        ],
+        "type": "Pylon.DB.Group.GroupConfig (Pylon.DB.Group.GroupFeedback3 subfeedback) (Pylon.DB.Group.GroupConfig3 subfeedback subbinding)"
+      },
+      {
+        "name": "GroupFeedback2",
+        "comment": " Nested group feedback, depth 2. ",
+        "args": [
+          "subfeedback"
+        ],
+        "type": "Pylon.DB.Group.GroupFeedback (Pylon.DB.Group.GroupFeedback subfeedback)"
+      },
+      {
+        "name": "GroupFeedback3",
+        "comment": " Nested group feedback, depth 3. ",
+        "args": [
+          "subfeedback"
+        ],
+        "type": "Pylon.DB.Group.GroupFeedback (Pylon.DB.Group.GroupFeedback2 subfeedback)"
+      },
+      {
+        "name": "GroupFeedback4",
+        "comment": " Nested group feedback, depth 4. ",
+        "args": [
+          "subfeedback"
+        ],
+        "type": "Pylon.DB.Group.GroupFeedback (Pylon.DB.Group.GroupFeedback3 subfeedback)"
+      }
+    ],
+    "types": [
+      {
+        "name": "GroupConfig",
+        "comment": " Specifies the binding behavior and mailbox address for a groupIntegrate ",
+        "args": [
+          "subfeedback",
+          "subbinding"
+        ],
+        "cases": []
+      },
+      {
+        "name": "GroupFeedback",
+        "comment": " Feedback for nested group subscriptions. ",
+        "args": [
+          "subfeedback"
+        ],
+        "cases": [
+          [
+            "GroupSubscribedAdd",
+            [
+              "ElmFire.Subscription"
+            ]
+          ],
+          [
+            "GroupSubscribedRemove",
+            [
+              "ElmFire.Subscription"
+            ]
+          ],
+          [
+            "GroupAdd",
+            [
+              "String"
+            ]
+          ],
+          [
+            "GroupRemove",
+            [
+              "String"
+            ]
+          ],
+          [
+            "GroupRefresh",
+            [
+              "String"
+            ]
+          ],
+          [
+            "GroupSub",
+            [
+              "String",
+              "subfeedback"
+            ]
+          ],
+          [
+            "GroupCancelledAdd",
+            []
+          ],
+          [
+            "GroupCancelledRemove",
+            []
+          ],
+          [
+            "GroupAddSubscriptionError",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "GroupRemoveSubscriptionError",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "GroupReserved",
+            [
+              "Pylon.DB.Group.GroupFeedbackReserved_"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "cancelAndResetDataGroup",
+        "comment": " Convenience function for cancelling and resetting a `Group (DB.Data v)` at once, such that the next\ntime a `group*Subscriber` is reached, it will be immediately rebound. ",
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelAndResetGroup",
+        "comment": " Convenience function for cancelling and resetting a group at once, such that the next time\na `group*Subscriber` is reached, it will be immediately rebound. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelAndResetGroup2",
+        "comment": " cancelAndResetGroup for depth 2. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelAndResetGroup3",
+        "comment": " cancelAndResetGroup for depth 3. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group3 subtype -> ( Pylon.DB.Group.Group3 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelAndResetGroup4",
+        "comment": " cancelAndResetGroup for depth 4. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group4 subtype -> ( Pylon.DB.Group.Group4 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelDataGroup",
+        "comment": " Convenience function for cancelling a `Group (DB.Data v)`. ",
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelGroup",
+        "comment": " Cancel a `Group`'s active subscription if any, resulting in a `Group` that is not effected by\nsubscriptions until a call to `groupReset`. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelGroup2",
+        "comment": " cancelGroup for depth 2. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelGroup3",
+        "comment": " cancelGroup for depth 3. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group3 subtype -> ( Pylon.DB.Group.Group3 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelGroup4",
+        "comment": " cancelGroup for depth 4. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group4 subtype -> ( Pylon.DB.Group.Group4 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "commitGroupDeltas",
+        "comment": " Commit the deltas of a group without using any controller. ",
+        "type": "Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "extractGroupSubFeedbackKeys",
+        "comment": " Extract all unique keys from a list of GroupFeedbacks. ",
+        "type": "List (Pylon.DB.Group.GroupFeedback subfeedback) -> List String"
+      },
+      {
+        "name": "extractGroupSubFeedbackPairs",
+        "comment": " Extract all `(key, feedback')` pairs from a list of GroupFeedbacks. ",
+        "type": "List (Pylon.DB.Group.GroupFeedback subfeedback) -> List ( String, subfeedback )"
+      },
+      {
+        "name": "flatten",
+        "comment": " Flatten a nested group `Group (Group subtype)` to a group `Group subtype` using a path\nreduction. For example if pathMerge were\n\n    \\outer inner -> outer ++ \"/\" ++ inner\n\nthen the resulting keys would be path fragments such as `foo/bar` where `foo` is the key of the\nouter group and `bar` is the key of the inner group.\n\n",
+        "type": "(String -> String -> String) -> Pylon.DB.Group.Group (Pylon.DB.Group.Group subtype) -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "getGroupCurrentData",
+        "comment": " Get the current dictionary representing the group's sub-record mapping, without the most recent\ndeltas factored in. ",
+        "type": "Pylon.DB.Group.Group subtype -> Dict.Dict String subtype"
+      },
+      {
+        "name": "getGroupDataResDeltaList",
+        "comment": " Get the current change in the group's data as a list of (key, (prior, current)) structures. ",
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Data v) -> List ( String , ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v ) )"
+      },
+      {
+        "name": "getGroupDataResDeltas",
+        "comment": " Get the current change in the group's data as a dictionary of resource pairs, each representing\nthe prior and current values of the data respectively. ",
+        "type": "Pylon.DB.Group.Group (Pylon.DB.Data v) -> Dict.Dict String ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v )"
+      },
+      {
+        "name": "getGroupDeltaData",
+        "comment": " Get the current change in the group's data. ",
+        "type": "Pylon.DB.Group.Group subtype -> Dict.Dict String (Maybe.Maybe subtype)"
+      },
+      {
+        "name": "getGroupNextData",
+        "comment": " Get what the group's data will be after the deltas are applied. Note that this result does not\naccount for cancellation and integration actions that will be applied by groupIntegrate. ",
+        "type": "Pylon.DB.Group.Group subtype -> Dict.Dict String subtype"
+      },
+      {
+        "name": "getGroupResDeltaList",
+        "comment": " Get the current change in the group's data as a list of (key, (prior, current)) structures. ",
+        "type": "Pylon.DB.Group.Group subtype -> List ( String , ( Pylon.Resource.Resource Pylon.DB.DBError subtype , Pylon.Resource.Resource Pylon.DB.DBError subtype ) )"
+      },
+      {
+        "name": "getGroupResDeltas",
+        "comment": " Get the current change in the group's data as a dictionary of resource pairs, each representing\nthe prior and current values of the data respectively. ",
+        "type": "Pylon.DB.Group.Group subtype -> Dict.Dict String ( Pylon.Resource.Resource Pylon.DB.DBError subtype , Pylon.Resource.Resource Pylon.DB.DBError subtype )"
+      },
+      {
+        "name": "getGroupSub",
+        "comment": " ",
+        "type": "String -> Pylon.DB.Group.Group subtype -> Maybe.Maybe subtype"
+      },
+      {
+        "name": "getGroupSubData",
+        "comment": " ",
+        "type": "String -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> Pylon.Resource.Resource Pylon.DB.DBError v"
+      },
+      {
+        "name": "getGroupSubFeedback",
+        "comment": " Get the subfeedback in a given GroupFeedback if applicable. ",
+        "type": "Pylon.DB.Group.GroupFeedback subfeedback -> Maybe.Maybe subfeedback"
+      },
+      {
+        "name": "getGroupSubFeedbackKey",
+        "comment": " Get the key of the subfeedback in a given GroupFeedback if applicable. ",
+        "type": "Pylon.DB.Group.GroupFeedback subfeedback -> Maybe.Maybe String"
+      },
+      {
+        "name": "getGroupSubFeedbackPair",
+        "comment": " Get the subfeedback and it's associated key `(key, feedback')` in a given GroupFeedback if applicable. ",
+        "type": "Pylon.DB.Group.GroupFeedback subfeedback -> Maybe.Maybe ( String, subfeedback )"
+      },
+      {
+        "name": "groupAddSub",
+        "comment": " Add a sub item to the group. This is how you can write new data within a group. One should use\n`groupAddSub` to add a new record, then invoke a write operation to add a new item. ",
+        "type": "subtype -> String -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "groupConfig",
+        "comment": " Construct a new group configuration. ",
+        "type": "Signal.Address (List (Pylon.DB.Group.GroupFeedback subfeedback)) -> (Signal.Address (List subfeedback) -> Maybe.Maybe ElmFire.Location -> String -> subbinding) -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigBinding",
+        "comment": " Interpret the current state of a `GroupConfig` by producing an immediate binding function that\npasses the current state of GroupConfig as it's self parameter. See `groupConfigSelf` and\n`groupConfigSelfForward` for a way to access the GroupConfig from within the binding function. ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> String -> subbinding"
+      },
+      {
+        "name": "groupConfigDefaultLocation",
+        "comment": " TODO: write docs ",
+        "type": "ElmFire.Location -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigForward",
+        "comment": " Construct a new group configuration with an action forwarding function. ",
+        "type": "(List (Pylon.DB.Group.GroupFeedback subfeedback) -> List action) -> Signal.Address (List action) -> (Signal.Address (List subfeedback) -> Maybe.Maybe ElmFire.Location -> String -> subbinding) -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigGetAddress",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Signal.Address (List (Pylon.DB.Group.GroupFeedback subfeedback))"
+      },
+      {
+        "name": "groupConfigGetLocation",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Maybe.Maybe ElmFire.Location"
+      },
+      {
+        "name": "groupConfigGetPath",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> List String"
+      },
+      {
+        "name": "groupConfigGetSubAddress",
+        "comment": " Get the subaddress that will be used for a given key. ",
+        "type": "String -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Signal.Address (List subfeedback)"
+      },
+      {
+        "name": "groupConfigHasLocation",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Bool"
+      },
+      {
+        "name": "groupConfigInputKey",
+        "comment": " TODO: write docs ",
+        "type": "String -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigLocation",
+        "comment": " Set a location for this group configuration. Note that since the Location type is opaque to\nPylon and is \"generally not validated\" (via the ElmFire docs), it is not possible for us to ensure\nthat the current location always matches up with the current path. Please take care. ",
+        "type": "ElmFire.Location -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigLocationOr",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> ElmFire.Location -> ElmFire.Location"
+      },
+      {
+        "name": "groupConfigMaybeLocation",
+        "comment": " Set a location if it exists. ",
+        "type": "Maybe.Maybe ElmFire.Location -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigNoLocation",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigParentLocation",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigPathLocation",
+        "comment": " Set a location for this group configuration by location and path. The root location will be\nderived from the given location (you should give the root location anyway for clarity's sake) and\nthen groupConfigSubLocation will be applied to each path element starting from the left, resulting\nin a properly rooted full path. This can be manipulated using groupConfigParentLocation with\nvalid results. ",
+        "type": "List String -> ElmFire.Location -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigPopKey",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigRebind",
+        "comment": " Rebind a group config to behave altogether differently. This is useful when propagating subbindings using the `*Self*` family. ",
+        "type": "(Signal.Address (List subfeedback) -> Maybe.Maybe ElmFire.Location -> String -> subbinding') -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding'"
+      },
+      {
+        "name": "groupConfigRebindSelf",
+        "comment": " Rebind a group config to behave altogether differently. This is useful when propagating subbindings using the `*Self*` family. ",
+        "type": "(Pylon.DB.Group.GroupConfig subfeedback subbinding' -> String -> subbinding') -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding'"
+      },
+      {
+        "name": "groupConfigRootLocation",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigSelf",
+        "comment": " Construct a new self aware group configuration. ",
+        "type": "Signal.Address (List (Pylon.DB.Group.GroupFeedback subfeedback)) -> (Pylon.DB.Group.GroupConfig subfeedback subbinding -> String -> subbinding) -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigSelfForward",
+        "comment": " Construct a new self aware group configuration with an action forwarding function. ",
+        "type": "(List (Pylon.DB.Group.GroupFeedback subfeedback) -> List action) -> Signal.Address (List action) -> (Pylon.DB.Group.GroupConfig subfeedback subbinding -> String -> subbinding) -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigSetPath",
+        "comment": " TODO: write docs ",
+        "type": "List String -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigSubLocation",
+        "comment": " TODO: write docs ",
+        "type": "String -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.GroupConfig subfeedback subbinding"
+      },
+      {
+        "name": "groupConfigTopKey",
+        "comment": " TODO: write docs ",
+        "type": "Pylon.DB.Group.GroupConfig subfeedback subbinding -> Maybe.Maybe String"
+      },
+      {
+        "name": "groupDataInput",
+        "comment": " Convenience concrete `DB.Data` record group update function accepting a list of `DB.Feedback`. ",
+        "type": "List (Pylon.DB.Group.GroupFeedback (Pylon.DB.Feedback v)) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> Pylon.DB.Group.Group (Pylon.DB.Data v)"
+      },
+      {
+        "name": "groupDataInputOne",
+        "comment": " Convenience concrete `DB.Data` record group update function accepting one `DB.Feedback`. ",
+        "type": "Pylon.DB.Group.GroupFeedback (Pylon.DB.Feedback v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> Pylon.DB.Group.Group (Pylon.DB.Data v)"
+      },
+      {
+        "name": "groupDataIntegrate",
+        "comment": " Convenient short version for groups of just data. This equivalency holds:\n\n    groupDataIntegrate controllers =\n      groupIntegrate controllers DB.cancel DB.subscribe\n\n",
+        "type": "List (Pylon.DB.Group.GroupConfig (Pylon.DB.Feedback v) (Pylon.DB.Binding v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.GroupConfig (Pylon.DB.Feedback v) (Pylon.DB.Binding v) -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> ( Pylon.DB.Group.Group (Pylon.DB.Data v) , List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupDataResDeltaFoldL",
+        "comment": " Fold from the left across the deltas for a data group, using a particular fold function and initial output. ",
+        "type": "(String -> ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> foldout"
+      },
+      {
+        "name": "groupDataResDeltaFoldR",
+        "comment": " Fold from the right across the deltas for a data group, using a particular fold function and initial output. ",
+        "type": "(String -> ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group (Pylon.DB.Data v) -> foldout"
+      },
+      {
+        "name": "groupDeriveDeltaFoldL",
+        "comment": " Fold from the left across the deltas, given a given derivation function and using a particular fold function and initial output. ",
+        "type": "(subtype -> Pylon.Resource.Resource Pylon.DB.DBError v) -> (String -> ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group subtype -> foldout"
+      },
+      {
+        "name": "groupDeriveDeltaFoldR",
+        "comment": " Fold from the right across the deltas, given a given derivation function and using a particular fold function and initial output. ",
+        "type": "(subtype -> Pylon.Resource.Resource Pylon.DB.DBError v) -> (String -> ( Pylon.Resource.Resource Pylon.DB.DBError v , Pylon.Resource.Resource Pylon.DB.DBError v ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group subtype -> foldout"
+      },
+      {
+        "name": "groupDeriveSub",
+        "comment": " ",
+        "type": "(subtype -> derived) -> String -> Pylon.DB.Group.Group subtype -> Maybe.Maybe derived"
+      },
+      {
+        "name": "groupDoEachSub",
+        "comment": " Perform groupDoSub at every existing key after deltas. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupDoSub",
+        "comment": " Update the data at the given key using an effector, as documented in `Pylon.App`. This can be\nused to nest the effectors provided by `Pylon.DB`, or in the case of nested groups, nesting can be\ndone as many layers deep as needed. _NOTE_ that this is how you can perform concrete operations\n`op*` on `DB.DB.Data` records bound recursively within the group. ",
+        "type": "(subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> String -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupInput",
+        "comment": " Group feedback update function accepting a list of `DB.Feedback`. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> List (Pylon.DB.Group.GroupFeedback subfeedback) -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "groupInput2",
+        "comment": " groupInput for depth 2. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> List (Pylon.DB.Group.GroupFeedback2 subfeedback) -> Pylon.DB.Group.Group2 subtype -> Pylon.DB.Group.Group2 subtype"
+      },
+      {
+        "name": "groupInput3",
+        "comment": " groupInput for depth 3. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> List (Pylon.DB.Group.GroupFeedback3 subfeedback) -> Pylon.DB.Group.Group3 subtype -> Pylon.DB.Group.Group3 subtype"
+      },
+      {
+        "name": "groupInput4",
+        "comment": " groupInput for depth 4. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> List (Pylon.DB.Group.GroupFeedback4 subfeedback) -> Pylon.DB.Group.Group4 subtype -> Pylon.DB.Group.Group4 subtype"
+      },
+      {
+        "name": "groupInputOne",
+        "comment": " Group feedback update function accepting one `DB.Feedback`. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> Pylon.DB.Group.GroupFeedback subfeedback -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "groupInputOne2",
+        "comment": " groupInputOne for depth 2. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> Pylon.DB.Group.GroupFeedback2 subfeedback -> Pylon.DB.Group.Group2 subtype -> Pylon.DB.Group.Group2 subtype"
+      },
+      {
+        "name": "groupInputOne3",
+        "comment": " groupInputOne for depth 3. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> Pylon.DB.Group.GroupFeedback3 subfeedback -> Pylon.DB.Group.Group3 subtype -> Pylon.DB.Group.Group3 subtype"
+      },
+      {
+        "name": "groupInputOne4",
+        "comment": " groupInputOne for depth 4. ",
+        "type": "subtype -> (subfeedback -> subtype -> subtype) -> Pylon.DB.Group.GroupFeedback4 subfeedback -> Pylon.DB.Group.Group4 subtype -> Pylon.DB.Group.Group4 subtype"
+      },
+      {
+        "name": "groupIntegrate",
+        "comment": " Integrate a group using the given controller functions, a configuration with the sub-binding\nfunction, and the address to send GroupFeedback to.\n\nThis is a more configurable version of groupSubscriber. It is now the underlying code for\ngroupSubscriber. `groupSubscriber` is depreciated in favor of this, and can be found in\n`Pylon.Legacy.Group`. ",
+        "type": "List (Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )) -> (subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (subbinding -> subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupIntegrate2",
+        "comment": " groupIntegrate for depth 2. ",
+        "type": "List (Pylon.DB.Group.GroupConfig2 subfeedback subbinding -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )) -> (subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (subbinding -> subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.GroupConfig2 subfeedback subbinding -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupIntegrate3",
+        "comment": " groupIntegrate for depth 3. ",
+        "type": "List (Pylon.DB.Group.GroupConfig3 subfeedback subbinding -> Pylon.DB.Group.Group3 subtype -> ( Pylon.DB.Group.Group3 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig2 subfeedback subbinding -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )) -> (subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (subbinding -> subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.GroupConfig3 subfeedback subbinding -> Pylon.DB.Group.Group3 subtype -> ( Pylon.DB.Group.Group3 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupIntegrate4",
+        "comment": " groupIntegrate for depth 4. ",
+        "type": "List (Pylon.DB.Group.GroupConfig4 subfeedback subbinding -> Pylon.DB.Group.Group4 subtype -> ( Pylon.DB.Group.Group4 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig3 subfeedback subbinding -> Pylon.DB.Group.Group3 subtype -> ( Pylon.DB.Group.Group3 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig2 subfeedback subbinding -> Pylon.DB.Group.Group2 subtype -> ( Pylon.DB.Group.Group2 subtype, List (Pylon.DB.DBTask never) )) -> List (Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )) -> (subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> (subbinding -> subtype -> ( subtype, List (Pylon.DB.DBTask never) )) -> Pylon.DB.Group.GroupConfig4 subfeedback subbinding -> Pylon.DB.Group.Group4 subtype -> ( Pylon.DB.Group.Group4 subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupRemoveSub",
+        "comment": " Remove a sub item from the group. Note that this should very, very rarely ever be called manually\nunless the group in question is deliberately not currently bound, in which case this becomes a simple\ncollection type anyway. ",
+        "type": "String -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "groupResDeltaFoldL",
+        "comment": " Fold from the left across the deltas, using a particular fold function and initial output. ",
+        "type": "(String -> ( Pylon.Resource.Resource Pylon.DB.DBError subtype , Pylon.Resource.Resource Pylon.DB.DBError subtype ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group subtype -> foldout"
+      },
+      {
+        "name": "groupResDeltaFoldR",
+        "comment": " Fold from the right across the deltas, using a particular fold function and initial output. ",
+        "type": "(String -> ( Pylon.Resource.Resource Pylon.DB.DBError subtype , Pylon.Resource.Resource Pylon.DB.DBError subtype ) -> foldout -> foldout) -> foldout -> Pylon.DB.Group.Group subtype -> foldout"
+      },
+      {
+        "name": "groupSetSub",
+        "comment": " This is for directly setting a sub item's current value in the group. This should be used in\nprocessing of derived groups that are not associated with a running controller from a GroupConfig.\n",
+        "type": "String -> subtype -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "groupSubscription",
+        "comment": " Controller for groupIntegrate that carries out the behavior groupSubscriber, which is the most\nconvenient option for mirroring data from Firebase directly. Since the previous definition was\nfrustratingly limited to this, I was not able to configure the group to mirror a different source,\nsuch as bindings derived from the data in a mirror. ",
+        "type": "ElmFire.OrderOptions -> Pylon.DB.Group.GroupConfig subfeedback subbinding -> Pylon.DB.Group.Group subtype -> ( Pylon.DB.Group.Group subtype, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "groupUpdateSub",
+        "comment": " Update the item at the given key using a transformation function. This can be used to nest the\ntransformations provided by `Pylon.DB`, or in the case of nested groups from this module\n(`Pylon.DB.Group`), nesting can be done as many layers deep as needed. ",
+        "type": "(subtype -> subtype) -> String -> Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "newGroup",
+        "comment": " A new group item. ",
+        "type": "Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "resetGroup",
+        "comment": " Reset a `Group`, such that the next time a `group*Subscriber` is reached, the `Group` will be\nrebound to the given `GroupBinding`.  ",
+        "type": "Pylon.DB.Group.Group subtype -> Pylon.DB.Group.Group subtype"
+      },
+      {
+        "name": "voidGroup",
+        "comment": " A new void group item, which is to say that it starts in the cancelled state, so subscriptions\nwill have no effect when reached until a call to `resetGroup`. ",
+        "type": "Pylon.DB.Group.Group subtype"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB",
+    "comment": " High level 2-way data binding against Firebase using ElmFire. For 2-way binding of arbitrary,\npossibly nested collections of data, use `Pylon.DB.Group`. You should have ElmFire installed to\nuse this, and in order to avoid redundancy. A more general API that can be wired to other DB\nbackends is planned, but not promised.\n\n# Types\n@docs DBTask, DBError, Feedback, Config, Binding, Operation, Data\n\n# Define Operations\n@docs opSet, opSetAndPrioritize, opPrioritize, opUpdateChildren, opSetOrUpdateChildren, opDelete\n\n# Configuration\n@docs config, configDecoder, configEncoder, nilConfig, withEncoder, withDecoder, bindingTo, bindingFrom, sendingTo, forwardingTo\n\n# Data Constructors\n@docs newData, voidData\n\n# Data Binding\n@docs subscribe, cancel, reset, cancelAndReset, inputOne, input\n\n# Interrogating Data\n@docs getResource, getPriorResource, getLastFailed\n\n# Operate on Data\n@docs doOperationIf, doMap, doTransform, enqueueOperation, flushQueue, doOperation, doRetry, doOperationSimple\n\n",
+    "aliases": [
+      {
+        "name": "Binding",
+        "comment": " Data binding. Consists of a `Config`, an address for `Feedback`, and a location in Firebase. ",
+        "args": [
+          "v"
+        ],
+        "type": "{ config : Pylon.DB.Config v , address : Signal.Address (List (Pylon.DB.Feedback v)) , location : ElmFire.Location }"
+      },
+      {
+        "name": "Config",
+        "comment": " Data configuration, consisting of a JSON decoder/encoder pair. ",
+        "args": [
+          "v"
+        ],
+        "type": "{ decoder : Json.Decode.Decoder v, encoder : v -> Json.Encode.Value }"
+      },
+      {
+        "name": "DBTask",
+        "comment": " An alias for `App.FinalTask`. Kept for legacy reasons in our proprietary codebase. ",
+        "args": [
+          "never"
+        ],
+        "type": "Pylon.App.FinalTask never"
+      },
+      {
+        "name": "Data",
+        "comment": " Represents a piece of data that may be bound to a Firebase location. ",
+        "args": [
+          "v"
+        ],
+        "type": "{ subscription : Pylon.Resource.Resource Pylon.DB.DBError ElmFire.Subscription , value : Pylon.Resource.Resource Pylon.DB.DBError v , priorValue : Pylon.Resource.Resource Pylon.DB.DBError v , lastFailed : Maybe.Maybe (Pylon.DB.Operation v) , queue : List (Pylon.DB.Operation v) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "DBError",
+        "comment": " A database error. ",
+        "args": [],
+        "cases": [
+          [
+            "QueryErrorTag",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "PermissionErrorTag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "DataUnavailableErrorTag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "OperationErrorTag",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "SubscriptionErrorTag",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "DecodingErrorTag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "WriteLocationParentIsData",
+            []
+          ],
+          [
+            "RecievedSubFeedbackForGroup",
+            []
+          ],
+          [
+            "RemovalPathDoesNotExist",
+            [
+              "Pylon.DB.Path.Path"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Feedback",
+        "comment": " Feedback from the database. ",
+        "args": [
+          "v"
+        ],
+        "cases": [
+          [
+            "Subscribed",
+            [
+              "ElmFire.Subscription"
+            ]
+          ],
+          [
+            "SubscriptionError",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "Cancelled",
+            []
+          ],
+          [
+            "DecodingFailed",
+            [
+              "String"
+            ]
+          ],
+          [
+            "QueryError",
+            [
+              "ElmFire.Error"
+            ]
+          ],
+          [
+            "Updated",
+            [
+              "v"
+            ]
+          ],
+          [
+            "UpdatedToVoid",
+            []
+          ],
+          [
+            "OperationError",
+            [
+              "Pylon.DB.Operation v",
+              "ElmFire.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Operation",
+        "comment": " Opaque type for a database operation. ",
+        "args": [
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "bindingFrom",
+        "comment": " Flipped version of `bindingTo` that composes more naturally in the event that your configuration\nwas created elsewhere and reused with a new ElmFire location. ",
+        "type": "Pylon.DB.Config v -> ElmFire.Location -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "bindingTo",
+        "comment": " Create a new data binding from a configuration and an ElmFire location. ",
+        "type": "ElmFire.Location -> Pylon.DB.Config v -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "cancel",
+        "comment": " Cancel your subscription to the data. This puts the data in a void state, so that the\n`subscribe` function ceases to have any effect. In order to reactivate the binding, you must\ncall `reset`. A convenience function `cancelAndReset` is provided, which allows you to skip the\nsecond call if you simply wish to refresh, but not disable, the data binding. ",
+        "type": "Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "cancelAndReset",
+        "comment": " A convenience function that cancels any current bindings that might be live, then `reset`s the\nstructure so that the next time `subscribe` is reached the bindings will be reactivated immediately.\n",
+        "type": "Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "config",
+        "comment": " Declare a data configuration with a decoder/encoder pair. ",
+        "type": "Json.Decode.Decoder v -> (v -> Json.Encode.Value) -> Pylon.DB.Config v"
+      },
+      {
+        "name": "configDecoder",
+        "comment": " Declare a data configuration with a decoder, but a dummy encoder. This is useful when you only\nwant one way binding from the server, or if you wish to declare the encoder and encoder seperately\nfor aesthetic reasons. ",
+        "type": "Json.Decode.Decoder v -> Pylon.DB.Config v"
+      },
+      {
+        "name": "configEncoder",
+        "comment": " Same as above, but declare only an encoder. Offered for symmetry. ",
+        "type": "(v -> Json.Encode.Value) -> Pylon.DB.Config v"
+      },
+      {
+        "name": "doMap",
+        "comment": " Map the current value of a bound `Data` record _iff_ the value is currently known. ",
+        "type": "Pylon.DB.Binding v -> (v -> v) -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "doOperation",
+        "comment": " Dispatch the given operation immediately on a bound `Data` record. ",
+        "type": "Pylon.DB.Binding v -> Pylon.DB.Operation v -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "doOperationIf",
+        "comment": " Conditionally dispatch an operation on a bound `Data` record. ",
+        "type": "(Pylon.Resource.Resource Pylon.DB.DBError v -> Bool) -> Pylon.DB.Binding v -> Pylon.DB.Operation v -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "doOperationSimple",
+        "comment": " Dispatch the given operation without binding to data. ",
+        "type": "ElmFire.Location -> Pylon.DB.Config v -> Pylon.DB.Operation v -> List (Pylon.DB.DBTask never)"
+      },
+      {
+        "name": "doRetry",
+        "comment": " Retry the last operation that failed on a given bound `Data` record in the case that any\nexists. ",
+        "type": "Pylon.DB.Binding v -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "doTransform",
+        "comment": " Transform the resource within a bound `Data` record. Do not use this unless you absolutely know what you are doing! ",
+        "type": "Pylon.DB.Binding v -> (Pylon.Resource.Resource Pylon.DB.DBError v -> Pylon.Resource.Resource Pylon.DB.DBError v) -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "enqueueOperation",
+        "comment": " Add an operation to the queue. ",
+        "type": "Pylon.DB.Operation v -> Pylon.DB.Data v -> Pylon.DB.Data v"
+      },
+      {
+        "name": "flushQueue",
+        "comment": " Flush the queue of pending operations, resulting in a list of tasks. ",
+        "type": "Pylon.DB.Binding v -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "forwardingTo",
+        "comment": " Set the `Feedback` address for a data binding to some forwarding address. Commonly, this is used\nto nest `Feedback` within an action type from your application. ",
+        "type": "(List (Pylon.DB.Feedback v) -> List action) -> Signal.Address (List action) -> Pylon.DB.Binding v -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "getLastFailed",
+        "comment": " Get the last operation that failed on the record, if it exists. ",
+        "type": "Pylon.DB.Data v -> Maybe.Maybe (Pylon.DB.Operation v)"
+      },
+      {
+        "name": "getPriorResource",
+        "comment": " Get the prior value of the resource tracked in the `Data` record, as of the last time it changed. ",
+        "type": "Pylon.DB.Data v -> Pylon.Resource.Resource Pylon.DB.DBError v"
+      },
+      {
+        "name": "getResource",
+        "comment": " Get the underlying resource tracked in the `Data` record. ",
+        "type": "Pylon.DB.Data v -> Pylon.Resource.Resource Pylon.DB.DBError v"
+      },
+      {
+        "name": "input",
+        "comment": " Input list update function for `Data`. ",
+        "type": "List (Pylon.DB.Feedback v) -> Pylon.DB.Data v -> Pylon.DB.Data v"
+      },
+      {
+        "name": "inputOne",
+        "comment": " Single input update function for `Data`. ",
+        "type": "Pylon.DB.Feedback v -> Pylon.DB.Data v -> Pylon.DB.Data v"
+      },
+      {
+        "name": "newData",
+        "comment": " An empty, unbound data. Always initialize instance of Data to this and then invoke `subscribe`\nto enable data flow back to the client. ",
+        "type": "Pylon.DB.Data v"
+      },
+      {
+        "name": "nilConfig",
+        "comment": " A configuration that hasn't yet been filled out. The decoder always fails, and the encoder\nalways encodes a `null`. Used by `configDecoder` and `configEncoder`. ",
+        "type": "Pylon.DB.Config v"
+      },
+      {
+        "name": "opDelete",
+        "comment": " Delete the bound data. ",
+        "type": "Pylon.DB.Operation v"
+      },
+      {
+        "name": "opPrioritize",
+        "comment": " Give the data a Firebase priority. ",
+        "type": "ElmFire.Priority -> Pylon.DB.Operation v"
+      },
+      {
+        "name": "opSet",
+        "comment": " Set the data to some value. ",
+        "type": "v -> Pylon.DB.Operation v"
+      },
+      {
+        "name": "opSetAndPrioritize",
+        "comment": " Set the data to some value and give it a Firebase priority. ",
+        "type": "v -> ElmFire.Priority -> Pylon.DB.Operation v"
+      },
+      {
+        "name": "opSetOrUpdateChildren",
+        "comment": " Combination operation that sets the data if the data is known to be void, or else performs the\nabove listed `opUpdateChildren`. ",
+        "type": "v -> Pylon.DB.Operation v"
+      },
+      {
+        "name": "opUpdateChildren",
+        "comment": " Update the children in the JSON structure of the data. This diffs the value of the data\ncurrently against the given value after encoding so that a minimal update is always done.\n\nTODO : This may not work right in the event that the data has been updated remotely but not yet\nsynced to the server. One way around this might be to manually fetch the data first as part of\nthe operation. ",
+        "type": "v -> Pylon.DB.Operation v"
+      },
+      {
+        "name": "reset",
+        "comment": " Reset the given data from a void or error state so that the binding can be attempted again the\nnext time `subscribe` is reached. Notice that this is a simple transformation and not an effector,\nso if the data binding is live, this will have no effect. If you wish to cancel an existing\nsubscription that is live and has not erred, then you should use `cancel`, or `cancelAndReset` in\nthe case that you wish to rebind the data right away. ",
+        "type": "Pylon.DB.Data v -> Pylon.DB.Data v"
+      },
+      {
+        "name": "sendingTo",
+        "comment": " Set the `Feedback` address for a data binding. By default, data bindings are bound to a\nhidden drain so that you can more comfortably construct bindings without being sure of the target\naddress right away. ",
+        "type": "Signal.Address (List (Pylon.DB.Feedback v)) -> Pylon.DB.Binding v -> Pylon.DB.Binding v"
+      },
+      {
+        "name": "subscribe",
+        "comment": " `subscribe` is an effector (see Pylon.App for what what we define an effector to be) that takes\na `Binding` and a `Data`. The resulting tasks when executed will set up 2 way data binding using the\n`Config` within the `Binding` to encode and decode the data, and sending all feedback to the\naddress within the `Binding`.  _Take care to set an address on your `Binding`_, or else the\nfeedback from the database _will not be recieved by your application._ ",
+        "type": "Pylon.DB.Binding v -> Pylon.DB.Data v -> ( Pylon.DB.Data v, List (Pylon.DB.DBTask never) )"
+      },
+      {
+        "name": "voidData",
+        "comment": " A new void data item, which will not be bound by a subscription until it is `reset`. ",
+        "type": "Pylon.DB.Data v"
+      },
+      {
+        "name": "withDecoder",
+        "comment": " Add a decoder to an existing configuration. ",
+        "type": "Json.Decode.Decoder v -> Pylon.DB.Config v -> Pylon.DB.Config v"
+      },
+      {
+        "name": "withEncoder",
+        "comment": " Add an encoder to an existing configuration. ",
+        "type": "(v -> Json.Encode.Value) -> Pylon.DB.Config v -> Pylon.DB.Config v"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.DB.Path",
+    "comment": " This path module is designed to work with Pylon.DB.Tree and ElmFire.\n\nPaths must be manipulated using this API. You can transform ElmFire locations with paths.\n\n# Path Type\n@docs Path\n\n# Constructors\n@docs base, single\n\n# List Conversion\n@docs toList, fromList, toStack, fromStack\n\n# Inquiry\n@docs countElements, top, last, first, depth\n\n# Walking\n@docs child, parent, push, pop, up, truncate\n\n# Special Operations\n@docs foldBase, foldTop, join\n\n# Manipulations for `ElmFire.Location`\n@docs childPath, childLocation, absoluteLocation\n\n# Comparisons\n@docs isSame\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Path",
+        "comment": " Opaque type representing a path. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "absoluteLocation",
+        "comment": " Given the ElmFire root location used by your application (it will be rooted just in case) and a\npath, give a location that represents it as an absolute path in to your database. ",
+        "type": "ElmFire.Location -> Pylon.DB.Path.Path -> ElmFire.Location"
+      },
+      {
+        "name": "base",
+        "comment": " A base path. Represents no path. ",
+        "type": "Pylon.DB.Path.Path"
+      },
+      {
+        "name": "child",
+        "comment": " Append a new last element to the path. Synonym: `push` ",
+        "type": "String -> Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "childLocation",
+        "comment": " Given an ElmFire location and a path adjust the location relative to it's current position. ",
+        "type": "ElmFire.Location -> Pylon.DB.Path.Path -> ElmFire.Location"
+      },
+      {
+        "name": "childPath",
+        "comment": " Take two paths, setting the first as the child path of the second. ",
+        "type": "Pylon.DB.Path.Path -> Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "countElements",
+        "comment": " Count of the elements in the path. ",
+        "type": "Pylon.DB.Path.Path -> Int"
+      },
+      {
+        "name": "depth",
+        "comment": " Synonym for countElements. ",
+        "type": "Pylon.DB.Path.Path -> Int"
+      },
+      {
+        "name": "first",
+        "comment": " Get first element of the path. NOTE: _O(n)_ ",
+        "type": "Pylon.DB.Path.Path -> Maybe.Maybe String"
+      },
+      {
+        "name": "foldBase",
+        "comment": " Fold over a path's elements from the _base_. ",
+        "type": "(String -> typeout -> typeout) -> typeout -> Pylon.DB.Path.Path -> typeout"
+      },
+      {
+        "name": "foldTop",
+        "comment": " Fold over a path's elements from the _top_. ",
+        "type": "(String -> typeout -> typeout) -> typeout -> Pylon.DB.Path.Path -> typeout"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create a path from a list of strings, ordered from the base to the top. ",
+        "type": "List String -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "fromStack",
+        "comment": " Set the internal stack. ",
+        "type": "List String -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "isSame",
+        "comment": " Compare two paths for equality. ",
+        "type": "Pylon.DB.Path.Path -> Pylon.DB.Path.Path -> Bool"
+      },
+      {
+        "name": "join",
+        "comment": " Join the path elements with a glue delimiter, like `List.join`. ",
+        "type": "String -> Pylon.DB.Path.Path -> String"
+      },
+      {
+        "name": "last",
+        "comment": " Get the last element of the path. NOTE : _O(1)_ ",
+        "type": "Pylon.DB.Path.Path -> Maybe.Maybe String"
+      },
+      {
+        "name": "parent",
+        "comment": " Remove the last element from the path. Synonym: `pop` ",
+        "type": "Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "pop",
+        "comment": " Pop an element from the end of the path. Synonym: `parent` ",
+        "type": "Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "push",
+        "comment": " Push an element to the end of the path. Synonym: `child` ",
+        "type": "String -> Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "single",
+        "comment": " A path with a single element. ",
+        "type": "String -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "toList",
+        "comment": " Interpret the path as a list of strings ordered from base to top. ",
+        "type": "Pylon.DB.Path.Path -> List String"
+      },
+      {
+        "name": "toStack",
+        "comment": " Get the internal stack. ",
+        "type": "Pylon.DB.Path.Path -> List String"
+      },
+      {
+        "name": "top",
+        "comment": " Get the last element of the path. Synonym for last. NOTE : _O(1)_ ",
+        "type": "Pylon.DB.Path.Path -> Maybe.Maybe String"
+      },
+      {
+        "name": "truncate",
+        "comment": " Truncate the path to _n_ members by popping until that element count is attained. ",
+        "type": "Int -> Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      },
+      {
+        "name": "up",
+        "comment": " Go up in the path by _n_ parents. Some equivalencies:\n\n  Path.up 1 mypath == Path.parent mypath == Path.pop mypath\n  Path.up (Path.countElements mypath) mypath = Path.base\n\nSynonym : `popMany`\n",
+        "type": "Int -> Pylon.DB.Path.Path -> Pylon.DB.Path.Path"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.App",
+    "comment": " Application module. Similar to StartApp, but with a few extra utilities. Heavily pruned and\nsimplified with respect to it's predecessor in Scaffold. No longer suffers from heinous type\nbloat.\n\n\n# Configuration And Application Structures\n\nThe basic building blocks of the application top level.\n\n@docs Options, Config, Output\n\n\n# Task Types\n\n@docs Dispatch, ActionTask, FinalTask\n\n\n# Task List Dispatch Methods\n\n@docs parallel, sequence\n\n\n# Constructing Options\n\n@docs defaultOptions, optionsDispatchMethod, optionsRunInputsOnStartup\n\n\n# Configuration DSL\n\nCumulatively build a configuration using this convenient DSL, starting either from a `nilConfig`\nor starting from a `configWithOptions`. The latter can be very nice for flowing right in to building\na configuration from building an `Options` struct.\n\n@docs nilConfig, configWithOptions, configOptions, configInit, configUpdateList, configUpdate, configStage, configPresent, configInput, configListInput, configRawInput\n\n# Chaining Effectors\n\nEffectors are functions which give a pair, the first element of which is the of the same type as the\nlast argument, and the second element of which is some list of tasks. Chaining is a useful way to\noperate on a single model with a sequence of actions, all of which might produce tasks. We use\nlists of tasks so that we can elegantly account for the case where no tasks are produced as well as\npossibly producing a number of tasks to execute. Such task lists can be either explicitly reduced\nby the user using `finalizeTasks`, or they can be converted to `ActionTask`s and returned to the\ntop level, where the configured `Dispatch` method is used to run the tasks.\n\n@docs chain, chainIf, chainWhile, chainSub, chainSubIf, chainSubMaybe, chainFinalizingEach, asEffector, mappedEffector, noEffect, doEffect, finalizedEffector\n\n\n# Task Manipulation\n\nSend the results of tasks to addresses, and dispatch them. Use of existing task primitives to handle\nsituations outside the scope of simply sending/forwarding results to the app's mailbox address and\ndetermining their order of execution is encouraged, so that a repeat of the awful `agent` DSL\nfrom Pylon's predecessor Scaffold is not repeated.\n\n@docs promoteActions, handleErrors, mapErrors, sendActions, forwardActions, sendErrorActions, sendResultActions, finalizeTasks, finalizeTask, thenDo, thenDoNothing\n\n\n# Running The Application\n\n`run` will allow you to run an application given an initial model and view with a configuration.\n`doCycle` exposes the internal functionality used by run, with a little syntactic sugar.\n\n@docs doCycle, run\n\n\n# Manipulating Sub Models\n@docs doSubUpdate, doSubStage, doSubPresent, doSubCycle\n\n",
+    "aliases": [
+      {
+        "name": "ActionTask",
+        "comment": " A task which results in a list of actions. This can be routed to an address. ",
+        "args": [
+          "errortype",
+          "actiontype"
+        ],
+        "type": "Task.Task errortype (List actiontype)"
+      },
+      {
+        "name": "Config",
+        "comment": " Configure an application. Sane defaults are provided so that you can construct as much or as\nlittle as you need using the provided DSL. ",
+        "args": [
+          "never",
+          "modeltype",
+          "actiontype",
+          "viewtype"
+        ],
+        "type": "{ init : Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) ) , inputs : List (Signal.Signal (List actiontype)) , update : List actiontype -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) ) , stage : Signal.Address (List actiontype) -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) ) , present : Signal.Address (List actiontype) -> Time.Time -> modeltype -> ( Maybe.Maybe viewtype, List (Pylon.App.FinalTask never) ) , options : Pylon.App.Options }"
+      },
+      {
+        "name": "FinalTask",
+        "comment": " FinalTask represents a task whose results have been routed to an address, and is ready to be\nexecuted. ",
+        "args": [
+          "never"
+        ],
+        "type": "Task.Task never ()"
+      },
+      {
+        "name": "Options",
+        "comment": " Some extra options for apps.\n\n    runInputsOnStartup    -- If this is true, run the actions produced by the initial input signals\n                          -- on startup.\n\n    dispatchMethod        -- May either dispatch the top level tasks returned in sequence or in\n                          -- parallel.\n\n",
+        "args": [],
+        "type": "{ runInputsOnStartup : Bool, dispatchMethod : Pylon.App.Dispatch }"
+      },
+      {
+        "name": "Output",
+        "comment": " Output of the application. Contains the current view, the current model, the current time, and the latest task if it exists. ",
+        "args": [
+          "never",
+          "modeltype",
+          "viewtype"
+        ],
+        "type": "{ view : Signal.Signal viewtype , model : Signal.Signal modeltype , now : Signal.Signal Time.Time , tasks : Signal.Signal (Pylon.App.FinalTask never) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Dispatch",
+        "comment": " Task dispatch mode. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "asEffector",
+        "comment": " If you want to take a simple transformation `a -> a` and include it in a chain of\n`a -> (a, List (Task z r))`, this is your tool for doing that. ",
+        "type": "(modeltype -> modeltype) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chain",
+        "comment": " Utility function for chaining effectors. ",
+        "type": "List (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chainFinalizingEach",
+        "comment": " Chaining effectors, finalizing each resultant task list seperately using the given dispatch\nmethod. ",
+        "type": "Pylon.App.Dispatch -> List (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "chainIf",
+        "comment": " Conditionally chain some effectors. ",
+        "type": "(modeltype -> Bool) -> List (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chainSub",
+        "comment": " Chain a list of effectors on a sub model. Provide a fetch and an update function to extract\nand replace the sub model, before and after executing the chain of effectors on the sub model\nrespectively. ",
+        "type": "(modeltype -> innertype) -> (innertype -> modeltype -> modeltype) -> List (innertype -> ( innertype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chainSubIf",
+        "comment": " Conditionally chain some effectors on an inner model. ",
+        "type": "(modeltype -> Bool) -> (modeltype -> innertype) -> (innertype -> modeltype -> modeltype) -> List (innertype -> ( innertype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chainSubMaybe",
+        "comment": " Execute the list of effectors on the Maybe sub model only if it is not Nothing. ",
+        "type": "(modeltype -> Maybe.Maybe innertype) -> (Maybe.Maybe innertype -> modeltype -> modeltype) -> List (innertype -> ( innertype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "chainWhile",
+        "comment": " Loop a list of effectors until the predicate is no longer satisfied. ",
+        "type": "(modeltype -> Bool) -> List (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "configInit",
+        "comment": " Set an initialization function on the app. ",
+        "type": "(Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configInput",
+        "comment": " Configure an input. ",
+        "type": "(inputtype -> actiontype) -> Signal.Signal inputtype -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configListInput",
+        "comment": " Configure a list input. ",
+        "type": "(List inputtype -> List actiontype) -> Signal.Signal (List inputtype) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configOptions",
+        "comment": " Set some extra options on the configuration. ",
+        "type": "Pylon.App.Options -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configPresent",
+        "comment": " Set a presentation function on the app. This can optionally update the view of the application,\nor not by returning nothing. ",
+        "type": "(Signal.Address (List actiontype) -> Time.Time -> modeltype -> ( Maybe.Maybe viewtype, List (Pylon.App.FinalTask never) )) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configRawInput",
+        "comment": " Configure a raw input. ",
+        "type": "Signal.Signal (List actiontype) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configStage",
+        "comment": " Set a staging function on the app. Staging is done after all actions are passed through update,\nbut before presentation. ",
+        "type": "(Signal.Address (List actiontype) -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configUpdate",
+        "comment": " Add a classic single action update function, which is simpler and just as good for most use\ncases. ",
+        "type": "(actiontype -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configUpdateList",
+        "comment": " Add an update function which is aware of an entire atomic action list as it comes in. ",
+        "type": "(List actiontype -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )) -> Pylon.App.Config never modeltype actiontype viewtype -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "configWithOptions",
+        "comment": " A nil configuration, with the given options set. ",
+        "type": "Pylon.App.Options -> Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " Default options. `runInputsOnStartup` set to `True`. ",
+        "type": "Pylon.App.Options"
+      },
+      {
+        "name": "doCycle",
+        "comment": " Perform a full cycle on a `(model, view)` pair, using the given application configuration. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> Signal.Address (List actiontype) -> List actiontype -> Time.Time -> ( modeltype, viewtype ) -> ( ( modeltype, viewtype ), List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "doEffect",
+        "comment": " This gives you a simple way of emitting effects in a chain without changing the model. ",
+        "type": "(modeltype -> List (Task.Task z r)) -> modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "doSubCycle",
+        "comment": " Perform a full cycle with action promotion. Useful for nesting models. This is\ndeliberately left very unambiguous to avoid obfuscation. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> (List actiontype -> List outeraction) -> Signal.Address (List outeraction) -> List actiontype -> Time.Time -> ( modeltype, viewtype ) -> ( ( modeltype, viewtype ), List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "doSubPresent",
+        "comment": " Present a sub model. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> (List actiontype -> List outeraction) -> Signal.Address (List outeraction) -> Time.Time -> modeltype -> ( Maybe.Maybe viewtype, List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "doSubStage",
+        "comment": " Stage a sub model. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> (List actiontype -> List outeraction) -> Signal.Address (List outeraction) -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "doSubUpdate",
+        "comment": " Update a sub model. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> (List actiontype -> List outeraction) -> List actiontype -> Time.Time -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "finalizeTask",
+        "comment": " Convert any task in to a `FinalTask`. This does not take a `Dispatch` method, because said\nmethod only makes sense when applied to a list of tasks, not a single task. ",
+        "type": "Task.Task e r -> List (Pylon.App.FinalTask never)"
+      },
+      {
+        "name": "finalizeTasks",
+        "comment": " Dispatch any arbitrary list of tasks using the given dispatch mode, which may be `parallel` or\n`sequence`. Note that for the sake of cleaner typing, the output of this function is a list of\n`FinalTask`s, however, this list may only have one member in the case that tasks are being\ndispatched, otherwise empty if the input list was empty. This is because finalizing a list of\ntasks will collapse it, encoding the manner in which is should execute in the resultant task if\nit exists. ",
+        "type": "Pylon.App.Dispatch -> List (Task.Task e r) -> List (Pylon.App.FinalTask never)"
+      },
+      {
+        "name": "finalizedEffector",
+        "comment": " Transform an effector by finalizing it's resulting tasks immediately using the given dispatch method. ",
+        "type": "Pylon.App.Dispatch -> (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Pylon.App.FinalTask never) )"
+      },
+      {
+        "name": "forwardActions",
+        "comment": " Forward the list of actions produced on the success of this task to the given address using the given transformation function. ",
+        "type": "(List actiontype -> List actiontype') -> Signal.Address (List actiontype') -> Pylon.App.ActionTask errortype actiontype -> Pylon.App.ActionTask errortype actiontype'"
+      },
+      {
+        "name": "handleErrors",
+        "comment": " Transform errors from the given task in to actions. ",
+        "type": "(errortype -> List actiontype) -> Pylon.App.ActionTask errortype actiontype -> Pylon.App.ActionTask z actiontype"
+      },
+      {
+        "name": "mapErrors",
+        "comment": " Map the errors of a given task to another type of error. ",
+        "type": "(errortype -> errortype') -> Task.Task errortype r -> Task.Task errortype' r"
+      },
+      {
+        "name": "mappedEffector",
+        "comment": " Transform the task output of an effector. This is useful if an effector works on the right type of model\nbut needs a shim to fit the correct task type ",
+        "type": "(List (Task.Task z r) -> List (Task.Task z' r')) -> (modeltype -> ( modeltype, List (Task.Task z r) )) -> modeltype -> ( modeltype, List (Task.Task z' r') )"
+      },
+      {
+        "name": "nilConfig",
+        "comment": " Empty configuration, providing all defaults and nil behavior. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype"
+      },
+      {
+        "name": "noEffect",
+        "comment": " An effector that does nothing and produces no tasks. Useful as a placeholder when no action\nis required. ",
+        "type": "modeltype -> ( modeltype, List (Task.Task z r) )"
+      },
+      {
+        "name": "optionsDispatchMethod",
+        "comment": " Set the dispatch method for the top level ActionTasks returned by application functions. ",
+        "type": "Pylon.App.Dispatch -> Pylon.App.Options -> Pylon.App.Options"
+      },
+      {
+        "name": "optionsRunInputsOnStartup",
+        "comment": " Set whether or not to run options. ",
+        "type": "Bool -> Pylon.App.Options -> Pylon.App.Options"
+      },
+      {
+        "name": "parallel",
+        "comment": " Dispatch tasks in parallel, no ordering is required. ",
+        "type": "Pylon.App.Dispatch"
+      },
+      {
+        "name": "promoteActions",
+        "comment": " Transform the action list type of an `ActionTask`. ",
+        "type": "(List actiontype -> List actiontype') -> Pylon.App.ActionTask errortype actiontype -> Pylon.App.ActionTask errortype actiontype'"
+      },
+      {
+        "name": "run",
+        "comment": " With the given configuration, start the application as in StartApp with the given initial model,\nand the given default view. ",
+        "type": "Pylon.App.Config never modeltype actiontype viewtype -> modeltype -> viewtype -> Pylon.App.Output never modeltype viewtype"
+      },
+      {
+        "name": "sendActions",
+        "comment": " Send the list of actions produced on the success of this task to the given address.  ",
+        "type": "Signal.Address (List actiontype) -> Pylon.App.ActionTask errortype actiontype -> Pylon.App.ActionTask errortype actiontype"
+      },
+      {
+        "name": "sendErrorActions",
+        "comment": " Translate task error to a list of actions and send to the given address. ",
+        "type": "(errortype -> List actiontype) -> Signal.Address (List actiontype) -> Pylon.App.ActionTask errortype actiontype -> Pylon.App.ActionTask errortype actiontype"
+      },
+      {
+        "name": "sendResultActions",
+        "comment": " Interpret the result of the task whether success or failure as some list of actions and then send. ",
+        "type": "(Result.Result errortype successtype -> List actiontype) -> Signal.Address (List actiontype) -> Task.Task errortype successtype -> Pylon.App.ActionTask errortype actiontype"
+      },
+      {
+        "name": "sequence",
+        "comment": " Dispatch tasks in sequence. Tasks will execute strictly in the order provided. ",
+        "type": "Pylon.App.Dispatch"
+      },
+      {
+        "name": "thenDo",
+        "comment": " Turn any task in to an `ActionTask` by performing the given list of actions upon it's successful\ncompletion. Notably, this may be used to turn an `FinalTask` back in to an action task. ",
+        "type": "List actiontype -> Task.Task errortype r -> Pylon.App.ActionTask errortype actiontype"
+      },
+      {
+        "name": "thenDoNothing",
+        "comment": " Turn any task in to an `ActionTask` without actually performing any actions. This is good for\ntransforming tasks that need to be returned from the top level of the application which have already\nbeen finalized, so the types simply have to match. It should be noted that empty action lists do\nnot trigger any update, staging, or presentation, and as such a busy loop caused by repeated\ndispatchment of empty action tasks will not occur. ",
+        "type": "Task.Task errortype r -> Pylon.App.ActionTask errortype a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Pylon.Resource",
+    "comment": " Resource types and reductions. Heavily pruned from Scaffold predecessor to give only what has\nbeen tested, used in practice, and proven useful.\n\n# Resource Type\n\nThis type represents a single remote resource in such a way that it's state can be easily reduced\nto a more abstract representation, either for another part of the system, or the user's view itself.\n\nWe export the tags as well so as to allow the user easy case destructuring.\n@docs Resource\n\n\n# Resource Constructors\n@docs def, pending, undecided, void, unknown\n\n\n# Predicate Composition\n@docs isAll, isAny\n\n\n# Predicates\n@docs isKnown, isNotKnown, isPending, isNotPending, isNotUndecided, isNotUnknown, isNotVoid, isUndecided, isUnknown, isVoid\n\n\n# Reduction\n@docs therefore, otherwise, decideBy, assumeIf, assumeIfNot, assumeInCase, deriveIf, deriveKnown\n\n\n# Interop with Result and Maybe\n@docs maybeKnown, maybeOr, resultOr\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Resource",
+        "comment": " A resource item. ",
+        "args": [
+          "errortype",
+          "v"
+        ],
+        "cases": [
+          [
+            "Unknown",
+            []
+          ],
+          [
+            "Pending",
+            []
+          ],
+          [
+            "Void",
+            []
+          ],
+          [
+            "Undecided",
+            [
+              "errortype"
+            ]
+          ],
+          [
+            "Known",
+            [
+              "v"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "assumeIf",
+        "comment": " If the given predicate is satisfied, the result will be known to the the given value, otherwise\nthe given resource will be given unchanged. ",
+        "type": "(Pylon.Resource.Resource errortype v -> Bool) -> v -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "assumeIfNot",
+        "comment": " Negation of assumeIf. ",
+        "type": "(Pylon.Resource.Resource errortype v -> Bool) -> v -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "assumeInCase",
+        "comment": " In the case that the provided function returns `Just x`, the resource shall be known as that\nvalue, otherwise the Resource shall remain unchanged.  ",
+        "type": "(Pylon.Resource.Resource errortype v -> Maybe.Maybe v) -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "decideBy",
+        "comment": " If the resource is an undecided resource, then the given  ",
+        "type": "(errortype -> Pylon.Resource.Resource errortype v) -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "def",
+        "comment": "  ",
+        "type": "v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "deriveIf",
+        "comment": " If the predicate is true, apply the given transformation to get a new resource. ",
+        "type": "(Pylon.Resource.Resource errortype v' -> Bool) -> (Pylon.Resource.Resource errortype v' -> Pylon.Resource.Resource errortype v') -> Pylon.Resource.Resource errortype v' -> Pylon.Resource.Resource errortype v'"
+      },
+      {
+        "name": "deriveKnown",
+        "comment": " If the resource is known, then use the given function to create an entirely new replacement resource,\notherwise carry the state to the new resource. This always transforms the type because no other states\ncarry the value type. ",
+        "type": "(v -> Pylon.Resource.Resource errortype v') -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v'"
+      },
+      {
+        "name": "isAll",
+        "comment": " True if _all_ of the given predicates is True, otherwise False. ",
+        "type": "List (Pylon.Resource.Resource errortype v -> Bool) -> Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isAny",
+        "comment": " True if _any_ of the given predicates is True, otherwise False. ",
+        "type": "List (Pylon.Resource.Resource errortype v -> Bool) -> Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isKnown",
+        "comment": " True if the resource is known. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isNotKnown",
+        "comment": " False if the resource is known. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isNotPending",
+        "comment": " False if the resource is pending. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isNotUndecided",
+        "comment": " False if the resource is undecided. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isNotUnknown",
+        "comment": " False if the resource is unknown. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isNotVoid",
+        "comment": " False if the resource is void. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isPending",
+        "comment": " True if the resource is pending. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isUndecided",
+        "comment": " True if the resource is undecided. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isUnknown",
+        "comment": " True if the resource is unknown. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "isVoid",
+        "comment": " True if the resource is void. ",
+        "type": "Pylon.Resource.Resource errortype v -> Bool"
+      },
+      {
+        "name": "maybeKnown",
+        "comment": " If a resource is known, then give Just it's value, otherwise Nothing. ",
+        "type": "Pylon.Resource.Resource errortype v' -> Maybe.Maybe v'"
+      },
+      {
+        "name": "maybeOr",
+        "comment": " ",
+        "type": "Pylon.Resource.Resource errortype v -> Maybe.Maybe v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "otherwise",
+        "comment": " In the event that the given resource is not a simple `def`, we replace it with a different simple\nresource. ",
+        "type": "v' -> Pylon.Resource.Resource errortype v' -> v'"
+      },
+      {
+        "name": "pending",
+        "comment": "  ",
+        "type": "Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "resultOr",
+        "comment": "  ",
+        "type": "(errortype -> Pylon.Resource.Resource errortype v) -> Result.Result errortype v -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "therefore",
+        "comment": " Given a resource of value type v, create a resource of value type v' by transforming the\nknown value or group using some function (v -> v'). NOTE that this will create an entirely new\nresouce structure, and thus any pending changes will be integrated immediately. If you wish to\npreserve deltas for the purpose of mirroring and efficient data flow, then one should be using\ndeltaTo in order to transform just the changes. ",
+        "type": "(v -> v') -> Pylon.Resource.Resource errortype v -> Pylon.Resource.Resource errortype v'"
+      },
+      {
+        "name": "undecided",
+        "comment": "  ",
+        "type": "errortype -> Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "unknown",
+        "comment": "  ",
+        "type": "Pylon.Resource.Resource errortype v"
+      },
+      {
+        "name": "void",
+        "comment": "  ",
+        "type": "Pylon.Resource.Resource errortype v"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

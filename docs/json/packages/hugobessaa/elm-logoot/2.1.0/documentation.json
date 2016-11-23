@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Logoot",
+    "comment": " Simple Logoot implementation.\n\nInsert and remove operations in Logoot are idempotent, commutative and associative.\nThis means two replicas can exchange operations made in their local Logoot over a\nnetwork without having to garantee the order of messages, enabling their use with\ndistributed networks such as P2P.\n\nHere are various functions to deal with the Logoot document. There are a lot of\nmissing pieces here, help us sending PRs to the GitHub [repository]!\n\n[repository]: https://github.com/hugobessaa/elm-logoot\n\n## Types\n\n@docs Logoot, Pid, Positions, Position, Line, Site, Clock\n\n## Build\n\n@docs empty, insert, remove, insertAfter, insertAt\n\n## Query\n\nfuture docs isEmpty, member, get, size\n\n## Dictionaries\n\n@docs toDict, fromDict, diffDict, intersectDict\n\n## Lists\n\nIt is not recommended to change a `Logoot a` by using those functions.\n\nWhen you transform a `Logoot a` into a `List (Pid, a)` and back, it loses the\ncommutative context. This may make your `Logoot a` out-of-sync with other replicas.\n\nUse those functions only at the boundaries of your app, to transform, display, and create.\n\n@docs keys, values, toList, fromList, diffList, intersectList\n",
+    "aliases": [
+      {
+        "name": "Clock",
+        "comment": " ",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "Line",
+        "comment": " ",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "Pid",
+        "comment": " ",
+        "args": [],
+        "type": "( Logoot.Positions, Logoot.Clock )"
+      },
+      {
+        "name": "Position",
+        "comment": " ",
+        "args": [],
+        "type": "( Logoot.Line, Logoot.Site )"
+      },
+      {
+        "name": "Positions",
+        "comment": " ",
+        "args": [],
+        "type": "List Logoot.Position"
+      },
+      {
+        "name": "Site",
+        "comment": " ",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [
+      {
+        "name": "Logoot",
+        "comment": " A Logoot.\n\n`Logoot` implementation details are hidden from the public API.\n\nYou should use the provided functions to create and transform a `Logoot a`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diffDict",
+        "comment": " Returns a `Dict Pid a` of the pairs that does\n   not appear in the second `Logoot a`.\n",
+        "type": "Logoot.Logoot a -> Logoot.Logoot a -> Dict.Dict Logoot.Pid a"
+      },
+      {
+        "name": "diffList",
+        "comment": " Returns an association list `List (Pid, a)` of the pairs that does\n   not appear in the second `Logoot a`.\n",
+        "type": "Logoot.Logoot a -> Logoot.Logoot a -> List ( Logoot.Pid, a )"
+      },
+      {
+        "name": "empty",
+        "comment": " Return an empty `Logoot a`.\n\nAn empty `Logoot a` come with the first and last `Pid` in place. They can not be modified.\n\nYou should provide an empty representation of your data type. This is used as the content\nfor the first and last `Pid`\n\nTo create a `Logoot String` you could use:\n\n    toDict empty \"\" == Dict.fromList\n      [ (([(0,0)],0), \"\")\n      , (([(32000,0)],0), \"\")\n      ]\n",
+        "type": "a -> Logoot.Logoot a"
+      },
+      {
+        "name": "fromDict",
+        "comment": " Convert a `Dict Pid a` into a `Logoot a`.\n",
+        "type": "a -> Dict.Dict Logoot.Pid a -> Logoot.Logoot a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list `List (Pid, a)` into a `Logoot a`.\n",
+        "type": "a -> List ( Logoot.Pid, a ) -> Logoot.Logoot a"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key in a `Logoot a`.\n\nThis works like `Dict.insert` but with a `Logoot a`.\n\n    empty \"\" |> insert ([(1, 3)], 15) \"it works\"\n\nUnlike `Dict.insert`, `insert` is commutative with `remove`,\nmaking it possible to insert and remove keys in any order and\nend up with the same `Logoot a`.\n",
+        "type": "Logoot.Pid -> a -> Logoot.Logoot a -> Logoot.Logoot a"
+      },
+      {
+        "name": "insertAfter",
+        "comment": " Insert a content that will come after `Pid` when `Logoot a` is sorted.\n",
+        "type": "Logoot.Site -> Logoot.Clock -> Logoot.Pid -> a -> Logoot.Logoot a -> Logoot.Logoot a"
+      },
+      {
+        "name": "insertAt",
+        "comment": " Insert a content that will come after a given index.\n\nIf the given index is invalid, return Nothing. If valid, Just Logoot\n",
+        "type": "Logoot.Site -> Logoot.Clock -> Int -> a -> Logoot.Logoot a -> Maybe.Maybe (Logoot.Logoot a)"
+      },
+      {
+        "name": "intersectDict",
+        "comment": " Returns `Dict Pid a` of the pairs that appears\n   in the second `Logoot a`, preference is given to values in the first `Logoot a`.\n",
+        "type": "Logoot.Logoot a -> Logoot.Logoot a -> Dict.Dict Logoot.Pid a"
+      },
+      {
+        "name": "intersectList",
+        "comment": " Returns an association list `List (Pid, a)` of the pairs that appears\n   in the second `Logoot a`, preference is given to values in the first `Logoot a`.\n",
+        "type": "Logoot.Logoot a -> Logoot.Logoot a -> List ( Logoot.Pid, a )"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a `Logoot a`, sorted from lowest to highest.\n",
+        "type": "Logoot.Logoot a -> List Logoot.Pid"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key in a `Logoot a`.\n\nThis works like `Dict.remove` but with a `Logoot a`.\n\n    empty \"\"\n      |> insert ([(1, 3)], 15) \"it works\"\n      |> remove ([(1, 3)], 15) \"it works\"\n\nWhen you remove a key that isn't a member of `Logoot a`, it will make sure\na future `insert` of that key will not add it to the `Logoot a`.\n\nUnlike `Dict.remove`, `remove` is commutative with `insert`,\nmaking it possible to insert and remove keys in any order and\nend up with the same `Logoot a`.\n",
+        "type": "Logoot.Pid -> a -> Logoot.Logoot a -> Logoot.Logoot a"
+      },
+      {
+        "name": "toDict",
+        "comment": " Convert a `Logoot a` into a `Dict Pid a` for easier usage.\n",
+        "type": "Logoot.Logoot a -> Dict.Dict Logoot.Pid a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a `Logoot a` into a sorted association list `List (Pid, a)`.\n",
+        "type": "Logoot.Logoot a -> List ( Logoot.Pid, a )"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a `Logoot a`, in the order of their keys.\n",
+        "type": "Logoot.Logoot a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

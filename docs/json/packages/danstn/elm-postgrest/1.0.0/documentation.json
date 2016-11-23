@@ -1,0 +1,173 @@
+[
+  {
+    "name": "PostgRest",
+    "comment": " A query builder library for PostgREST.\n\nI recommend looking at the [examples](https://github.com/john-kelly/elm-postgrest/blob/master/examples/Main.elm) before diving into the API or source code.\n\n# Define a Resource\n@docs Resource, resource, Field, field\n\n# Build a Query\n@docs Query, query\n\n### Selecting and Nesting\n@docs select, include, includeMany\n\n### Filtering\n@docs Filter, filter, like, ilike, eq, gte, gt, lte, lt, in', is, not'\n\n### Ordering\n@docs OrderBy, order, asc, desc\n\n# Send a Query\n@docs list, first\n\n### Pagination\n@docs Page, paginate\n\n",
+    "aliases": [
+      {
+        "name": "Page",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ data : List a, count : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Field",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Filter",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "OrderBy",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Query",
+        "comment": " ",
+        "args": [
+          "schema",
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Resource",
+        "comment": " ",
+        "args": [
+          "schema"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "asc",
+        "comment": " Ascending\n",
+        "type": "(schema -> PostgRest.Field a) -> schema -> PostgRest.OrderBy"
+      },
+      {
+        "name": "desc",
+        "comment": " Descending\n",
+        "type": "(schema -> PostgRest.Field a) -> schema -> PostgRest.OrderBy"
+      },
+      {
+        "name": "eq",
+        "comment": " Equals\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "field",
+        "comment": " ",
+        "type": "String -> Json.Decode.Decoder a -> PostgRest.Field a"
+      },
+      {
+        "name": "filter",
+        "comment": " Apply filters to a query\n",
+        "type": "List (schema -> PostgRest.Filter) -> PostgRest.Query schema a -> PostgRest.Query schema a"
+      },
+      {
+        "name": "first",
+        "comment": " Takes `url` and a `query`, returning the first object from database on success and Http.Error otherwise\n",
+        "type": "String -> PostgRest.Query schema a -> Task.Task Http.Error a"
+      },
+      {
+        "name": "gt",
+        "comment": " Greater than\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "gte",
+        "comment": " Greater than or equal to\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "ilike",
+        "comment": " Case-insensitive `like`\n",
+        "type": "String -> (schema -> PostgRest.Field String) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "in'",
+        "comment": " In List\n",
+        "type": "List a -> PostgRest.Modifier a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "include",
+        "comment": " ",
+        "type": "PostgRest.Query schema2 a -> PostgRest.Query schema1 (a -> b) -> PostgRest.Query schema1 b"
+      },
+      {
+        "name": "includeMany",
+        "comment": " ",
+        "type": "Maybe.Maybe Int -> PostgRest.Query schema2 a -> PostgRest.Query schema1 (List a -> b) -> PostgRest.Query schema1 b"
+      },
+      {
+        "name": "is",
+        "comment": " Is comparison\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "like",
+        "comment": "\nSimple [pattern matching](https://www.postgresql.org/docs/9.5/static/functions-matching.html#FUNCTIONS-LIKE)\n",
+        "type": "String -> (schema -> PostgRest.Field String) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "list",
+        "comment": " Takes `limit`, `url` and a `query`, returning a list of objects from database on success and Http.Error otherwise\n",
+        "type": "Maybe.Maybe Int -> String -> PostgRest.Query schema a -> Task.Task Http.Error (List a)"
+      },
+      {
+        "name": "lt",
+        "comment": " Less than\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "lte",
+        "comment": " Less than or equal to\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "not'",
+        "comment": " Negate a Filter\n",
+        "type": "(a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter) -> a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "order",
+        "comment": " ",
+        "type": "List (schema -> PostgRest.OrderBy) -> PostgRest.Query schema a -> PostgRest.Query schema a"
+      },
+      {
+        "name": "paginate",
+        "comment": " ",
+        "type": "{ pageNumber : Int, pageSize : Int } -> String -> PostgRest.Query schema a -> Task.Task Http.Error (PostgRest.Page a)"
+      },
+      {
+        "name": "query",
+        "comment": " ",
+        "type": "PostgRest.Resource schema -> (a -> b) -> PostgRest.Query schema (a -> b)"
+      },
+      {
+        "name": "resource",
+        "comment": " ",
+        "type": "String -> schema -> PostgRest.Resource schema"
+      },
+      {
+        "name": "select",
+        "comment": " ",
+        "type": "(schema -> PostgRest.Field a) -> PostgRest.Query schema (a -> b) -> PostgRest.Query schema b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

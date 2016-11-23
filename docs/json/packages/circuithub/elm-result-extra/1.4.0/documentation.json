@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Result.Extra",
+    "comment": " Convenience functions for working with Result\n\n# Common Helpers\n@docs isOk, isErr, extract, mapBoth, withDefault, combine\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "combine",
+        "comment": " Combine a list of results into a single result (holding a list).\n",
+        "type": "List (Result.Result x a) -> Result.Result x (List a)"
+      },
+      {
+        "name": "extract",
+        "comment": " Turn a `Result e a` to an `a`, by applying the conversion\nfunction specified to the `e`.\n",
+        "type": "(e -> a) -> Result.Result e a -> a"
+      },
+      {
+        "name": "isErr",
+        "comment": " Check whether the result is `Err` without unwrapping it.\n",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "isOk",
+        "comment": " Check whether the result is `Ok` without unwrapping it.\n",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " Convert a `Result e a` to a `b` by applying either a function\nif the `Result` is an `Err` or a function if the `Result` is `Ok`.\nBoth of these functions must return the same type.\n",
+        "type": "(e -> b) -> (a -> b) -> Result.Result e a -> b"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Returns a `Result`'s contents if the `Result` is an `Ok`,\nor the given default value if the `Result` is an `Err`.\nThis is basically the same as running `Result.toMaybe` and then `Maybe.withDefault`.\n\n    0 == Result.withDefault 0 (String.toInt \"this is not a valid integer!\")\n",
+        "type": "a -> Result.Result x a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

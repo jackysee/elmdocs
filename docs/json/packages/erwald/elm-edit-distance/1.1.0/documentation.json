@@ -1,0 +1,80 @@
+[
+  {
+    "name": "EditDistance",
+    "comment": "  The EditDistance module allows for calculating the Levenshtein distance\nbetween two lists, or the actual edit steps required to go from one to the\nother.\n\n# Edit Steps\n@docs EditStep, edits, editsFromStrings, editsWithCostFunc, editsWithCostFuncFromStrings\n\n# Levenshtein\n@docs levenshtein, levenshteinFromStrings\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "EditStep",
+        "comment": " Describes an edit step used to go from one list to another.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Insert",
+            [
+              "a",
+              "Int"
+            ]
+          ],
+          [
+            "Delete",
+            [
+              "a",
+              "Int"
+            ]
+          ],
+          [
+            "Substitute",
+            [
+              "a",
+              "Int"
+            ]
+          ],
+          [
+            "Move",
+            [
+              "a",
+              "Int",
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "edits",
+        "comment": " Calculate the minimum steps (insertions, deletions, moves and substitutions)\nrequired to turn one given list into another.\n\n    edits (String.toList \"kitten\") (String.toList \"sitting\") ==\n      [ Substitute 's' 0\n      , Substitute 'i' 4\n      , Insert 'g' 6\n      ]\n\n    edits (String.toList \"garvey\") (String.toList \"avery\") ==\n      [ Delete 'g' 0\n      , Move 'r' 2 3\n      ]\n\nThe resulting indices reflect edits where _deletions are made first_, before\ninsertions and substitutions. That is, indices for deletions refer to the source\nlist, whereas indices for insertions and substitutions refer to the latter,\nintermediate lists.\n",
+        "type": "List comparable -> List comparable -> List (EditDistance.EditStep comparable)"
+      },
+      {
+        "name": "editsFromStrings",
+        "comment": " Same as the `edits` function, but for String values.\n\n    editsFromStrings \"kitten\" \"sitting\" ==\n      [ Substitute 's' 0\n      , Substitute 'i' 4\n      , Insert 'g' 6\n      ]\n\n    editsFromStrings \"garvey\" \"avery\" ==\n      [ Delete 'g' 0\n      , Move 'r' 2 3\n      ]\n",
+        "type": "String -> String -> List (EditDistance.EditStep Char)"
+      },
+      {
+        "name": "editsWithCostFunc",
+        "comment": " Same as `edits`, but also takes a custom cost function, which takes an\nEditStep (of type Insert, Delete or Substitute) and returns a cost (i.e. an\nInt).\n\n    edits (String.toList \"abc\") (String.toList \"adc\") ==\n      [ Substitute 'd' 1\n      ]\n\n    -- Make substitutions more costly.\n    costFunc editStep =\n      case editStep of\n        Substitute _ _ -> 3\n        _ -> 1\n\n    -- Substitutions are replaced by insertions and deletions.\n    editsWithCostFunc costFunc (String.toList \"abc\") (String.toList \"adc\") ==\n      [ Insert 'd' 1\n      , Delete 'b' 1\n      ]\n\n(Note that the cost function is applied _before_ insertions and deletions are\nconverted into moves, meaning it will never receive an EditStep of type Move as\nan argument.)\n",
+        "type": "(EditDistance.EditStep comparable -> Int) -> List comparable -> List comparable -> List (EditDistance.EditStep comparable)"
+      },
+      {
+        "name": "editsWithCostFuncFromStrings",
+        "comment": " Same as the `editsWithCostFunc` function, but for String values.\n\n    editsFromStrings \"abc\" \"adc\" ==\n      [ Substitute 'd' 1\n      ]\n\n    -- Make substitutions more costly.\n    costFunc editStep =\n      case editStep of\n        Substitute _ -> 3\n        _ -> 1\n\n    -- Substitutions are replaced by insertions and deletions.\n    editsWithCostFuncFromStrings costFunc \"abc\" \"adc\" ==\n      [ Insert 'd' 1\n      , Delete 'b' 1\n      ]\n",
+        "type": "(EditDistance.EditStep Char -> Int) -> String -> String -> List (EditDistance.EditStep Char)"
+      },
+      {
+        "name": "levenshtein",
+        "comment": " Calculate the Levenshtein distance between two lists, i.e. how many\ninsertions, deletions or substitutions are required to turn one given list\ninto another.\n\n    levenshtein (String.toList \"kitten\") (String.toList \"sitting\")\n      == 3\n\n    levenshtein (String.toList \"preterit\") (String.toList \"zeitgeist\")\n      == 6\n\n    levenshtein (String.toList \"garvey\") (String.toList \"avery\")\n      == 3\n",
+        "type": "List comparable -> List comparable -> Int"
+      },
+      {
+        "name": "levenshteinFromStrings",
+        "comment": " Same as the `levenshtein` function, but for String values.\n\n    levenshtein \"kitten\" \"sitting\" == 3\n\n    levenshtein \"preterit\" \"zeitgeist\" == 6\n\n    levenshtein \"garvey\" \"avery\" == 3\n",
+        "type": "String -> String -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Effects.App",
+    "comment": " This module simplifies creating an app using functions that return an\n`Effects` wrapper instead of the regular `(Model, Cmd Msg)` pair.\n\n@docs program\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " This function creates a new app, acting as a thin wrapper around\nthe `Html.App` function. It will take a list of Cmds returned from your `init` and `update` functions and\nbatch them together into the single Cmd that the regular Html.App.program functions\nexpect. This allows you to keep your main module consistent with the rest of your codebase\nbecause the functions can use Effects.\n",
+        "type": "{ init : Effects.Effects model (Platform.Cmd.Cmd msg) , update : msg -> model -> Effects.Effects model (Platform.Cmd.Cmd msg) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Effects",
+    "comment": " This package contains several useful functions for operating on pairs\nof a value and a list of side-effects. Side-effects do not have to be external\nElm events such as I/O and randomness - they can be internal app events, such as a message indicating that\nthe score of your game should increase or that you want to navigate back to the home page.\n\nFor example, having the player jump might update the state of the player and have a\nside-effect of playing a sound and spawning some dust particles if the player\njumped off the ground. In that case, your player component might look like this:\n\n    type Msg\n      = Jump\n\n    type Effect\n      = SpawnDustParticles\n      | PlaySound String\n\n    update : Msg -> Model -> Effects Model Effect\n    update msg model =\n        case msg of\n            Jump ->\n                Effects.return { model | velocity = jumpVelocity }\n                    |> Effects.add [PlaySound \"jumpSound.wav\"]\n                    |> Effects.addIf model.isGrounded [SpawnDustParticles]\n\n# Aliases\n@docs Effects, None\n\n# Constructors\n@docs init, return\n\n# Getters\n@docs getValue, getEffects\n\n# Adding Effects\n@docs add, addIf\n\n# Mapping\n@docs mapOverValue, mapOverEffects\n\n# Handling Effects\n@docs Handler, handle, ignoreUnused\n\n# Chaining Operations\n@docs andThen\n\n# Combining\n@docs batch\n\n# Conversion\n@docs toCmd\n",
+    "aliases": [
+      {
+        "name": "Effects",
+        "comment": " `Effects a effect` combines a value of type `a` and a list of effects of\ntype `effect` into a single data structure.\n",
+        "args": [
+          "a",
+          "effect"
+        ],
+        "type": "( a, List effect )"
+      },
+      {
+        "name": "Handler",
+        "comment": " A `Handler` is a function that takes an effect and applies it to an object,\ngiving back the new state of that object and any resulting effects.\n",
+        "args": [
+          "effectA",
+          "a",
+          "effectB"
+        ],
+        "type": "effectA -> a -> Effects.Effects a effectB"
+      },
+      {
+        "name": "None",
+        "comment": " `None` is useful when updating a component shouldn't have any side effects on\nthe world. This way, you can still keep the structure of your component the same,\nmaking your code consistent and flexible if you want to introduce side-effects later\non. For example, a cloud in the background might not have any side-effects on the world:\n\n    type Msg = Tick Time\n\n    type alias Effect = Effects.None\n\n    update : Msg -> Model -> Effects Model Effect\n    update msg model =\n        -- implementation details\n",
+        "args": [],
+        "type": "()"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add some additional side-effects to your value-and-effects result. This is\nnice when you want to take the result from another function and dump some extra\neffects into it without destructuring.\n",
+        "type": "List effect -> Effects.Effects a effect -> Effects.Effects a effect"
+      },
+      {
+        "name": "addIf",
+        "comment": " Same as `add`, but will only add the effects if the given condition is\nsatisfied. For example, you might only want to increase the score of the game\nif the enemy died:\n\n    Effects.return updatedEnemy\n        |> Effects.addIf updatedEnemy.isDead [IncreaseScore 100]\n",
+        "type": "Bool -> List effect -> Effects.Effects a effect -> Effects.Effects a effect"
+      },
+      {
+        "name": "andThen",
+        "comment": " If you have a bunch of operations that take a value and return a value-and-effects\npair, e.g. a value and a list of `Cmd`s to batch together, chaining them together\ncan be really annoying, because you constantly have to destructure the result\nand grab the value, bringing it into the next statement.\n\n`andThen` lets you take the value out of a value-and-effects pair, run a function\non it that returns a new value-and-effects pair, and batches the old effects together\nwith the new ones. For example, here are a bunch of actions chained together that\nmight generate sound effects and particles:\n\n    -- returns Effects Enemy.Model Enemy.Effect\n    Effects.return newEnemy\n        `andThen` Enemy.move {x = 0, y = 1}\n        `andThen` Enemy.makeYelpingNoiseOccasionally\n",
+        "type": "Effects.Effects a effect -> (a -> Effects.Effects b effect) -> Effects.Effects b effect"
+      },
+      {
+        "name": "batch",
+        "comment": " Takes a list of results with the same type of effects and brings their\neffects together into one list. This is useful when you map a function that\nreturns a value and effects over a list of objects, e.g.\n\n    List.map (Enemy.update Enemy.TakeDamage) enemies\n        |> Effects.batch -- equivalent to |> \\(x, effectLists) -> (x, List.concat effectsLists)\n",
+        "type": "List (Effects.Effects a effect) -> Effects.Effects (List a) effect"
+      },
+      {
+        "name": "getEffects",
+        "comment": " Gets the effects from a value-and-effects pair.\n",
+        "type": "Effects.Effects a effect -> List effect"
+      },
+      {
+        "name": "getValue",
+        "comment": " Gets the value from a value-and-effects pair.\n",
+        "type": "Effects.Effects a effect -> a"
+      },
+      {
+        "name": "handle",
+        "comment": " Perform a list of effects sequentially on an object, returning the new state of that\nobject and any side-effects that resulted from those effects occurring. This is similar\nto a `foldl`.\n\nThis is useful when you want to take a child's side-effect and have the parent react to it.\nFor example, if a child component gets updated and returns an effect saying to increase the score,\nthe parent should update the score and play a sound:\n\n    -- in the parent component's update function\n\n    let\n        (updatedEnemies, enemyEffects) =\n            List.map (Enemy.update Enemy.TakeDamage) model.enemies\n                |> Effects.batch -- the score might increase if the enemy died\n    in\n        Effects.return { model | enemies = updatedEnemies }\n            `Effects.andThen` Effects.handle handleEnemyEffect enemyEffects\n\n    -- in the parent component's helper functions\n\n    handleEnemyEffect : Effects.Handler Enemy.Effect Model Effect\n    handleEnemyEffect enemyEffect model =\n        case enemyEffect of\n            Enemy.IncreaseScore amount ->\n                Effects.return { model | score = model.score + amount }\n                    |> Effects.add [PlaySound \"scoreIncreased.wav\"]\n",
+        "type": "Effects.Handler effectA a effectB -> List effectA -> a -> Effects.Effects a effectB"
+      },
+      {
+        "name": "ignoreUnused",
+        "comment": " If an object returned no side-effect, this function allows you to ignore it\nin a way that will fail to compile if the object's code is modified to return\nside-effects in the future.\n\n    Effects.return { model | clouds = updatedClouds }\n        `Effects.andThen` Effects.handle handleCloudEffect cloudEffects\n\n    handleCloudEffect : Effects.Handler Cloud.Effect Model Effect\n    handleCloudEffect =\n      Effects.ignoreUnused\n",
+        "type": "Effects.Handler Effects.None a effect"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize an `Effects` wrapper from a value and a list of effects. For now,\nthis is pretty useless compared to just wrapping the value and effects\nin parentheses -- however, later on the implementation of `Effects`\nmight change to become a dictionary with `value` and `effects` keys, so using\nthis function makes your code more future-proof. It's also a bit nicer stylistically\ncompared to wrapping your code in parentheses when the value is more complicated: compare\n`elm-format`'s output of\n\n    ( { x = 0\n      , y = 0\n      }\n    , [ PlaySound \"hello.wav\", IncreaseScore 100 ]\n    )\n\nwith\n\n    Effects.init\n        { x = 0\n        , y = 0\n        }\n        [ PlaySound \"hello.wav\", IncreaseScore 100 ]\n\n",
+        "type": "a -> List effect -> Effects.Effects a effect"
+      },
+      {
+        "name": "mapOverEffects",
+        "comment": " Map a function over the list of effects of a value-and-effects pair,\nwhile still keeping the value the same.\n",
+        "type": "(effectA -> effectB) -> Effects.Effects a effectA -> Effects.Effects a effectB"
+      },
+      {
+        "name": "mapOverValue",
+        "comment": " Modify the value of a value-and-effects pair, while still keeping the effects\n   the same.\n",
+        "type": "(a -> b) -> Effects.Effects a effect -> Effects.Effects b effect"
+      },
+      {
+        "name": "return",
+        "comment": " Take a value and wrap it with no effects.\nThis is useful when you don't want to make a tuple with a more complicated value and an empty\nlist because it will look messy, e.g.\n\n    Effects.return\n        { model\n            | isGrounded = true\n            , velocity = (0, 0)\n        }\n",
+        "type": "a -> Effects.Effects a effect"
+      },
+      {
+        "name": "toCmd",
+        "comment": " Takes a pair of a value and a list of commands,\nand turns it into a pair of a value and a single command by batching the commands\ntogether.\n\n    runRequests : Model -> (Model, Cmd Msg)\n    runRequests model =\n        (Effects.return model\n            `Effects.andThen` fetchGifs\n            `Effects.andThen` attachRandomId\n        )\n            |> Effects.toCmd\n",
+        "type": "Effects.Effects a (Platform.Cmd.Cmd msg) -> ( a, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

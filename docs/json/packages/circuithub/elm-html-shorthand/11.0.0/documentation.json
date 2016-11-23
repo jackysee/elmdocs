@@ -1,0 +1,1489 @@
+[
+  {
+    "name": "Html.Shorthand",
+    "comment": " Shorthands for common Html elements\n\n# Interactive elements (Unsupported)\nThe following elements are not currently well supported and do not have shorthands:\n\n* [&lt;details&gt;, &lt;summary&gt;](http://caniuse.com/#feat=details)\n* [&lt;menu&gt;, &lt;menuitem&gt;](http://caniuse.com/#feat=menu)\n\n# Conventions\nThe following two conventions are used for shorthands. One example is provided for each.\n\n## Elision form\nMost attributes of the node are elided, only one or two arguments needs to be supplied.\n\n@docs div_\n\n## Idiomatic form\n\nThis form attempts to take a common sense record of parameters. This is a more expansive shorthand which\nwill not satisfy every need, but takes care of the usual cases while still encouraging uniformity.\n\n@docs img'\n\n# Basic types\nThe following types are all aliases for `String` and as such, only serve documentation purposes.\n\n@docs IdString, ClassString, UrlString, TextString, TextDirection\n\n# Event / handler types\n@docs EventDecodeError, FormUpdate, FieldUpdate, SelectUpdate, fieldUpdate, fieldUpdateContinuous, fieldUpdateFocusLost, fieldUpdateFallbackFocusLost, fieldUpdateFallbackContinuous\n\n# Element types\n@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam\n\n# Encoders\n@docs encodeId, encodeClass\n\n# Idiomatic attributes\n@docs id', class'\n\n# Sections\n@docs body_, body', section_, section', nav_, nav', article_, article', aside'\n@docs h1_, h1', h2_, h2', h3_, h3', h4_, h4', h5_, h5', h6_, h6', header_, header', footer_, footer'\n@docs address_, address', main_\n\n# Grouping content\n@docs p_, p', pre_, pre', blockquote_, blockquote', ol_, ol', ul_, ul', li_, li', dl_, dl', dt', dd_, dd', hr_\n@docs figure', figcaption_, figcaption'\n@docs div_, div', a_, a', em_, em', strong_, strong', small_, small', s_, s'\n@docs cite_, cite', q_, q', dfn', abbr_, abbr'\n* time_ (TODO)\n* time' (TODO)\n@docs code_, code', var_, var', samp_, samp', kbd_, kbd'\n@docs sub_, sub', sup_, sup', i_, i', b_, b', u_, u', mark_, mark'\n@docs ruby_, ruby', rt_, rt', rp_, rp', bdi_, bdi', bdo'\n@docs span_, span'\n@docs br', wbr'\n\n# Edits\n@docs ins_, ins', del_, del'\n\n# Embedded content\n@docs img', img_, iframe', embed', object'\n@docs param', video_, video', audio_, audio'\n* source' (TODO)\n* track' (TODO)\n* svg' (TODO)\n* math' (TODO)\n\n# Tabular data\n@docs table_, table', caption_, caption'\n* colgroup' (TODO)\n* col' (TODO)\n@docs tbody_, tbody', thead_, thead', tfoot_, tfoot', tr_, tr', td_, td', th_, th'\n\n# Forms\n@docs form', fieldset_, fieldset', legend_, legend', label_, label'\n@docs inputField', inputText', inputMaybeText', inputFloat', inputMaybeFloat', inputInt', inputMaybeInt', inputUrl', inputMaybeUrl'\n* radio' (TODO)\n* checkbox' (TODO)\n@docs button_, button', buttonLink_, buttonLink', buttonSubmit_, buttonSubmit', buttonReset_, buttonReset'\n@docs select'\n* datalist' (TODO)\n* optgroup' (TODO)\n@docs option_, option'\n* textarea_ (TODO)\n* textarea' (TODO)\n* keygen_ (TODO)\n* keygen' (TODO)\n@docs output', progress', meter'\n\n",
+    "aliases": [
+      {
+        "name": "AnchorParam",
+        "comment": " See [AnchorParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AnchorParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.AnchorParam"
+      },
+      {
+        "name": "AudioParam",
+        "comment": " See [AudioParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#AudioParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.AudioParam"
+      },
+      {
+        "name": "ButtonParam",
+        "comment": " See [ButtonParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ButtonParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.ButtonParam msg"
+      },
+      {
+        "name": "ClassCiteParam",
+        "comment": " See [ClassCiteParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassCiteParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ClassCiteParam"
+      },
+      {
+        "name": "ClassIdParam",
+        "comment": " See [ClassIdParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassIdParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ClassIdParam"
+      },
+      {
+        "name": "ClassParam",
+        "comment": " See [ClassParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ClassParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ClassParam"
+      },
+      {
+        "name": "ClassString",
+        "comment": " Class parameters will automatically be encoded via `encodeClass`\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ClassString"
+      },
+      {
+        "name": "EmbedParam",
+        "comment": " See [EmbedParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EmbedParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.EmbedParam"
+      },
+      {
+        "name": "EventDecodeError",
+        "comment": " A field error is generated when an input fails to parse its input string during an attempt to produce the output value.\nThis gives the user an opportunity to specify a fallback behaviour or simply ignore the error, leaving the input in an intermediate state.\n\n* *event* - json event that generated this error\n* *reason* - error string describing the parse error\n\nSee also [EventDecodeError](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#EventDecodeError)\n\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.EventDecodeError"
+      },
+      {
+        "name": "FieldUpdate",
+        "comment": " Update configuration for `input` fields.\n\n* *onInput* - continuously send messages on any input event (`onInput`)\n* *onEnter* - a message to send whenever the enter key is hit\n* *onKeyboardLost* - a message to send whenever the input field loses the keyboard cursor\n\nIn the future, if this can be made efficient, this may also support:\n\n* *onMouseMove* - a message to send whenever the mouse moves while the input field has keyboard focus\n\nSee also [FieldUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldUpdate)\n\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.FieldUpdate a msg"
+      },
+      {
+        "name": "FieldsetParam",
+        "comment": " See [FieldsetParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FieldsetParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.FieldsetParam"
+      },
+      {
+        "name": "FormParam",
+        "comment": " See [FormParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.FormParam msg"
+      },
+      {
+        "name": "FormUpdate",
+        "comment": " Update configuration for a `form` element.\n\n* *onSubmit* - a submit action was triggered\n* *onEnter* - action to perform on enter key... see also [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513)\n\nSee also [FormUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#FormUpdate)\n\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.FormUpdate msg"
+      },
+      {
+        "name": "IdString",
+        "comment": " Id parameters will automatically be encoded via `encodeId`\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.IdString"
+      },
+      {
+        "name": "IframeParam",
+        "comment": " See [IframeParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#IframeParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.IframeParam"
+      },
+      {
+        "name": "ImgParam",
+        "comment": " See [ImgParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ImgParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ImgParam"
+      },
+      {
+        "name": "InputFieldParam",
+        "comment": " See [InputFieldParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFieldParam)\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputFieldParam a msg"
+      },
+      {
+        "name": "InputFloatParam",
+        "comment": " See [InputFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputFloatParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputFloatParam msg"
+      },
+      {
+        "name": "InputIntParam",
+        "comment": " See [InputIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputIntParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputIntParam msg"
+      },
+      {
+        "name": "InputMaybeFloatParam",
+        "comment": " See [InputMaybeFloatParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeFloatParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputMaybeFloatParam msg"
+      },
+      {
+        "name": "InputMaybeIntParam",
+        "comment": " See [InputMaybeIntParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeIntParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputMaybeIntParam msg"
+      },
+      {
+        "name": "InputMaybeTextParam",
+        "comment": " See [InputMaybeTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeTextParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputMaybeTextParam msg"
+      },
+      {
+        "name": "InputMaybeUrlParam",
+        "comment": " See [InputMaybeUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputMaybeUrlParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputMaybeUrlParam msg"
+      },
+      {
+        "name": "InputTextParam",
+        "comment": " See [InputTextParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputTextParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputTextParam msg"
+      },
+      {
+        "name": "InputUrlParam",
+        "comment": " See [InputUrlParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#InputUrlParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.InputUrlParam msg"
+      },
+      {
+        "name": "LabelParam",
+        "comment": " See [LabelParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#LabelParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.LabelParam"
+      },
+      {
+        "name": "MediaParam",
+        "comment": " See [MediaParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#MediaParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.MediaParam"
+      },
+      {
+        "name": "MeterParam",
+        "comment": " See [MeterParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#MeterParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.MeterParam"
+      },
+      {
+        "name": "ModParam",
+        "comment": " See [ModParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ModParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ModParam"
+      },
+      {
+        "name": "ObjectParam",
+        "comment": " See [ObjectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ObjectParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ObjectParam"
+      },
+      {
+        "name": "OptionParam",
+        "comment": " See [OptionParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OptionParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.OptionParam"
+      },
+      {
+        "name": "OutputParam",
+        "comment": " See [OutputParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#OutputParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.OutputParam"
+      },
+      {
+        "name": "ProgressParam",
+        "comment": " See [ProgressParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#ProgressParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.ProgressParam"
+      },
+      {
+        "name": "SelectParam",
+        "comment": " See [SelectParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectParam)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.SelectParam msg"
+      },
+      {
+        "name": "SelectUpdate",
+        "comment": " Update configuration for a `select` element.\n\n* *onSelect* - the selected option has changed.\n\nSee also [SelectUpdate](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#SelectUpdate)\n\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "Html.Shorthand.Type.SelectUpdate a msg"
+      },
+      {
+        "name": "TextString",
+        "comment": " The string passed to a function taking this parameter will be rendered as textual content via `text`.\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.TextString"
+      },
+      {
+        "name": "UrlString",
+        "comment": " Only valid urls should be passed to functions taking this parameter\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.UrlString"
+      },
+      {
+        "name": "VideoParam",
+        "comment": " See [VideoParam](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand-Type#VideoParam)\n",
+        "args": [],
+        "type": "Html.Shorthand.Type.VideoParam"
+      }
+    ],
+    "types": [
+      {
+        "name": "TextDirection",
+        "comment": " Direction to output text\n",
+        "args": [],
+        "cases": [
+          [
+            "LeftToRight",
+            []
+          ],
+          [
+            "RightToLeft",
+            []
+          ],
+          [
+            "AutoDirection",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "a'",
+        "comment": "",
+        "type": "Html.Shorthand.AnchorParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "a_",
+        "comment": " [&lt;a&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a) represents a hyperlink , linking to another resource.\n",
+        "type": "Html.Shorthand.UrlString -> Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "abbr'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "abbr_",
+        "comment": " [&lt;abbr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) represents an abbreviation or an acronym ; the expansion of the\nabbreviation can be represented in the title attribute.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "address'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "address_",
+        "comment": " [&lt;address&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address) defines a section containing contact information.\n\n**Do:**\n* [place inside the &lt;footer&gt; where appropriate](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)\n\n**Don't:**\n* [represent an arbitrary, unrelated address](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/address#Summary)\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "article'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "article_",
+        "comment": " [&lt;article&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article) defines self-contained content that could exist independently of the rest\nof the content.\n\n**Do:**\n* [use &lt;article&gt; for self-contained components with informational content](http://html5doctor.com/the-article-element/)\n* [use &lt;article&gt; for blog entries, user-submitted comments, interactive educational gadgets](http://html5doctor.com/the-article-element/)\n\n**Don't:**\n* [confuse &lt;article&gt; with &lt;section&gt; which need not be self-contained](http://www.brucelawson.co.uk/2010/html5-articles-and-sections-whats-the-difference/)\n\n",
+        "type": "Html.Shorthand.IdString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "aside'",
+        "comment": " [&lt;aside&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside) defines some content loosely related to the page content. If it is removed,\nthe remaining content still makes sense.\n",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "audio'",
+        "comment": "",
+        "type": "Html.Shorthand.AudioParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "audio_",
+        "comment": " [&lt;audio&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) represents a sound or audio stream.\n\nDoesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `audio` for that.\n",
+        "type": "Html.Shorthand.UrlString -> Html.Html msg"
+      },
+      {
+        "name": "b'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "b_",
+        "comment": " [&lt;b&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) represents a text which to which attention is drawn for utilitarian\npurposes. It doesn't convey extra importance and doesn't imply an alternate voice.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "bdi'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "bdi_",
+        "comment": " [&lt;bdi&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdi) represents text that must be isolated from its surrounding for\nbidirectional text formatting. It allows embedding a span of text with a\ndifferent, or unknown, directionality.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "bdo'",
+        "comment": " [&lt;bdo&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/bdo) represents the directionality of its children, in order to explicitly\noverride the Unicode bidirectional algorithm.\n",
+        "type": "Html.Shorthand.TextDirection -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "blockquote'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassCiteParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "blockquote_",
+        "comment": " [&lt;blockquote&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) represents a content that is quoted from another source.\n\nThe idiomatic form uses a cite url, but an elision form is also provided.\n\n**Don't:**\n* use blockquote for short, inline quotations, we have &lt;`q'`&gt; for that\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "body'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "body_",
+        "comment": " [&lt;body&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/body) represents the content of an HTML document. There is only one `body`\nelement in a document.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "br'",
+        "comment": " [&lt;br&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br) represents a line break.\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "button'",
+        "comment": "",
+        "type": "Html.Shorthand.ButtonParam msg -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "buttonLink'",
+        "comment": "",
+        "type": "Html.Shorthand.ButtonParam msg -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "buttonLink_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> msg -> Html.Html msg"
+      },
+      {
+        "name": "buttonReset'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "buttonReset_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "buttonSubmit'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "buttonSubmit_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "button_",
+        "comment": " [&lt;button&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) represents a button.\n",
+        "type": "Html.Shorthand.TextString -> msg -> Html.Html msg"
+      },
+      {
+        "name": "caption'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "caption_",
+        "comment": " [&lt;caption&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption) represents the title of a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "cite'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "cite_",
+        "comment": " [&lt;cite&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite) represents the title of a work.\n\n**Do:**\n* [consider using an anchor inside of the cite to link to the origin](http://html5doctor.com/cite-and-blockquote-reloaded/)\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "class'",
+        "comment": " Encoded class attribute. Uses `encodeClass` to ensure that the classes are nicely normalized.\n",
+        "type": "Html.Shorthand.ClassString -> Html.Attribute msg"
+      },
+      {
+        "name": "code'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "code_",
+        "comment": " [&lt;code&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code) represents computer code.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dd'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dd_",
+        "comment": " [&lt;dd&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dd) represents the definition of the terms immediately listed before it.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "del'",
+        "comment": "",
+        "type": "Html.Shorthand.ModParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "del_",
+        "comment": " [&lt;del&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/del) defines a removal from the document.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dfn'",
+        "comment": " [&lt;dfn&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) represents a term whose definition is contained in its nearest ancestor\ncontent.\n",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "div'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "div_",
+        "comment": " [&lt;div&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div) represents a generic container with no special meaning.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dl'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dl_",
+        "comment": " [&lt;dl&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl) defines a definition list, that is, a list of terms and their associated\ndefinitions.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dt'",
+        "comment": " [&lt;dt&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dt) represents a term defined by the next `dd`.\n",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "em'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "em_",
+        "comment": " [&lt;em&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) represents emphasized text, like a stress accent.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "embed'",
+        "comment": " [&lt;embed&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed) represents a integration point for an external, often non-HTML,\napplication or interactive content.\n",
+        "type": "Html.Shorthand.EmbedParam -> Html.Html msg"
+      },
+      {
+        "name": "encodeClass",
+        "comment": " A simplistic way of encoding of `class` attributes into a [sane format](http://stackoverflow.com/a/72577).\nThis is used internally by all of the shorthands that take a `ClassString`.\n\n* Everything is turned into lowercase\n* Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.\n* Trim hyphens (-) and underscores (_) on the sides of each class.\n* If the first character is a number, 'x' will be prepended.\n* Empty strings are allowed\n\nE.g.\n\n    encodeClass \"Color.encoding: BLUE-GREEN\" == \"colorencoding blue-green\"\n    encodeClass \"99-bottles... 98-bottles\" == \"x99-bottles x98-bottles\"\n    encodeClass \"_internal-class-\" == \"internal-class\"\n    encodeClass \" \\t \\n\" == \"\"\n\n",
+        "type": "Html.Shorthand.ClassString -> Html.Shorthand.ClassString"
+      },
+      {
+        "name": "encodeId",
+        "comment": " A simplistic way of encoding `id` attributes into a [sane format](http://stackoverflow.com/a/72577).\nThis is used internally by all of the shorthands that take an `IdString`.\n\n* Everything is turned into lowercase\n* Only alpha-numeric characters (a-z,A-Z,0-9), hyphens (-) and underscores (_) are passed through the filter.\n* Trim hyphens (-) and underscores (_) off the sides.\n* If the first character is a number, 'x' will be prepended.\n* Empty strings are allowed\n\nE.g.\n\n    encodeId \"Elmo teaches Elm!\" == \"elmo-teaches-elm\"\n    encodeId \"99 bottles of beer, 98 bottles...\" == \"x99-bottles-of-beer-98-bottles\"\n    encodeId \"_internal- -<-identifier->-\" == \"internal-identifier\"\n    encodeId \" \\t \\n\" == \"\"\n\n",
+        "type": "Html.Shorthand.IdString -> Html.Shorthand.IdString"
+      },
+      {
+        "name": "fieldUpdate",
+        "comment": " Default field update handlers. Use this to select only one or two handlers.\n\n    { fieldUpdate\n    | onInput <- Just (\\r -> case r of  \n                                Ok x -> Just (SetValue x)\n                                Err _ -> Just (SetError \"Input error\"))\n    }\n\n",
+        "type": "Html.Shorthand.FieldUpdate a msg"
+      },
+      {
+        "name": "fieldUpdateContinuous",
+        "comment": " Good configuration for continuously updating fields that don't have any invalid states, or are restricted by a pattern.\n",
+        "type": "{ onInput : a -> msg } -> Html.Shorthand.FieldUpdate a msg"
+      },
+      {
+        "name": "fieldUpdateFallbackContinuous",
+        "comment": " Continuously update the field, handling invalid states on any input event.\nUse this configuration to generate error notifications rapidly.\n\n    inputField'\n      { update = fieldUpdateFallbackContinuous\n                  { -- Show an error notification (e.g. highlight the input field)\n                    onFallback _ = InvalidTemperature\n                  , -- Update the temperature if it parsed correctly\n                    onInput v = SetTemperature v\n                  }\n      , ...\n      }\n\nNote that this configuration does not work well with `inputFloat'`/`inputMaybeFloat'` and `inputInt'`/`inputMaybeInt'` fields due to\nthe strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.\n\n",
+        "type": "{ onFallback : String -> msg, onInput : a -> msg } -> Html.Shorthand.FieldUpdate a msg"
+      },
+      {
+        "name": "fieldUpdateFallbackFocusLost",
+        "comment": " Continuously update the field, handling invalid states only when the focus is lost.\nThe input element will try to consolidate the field with its value in all of these scenarios:\n\n* During input event, if and only if the input parses correctly\n* When the return key (ENTER) is hit; resets to the last known value if it couldn't parse\n* When the keyboard cursor is moved to a different element; resets to the last known value if it couldn't parse\n\nIn the future, if this can be made efficient, it will also support:\n* When the element has keyboard focus and the mouse cursor is moved ; resets to the last known value if it couldn't parse\n\nThis function takes an explicit fallback function that can usually be set to the previous value in order to have the field simply reset.\n\n    inputField'\n      { update = fieldUpdateFallbackFocusLost\n                  { -- Reset the input to the current temperature\n                    onFallback _ = SetTemperature currentTemperature\n                  , -- Update the temperature if it parsed correctly\n                    onInput v = SetTemperature v\n                  }\n      , ...\n      }\n\nNote that this configuration does not work well with `inputFloat'`/`inputMaybeFloat'` and `inputInt'`/`inputMaybeInt'` fields due to\nthe strange way that browsers treat numeric inputs. This update method can be used to implement custom field types however.\n\n",
+        "type": "{ onFallback : String -> msg, onInput : a -> msg } -> Html.Shorthand.FieldUpdate a msg"
+      },
+      {
+        "name": "fieldUpdateFocusLost",
+        "comment": " Use with fields that should consolidate their value when the focus moved.\n",
+        "type": "{ onInput : a -> msg } -> Html.Shorthand.FieldUpdate a msg"
+      },
+      {
+        "name": "fieldset'",
+        "comment": "",
+        "type": "Html.Shorthand.FieldsetParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "fieldset_",
+        "comment": " [&lt;fieldset&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset) represents a set of controls.\n",
+        "type": "Bool -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "figcaption'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "figcaption_",
+        "comment": " [&lt;figcaption&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figcaption) represents the legend of a figure.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "figure'",
+        "comment": " [&lt;figure&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure) represents a figure illustrated as part of the document.\n\n**Do:**\n* [use figure for captioned content](http://html5doctor.com/the-figure-figcaption-elements/)\n* [use figure for things other than images: video, audio, a chart, a table etc](http://html5doctor.com/the-figure-figcaption-elements/)\n\n**Don't:**\n* [turn every image into a figure](http://html5doctor.com/avoiding-common-html5-mistakes/#figure)\n\n",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "footer'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "footer_",
+        "comment": " [&lt;footer&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer) defines the footer for a page or section. It often contains a copyright\nnotice, some links to legal information, or addresses to give feedback.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "form'",
+        "comment": " [&lt;form&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) represents a form , consisting of controls, that can be submitted to a\nserver for processing.\n\nIn future `Nothing` may mask out the default submit on Enter key behaviour.\nSee [virtual-dom/pull/5#issuecomment-88444513](https://github.com/evancz/virtual-dom/pull/5#issuecomment-88444513) and [stackoverflow](http://stackoverflow.com/a/587575/167485).\n",
+        "type": "Html.Shorthand.FormParam msg -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h1'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h1_",
+        "comment": " [&lt;h*n*&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) provide titles for sections and subsections, describing the topic it introduces.\n\n**Do:**\n* [use &lt;h*n*&gt; to define a document outline](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)\n* [try to have only one first level &lt;h*n*&gt; on a page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)\n* [introduce &lt;section&gt;s with headings](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)\n\n**Don't:**\n* [skip &lt;h*n*&gt; levels if you can help it](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements)\n* [style &lt;h*n*&gt;s using html5 &lt;section&gt;s](http://www.stubbornella.org/content/2011/09/06/style-headings-using-html5-sections/)\n* [use &lt;h*n*&gt; for subtitles, subheadings](http://html5doctor.com/howto-subheadings/)\n\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "h2'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h2_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "h3'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h3_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "h4'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h4_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "h5'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h5_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "h6'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "h6_",
+        "comment": "",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "header'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "header_",
+        "comment": " [&lt;header&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header) defines the header of a page or section. It often contains a logo, the\ntitle of the web site, and a navigational table of content.\n\n**Don't:**\n* [overuse &lt;header&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#header-hgroup)\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "hr_",
+        "comment": " [&lt;hr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hr) represents a thematic break between paragraphs of a section or article or\nany longer content.\n\nNo other form is provided since hr should probably not have any classes or contents.\n\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "i'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "i_",
+        "comment": " [&lt;i&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) represents some text in an alternate voice or mood, or at least of\ndifferent quality, such as a taxonomic designation, a technical term, an\nidiomatic phrase, a thought, or a ship name.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "id'",
+        "comment": " Encoded id attribute. Uses `encodeId` to ensure that the id is nicely normalized.\n",
+        "type": "Html.Shorthand.IdString -> Html.Attribute msg"
+      },
+      {
+        "name": "iframe'",
+        "comment": " [&lt;iframe&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) embedded an HTML document.\n",
+        "type": "Html.Shorthand.IframeParam -> Html.Html msg"
+      },
+      {
+        "name": "img'",
+        "comment": " [&lt;img&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) represents an image.\n",
+        "type": "Html.Shorthand.ImgParam -> Html.Html msg"
+      },
+      {
+        "name": "img_",
+        "comment": "",
+        "type": "Int -> Int -> Html.Shorthand.UrlString -> String -> Html.Html msg"
+      },
+      {
+        "name": "inputField'",
+        "comment": " [&lt;input&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) represents a typed data field allowing the user to edit the data.\n\nIn order to disable an input field, use `fieldset_ False`.\n",
+        "type": "Html.Shorthand.InputFieldParam a msg -> List (Html.Attribute msg) -> Html.Html msg"
+      },
+      {
+        "name": "inputFloat'",
+        "comment": "",
+        "type": "Html.Shorthand.InputFloatParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputInt'",
+        "comment": "",
+        "type": "Html.Shorthand.InputIntParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputMaybeFloat'",
+        "comment": "",
+        "type": "Html.Shorthand.InputMaybeFloatParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputMaybeInt'",
+        "comment": "",
+        "type": "Html.Shorthand.InputMaybeIntParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputMaybeText'",
+        "comment": "",
+        "type": "Html.Shorthand.InputMaybeTextParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputMaybeUrl'",
+        "comment": "",
+        "type": "Html.Shorthand.InputMaybeUrlParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputText'",
+        "comment": "",
+        "type": "Html.Shorthand.InputTextParam msg -> Html.Html msg"
+      },
+      {
+        "name": "inputUrl'",
+        "comment": "",
+        "type": "Html.Shorthand.InputUrlParam msg -> Html.Html msg"
+      },
+      {
+        "name": "ins'",
+        "comment": "",
+        "type": "Html.Shorthand.ModParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "ins_",
+        "comment": " [&lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ins) defines an addition to the document.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "kbd'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "kbd_",
+        "comment": " [&lt;kbd&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd) represents user input, often from the keyboard, but not necessarily; it\nmay represent other input, like transcribed voice commands.\n\n    instructions : Html msg\n    instructions =\n      p_\n        [ text \"Press \"\n        , kbd_\n          [ kbd_ [ text \"Ctrl\" ]\n          , text \"+\"\n          , kbd_ [ text \"S\"]\n          ]\n        , text \" to save this document.\"\n        ]\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "label'",
+        "comment": "",
+        "type": "Html.Shorthand.LabelParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "label_",
+        "comment": " [&lt;label&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) represents the caption of a form control.\n",
+        "type": "Html.Shorthand.IdString -> Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "legend'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "legend_",
+        "comment": " [&lt;legend&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/legend) represents the caption for a `fieldset`.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "li'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "li_",
+        "comment": " [&lt;li&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li) defines a item of an enumeration list.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "main_",
+        "comment": " [&lt;main&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main) defines the main or important content in the document. There is only one\n`main` element in the document.\n\nNote that main' is provided by [elm-html](http://package.elm-lang.org/packages/evancz/elm-html/latest/Html#main'), not by this package which only provides `main_`.\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "mark'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "mark_",
+        "comment": " [&lt;mark&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark) represents text highlighted for reference purposes, that is for its\nrelevance in another context.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "meter'",
+        "comment": " [&lt;meter&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meter) represents a scalar measurement (or a fractional value), within a known range.\n",
+        "type": "Html.Shorthand.MeterParam -> String -> Html.Html msg"
+      },
+      {
+        "name": "nav'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "nav_",
+        "comment": " [&lt;nav&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav) defines a section that contains only navigation links.\n\n**Do:**\n* [use &lt;nav&gt; for major navigation](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)\n\n**Don't:**\n* [wrap all lists of links in &lt;nav&gt;](http://html5doctor.com/avoiding-common-html5-mistakes/#nav-external)\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "object'",
+        "comment": " [&lt;object&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object) represents an external resource , which is treated as an image, an HTML\nsub-document, or an external resource to be processed by a plug-in.\n",
+        "type": "Html.Shorthand.ObjectParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "ol'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "ol_",
+        "comment": " [&lt;ol&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol) defines an ordered list of items.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "option'",
+        "comment": "",
+        "type": "Html.Shorthand.OptionParam -> Html.Html msg"
+      },
+      {
+        "name": "option_",
+        "comment": " [&lt;option&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option) represents an option in a `select` element or a suggestion of a `datalist` element.\n",
+        "type": "Html.Shorthand.TextString -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "output'",
+        "comment": " [&lt;output&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/output) represents the result of a calculation.\n",
+        "type": "Html.Shorthand.OutputParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "p'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "p_",
+        "comment": " [&lt;p&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p) defines a portion that should be displayed as a paragraph of text.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "param'",
+        "comment": " [&lt;param&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/param) defines parameters for use by plug-ins invoked by `object` elements.\n",
+        "type": "String -> String -> Html.Html msg"
+      },
+      {
+        "name": "pre'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "pre_",
+        "comment": " [&lt;pre&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre) indicates that its content is preformatted and that this format must be\npreserved.\n\n**Do:**\n* [use &lt;pre&gt; for blocks of whitespace sensitive text that must not wrap](http://stackoverflow.com/a/4611735)\n* use &lt;pre&gt; as a wrapper for blocks &lt;`code_`&gt;\n* use &lt;pre&gt; as a wrapper for blocks of &lt;`samp_`&gt; output from a computer program\n\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "progress'",
+        "comment": " [&lt;progress&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress) represents the completion progress of a task.\n",
+        "type": "Html.Shorthand.ProgressParam -> String -> Html.Html msg"
+      },
+      {
+        "name": "q'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassCiteParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "q_",
+        "comment": " [&lt;q&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q) represents an inline quotation.\n\nThe idiomatic form uses a cite url, but the elision is also provided.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "rp'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "rp_",
+        "comment": " [&lt;rp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rp) represents parenthesis around a ruby annotation, used to display the\nannotation in an alternate way by browsers not supporting the standard display\nfor annotations.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "rt'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "rt_",
+        "comment": " [&lt;rt&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/rt) represents the text of a ruby annotation .\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "ruby'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "ruby_",
+        "comment": " [&lt;ruby&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby) represents content to be marked with ruby annotations, short runs of text\npresented alongside the text. This is often used in conjunction with East Asian\nlanguage where the annotations act as a guide for pronunciation, like the\nJapanese furigana.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "s'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "s_",
+        "comment": " [&lt;s&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s) represents content that is no longer accurate or relevant.\n\n**Don't:**\n* [use &lt;s&gt; for indicating document edits, use &lt;del&gt; or &lt;ins&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/s#Summary)\n\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "samp'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "samp_",
+        "comment": " [&lt;samp&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) represents the output of a program or a computer.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "section'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassIdParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "section_",
+        "comment": " [&lt;section&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section) defines a section in a document. Use sections to construct a document outline.\n\n**Do:**\n* [use &lt;section&gt;s to define document outlines](http://html5doctor.com/outlines/)\n* [...but use &lt;h*n*&gt;s carefully](http://www.paciellogroup.com/blog/2013/10/html5-document-outline/)\n\n**Don't:**\n* [use &lt;section&gt; as a wrapper for styling](http://html5doctor.com/avoiding-common-html5-mistakes/#section-wrapper)\n\n",
+        "type": "Html.Shorthand.IdString -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "select'",
+        "comment": " [&lt;select&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select) represents a control allowing selection among a set of options.\n",
+        "type": "Html.Shorthand.SelectParam msg -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "small'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "small_",
+        "comment": " [&lt;small&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small) represents a side comment , that is, text like a disclaimer or a\ncopyright, which is not essential to the comprehension of the document.\n\n**Don't:**\n  * [use small for pure styling](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)\n\n**Do:**\n  * [use small for side-comments and small print, including copyright and legal text](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small#Summary)\n\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "span'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "span_",
+        "comment": " [&lt;span&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span) represents text with no specific meaning. This has to be used when no other\ntext-semantic element conveys an adequate meaning, which, in this case, is\noften brought by global attributes like class', lang, or dir.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "strong'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "strong_",
+        "comment": " [&lt;strong&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) represents especially important text.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "sub'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "sub_",
+        "comment": " [&lt;sub&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub) represent a subscript.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "sup'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "sup_",
+        "comment": " [&lt;sup&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup) represent a superscript.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "table'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "table_",
+        "comment": " [&lt;table&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table) represents data with more than one dimension.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tbody'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tbody_",
+        "comment": " [&lt;tbody&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody) represents the block of rows that describes the concrete data of a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "td'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "td_",
+        "comment": " [&lt;td&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td) represents a data cell in a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tfoot'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tfoot_",
+        "comment": " [&lt;tfoot&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tfoot) represents the block of rows that describes the column summaries of a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "th'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "th_",
+        "comment": " [&lt;th&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th) represents a header cell in a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "thead'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "thead_",
+        "comment": " [&lt;thead&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead) represents the block of rows that describes the column labels of a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tr'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tr_",
+        "comment": " [&lt;tr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr) represents a row of cells in a table.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "u'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "u_",
+        "comment": " [&lt;u&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/u) represents a non-textual annoatation for which the conventional\npresentation is underlining, such labeling the text as being misspelt or\nlabeling a proper name in Chinese text.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "ul'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "ul_",
+        "comment": " [&lt;ul&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul) defines an unordered list of items.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "var'",
+        "comment": "",
+        "type": "Html.Shorthand.ClassParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "var_",
+        "comment": " [&lt;var&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var) represents a variable. Specific cases where it should be used include an\nactual mathematical expression or programming context, an identifier\nrepresenting a constant, a symbol identifying a physical quantity, a function\nparameter, or a mere placeholder in prose.\n",
+        "type": "Html.Shorthand.TextString -> Html.Html msg"
+      },
+      {
+        "name": "video'",
+        "comment": "",
+        "type": "Html.Shorthand.VideoParam -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "video_",
+        "comment": " [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) represents a video, the associated audio and captions, and controls.\n\nDoesn't allow for &lt;track&gt;s &lt;source&gt;s, please use `video` for that.\n",
+        "type": "Html.Shorthand.UrlString -> Html.Html msg"
+      },
+      {
+        "name": "wbr'",
+        "comment": " [&lt;wbr&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/wbr) represents a line break opportunity , that is a suggested point for\nwrapping text in order to improve readability of text split on several lines.\n",
+        "type": "Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Html.Shorthand.Internal",
+    "comment": " Internals for Html.Shorthand See [Html.Shorthand](http://package.elm-lang.org/packages/circuithub/elm-html-shorthand/latest/Html-Shorthand)\n\n@docs encodeId, encodeClass, class', id'\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "class'",
+        "comment": " ",
+        "type": "Html.Shorthand.Type.ClassString -> Html.Attribute msg"
+      },
+      {
+        "name": "encodeClass",
+        "comment": " ",
+        "type": "Html.Shorthand.Type.ClassString -> Html.Shorthand.Type.ClassString"
+      },
+      {
+        "name": "encodeId",
+        "comment": " ",
+        "type": "Html.Shorthand.Type.IdString -> Html.Shorthand.Type.IdString"
+      },
+      {
+        "name": "id'",
+        "comment": " ",
+        "type": "Html.Shorthand.Type.IdString -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Html.Shorthand.Event",
+    "comment": " Shorthands for common Html events\n\n# Events\n@docs onInput', onEnter, onChange, onKeyboardLost, onMouseLost\n\n# Special decoders\n@docs messageDecoder\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "messageDecoder",
+        "comment": " A special decoder that allows you to mix event decoding logic with message generation.\nThis function takes an existing event decoder and passes the result of the parser along in order to produce an optional message directly.\nThis provides a mechanism for altering messages if parse errors occur in the decoder.\n\n    messageDecoder targetValueFloat <| \\r ->\n      case r of\n        Ok temp -> Just <| SetTemperature temp\n        Err _   -> Just <| SetError \"Please enter a valid temperature\"\n",
+        "type": "Json.Decode.Decoder a -> (Result.Result Html.Shorthand.Type.EventDecodeError a -> Maybe.Maybe msg) -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "onChange",
+        "comment": " Fires when a \"change\" event is triggered.\n",
+        "type": "Json.Decode.Decoder a -> (a -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onEnter",
+        "comment": " Fires off the message when the `Enter` key is pressed (on keydown).\n",
+        "type": "Json.Decode.Decoder a -> (a -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onInput'",
+        "comment": " Similar to onInput, but uses a decoder to return the internal state of an input field.\n",
+        "type": "Json.Decode.Decoder a -> (a -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onKeyboardLost",
+        "comment": " Similar to onBlur, but uses a decoder to return the internal state of an input field.\n",
+        "type": "Json.Decode.Decoder a -> (a -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseLost",
+        "comment": " Similar to onMouseLeave, but uses a decoder to return the internal state of an input field.\n",
+        "type": "Json.Decode.Decoder a -> (a -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Html.Shorthand.Type",
+    "comment": " Types used by the shorthand. All of these types are re-exported by `Html.Shorthand` so this module is only useful if\nyou aren't already importing Html.Shorthand.\n\n# Common types\n@docs IdString, ClassString, UrlString, TextString\n\n# Event / handler types\n@docs EventDecodeError, FormUpdate, FieldUpdate, ButtonUpdate, SelectUpdate\n\n# Element parameters\n@docs ClassParam, ClassIdParam, ClassCiteParam, AnchorParam, ModParam, ImgParam, IframeParam, EmbedParam, ObjectParam, MediaParam, VideoParam, AudioParam, FormParam, FieldsetParam, LabelParam, InputFieldParam, InputTextParam, InputMaybeTextParam, InputFloatParam, InputMaybeFloatParam, InputIntParam, InputMaybeIntParam, InputUrlParam, InputMaybeUrlParam, ButtonParam, SelectParam, OptionParam, OutputParam, ProgressParam, MeterParam\n\n",
+    "aliases": [
+      {
+        "name": "AnchorParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , href : Html.Shorthand.Type.UrlString }"
+      },
+      {
+        "name": "AudioParam",
+        "comment": " ",
+        "args": [],
+        "type": "Html.Shorthand.Type.MediaParam"
+      },
+      {
+        "name": "ButtonParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , update : Html.Shorthand.Type.ButtonUpdate msg }"
+      },
+      {
+        "name": "ButtonUpdate",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ onClick : msg }"
+      },
+      {
+        "name": "ClassCiteParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , cite : Html.Shorthand.Type.UrlString }"
+      },
+      {
+        "name": "ClassIdParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , id : Html.Shorthand.Type.IdString }"
+      },
+      {
+        "name": "ClassParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString }"
+      },
+      {
+        "name": "ClassString",
+        "comment": " ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "EmbedParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , id : Html.Shorthand.Type.IdString , src : Html.Shorthand.Type.UrlString , type' : String , useMapName : Maybe.Maybe Html.Shorthand.Type.IdString , height : Int , width : Int }"
+      },
+      {
+        "name": "EventDecodeError",
+        "comment": " ",
+        "args": [],
+        "type": "{ event : Json.Decode.Value, reason : String }"
+      },
+      {
+        "name": "FieldUpdate",
+        "comment": " ",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "{ onInput : Maybe.Maybe (Result.Result Html.Shorthand.Type.EventDecodeError a -> Maybe.Maybe msg) , onEnter : Maybe.Maybe (Result.Result Html.Shorthand.Type.EventDecodeError a -> Maybe.Maybe msg) , onKeyboardLost : Maybe.Maybe (Result.Result Html.Shorthand.Type.EventDecodeError a -> Maybe.Maybe msg) }"
+      },
+      {
+        "name": "FieldsetParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString, disabled : Bool }"
+      },
+      {
+        "name": "FormParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , novalidate : Bool , update : Html.Shorthand.Type.FormUpdate msg }"
+      },
+      {
+        "name": "FormUpdate",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ onSubmit : Maybe.Maybe msg, onEnter : Maybe.Maybe msg }"
+      },
+      {
+        "name": "IdString",
+        "comment": " ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "IframeParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , src : Html.Shorthand.Type.UrlString , width : Int , height : Int , sandbox : Maybe.Maybe String , seamless : Bool }"
+      },
+      {
+        "name": "ImgParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , src : Html.Shorthand.Type.UrlString , width : Int , height : Int , alt : String }"
+      },
+      {
+        "name": "InputFieldParam",
+        "comment": " ",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , update : Html.Shorthand.Type.FieldUpdate a msg , type' : String , pattern : Maybe.Maybe String , required : Bool , decoder : Json.Decode.Decoder a }"
+      },
+      {
+        "name": "InputFloatParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Float , min : Maybe.Maybe Float , max : Maybe.Maybe Float , step : Maybe.Maybe Float , update : Html.Shorthand.Type.FieldUpdate Float msg }"
+      },
+      {
+        "name": "InputIntParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Int , min : Maybe.Maybe Int , max : Maybe.Maybe Int , step : Maybe.Maybe Int , update : Html.Shorthand.Type.FieldUpdate Int msg }"
+      },
+      {
+        "name": "InputMaybeFloatParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Maybe.Maybe Float , min : Maybe.Maybe Float , max : Maybe.Maybe Float , step : Maybe.Maybe Float , update : Html.Shorthand.Type.FieldUpdate (Maybe.Maybe Float) msg }"
+      },
+      {
+        "name": "InputMaybeIntParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Maybe.Maybe Int , min : Maybe.Maybe Int , max : Maybe.Maybe Int , step : Maybe.Maybe Int , update : Html.Shorthand.Type.FieldUpdate (Maybe.Maybe Int) msg }"
+      },
+      {
+        "name": "InputMaybeTextParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Maybe.Maybe String , autocomplete : Bool , update : Html.Shorthand.Type.FieldUpdate (Maybe.Maybe String) msg }"
+      },
+      {
+        "name": "InputMaybeUrlParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Maybe.Maybe Html.Shorthand.Type.UrlString , autocomplete : Bool , update : Html.Shorthand.Type.FieldUpdate (Maybe.Maybe Html.Shorthand.Type.UrlString) msg }"
+      },
+      {
+        "name": "InputTextParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : String , required : Bool , autocomplete : Bool , update : Html.Shorthand.Type.FieldUpdate String msg }"
+      },
+      {
+        "name": "InputUrlParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , placeholder : Maybe.Maybe String , value : Html.Shorthand.Type.UrlString , required : Bool , autocomplete : Bool , update : Html.Shorthand.Type.FieldUpdate Html.Shorthand.Type.UrlString msg }"
+      },
+      {
+        "name": "LabelParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , for : Html.Shorthand.Type.IdString }"
+      },
+      {
+        "name": "MediaParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , src : Maybe.Maybe Html.Shorthand.Type.UrlString , autoplay : Bool , controls : Bool , loop : Bool , preload : Maybe.Maybe String , poster : Maybe.Maybe Html.Shorthand.Type.UrlString , volume : Maybe.Maybe Float }"
+      },
+      {
+        "name": "MeterParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , value : Float , min : Float , max : Float , low : Maybe.Maybe Float , high : Maybe.Maybe Float , optimum : Maybe.Maybe Float }"
+      },
+      {
+        "name": "ModParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , cite : String , datetime : String }"
+      },
+      {
+        "name": "ObjectParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , data : Html.Shorthand.Type.UrlString , type' : String , useMapName : Maybe.Maybe Html.Shorthand.Type.IdString , height : Int , width : Int }"
+      },
+      {
+        "name": "OptionParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ label : String, value : String, selected : Bool }"
+      },
+      {
+        "name": "OutputParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , for : List Html.Shorthand.Type.IdString }"
+      },
+      {
+        "name": "ProgressParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , value : Float , max : Float }"
+      },
+      {
+        "name": "SelectParam",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ class : Html.Shorthand.Type.ClassString , name : Html.Shorthand.Type.IdString , update : Html.Shorthand.Type.SelectUpdate String msg }"
+      },
+      {
+        "name": "SelectUpdate",
+        "comment": " ",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "{ onSelect : a -> msg }"
+      },
+      {
+        "name": "TextString",
+        "comment": " ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "UrlString",
+        "comment": " ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "VideoParam",
+        "comment": " ",
+        "args": [],
+        "type": "{ class : Html.Shorthand.Type.ClassString , src : Maybe.Maybe Html.Shorthand.Type.UrlString , width : Int , height : Int , videoHeight : Int , videoWidth : Int , autoplay : Bool , controls : Bool , loop : Bool , preload : Maybe.Maybe String , poster : Maybe.Maybe Html.Shorthand.Type.UrlString , volume : Maybe.Maybe Float }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

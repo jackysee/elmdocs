@@ -1,0 +1,63 @@
+[
+  {
+    "name": "ReadingTime",
+    "comment": " ReadingTime functions and Msg.\n\n# Types\n@docs Stats\n\n# Regex\n@docs stripTab, stripReturn, stripNewLine\n\n# Functions\n@docs countWords, getTime, report, stats, getRoundedReadingTime, getMinutes, getTime\n",
+    "aliases": [
+      {
+        "name": "Stats",
+        "comment": " Stats type\n",
+        "args": [],
+        "type": "{ duration : String, minutes : Float, time : Int, words : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "countWords",
+        "comment": " Split a string and count it's length\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "getMinutes",
+        "comment": " Calculate the minutes to read a string of words divided by option words per minute (wpm)\n",
+        "type": "Int -> Maybe.Maybe Float -> Float"
+      },
+      {
+        "name": "getRoundedReadingTime",
+        "comment": " Rount up a Float and convert to string\n",
+        "type": "Float -> String"
+      },
+      {
+        "name": "getTime",
+        "comment": " Multiple a float value by 60 and then 1000\n",
+        "type": "Float -> Int"
+      },
+      {
+        "name": "report",
+        "comment": " Return a specific Stats record\n",
+        "type": "Int -> Maybe.Maybe Float -> ReadingTime.Stats"
+      },
+      {
+        "name": "stats",
+        "comment": " Intitialise reporting\n",
+        "type": "String -> Maybe.Maybe Float -> ReadingTime.Stats"
+      },
+      {
+        "name": "stripNewLine",
+        "comment": " Remove new lines from string\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "stripReturn",
+        "comment": " Remove returns from string\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "stripTab",
+        "comment": " Remove tabs from string\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

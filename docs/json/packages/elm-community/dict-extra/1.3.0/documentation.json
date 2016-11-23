@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Dict.Extra",
+    "comment": " Convenience functions for working with `Dict`\n\n# List operations\n@docs groupBy, fromListBy\n\n# Manipulation\n@docs removeWhen, removeMany, keepOnly, mapKeys\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromListBy",
+        "comment": " Create a dictionary from a list of values, by passing a function that can get a key from any such value.\nIf the function does not return unique keys, earlier values are discarded.\nThis can, for instance, be useful when constructing Dicts from a List of records with `id` fields:\n\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n    fromListBy .id [jack, jill] == Dict.fromList [(1, jack), (2, jill)]\n",
+        "type": "(a -> comparable) -> List a -> Dict.Dict comparable a"
+      },
+      {
+        "name": "groupBy",
+        "comment": " Takes a key-fn and a list.\nCreates a `Dict` which maps the key to a list of matching elements.\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n    groupBy .id [mary, jack, jill] == Dict.fromList [(1, [jill, mary]), (2, [jack])]\n",
+        "type": "(a -> comparable) -> List a -> Dict.Dict comparable (List a)"
+      },
+      {
+        "name": "keepOnly",
+        "comment": " Keep a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> Dict.Dict comparable v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "mapKeys",
+        "comment": " Apply a function to all keys in a dictionary\n",
+        "type": "(comparable -> comparable) -> Dict.Dict comparable v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "removeMany",
+        "comment": " Remove a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> Dict.Dict comparable v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "removeWhen",
+        "comment": " Remove elements which satisfies the predicate.\n\n    removeWhen (\\c v -> v == 1) Dict.fromList [(\"Mary\", 1), (\"Jack\", 2), (\"Jill\", 1)] == Dict.fromList [(\"Jack\", 2)]\n",
+        "type": "(comparable -> v -> Bool) -> Dict.Dict comparable v -> Dict.Dict comparable v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

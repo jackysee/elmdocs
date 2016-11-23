@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TransitStyle",
+    "comment": " Animations for elm-transit, to be used on elm-html `style` attribute.\n\n    div\n      [ style (fadeSlide 100 model.transition) ]\n      [ text \"Some content\" ]\n\n# Combinations\n@docs fadeSlide\n\n# Slide left\n@docs slide, slideOut, slideIn\n\n# Fade\n@docs fade, fadeOut, fadeIn\n\n# Tooling to create animations\n@docs compose, Style\n",
+    "aliases": [
+      {
+        "name": "Style",
+        "comment": " Just an alias for elm-html style value ",
+        "args": [],
+        "type": "List ( String, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "compose",
+        "comment": " Compose an animation with `exit` and `enter` phases. ",
+        "type": "(Float -> TransitStyle.Style) -> (Float -> TransitStyle.Style) -> Transit.Transition -> TransitStyle.Style"
+      },
+      {
+        "name": "fade",
+        "comment": " Fade animation ",
+        "type": "Transit.Transition -> TransitStyle.Style"
+      },
+      {
+        "name": "fadeIn",
+        "comment": " Fade in (enter). ",
+        "type": "Float -> TransitStyle.Style"
+      },
+      {
+        "name": "fadeOut",
+        "comment": " Fade out (exit). ",
+        "type": "Float -> TransitStyle.Style"
+      },
+      {
+        "name": "fadeSlide",
+        "comment": " Combine fade and slideLeft with the specified offset ",
+        "type": "Float -> Transit.Transition -> TransitStyle.Style"
+      },
+      {
+        "name": "slide",
+        "comment": " Slide animation, with the specified offset.\nGreater than 0 to right, lesser to left.\n",
+        "type": "Float -> Transit.Transition -> TransitStyle.Style"
+      },
+      {
+        "name": "slideIn",
+        "comment": " Slide in (enter) by translating on X for desired offset ",
+        "type": "Float -> Float -> TransitStyle.Style"
+      },
+      {
+        "name": "slideOut",
+        "comment": " Slide out (exit) by translating on X for desired offset ",
+        "type": "Float -> Float -> TransitStyle.Style"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

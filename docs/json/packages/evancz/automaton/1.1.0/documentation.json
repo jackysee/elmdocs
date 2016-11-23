@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Automaton",
+    "comment": " This library is for structuring reactive code. The key concepts come\ndirectly from [Arrowized FRP][afrp]. It is not yet clear how\nvaluable this is, so it is a great domain for experimentation and iteration\nto see if we can make it a really useful tool.\n\nThis library aims to be a simple and minimal API that will help you get\nstarted with Arrowized FRP (AFRP), which can be very hard to understand\nfrom just the academic papers. From there, let us know on [the mailing\nlist](https://groups.google.com/forum/#!forum/elm-discuss) if you wrote\na larger program with it or have ideas of how to extend the API.\n\n [afrp]: http://haskell.cs.yale.edu/wp-content/uploads/2011/02/workshop-02.pdf\n\n# Automatons\n@docs Automaton\n\n# Create\n@docs pure, state, hiddenState\n\n# Evaluate\n@docs run, step\n\n# Combine\n@docs (>>>), (<<<), branch, pair, merge, first, second, combine, loop\n\n# Common Automatons\n@docs count, average\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Automaton",
+        "comment": " Think of an automaton as a little robot. It takes in `a` values and spits\nout `b` values. These robots can also remember stuff. If you put two of these\nrobots next to each other you can do fancier stuff.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "<<<",
+        "comment": " Compose two automatons into a pipeline. For example, lets say we have a way\nto gather wood from the trees and a way to build a ship out of wood.\n\n      gatherWood : Automaton Trees Wood\n      buildShip  : Automaton Wood  Ship\n\n      createShip : Automaton Trees Ship\n      createShip = buildShip <<< gatherWood\n",
+        "type": "Automaton.Automaton inner o -> Automaton.Automaton i inner -> Automaton.Automaton i o"
+      },
+      {
+        "name": ">>>",
+        "comment": " Compose two automatons into a pipeline. For example, lets say we have a way\nto gather wood from the trees and a way to build a ship out of wood.\n\n      gatherWood : Automaton Trees Wood\n      buildShip  : Automaton Wood  Ship\n\n      createShip : Automaton Trees Ship\n      createShip = gatherWood >>> buildShip\n",
+        "type": "Automaton.Automaton i inner -> Automaton.Automaton inner o -> Automaton.Automaton i o"
+      },
+      {
+        "name": "average",
+        "comment": " Computes the running average of the last `n` inputs. ",
+        "type": "Int -> Automaton.Automaton Float Float"
+      },
+      {
+        "name": "branch",
+        "comment": " Take a single input and branch it out into two different results.\n\n      buildShip  : Automaton Wood Ship\n      buildHouse : Automaton Wood House\n\n      build : Automaton Wood (Ship,House)\n      build = branch buildShip buildHouse\n",
+        "type": "Automaton.Automaton i o1 -> Automaton.Automaton i o2 -> Automaton.Automaton i ( o1, o2 )"
+      },
+      {
+        "name": "combine",
+        "comment": " Combine a list of automatons into a single automaton that produces a\nlist.\n",
+        "type": "List (Automaton.Automaton i o) -> Automaton.Automaton i (List o)"
+      },
+      {
+        "name": "count",
+        "comment": " Count the number of steps taken. ",
+        "type": "Automaton.Automaton a Int"
+      },
+      {
+        "name": "first",
+        "comment": " Create an automaton that takes in a tuple and returns a tuple, but only\ntransform the *first* thing in the tuple.\n\n      build       : Automaton Wood (Ship,House)\n      upgradeShip : Automaton Ship Yacht\n\n      buildNicer : Automaton Wood (Yacht,House)\n      buildNicer = build >>> first upgradeShip\n\nIt may be helpful to know about the following equivalence:\n\n      first upgradeShip == pair upgradeShip (pure identity)\n",
+        "type": "Automaton.Automaton i o -> Automaton.Automaton ( i, extra ) ( o, extra )"
+      },
+      {
+        "name": "hiddenState",
+        "comment": " Create an automaton with hidden state. Requires an initial state and a\nstep function to step the state forward and produce an output.\n\n      type Feelings = Happy | Sad\n\n      stepPerson : Action -> Feelings -> (Reaction, Feelings)\n\n      person : Automaton Action Reaction\n      person = hiddenState Happy stepPerson\n\nNotice that a `person` has feelings, but like [the\nBehaviorists](http://en.wikipedia.org/wiki/Behaviorism), we do not need to\nworry about that as an outside observer.\n",
+        "type": "s -> (i -> s -> ( o, s )) -> Automaton.Automaton i o"
+      },
+      {
+        "name": "loop",
+        "comment": " Turn an automaton into a loop, feeding some of its output back into itself!\nThis is how you make a stateful automaton the hard way.\n\n      type Feelings = Happy | Sad\n\n      stepPerson : (Action, Feelings) -> (Reaction, Feelings)\n\n      person : Automaton Action Reaction\n      person = loop Happy (pure stepPerson)\n\nThis example is equivalent to using `hiddenState` to create a `person`, but the\nbenefit of loop is that you can add state to *any* automaton. We used\n`(pure stepPerson)` in our example, but something more complex such as\n`(branch f g >>> merge h)` would work just as well with `loop`.\n",
+        "type": "state -> Automaton.Automaton ( i, state ) ( o, state ) -> Automaton.Automaton i o"
+      },
+      {
+        "name": "merge",
+        "comment": " Create an automaton that takes a branched input and merges it into a single\noutput.\n\n      disaster : Automaton (Ship,House) (Wood,Wood)\n      pileWood : Wood -> Wood -> Wood\n\n      disasterRelief : Automaton (Ship,House) Wood\n      disasterRelief = disaster >>> merge pileWood\n\nIt may be helpful to notice that merge is just a variation of `pure`:\n\n      merge plieWood == pure (\\(logs,sticks) -> pileWood logs sticks)\n",
+        "type": "(i1 -> i2 -> o) -> Automaton.Automaton ( i1, i2 ) o"
+      },
+      {
+        "name": "pair",
+        "comment": " Combine two independent automatons. The new automaton takes a pair of\ninputs and produces a pair of outputs. In this case we convert two separate\nvalues into two separate piles of wood:\n\n      tsunami : Automaton Ship  Wood\n      tornado : Automaton House Wood\n\n      disaster : Automaton (Ship,House) (Wood,Wood)\n      disaster = pair tsunami tornado\n",
+        "type": "Automaton.Automaton i1 o1 -> Automaton.Automaton i2 o2 -> Automaton.Automaton ( i1, i2 ) ( o1, o2 )"
+      },
+      {
+        "name": "pure",
+        "comment": " Create an automaton with no memory. It just applies the given function to\nevery input.\n\n      burnCoal : Coal -> Energy\n\n      powerPlant : Automaton Coal Energy\n      powerPlant = pure burnCoal\n\nThe term *pure* refers to the fact that [the same input will always result in\nthe same output](http://en.wikipedia.org/wiki/Pure_function).\n",
+        "type": "(a -> b) -> Automaton.Automaton a b"
+      },
+      {
+        "name": "run",
+        "comment": " Run an automaton on a given signal. The automaton steps forward whenever the\ninput signal updates.\n\n      count : Automaton a Int\n\n      run count Mouse.clicks\n",
+        "type": "Automaton.Automaton i o -> o -> Signal.Signal i -> Signal.Signal o"
+      },
+      {
+        "name": "second",
+        "comment": " Create an automaton that takes in a tuple and returns a tuple, but only\ntransform the *second* thing in the tuple.\n\n      build        : Automaton Wood (Ship,House)\n      upgradeHouse : Automaton House Palace\n\n      buildNicer : Automaton Wood (Ship,Palace)\n      buildNicer = build >>> second upgradeHouse\n\nIt may be helpful to know about the following equivalence:\n\n      second upgradeHouse == pair (pure identity) upgradeHouse\n",
+        "type": "Automaton.Automaton i o -> Automaton.Automaton ( extra, i ) ( extra, o )"
+      },
+      {
+        "name": "state",
+        "comment": " Create an automaton with state. Requires an initial state and a step\nfunction to step the state forward. For example, an automaton that counted\nhow many steps it has taken would look like this:\n\n      count = Automaton a Int\n      count = state 0 (\\_ c -> c+1)\n\nIt is a stateful automaton. The initial state is zero, and the step function\nincrements the state on every step.\n\nThis is very similar to `Signal.foldp`. Indeed, the following equivalence\nholds:\n\n      foldp f s == run (state s f) s\n",
+        "type": "b -> (a -> b -> b) -> Automaton.Automaton a b"
+      },
+      {
+        "name": "step",
+        "comment": " Step an automaton forward once with a given input.\n\nSay we start with the `count` automaton, which begins with the counter at zero.\nWhen we run `step 42 count` we get back a new automaton with the counter at\n1 and the value 1. The original `count` automaton is unchanged, so we need to\nuse the new automaton to use the latest state.\n",
+        "type": "i -> Automaton.Automaton i o -> ( Automaton.Automaton i o, o )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

@@ -1,0 +1,49 @@
+[
+  {
+    "name": "State",
+    "comment": " This library provides a different approach to handling of app state.\nAccording to this idea the application state changing in time\nby stream of state-mutating functions (updates).\n\n    import Html\n    import Time\n    import State\n\n    main = State.start state view updates\n\n    state = 0\n\n    view address state =\n      Html.text <| toString state\n\n    updates =\n      Signal.map (always <| (+) 1)\n      <| Time.every Time.second\n\n# Types\n@docs Update, View\n\n# Common helpers\n@docs start, forward\n\n# Infix operators\n@docs (^.), (%~)\n",
+    "aliases": [
+      {
+        "name": "Update",
+        "comment": " State update (function from the old state to the new one).\n\n    type alias State = Int\n\n    updates : Signal (Update State)\n    updates = Signal.constant ((*) 2)\n",
+        "args": [
+          "state"
+        ],
+        "type": "state -> state"
+      },
+      {
+        "name": "View",
+        "comment": " View. Receives an address for the updates, and the current\nstate to display.\n\n    type alias State = { value : Int }\n\n    view : View State Html\n    view address state =\n      button\n        [ onClick address (\\s -> { s | value = s.value * 2 }) ]\n        [ text <| toString state ]\n",
+        "args": [
+          "state",
+          "view"
+        ],
+        "type": "Signal.Address (State.Update state) -> state -> view"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "%~",
+        "comment": " Infix operator for constructing of updater.\n\n    type alias Counter = { value_ : Int }\n\n    value : Focus Counter Int\n    value = ...\n\n    increment : Counter -> Counter\n    increment = value %~ (+) 1\n",
+        "type": "Focus.Focus state subState -> (subState -> subState) -> state -> state"
+      },
+      {
+        "name": "^.",
+        "comment": " Sub-state extracting infix operator.\n\n    type alias User = { name_ : String }\n\n    name : Focus User String\n    name = ...\n\n    -- somewhere in view\n      Html.text <| user ^. name\n",
+        "type": "state -> Focus.Focus state subState -> subState"
+      },
+      {
+        "name": "forward",
+        "comment": " Calls the sub-view function to display sub-state, extracting it\nfrom the \"root\" state using the Focus. Sub-view can send updates\nonly for sub-state (inner components are isolated from the container).\n",
+        "type": "Signal.Address (State.Update state) -> state -> Focus.Focus state subState -> State.View subState view -> view"
+      },
+      {
+        "name": "start",
+        "comment": " Starts the application. Receives an initial state, the view function\nand the stream of updates.\n",
+        "type": "state -> State.View state a -> Signal.Signal (State.Update state) -> Signal.Signal a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

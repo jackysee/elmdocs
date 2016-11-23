@@ -1,0 +1,235 @@
+[
+  {
+    "name": "ElmFire.Op",
+    "comment": " High-level interface for operations on a Firebase collection.\n\nThe Firebase collection at a given location is treated like a key-value store.\n\nKeys are of type String. The value type is a configurable type `v`.\nA mapping between Elm values and the Firebase's JSON values has to be provided.\n\nThis module is accompanied by `ElmFire.Dict` for querying and mirroring the key-value store.\n\n# Configuration\n@docs Config\n\n# Performing operations\n@docs Operation, operate, forwardOperation\n\n# Initializing the key-value store\n@docs empty, fromDict, fromList\n\n# Modifying single values\n@docs insert, push, update, remove\n\n# Dispatch modes\nOperations that touch the whole collection can be executed in different dispatch modes.\n@docs Dispatch, atomic, sequential, parallel\n\n# Inserting and deleting lists of key-value pairs\n@docs insertList, removeList\n\n# Updating the whole collection with higher-order functions\n@docs map, filter, filterMap\n\n# Miscellaneous operations\n@docs none\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " The target of all operations is described in a configuration record:\n\n- `location`: Pointer to the Firebase path (e.g. `ElmFire.fromUrl \"https://.../...\"`).\n- `orderOptions`: Filter and limit elements according to a given order. Use `ElmFire.noOrder` if not needed.\n- `encoder`: Function to convert Elm values into JSON values according to the Firebase's schema.\n- `decoder`: A Json.Decoder used to convert a JSON value from the Firebase into the corresponding Elm value.\n\nDecoding errors are silently ignored in all operations (if they need the decoder at all).\n",
+        "args": [
+          "v"
+        ],
+        "type": "{ location : ElmFire.Location , orderOptions : ElmFire.OrderOptions , encoder : v -> Json.Decode.Value , decoder : Json.Decode.Decoder v }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Dispatch",
+        "comment": " Opaque type representing a dispatch mode ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Operation",
+        "comment": " Opaque type representing an operation ",
+        "args": [
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "atomic",
+        "comment": " Perform the whole operation as a single transaction. ",
+        "type": "ElmFire.Op.Dispatch"
+      },
+      {
+        "name": "empty",
+        "comment": " Dlete the whole collection. ",
+        "type": "ElmFire.Op.Operation v"
+      },
+      {
+        "name": "filter",
+        "comment": " Remove those elements that don't satisfy a predicate. ",
+        "type": "ElmFire.Op.Dispatch -> (String -> v -> Bool) -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "filterMap",
+        "comment": " Apply a function to modify or remove values. ",
+        "type": "ElmFire.Op.Dispatch -> (String -> v -> Maybe.Maybe v) -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "forwardOperation",
+        "comment": " Creates a new address for receiving operations with a fixed configuration. ",
+        "type": "Signal.Address (Task.Task ElmFire.Error ElmFire.Reference) -> ElmFire.Op.Config v -> Signal.Address (ElmFire.Op.Operation v)"
+      },
+      {
+        "name": "fromDict",
+        "comment": " Initialize the collection from a dictionary. ",
+        "type": "ElmFire.Op.Dispatch -> Dict.Dict String v -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "fromList",
+        "comment": " Initialize the collection from a list of key-value pairs. ",
+        "type": "ElmFire.Op.Dispatch -> List ( String, v ) -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a single key-value pair, possible overwriting the previous value. ",
+        "type": "String -> v -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "insertList",
+        "comment": " Insert a list of key-value pairs. ",
+        "type": "ElmFire.Op.Dispatch -> List ( String, v ) -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to modify all values. ",
+        "type": "ElmFire.Op.Dispatch -> (String -> v -> v) -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "none",
+        "comment": " Do nothing. ",
+        "type": "ElmFire.Op.Operation v"
+      },
+      {
+        "name": "operate",
+        "comment": " Task to perform an operation with a given configuration. ",
+        "type": "ElmFire.Op.Config v -> ElmFire.Op.Operation v -> Task.Task ElmFire.Error ElmFire.Reference"
+      },
+      {
+        "name": "parallel",
+        "comment": " Perform the operation for each affected element in parallel.\nWill be executed asynchronously (due to a Task module restriction).\n",
+        "type": "ElmFire.Op.Dispatch"
+      },
+      {
+        "name": "push",
+        "comment": " Insert a single key-value pair. This generates a new child location using a unique key. ",
+        "type": "v -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove the element with the given key. ",
+        "type": "String -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "removeList",
+        "comment": " Remove selected elements by a list of keys. ",
+        "type": "ElmFire.Op.Dispatch -> List String -> ElmFire.Op.Operation v"
+      },
+      {
+        "name": "sequential",
+        "comment": " Perform the operation step-by-step for each affected element in a sequential manner. ",
+        "type": "ElmFire.Op.Dispatch"
+      },
+      {
+        "name": "update",
+        "comment": " Update a single value for a specific key with a given function. ",
+        "type": "String -> (Maybe.Maybe v -> Maybe.Maybe v) -> ElmFire.Op.Operation v"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "ElmFire.Dict",
+    "comment": " Tasks to mirror a Firebase location in an Elm dictionary, either one-time or continuously.\n\nThe Firebase collection at a given location is treated like a key-value store, which is mapped into a `Dict String v`.\n\nKeys are of type String. Values get converted from JSON to a user-defined type `v`.\n\nThis module is accompanied by `ElmFire.Op` for modifying the key-value store.\n\n# Configuration\n@docs Config\n\n# One-time queries\n@docs getDict\n\nThe lists returned by the following query tasks are ordered in respect to the configured `orderOptions`.\n\n@docs getList, getKeys, getValues\n\n# Subscribing to continuous mirroring\n@docs Delta, subscribeDelta, update, integrate, mirror\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Each query target is described by a configuration:\n\n- `location`: Pointer to the Firebase path, e.g. `ElmFire.fromUrl \"https://.../...\"`.\n- `orderOptions`: Filter and limit elements according to a given order. Use `ElmFire.noOrder` if not needed.\n- `encoder`: Function to convert Elm values into JSON values according to the Firebase's schema.\n  `encoder` is used only in module `ElmFire.Op`, but is present here because the type `Config` is shared between these two modules.\n- `decoder`: A Json.Decoder used to convert a JSON value from the Firebase into the corresponding Elm value.\n\nDecoding errors are reported as the special `Delta` value `Undecodable String String`.\nThey are silently ignored in all other functions of this module.\n",
+        "args": [
+          "v"
+        ],
+        "type": "{ location : ElmFire.Location , orderOptions : ElmFire.OrderOptions , encoder : v -> Json.Decode.Value , decoder : Json.Decode.Decoder v }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Delta",
+        "comment": " Represents a single update reported from the Firebase. ",
+        "args": [
+          "v"
+        ],
+        "cases": [
+          [
+            "Idem",
+            []
+          ],
+          [
+            "Added",
+            [
+              "String",
+              "v"
+            ]
+          ],
+          [
+            "Changed",
+            [
+              "String",
+              "v"
+            ]
+          ],
+          [
+            "Removed",
+            [
+              "String",
+              "v"
+            ]
+          ],
+          [
+            "Undecodable",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Unsubscribed",
+            []
+          ],
+          [
+            "QueryError",
+            [
+              "ElmFire.Error"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getDict",
+        "comment": " One-time query, mapping the Firebase store to a dictionary ",
+        "type": "ElmFire.Dict.Config v -> Task.Task ElmFire.Error (Dict.Dict String v)"
+      },
+      {
+        "name": "getKeys",
+        "comment": " One-time query, resulting in a list of keys (without values) ",
+        "type": "ElmFire.Dict.Config v -> Task.Task ElmFire.Error (List String)"
+      },
+      {
+        "name": "getList",
+        "comment": " One-time query, mapping the Firebase store to a list of key-value pairs ",
+        "type": "ElmFire.Dict.Config v -> Task.Task ElmFire.Error (List ( String, v ))"
+      },
+      {
+        "name": "getValues",
+        "comment": " One-time query, resulting in a list of values (without keys) ",
+        "type": "ElmFire.Dict.Config v -> Task.Task ElmFire.Error (List v)"
+      },
+      {
+        "name": "integrate",
+        "comment": " Integrate a signal of deltas, returning a signal of dictionaries. ",
+        "type": "Signal.Signal (ElmFire.Dict.Delta v) -> Signal.Signal (Dict.Dict String v)"
+      },
+      {
+        "name": "mirror",
+        "comment": " Convenience function that combines subscribing to and integrating of deltas.\nIt returns a 2-tuple:\n\n- First element is a task to subscribe to the Firebase updates. It needs to be executed to initiate\n  the subscritpion. The task's result is another task that can be uses for unsubscribing.\n- Second element is a signal of the dictionary that consecutively mirrors the Firebase collection.\n",
+        "type": "ElmFire.Dict.Config v -> ( Task.Task ElmFire.Error (Task.Task ElmFire.Error ()) , Signal.Signal (Dict.Dict String v) )"
+      },
+      {
+        "name": "subscribeDelta",
+        "comment": " Get the initial state from the Firebase and subscribe to subsequent updates.\nThe resulting deltas are sent to a given mailbox.\n\nThe resulting task needs to be executed in order to initiate the subscription.\n\nIts success-result is a task that may be executed later to unsubscribe again.\n",
+        "type": "Signal.Address (ElmFire.Dict.Delta v) -> ElmFire.Dict.Config v -> Task.Task ElmFire.Error (Task.Task ElmFire.Error ())"
+      },
+      {
+        "name": "update",
+        "comment": " Update a dictionary by applying a single given delta. ",
+        "type": "ElmFire.Dict.Delta v -> Dict.Dict String v -> Dict.Dict String v"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

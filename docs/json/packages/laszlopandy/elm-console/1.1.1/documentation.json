@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Console",
+    "comment": "\n\nA library for writing terminal-based scripts in elm.  The IO type\nprovides an interface for constructing \"computations\" that may perform\nIO effects. Something with type `IO a` is a lazy computation that when\nrun will produce an `a`, possibly IO side effects. See Console.Runner for\nhow to run such a computation.\n\n# IO Type\n@docs IO, run\n\n# Stdout\n@docs putChar, putStr, putStrLn\n\n# Stdin\n@docs getChar, getLine, readUntil\n\n# File Operations\n@docs writeFile\n\n# Exit code\n@docs exit\n\n# Plumbing\n@docs map, map2, mapIO, forEach, pure, apply,\n      (<*>), andThen, (>>=), seq, sequenceMany, (>>>), forever\n",
+    "aliases": [
+      {
+        "name": "IO",
+        "comment": " An `IO a` is a computation that does some I/O and eventually\n    returns an `a` ",
+        "args": [
+          "a"
+        ],
+        "type": "Console.Core.IO a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "<*>",
+        "comment": " Convenient operator for apply, similar to ~ in the Signal module ",
+        "type": "Console.Core.IO (a -> b) -> Console.Core.IO a -> Console.Core.IO b"
+      },
+      {
+        "name": ">>=",
+        "comment": " Operator version of andThen ",
+        "type": "Console.Core.IO a -> (a -> Console.Core.IO b) -> Console.Core.IO b"
+      },
+      {
+        "name": ">>>",
+        "comment": " Operator version of seq ",
+        "type": "Console.Core.IO a -> Console.Core.IO b -> Console.Core.IO b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Chain together IO computations ",
+        "type": "Console.Core.IO a -> (a -> Console.Core.IO b) -> Console.Core.IO b"
+      },
+      {
+        "name": "apply",
+        "comment": " Apply an IO function to an IO value ",
+        "type": "Console.Core.IO (a -> b) -> Console.Core.IO a -> Console.Core.IO b"
+      },
+      {
+        "name": "exit",
+        "comment": " Exit the program with the given exit code. ",
+        "type": "Int -> Console.Core.IO ()"
+      },
+      {
+        "name": "forEach",
+        "comment": " Run an IO computation for each element of a list ",
+        "type": "List a -> (a -> Console.Core.IO ()) -> Console.Core.IO ()"
+      },
+      {
+        "name": "forever",
+        "comment": " Run the same computation over and over again forever. ",
+        "type": "Console.Core.IO a -> Console.Core.IO ()"
+      },
+      {
+        "name": "getChar",
+        "comment": " Read a character from stdin ",
+        "type": "Console.Core.IO Char"
+      },
+      {
+        "name": "getLine",
+        "comment": " Read a line from stdin ",
+        "type": "Console.Core.IO String"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a pure function to an IO value ",
+        "type": "(a -> b) -> Console.Core.IO a -> Console.Core.IO b"
+      },
+      {
+        "name": "map2",
+        "comment": " Apply a pure function to two IO values. ",
+        "type": "(a -> b -> result) -> Console.IO a -> Console.IO b -> Console.IO result"
+      },
+      {
+        "name": "mapIO",
+        "comment": " Alternative interface to forEach  ",
+        "type": "(a -> Console.Core.IO ()) -> List a -> Console.Core.IO ()"
+      },
+      {
+        "name": "pure",
+        "comment": " Use a pure value where an IO computation is expected. ",
+        "type": "a -> Console.Core.IO a"
+      },
+      {
+        "name": "putChar",
+        "comment": " Print a character to stdout ",
+        "type": "Char -> Console.Core.IO ()"
+      },
+      {
+        "name": "putStr",
+        "comment": " Print a string to stdout. ",
+        "type": "String -> Console.Core.IO ()"
+      },
+      {
+        "name": "putStrLn",
+        "comment": " Print a string to stdout, followed by a newline. ",
+        "type": "String -> Console.Core.IO ()"
+      },
+      {
+        "name": "readUntil",
+        "comment": " Read characters from stdin until one matches the given character. ",
+        "type": "Char -> Console.Core.IO String"
+      },
+      {
+        "name": "run",
+        "comment": " Run an IO computation as a Task ",
+        "type": "Console.Core.IO () -> Signal.Signal (Task.Task x ())"
+      },
+      {
+        "name": "seq",
+        "comment": " Run one computation and then another, ignoring the first's output ",
+        "type": "Console.Core.IO a -> Console.Core.IO b -> Console.Core.IO b"
+      },
+      {
+        "name": "sequenceMany",
+        "comment": " Run several computations in a sequence, combining all results into a list ",
+        "type": "List (Console.IO a) -> Console.IO (List a)"
+      },
+      {
+        "name": "writeFile",
+        "comment": " Write content to a file ",
+        "type": "{ file : String, content : String } -> Console.Core.IO ()"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

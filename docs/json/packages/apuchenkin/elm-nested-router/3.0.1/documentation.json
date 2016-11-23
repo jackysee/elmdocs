@@ -1,0 +1,229 @@
+[
+  {
+    "name": "Router",
+    "comment": " A simple nested router for single page applications.\n\nSee [Example](https://github.com/apuchenkin/elm-nested-router/tree/master/example) ([Live demo](http://apuchenkin.github.io/elm-nested-router/example))\nand [Tests](https://github.com/apuchenkin/elm-nested-router/tree/master/test/Test) for more details\n\n@docs dispatch, initialState\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dispatch",
+        "comment": " Launches the router.\n  Provide `init` function and router config as parameters\n ",
+        "type": "(flags -> ( Router.Types.WithRouter route state , Platform.Cmd.Cmd (Router.Types.Action (Router.Types.WithRouter route state)) )) -> Router.Types.RouterConfig route (Router.Types.WithRouter route state) -> Platform.Program flags"
+      },
+      {
+        "name": "initialState",
+        "comment": " Initial state for router. Fed this into your application state ",
+        "type": "Router.Types.RouterState route"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Router.Helpers",
+    "comment": " A set of utility functions\n@docs noFx, doNothing, performTask, chainAction, combineActions\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "chainAction",
+        "comment": " Combines two action together ",
+        "type": "Router.Types.Action state -> Router.Types.Action state -> Router.Types.Action state"
+      },
+      {
+        "name": "combineActions",
+        "comment": " @Private\n  Folds actions for a handlers into a single action\n",
+        "type": "List (Router.Types.Action state) -> Router.Types.Action state"
+      },
+      {
+        "name": "doNothing",
+        "comment": " An empty action ",
+        "type": "Router.Types.Action state"
+      },
+      {
+        "name": "noFx",
+        "comment": " An action without side effects ",
+        "type": "state -> ( state, Router.Types.Commands state )"
+      },
+      {
+        "name": "performTask",
+        "comment": " Creates a commnd to perform the task ",
+        "type": "Task.Task Basics.Never (Router.Types.Action state) -> Platform.Cmd.Cmd (Router.Types.Action state)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Router.Types",
+    "comment": " Router types\n\n# URL parts\n@docs URL, RawURL, RawSegment, Param, Constraint, Route, RouteConfig, RouteParams\n\n# Actions and handlers\n@docs WithRouter, Handler, Action, Commands, Response, Transition\n\n# Router\n@docs Router, RouterConfig, RouterState\n",
+    "aliases": [
+      {
+        "name": "Action",
+        "comment": " `Action` represents function that prforms something with application state, and might contain side efects ",
+        "args": [
+          "state"
+        ],
+        "type": "state -> Router.Types.Response state"
+      },
+      {
+        "name": "Commands",
+        "comment": " Helper to get rid of brackets ",
+        "args": [
+          "state"
+        ],
+        "type": "Platform.Cmd.Cmd (Router.Types.Action state)"
+      },
+      {
+        "name": "Handler",
+        "comment": "\n  A `Handler` is a piece of functionality binded to specific route\n  * `view` &mdash; Function that describes how to render application state to map of named views\n  * `actions` &mdash; A set of necessary to perform actions\n",
+        "args": [
+          "state"
+        ],
+        "type": "{ view : state -> Dict.Dict String (Html.Html (Router.Types.Action state)) -> Dict.Dict String (Html.Html (Router.Types.Action state)) , actions : List (Router.Types.Action state) }"
+      },
+      {
+        "name": "Param",
+        "comment": " Dynamic route parameter name ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "RawSegment",
+        "comment": " A single segment of `RawURL` template ",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "RawURL",
+        "comment": " Raw URL template:\n```\n\"/home/post/:postId\"\n```\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Route",
+        "comment": " combined abstract route type with params ",
+        "args": [
+          "route"
+        ],
+        "type": "( route, Router.Types.RouteParams )"
+      },
+      {
+        "name": "RouteConfig",
+        "comment": "\n  `RouteConfig` is a route configuration\n\n  * `segment` &mdash; URL segment\n\n  Expample:\n```\n\"/home\",\n\"/post/:postId\",\n\"/author[/:authorId]\"\n```\n  * `parent` &mdash; A parent route\n  * `bypass` &mdash; When setted to True - route will not be matched directly, but still can provide actions and views\n  * `constraints` &mdash; A set of constraints applied to route params. (`String`, `Int`, `Enum`, `Regexp`) constraints are supported\n  * `handler` &mdash; A binding to handler.\n\n  **Exapmle of route configuration**:\n```\n  config = {\n    -- \"author\" and \"postId\" is dynamic url parts\n    -- \"postId\" is marked as optional and might me ommited in URL\n    segment = \"/page/:author[/:postId]\"\n  , parent = Nothing\n    -- setting a parent for route means that full route URL will be combined with it's parent, and actions for route and it's parent will be fired on match\n  , bypass = False\n  , constraints = Dict.fromList [(\"author\", String),(\"postId\", Int)]\n    -- constraints specify that `author` param must be a string,\n    -- and postId an integer\n  , handler = always PostHandler\n  }\n```\n\n  A `config` above will match following URLs:\n```\n\"/page/mark/1\", \"/page/mark\", \"/page/joe\"\n```\n  \"mark\" and \"joe\" will be stored as `author` param, and \"1\" as `postId`\n  Everything enclosed by brackets considered as optional.\n",
+        "args": [
+          "route",
+          "state"
+        ],
+        "type": "{ segment : Router.Types.RawSegment , parent : Maybe.Maybe route , bypass : Bool , constraints : Dict.Dict Router.Types.Param Router.Types.Constraint , handler : Router.Types.Router route state -> Router.Types.Handler state }"
+      },
+      {
+        "name": "RouteParams",
+        "comment": " A map of route param names and values ",
+        "args": [],
+        "type": "Dict.Dict Router.Types.Param String"
+      },
+      {
+        "name": "Router",
+        "comment": "\n  A `Router` is a provider of following functions:\n\n  * `bindForward` &mdash; Binds a `forward` action to a provided `Route` with a list of html attributes.\n    This is useful to create links in application\n  * `buildUrl` &mdash; Builds an URL for provided `Route`\n  * `forward` &mdash; Preforms a transition to provided `Route`\n  * `redirect` &mdash; Redirects to provided `Route`\n  * `match` &mdash; Performs attempt to match provided URL.\n\n  Router also provide it's `config`\n",
+        "args": [
+          "route",
+          "state"
+        ],
+        "type": "{ config : Router.Types.RouterConfig route state , bindForward : Router.Types.Route route -> List (Html.Attribute (Router.Types.Action state)) -> List (Html.Attribute (Router.Types.Action state)) , buildUrl : Router.Types.Route route -> Router.Types.URL , forward : Router.Types.Route route -> Router.Types.Action state , redirect : Router.Types.Route route -> Router.Types.Action state , match : String -> Maybe.Maybe (Router.Types.Route route) }"
+      },
+      {
+        "name": "RouterState",
+        "comment": " A state of router ",
+        "args": [
+          "route"
+        ],
+        "type": "{ route : Maybe.Maybe route, params : Router.Types.RouteParams }"
+      },
+      {
+        "name": "Transition",
+        "comment": " A transition from route A to route B ",
+        "args": [
+          "route",
+          "state"
+        ],
+        "type": "Maybe.Maybe (Router.Types.Route route) -> Maybe.Maybe (Router.Types.Route route) -> Router.Types.Action state"
+      },
+      {
+        "name": "URL",
+        "comment": " A valid URL:\n```\n\"/home/post/1\"\n```\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "WithRouter",
+        "comment": " Type extension for the application state ",
+        "args": [
+          "route",
+          "state"
+        ],
+        "type": "{ state | router : Router.Types.RouterState route }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Constraint",
+        "comment": " A constraint of route parameter type ",
+        "args": [],
+        "cases": [
+          [
+            "Int",
+            []
+          ],
+          [
+            "String",
+            []
+          ],
+          [
+            "Enum",
+            [
+              "List String"
+            ]
+          ],
+          [
+            "Regex",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Response",
+        "comment": " An action result - a modified state combined with side effects ",
+        "args": [
+          "state"
+        ],
+        "cases": [
+          [
+            "Response",
+            [
+              "( state, Router.Types.Commands state )"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "RouterConfig",
+        "comment": "\n  `RouterConfig` is configuration for the router:\n\n  * `html5` &mdash; Use html5 pushState.\n  * `removeTrailingSlash` &mdash; Trailing slashes will be removed from matched and builded urls\n  * `layout` &mdash; Main rendered function that combines named views gathered from Handlers in a single HTML\n  * `transition` &mdash; An action that should be executed on every router transition\n  * `routeConfig` &mdash; A mapping between route and route configuration\n  * `routes` &mdash; A list of routes available for routing\n  * `subscriptions` &mdash; A list of subscriptions (see: [elm-lang/html](http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-App) for details)\n",
+        "args": [
+          "route",
+          "state"
+        ],
+        "cases": [
+          [
+            "RouterConfig",
+            [
+              "{ html5 : Bool , removeTrailingSlash : Bool , layout : Router.Types.Router route state -> state -> Dict.Dict String (Html.Html (Router.Types.Action state)) -> Html.Html (Router.Types.Action state) , transition : Router.Types.Router route state -> Router.Types.Transition route state , routeConfig : route -> Router.Types.RouteConfig route state , routes : List route , subscriptions : state -> Platform.Sub.Sub (Router.Types.Action state) }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

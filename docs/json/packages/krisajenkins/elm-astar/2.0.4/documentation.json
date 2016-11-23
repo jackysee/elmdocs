@@ -1,0 +1,39 @@
+[
+  {
+    "name": "AStar",
+    "comment": " The A-Star pathfinding algorithm.\n\n@docs Position\n@docs Path\n@docs findPath\n@docs straightLineCost\n@docs pythagoreanCost\n",
+    "aliases": [
+      {
+        "name": "Path",
+        "comment": " A path is a `List` of `Position`s.\n",
+        "args": [],
+        "type": "List AStar.Position"
+      },
+      {
+        "name": "Position",
+        "comment": " A position is just a pair of (x,y) coordinates.\n",
+        "args": [],
+        "type": "( Int, Int )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "findPath",
+        "comment": " Find a path between the `start` and `end` `Position`s. You must\n  supply a cost function and a move function.\n\n  The cost function must estimate the distance between any two\n  positions. It doesn't really matter how accurate this estimate is,\n  as long as it *never* underestimates.\n\n  The move function takes a `Position` and returns a `Set` of possible\n  places you can move to in one step.\n\n  If this function returns `Nothing`, there is no path between the two\n  points. Otherwise it returns `Just` a `List` of steps from `start`\n  to `end`.\n\n  Example usage.\n\n     import AStar exposing (..)\n\n\n     type World =\n         ...your custom code...\n\n\n     movesFrom : World -> Position -> Set Position\n     movesFrom world (x,y) =\n         ...your custom code...\n\n\n     findPath\n         straightLineCost\n         (movesFrom currentWorld)\n         ( 0, 0 ) ( 2, 0 )\n     --> Just [ ( 1, 0 ), ( 2, 0 ) ]\n",
+        "type": "(AStar.Position -> AStar.Position -> Float) -> (AStar.Position -> Set.Set AStar.Position) -> AStar.Position -> AStar.Position -> Maybe.Maybe AStar.Path"
+      },
+      {
+        "name": "pythagoreanCost",
+        "comment": " An alternative costing algorithm, which calculates pythagorean distance.\n",
+        "type": "AStar.Position -> AStar.Position -> Float"
+      },
+      {
+        "name": "straightLineCost",
+        "comment": " A simple costing algorithm. Think of it as the number of moves a\nrook/castle would have to make on a chessboard. Even if your piece can\nmove diagonally it will still work! A-Star only requires that the cost\nfunction never *under*estimates.\n",
+        "type": "AStar.Position -> AStar.Position -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

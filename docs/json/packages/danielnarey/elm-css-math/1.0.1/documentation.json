@@ -1,0 +1,76 @@
+[
+  {
+    "name": "CssMath",
+    "comment": "\n## Arithmetic and unit conversions with CSS values\n\nThis library extends `CssBasics` by providing helpers for dealing with numeric\ncomponents of `CssValue` types. It allows you to add, subtract, scale, and\ncalculate ratios of numeric CSS values, to convert between units and numbers,\nand to convert among absolute and relative units of length.\n\nSee\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/length)\nfor CSS unit specifications.\n\n# Basic Numeric Operations\n@docs add, subtract, scale, ratio\n\n## Applying Custom Operations\n@docs numOp\n\n# Unit Conversions\n@docs absToPx, relToPx, vpRelToPx, absToRem\n\n# Helpers\n@docs toUnit, toNumber, toNumberList, isNonZero\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "absToPx",
+        "comment": " Convert any value in absolute units (`Px`, `In`, `Cm`, `Mm`, `Pt`, `Pc`) to\na pixel (`Px`) value. Returns an error if the argument is a non-zero value with\na relative unit, or if the argument contains one or more non-unit values.\n\nThe argument may be a `Sides` or `Multiple` value, which will return a `Sides`\nor `Multiple` with the converted unit values. `Num 0` will convert to\n`Unit 0 Px`, but non-zero `Num` values will return an error message.\n\n    Unit 1 In\n      |> absToPx\n\n    --> Ok (Unit 92 Px)\n\n    Unit 1 Em\n      |> absToPx\n\n    --> Err \"..\"\n\n    Sides [Unit 0.5 In, Unit 36 Pt, Unit 0 NoUnit, Unit 0 Em]\n      |> absToPx\n\n    --> Ok (Sides [Unit 46 Px, Unit 46 Px, Unit 0 Px, Unit 0 Px])\n\n    Num 0\n      |> absToPx\n\n    --> Ok (Unit 0 Px)\n\n    Num 1\n      |> absToPx\n\n    --> Err \"..\"\n\n",
+        "type": "CssBasics.CssValue number -> Result.Result String (CssBasics.CssValue number)"
+      },
+      {
+        "name": "absToRem",
+        "comment": " Convert any value in absolute units (`Px`, `In`, `Cm`, `Mm`, `Pt`, `Pc`) to\na `Rem` value. In CSS, \"rem\" is a relative unit defined by the font size of the\nHTML `<body>` element. To convert to rems, the first argument to this function\nmust supply this base font size in pixels.\n\nReturns an error if the argument is a non-zero value with a relative unit, or if\nthe argument contains one or more non-unit values.\n\nThe argument may be a `Sides` or `Multiple` value, which will return a `Sides`\nor `Multiple` with the converted unit values. `Num 0` will convert to\n`Unit 0 Rem`, but non-zero `Num` values will return an error message.\n\n    Unit 12 Px\n      |> absToRem 16\n\n    --> Ok (Unit 0.75 Rem)\n",
+        "type": "Float -> CssBasics.CssValue Float -> Result.Result String (CssBasics.CssValue Float)"
+      },
+      {
+        "name": "add",
+        "comment": " Add the value in the first argument to the value(s) in the second argument\nand return the result, or return an error message if one or more of the\nvalues is of an incompatible type.\n\n**Type compatibility:**\nYou can add two `Num` values, two `Unit` values with the same unit, or two\n`Unit` values with different units that are both absolute (`Px`, `In`, `Cm`,\n`Mm`, `Pt`, `Pc`). You can also add a single `Num` or `Unit` value to a `Sides`\nor `Multiple`, so long as all of the values are compatible. See the examples\nbelow.\n\n*Zero values are an exception:*\n`Num 0` or `Unit 0 _` (with any unit type) may be added to a non-zero unit value\nwithout producing an error.\n\n    Num 1\n      |> add (Num 1)\n\n    --> Ok (Num 2)\n\n    Unit 0.5 In\n      |> add (Unit 36 Pt)\n\n    --> Ok (Unit 92 Px)\n\n    Unit 1 Em\n      |> add (Unit 0.5 Em)\n\n    --> Ok (Unit 1.5 Em)\n\n    Unit 12 Px\n      |> add (Num 1)\n\n    --> Err \"..\"\n\n    Unit 12 Px\n      |> add (Unit 1 Em)\n\n    --> Err \"..\"\n\n    Sides [Unit 0.5 In, Unit 36 Pt, Unit 0 NoUnit, Unit 0 Em]\n      |> add (Unit 0.5 In)\n\n    --> Ok (Sides [Unit 1 In, Unit 92 Px, Unit 46 Px, Unit 46 Px])\n\n    Unit 12 Px\n      |> add (Num 0)\n\n    --> Ok (Unit 12 Px)\n\n    Unit 12 Px\n      |> add (Num 1)\n\n    --> Err \"..\"\n\n",
+        "type": "CssBasics.CssValue number -> CssBasics.CssValue number -> Result.Result String (CssBasics.CssValue number)"
+      },
+      {
+        "name": "isNonZero",
+        "comment": " Returns a `True` result if the argument is a `Num` or `Unit` containing a\nnon-zero value or a `Sides` or `Multiple` value containing at least one\nnon-zero value. Returns an error message if the argument contains one or more\nnon-numeric values.\n",
+        "type": "CssBasics.CssValue number -> Result.Result String Bool"
+      },
+      {
+        "name": "numOp",
+        "comment": " Apply a numeric operation to a pair of `CssValue` values. This is the\ngeneric function called by `add` and `subtract`, so see the documentation above\nfor details on type compatibility.\n",
+        "type": "(number -> number -> number) -> ( CssBasics.CssValue number, CssBasics.CssValue number ) -> Result.Result String (CssBasics.CssValue number)"
+      },
+      {
+        "name": "ratio",
+        "comment": " Given a tuple of `Num` or `Unit` values, calculate the ratio of the first\nvalue to the second, or return an error message if one or more of the values is\nof an incompatible type.\n\nType compatibility works the same as for `add` and `subtract`, but `Sides` and\n`Multiple` values are not allowed.\n\n    (Unit 46 Px, Unit 1 In)\n      |> ratio\n\n    --> Ok 0.5\n\n    (Num 0, Unit 1 In)\n      |> ratio\n\n    --> Ok 0\n",
+        "type": "( CssBasics.CssValue Float, CssBasics.CssValue Float ) -> Result.Result String Float"
+      },
+      {
+        "name": "relToPx",
+        "comment": " Convert any value in relative units (`Percent`, `Em`, `Ex`, `Ch`, `Rem`,\n`Vh`, `Vw`, `Vmin`, `Vmax`) to a pixel (`Px`) value. The first argument supplies\nthe pixel length to which the unit value is relative. Conversions from `Ex` and\n`Ch` values are approximate, as the exact values of these units are dependent on\nfont properties.\n\nReturns an error if the argument is a non-zero value with a relative unit, or if\nthe argument contains one or more non-unit values.\n\nThe argument may be a `Sides` or `Multiple` value, which will return a `Sides`\nor `Multiple` with the converted unit values. `Num 0` will convert to\n`Unit 0 Px`, but non-zero `Num` values will return an error message.\n\n    Unit 1 Em\n      |> relToPx 16\n\n    --> Ok (Unit 16 Px)\n",
+        "type": "Float -> CssBasics.CssValue Float -> Result.Result String (CssBasics.CssValue Float)"
+      },
+      {
+        "name": "scale",
+        "comment": " Scale the value(s) in the second argument by the factor given as the first\nargument, or return an error message if one or more of the values is of an\nincompatible type.\n\nThe argument may be a `Sides` or `Multiple` value, which will return a `Sides`\nor `Multiple` containing the scaled unit values. If a `Multiple` contains both\nnumeric and non-numeric values, the numeric portion may be scaled using this\nfunction, which will leave the non-numeric values unchanged. This behavior is\ndifferent from `add` and `subtract`, which will return an error if the\narguments contain any non-numeric values.\n\n    Unit 2 Em\n      |> scale 0.5\n\n    --> Ok (Unit 1 Em)\n\n    Sides [Unit 12 Px, Unit 2 Em]\n      |> scale 0.5\n\n    --> Ok (Sides [Unit 6 Px, Unit 1 Em])\n\n    Multiple \" \" [Unit 1 Px, Str \"dashed\", Col Color.red]\n      |> scale 2\n\n    --> Ok (Multiple \" \" [Unit 2 Px, Str \"dashed\", Col (RGBA 204 0 0 1)])\n",
+        "type": "number -> CssBasics.CssValue number -> Result.Result String (CssBasics.CssValue number)"
+      },
+      {
+        "name": "subtract",
+        "comment": " Subtract the value in the first argument from the value(s) in the second\nargument and return the result, or return an error message if one or more of the\nvalues is of an incompatible type. For details on type compatibility, see the\ndocumentation for `add`.\n\n    Unit 1 In\n      |> subtract (Unit 36 Pt)\n\n    --> Ok (Unit 46 Px)\n",
+        "type": "CssBasics.CssValue number -> CssBasics.CssValue number -> Result.Result String (CssBasics.CssValue number)"
+      },
+      {
+        "name": "toNumber",
+        "comment": " Extracts the numeric part of a `Num` or `Unit` value, or returns an error\nmessage if the `CssValue` is not a `Num` or `Unit`\n",
+        "type": "CssBasics.CssValue number -> Result.Result String number"
+      },
+      {
+        "name": "toNumberList",
+        "comment": " Extracts a list of numbers from a `Sides` or `Multiple` value, or a list\ncontaining a single number from a `Num` or `Unit`. Returns an error message if\nany of the values are non-numeric.\n",
+        "type": "CssBasics.CssValue number -> Result.Result String (List number)"
+      },
+      {
+        "name": "toUnit",
+        "comment": " Convenience function to convert a number to a `Unit`\n",
+        "type": "CssBasics.UnitType -> number -> CssBasics.CssValue number"
+      },
+      {
+        "name": "vpRelToPx",
+        "comment": " Convert any value in viewport-relative units (`Vh`, `Vw`, `Vmin`, `Vmax`) to\na pixel (`Px`) value. The first argument supplies the width and height of the\nviewport in pixels as a 2-tuple.\n\nReturns an error if the argument is a non-zero value with a\nnon-viewport-relative unit, or if the argument contains one or more non-unit\nvalues.\n\nThe argument may be a `Sides` or `Multiple` value, which will return a `Sides`\nor `Multiple` with the converted unit values. `Num 0` will convert to\n`Unit 0 Px`, but non-zero `Num` values will return an error message.\n\n    Unit 10 Vmin\n      |> vpRelToPx (600, 800)\n\n    --> Ok (Unit 60 Px)\n",
+        "type": "( Float, Float ) -> CssBasics.CssValue Float -> Result.Result String (CssBasics.CssValue Float)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

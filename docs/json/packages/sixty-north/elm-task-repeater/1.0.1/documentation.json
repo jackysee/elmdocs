@@ -1,0 +1,78 @@
+[
+  {
+    "name": "TaskRepeater.Schedulers",
+    "comment": " A collection of schedulers for task repeaters.\n\n# Schedulers\n@docs uniform, exponentialBackoff\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "exponentialBackoff",
+        "comment": " Create a scheduler that puts exponentially increasing time between each\nexecution of the task.\n\nTo create a scheduler that starts with a 2 second wait, doubles the wait time\nfor each subsequent execution, and maxes out at 60 seconds:\n\n    exponentialBackoff (Time.second 2) 2 (Time.second 60)\n",
+        "type": "Time.Time -> Float -> Time.Time -> TaskRepeater.Scheduler TaskRepeater.Schedulers.ExponentialParams"
+      },
+      {
+        "name": "uniform",
+        "comment": " Create scheduler that puts a uniform time between each performance of the\ntask.\n\nTo create a schedule that runs a task every 10 seconds:\n\n  uniform (Time.seconds * 10)\n",
+        "type": "Time.Time -> TaskRepeater.Scheduler Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "TaskRepeater",
+    "comment": " Provides a repeatedly running a Task and communicating the results (success\nor error) to other parts of a program.\n\nYou provide a few pieces of information:\n - the task to run\n - a scheduler for determining when to run the task\n - messages for communicating success and error\n - a message for wrapping internal messages that should come back to the task\n   repeater framework\n - a function determining when to continue running the task\n\nBased on these TaskRepeater will repeated execute the task, sending back the\nresults via the messages you configure it with.\n\n# Factories\n@docs model, scheduler, Scheduler\n\n# Execution\n@docs start, update\n\n# Plumbing\n@docs Model, Msg\n\nTODO: Example\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " A model for TaskRepeaters. You'll need one (or more) of these in your\nhigher-level model to use TaskRepeater.\n",
+        "args": [
+          "error",
+          "result",
+          "s",
+          "extmsg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages used for internal operations.\n",
+        "args": [
+          "extmsg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Scheduler",
+        "comment": " Defines a particular schedule for executing tasks.\n",
+        "args": [
+          "m"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "model",
+        "comment": " Create a new model.\n\n`task` is the task to be periodically executed.\n`scheduler` determines when the task will be executed.\n`onResult` creates the message that will be issued when the task succeeds.\n`onError` creates the message that will be issued when the task fails.\n`msgWrapper` creates a message that wraps a Msg so that users can route messages to `update`.\n`continue` determines if execution should continue when a result is received.\n\n    type Msg\n        = Success Result\n        | Error Http.Error\n        | Wrapper (TaskRepeater.Msg Msg)\n\n    poller =\n        let\n            task = Http.get resultDecoder \"http://example.com\"\n            scheduler = uniform (Time.second 5)\n        in\n            model task scheduler Success Error Wrapper (\\_ -> True)\n",
+        "type": "Task.Task e r -> TaskRepeater.Scheduler s -> (r -> m) -> (e -> m) -> (TaskRepeater.Msg m -> m) -> (r -> Bool) -> TaskRepeater.Model e r s m"
+      },
+      {
+        "name": "scheduler",
+        "comment": " Create a schedule for task execution.\n\n`model` is whatever data the scheduler needs to do its job.\n\n`next` determines how long to wait before the next task execution. Given the\ncurrent model, it produces the next model and the delay time.\n\nFor example, to create a scheduler that runs a task every 10 seconds:\n\n    scheduler (Time.seconds 10) (\\m -> (m, m))\n",
+        "type": "m -> (m -> ( m, Time.Time )) -> TaskRepeater.Scheduler m"
+      },
+      {
+        "name": "start",
+        "comment": " Start executing a task on a schedule.\n\nThis will return a Cmd that should be routed normally by the caller.\n\n    update msg model =\n        case msg of\n            StartPolling ->\n                model ! [start model.poller]\n",
+        "type": "TaskRepeater.Model e r s m -> Platform.Cmd.Cmd m"
+      },
+      {
+        "name": "update",
+        "comment": " Process a Msg to update a Model.\n\nA standard update function.\n",
+        "type": "TaskRepeater.Msg m -> TaskRepeater.Model e r s m -> ( TaskRepeater.Model e r s m, Platform.Cmd.Cmd m )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

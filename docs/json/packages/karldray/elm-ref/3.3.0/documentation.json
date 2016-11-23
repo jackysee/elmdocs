@@ -1,0 +1,127 @@
+[
+  {
+    "name": "Ref",
+    "comment": "A `Ref` represents a \"mutable\" piece of data that might exist inside a larger data structure.\nIt exposes the current value of that data and encapsulates the information needed to update it.\n\n# Creating top-level Refs\n@docs new\n\n# Manipulating Refs\n\n## Records\n@docs Focus, focus, map\n\n## Tuples\n@docs fst, snd, destructure\n\n## Collections\nSee the Array.Ref and Dict.Ref modules.\n\n\n# Address builders for use in Html.Events attributes\n@docs transform, set",
+    "aliases": [
+      {
+        "name": "Focus",
+        "comment": "A Focus describes how to get and set a value of one type inside a value of another type.\nThe `get` function takes a \"big\" value and returns the \"small\" value inside it.\nThe `set` function takes a new \"small\" value and an old \"big\" value\nand returns an updated \"big\" value.",
+        "args": [
+          "t",
+          "u"
+        ],
+        "type": "{ get : t -> u, set : u -> t -> t }"
+      },
+      {
+        "name": "Ref",
+        "comment": "",
+        "args": [
+          "t"
+        ],
+        "type": "{ value : t, address : Address (t -> t) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "destructure",
+        "comment": "Split a referenced pair into two references.",
+        "type": "Ref ( a, b ) -> ( Ref a, Ref b )"
+      },
+      {
+        "name": "focus",
+        "comment": "Create a Focus from a pair of `get` and `set` functions.\nTypically, you'll use this to represent a field of a record type:\n\n```elm\nfooField = Ref.focus .foo (\\x m -> {m | foo \u003c- x})\n```",
+        "type": "(t -> u) -> (u -> t -> t) -> Focus t u"
+      },
+      {
+        "name": "fst",
+        "comment": "Refer to the first element of a pair.",
+        "type": "Ref ( a, b ) -> Ref a"
+      },
+      {
+        "name": "map",
+        "comment": "Apply a Focus to a \"big\" Ref, creating a reference to the \"small\" value inside it.",
+        "type": "Focus t u -> Ref t -> Ref u"
+      },
+      {
+        "name": "new",
+        "comment": "Create a new mutable object with the given initial value.",
+        "type": "t -> Signal (Ref t)"
+      },
+      {
+        "name": "set",
+        "comment": "Create an Address that replaces the referenced value with whatever you send it.",
+        "type": "Ref t -> Address t"
+      },
+      {
+        "name": "snd",
+        "comment": "Refer to the second element of a pair.",
+        "type": "Ref ( a, b ) -> Ref b"
+      },
+      {
+        "name": "transform",
+        "comment": "Create an Address that updates the referenced value by applying functions to it.",
+        "type": "Ref t -> Address (t -> t)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Array.Ref",
+    "comment": "Tools for dealing with `Ref Array` values.\nThese functions are analagous to the corresponding ones from the Array module.\n\nSee\n[CounterList.elm](https://github.com/karldray/elm-ref/blob/master/examples/CounterList.elm)\nfor example usage.\n\n@docs get, map, indexedMap",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "get",
+        "comment": "Refer to the element at a given index in an array.",
+        "type": "Int -> Ref (Array t) -> Maybe (Ref t)"
+      },
+      {
+        "name": "indexedMap",
+        "comment": "Like `map`, but also passes element indexes to the provided function.",
+        "type": "(Int -> Ref t -> u) -> Ref (Array t) -> Array u"
+      },
+      {
+        "name": "map",
+        "comment": "Map over an array, passing elements \"by reference\" to the provided function.",
+        "type": "(Ref t -> u) -> Ref (Array t) -> Array u"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "Dict.Ref",
+    "comment": "Tools for dealing with `Ref Dict` values.\nThese functions are analagous to the corresponding ones from the Dict module.\n\nSee\n[CounterDict.elm](https://github.com/karldray/elm-ref/blob/master/examples/CounterDict.elm)\nfor example usage.\n\n@docs get, values, toList, mapToList, map",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "get",
+        "comment": "Refer to the element at a given key in a dictionary.",
+        "type": "comparable -> Ref (Dict comparable a) -> Maybe (Ref a)"
+      },
+      {
+        "name": "map",
+        "comment": "Like `mapToList`, but produces a new dictionary with the same keys as the given one.",
+        "type": "(comparable -> Ref a -> b) -> Ref (Dict comparable a) -> Dict comparable b"
+      },
+      {
+        "name": "mapToList",
+        "comment": "Map over a referenced dictionary,\npassing keys and values to the provided function,\nreturning the results in a list.\nValues (but not keys) are passed \"by reference\".",
+        "type": "(comparable -> Ref a -> b) -> Ref (Dict comparable a) -> List b"
+      },
+      {
+        "name": "toList",
+        "comment": "Convert a dictionary to a list of (key, Ref value) pairs.",
+        "type": "Ref (Dict comparable a) -> List ( comparable, Ref a )"
+      },
+      {
+        "name": "values",
+        "comment": "Get a list of references to the values in a dictionary.",
+        "type": "Ref (Dict comparable a) -> List (Ref a)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

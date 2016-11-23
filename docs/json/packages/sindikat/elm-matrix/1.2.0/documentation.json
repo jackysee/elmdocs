@@ -1,0 +1,298 @@
+[
+  {
+    "name": "Matrix",
+    "comment": "A library for fast immutable rectangular matrices. The elements in a matrix must have the same type. The matrices are implemented on top of Elm's built-in arrays: `type alias Matrix a = Array (Array a)`. While all functions in this library preserve the rectangular property of the matrices, this isn't enforced, so make sure you manipulate the matrices using this API and not Array functions.\n\nGeared towards 2D games.\n\nThe API is very unstable and will be changed and revamped many times. I am very happy to discuss and accept any ideas, suggestions, and pull requests on the GitHub page:\n\nhttp://github.com/sindikat/elm-matrix\n\n# Types\n@docs Matrix, Cell\n\n# Create matrices\n@docs empty, repeat, matrix, square, rowVector, colVector, numbered, numbered1, fromList\n\n# Get and set\n@docs get, set, update\n\n# Advanced get and set\n@docs getMany, setMany, setManyWith, updateMany, updateManyWith\n\n# Convert to other types\n@docs toList, toIndexedList, flatten, flattenArray\n\n# Map\n@docs map, indexedMap\n\n# Compare two matrices\n@docs compare, compareI, comm, diff\n\n# Matrix properties\n@docs isEmpty, isSquare, width, height, size\n\n# Get rows and columns\n@docs getRow, getCol, firstRow, lastRow, firstCol, lastCol, rows, cols, takeRows, takeCols, takeRowsEnd, takeColsEnd, dropRows, dropCols, dropRowsEnd, dropColsEnd, slice\n\n# Misc\n@docs transpose, filterRows, filterCols\n\n# Cells\n@docs compareCells, combineCells",
+    "aliases": [
+      {
+        "name": "Cell",
+        "comment": "A representation of a single matrix cell, together with its horizontal and vertical indices.",
+        "args": [
+          "a"
+        ],
+        "type": "( Int, Int, a )"
+      },
+      {
+        "name": "Matrix",
+        "comment": "An ordered collection of elements of the same type, arranged into a rectangular matrix of `m` columns and `n` rows.",
+        "args": [
+          "a"
+        ],
+        "type": "Array.Array (Array.Array a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "colVector",
+        "comment": "Create a column vector from an array. A column vector is matrix of size m × 1. That is, it is a matrix with a single column.\n\n    colVector (Array.fromList [1,2,3,4,5])\n\nwill give back the matrix\n\n    1\n    2\n    3\n    4\n    5",
+        "type": "Array.Array a -> Matrix.Matrix a"
+      },
+      {
+        "name": "cols",
+        "comment": "Return the matrix as an array of arrays, where inner arrays are columns of the matrix.\n\n    cols (numbered1 3 3) == Array.fromList [[1,4,7],[2,5,8],[3,6,9]]",
+        "type": "Matrix.Matrix a -> Array.Array (Array.Array a)"
+      },
+      {
+        "name": "combineCells",
+        "comment": "Combine two cells by putting their elements into a tuple. Their indices are assumed to be equal.",
+        "type": "Matrix.Cell a -> Matrix.Cell b -> Matrix.Cell ( a, b )"
+      },
+      {
+        "name": "comm",
+        "comment": "Return a list of indices of those cells of matrix, which are equal. Named after GNU/Linux command `comm`.\n\n    square 3 (+) `comm` square 3 always == [(0,0),(1,0),(2,0)]",
+        "type": "Matrix.Matrix a -> Matrix.Matrix a -> List ( Int, Int )"
+      },
+      {
+        "name": "compare",
+        "comment": "Take a binary function, a binary predicate, and 2 matrices. The 2 matrices are assumed equal size, although this is not enforced. Compare same-indexed elements using the binary predicate. Return the indexed list of all cells, for which the predicate returns True. The indexed list of cells is of the format `[(Int, Int, (a,b))]`, where `a` is type of element from first matrix, and `b` is type of element from second matrix.\n\nConsider an example. Suppose you have two matrices:\n\n    square 4 (+)  and  square 4 (*)\n    -------            -------\n    0 1 2 3            0 0 0 0\n    1 2 3 4            0 1 2 3\n    2 3 4 5            0 2 4 6\n    3 4 5 6            0 3 6 9\n\nWe want to return the cells, where second matrix's element is greater than or equal first matrix's element. We want to return these cells in a list, with corresponding indexes.\n\n    compare (<=) (square 4 (+)) (square 4 (*))\n\nreturns:\n\n    [(0,0,(0,0)), (2,2,(4,4)), (3,2,(5,6)), (2,3,(5,6)), (3,3,(6,9))]\n\nwhich corresponds to these cells in both matrices:\n\n    square 4 (+)  and  square 4 (*)\n    -------            -------\n    0 . . .            0 . . .\n    . . . .            . . . .\n    . . 4 5            . . 4 6\n    . . 5 6            . . 6 9",
+        "type": "(a -> b -> Bool) -> Matrix.Matrix a -> Matrix.Matrix b -> List (Matrix.Cell ( a, b ))"
+      },
+      {
+        "name": "compareCells",
+        "comment": "Take a binary predicate and two cells. Compare the elements within these cells. That is return True, if the predicate returns True for these elements, otherwise return False. Ignore indices during comparison.\n\n    compareCells (>=) (1,1,10) (1,1,5) == True\n    compareCells (>=) (1,1,10) (2,3,5) == True",
+        "type": "(a -> b -> Bool) -> Matrix.Cell a -> Matrix.Cell b -> Bool"
+      },
+      {
+        "name": "compareI",
+        "comment": "Same as compare, but return only indexes of the form `[(Int, Int)]`, not triples with indexes and pair of elements of the form `[(Int,Int,(a,b))]`.\n\n    compareI (<=) (square 4 (+)) (square 4 (*))\n\nreturns:\n\n    [(0,0), (2,2), (3,2), (2,3), (3,3)]",
+        "type": "(a -> b -> Bool) -> Matrix.Matrix a -> Matrix.Matrix b -> List ( Int, Int )"
+      },
+      {
+        "name": "diff",
+        "comment": "Return a list of indices of those cells of matrix, which are *not* equal.\n\n    square 3 (+) `diff` square 3 always == [(0,1),(1,1),(2,1),(0,2),(1,2),(2,2)]",
+        "type": "Matrix.Matrix a -> Matrix.Matrix a -> List ( Int, Int )"
+      },
+      {
+        "name": "dropCols",
+        "comment": "",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "dropColsEnd",
+        "comment": "",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "dropRows",
+        "comment": "",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "dropRowsEnd",
+        "comment": "",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "empty",
+        "comment": "Create an empty matrix of size 0 × 0. Probably won't ever be used in code. If you are using empty matrices in your code, you probably doing something wrong.",
+        "type": "Matrix.Matrix a"
+      },
+      {
+        "name": "filterCols",
+        "comment": "Remove cols that do not satisfy predicate. The col in a predicate is represented as an `Array`.",
+        "type": "(Array.Array a -> Bool) -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "filterRows",
+        "comment": "Remove rows that do not satisfy predicate. The row in a predicate is represented as an `Array`.",
+        "type": "(Array.Array a -> Bool) -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "firstCol",
+        "comment": "Return first column of a matrix as an Array.",
+        "type": "Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "firstRow",
+        "comment": "Return first row of a matrix as an Array.",
+        "type": "Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "flatten",
+        "comment": "Create a flat list from a matrix.\n\n    flatten (square 3 (\\x y -> x*2+y)) == [0,2,4,1,3,5,2,4,6]",
+        "type": "Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "flattenArray",
+        "comment": "Create a flat array from a matrix.\n\n    flattenArray (square 3 (\\x y -> x*2+y)) == Array.fromList [0,2,4,1,3,5,2,4,6]",
+        "type": "Matrix.Matrix a -> Array.Array a"
+      },
+      {
+        "name": "fromList",
+        "comment": "Convert a list of list into a matrix.\n\n    fromList [[0,1], [1,2]] == square 2 (+)",
+        "type": "List (List a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "get",
+        "comment": "Get the element at a particular location.\nReturn Nothing if index out of bounds.\n\n    get 1 1 (square 2 (+)) == Just 2\n    get 2 2 (square 2 (+)) == Nothing",
+        "type": "Int -> Int -> Matrix.Matrix a -> Maybe.Maybe a"
+      },
+      {
+        "name": "getCol",
+        "comment": "Return a col of index *n* as a one-dimensional Array. Negative index means count from end. If index is out of bounds, return `Nothing`.",
+        "type": "Int -> Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "getMany",
+        "comment": "Given list of indexes in a form of a tuple,\nreturn list of objects in corresponding cells.\n\n    getMany [(0,0),(1,1),(2,2)] (square 3 (+)) == [0,2,4]",
+        "type": "List ( Int, Int ) -> Matrix.Matrix a -> List a"
+      },
+      {
+        "name": "getRow",
+        "comment": "Return a row of index *n* as a one-dimensional Array. Negative index means count from end. If index is out of bounds, return `Nothing`.",
+        "type": "Int -> Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "height",
+        "comment": "Return height (number of rows) of a matrix.",
+        "type": "Matrix.Matrix a -> Int"
+      },
+      {
+        "name": "indexedMap",
+        "comment": "Apply a function of type `Int -> Int -> a -> b` to each element\nof a matrix. Int arguments of a function are col and row indexes\nrespectively.\n\n    indexedMap (\\x y e -> x) (square 3 (+)) == fromList [[0,1,2],[0,1,2],[0,1,2]]",
+        "type": "(Int -> Int -> a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "isEmpty",
+        "comment": "Check if the matrix is empty, i.e. of size 0 × 0. Probably won't ever be used in code. If you are using empty matrices in your code, you probably doing something wrong.",
+        "type": "Matrix.Matrix a -> Bool"
+      },
+      {
+        "name": "isSquare",
+        "comment": "Check if matrix is square. That is, check that both width (number of columns) and height (number of rows) are equal.",
+        "type": "Matrix.Matrix a -> Bool"
+      },
+      {
+        "name": "lastCol",
+        "comment": "Return last column of a matrix as an Array.",
+        "type": "Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "lastRow",
+        "comment": "Return last row of a matrix as an Array.",
+        "type": "Matrix.Matrix a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "map",
+        "comment": "Apply a function to each element of a matrix.\n\n    map ((+)5) (square 2 (+)) == fromList [[5,6], [6,7]]",
+        "type": "(a -> b) -> Matrix.Matrix a -> Matrix.Matrix b"
+      },
+      {
+        "name": "matrix",
+        "comment": "Initialize a new matrix of size m × n. Delegates to a function of\ntype (Int -> Int -> a) to determine the value of the cell, where first\nInt argument is col index and second Int argument is row index.\n\n    matrix 4 3 (\\x y -> x + y*2 + 1)\n\nwill give back the matrix\n\n    1 2 3 4\n    2 4 6 8",
+        "type": "Int -> Int -> (Int -> Int -> a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "numbered",
+        "comment": "Create a matrix, fill it with increasing numbers, starting from 0.\n\n    numbered 5 5\n\nwill give back the matrix\n\n     0  1  2  3  4\n     5  6  7  8  9\n    10 11 12 13 14\n    15 16 17 18 19\n    20 21 22 23 24",
+        "type": "Int -> Int -> Matrix.Matrix Int"
+      },
+      {
+        "name": "numbered1",
+        "comment": "Create a matrix, fill it with increasing numbers, starting from 1.\n\n    numbered1 5 5\n\nwill give back the matrix\n\n     1  2  3  4  5\n     6  7  8  9 10\n    11 12 13 14 15\n    16 17 18 19 20\n    21 22 23 24 25",
+        "type": "Int -> Int -> Matrix.Matrix Int"
+      },
+      {
+        "name": "repeat",
+        "comment": "Create an array with given sizes, filled with a default element\n\n    repeat 4 2 0\n\nwill give back the matrix\n\n    0 0 0 0\n    0 0 0 0",
+        "type": "Int -> Int -> a -> Matrix.Matrix a"
+      },
+      {
+        "name": "rowVector",
+        "comment": "Create a row vector from an array. A row vector is matrix of size 1 × n. That is, it is a matrix with a single row.\n\n    rowVector (Array.fromList [1,2,3,4,5])\n\nwill give back the matrix\n\n    1 2 3 4 5",
+        "type": "Array.Array a -> Matrix.Matrix a"
+      },
+      {
+        "name": "rows",
+        "comment": "Return the matrix as an array of arrays, where inner arrays are rows of the matrix.\n\n    rows (numbered1 3 3) == Array.fromList [[1,2,3],[4,5,6],[7,8,9]]",
+        "type": "Matrix.Matrix a -> Array.Array (Array.Array a)"
+      },
+      {
+        "name": "set",
+        "comment": "Set the element at a particular location and return new matrix.\nReturn the matrix unchanged if index is out of bounds.\n\n    set 1 1 10 (square 2 (+)) == fromList [[0,1], [1,10]]",
+        "type": "Int -> Int -> a -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "setMany",
+        "comment": "Given list of indexes and list of objects,\nupdate multiple cells of an array.\n\n    setMany [(0,0),(1,1),(2,2)] (9,8,7) (square 3 (+))\n\nwill give back this matrix:\n\n     9 1 2\n     1 8 3\n     2 3 7",
+        "type": "List ( Int, Int ) -> List a -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "setManyWith",
+        "comment": "Similar to setMany, but behaves differently. You provide a\nfunction that returns indexes, a function that converts objects,\nand a list of objects. The index-generating function is applied\nto each object to generate indexes. Then the converting function\nis applied to each object. Then converted objects are put into\nthe matrix.\n\nThis function is useful if you use records of game objects and you\nwant to generate a matrix of where these objects are on a map.\n\n    type alias Object = {x:Int, y:Int, char:Char}\n    type alias Model = List Object\n    model : Model\n    model = [{x=0,y=0,char='@'}, {x=1,y=1,char='@'}]\n    setManyWith (\\{x,y} -> (x,y)) (\\{char} -> char) model (square 3 (\\_ _ -> '.'))\n\nwill give back this matrix:\n\n    @ . .\n    . @ .\n    . . .",
+        "type": "(b -> ( Int, Int )) -> (b -> a) -> List b -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "size",
+        "comment": "Return size of a matrix as a tuple (width, height).",
+        "type": "Matrix.Matrix a -> ( Int, Int )"
+      },
+      {
+        "name": "slice",
+        "comment": "Take a rectangular piece out of a matrix. The arguments are: horizontal-start, horizontal-end, vertical-start, vertical-end. The indexes are zero-based. The slice extracts from start including up to but not including end on both dimensions.\n\n    slice 1 6 2 4  (numbered1 10 10)\n\nwill give back the matrix:\n\n    22 23 24 25 26\n    32 33 34 35 36\n\nThe slice supports negative arguments, which count from end.\n\n    slice -9 -1 -4 -2 (numbered1 10 10)\n\nwill give back the matrix:\n\n    62 63 64 65 66 67 68 69\n    72 73 74 75 76 77 78 79",
+        "type": "Int -> Int -> Int -> Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "square",
+        "comment": "Create a square matrix of a certain size.\n\n    square 2 (+)\n\nwill give back the matrix\n\n    0 1\n    1 2",
+        "type": "Int -> (Int -> Int -> a) -> Matrix.Matrix a"
+      },
+      {
+        "name": "takeCols",
+        "comment": "Take columns from left. Negative argument means count from right. Below are examples  of expressions with returned matrices underneath.\n\n    takeCols 2 (numbered1 3 3)\n\n    1 2\n    4 5\n    7 8\n\n    takeCols -2 (numbered1 3 3)\n\n    2 3\n    5 6\n    8 9",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "takeColsEnd",
+        "comment": "Take columns from right. Negative argument means count from left. Below are examples  of expressions with returned matrices underneath.\n\n    takeColsEnd 2 (numbered1 3 3)\n\n    2 3\n    5 6\n    8 9\n\n    takeColsEnd -2 (numbered1 3 3)\n\n    1 2\n    4 5\n    7 8",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "takeRows",
+        "comment": "Take rows from up. Negative argument means count from down. Below are examples  of expressions with returned matrices underneath.\n\n    takeRows 2 (numbered1 3 3)\n\n    1 2 3\n    4 5 6\n\n    takeRows -2 (numbered1 3 3)\n\n    4 5 6\n    7 8 9",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "takeRowsEnd",
+        "comment": "Take columns from down. Negative argument means count from up. Below are examples  of expressions with returned matrices underneath.\n\n    takeRowsEnd 2 (numbered1 3 3)\n\n    4 5 6\n    7 8 9\n\n    takeRowsEnd -2 (numbered1 3 3)\n\n    1 2 3\n    4 5 6",
+        "type": "Int -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "toIndexedList",
+        "comment": "Create a list of 3-tuples `(x,y,element)` from a matrix.\n\n    toIndexedList (square 2 (+)) == [(0,0,0),(1,0,1),(0,1,1),(1,1,2)]",
+        "type": "Matrix.Matrix a -> List (Matrix.Cell a)"
+      },
+      {
+        "name": "toList",
+        "comment": "Create a list of lists from a matrix\n\n    toList (square 3 (+)) == [[0,1,2],[1,2,3],[2,3,4]]",
+        "type": "Matrix.Matrix a -> List (List a)"
+      },
+      {
+        "name": "transpose",
+        "comment": "Transpose a matrix.\n\n    transpose (numbered1 2 4)\n\n    1 3 5 7\n    2 4 6 8",
+        "type": "Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "update",
+        "comment": "Update the element at a particular location using its current\nvalue. Return matrix unchanged if index is out of bounds.\n\n    update 1 1 ((*)2) (square 2 (+)) == fromList [[0,1], [1,4]]\n    update 1 1 ((+)5) (square 3 (+)) == fromList [[0,1,2],[1,7,3],[2,3,4]]",
+        "type": "Int -> Int -> (a -> a) -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "updateMany",
+        "comment": "Apply function at multiple indexes and return a new matrix.\n\n    updateMany [(0,0),(1,1)] ((+)5) (square 2 (+)) == fromList [[5,1],[1,7]]",
+        "type": "List ( Int, Int ) -> (a -> a) -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "updateManyWith",
+        "comment": "Similar to updateMany. Takes a function of type `a -> b -> a`,\na list of indexes, and a list of objects. Combines an old object\nunder index with a new object using the function.",
+        "type": "(a -> b -> a) -> List ( Int, Int ) -> List b -> Matrix.Matrix a -> Matrix.Matrix a"
+      },
+      {
+        "name": "width",
+        "comment": "Return width (number of columns) of a matrix.",
+        "type": "Matrix.Matrix a -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

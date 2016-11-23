@@ -1,0 +1,239 @@
+[
+  {
+    "name": "Slides",
+    "comment": "\n# Main API\n@docs app, md, mdFragments, html, htmlFragments\n\n# Options\n@docs Options, slidesDefaultOptions\n\n# Elm Architecture\nNormally used with [Navigation.program](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#program)\n@docs Msg, Model, slideIndexParser, init, update, urlUpdate, view, subscriptions\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " ",
+        "args": [],
+        "type": "{ slides : Array.Array Slides.Slide , windowSize : Window.Size , isPaused : Bool , slideAnimation : SmoothAnimator.Model , fragmentAnimation : SmoothAnimator.Model }"
+      },
+      {
+        "name": "Options",
+        "comment": "\nConfiguration options:\n\n* `style` &mdash; A list of [elm-css](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest) `Snippets` to apply.\n  Use [] if you want to use an external CSS.\n  The `Slides.Style` module contains some preset styles ready to use.\n\n* `slideAnimator` &mdash; The function used to customize the slide animation.\n  The `Slides.SlideAnimation` module contains some preset animators and the information for writing custom ones.\n\n* `fragmentAnimator` &mdash; the function used to animate a fragment within a slide.\n  The `Slides.FragmentAnimation` module contains some preset animators and the information for writing custom ones.\n\n* `easingFunction` &mdash; Any f : [0, 1] -> [0, 1]\n  The standard ones are available in Elm's [easing-functions](http://package.elm-lang.org/packages/elm-community/easing-functions/1.0.1/).\n\n* `animationDuration` &mdash; the `Time` duration of a slide or fragment animation.\n\n* `slidePixelSize` &mdash; `width` and `height` geometry of the slide area, in pixel.\n   While the slide will be scaled to the window size, the internal coordinates of the slide will refer to these values.\n\n* `keyCodesToMsg` &mdash; a map of all Msg and the key codes that can trigger them.\n",
+        "args": [],
+        "type": "{ style : List Css.Snippet , slideAnimator : Slides.SlideAnimation.Animator , fragmentAnimator : Slides.FragmentAnimation.Animator , easingFunction : Float -> Float , animationDuration : Time.Time , slidePixelSize : { height : Int, width : Int } , keyCodesToMsg : List { msg : Slides.Msg, keyCodes : List Int } }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Noop",
+            []
+          ],
+          [
+            "First",
+            []
+          ],
+          [
+            "Last",
+            []
+          ],
+          [
+            "Next",
+            []
+          ],
+          [
+            "Prev",
+            []
+          ],
+          [
+            "AnimationTick",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "PauseAnimation",
+            []
+          ],
+          [
+            "WindowResizes",
+            [
+              "Window.Size"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "app",
+        "comment": "\nDoes all the wiring for you, returning a `Program` ready to run.\n```\nmain = Slides.app\n    Slides.slidesDefaultOptions\n    [ slide1\n    , slide2\n    , ...\n    ]\n```\n",
+        "type": "Slides.Options -> List Slides.Slide -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "html",
+        "comment": "\nCreates a single slide from a DOM node.\n\nCan be used to create custom slides constructors (yes, it is used internally by `md` and `mdMarkdown`).\n```\nimport Html exposing (..)\n\nslide1 = Slides.html <|\n     div\n        []\n        [ h1 [] [ text \"Hello, I am the slide header\" ]\n        , div [] [ text \"and I am some content\" ]\n        ]\n```\n",
+        "type": "Html.Html Slides.Msg -> Slides.Slide"
+      },
+      {
+        "name": "htmlFragments",
+        "comment": "\nCreates a single slide made by several fragments, which are displayed in sequence, one after the other.\n```\nslide2 = Slides.htmlFragments\n    [ div [] [ text \"I am always visible when the slide is visible\" ]\n    , div [] [ text \"Then I appear\"\n    , div [] [ text \"and then I appear!\"\n    ]\n```\n",
+        "type": "List (Html.Html Slides.Msg) -> Slides.Slide"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "Slides.Options -> List Slides.Slide -> Maybe.Maybe Int -> ( Slides.Model, Platform.Cmd.Cmd Slides.Msg )"
+      },
+      {
+        "name": "md",
+        "comment": "\nCreates a slide from a Markdown string.\n\nIt uses [elm-markdown](http://package.elm-lang.org/packages/evancz/elm-markdown/3.0.0/)\nso you can enable syntax highlightning by including [highlight.js](https://highlightjs.org/).\n\nIt automatically removes indentation from multi-line strings.\n\n```\nslide3 = Slides.md\n    \"\"\"\n    # Hello! I am a header\n    *and I am emph!*\n    \"\"\"\n```\n",
+        "type": "String -> Slides.Slide"
+      },
+      {
+        "name": "mdFragments",
+        "comment": "\nTurns several Markdown strings into a single slide made by several fragments,\nwhich will appear one after another:\n```\nslide4 = Slides.mdFragments\n    [ \"I am always visible\"\n    , \"Then I appear\"\n    , \"and Then I\"\n    ]\n```\n",
+        "type": "List String -> Slides.Slide"
+      },
+      {
+        "name": "slideIndexParser",
+        "comment": " ",
+        "type": "Navigation.Parser (Maybe.Maybe Int)"
+      },
+      {
+        "name": "slidesDefaultOptions",
+        "comment": "\n\nDefault configuration options.\n\n```\nslidesDefaultOptions =\n    { style =\n        Slides.Styles.whiteOnBlack\n    , slideAnimator =\n        SlideAnimation.scroll\n    , fragmentAnimator =\n        FragmentAnimation.fade\n    , easingFunction =\n        Ease.inOutCubic\n    , animationDuration =\n        500 * Time.millisecond\n    , slidePixelSize =\n        { height = 700\n        , width = 960\n        }\n    , keyCodesToMsg =\n        [ { msg = First\n          , keyCodes =\n                [ 36 ]\n                -- Home\n          }\n        , { msg = Last\n          , keyCodes =\n                [ 35 ]\n                -- End\n          }\n        , { msg = Next\n          , keyCodes =\n                [ 13, 32, 39, 76, 68 ]\n                -- Enter, Spacebar, Arrow Right, l, d\n          }\n        , { msg = Prev\n          , keyCodes =\n                [ 37, 72, 65 ]\n                -- Arrow Left, h, a\n          }\n        , { msg = PauseAnimation\n          , keyCodes = [ 80 ]\n          }\n        ]\n    }\n```\n",
+        "type": "Slides.Options"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "Slides.Options -> Slides.Model -> Platform.Sub.Sub Slides.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "Slides.Options -> Slides.Msg -> Slides.Model -> ( Slides.Model, Platform.Cmd.Cmd Slides.Msg )"
+      },
+      {
+        "name": "urlUpdate",
+        "comment": " ",
+        "type": "Slides.Options -> Maybe.Maybe Int -> Slides.Model -> ( Slides.Model, Platform.Cmd.Cmd Slides.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " ",
+        "type": "Slides.Options -> Slides.Model -> Html.Html Slides.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Slides.Styles",
+    "comment": " A few ready made styles to use as `Options.style`.\n\n@docs whiteOnBlack\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "whiteOnBlack",
+        "comment": " White centered text, black background\n",
+        "type": "List Css.Snippet"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Slides.SlideAnimation",
+    "comment": "\n\nThis module contains the functions used to animate the change from one slide to another,\nand the types to create your own function.\n\n# Slide animators\n@docs scroll, fade\n\n# Types\n@docs Animator, Status, MotionDirection, RelativeOrder\n\n",
+    "aliases": [
+      {
+        "name": "Animator",
+        "comment": " Shorthand for the function type used to animate the slides.\nThe first argument describes the slide state: whether it is still or moving, and if the latter\nin which direction and how much movement.\n\n```\nfade : SlideAttributes\nfade status =\n    let\n        opacity =\n            case status of\n                Still -> 1\n                Moving direction order completion ->\n                    case direction of\n                        Incoming -> completion\n                        Outgoing -> 1 - completion\n    in\n        Css.asPairs\n            [ Css.opacity (Css.num opacity) ]\n```\n",
+        "args": [],
+        "type": "Slides.SlideAnimation.Status -> List ( String, String )"
+      }
+    ],
+    "types": [
+      {
+        "name": "MotionDirection",
+        "comment": " This is used to tell the slideAttributes function whether it is running on\n    the slide that's coming into view or the one that's going away.\n",
+        "args": [],
+        "cases": [
+          [
+            "Incoming",
+            []
+          ],
+          [
+            "Outgoing",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "RelativeOrder",
+        "comment": "\n Usually during an animation there will be two visible slides:\n this tells you the relative position of the two slides within the normal\n slide sequence.\n\n If you navigate from one slide to the next, the Outgoing slide will be\n the EarlierSlide, and the Incoming slide will be the LaterSlide.\n\n If instead you navigate backwards, from one slide to the previous, it\n will be the opposite.\n",
+        "args": [],
+        "cases": [
+          [
+            "EarlierSlide",
+            []
+          ],
+          [
+            "LaterSlide",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Status",
+        "comment": " Tells you what a visible slide is doing.\n    The `Float` used by the `Moving` constructor is for the animation completion that runs between 0 and 1,\n    0 when the animation hasn't yet started and 1 when it is completed.\n",
+        "args": [],
+        "cases": [
+          [
+            "Still",
+            []
+          ],
+          [
+            "Moving",
+            [
+              "Slides.SlideAnimation.MotionDirection",
+              "Slides.SlideAnimation.RelativeOrder",
+              "Float"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fade",
+        "comment": " Fade in\n",
+        "type": "Slides.SlideAnimation.Animator"
+      },
+      {
+        "name": "scroll",
+        "comment": " Scrolls the slide horizontally, right to left\n",
+        "type": "Slides.SlideAnimation.Animator"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Slides.FragmentAnimation",
+    "comment": "\n\nThis module contains the functions used to animate the appearance\nof a new slide fragment (or the hiding of an old one, if going backwards).\n\n# Fragment animators\n@docs fade\n\n# Shorthand type\n@docs Animator\n",
+    "aliases": [
+      {
+        "name": "Animator",
+        "comment": " Shorthand for the function type used to animate the fragments.\n\n```\nfade : Animator\nfade completion =\n    [ ( \"opacity\", toString completion ) ]\n```\n",
+        "args": [],
+        "type": "Float -> List ( String, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "fade",
+        "comment": " Fade in\n",
+        "type": "Slides.FragmentAnimation.Animator"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

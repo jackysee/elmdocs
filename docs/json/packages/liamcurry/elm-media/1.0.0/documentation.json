@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Media.Site",
+    "comment": " This package includes representations of various social media sites.\n\n@docs all, image, video\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " All available sites.\n",
+        "type": "List Media.Site"
+      },
+      {
+        "name": "image",
+        "comment": " Sites that are for image sharing. Includes:\n\n- [Gfycat](//gfycat.com)\n- [Imgur](//imgur.com)\n",
+        "type": "List Media.Site"
+      },
+      {
+        "name": "video",
+        "comment": " Sites that are for watching videos/streams. Includes:\n\n- [LiveCap](//livecap.tv)\n- [Oddshot](//oddshot.tv)\n- [Twitch](//twitch.tv)\n- [YouTube](//youtube.com)\n",
+        "type": "List Media.Site"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Media",
+    "comment": " This package is for extracting social media references from text. The\nmost common use-case for this package is to embed social media widgets on\na webpage from user input.\n\nBasic example:\n\n    import Media\n    import Media.Site as Site\n\n    text = \"\"\"https://imgur.com/cjCGCNH\n    https://youtu.be/oYk8CKH7OhE\n    https://www.youtube.com/watch?v=DfLvDFxcAIA\n    \"\"\"\n\n    -- Find all the media references in some text\n    media = Media.find Site.all text\n\n    -- Generate URLs for media objects\n    urls = Media.urls media\n\n# Types\n@docs Kind, Id, Media, SiteId, Site, Url, Urls\n\n# Extracting media\n@docs find, urls\n\n",
+    "aliases": [
+      {
+        "name": "Id",
+        "comment": " Unique site-specific identifier for media.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Media",
+        "comment": " A slim reference to media on a site.\n",
+        "args": [],
+        "type": "{ id : Media.Id, kind : Media.Kind, siteId : Media.SiteId }"
+      },
+      {
+        "name": "Site",
+        "comment": " Represents a site.\n",
+        "args": [],
+        "type": "{ id : Media.SiteId , name : String , matchers : List ( Media.Kind, String ) , url : Media.Media -> Maybe.Maybe Media.Url , imgSmUrl : Maybe.Maybe (Media.Media -> Maybe.Maybe Media.Url) , imgMdUrl : Maybe.Maybe (Media.Media -> Maybe.Maybe Media.Url) , imgLgUrl : Maybe.Maybe (Media.Media -> Maybe.Maybe Media.Url) , iframeUrl : Maybe.Maybe (Media.Media -> Maybe.Maybe Media.Url) }"
+      },
+      {
+        "name": "SiteId",
+        "comment": " Unique identifier for a site.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Url",
+        "comment": " A basic representation of a URL.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Urls",
+        "comment": " Represents all possible URLs for a given media object and site.\n",
+        "args": [],
+        "type": "{ media : Media.Media , url : Maybe.Maybe Media.Url , imgSmUrl : Maybe.Maybe Media.Url , imgMdUrl : Maybe.Maybe Media.Url , imgLgUrl : Maybe.Maybe Media.Url , iframeUrl : Maybe.Maybe Media.Url }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Kind",
+        "comment": " Represents the general type of media.\n",
+        "args": [],
+        "cases": [
+          [
+            "Post",
+            []
+          ],
+          [
+            "Reply",
+            []
+          ],
+          [
+            "Stream",
+            []
+          ],
+          [
+            "Video",
+            []
+          ],
+          [
+            "Image",
+            []
+          ],
+          [
+            "Album",
+            []
+          ],
+          [
+            "Listing",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "find",
+        "comment": " Find media links from input text based on a list of available sites.\n",
+        "type": "List Media.Site -> String -> List ( Media.Site, Media.Media )"
+      },
+      {
+        "name": "urls",
+        "comment": " Generate URLs for given media.\n",
+        "type": "List ( Media.Site, Media.Media ) -> List ( Media.Site, Media.Media, Media.Urls )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

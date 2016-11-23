@@ -1,0 +1,108 @@
+[
+  {
+    "name": "Legacy.Check.Test",
+    "comment": " An implementation of the legacy `Check.Test` module for backwards compatibility.\n\nIf you are currently using `Check.Test` and want to upgrade your version of\n`elm-test` to access the improved test runners, but still want your existing\ncode to compile, just replace your current `import Check.Test` with this:\n\n    import Legacy.Check.Test as CheckTest\n\nThat's it! (Well, you may also need to find/replace `Check.Test` with `CheckTest`.)\n\nThis module provides integration with\n[`elm-test`](http://package.elm-lang.org/packages/elm-community/elm-test/latest/).\n\n# Convert to Tests\n@docs evidenceToTest\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "evidenceToTest",
+        "comment": " Convert elm-check's Evidence into an elm-test Test. You can use elm-test's\nrunners to view the results of your property-based tests, alongside the results\nof unit tests.\n",
+        "type": "Check.Evidence -> Legacy.ElmTest.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Legacy.ElmTest",
+    "comment": " An implementation of the legacy `ElmTest` module for backwards compatibility.\n\nIf you are currently using `ElmTest` and want to upgrade your version of\n`elm-test` to access the improved test runners, but still want your existing\ncode to compile, just replace your current `import ElmTest` with this:\n\n    import Legacy.ElmTest as ElmTest\n\nThat's it!\n\nThis implementation of the old `ElmTest` API has been done entirely\nin terms of the new API. All of the logic should work the same way, although\nfailure reports will be formatted differently. They are most different for\n`stringRunner` and `defaultTest`, so take a look at the docs for those to see\nwhat's changed.\n\nNote that unlike `elm-test`, this API is synchronous, meaning tests cannot be\nrun in parallel. (That was a big part of the motivation for changing the API!)\nUnfortunately, there is no workaround for this. Upgrading is the only way.\n\n# Tests\n@docs Test, test, defaultTest, equals, suite\n\n# Assertions\n@docs Assertion, assert, assertEqual, assertNotEqual, lazyAssert, assertionList, pass, fail\n\n# Run tests in-program\n@docs stringRunner\n\n# Run tests as an app\n@docs runSuite, runSuiteHtml\n",
+    "aliases": [
+      {
+        "name": "Assertion",
+        "comment": " The basic unit of testability.\n",
+        "args": [],
+        "type": "Expect.Expectation"
+      },
+      {
+        "name": "Test",
+        "comment": " The core unit representing a runnable test, or a group of tests called a\nsuite.\n",
+        "args": [],
+        "type": "Test.Test"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assert",
+        "comment": " Basic function to assert that some expression is True\n",
+        "type": "Bool -> Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "assertEqual",
+        "comment": " Basic function to assert that two expressions are equal in value.\n",
+        "type": "a -> a -> Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "assertNotEqual",
+        "comment": " Basic function to assert that two expressions are not equal.\n",
+        "type": "a -> a -> Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "assertionList",
+        "comment": " Given a list of values and another list of expected values, generates a\nlist of assertions that these values are equal.\n",
+        "type": "List a -> List a -> List Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "defaultTest",
+        "comment": " In the original elm-test API, this would create a `Test` with a default name automatically chosen based on the inputs.\nFor example, `defaultTest (assertEqual 5 5)` would have be named \"5 == 5\".\n\nIn this version, it creates a `Test` with no name instead.\n",
+        "type": "Legacy.ElmTest.Assertion -> Legacy.ElmTest.Test"
+      },
+      {
+        "name": "equals",
+        "comment": " Create a `Test` which asserts equality between two expressions.\nFor example, `(7 + 10) `equals` (1 + 16)` will create a `Test` which tests for\nequality between the statements `(7 + 10)` and `(1 + 16)`.\n",
+        "type": "a -> a -> Legacy.ElmTest.Test"
+      },
+      {
+        "name": "fail",
+        "comment": " Create an assertion that always fails, for reasons described by the given\nstring.\n",
+        "type": "String -> Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "lazyAssert",
+        "comment": " A lazy version of `assert`. Delays execution of the expression until tests\nare run.\n",
+        "type": "(() -> Bool) -> Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "pass",
+        "comment": " An assertion that always passes. This is useful when you have test results\nfrom another library but want to use ElmTest runners.\n",
+        "type": "Legacy.ElmTest.Assertion"
+      },
+      {
+        "name": "runSuite",
+        "comment": " Run a suite as a program. Useful for tests run from the command line:\n    module Tests exposing (..)\n    import ElmTest exposing (..)\n\n    tests : Test\n    tests =\n        suite \"A Test Suite\"\n            [ test \"Addition\" (assertEqual (3 + 7) 10)\n            , test \"Subtraction\" (assertEqual (7 - 3) 4)\n            , test \"This test should fail\" (assert False)\n            ]\n\n    main : Program Never\n    main =\n        runSuite tests\nAnd then:\n    $ elm-make Tests.elm --output tests.js\n    $ node tests.js\n",
+        "type": "Legacy.ElmTest.Test -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "runSuiteHtml",
+        "comment": " Run a suite as program with Html output.\n",
+        "type": "Legacy.ElmTest.Test -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "stringRunner",
+        "comment": " Run a test or a test suite and return the results as a `String`. Mostly\nuseful if you want to implement a different type of output for your test\nresults. If you aren't sure whether or not to use this function, you should\nprobably use `elementRunner`.\n",
+        "type": "Legacy.ElmTest.Test -> String"
+      },
+      {
+        "name": "suite",
+        "comment": " Convert a list of `Test`s to a test suite. Test suites are used to group\ntests into logical units, simplifying the management and running of many tests.\nTakes a name and a list of `Test`s. Since suites are also of type `Test`, they\ncan contain other suites, allowing for a more complex tree structure.\n",
+        "type": "String -> List Legacy.ElmTest.Test -> Legacy.ElmTest.Test"
+      },
+      {
+        "name": "test",
+        "comment": " A basic function to create a `Test`. Takes a name and an `Assertion`.\n",
+        "type": "String -> Legacy.ElmTest.Assertion -> Legacy.ElmTest.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

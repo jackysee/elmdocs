@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Jwt",
+    "comment": " Helper functions for Jwt token authentication.\n\nA Jwt Token comprises 3 elements: a header and footer and the content. This package\nincludes a function to send an authentication request, a function to read the content of a token;\nand a function to send GET requests with the token attached.\n\n# API functions\n@docs authenticate, decodeToken, send, get, post, getWithJwt, isExpired, promote401\n\n# Errors\n@docs JwtError\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "JwtError",
+        "comment": " The three errors that can emerge are:\n - network errors (except a 401),\n - a 401 error, which we check is because of token expiry\n - issues with processing (e.g. base 64 decoding) the token, and\n - problems decoding the json data within the content of the token\n\n",
+        "args": [],
+        "cases": [
+          [
+            "HttpError",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "TokenExpired",
+            []
+          ],
+          [
+            "TokenProcessingError",
+            [
+              "String"
+            ]
+          ],
+          [
+            "TokenDecodeError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " `authenticate` is a custom Http POST method that sends a stringified\nJson object containing the login credentials. It then extracts the token from the\njson response from the server and returns it.\n\n    let credentials =\n        E.object\n            [ (\"username\", E.string model.uname)\n            , (\"password\", E.string model.pword)\n            ]\n        |> E.encode 0\n    in\n    ( model\n    , Task.perform\n        LoginFail LoginSuccess\n        (authenticate tokenStringDecoder \"/sessions\" credentials)\n    )\n",
+        "type": "Json.Decode.Decoder String -> String -> String -> Task.Task Jwt.JwtError String"
+      },
+      {
+        "name": "decodeToken",
+        "comment": " decodeToken converts the token content to an Elm record structure.\n\n    decoderToken dec token\n\nIn the event of success, `decodeToken` returns an Elm record structure using the JSON Decoder.\n\n",
+        "type": "Json.Decode.Decoder a -> String -> Result.Result Jwt.JwtError a"
+      },
+      {
+        "name": "get",
+        "comment": " get is a replacement for `Http.get` that attaches a provided Jwt token\nto the headers of the GET request.\n\n    Task.perform\n        PostFail PostSucess\n        (get token dataDecoder \"/api/data\")\n",
+        "type": "Jwt.Token -> Json.Decode.Decoder a -> String -> Task.Task Http.Error a"
+      },
+      {
+        "name": "getWithJwt",
+        "comment": " getWithJwt is an alias for get, provided for backwards compatibility.\n",
+        "type": "Jwt.Token -> Json.Decode.Decoder a -> String -> Task.Task Http.Error a"
+      },
+      {
+        "name": "isExpired",
+        "comment": " isExpired checks whether a token remains valid, i.e. it has not expired.\n\nNote: This function assumes that the expiry was set in seconds and thus\nmultiplies by 100 to compare with javascript time (in milliseconds).\nYou may need to write a custom version if your Jwt provide works differently.\n",
+        "type": "Time.Time -> Jwt.Token -> Bool"
+      },
+      {
+        "name": "post",
+        "comment": " post is a replacement for `Http.post` that attaches a provided Jwt token\nto the headers, and sets the Content-type to 'application/json'.\n",
+        "type": "Jwt.Token -> Json.Decode.Decoder a -> String -> Http.Body -> Task.Task Http.Error a"
+      },
+      {
+        "name": "promote401",
+        "comment": " promote401 promotes a 401 Unauthorized Http reponse to the JwtError TokenExpired.\n\n    Jwt.get token dataDecoder \"/api/data\"\n    `Task.onError` (promote401 token)\n    |> Task.perform PostFail PostSucess\n",
+        "type": "Jwt.Token -> Http.Error -> Task.Task Jwt.JwtError a"
+      },
+      {
+        "name": "send",
+        "comment": " send is a replacement for Http.send that includes a Jwt token\n",
+        "type": "String -> Jwt.Token -> Json.Decode.Decoder a -> String -> Http.Body -> Task.Task Http.Error a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

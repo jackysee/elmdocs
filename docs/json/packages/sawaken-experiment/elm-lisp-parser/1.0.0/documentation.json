@@ -1,0 +1,126 @@
+[
+  {
+    "name": "LispParser",
+    "comment": "This library provides parser of simple-lisp-syntax and its AST data-structure.\nConverting AST to String of lisp-expression is also supported.\n\n# Definition\n@docs Exp, VarName, Value, Op\n\n# Lisp-expression to AST\n@docs read\n\n# AST to Lisp-expression\n@docs print",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Exp",
+        "comment": "Expression (AST) type",
+        "args": [],
+        "cases": [
+          [
+            "Lambda",
+            [
+              "List LispParser.VarName",
+              "LispParser.Exp"
+            ]
+          ],
+          [
+            "If",
+            [
+              "LispParser.Exp",
+              "LispParser.Exp",
+              "LispParser.Exp"
+            ]
+          ],
+          [
+            "Set",
+            [
+              "LispParser.VarName",
+              "LispParser.Exp"
+            ]
+          ],
+          [
+            "Apply",
+            [
+              "LispParser.Exp",
+              "List LispParser.Exp"
+            ]
+          ],
+          [
+            "OpApply",
+            [
+              "LispParser.Op",
+              "List LispParser.Exp"
+            ]
+          ],
+          [
+            "Literal",
+            [
+              "LispParser.Value"
+            ]
+          ],
+          [
+            "VarRef",
+            [
+              "LispParser.VarName"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Op",
+        "comment": "Operator type",
+        "args": [],
+        "cases": [
+          [
+            "Add",
+            []
+          ],
+          [
+            "Sub",
+            []
+          ],
+          [
+            "Mul",
+            []
+          ],
+          [
+            "Div",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Value",
+        "comment": "Value type",
+        "args": [],
+        "cases": [
+          [
+            "IntValue",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "VarName",
+        "comment": "Variable type",
+        "args": [],
+        "cases": [
+          [
+            "VarName",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "print",
+        "comment": "Describe Lisp-expression",
+        "type": "LispParser.Exp -> String"
+      },
+      {
+        "name": "read",
+        "comment": "Parse Lisp-expression",
+        "type": "String -> Maybe.Maybe LispParser.Exp"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

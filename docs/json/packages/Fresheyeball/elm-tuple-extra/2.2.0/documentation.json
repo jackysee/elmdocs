@@ -1,0 +1,160 @@
+[
+  {
+    "name": "Tuple2",
+    "comment": "\n\n# Tuple definition\n@docs (=>)\n\n# Map\n@docs map, mapFst, mapSnd, mapEach, mapBoth\n\n# Swap\n@docs swap\n\n# Sorting\n@docs sort, sortBy, sortWith\n\n# Transform\n@docs toList\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "=>",
+        "comment": " Define a double with infix operator. Primarily used, when defining a List\n    with key-value Tuples.\n\n    Dict.fromList\n        [ 0 => 'a'\n        , 1 => 'b'\n        , 2 => 'c'\n        ]\n",
+        "type": "a -> b -> ( a, b )"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b ) -> ( a, x )"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " ",
+        "type": "(a -> b) -> ( a, a ) -> ( b, b )"
+      },
+      {
+        "name": "mapEach",
+        "comment": " ",
+        "type": "(a -> x) -> (b -> x') -> ( a, b ) -> ( x, x' )"
+      },
+      {
+        "name": "mapFst",
+        "comment": " ",
+        "type": "(a -> x) -> ( a, b ) -> ( x, b )"
+      },
+      {
+        "name": "mapSnd",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b ) -> ( a, x )"
+      },
+      {
+        "name": "sort",
+        "comment": " ",
+        "type": "( comparable, comparable ) -> ( comparable, comparable )"
+      },
+      {
+        "name": "sortBy",
+        "comment": " ",
+        "type": "(a -> comparable) -> ( a, a ) -> ( a, a )"
+      },
+      {
+        "name": "sortWith",
+        "comment": " ",
+        "type": "(a -> a -> Basics.Order) -> ( a, a ) -> ( a, a )"
+      },
+      {
+        "name": "swap",
+        "comment": " ",
+        "type": "( a, b ) -> ( b, a )"
+      },
+      {
+        "name": "toList",
+        "comment": " ",
+        "type": "( a, a ) -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Tuple3",
+    "comment": "\n# Getters\n@docs fst, snd, trd, tail, init\n\n# Maps\n@docs map, mapFst, mapSnd, mapTrd, mapEach, mapAll\n\n# Swap\n@docs swirlr, swirll\n\n# Sorting\n@docs sort, sortBy, sortWith\n\n# Transform\n@docs toList\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fst",
+        "comment": " ",
+        "type": "( a, b, c ) -> a"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( a, b )"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(c -> x) -> ( a, b, c ) -> ( a, b, x )"
+      },
+      {
+        "name": "mapAll",
+        "comment": " ",
+        "type": "(a -> b) -> ( a, a, a ) -> ( b, b, b )"
+      },
+      {
+        "name": "mapEach",
+        "comment": " ",
+        "type": "(a -> x) -> (b -> x') -> (c -> x'') -> ( a, b, c ) -> ( x, x', x'' )"
+      },
+      {
+        "name": "mapFst",
+        "comment": " ",
+        "type": "(a -> x) -> ( a, b, c ) -> ( x, b, c )"
+      },
+      {
+        "name": "mapSnd",
+        "comment": " ",
+        "type": "(b -> x) -> ( a, b, c ) -> ( a, x, c )"
+      },
+      {
+        "name": "mapTrd",
+        "comment": " ",
+        "type": "(c -> x) -> ( a, b, c ) -> ( a, b, x )"
+      },
+      {
+        "name": "snd",
+        "comment": " ",
+        "type": "( a, b, c ) -> b"
+      },
+      {
+        "name": "sort",
+        "comment": " ",
+        "type": "( comparable, comparable, comparable ) -> ( comparable, comparable, comparable )"
+      },
+      {
+        "name": "sortBy",
+        "comment": " ",
+        "type": "(a -> comparable) -> ( a, a, a ) -> ( a, a, a )"
+      },
+      {
+        "name": "sortWith",
+        "comment": " ",
+        "type": "(a -> a -> Basics.Order) -> ( a, a, a ) -> ( a, a, a )"
+      },
+      {
+        "name": "swirll",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( c, a, b )"
+      },
+      {
+        "name": "swirlr",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( b, c, a )"
+      },
+      {
+        "name": "tail",
+        "comment": " ",
+        "type": "( a, b, c ) -> ( b, c )"
+      },
+      {
+        "name": "toList",
+        "comment": " ",
+        "type": "( a, a, a ) -> List a"
+      },
+      {
+        "name": "trd",
+        "comment": " ",
+        "type": "( a, b, c ) -> c"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]
