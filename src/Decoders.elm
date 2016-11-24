@@ -17,7 +17,7 @@ decodeAllPackages =
 decodeDoc : String -> String -> Json.Decoder Doc
 decodeDoc packageName version =
     Json.map6 Doc
-        (Json.succeed <| packageName ++ "#" ++ version)
+        (Json.succeed <| packageName ++ "/" ++ version)
         (Json.succeed packageName)
         (Json.succeed version)
         (Json.list decodeModule)

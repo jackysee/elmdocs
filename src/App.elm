@@ -1,6 +1,6 @@
 port module App exposing (..)
 
-import Html exposing (Html, text, div, input, h1, h3, br, span)
+import Html exposing (Html, text, div, input, h1, h2, h3, br, span, button)
 import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList)
 import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions)
 import Http
@@ -11,18 +11,27 @@ import Regex
 import Json.Decode
 import Task exposing (Task)
 import Dict exposing (Dict)
+import Navigation exposing (Location)
 import Models exposing (..)
 import Decoders exposing (..)
 import Msgs exposing (..)
 import Icons
+import Utils exposing (..)
+import Navigation
 
 
-init : Maybe StoreModel -> ( Model, Cmd Msg )
-init storeModel =
+init : Maybe StoreModel -> Location -> ( Model, Cmd Msg )
+init storeModel location =
     { allPackages = []
-    , pinnedDocs = storeModel |> Maybe.map .docs |> Maybe.withDefault []
-    , currentDoc = Nothing
-    , searchIndex = storeModel |> Maybe.map .searchIndex |> Maybe.withDefault []
+    , pinnedDocs =
+        storeModel
+            |> Maybe.map .docs
+            |> Maybe.withDefault []
+    , page = Home
+    , searchIndex =
+        storeModel
+            |> Maybe.map .searchIndex
+            |> Maybe.withDefault []
     , searchResult = []
     , searchText = ""
     , showDisabled = False
@@ -153,6 +162,7 @@ update msg model =
                     | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
                     , searchIndex = searchIndex
                     , showConfirmDeleteDoc = Nothing
+                    , page = Home
                 }
                     ! [ removeLocal { doc = doc, searchIndex = searchIndex } ]
 
@@ -164,6 +174,7 @@ update msg model =
                 { model
                     | pinnedDocs = model.pinnedDocs ++ [ doc ]
                     , searchIndex = searchIndex
+                    , page = DocOverview doc.id
                 }
                     ! [ getDocs rest
                       , saveLocal { doc = doc, searchIndex = searchIndex }
@@ -172,52 +183,66 @@ update msg model =
         PinDoc rest (Err err) ->
             ( model, getDocs rest )
 
-        GetCurrentDocFromPackage package ->
-            case List.head package.versions of
-                Just version_ ->
-                    ( model
-                    , getDoc package.name version_
+        GetCurrentDocFromPackage name version modulePath ->
+            let
+                loadDoc =
+                    getDoc name version
                         |> Task.attempt
-                            (Result.map (SetCurrentDoc "")
+                            (Result.map SetDisabledDoc
                                 >> Result.withDefault NoOp
                             )
-                    )
+            in
+                case model.page of
+                    DisabledDoc doc _ ->
+                        if doc.id == name ++ "/" ++ version then
+                            ( { model | page = DisabledDoc doc modulePath }, Cmd.none )
+                        else
+                            ( model, loadDoc )
 
-                Nothing ->
-                    ( model, Cmd.none )
+                    _ ->
+                        ( model, loadDoc )
 
-        GetCurrentDocFromId nav docId ->
-            case String.split "#" docId of
-                name :: version :: [] ->
-                    ( { model
-                        | currentDoc =
-                            findFirst
-                                (\doc ->
-                                    doc.packageName == name && doc.packageVersion == version
-                                )
-                                model.pinnedDocs
-                                |> Maybe.map (\doc -> ( nav, doc ))
-                      }
-                    , scrollToElement nav
-                    )
+        SetDisabledDoc doc ->
+            ( { model | page = DisabledDoc doc "" }
+            , Cmd.none
+            )
+
+        SetDisabledDocModule modulePath ->
+            case model.page of
+                DisabledDoc doc _ ->
+                    ( { model | page = DisabledDoc doc modulePath }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
-        SetCurrentDoc nav doc ->
-            ( { model | currentDoc = Just ( nav, doc ) }
-            , scrollToElement nav
+        SetCurrentDocFromId modulePath docId ->
+            ( { model
+                | page =
+                    if docId == "" then
+                        Home
+                    else
+                        case getDocById model docId of
+                            Just doc ->
+                                if modulePath == "" then
+                                    DocOverview doc.id
+                                else
+                                    DocModule doc.id modulePath
+
+                            Nothing ->
+                                NotFound
+              }
+            , scrollToElement modulePath
             )
 
         Search text ->
             ( { model
                 | searchText = text
                 , selectedIndex = 0
-                , currentDoc =
+                , page =
                     if String.isEmpty text then
-                        Nothing
+                        Home
                     else
-                        model.currentDoc
+                        model.page
                 , searchResult =
                     if String.isEmpty text then
                         []
@@ -273,6 +298,12 @@ update msg model =
             , Cmd.none
             )
 
+        LinkToPinnedDoc path docId ->
+            ( model, Navigation.newUrl <| "#packages/" ++ docId ++ "/" ++ path )
+
+        LinkToDisabledDoc name version path ->
+            ( model, Navigation.newUrl <| "#disabled/" ++ name ++ "/" ++ version ++ "/" ++ path )
+
 
 view : Model -> Html Msg
 view model =
@@ -297,27 +328,87 @@ view model =
                     , viewDiasabledDocs model
                     ]
             ]
-        , div [ class "doc" ]
-            (model.currentDoc
-                |> Maybe.map
-                    (\( path, doc ) ->
-                        [ h1
-                            [ class "doc-title" ]
-                            [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-                        , div [ class "doc-content" ]
-                            [ if path == "" then
-                                viewDocOverview doc
-                              else
-                                viewModule model path doc
-                            ]
-                        ]
-                    )
-                |> Maybe.withDefault
+        , div [ class "doc" ] <|
+            case model.page of
+                Home ->
                     [ div
                         [ class "doc-empty-title" ]
                         [ span [] [ text "ElmDocs" ] ]
                     ]
-            )
+
+                DocOverview docId ->
+                    case getDocById model docId of
+                        Just doc ->
+                            [ h1
+                                [ class "doc-title" ]
+                                [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                            , div
+                                [ class "doc-content" ]
+                                [ viewDocOverview doc ]
+                            ]
+
+                        Nothing ->
+                            []
+
+                DocModule docId modulePath ->
+                    case getDocById model docId of
+                        Just doc ->
+                            [ h1
+                                [ class "doc-title" ]
+                                [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                            , div
+                                [ class "doc-content" ]
+                                [ viewModule model modulePath doc ]
+                            ]
+
+                        Nothing ->
+                            []
+
+                DisabledDoc doc modulePath ->
+                    [ h1
+                        [ class "doc-title" ]
+                        [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                    , div
+                        [ class "doc-content" ]
+                      <|
+                        [ div [ class "doc-disabled-info" ]
+                            [ text "This documentation is disabled."
+                            , button
+                                [ class "btn-link"
+                                , onClick <|
+                                    MsgBatch
+                                        [ PinDoc [] (Ok doc)
+                                        , LinkToPinnedDoc modulePath doc.id
+                                        ]
+                                ]
+                                [ text "Enable it" ]
+                            ]
+                        ]
+                            ++ if modulePath == "" then
+                                [ viewDocOverview doc
+                                , h2 [] [ text "Modules" ]
+                                , div
+                                    [ class "module-list" ]
+                                  <|
+                                    List.map
+                                        (\m ->
+                                            div
+                                                [ class "btn-link"
+                                                , onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
+                                                ]
+                                                [ text m.name ]
+                                        )
+                                        doc.modules
+                                ]
+                               else
+                                [ viewModule model modulePath doc ]
+                    ]
+
+                NotFound ->
+                    [ div
+                        [ class "doc-empty-title" ]
+                        [ span [] [ text "Document not found" ] ]
+                    ]
         ]
 
 
@@ -339,15 +430,15 @@ inputKeyUp model code =
                 (\navItem ->
                     case navItem of
                         DocNav d ->
-                            SetCurrentDoc "" d
+                            LinkToPinnedDoc "" d.id
 
                         ModuleNav m docId ->
-                            GetCurrentDocFromId m.name docId
+                            LinkToPinnedDoc m.name docId
                 )
         else
             selectedItemMsg model.selectedIndex
                 model.searchResult
-                (\( path, docId ) -> GetCurrentDocFromId path docId)
+                (\( path, docId ) -> LinkToPinnedDoc path docId)
     else if code == 27 then
         Search ""
     else if code == 39 && model.searchText == "" then
@@ -400,7 +491,7 @@ viewSearchResult model =
                             ]
                         , onClick <|
                             MsgBatch
-                                [ GetCurrentDocFromId path docId
+                                [ LinkToPinnedDoc path docId
                                 , SetSelectedIndex i
                                 ]
                         ]
@@ -443,11 +534,14 @@ viewPinnedDocs model =
                                     ]
                                 , onClick <|
                                     MsgBatch
-                                        [ SetCurrentDoc "" d
+                                        [ LinkToPinnedDoc "" d.id
                                         , SetSelectedIndex i
                                         ]
                                 ]
-                                [ span [ class "icon" ]
+                                [ span
+                                    [ class "icon"
+                                    , onClickInside (DocNavExpand (not d.navExpanded) d.id)
+                                    ]
                                     [ if d.navExpanded then
                                         Icons.caretDown
                                       else
@@ -492,7 +586,11 @@ viewPinnedDocs model =
                                     [ ( "nav-item nav-doc-module", True )
                                     , ( "is-selected", i == model.selectedIndex )
                                     ]
-                                , onClick <| GetCurrentDocFromId m.name docId
+                                , onClick <|
+                                    MsgBatch
+                                        [ LinkToPinnedDoc m.name docId
+                                        , SetSelectedIndex i
+                                        ]
                                 ]
                                 [ span [] [ text m.name ] ]
                 )
@@ -502,12 +600,22 @@ viewPinnedDocs model =
 viewDiasabledDocs : Model -> Html Msg
 viewDiasabledDocs model =
     div
-        [ class "nav-packages nav-item" ]
+        [ class "nav-packages" ]
         [ div
-            [ onClick ToggleShowDisabled ]
-            [ text <| "Disabled" ]
+            [ class "nav-packages-disabled-handle"
+            , onClick ToggleShowDisabled
+            ]
+            [ span
+                [ class "icon" ]
+                [ if model.showDisabled then
+                    Icons.caretDown
+                  else
+                    Icons.caretRight
+                ]
+            , span [] [ text <| "Disabled" ]
+            ]
         , if model.showDisabled then
-            div [] <|
+            div [ class "nav-packages-disabled" ] <|
                 [ div [ class "nav-item nav-package-search" ]
                     [ input
                         [ class "search-package-input"
@@ -532,12 +640,16 @@ viewDiasabledDocs model =
                             |> List.map
                                 (\p ->
                                     div
-                                        [ class "nav-item nav-doc-item"
-                                        ]
+                                        [ class "nav-item nav-doc-item nav-packages-doc-item" ]
                                         [ span
                                             [ class "nav-doc-package"
                                             , title <| "show " ++ p.name
-                                            , onClick (GetCurrentDocFromPackage p)
+                                            , case List.head p.versions of
+                                                Just version ->
+                                                    onClick (LinkToDisabledDoc p.name version "")
+
+                                                Nothing ->
+                                                    onClick NoOp
                                             ]
                                             [ text p.name ]
                                         , span
@@ -571,23 +683,22 @@ viewDocOverview doc =
     div
         [ class "doc-overview" ]
     <|
-        --    [ -- h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-        [ Markdown.toHtml [ class "doc-overview" ] doc.readme
-        ]
-
-
-
--- ++ (doc.modules
---         |> List.sortBy .name
---         |> List.map
---             (\m ->
---                 div
---                     [ class "module-link"
---                     , onClick (SetCurrentDoc m.name doc)
---                     ]
---                     [ text m.name ]
---             )
---    )
+        if String.isEmpty doc.readme then
+            [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+            ]
+                ++ (doc.modules
+                        |> List.sortBy .name
+                        |> List.map
+                            (\m ->
+                                div
+                                    [ class "btn-link"
+                                    , onClick (SetCurrentDocFromId m.name doc.id)
+                                    ]
+                                    [ text m.name ]
+                            )
+                   )
+        else
+            [ Markdown.toHtml [ class "doc-overview" ] doc.readme ]
 
 
 viewModule : Model -> String -> Doc -> Html Msg
@@ -631,38 +742,6 @@ viewModule model path doc =
 
             Nothing ->
                 div [] [ text "module not found." ]
-
-
-findFirst : (a -> Bool) -> List a -> Maybe a
-findFirst predicate list =
-    case list of
-        [] ->
-            Nothing
-
-        x :: xs ->
-            if predicate x then
-                Just x
-            else
-                findFirst predicate xs
-
-
-onNothing : Maybe a -> Maybe a -> Maybe a
-onNothing a b =
-    case b of
-        Nothing ->
-            a
-
-        _ ->
-            b
-
-
-onClickInside : Msg -> Html.Attribute Msg
-onClickInside msg =
-    onWithOptions "click"
-        { stopPropagation = True
-        , preventDefault = True
-        }
-        (Json.Decode.succeed msg)
 
 
 buildEntryDict : Module -> Dict String Entry

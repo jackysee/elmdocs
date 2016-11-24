@@ -1,10 +1,12 @@
 module Models exposing (..)
 
+import Utils exposing (findFirst)
+
 
 type alias Model =
     { allPackages : List Package
     , pinnedDocs : List Doc
-    , currentDoc : Maybe ( String, Doc )
+    , page : Page
     , searchIndex : List ( String, String )
     , searchResult : List ( String, String )
     , searchText : String
@@ -13,6 +15,14 @@ type alias Model =
     , showConfirmDeleteDoc : Maybe DocId
     , selectedIndex : Int
     }
+
+
+type Page
+    = Home
+    | DocOverview DocId
+    | DocModule DocId String
+    | DisabledDoc Doc String
+    | NotFound
 
 
 type DocNavItem
@@ -86,6 +96,14 @@ type alias Value =
     }
 
 
+getDocById : Model -> DocId -> Maybe Doc
+getDocById model docId =
+    if String.isEmpty docId then
+        Nothing
+    else
+        findFirst (\d -> d.id == docId) model.pinnedDocs
+
+
 toDocNavItemList : List Doc -> List DocNavItem
 toDocNavItemList list =
     list
@@ -93,7 +111,9 @@ toDocNavItemList list =
             (\d ->
                 [ DocNav d ]
                     ++ if d.navExpanded then
-                        List.map (\m -> ModuleNav m d.id) d.modules
+                        d.modules
+                            |> List.sortBy .name
+                            |> List.map (\m -> ModuleNav m d.id)
                        else
                         []
             )

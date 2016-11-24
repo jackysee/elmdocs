@@ -15,6 +15,7 @@ body {
     flex-direction: row;
     align-items: stretch;
     height: 100vh;
+    overflow-y: hidden;
 }
 .nav{
     border-right: 1px solid #ccc;
@@ -76,8 +77,18 @@ body {
 .confirm-danger{
     color: red;
 }
-.nav-packages{
+
+.nav-packages-disabled{
     color: #888;
+    padding-left: 0.5rem;
+}
+.nav-packages-disabled-handle{
+    color: #888;
+    padding-left: 0;
+    display: flex;
+    align-items:  center;
+    fill: #888;
+    cursor: pointer;
 }
 .nav-result-item{
     display: flex;
@@ -199,4 +210,11 @@ body {
 
 .icon, .icon svg{
     height: 1rem;
+}
+
+.btn-link{
+    border: none;
+    background: none;
+    text-decoration: underline;
+    cursor: pointer;
 }
