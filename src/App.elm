@@ -177,7 +177,6 @@ update msg model =
                 { model
                     | pinnedDocs = model.pinnedDocs ++ [ doc ]
                     , searchIndex = searchIndex
-                    , page = DocOverview doc.id
                 }
                     ! [ getDocs rest
                       , saveLocal { doc = doc, searchIndex = searchIndex }
