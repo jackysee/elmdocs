@@ -1,0 +1,184 @@
+[
+  {
+    "name": "Function.Infix",
+    "comment": "\nElm is getting less functional, here is some relief\n@docs (<$>), (<*>), (>>=), (<.>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "<$>",
+        "comment": " map as an infix, like normal ",
+        "type": "(a -> b) -> (x -> a) -> x -> b"
+      },
+      {
+        "name": "<*>",
+        "comment": " apply as an infix, like normal ",
+        "type": "(x -> a -> b) -> (x -> a) -> x -> b"
+      },
+      {
+        "name": "<.>",
+        "comment": " Profunctor about, like a baby rabbit in a meadow ",
+        "type": "(a -> b) -> (c -> d) -> (b -> c) -> a -> d"
+      },
+      {
+        "name": ">>=",
+        "comment": " bind as an infix, like normal ",
+        "type": "(x -> a) -> (a -> x -> b) -> x -> b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Function.Pro",
+    "comment": "\nBasic Pro Functor utilities for working on functions\n\n## Functors\n@docs mapBefore, mapAfter, mapBoth\n\n## Tuples\nTuples are ultimately AND on the type level\n@docs first, second, sproodle\n\n## Either\nEithers are ultimately XOR on the type level\n@docs mapWithLeft, mapWithRight\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " Slip in a value on the right hand side of a tuple ",
+        "type": "Function.Arrow a b -> Function.Arrow ( a, x ) ( b, x )"
+      },
+      {
+        "name": "mapAfter",
+        "comment": " Map on the co-domain ",
+        "type": "(a -> b) -> Function.Arrow x a -> Function.Arrow x b"
+      },
+      {
+        "name": "mapBefore",
+        "comment": " Map on the domain ",
+        "type": "(b -> a) -> Function.Arrow a x -> Function.Arrow b x"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " Map both sides of a function ",
+        "type": "(a -> b) -> (c -> d) -> Function.Arrow b c -> Function.Arrow a d"
+      },
+      {
+        "name": "mapWithLeft",
+        "comment": " ",
+        "type": "Function.Arrow a b -> Function.Arrow (Either.Either a x) (Either.Either b x)"
+      },
+      {
+        "name": "mapWithRight",
+        "comment": " ",
+        "type": "Function.Arrow a b -> Function.Arrow (Either.Either x a) (Either.Either x b)"
+      },
+      {
+        "name": "second",
+        "comment": " Slip in a value on the left hand side of a tuple ",
+        "type": "Function.Arrow a b -> Function.Arrow ( x, a ) ( x, b )"
+      },
+      {
+        "name": "sproodle",
+        "comment": " I think I know exactly what I mean ",
+        "type": "Function.Arrow a (b -> c) -> Function.Arrow ( a, b ) c"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Function",
+    "comment": "\n## Function arrow as a type\n@docs Arrow\n\n## Compose a two parameter function with a single parameter function\n@docs (>>>), (<<<)\n\n## Compose a three parameter function with a single parameter function\n@docs (>>>>), (<<<<)\n\n## Function properties\n@docs map, map2, map3, map4, map5, map6, andMap, andThen, singleton, on\n\n## Reorder\n@docs swirlr, swirll, flip3\n",
+    "aliases": [
+      {
+        "name": "Arrow",
+        "comment": "\nMaking `->` into a type makes reading it much easier,\nto read the effects when treating functions as a data structure.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "a -> b"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "<<<",
+        "comment": "\n```elm\n(\\x y -> bar <| foo x y)\n-- becomes\nbar <<< foo\n```\n",
+        "type": "(c -> d) -> (a -> b -> c) -> a -> b -> d"
+      },
+      {
+        "name": "<<<<",
+        "comment": "\n```elm\n(\\x y z -> bar <| foo x y z)\n-- becomes\nbar <<<< foo\n```\n",
+        "type": "(d -> e) -> (a -> b -> c -> d) -> a -> b -> c -> e"
+      },
+      {
+        "name": ">>>",
+        "comment": "\n```elm\n(\\x y -> foo x y |> bar)\n-- becomes\nfoo >>> bar\n```\n",
+        "type": "(a -> b -> c) -> (c -> d) -> a -> b -> d"
+      },
+      {
+        "name": ">>>>",
+        "comment": "\n```elm\n(\\x y z -> foo x y z |> bar)\n-- becomes\nfoo >>>> bar\n```\n",
+        "type": "(a -> b -> c -> d) -> (d -> e) -> a -> b -> c -> e"
+      },
+      {
+        "name": "andMap",
+        "comment": " Make a function that will call two functions on the same value and subsequently combine them.\n\nUseful for longer chains, see the following examples:\n\n    f = (,) `map` sqrt `andMap` (\\x -> x ^ 2)\n    f 4 -- (2, 16)\n\n    g = (,,) `map` toString `andMap` ((+) 1) `andMap` (\\x -> x % 5)\n    g 12 -- (\"12\",13,2)\n",
+        "type": "Function.Arrow x a -> Function.Arrow x (a -> b) -> Function.Arrow x b"
+      },
+      {
+        "name": "andThen",
+        "comment": "\nThe functions are Monads and so should have an `andThen`.\n",
+        "type": "(a -> Function.Arrow x b) -> Function.Arrow x a -> Function.Arrow x b"
+      },
+      {
+        "name": "flip3",
+        "comment": "",
+        "type": "(a -> b -> c -> d) -> c -> b -> a -> d"
+      },
+      {
+        "name": "map",
+        "comment": "",
+        "type": "(a -> b) -> Function.Arrow x a -> Function.Arrow x b"
+      },
+      {
+        "name": "map2",
+        "comment": "",
+        "type": "(a -> b -> c) -> Function.Arrow x a -> Function.Arrow x b -> Function.Arrow x c"
+      },
+      {
+        "name": "map3",
+        "comment": "",
+        "type": "(a -> b -> c -> d) -> Function.Arrow x a -> Function.Arrow x b -> Function.Arrow x c -> Function.Arrow x d"
+      },
+      {
+        "name": "map4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e) -> Function.Arrow x a -> Function.Arrow x b -> Function.Arrow x c -> Function.Arrow x d -> Function.Arrow x e"
+      },
+      {
+        "name": "map5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f) -> Function.Arrow x a -> Function.Arrow x b -> Function.Arrow x c -> Function.Arrow x d -> Function.Arrow x e -> Function.Arrow x f"
+      },
+      {
+        "name": "map6",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f -> g) -> Function.Arrow x a -> Function.Arrow x b -> Function.Arrow x c -> Function.Arrow x d -> Function.Arrow x e -> Function.Arrow x f -> Function.Arrow x g"
+      },
+      {
+        "name": "on",
+        "comment": "\n```elm\nsortBy (compare `on` fst)\n```\n",
+        "type": "(b -> b -> c) -> (a -> b) -> a -> a -> c"
+      },
+      {
+        "name": "singleton",
+        "comment": "\nThe functions are Monads and so should have a `singleton`.\n",
+        "type": "a -> Function.Arrow x a"
+      },
+      {
+        "name": "swirll",
+        "comment": "\n```elm\nfoo = List.foldr (\\a b -> bar a ++ baz b) 0 xs\n--becomes\nfoo = swirll List.foldr 0 xs\n  <| \\a b -> bar a ++ baz b\n```\n",
+        "type": "(a -> b -> c -> d) -> b -> c -> a -> d"
+      },
+      {
+        "name": "swirlr",
+        "comment": "\n```elm\nfoo = List.foldr (\\a b -> bar a ++ baz b) 0 xs\n--becomes\nfoo = swirlr List.foldr xs (\\a b -> bar a ++ baz b) 0\n```\n",
+        "type": "(a -> b -> c -> d) -> c -> a -> b -> d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

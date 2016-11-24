@@ -1,0 +1,2 @@
+# safe-int
+This package implements a way of explicitly representing invalid integers so that you can ensure they don't propagate to weird places in your application (for instance the view). It achieves this by internally modelling which numbers are valid integers and which aren't, and returning a `Maybe Int` from the `get` function. So in effect, you always need to explicitly handle invalid calculations at the end of a calculation chain.
