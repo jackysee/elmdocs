@@ -206,7 +206,10 @@ update msg model =
                 loadDoc =
                     getDoc name version
                         |> Task.attempt
-                            (Result.map SetDisabledDoc
+                            (Result.map
+                                (\doc ->
+                                    SetDisabledDoc doc modulePath
+                                )
                                 >> Result.withDefault NoOp
                             )
             in
@@ -220,8 +223,8 @@ update msg model =
                     _ ->
                         ( model, loadDoc )
 
-        SetDisabledDoc doc ->
-            ( { model | page = DisabledDoc doc "" }
+        SetDisabledDoc doc path ->
+            ( { model | page = DisabledDoc doc path }
             , Cmd.none
             )
 

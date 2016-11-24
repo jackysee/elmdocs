@@ -13,7 +13,7 @@ type Msg
     | RemoveDoc Doc
     | PinDoc (List ( String, String )) (Result Http.Error Doc)
     | GetCurrentDocFromPackage String String String
-    | SetDisabledDoc Doc
+    | SetDisabledDoc Doc String
     | SetDisabledDocModule String
     | SetCurrentDocFromId String DocId
     | Search String
