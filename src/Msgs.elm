@@ -19,3 +19,4 @@ type Msg
     | SetShowConfirmDeleteDoc (Maybe DocId)
     | SetSelectedIndex Int
     | MsgBatch (List Msg)
+    | DocNavExpand Bool DocId

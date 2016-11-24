@@ -9,10 +9,12 @@ import String.Extra
 import Markdown
 import Regex
 import Json.Decode
+import Task exposing (Task)
 import Dict exposing (Dict)
 import Models exposing (..)
 import Decoders exposing (..)
 import Msgs exposing (..)
+import Icons
 
 
 init : Maybe StoreModel -> ( Model, Cmd Msg )
@@ -38,24 +40,27 @@ getAllPackages loadDefault =
         |> Http.send (LoadAllPackages loadDefault)
 
 
-getDocRequest : String -> String -> Http.Request Doc
-getDocRequest moduleName version =
-    Http.get
-        ("json/packages/"
-            ++ moduleName
-            ++ "/"
-            ++ version
-            ++ "/documentation.json"
+getDoc : String -> String -> Task Http.Error Doc
+getDoc moduleName version =
+    Task.map2
+        (\doc readme -> { doc | readme = readme })
+        (Http.toTask <|
+            Http.get
+                ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/documentation.json")
+                (decodeDoc moduleName version)
         )
-        (decodeDoc moduleName version)
+        (Http.toTask <|
+            Http.getString
+                ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/README.md")
+        )
 
 
 getDocs : List ( String, String ) -> Cmd Msg
 getDocs list =
     case list of
         ( moduleName, version ) :: xs ->
-            getDocRequest moduleName version
-                |> Http.send (PinDoc xs)
+            getDoc moduleName version
+                |> Task.attempt (PinDoc xs)
 
         [] ->
             Cmd.none
@@ -106,6 +111,18 @@ update msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        MsgBatch list ->
+            List.foldl
+                (\msg ( model, cmd ) ->
+                    let
+                        ( model_, cmd_ ) =
+                            update msg model
+                    in
+                        model_ ! [ cmd, cmd_ ]
+                )
+                ( model, Cmd.none )
+                list
 
         LoadAllPackages loadDefault (Ok list) ->
             let
@@ -158,8 +175,11 @@ update msg model =
             case List.head package.versions of
                 Just version_ ->
                     ( model
-                    , getDocRequest package.name version_
-                        |> Http.send (Result.map (SetCurrentDoc "") >> Result.withDefault NoOp)
+                    , getDoc package.name version_
+                        |> Task.attempt
+                            (Result.map (SetCurrentDoc "")
+                                >> Result.withDefault NoOp
+                            )
                     )
 
                 Nothing ->
@@ -224,17 +244,33 @@ update msg model =
         SetSelectedIndex i ->
             ( { model | selectedIndex = i }, Cmd.none )
 
-        MsgBatch list ->
-            List.foldl
-                (\msg ( model, cmd ) ->
-                    let
-                        ( model_, cmd_ ) =
-                            update msg model
-                    in
-                        model_ ! [ cmd, cmd_ ]
-                )
-                ( model, Cmd.none )
-                list
+        DocNavExpand expand docId ->
+            ( { model
+                | pinnedDocs =
+                    List.map
+                        (\d ->
+                            if d.id == docId then
+                                { d | navExpanded = expand }
+                            else
+                                d
+                        )
+                        model.pinnedDocs
+                , selectedIndex =
+                    findFirst
+                        (\( i, navItem ) ->
+                            case navItem of
+                                DocNav d ->
+                                    d.id == docId
+
+                                _ ->
+                                    False
+                        )
+                        (List.indexedMap (,) (toDocNavItemList model.pinnedDocs))
+                        |> Maybe.map (\( i, _ ) -> i)
+                        |> Maybe.withDefault 0
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
@@ -289,28 +325,65 @@ inputKeyUp model code =
     if code == 40 then
         SetSelectedIndex <|
             if model.searchText == "" then
-                min (model.selectedIndex + 1) (List.length model.pinnedDocs - 1)
+                min (model.selectedIndex + 1) (List.length (toDocNavItemList model.pinnedDocs) - 1)
             else
                 min (model.selectedIndex + 1) (List.length model.searchResult - 1)
     else if code == 38 then
         SetSelectedIndex <| max 0 (model.selectedIndex - 1)
     else if code == 13 then
         if model.searchText == "" then
-            findFirst
-                (\( i, _ ) -> i == model.selectedIndex)
-                (List.indexedMap (,) model.pinnedDocs)
-                |> Maybe.map (\( i, d ) -> SetCurrentDoc "" d)
-                |> Maybe.withDefault NoOp
+            selectedItemMsg
+                model.selectedIndex
+                (toDocNavItemList model.pinnedDocs)
+                (\navItem ->
+                    case navItem of
+                        DocNav d ->
+                            SetCurrentDoc "" d
+
+                        ModuleNav m docId ->
+                            GetCurrentDocFromId m.name docId
+                )
         else
-            findFirst
-                (\( i, _ ) -> i == model.selectedIndex)
-                (List.indexedMap (,) model.searchResult)
-                |> Maybe.map (\( i, ( path, docId ) ) -> GetCurrentDocFromId path docId)
-                |> Maybe.withDefault NoOp
+            selectedItemMsg model.selectedIndex
+                model.searchResult
+                (\( path, docId ) -> GetCurrentDocFromId path docId)
     else if code == 27 then
         Search ""
+    else if code == 39 && model.searchText == "" then
+        selectedItemMsg
+            model.selectedIndex
+            (toDocNavItemList model.pinnedDocs)
+            (\navItem ->
+                case navItem of
+                    DocNav d ->
+                        DocNavExpand True d.id
+
+                    _ ->
+                        NoOp
+            )
+    else if code == 37 && model.searchText == "" then
+        selectedItemMsg
+            model.selectedIndex
+            (toDocNavItemList model.pinnedDocs)
+            (\navItem ->
+                case navItem of
+                    DocNav d ->
+                        DocNavExpand False d.id
+
+                    ModuleNav m docId ->
+                        DocNavExpand False docId
+            )
     else
         NoOp
+
+
+selectedItemMsg : Int -> List a -> (a -> Msg) -> Msg
+selectedItemMsg index list mapper =
+    findFirst
+        (\( i, _ ) -> i == index)
+        (List.indexedMap (,) list)
+        |> Maybe.map (\( i, d ) -> mapper d)
+        |> Maybe.withDefault NoOp
 
 
 viewSearchResult : Model -> Html Msg
@@ -335,16 +408,14 @@ viewSearchResult model =
                             , title path
                             ]
                             [ text <| path ]
-                          {--
-                        , span
+                          {--, span
                             [ class "nav-result-doc" ]
                             [ text
                                 (docId
                                     |> String.Extra.rightOf "/"
                                     |> String.Extra.leftOf "#"
                                 )
-                            ]
-                            --}
+                            ] --}
                         ]
                 )
                 model.searchResult
@@ -358,54 +429,73 @@ viewSearchResult model =
 
 viewPinnedDocs : Model -> Html Msg
 viewPinnedDocs model =
-    div [ class "nav-pinned" ] <|
-        List.indexedMap
-            (\i d ->
-                div
-                    [ classList
-                        [ ( "nav-item nav-doc-item", True )
-                        , ( "is-selected", i == model.selectedIndex )
-                        ]
-                    , onClick <|
-                        MsgBatch
-                            [ SetCurrentDoc "" d
-                            , SetSelectedIndex i
-                            ]
-                    ]
-                    [ span [ class "nav-doc-package" ] [ text d.packageName ]
-                    , span [ class "nav-doc-version" ]
-                        [ div
-                            [ class "nav-doc-version-str" ]
-                            [ text d.packageVersion ]
-                        , div [ class "nav-doc-version-action" ]
-                            [ if model.showConfirmDeleteDoc == Nothing then
-                                span
-                                    [ class "nav-doc-version-remove"
-                                    , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
+    div [ class "nav-pinned" ]
+        (toDocNavItemList model.pinnedDocs
+            |> List.indexedMap
+                (\i navItem ->
+                    case navItem of
+                        DocNav d ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-doc-item", True )
+                                    , ( "is-selected", i == model.selectedIndex )
                                     ]
-                                    [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
-                                    ]
-                              else if model.showConfirmDeleteDoc == Just d.id then
-                                span
-                                    []
-                                    [ span
-                                        [ class "nav-doc-version-remove-confirm confirm-danger"
-                                        , onClickInside (RemoveDoc d)
+                                , onClick <|
+                                    MsgBatch
+                                        [ SetCurrentDoc "" d
+                                        , SetSelectedIndex i
                                         ]
-                                        [ text "Remove" ]
-                                    , span
-                                        [ class "nav-doc-version-remove-confirm"
-                                        , onClickInside (SetShowConfirmDeleteDoc Nothing)
-                                        ]
-                                        [ text "/ Cancel" ]
+                                ]
+                                [ span [ class "icon" ]
+                                    [ if d.navExpanded then
+                                        Icons.caretDown
+                                      else
+                                        Icons.caretRight
                                     ]
-                              else
-                                text ""
-                            ]
-                        ]
-                    ]
-            )
-            model.pinnedDocs
+                                , span [ class "nav-doc-package" ] [ text d.packageName ]
+                                , span [ class "nav-doc-version" ]
+                                    [ div
+                                        [ class "nav-doc-version-str" ]
+                                        [ text d.packageVersion ]
+                                    , div [ class "nav-doc-version-action" ]
+                                        [ if model.showConfirmDeleteDoc == Nothing then
+                                            span
+                                                [ class "nav-doc-version-remove"
+                                                , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
+                                                ]
+                                                [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
+                                                ]
+                                          else if model.showConfirmDeleteDoc == Just d.id then
+                                            span
+                                                []
+                                                [ span
+                                                    [ class "nav-doc-version-remove-confirm confirm-danger"
+                                                    , onClickInside (RemoveDoc d)
+                                                    ]
+                                                    [ text "Remove" ]
+                                                , span
+                                                    [ class "nav-doc-version-remove-confirm"
+                                                    , onClickInside (SetShowConfirmDeleteDoc Nothing)
+                                                    ]
+                                                    [ text "/ Cancel" ]
+                                                ]
+                                          else
+                                            text ""
+                                        ]
+                                    ]
+                                ]
+
+                        ModuleNav m docId ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-doc-module", True )
+                                    , ( "is-selected", i == model.selectedIndex )
+                                    ]
+                                , onClick <| GetCurrentDocFromId m.name docId
+                                ]
+                                [ span [] [ text m.name ] ]
+                )
+        )
 
 
 viewDiasabledDocs : Model -> Html Msg
@@ -480,18 +570,23 @@ viewDocOverview doc =
     div
         [ class "doc-overview" ]
     <|
-        [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
-            ++ (doc.modules
-                    |> List.sortBy .name
-                    |> List.map
-                        (\m ->
-                            div
-                                [ class "module-link"
-                                , onClick (SetCurrentDoc m.name doc)
-                                ]
-                                [ text m.name ]
-                        )
-               )
+        --    [ -- h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+        [ Markdown.toHtml [ class "doc-overview" ] doc.readme
+        ]
+
+
+
+-- ++ (doc.modules
+--         |> List.sortBy .name
+--         |> List.map
+--             (\m ->
+--                 div
+--                     [ class "module-link"
+--                     , onClick (SetCurrentDoc m.name doc)
+--                     ]
+--                     [ text m.name ]
+--             )
+--    )
 
 
 viewModule : Model -> String -> Doc -> Html Msg

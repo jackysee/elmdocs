@@ -20,8 +20,9 @@ body {
     border-right: 1px solid #ccc;
 }
 .nav-top{
-    height: 2rem;
+    height: calc(2rem + 1px);
     display: flex;
+    border-bottom: 1px solid #CCC;
 }
 .nav-list{
     height: calc(100vh - 2rem);
@@ -42,6 +43,14 @@ body {
 .nav-doc-item{
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
+}
+.nav-doc-caret{
+    margin-left: -1rem;
+}
+.nav-doc-module{
+    padding-left: 1rem;
 }
 .nav-doc-package{
     flex: 1;
@@ -143,14 +152,16 @@ body {
     margin-bottom: 1rem;
 }
 
-.module-doc-comment pre{
+.module-doc-comment pre,
+.doc-overview pre{
     border: 1px solid #ccc;
     background: #eee;
     padding: 1rem;
     overflow: auto;
 }
 
-.module-doc-comment code{
+.module-doc-comment code,
+.doc-overview code{
     font-family: 'Source Code Pro', Consolas, "Liberation Mono", Menlo, Courier, monospace;
     font-size: 0.8rem;
     background-color: #EEE;
@@ -184,4 +195,8 @@ body {
     flex: 1;
     font-size: 5rem;
     color: #DDD;
+}
+
+.icon, .icon svg{
+    height: 1rem;
 }

@@ -15,6 +15,11 @@ type alias Model =
     }
 
 
+type DocNavItem
+    = DocNav Doc
+    | ModuleNav Module DocId
+
+
 type alias StoreModel =
     { docs : List Doc
     , searchIndex : List ( String, String )
@@ -37,6 +42,8 @@ type alias Doc =
     , packageName : String
     , packageVersion : String
     , modules : List Module
+    , readme : String
+    , navExpanded : Bool
     }
 
 
@@ -77,3 +84,17 @@ type alias Value =
     , comment : String
     , type_ : String
     }
+
+
+toDocNavItemList : List Doc -> List DocNavItem
+toDocNavItemList list =
+    list
+        |> List.map
+            (\d ->
+                [ DocNav d ]
+                    ++ if d.navExpanded then
+                        List.map (\m -> ModuleNav m d.id) d.modules
+                       else
+                        []
+            )
+        |> List.concat
