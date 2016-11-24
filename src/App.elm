@@ -39,14 +39,14 @@ init storeModel location =
     , showConfirmDeleteDoc = Nothing
     , selectedIndex = 0
     }
-        ! [ getAllPackages (storeModel == Nothing)
+        ! [ getAllPackages (storeModel == Nothing) location
           ]
 
 
-getAllPackages : Bool -> Cmd Msg
-getAllPackages loadDefault =
+getAllPackages : Bool -> Location -> Cmd Msg
+getAllPackages loadDefault location =
     Http.get "json/all-packages.json" decodeAllPackages
-        |> Http.send (LoadAllPackages loadDefault)
+        |> Http.send (LoadAllPackages loadDefault location)
 
 
 getDoc : String -> String -> Task Http.Error Doc
@@ -134,7 +134,7 @@ update msg model =
                 ( model, Cmd.none )
                 list
 
-        LoadAllPackages loadDefault (Ok list) ->
+        LoadAllPackages loadDefault location (Ok list) ->
             let
                 model_ =
                     { model | allPackages = list }
@@ -143,11 +143,11 @@ update msg model =
                     if loadDefault then
                         getDefaultDocs model_
                     else
-                        Cmd.none
+                        Navigation.newUrl location.hash
             in
                 ( model_, cmd_ )
 
-        LoadAllPackages loadDefault (Err _) ->
+        LoadAllPackages loadDefault location (Err _) ->
             ( model, Cmd.none )
 
         AddDoc p ->
@@ -333,7 +333,11 @@ view model =
                 Home ->
                     [ div
                         [ class "doc-empty-title" ]
-                        [ span [] [ text "ElmDocs" ] ]
+                        [ span [] [ text "ElmDocs" ]
+                        , Markdown.toHtml
+                            [ class "doc-info" ]
+                            """ Written in [Elm](http://elm-lang.org) by [jackysee](http://github.com/jackysee/elmdocs)"""
+                        ]
                     ]
 
                 DocOverview docId ->

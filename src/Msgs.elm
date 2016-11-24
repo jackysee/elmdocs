@@ -2,11 +2,12 @@ module Msgs exposing (..)
 
 import Models exposing (..)
 import Http
+import Navigation exposing (Location)
 
 
 type Msg
     = NoOp
-    | LoadAllPackages Bool (Result Http.Error (List Package))
+    | LoadAllPackages Bool Location (Result Http.Error (List Package))
     | AddDoc ( String, String )
     | RemoveDoc Doc
     | PinDoc (List ( String, String )) (Result Http.Error Doc)
