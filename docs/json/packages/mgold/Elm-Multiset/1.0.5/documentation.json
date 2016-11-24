@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Multiset",
+    "comment": " A Multiset is a mapping from comparable keys to Int counts. What makes a\nMultiset special is that you never have to worry about Maybe values; instead\nyou'll get zero. This simplifies the insert and query functions.\n\nMultisets do not store counts of zero explicitly, so don't expect them in `map`,\n`filter`, `counts`, and the like. You should equate multisets with the given\n`equals` function and not the built-in `(==)`. Multisets support negative\ncounts.\n\n**NOTICE:** This package is being renamed `mgold/elm-multiset`, lowercase, for compatibility.\n\n# Definition\n@docs Multiset\n\n# Create\n@docs empty, singleton, fromList, fromAssocList\n\n# Update\n@docs add, remove, set, update\n\n# Query\n@docs get, equals, keys, counts, toList\n\n# Transform\n@docs map, map2, foldl, foldr, filter, partition\n\n",
+    "aliases": [
+      {
+        "name": "Multiset",
+        "comment": " A Multiset is a wrapper around\n[Dict](http://package.elm-lang.org/packages/elm-lang/core/latest/Dict), but you\nshould treat the type as opaque — except when you're trying to solve type\ninference errors. ",
+        "args": [
+          "comparable"
+        ],
+        "type": "Dict.Dict comparable Int"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add a key to the multiset, incrementing its count by one. ",
+        "type": "comparable -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "counts",
+        "comment": " Get all of the counts in a multiset. ",
+        "type": "Multiset.Multiset comparable -> List Int"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty multiset. ",
+        "type": "Multiset.Multiset comparable"
+      },
+      {
+        "name": "equals",
+        "comment": " Equate two multisets. You should use this function instead of `(==)`, which\nequates the tree representation rather than the abstract container. You can also\nuse this function and `empty` for empty checking.\n\n    empty `equals` (fromAssocList [(\"foo\", 0)]) == True\n    empty `equals` singleton \"bar\" == False\n    (fromList [1,2,1]) `equals` (fromList [1,1,2]) == True\n\n",
+        "type": "Multiset.Multiset comparable -> Multiset.Multiset comparable -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-count pair when it satisfies a predicate. ",
+        "type": "(comparable -> Int -> Bool) -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-count pairs in a dictionary, in order from lowest key to\nhighest key. ",
+        "type": "(comparable -> Int -> b -> b) -> b -> Multiset.Multiset comparable -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-count pairs in a dictionary, in order from highest key to\nlowest key. ",
+        "type": "(comparable -> Int -> b -> b) -> b -> Multiset.Multiset comparable -> b"
+      },
+      {
+        "name": "fromAssocList",
+        "comment": " Convert an association list of key-count pairs into a multiset. It is safe\nto have some counts be zero (but it's pointless to hard-code any zeroes).",
+        "type": "List ( comparable, Int ) -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list of keys into a multiset, counting repeats. ",
+        "type": "List comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "get",
+        "comment": " Get the count of a key, which may be zero. ",
+        "type": "comparable -> Multiset.Multiset comparable -> Int"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a multiset. ",
+        "type": "Multiset.Multiset comparable -> List comparable"
+      },
+      {
+        "name": "map",
+        "comment": " Map over a multiset, changing the counts of the keys. It is safe to return\nzero. ",
+        "type": "(comparable -> Int -> Int) -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "map2",
+        "comment": " Map over two multisets, producing a new multiset. It is safe to return zero.\nYou can use this function to add two multisets: `map2 (always (+))`. Similar\napproaches will substract or find the max or min of multisets. ",
+        "type": "(comparable -> Int -> Int -> Int) -> Multiset.Multiset comparable -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-count pairs which satisfy the predicate, and the second\ncontains the rest. ",
+        "type": "(comparable -> Int -> Bool) -> Multiset.Multiset comparable -> ( Multiset.Multiset comparable, Multiset.Multiset comparable )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key from the multiset, decrementing its count by one. ",
+        "type": "comparable -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "set",
+        "comment": " Set the count of a key to a new integer, regardness of what it used to be. ",
+        "type": "comparable -> Int -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a multiset containing the key once. ",
+        "type": "comparable -> Multiset.Multiset comparable"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a multiset into an association list of key-count pairs. ",
+        "type": "Multiset.Multiset comparable -> List ( comparable, Int )"
+      },
+      {
+        "name": "update",
+        "comment": " Update the count of a comparable using the given function. It is safe to\nreturn zero. ",
+        "type": "comparable -> (Int -> Int) -> Multiset.Multiset comparable -> Multiset.Multiset comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

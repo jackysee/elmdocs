@@ -1,0 +1,56 @@
+[
+  {
+    "name": "PairingHeap",
+    "comment": " This is a simple pairing heap implementation written in Elm usable as a priority queue. This code is\nbased heavily on the pseudocode available at [the Wikipedia page](https://en.wikipedia.org/wiki/Pairing_heap).\n\n# Type and Constructor\n@docs PairingHeap, empty\n\n# Operations\n@docs insert, merge, findMin, deleteMin\n\n# Convenience functions\n@docs fromList, toSortedList\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "PairingHeap",
+        "comment": " A `PairingHeap` has comparable keys and values of an arbitrary type.\n",
+        "args": [
+          "comparable",
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "deleteMin",
+        "comment": " Removes the minimum element from a `PairingHeap` returning a new heap without that element.\nThis will return an empty heap if given an empty heap as input.\n\nComplexity: O(log n)\n",
+        "type": "PairingHeap.PairingHeap comparable a -> PairingHeap.PairingHeap comparable a"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty PairingHeap.\n",
+        "type": "PairingHeap.PairingHeap comparable a"
+      },
+      {
+        "name": "findMin",
+        "comment": " Find the minimum value in a heap returning Nothing if the heap is empty.\n\nComplexity: O(1)\n\n    findMin (fromList [(10, ()), (3, ()), (8, ())]) == Just 3\n",
+        "type": "PairingHeap.PairingHeap comparable a -> Maybe.Maybe ( comparable, a )"
+      },
+      {
+        "name": "fromList",
+        "comment": " This function turns a list of key-value pairs into a `PairingHeap`.\n\nComplexity: O(n)\n",
+        "type": "List ( comparable, a ) -> PairingHeap.PairingHeap comparable a"
+      },
+      {
+        "name": "insert",
+        "comment": " Inserts a new element into a `PairingHeap`.\n\nComplexity: O(1)\n",
+        "type": "( comparable, a ) -> PairingHeap.PairingHeap comparable a -> PairingHeap.PairingHeap comparable a"
+      },
+      {
+        "name": "merge",
+        "comment": " Merges two `PairingHeap`s together into one new heap containing all of the key-value pairs from both inputs.\n\nComplexity: O(1)\n",
+        "type": "PairingHeap.PairingHeap comparable a -> PairingHeap.PairingHeap comparable a -> PairingHeap.PairingHeap comparable a"
+      },
+      {
+        "name": "toSortedList",
+        "comment": " This function turns a `PairingHeap` into a sorted list of key-value pairs.\n\nComplexity: O(n log n)\n",
+        "type": "PairingHeap.PairingHeap comparable a -> List ( comparable, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

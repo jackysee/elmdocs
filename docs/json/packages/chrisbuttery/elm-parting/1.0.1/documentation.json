@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Parting",
+    "comment": " Parting functions and Msg.\n\n# Model\n@docs Model, init, model\n\n# Message\n@docs Msg\n\n# Update function\n@docs update\n\n# View function\n@docs view\n\n# Main function\n@docs main\n\n# Common Helpers\n@docs getParting, getRandomInt\n\n# Static data\n@docs partings\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A union type representing The Elm Architect's `Msg`\n",
+        "args": [],
+        "cases": [
+          [
+            "SetRandomInt",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getParting",
+        "comment": " Convert the partings list to an array and retrieve a value\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "getRandomInt",
+        "comment": " Generate a Random int and send it to SetRandomInt\n",
+        "type": "Int -> Platform.Cmd.Cmd Parting.Msg"
+      },
+      {
+        "name": "init",
+        "comment": " Init the app and generate a random Int\n",
+        "type": "( Parting.Model, Platform.Cmd.Cmd Parting.Msg )"
+      },
+      {
+        "name": "main",
+        "comment": " The Elm Architect's main function.\n",
+        "type": "Platform.Program Basics.Never"
+      },
+      {
+        "name": "model",
+        "comment": " The inital model\n",
+        "type": "Parting.Model"
+      },
+      {
+        "name": "partings",
+        "comment": " A list of availble partings\n",
+        "type": "List String"
+      },
+      {
+        "name": "update",
+        "comment": " The Elm Architect's update function.\n",
+        "type": "Parting.Msg -> Parting.Model -> ( Parting.Model, Platform.Cmd.Cmd Parting.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Render a parting element\n",
+        "type": "Parting.Model -> Html.Html Parting.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

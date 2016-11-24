@@ -1,0 +1,31 @@
+[
+  {
+    "name": "String.Extra",
+    "comment": " Convenience functions for working with Strings\n\n# Formatting\n@docs capitalize, pluralize, toSentence\n\n# Whitespace\n@docs isWhitespace\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "capitalize",
+        "comment": " Capitalize or uncapitalize the given string.\n\n    capitalize True \"foo\"\n    -- \"Foo\"\n\n    capitalize False \"BAR\"\n    -- \"bAR\"\n",
+        "type": "Bool -> String -> String"
+      },
+      {
+        "name": "isWhitespace",
+        "comment": " Returns True iff the given String is 1 or more whitespace characters,\nand nothing else.\n\n(Whitespace is defined as the regular expression `\\s` matcher.)\n\n    isWhitespace \"\"   == False\n    isWhitespace \" \"  == True\n    isWhitespace \"  \" == True\n    isWhitespace \" x\" == False\n    isWhitespace \"x \" == False\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "pluralize",
+        "comment": " Given a number, a singular string, and a plural string, returns the number\nfollowed by a space, followed by either the singular string if the number was 1,\nor the plural string otherwise.\n\n    pluralize \"elf\" \"elves\" 2 == \"2 elves\"\n    pluralize \"elf\" \"elves\" 1 == \"1 elf\"\n    pluralize \"elf\" \"elves\" 0 == \"0 elves\"\n\n",
+        "type": "String -> String -> number -> String"
+      },
+      {
+        "name": "toSentence",
+        "comment": " Converts a list of strings into a human formatted readable list\n\n\n    toSentence [] ---> \"\"\n    toSentence [\"lions\"] ---> \"lions\"\n    toSentence [\"lions\", \"tigers\"] --> \"lions and tigers\"\n    toSentence [\"lions\", \"tigers\", \"bears\"] --> \"lions, tigers, and bears\"\n\nnotes:\n* It *DOES* include an oxford comma\n* It *DOES NOT* include a period\n* It *DOES NOT* include the phrase \"...oh my!\"\n\n",
+        "type": "List String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

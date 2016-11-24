@@ -1,0 +1,218 @@
+[
+  {
+    "name": "Oprocesso.EDSL",
+    "comment": " The `EDSL` module provides infix operator symbols and precedence to use the framework as mentioned in the `README`.\nJust include, if you into such stuff.\n\n@docs (>>-), (!<<), (-<<), (=>>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!<<",
+        "comment": " Infix operator for 'onfail'. ",
+        "type": "Oprocesso.Types.Action error model -> (error -> Oprocesso.Types.Action x model) -> Oprocesso.Types.Action x model",
+        "associativity": "left",
+        "precedence": 4
+      },
+      {
+        "name": "-<<",
+        "comment": " Infix operator for 'thenDo' with *lower* fixity then '(>>-)' or 'thenDo'. ",
+        "type": "Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model",
+        "associativity": "left",
+        "precedence": 3
+      },
+      {
+        "name": "=>>",
+        "comment": " Infix operator for 'next'. ",
+        "type": "Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": ">>-",
+        "comment": " Infix operator for 'thenDo'. ",
+        "type": "Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model",
+        "associativity": "left",
+        "precedence": 5
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Oprocesso",
+    "comment": " The core part of the `oprocesso` framework.\n\n# Background\n@docs RepType, mmstack\n\n# Framework\n@docs actionbox, invoke, hook, ioport\n\n# Lifts\n@docs pure, pureParam, async, asyncOn, task\n\n# Combinators\n@docs thenDo, next, onfail\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "RepType",
+        "comment": " Every 'Action' gets replicated into a queue, from where it gets polled and executed; their 'RepType' is a hull for every action in the queue, needed for the framework to decide how to execute the actions. ",
+        "args": [
+          "error",
+          "model"
+        ],
+        "cases": [
+          [
+            "Sync",
+            [
+              "Oprocesso.Types.Action error model"
+            ]
+          ],
+          [
+            "Async",
+            [
+              "Task.Task error (Oprocesso.Types.Action error model)"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "actionbox",
+        "comment": " 'actionbox' is where one sends actions to, when using the provided framework. ",
+        "type": "Signal.Mailbox (Oprocesso.Types.Action error model)"
+      },
+      {
+        "name": "async",
+        "comment": " An asynchronous modification of the model is any task which gets invoked based on the current model and returns with a modification. One can use 'async' to lift such functions. ",
+        "type": "(model -> Task.Task error (model -> model)) -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "asyncOn",
+        "comment": " Often the invocation of tasks depends on a certain value out of the model which can be reached by a getter. 'asyncOn' is meant to be used in such a situation:\n\n  requestJson `asyncOn` .typed\n\n\n",
+        "type": "(a -> Task.Task error (model -> model)) -> (model -> a) -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "hook",
+        "comment": " 'hook' sets up the main model signal.\n\n  import Oprocesso  as O\n  main = Signal.map view (O.hook initmodel)\n\n",
+        "type": "model -> Signal.Signal model"
+      },
+      {
+        "name": "invoke",
+        "comment": " 'invoke' is the direct way to invoke an action. ",
+        "type": "Oprocesso.Types.Action error model -> Task.Task x ()"
+      },
+      {
+        "name": "ioport",
+        "comment": " 'ioport' sets up a port which runs the asynchronous tasks and calls the actions by feeding them back into the 'actionbox'.\n\n  import Oprocesso as O\n\n  port asyncrunner : Signal (Task x ())\n  port asyncrunner = O.ioport initmodel\n\n\n",
+        "type": "model -> Signal.Signal (Task.Task x ())"
+      },
+      {
+        "name": "mmstack",
+        "comment": " The 'mmstack' is a signal consisting of the latest model and the next action, if there is any. It *forks* the actionbox by past folding pure operations and keeping track of the latest next action.\n",
+        "type": "model -> Signal.Signal ( model, Maybe.Maybe (Oprocesso.RepType error model) )"
+      },
+      {
+        "name": "next",
+        "comment": " 'next' is the asynchronous combinator. It combines two actions such that both get invoked asynchronously.\n",
+        "type": "Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "onfail",
+        "comment": " 'onfail' is the error handling combinator. Its second argument is an error handler; on none asynchronous actions, nothing changes.\n\n\n   (requestJson `asyncOn` .typed)\n        `onfail` \\err -> pure <| addEntry <| \"Error happened: \" ++ err\n",
+        "type": "Oprocesso.Types.Action error model -> (error -> Oprocesso.Types.Action x model) -> Oprocesso.Types.Action x model"
+      },
+      {
+        "name": "pure",
+        "comment": " The easiest building blocks are actions which just change the model, these are so called 'pure' ones.\n\n  pure (\\m -> { m | entries <- asEntry m.typed\n                  , typed   <- \"\"})\n",
+        "type": "(model -> model) -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "pureParam",
+        "comment": " Usually, a model gets modified based on a parameter. These can be lifted with `pureParam`:\n\n  addString : String -> Model -> Model\n  addString s = \\m -> { m | entries <- asEntry s }\n\n  pureParam addString \"an Entry\"\n",
+        "type": "(a -> model -> model) -> a -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "task",
+        "comment": " An asynchronous modification which does not depend on the current model can be lifted with 'task'.\n",
+        "type": "Task.Task error (model -> model) -> Oprocesso.Types.Action error model"
+      },
+      {
+        "name": "thenDo",
+        "comment": " 'thenDo' can be thought of as an `onSuccess` combinator: it combines two actions `act1` and `act2` in such a way, that if `act1` succeeds (which is always the case if no asynchronous action is involved) then right after it returns, `act2` takes place.\n",
+        "type": "Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model -> Oprocesso.Types.Action error model"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Oprocesso.Types",
+    "comment": " Type for Oprocesso.\n# Base Types\n\n## State Monad\n@docs State, run, mapState, andThen, return\n\n## Action and Modifier\n@docs Modifier, Action\n",
+    "aliases": [
+      {
+        "name": "Modifier",
+        "comment": " a 'Modifier' is the core of an 'Action'. Inhabitants define how the model gets changed and which is the next 'Action' which has to happen (in the same synchronous task). ",
+        "args": [
+          "error",
+          "model"
+        ],
+        "type": "Oprocesso.Types.State model (Oprocesso.Types.Action error model)"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " an 'Action' defines how the model change (if at all) or if an asynchronous modification shall take place. ",
+        "args": [
+          "error",
+          "model"
+        ],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Modify",
+            [
+              "Oprocesso.Types.Modifier error model"
+            ]
+          ],
+          [
+            "Launch",
+            [
+              "model -> Task.Task error (Oprocesso.Types.Modifier error model)"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "State",
+        "comment": " the 'State' monad is the underlying type of a 'Modifier', where its bindable variable will be an 'Action.' ",
+        "args": [
+          "s",
+          "a"
+        ],
+        "cases": [
+          [
+            "State",
+            [
+              "s -> ( s, a )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " 'andThen' is the `bind` of the 'State' monad. ",
+        "type": "Oprocesso.Types.State s a -> (a -> Oprocesso.Types.State s b) -> Oprocesso.Types.State s b"
+      },
+      {
+        "name": "mapState",
+        "comment": " 'mapState' distributes a map over the inner state of a 'State' monad. ",
+        "type": "(s -> s) -> Oprocesso.Types.State s a -> Oprocesso.Types.State s a"
+      },
+      {
+        "name": "return",
+        "comment": " 'return' is the `return` of the 'State' monad. ",
+        "type": "a -> Oprocesso.Types.State s a"
+      },
+      {
+        "name": "run",
+        "comment": " 'run' unwraps the function out of the 'State' monad. ",
+        "type": "Oprocesso.Types.State s a -> s -> ( s, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

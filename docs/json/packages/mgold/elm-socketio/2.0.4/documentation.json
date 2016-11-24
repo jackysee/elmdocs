@@ -1,0 +1,50 @@
+[
+  {
+    "name": "SocketIO",
+    "comment": " A module for working with [Socket.io](http://socket.io/) servers. This\nmodule uses Socket.io 1.4.4.\n\nCompared to native JavaScript socket.io, this library is limited in its ability\nto dynamically change hosts, handle errors, and data must be encoded as a\nstring.\n\nSee the README for information on examples, including one for The Elm Architecture.\n\n# Creating a Socket\nAvoid creating signals of sockets.\n@docs io, Options, defaultOptions\n\n# Sending and Receiving\nThese functions should be used with `Task.andThen` to provide them with a socket\nobtained with `io`.\n@docs emit, on, connected\n\n# The Socket Type\n@docs Socket\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " A type for options on a socket. See the [Socket.io docs](http://socket.io/docs/client-api/)\nfor further explanation.\n",
+        "args": [],
+        "type": "{ multiplex : Bool , reconnection : Bool , reconnectionDelay : Time.Time , reconnectionDelayMax : Time.Time , timeout : Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Socket",
+        "comment": " An opaque type representing a socket. You cannot access anything directly,\nonly through the API provided above.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "connected",
+        "comment": " Set up a signal of bools indicating whether or not the socket is connected.\nYou should initialize the mailbox to `False`; if the server is available a\n`True` event will be sent almost immediately. If the server is not available,\n`io` will not complete and therefore this task will not run. If the socket\ndisconnects (and then reconnects later), the address's mailbox's signal will\nhave events indicating that.\n",
+        "type": "Signal.Address Bool -> SocketIO.Socket -> Task.Task x ()"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " Default options for a new socket and manager. These are the same as\nSocket.io itself.\n",
+        "type": "SocketIO.Options"
+      },
+      {
+        "name": "emit",
+        "comment": " Send a string on the socket using the given event name. To serialize your\nElm values, use `toString` or `Json.Encode`.\n\n    port outgoing = socket `Task.andThen` emit \"myEvent\" \"Testing 1 2 3\"\n",
+        "type": "String -> String -> SocketIO.Socket -> Task.Task x ()"
+      },
+      {
+        "name": "io",
+        "comment": " Create a socket, given a hostname and options.\n\n    socket = io \"http://localhost:8001\" defaultOptions\n\nIt's possible to run the Elm Reactor and your Socket.io node server\nsimultaneously on different ports.\n\nThe task never fails; if the server is unreachable it will never succeed.\n",
+        "type": "String -> SocketIO.Options -> Task.Task x SocketIO.Socket"
+      },
+      {
+        "name": "on",
+        "comment": " Receive data of the given event name at a mailbox as a string. If data\nreceived is not already a string, it will be JSON-encoded. Unserializable JS\nvalues become `\"null\"`; this is a good initial value when you set up the\nmailbox.\n\n    mailbox = Signal.mailbox \"null\"\n    port incoming = socket `Task.andThen` on \"myEvent\" mailbox.address\n",
+        "type": "String -> Signal.Address String -> SocketIO.Socket -> Task.Task x ()"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

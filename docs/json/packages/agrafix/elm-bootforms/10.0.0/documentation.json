@@ -1,0 +1,322 @@
+[
+  {
+    "name": "Html.Form.Input.Suggest",
+    "comment": " This module implements an input that includes input suggestions\n\n# The search index\n@docs SearchIndex, makeSearchIndex\n\n# The input field\n@docs SuggestiveInput, suggestiveTextInput\n",
+    "aliases": [
+      {
+        "name": "SuggestiveInput",
+        "comment": " Spec for suggestive input ",
+        "args": [
+          "e"
+        ],
+        "type": "Html.Form.Input.FormElement String e () { choices : Html.Form.Input.Suggest.SearchIndex , maxSuggest : Int , minTyped : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "SearchIndex",
+        "comment": " An abstract search index ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "makeSearchIndex",
+        "comment": " Build a search index for a given list of searchable items ",
+        "type": "List String -> Html.Form.Input.Suggest.SearchIndex"
+      },
+      {
+        "name": "suggestiveTextInput",
+        "comment": " A suggestive input field. Note that suggestions require at least 3 typed characters ",
+        "type": "Html.Form.Input.Suggest.SuggestiveInput e -> Html.Html"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Html.Form.Input.Suggest.External",
+    "comment": " This module implements an input that includes input suggestions coming from an external source,\nsuch as an HTTP request.\n\n# The input field\n@docs Suggestions, extSuggFormVal, ExtSuggestiveInput, extSuggestiveTextInput\n",
+    "aliases": [
+      {
+        "name": "ExtSuggestiveInput",
+        "comment": " Spec for suggestive input with external data source.\n",
+        "args": [
+          "err",
+          "e"
+        ],
+        "type": "Html.Form.Input.FormElement String e Html.Form.Input.Suggest.External.Suggestions { maxSuggest : Int , minTyped : Int , loadSuggestions : String -> Task.Task err Html.Form.Input.Suggest.External.Suggestions }"
+      },
+      {
+        "name": "Suggestions",
+        "comment": " A list of suggestions ",
+        "args": [],
+        "type": "List String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "extSuggFormVal",
+        "comment": " Generate a FormValue for a suggestive input boxes ",
+        "type": "String -> Html.Form.Input.FormValueSt e String Html.Form.Input.Suggest.External.Suggestions"
+      },
+      {
+        "name": "extSuggestiveTextInput",
+        "comment": " A suggestive input field. Note that suggestions require at least 3 typed characters ",
+        "type": "Html.Form.Input.Suggest.External.ExtSuggestiveInput err e -> Html.Html"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Html.Form.Input.Date",
+    "comment": " This module implements an input that includes a date picker\n\n# The input field\n@docs DatePickerInput, datePickerInput\n\n# Configuration helpers\n@docs displayDayGerman, displayMonthGerman\n",
+    "aliases": [
+      {
+        "name": "DatePickerInput",
+        "comment": " Spec for date picker input ",
+        "args": [
+          "e"
+        ],
+        "type": "Html.Form.Input.FormElement Date.Date e () { displayMonth : Date.Month -> String , displayDay : Date.Day -> String , defaultDate : Date.Date , encoder : Date.Date -> String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "datePickerInput",
+        "comment": " An input field that shows a date picker below ",
+        "type": "Html.Form.Input.Date.DatePickerInput e -> Html.Html"
+      },
+      {
+        "name": "displayDayGerman",
+        "comment": " Short german week days ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "displayMonthGerman",
+        "comment": " German month names ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Html.Form.Input",
+    "comment": " This module will help generating good looking forms using the twitter bootstrap framework.\nIt also provides automatic conversion of textual input to more useful types\n\n# Form input\n@docs FormValue, FormValueSt, FormValueAction, FormValueActionSt, apply, effect, mappedEffect, noFx, getFormValue, getFormValueDef, validFormValue, stringFormVal, mayStringFormVal, emptyFormVal\n\n# Default input element structure\n@docs Element, FormElement\n\n# Popular form groups\n@docs textInput, passwordInput, intInput, floatInput, dateInput, TimeOfDay, timeInput, checkBox, SelectElement, selectBox, textArea\n\n# Custom input elements\n@docs InputElement, basicInput, basicInputRaw, basicInputRawEff\n\n# Custom form groups\n@docs formGroup\n",
+    "aliases": [
+      {
+        "name": "Element",
+        "comment": " All inputs will be defined by this basic structure ",
+        "args": [
+          "v",
+          "e",
+          "st"
+        ],
+        "type": "{ id : String , label : String , helpBlock : Maybe.Maybe String , value : Html.Form.Input.FormValueSt e v st , onValue : Html.Form.Input.FormValueActionSt e v st -> Signal.Message }"
+      },
+      {
+        "name": "FormElement",
+        "comment": " An element with a decoder ",
+        "args": [
+          "v",
+          "e",
+          "st",
+          "a"
+        ],
+        "type": "{ element : Html.Form.Input.Element v e st , props : a , decoder : String -> Result.Result e v , autoBlur : Bool }"
+      },
+      {
+        "name": "FormValue",
+        "comment": " The input string of the user and the parsed value ",
+        "args": [
+          "e",
+          "v"
+        ],
+        "type": "Html.Form.Input.FormValueSt e v ()"
+      },
+      {
+        "name": "FormValueAction",
+        "comment": " An action to be applied to a form value ",
+        "args": [
+          "e",
+          "v"
+        ],
+        "type": "Html.Form.Input.FormValueActionSt e v ()"
+      },
+      {
+        "name": "FormValueSt",
+        "comment": " The input string of the user, the parsed value and internal state of the component ",
+        "args": [
+          "e",
+          "v",
+          "st"
+        ],
+        "type": "{ userInput : String , value : Result.Result e v , focused : Bool , internalState : st }"
+      },
+      {
+        "name": "InputElement",
+        "comment": " Spec for an input with a type ",
+        "args": [
+          "v",
+          "e",
+          "st"
+        ],
+        "type": "Html.Form.Input.FormElement v e st { type' : String, extraClasses : List String }"
+      },
+      {
+        "name": "SelectElement",
+        "comment": " Spec for selectBox ",
+        "args": [
+          "v",
+          "e"
+        ],
+        "type": "Html.Form.Input.FormElement v e () { choices : List v , displayChoice : v -> String , choiceValue : v -> String }"
+      },
+      {
+        "name": "TimeOfDay",
+        "comment": " Time of day ",
+        "args": [],
+        "type": "{ hour : Int, minute : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "FormValueActionSt",
+        "comment": " An action to be applied to a form value for components with internal state ",
+        "args": [
+          "e",
+          "v",
+          "st"
+        ],
+        "cases": [
+          [
+            "FormValueActionSt",
+            [
+              "{ action : Html.Form.Input.FormValueSt e v st -> Html.Form.Input.FormValueSt e v st , effect : Effects.Effects (Html.Form.Input.FormValueActionSt e v st) }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Apply an action to a form value ",
+        "type": "Html.Form.Input.FormValueActionSt e v st -> Html.Form.Input.FormValueSt e v st -> Html.Form.Input.FormValueSt e v st"
+      },
+      {
+        "name": "basicInput",
+        "comment": " A simple input ",
+        "type": "Html.Form.Input.InputElement v e st -> Html.Html"
+      },
+      {
+        "name": "basicInputRaw",
+        "comment": " A simple input not grouped yet ",
+        "type": "Html.Form.Input.InputElement v e st -> Html.Html"
+      },
+      {
+        "name": "basicInputRawEff",
+        "comment": " A simple input not grouped yet emitting an effect ",
+        "type": "(Html.Form.Input.FormValueSt e v st -> Effects.Effects (Html.Form.Input.FormValueActionSt e v st)) -> Html.Form.Input.InputElement v e st -> Html.Html"
+      },
+      {
+        "name": "checkBox",
+        "comment": " A simple checkbox input ",
+        "type": "Html.Form.Input.Element Bool e st -> Html.Html"
+      },
+      {
+        "name": "dateInput",
+        "comment": " A simple date input ",
+        "type": "Html.Form.Input.Element Date.Date String () -> Html.Html"
+      },
+      {
+        "name": "effect",
+        "comment": " Return all side effects of an action to a form value ",
+        "type": "Html.Form.Input.FormValueActionSt e v st -> Effects.Effects (Html.Form.Input.FormValueActionSt e v st)"
+      },
+      {
+        "name": "emptyFormVal",
+        "comment": " An empty form value ",
+        "type": "Html.Form.Input.FormValueSt String v ()"
+      },
+      {
+        "name": "floatInput",
+        "comment": " A simple float input ",
+        "type": "Html.Form.Input.Element Float String () -> Html.Html"
+      },
+      {
+        "name": "formGroup",
+        "comment": " Build your own input element ",
+        "type": "Html.Form.Input.Element v e st -> Html.Html -> Html.Html"
+      },
+      {
+        "name": "getFormValue",
+        "comment": " Read the current form value if available ",
+        "type": "Html.Form.Input.FormValueSt e t st -> Maybe.Maybe t"
+      },
+      {
+        "name": "getFormValueDef",
+        "comment": " Read the current form value or fallback to a default ",
+        "type": "t -> Html.Form.Input.FormValueSt e t st -> t"
+      },
+      {
+        "name": "intInput",
+        "comment": " A simple int input ",
+        "type": "Html.Form.Input.Element Int String () -> Html.Html"
+      },
+      {
+        "name": "mappedEffect",
+        "comment": " Return all side effects of an action to a form value and apply a function to wrap them ",
+        "type": "(Html.Form.Input.FormValueActionSt e v st -> a) -> Html.Form.Input.FormValueActionSt e v st -> Effects.Effects a"
+      },
+      {
+        "name": "mayStringFormVal",
+        "comment": " Generate a FormValueSt for textual input boxes w/o validation ",
+        "type": "Maybe.Maybe String -> Html.Form.Input.FormValueSt e String ()"
+      },
+      {
+        "name": "noFx",
+        "comment": " An effect free form action ",
+        "type": "(Html.Form.Input.FormValueSt e v st -> Html.Form.Input.FormValueSt e v st) -> Html.Form.Input.FormValueActionSt e v st"
+      },
+      {
+        "name": "passwordInput",
+        "comment": " A simple password input ",
+        "type": "Html.Form.Input.Element String e () -> Html.Html"
+      },
+      {
+        "name": "selectBox",
+        "comment": " A simple dropdown ",
+        "type": "Html.Form.Input.SelectElement v e -> Html.Html"
+      },
+      {
+        "name": "stringFormVal",
+        "comment": " Generate a FormValueSt for textual input boxes w/o validation ",
+        "type": "String -> Html.Form.Input.FormValueSt e String ()"
+      },
+      {
+        "name": "textArea",
+        "comment": " A textarea ",
+        "type": "Html.Form.Input.Element String e () -> Html.Html"
+      },
+      {
+        "name": "textInput",
+        "comment": " A simple text input ",
+        "type": "Html.Form.Input.Element String e () -> Html.Html"
+      },
+      {
+        "name": "timeInput",
+        "comment": " A simple time input ",
+        "type": "Html.Form.Input.Element Html.Form.Input.TimeOfDay String () -> Html.Html"
+      },
+      {
+        "name": "validFormValue",
+        "comment": " Check if the given FormValueSt contains a valid value ",
+        "type": "Html.Form.Input.FormValueSt e t st -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

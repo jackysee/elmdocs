@@ -1,0 +1,134 @@
+[
+  {
+    "name": "ProgramEx",
+    "comment": "\n@docs programExBuilderWithFlags, programExBuilderWithFlagsAndNavigation\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "programExBuilderWithFlags",
+        "comment": "\nPass in the usual callbacks and it returns a built callback set.\n\nThis can be used via Html.App.programWithFlags like:\n\n    Html.App.programWithFlags\n      ( programExBuilderWithFlags\n        { init=init\n        , filter=filter\n        , update=update\n        , view=view\n        , subscriptions=subscriptions\n        }\n      )\n",
+        "type": "{ init : flags -> ( userModel, Platform.Cmd.Cmd userMsg ) , filters : userMsg -> userModel -> ( userMsg, ProgramEx.States.States userModel userMsg ) , update : userMsg -> userModel -> ( userModel, Platform.Cmd.Cmd userMsg ) , view : userModel -> Html.Html userMsg , subscriptions : userModel -> Platform.Sub.Sub userMsg } -> { init : flags -> ( ProgramEx.Model userModel userMsg, Platform.Cmd.Cmd userMsg ) , update : userMsg -> ProgramEx.Model userModel userMsg -> ( ProgramEx.Model userModel userMsg, Platform.Cmd.Cmd userMsg ) , view : ProgramEx.Model userModel userMsg -> Html.Html userMsg , subscriptions : ProgramEx.Model userModel userMsg -> Platform.Sub.Sub userMsg }"
+      },
+      {
+        "name": "programExBuilderWithFlagsAndNavigation",
+        "comment": "\nPass in the usual callbacks and it returns a built callback set.\n\nThis can be used via Html.App.programWithFlags like:\n\n    Navigation.programWithFlags urlParser\n      ( programExBuilderWithFlagsAndNavigation\n        { init=init\n        , filter=filter\n        , update=update\n        , view=view\n        , subscriptions=subscriptions\n        , urlUpdate=urlUpdate\n        }\n      )\n",
+        "type": "{ init : flags -> navParseResult -> ( userModel, Platform.Cmd.Cmd userMsg ) , filters : userMsg -> userModel -> ( userMsg, ProgramEx.States.States userModel userMsg ) , update : userMsg -> userModel -> ( userModel, Platform.Cmd.Cmd userMsg ) , view : userModel -> Html.Html userMsg , subscriptions : userModel -> Platform.Sub.Sub userMsg , urlUpdate : navData -> userModel -> ( userModel, Platform.Cmd.Cmd userMsg ) } -> { init : flags -> navParseResult -> ( ProgramEx.Model userModel userMsg, Platform.Cmd.Cmd userMsg ) , update : userMsg -> ProgramEx.Model userModel userMsg -> ( ProgramEx.Model userModel userMsg, Platform.Cmd.Cmd userMsg ) , view : ProgramEx.Model userModel userMsg -> Html.Html userMsg , subscriptions : ProgramEx.Model userModel userMsg -> Platform.Sub.Sub userMsg , urlUpdate : navData -> ProgramEx.Model userModel userMsg -> ( ProgramEx.Model userModel userMsg, Platform.Cmd.Cmd userMsg ) }"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "ProgramEx.States",
+    "comment": "\nThis module handles the States structure that controls how callbacks will be called\n\nExample usage via in a filter callback:\n\n    filters : Msg -> Model -> ( Msg, States Model Msg )\n    filters msg model =\n        let\n            log =\n                debug_log (model.programFlags.debug_log |> Maybe.withDefault False) \"filters\" ( msg, model )\n        in\n            case msg of\n                Helpers helpersMsg ->\n                    ( msg\n                    , States.enableAll |> States.delegate (helpers_delegate Helpers helpersMsg)\n                    )\n\n                Mdl mdlMsg ->\n                    ( msg\n                    , States.enableAll\n                        |> States.delegate\n                            { key = \"Mdl\"\n                            , update = Just (\\_ o -> Material.update mdlMsg o)\n                            , subscriptions = Just (\\o -> Material.subscriptions Mdl o)\n                            }\n                    )\n\n                MesgList_Scroll scrolled ->\n                    case model.loc of\n                        RoomLocation rid _ ->\n                            let\n                                doLoad : Bool\n                                doLoad =\n                                    (model.firstMessageReached == False)\n                                        && (scrolled.pos < 16)\n                                        && (model.isLoadingOlder == False)\n                                        && ((Dict.size model.active_room_msgs) >= 10)\n                            in\n                                if doLoad then\n                                    ( MesgList_LoadOlder rid, States.enableAll )\n                                else\n                                    ( msg, States.disableAll )\n\n                        _ ->\n                            ( msg, States.disableAll )\n\n                _ ->\n                    ( msg, States.enableAll )\n\n\n@docs States, Callbacks, Delegates\n@docs defaultOn, defaultOff\n@docs enableAll, disableAll\n@docs enableOnly, disableOnly\n@docs enable, disable\n@docs delegate\n@docs doUpdate, doSubscriptions, doView, getDelegates\n",
+    "aliases": [
+      {
+        "name": "Delegates",
+        "comment": " Delegate record, fill this in to specify delegates for a module\n",
+        "args": [
+          "userModel",
+          "userMsg"
+        ],
+        "type": "{ key : String , update : Maybe.Maybe (userMsg -> userModel -> ( userModel, Platform.Cmd.Cmd userMsg )) , subscriptions : Maybe.Maybe (userModel -> Platform.Sub.Sub userMsg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Callbacks",
+        "comment": " Various supported states that can be allowed or denied\n",
+        "args": [],
+        "cases": [
+          [
+            "Update",
+            []
+          ],
+          [
+            "Subscriptions",
+            []
+          ],
+          [
+            "View",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "States",
+        "comment": " Holds the State information\n",
+        "args": [
+          "userModel",
+          "userMsg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOff",
+        "comment": " Gets the default state set, everything is disabled\n",
+        "type": "ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "defaultOn",
+        "comment": " Gets the default state set, everything is enabled\n",
+        "type": "ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "delegate",
+        "comment": " Changes the callback functions for these callbacks to the specified ones, useful for TEA modules delegation\n\nExample use:\n\n    filters : Msg -> Model -> ( Msg, States )\n    filters msg model =\n      case msg of\n        Material\n",
+        "type": "ProgramEx.States.Delegates userModel userMsg -> ProgramEx.States.States userModel userMsg -> ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "disable",
+        "comment": " Returns a new state from an old disabling a specific callback\n",
+        "type": "ProgramEx.States.Callbacks -> ProgramEx.States.States userModel userMsg -> ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "disableAll",
+        "comment": " Runs no callbacks at all, same as `defaultOff`\n",
+        "type": "ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "disableOnly",
+        "comment": " Returns a State that will only allow all callbacks except the ones specified\n",
+        "type": "List ProgramEx.States.Callbacks -> ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "doSubscriptions",
+        "comment": " Gets from the state if the subscriptions callback should be run\n",
+        "type": "ProgramEx.States.States userModel userMsg -> Bool"
+      },
+      {
+        "name": "doUpdate",
+        "comment": " Gets from the state if the update callback should be run\n",
+        "type": "ProgramEx.States.States userModel userMsg -> Bool"
+      },
+      {
+        "name": "doView",
+        "comment": " Gets from the state if the view callback should be run\n",
+        "type": "ProgramEx.States.States userModel userMsg -> Bool"
+      },
+      {
+        "name": "enable",
+        "comment": " Returns a new state from an old enabling a specific callback\n",
+        "type": "ProgramEx.States.Callbacks -> ProgramEx.States.States userModel userMsg -> ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "enableAll",
+        "comment": " Runs all callbacks as expected, same as `defaultOn`\n",
+        "type": "ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "enableOnly",
+        "comment": " Returns a State that will only allow these callbacks to run\n",
+        "type": "List ProgramEx.States.Callbacks -> ProgramEx.States.States userModel userMsg"
+      },
+      {
+        "name": "getDelegates",
+        "comment": " Gets the delegates for this state\n",
+        "type": "ProgramEx.States.States userModel userMsg -> Maybe.Maybe (ProgramEx.States.Delegates userModel userMsg)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

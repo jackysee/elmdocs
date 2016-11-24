@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Notification",
+    "comment": "\nEasily display toast notifications to users. The module defines four common alert levels (success,\ninfo, warning and error) and takes care of managing toast lifecycles.\n\nSee the [demo](https://ktorz.github.io/elm-notification) to get a nice overview of the capability.\n\n# Create a notification\n\nTo create a notification, just send a `Notification` to the provided signal address. This can be\ndone either by directly calling `Signal.send` or, by using events subscriber from the `Html.Events`\nmodule.\n\n@docs Notification, success, info, warning, error, address\n\n# Display and run effects\n\nTo be able to run and to actually work, notifications need to be added to your view. A `Signal Html`\nis available for that purpose as well as a `Signal (Task Effects.Never ())` ready to be plugged in a\nport, or merged with on of your application effects signal.\n\n@docs view, task\n",
+    "aliases": [
+      {
+        "name": "Notification",
+        "comment": " Representation of a notification ",
+        "args": [],
+        "type": "{ content : String, level : Notification.Level }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "address",
+        "comment": " Communication address to require a notification on the screen ",
+        "type": "Signal.Address Notification.Notification"
+      },
+      {
+        "name": "error",
+        "comment": " Create an `error` notification ",
+        "type": "String -> Notification.Notification"
+      },
+      {
+        "name": "info",
+        "comment": " Create an `info` notification ",
+        "type": "String -> Notification.Notification"
+      },
+      {
+        "name": "success",
+        "comment": " Create a `success` notification ",
+        "type": "String -> Notification.Notification"
+      },
+      {
+        "name": "task",
+        "comment": " Effects runner ",
+        "type": "Signal.Signal (Task.Task Effects.Never ())"
+      },
+      {
+        "name": "view",
+        "comment": " Notification view updated for each user interaction ",
+        "type": "Signal.Signal Html.Html"
+      },
+      {
+        "name": "warning",
+        "comment": " Create a `warning` notification ",
+        "type": "String -> Notification.Notification"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

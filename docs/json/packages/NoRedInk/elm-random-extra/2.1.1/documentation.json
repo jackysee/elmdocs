@@ -1,0 +1,2098 @@
+[
+  {
+    "name": "Random.Mouse",
+    "comment": " List of Mouse Generators\n\n# Generators\n@docs mousePosition, mouseX, mouseY, leftMouseDown\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "leftMouseDown",
+        "comment": " Generate a random instance of left mouse down (alias for `bool`)\n",
+        "type": "Random.Generator Bool"
+      },
+      {
+        "name": "mousePosition",
+        "comment": " Generate a random mouse position given a screen width and a screen height\n",
+        "type": "Int -> Int -> Random.Generator ( Int, Int )"
+      },
+      {
+        "name": "mouseX",
+        "comment": " Generate a random mouseX value given a screen width\n",
+        "type": "Int -> Random.Generator Int"
+      },
+      {
+        "name": "mouseY",
+        "comment": " Generate a random mouseY value given a screen height\n",
+        "type": "Int -> Random.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.String",
+    "comment": " List of String Generators\n\n# Simple Generators\n@docs string, word, englishWord, capitalizedEnglishWord\n\n# Random Length String Generators\n@docs rangeLengthString, rangeLengthWord, rangeLengthEnglishWord, anyEnglishWord, anyCapitalizedEnglishWord, rangeLengthCapitalizedEnglishWord\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "anyCapitalizedEnglishWord",
+        "comment": " Generate a random capitalized word with english characters of random length\nbetween 1 34.\nAside: 34 was picked as a maximum as \"supercalifragilisticexpialidocious\"\nis considered the longest commonly used word and is 34 character long.\nLonger words do occur, especially in scientific contexts. In which case, consider\nusing `rangeLengthEnglishWord` for more granular control.\n",
+        "type": "Random.Generator String"
+      },
+      {
+        "name": "anyEnglishWord",
+        "comment": " Generate a random lowercase word with english characters of random length\nbetween 1 34.\nAside: 34 was picked as a maximum as \"supercalifragilisticexpialidocious\"\nis considered the longest commonly used word and is 34 character long.\nLonger words do occur, especially in scientific contexts. In which case, consider\nusing `rangeLengthEnglishWord` for more granular control.\n",
+        "type": "Random.Generator String"
+      },
+      {
+        "name": "capitalizedEnglishWord",
+        "comment": " Generate a random capitalized word with english characters of a given length.\nNote: This just generates a random string using the letters in english, so there\nare no guarantees that the result be an actual english word.\n",
+        "type": "Int -> Random.Generator String"
+      },
+      {
+        "name": "englishWord",
+        "comment": " Generate a random lowercase word with english characters of a given length.\nNote: This just generates a random string using the letters in english, so there\nare no guarantees that the result be an actual english word.\n",
+        "type": "Int -> Random.Generator String"
+      },
+      {
+        "name": "rangeLengthCapitalizedEnglishWord",
+        "comment": " Generate a random capitalized word with english characters of random length\ngiven a minimum length and a maximum length.\n",
+        "type": "Int -> Int -> Random.Generator String"
+      },
+      {
+        "name": "rangeLengthEnglishWord",
+        "comment": " Generate a random lowercase word with english characters of random length\ngiven a minimum length and maximum length.\n",
+        "type": "Int -> Int -> Random.Generator String"
+      },
+      {
+        "name": "rangeLengthString",
+        "comment": " Generates a random string of random length given the minimum length\nand maximum length and a given character generator.\n",
+        "type": "Int -> Int -> Random.Generator Char -> Random.Generator String"
+      },
+      {
+        "name": "rangeLengthWord",
+        "comment": " Alias for `rangeLengthString`\n",
+        "type": "Int -> Int -> Random.Generator Char -> Random.Generator String"
+      },
+      {
+        "name": "string",
+        "comment": " Generate a random string of a given length with a given character generator\n\n    fiveLetterEnglishWord = string 5 english\n",
+        "type": "Int -> Random.Generator Char -> Random.Generator String"
+      },
+      {
+        "name": "word",
+        "comment": " Generate a random word of a given length with a given character generator\n(alias for `string`)\n",
+        "type": "Int -> Random.Generator Char -> Random.Generator String"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Touch",
+    "comment": " List of Touch Generators\n\n# Generators\n@docs tap, touch\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "tap",
+        "comment": " Generate a random tap given a screen width and screen height\n",
+        "type": "Int -> Int -> Random.Generator { x : Int, y : Int }"
+      },
+      {
+        "name": "touch",
+        "comment": " Generate a random touch given a screen width and screen height\n",
+        "type": "Int -> Int -> Random.Generator Touch.Touch"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Array",
+    "comment": " List of Array Generators\n\n# Generate an Array\n@docs array, emptyArray, rangeLengthArray\n\n# Random Operations on an Array\n@docs sample, choose, shuffle\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "array",
+        "comment": " Generate a random array of given size given a random generator\n\n    randomLength5IntArray = array 5 (int 0 100)\n",
+        "type": "Int -> Random.Generator a -> Random.Generator (Array.Array a)"
+      },
+      {
+        "name": "choose",
+        "comment": " Sample without replacement: produce a randomly selected element of the\narray, and the array with that element omitted (shifting all later elements\ndown). ",
+        "type": "Array.Array a -> Random.Generator ( Maybe.Maybe a, Array.Array a )"
+      },
+      {
+        "name": "emptyArray",
+        "comment": " Generator that always generates the empty array\n",
+        "type": "Random.Generator (Array.Array a)"
+      },
+      {
+        "name": "rangeLengthArray",
+        "comment": " Generate a random array of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Generator a -> Random.Generator (Array.Array a)"
+      },
+      {
+        "name": "sample",
+        "comment": " Sample with replacement: produce a randomly selected element of the\narray, or `Nothing` for an empty array. Takes O(1) time. ",
+        "type": "Array.Array a -> Random.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "shuffle",
+        "comment": " Shuffle the array using the Fisher-Yates algorithm. Takes O(_n_ log _n_)\ntime and O(_n_) additional space. ",
+        "type": "Array.Array a -> Random.Generator (Array.Array a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Bool",
+    "comment": " List of Bool Generators\n\n# Generators\n@docs bool\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bool",
+        "comment": " Random Bool generator\n",
+        "type": "Random.Generator Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Char",
+    "comment": " List of Char Generators\n\n# Basic Generators\n@docs char, lowerCaseLatin, upperCaseLatin, latin, english, ascii, unicode\n\n# Unicode Generators (UTF-8)\n@docs basicLatin, latin1Supplement, latinExtendedA, latinExtendedB, ipaExtensions, spacingModifier, combiningDiacriticalMarks, greekAndCoptic, cyrillic, cyrillicSupplement, armenian, hebrew, arabic, syriac, arabicSupplement, thaana, nko, samaritan, mandaic, arabicExtendedA, devanagari, bengali, gurmukhi, gujarati, oriya, tamil, telugu, kannada, malayalam, sinhala, thai, lao, tibetan, myanmar, georgian, hangulJamo, ethiopic, ethiopicSupplement, cherokee, unifiedCanadianAboriginalSyllabic, ogham, runic, tagalog, hanunoo, buhid, tagbanwa, khmer, mongolian, unifiedCanadianAboriginalSyllabicExtended, limbu, taiLe, newTaiLue, khmerSymbol, buginese, taiTham, balinese, sundanese, batak, lepcha, olChiki, sundaneseSupplement, vedicExtensions, phoneticExtensions, phoneticExtensionsSupplement, combiningDiacriticalMarksSupplement, latinExtendedAdditional, greekExtended, generalPunctuation, superscriptOrSubscript, currencySymbol, combiningDiacriticalMarksForSymbols, letterlikeSymbol, numberForm, arrow, mathematicalOperator, miscellaneousTechnical, controlPicture, opticalCharacterRecognition, enclosedAlphanumeric, boxDrawing, blockElement, geometricShape, miscellaneousSymbol, dingbat, miscellaneousMathematicalSymbolA, supplementalArrowA, braillePattern, supplementalArrowB, miscellaneousMathematicalSymbolB, supplementalMathematicalOperator, miscellaneousSymbolOrArrow, glagolitic, latinExtendedC, coptic, georgianSupplement, tifinagh, ethiopicExtended, cyrillicExtendedA, supplementalPunctuation, cjkRadicalSupplement, kangxiRadical, ideographicDescription, cjkSymbolOrPunctuation, hiragana, katakana, bopomofo, hangulCompatibilityJamo, kanbun, bopomofoExtended, cjkStroke, katakanaPhoneticExtension, enclosedCJKLetterOrMonth, cjkCompatibility, cjkUnifiedIdeographExtensionA, yijingHexagramSymbol, cjkUnifiedIdeograph, yiSyllable, yiRadical, lisu, vai, cyrillicExtendedB, bamum, modifierToneLetter, latinExtendedD, sylotiNagri, commonIndicNumberForm, phagsPa, saurashtra, devanagariExtended, kayahLi, rejang, hangulJamoExtendedA, javanese, cham, myanmarExtendedA, taiViet, meeteiMayekExtension, ethiopicExtendedA, meeteiMayek, hangulSyllable, hangulJamoExtendedB, highSurrogate, highPrivateUseSurrogate, lowSurrogate, privateUseArea, cjkCompatibilityIdeograph, alphabeticPresentationForm, arabicPresentationFormA, variationSelector, verticalForm, combiningHalfMark, cjkCompatibilityForm, smallFormVariant, arabicPresentationFormB, halfwidthOrFullwidthForm, special, linearBSyllable, linearBIdeogram, aegeanNumber, ancientGreekNumber, ancientSymbol, phaistosDisc, lycian, carian, oldItalic, gothic, ugaritic, oldPersian, deseret, shavian, osmanya, cypriotSyllable, imperialAramaic, phoenician, lydian, meroiticHieroglyph, meroiticCursive, kharoshthi, oldSouthArabian, avestan, inscriptionalParthian, inscriptionalPahlavi, oldTurkic, rumiNumericalSymbol, brahmi, kaithi, soraSompeng, chakma, sharada, takri, cuneiform, cuneiformNumberOrPunctuation, egyptianHieroglyph, bamumSupplement, miao, kanaSupplement, byzantineMusicalSymbol, musicalSymbol, ancientGreekMusicalNotationSymbol, taiXuanJingSymbol, countingRodNumeral, mathematicalAlphanumericSymbol, arabicMathematicalAlphabeticSymbol, mahjongTile, dominoTile, playingCard, enclosedAlphanumericSupplement, enclosedIdeographicSupplement, miscellaneousSymbolOrPictograph, emoticon, transportOrMapSymbol, alchemicalSymbol, cjkUnifiedIdeographExtensionB, cjkUnifiedIdeographExtensionC, cjkUnifiedIdeographExtensionD, cjkCompatibilityIdeographSupplement, tag, variationSelectorSupplement, supplementaryPrivateUseAreaA, supplementaryPrivateUseAreaB\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "aegeanNumber",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "alchemicalSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "alphabeticPresentationForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ancientGreekMusicalNotationSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ancientGreekNumber",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ancientSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabicExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabicMathematicalAlphabeticSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabicPresentationFormA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabicPresentationFormB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arabicSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "armenian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "arrow",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ascii",
+        "comment": " Generate a random ASCII Character\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "avestan",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "balinese",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "bamum",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "bamumSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "basicLatin",
+        "comment": " UTF-8 ",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "batak",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "bengali",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "blockElement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "bopomofo",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "bopomofoExtended",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "boxDrawing",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "brahmi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "braillePattern",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "buginese",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "buhid",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "byzantineMusicalSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "carian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "chakma",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cham",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "char",
+        "comment": " Generate a random character within a certain keyCode range\n\n    lowerCaseLetter = char 65 90\n",
+        "type": "Int -> Int -> Random.Generator Char"
+      },
+      {
+        "name": "cherokee",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkCompatibility",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityIdeograph",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityIdeographSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkRadicalSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkStroke",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkSymbolOrPunctuation",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeograph",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionC",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionD",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarks",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarksForSymbols",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarksSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "combiningHalfMark",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "commonIndicNumberForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "controlPicture",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "coptic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "countingRodNumeral",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cuneiform",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cuneiformNumberOrPunctuation",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "currencySymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cypriotSyllable",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cyrillic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cyrillicExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cyrillicExtendedB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "cyrillicSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "deseret",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "devanagari",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "devanagariExtended",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "dingbat",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "dominoTile",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "egyptianHieroglyph",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "emoticon",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "enclosedAlphanumeric",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "enclosedAlphanumericSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "enclosedCJKLetterOrMonth",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "enclosedIdeographicSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "english",
+        "comment": " Generate a random English Letter (alias for `latin`)\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ethiopic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ethiopicExtended",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ethiopicExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ethiopicSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "generalPunctuation",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "geometricShape",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "georgian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "georgianSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "glagolitic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "gothic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "greekAndCoptic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "greekExtended",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "gujarati",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "gurmukhi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "halfwidthOrFullwidthForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hangulCompatibilityJamo",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hangulJamo",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hangulJamoExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hangulJamoExtendedB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hangulSyllable",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hanunoo",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hebrew",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "highPrivateUseSurrogate",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "highSurrogate",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "hiragana",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ideographicDescription",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "imperialAramaic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "inscriptionalPahlavi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "inscriptionalParthian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ipaExtensions",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "javanese",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kaithi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kanaSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kanbun",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kangxiRadical",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kannada",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "katakana",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "katakanaPhoneticExtension",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kayahLi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "kharoshthi",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "khmer",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "khmerSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lao",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latin",
+        "comment": " Generate a random Latin Letter\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latin1Supplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latinExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latinExtendedAdditional",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latinExtendedB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latinExtendedC",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "latinExtendedD",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lepcha",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "letterlikeSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "limbu",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "linearBIdeogram",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "linearBSyllable",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lisu",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lowSurrogate",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lowerCaseLatin",
+        "comment": " Generate a random lower-case Latin Letter\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lycian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "lydian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "mahjongTile",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "malayalam",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "mandaic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "mathematicalAlphanumericSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "mathematicalOperator",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "meeteiMayek",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "meeteiMayekExtension",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "meroiticCursive",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "meroiticHieroglyph",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miao",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousMathematicalSymbolA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousMathematicalSymbolB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbolOrArrow",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbolOrPictograph",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "miscellaneousTechnical",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "modifierToneLetter",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "mongolian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "musicalSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "myanmar",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "myanmarExtendedA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "newTaiLue",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "nko",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "numberForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ogham",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "olChiki",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "oldItalic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "oldPersian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "oldSouthArabian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "oldTurkic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "opticalCharacterRecognition",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "oriya",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "osmanya",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "phagsPa",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "phaistosDisc",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "phoenician",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "phoneticExtensions",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "phoneticExtensionsSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "playingCard",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "privateUseArea",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "rejang",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "rumiNumericalSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "runic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "samaritan",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "saurashtra",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "sharada",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "shavian",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "sinhala",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "smallFormVariant",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "soraSompeng",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "spacingModifier",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "special",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "sundanese",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "sundaneseSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "superscriptOrSubscript",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementalArrowA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementalArrowB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementalMathematicalOperator",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementalPunctuation",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementaryPrivateUseAreaA",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "supplementaryPrivateUseAreaB",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "sylotiNagri",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "syriac",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tag",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tagalog",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tagbanwa",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "taiLe",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "taiTham",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "taiViet",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "taiXuanJingSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "takri",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tamil",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "telugu",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "thaana",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "thai",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tibetan",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "tifinagh",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "transportOrMapSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "ugaritic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "unicode",
+        "comment": " Generate a random Character in the valid unicode range.\nNote: This can produce garbage values as unicode doesn't use all valid values.\nTo test for specific languages and character sets, use the appropriate one\nfrom the list.\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "unifiedCanadianAboriginalSyllabic",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "unifiedCanadianAboriginalSyllabicExtended",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "upperCaseLatin",
+        "comment": " Generate a random upper-case Latin Letter\n",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "vai",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "variationSelector",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "variationSelectorSupplement",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "vedicExtensions",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "verticalForm",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "yiRadical",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "yiSyllable",
+        "comment": "",
+        "type": "Random.Generator Char"
+      },
+      {
+        "name": "yijingHexagramSymbol",
+        "comment": "",
+        "type": "Random.Generator Char"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Color",
+    "comment": " List of Color Generators\n\n# Generators\n@docs color, rgb, rgba, hsl, hsla, greyscale, grayscale, red, green, blue\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "blue",
+        "comment": " Generate a random shade of blue\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "color",
+        "comment": " Generate a random color\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "grayscale",
+        "comment": " Alias for greyscale\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "green",
+        "comment": " Generate a random shade of green\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "greyscale",
+        "comment": " Generate a random shade of grey\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "hsl",
+        "comment": " Generate a random color which randomizes hsl values\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "hsla",
+        "comment": " Generate a random color which randomizes hsla values\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "red",
+        "comment": " Generate a random shade of red\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "rgb",
+        "comment": " Generate a random color which randomizes rgb values\n",
+        "type": "Random.Generator Color.Color"
+      },
+      {
+        "name": "rgba",
+        "comment": " Generate a random color which randomizes rgba values\n",
+        "type": "Random.Generator Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Date",
+    "comment": " List of date Generators\n\n# Generators\n@docs date, day, month, year, hour, hour24, hour12, minute, second\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "date",
+        "comment": " Generate a random date given a start date and an end date.\n",
+        "type": "Date.Date -> Date.Date -> Random.Generator Date.Date"
+      },
+      {
+        "name": "day",
+        "comment": " Generate a random day of the week.\n",
+        "type": "Random.Generator Date.Day"
+      },
+      {
+        "name": "hour",
+        "comment": " Generate a random hour (random int between 0 and 23 inclusive)\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "hour12",
+        "comment": " Generate a random 12-hour day hour (random int between 0 and 11 inclusive)\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "hour24",
+        "comment": " Generate a random 24-hour day hour (random int between 0 and 23 inclusive)\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "minute",
+        "comment": " Generate a random minute (random int between 0 and 59 inclusive)\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "month",
+        "comment": " Generate a random month of the year.\n",
+        "type": "Random.Generator Date.Month"
+      },
+      {
+        "name": "second",
+        "comment": " Generate a random second (random int between 0 and 59 inclusive)\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "year",
+        "comment": " Generate a random year given a start year and end year (alias for `int`)\n",
+        "type": "Int -> Int -> Random.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Dict",
+    "comment": " List of Dict Generators\n\n# Generators\n@docs dict, emptyDict, rangeLengthDict\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dict",
+        "comment": " Generate a random dict with given length, key generator, and value generator\n\n    randomLength10StringIntDict = dict 10 (englishWord 10) (int 0 100)\n",
+        "type": "Int -> Random.Generator comparable -> Random.Generator value -> Random.Generator (Dict.Dict comparable value)"
+      },
+      {
+        "name": "emptyDict",
+        "comment": " Generator that always generates the empty dict\n",
+        "type": "Random.Generator (Dict.Dict comparable value)"
+      },
+      {
+        "name": "rangeLengthDict",
+        "comment": " Generate a random dict of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Generator comparable -> Random.Generator value -> Random.Generator (Dict.Dict comparable value)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Float",
+    "comment": " List of Float Generators\n\n# Generators\n@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan, probability, negativeProbability, unitRange\n\n# Gaussian Generators\n@docs normal, standardNormal, gaussian\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "anyFloat",
+        "comment": " Generator that generates any float\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "floatGreaterThan",
+        "comment": " Generator that generates a float greater than a given float\n",
+        "type": "Float -> Random.Generator Float"
+      },
+      {
+        "name": "floatLessThan",
+        "comment": " Generator that generates a float less than a given float\n",
+        "type": "Float -> Random.Generator Float"
+      },
+      {
+        "name": "gaussian",
+        "comment": " Alias for `normal`.\n",
+        "type": "Float -> Float -> Float -> Random.Generator Float"
+      },
+      {
+        "name": "negativeFloat",
+        "comment": " Generator that generates any negative float\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "negativeProbability",
+        "comment": " Generator that generates a float between -1 and 0\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "normal",
+        "comment": " Create a generator of floats that is normally distributed with\ngiven minimum, maximum, and standard deviation.\n",
+        "type": "Float -> Float -> Float -> Random.Generator Float"
+      },
+      {
+        "name": "positiveFloat",
+        "comment": " Generator that generates any positive float\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "probability",
+        "comment": " Generator that generates a float between 0 and 1\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "standardNormal",
+        "comment": " Generator that follows a standard normal distribution (as opposed to\na uniform distribution)\n",
+        "type": "Random.Generator Float"
+      },
+      {
+        "name": "unitRange",
+        "comment": " Generator that generates a float between - 1 and 1\n",
+        "type": "Random.Generator Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Function",
+    "comment": " List of Function Generators\n\n# Generators\n@docs func, func2, func3, func4, func5, func6\n\n# Infix operators\n@docs (<<<), (>>>)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "<<<",
+        "comment": " Compose two function generators. Analogous to `<<`\n",
+        "type": "Random.Generator (b -> c) -> Random.Generator (a -> b) -> Random.Generator (a -> c)",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": ">>>",
+        "comment": " Compose two function generators. Analogous to `>>`\n",
+        "type": "Random.Generator (a -> b) -> Random.Generator (b -> c) -> Random.Generator (a -> c)",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "func",
+        "comment": " Generates a random function of one argument given a generator for the output.\n",
+        "type": "Random.Generator b -> Random.Generator (a -> b)"
+      },
+      {
+        "name": "func2",
+        "comment": " Generates a random function of two arguments given a generator for the output.\n",
+        "type": "Random.Generator c -> Random.Generator (a -> b -> c)"
+      },
+      {
+        "name": "func3",
+        "comment": " Generates a random function of three arguments given a generator for the output.\n",
+        "type": "Random.Generator d -> Random.Generator (a -> b -> c -> d)"
+      },
+      {
+        "name": "func4",
+        "comment": " Generates a random function of four arguments given a generator for the output.\n",
+        "type": "Random.Generator e -> Random.Generator (a -> b -> c -> d -> e)"
+      },
+      {
+        "name": "func5",
+        "comment": " Generates a random function of five arguments given a generator for the output.\n",
+        "type": "Random.Generator f -> Random.Generator (a -> b -> c -> d -> e -> f)"
+      },
+      {
+        "name": "func6",
+        "comment": " Generates a random function of six arguments given a generator for the output.\n",
+        "type": "Random.Generator g -> Random.Generator (a -> b -> c -> d -> e -> f -> g)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Keyboard",
+    "comment": " List of Keyboard Generators\n\n# Generators\n@docs arrows, keyCode, numberKey, letterKey, arrowKey, numpadKey, fKey\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "arrowKey",
+        "comment": " Generate a random arrow key input\n",
+        "type": "Random.Generator Char.KeyCode"
+      },
+      {
+        "name": "arrows",
+        "comment": " Generate random Keyboard arrows input\n",
+        "type": "Random.Generator { x : Int, y : Int }"
+      },
+      {
+        "name": "fKey",
+        "comment": " Generate a random fKey input\n",
+        "type": "Random.Generator Char.KeyCode"
+      },
+      {
+        "name": "keyCode",
+        "comment": " Generate a random Keyboard input.\n",
+        "type": "Random.Generator Char.KeyCode"
+      },
+      {
+        "name": "letterKey",
+        "comment": " Generate a random letter key input\n",
+        "type": "Random.Generator Char.KeyCode"
+      },
+      {
+        "name": "numberKey",
+        "comment": " Generate a random number key input\n",
+        "type": "Random.Generator Char.KeyCode"
+      },
+      {
+        "name": "numpadKey",
+        "comment": " Generate a random numpadKey input\n",
+        "type": "Random.Generator Char.KeyCode"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.List",
+    "comment": " List of List Generators\n\n# Generators\n@docs emptyList, rangeLengthList\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "emptyList",
+        "comment": " Generator that always returns the empty list.\n",
+        "type": "Random.Generator (List a)"
+      },
+      {
+        "name": "rangeLengthList",
+        "comment": " Generate a random list of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Generator a -> Random.Generator (List a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Mailbox",
+    "comment": " List of Mailbox Generators\n\n# Generators\n@docs mailbox, address\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "address",
+        "comment": " Generates a random mailbox address\n",
+        "type": "Random.Generator a -> Random.Generator (Signal.Address a)"
+      },
+      {
+        "name": "mailbox",
+        "comment": " Generates a random mailbox\n",
+        "type": "Random.Generator a -> Random.Generator (Signal.Mailbox a)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Maybe",
+    "comment": " List of Maybe Generators\n\n# Generators\n@docs maybe, withDefault, withDefaultGenerator\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "maybe",
+        "comment": " Generate a Maybe from a generator. Will generate Nothings 50% of the time.\n",
+        "type": "Random.Generator a -> Random.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Generate values from a maybe generator or a default value.\n",
+        "type": "a -> Random.Generator (Maybe.Maybe a) -> Random.Generator a"
+      },
+      {
+        "name": "withDefaultGenerator",
+        "comment": " Generate values from a maybe generator or a default generator.\n",
+        "type": "Random.Generator a -> Random.Generator (Maybe.Maybe a) -> Random.Generator a"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Order",
+    "comment": " List of Order Generators\n\n# Generators\n@docs order\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "order",
+        "comment": " Generate a random order with equal probability.\n",
+        "type": "Random.Generator Basics.Order"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Result",
+    "comment": " List of Result Generators\n\n# Generators\n@docs ok, error, result\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "error",
+        "comment": " Generate an error result from a random generator of errors\n",
+        "type": "Random.Generator error -> Random.Generator (Result.Result error value)"
+      },
+      {
+        "name": "ok",
+        "comment": " Generate an ok result from a random generator of values\n",
+        "type": "Random.Generator value -> Random.Generator (Result.Result error value)"
+      },
+      {
+        "name": "result",
+        "comment": " Generate an ok result or an error result with 50-50 chance\n\nThis is simply implemented as follows:\n\n    result errorGenerator okGenerator =\n      frequency\n        [ (1, error errorGenerator)\n        , (1, ok okGenerator)\n        ] (ok okGenerator)\n\nIf you want to generate results with a different frequency, tweak those\nnumbers to your bidding in your own custom generators.\n",
+        "type": "Random.Generator error -> Random.Generator value -> Random.Generator (Result.Result error value)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Window",
+    "comment": " List of window Generators\n\n# Generators\n@docs windowDimensions, windowWidth, windowHeight\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "windowDimensions",
+        "comment": " Generate a random tuple of window dimensions given a minimum screen width, a maximum screen width, a minimum screen height, a maximum screen height\n",
+        "type": "Int -> Int -> Int -> Int -> Random.Generator ( Int, Int )"
+      },
+      {
+        "name": "windowHeight",
+        "comment": " Generate a random width height value given a minimum screen height and a maximum screen height\n",
+        "type": "Int -> Int -> Random.Generator Int"
+      },
+      {
+        "name": "windowWidth",
+        "comment": " Generate a random window width value given a minimum screen width and a maximum screen width\n",
+        "type": "Int -> Int -> Random.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Signal",
+    "comment": " List of Signal Generators\n\n# Generators\n@docs constant\n\n# Random Seeds\n@docs randomSeed, randomSeedEvery\n\n# Generate Signals\n@docs generate, generateEvery\n\n# Generate a run of an application\n@docs application, run\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "application",
+        "comment": " Generate a random run of an application that follows the Elm Architecture.\nHere, the Elm Architecture is interpreted as follows:\n\n    initialModel : model\n    actions : Signal action\n    update : action -> model -> model\n    view : model -> view -- where view is usually Element or Html\n\n    main =\n      Signal.map view\n        (Signal.foldp update initialModel actions)\n\n\nHow to use:\n\n    applicationGenerator =\n      application initialModel actionGenerator update view\n\n    main =\n      generate applicationGenerator\n\n",
+        "type": "model -> Random.Generator action -> (action -> model -> model) -> (model -> view) -> Random.Generator view"
+      },
+      {
+        "name": "constant",
+        "comment": " Generates constant signals.\n",
+        "type": "Random.Generator a -> Random.Generator (Signal.Signal a)"
+      },
+      {
+        "name": "generate",
+        "comment": " Generate a signal from a random generator that updates 60 times per second.\n",
+        "type": "Random.Generator a -> Signal.Signal a"
+      },
+      {
+        "name": "generateEvery",
+        "comment": " Generate a signal from a random generator that updates every\ngiven number of milliseconds.\n",
+        "type": "Time.Time -> Random.Generator a -> Signal.Signal a"
+      },
+      {
+        "name": "randomSeed",
+        "comment": " Generate a random seed that updates 60 times per second.\nNote: The seed uses the current Unix time.\n",
+        "type": "Signal.Signal Random.Seed"
+      },
+      {
+        "name": "randomSeedEvery",
+        "comment": " Generate a random seed that updates every given timestep.\n",
+        "type": "Time.Time -> Signal.Signal Random.Seed"
+      },
+      {
+        "name": "run",
+        "comment": " Create a running signal from an application that follows the Elm Architecture.\nThis is analogous to `application` and works better as it avoids issues with\n`Random.Extra.reduce`.\n\nHow to use:\n\n    main =\n      run initialModel actionGenerator update view\n",
+        "type": "model -> Random.Generator action -> (action -> model -> model) -> (model -> view) -> Signal.Signal view"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Task",
+    "comment": " List of Task Generators\n\n# Generators\n@docs task, error, spawn\n\n# Timeout Generators\n@docs timeout, rangeLengthTimeout\n\n# Chaining Task Generators\n@docs sequence, parallel, optional\n\n# Generators that communicate with mailboxes\n@docs send, broadcast\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "broadcast",
+        "comment": " Generate a task that broadcasts randomly generated values to a given address\nusing a given random generator\n",
+        "type": "List (Signal.Address a) -> Random.Generator a -> Random.Generator (Task.Task error ())"
+      },
+      {
+        "name": "error",
+        "comment": " Generate a failed task from a generator of error values\n",
+        "type": "Random.Generator error -> Random.Generator (Task.Task error value)"
+      },
+      {
+        "name": "optional",
+        "comment": " Generate a sequence of optional tasks that are run in sequence from a list\nof tasks\n",
+        "type": "Random.Generator (List (Task.Task x value)) -> Random.Generator (Task.Task y (List value))"
+      },
+      {
+        "name": "parallel",
+        "comment": " Generate a sequence of tasks that are run in parallel from a list of tasks\n",
+        "type": "Random.Generator (List (Task.Task error value)) -> Random.Generator (Task.Task error (List Task.ThreadID))"
+      },
+      {
+        "name": "rangeLengthTimeout",
+        "comment": " Generate a timeout which times out at some point between a given minimum\nand maximum time\n",
+        "type": "Time.Time -> Time.Time -> Random.Generator (Task.Task error ())"
+      },
+      {
+        "name": "send",
+        "comment": " Generate a task that sends randomly generated values to a given address\nusing a given random generator\n",
+        "type": "Signal.Address a -> Random.Generator a -> Random.Generator (Task.Task error ())"
+      },
+      {
+        "name": "sequence",
+        "comment": " Generate a sequence of tasks that are run in series from a list of tasks\n",
+        "type": "Random.Generator (List (Task.Task error value)) -> Random.Generator (Task.Task error (List value))"
+      },
+      {
+        "name": "spawn",
+        "comment": " Generate a task that is spawned in some independent thread given a\ntask generator\n",
+        "type": "Random.Generator (Task.Task x value) -> Random.Generator (Task.Task y Task.ThreadID)"
+      },
+      {
+        "name": "task",
+        "comment": " Generate a successful task from a generator of successful values\n",
+        "type": "Random.Generator value -> Random.Generator (Task.Task error value)"
+      },
+      {
+        "name": "timeout",
+        "comment": " Generate a timeout of given time\n",
+        "type": "Time.Time -> Random.Generator (Task.Task error ())"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Set",
+    "comment": " List of Random Set Generators\n\n# Generators\n@docs empty, singleton, set, notInSet\n\n# Combinators\n@docs select, selectWithDefault\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Generator that always returns the empty set\n",
+        "type": "Random.Generator (Set.Set comparable)"
+      },
+      {
+        "name": "notInSet",
+        "comment": " A generator that creates values not present in a given set.\n",
+        "type": "Set.Set comparable -> Random.Generator comparable -> Random.Generator comparable"
+      },
+      {
+        "name": "select",
+        "comment": " Generate values from a set.\nAnalogous to `Random.Extra.select` but with sets\n",
+        "type": "Set.Set comparable -> Random.Generator (Maybe.Maybe comparable)"
+      },
+      {
+        "name": "selectWithDefault",
+        "comment": " Generate values from a set or a default value.\nAnalogous to `Random.Extra.selectWithDefault` but with sets\n",
+        "type": "comparable -> Set.Set comparable -> Random.Generator comparable"
+      },
+      {
+        "name": "set",
+        "comment": " Generate a set of at most the given size from a generator.\n\nThe size of a generated set is limited both by the integer provided and the\nnumber of unique values the generator can generate. It is very likely, but not\nguaranteed, that generated sets will be as big as the smaller of the two limits.\n",
+        "type": "Int -> Random.Generator comparable -> Random.Generator (Set.Set comparable)"
+      },
+      {
+        "name": "singleton",
+        "comment": " Generator that creates a singleton set from a generator\n",
+        "type": "Random.Generator comparable -> Random.Generator (Set.Set comparable)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Extra",
+    "comment": " Module providing extra functionality to the core Random module.\n\n# Constant Generators\n@docs constant\n\n# Generator Transformers\n@docs flattenList\n\n# Select\n@docs select, selectWithDefault, frequency, merge\n\n# Maps\nBecause `map` and `mapN` up through N=5 were added to the core Random\nlibrary in Elm 0.16, the versions below are aliases and are kept only\nfor compatibility with prior versions of this library.\n@docs map, map2, map3, map4, map5, map6, mapConstraint\n\n# Flat Maps\n@docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5, flatMap6\n\n# Zips\n@docs zip, zip3, zip4, zip5, zip6\n\n# Reducers\n@docs reduce, fold\n\n# Chaining Generators\n@docs andMap, andThen\n\n# Filtering Generators\n@docs keepIf, dropIf\n\n# Functions that generate random values from Generators\n@docs generateN, quickGenerate, cappedGenerateUntil, generateIterativelyUntil, generateIterativelySuchThat, generateUntil, generateSuchThat\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Apply a generator of functions to a generator of values.\nUseful for chaining generators.\n",
+        "type": "Random.Generator (a -> b) -> Random.Generator a -> Random.Generator b"
+      },
+      {
+        "name": "andThen",
+        "comment": " An alias for `Random.andThen` in the standard library. This\nversion is kept for compatibility.\n",
+        "type": "Random.Generator a -> (a -> Random.Generator b) -> Random.Generator b"
+      },
+      {
+        "name": "cappedGenerateUntil",
+        "comment": " Generate iteratively a list of values from a generator until either\nthe given maxlength is reached or the predicate is satisfied.\n\n    cappedGenerateUntil maxLength predicate generator seed\n",
+        "type": "Int -> (a -> Bool) -> Random.Generator a -> Random.Seed -> List a"
+      },
+      {
+        "name": "constant",
+        "comment": " Create a generator that always returns the same value.\n",
+        "type": "a -> Random.Generator a"
+      },
+      {
+        "name": "dropIf",
+        "comment": " Convert a generator into a generator that only generates values\nthat do not satisfy a given predicate.\n",
+        "type": "(a -> Bool) -> Random.Generator a -> Random.Generator a"
+      },
+      {
+        "name": "flatMap",
+        "comment": "",
+        "type": "(a -> Random.Generator b) -> Random.Generator a -> Random.Generator b"
+      },
+      {
+        "name": "flatMap2",
+        "comment": "",
+        "type": "(a -> b -> Random.Generator c) -> Random.Generator a -> Random.Generator b -> Random.Generator c"
+      },
+      {
+        "name": "flatMap3",
+        "comment": "",
+        "type": "(a -> b -> c -> Random.Generator d) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d"
+      },
+      {
+        "name": "flatMap4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> Random.Generator e) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e"
+      },
+      {
+        "name": "flatMap5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> Random.Generator f) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator f"
+      },
+      {
+        "name": "flatMap6",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f -> Random.Generator g) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator f -> Random.Generator g"
+      },
+      {
+        "name": "flattenList",
+        "comment": " Turn a list of generators into a generator of lists.\n",
+        "type": "List (Random.Generator a) -> Random.Generator (List a)"
+      },
+      {
+        "name": "fold",
+        "comment": " Alias for reduce.\n",
+        "type": "(a -> b -> b) -> b -> Random.Generator a -> Random.Generator b"
+      },
+      {
+        "name": "frequency",
+        "comment": " Create a generator that chooses a generator from a tuple of generators\nbased on the provided likelihood. The likelihood of a given generator being\nchosen is its likelihood divided by the sum of all likelihood. A default\ngenerator must be provided in the case that the list is empty or that the\nsum of the likelihoods is 0. Note that the absolute values of the likelihoods\nis always taken.\n",
+        "type": "List ( Float, Random.Generator a ) -> Random.Generator a -> Random.Generator a"
+      },
+      {
+        "name": "generateIterativelySuchThat",
+        "comment": " Generate iteratively a list of values from a generator parametrized by\nthe value of the iterator until either the given maxlength is reached or\nthe predicate ceases to be satisfied.\n\n    generateIterativelySuchThat maxLength predicate constructor seed\n",
+        "type": "Int -> (a -> Bool) -> (Int -> Random.Generator a) -> Random.Seed -> List a"
+      },
+      {
+        "name": "generateIterativelyUntil",
+        "comment": " Generate iteratively a list of values from a generator parametrized by\nthe value of the iterator until either the given maxlength is reached or\nthe predicate is satisfied.\n\n    generateIterativelyUntil maxLength predicate constructor seed\n",
+        "type": "Int -> (a -> Bool) -> (Int -> Random.Generator a) -> Random.Seed -> List a"
+      },
+      {
+        "name": "generateN",
+        "comment": " Generate n values from a generator.\n",
+        "type": "Int -> Random.Generator a -> Random.Seed -> List a"
+      },
+      {
+        "name": "generateSuchThat",
+        "comment": " Generate a value from a generator that satisfies a given predicate\n",
+        "type": "(a -> Bool) -> Random.Generator a -> Random.Seed -> ( a, Random.Seed )"
+      },
+      {
+        "name": "generateUntil",
+        "comment": " Generate a list of values from a generator until the given predicate\nis satisfied\n",
+        "type": "(a -> Bool) -> Random.Generator a -> Random.Seed -> List a"
+      },
+      {
+        "name": "keepIf",
+        "comment": " Convert a generator into a generator that only generates values\nthat satisfy a given predicate.\nNote that if the predicate is unsatisfiable, the generator will not terminate.\n",
+        "type": "(a -> Bool) -> Random.Generator a -> Random.Generator a"
+      },
+      {
+        "name": "map",
+        "comment": "",
+        "type": "(a -> b) -> Random.Generator a -> Random.Generator b"
+      },
+      {
+        "name": "map2",
+        "comment": "",
+        "type": "(a -> b -> c) -> Random.Generator a -> Random.Generator b -> Random.Generator c"
+      },
+      {
+        "name": "map3",
+        "comment": "",
+        "type": "(a -> b -> c -> d) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d"
+      },
+      {
+        "name": "map4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e"
+      },
+      {
+        "name": "map5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator f"
+      },
+      {
+        "name": "map6",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f -> g) -> Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator f -> Random.Generator g"
+      },
+      {
+        "name": "mapConstraint",
+        "comment": " Apply a constraint onto a generator and returns both the input to\nthe constraint and the result of applying the constaint.\n",
+        "type": "(a -> b) -> Random.Generator a -> Random.Generator ( a, b )"
+      },
+      {
+        "name": "merge",
+        "comment": " Choose between two generators with a 50-50 chance.\nUseful for merging two generators that cover different areas of the same type.\n",
+        "type": "Random.Generator a -> Random.Generator a -> Random.Generator a"
+      },
+      {
+        "name": "quickGenerate",
+        "comment": " Quickly generate a value from a generator disregarding seeds.\n",
+        "type": "Random.Generator a -> a"
+      },
+      {
+        "name": "reduce",
+        "comment": " Reduce a generator using a reducer and an initial value.\nNote that the initial value is always passed to the function;\nnot the previously generator value.\n",
+        "type": "(a -> b -> b) -> b -> Random.Generator a -> Random.Generator b"
+      },
+      {
+        "name": "select",
+        "comment": " Generator that randomly selects an element from a list.\n",
+        "type": "List a -> Random.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "selectWithDefault",
+        "comment": " Generator that randomly selects an element from a list with a default value\n(in case you pass in an empty list).\n",
+        "type": "a -> List a -> Random.Generator a"
+      },
+      {
+        "name": "zip",
+        "comment": "",
+        "type": "Random.Generator a -> Random.Generator b -> Random.Generator ( a, b )"
+      },
+      {
+        "name": "zip3",
+        "comment": "",
+        "type": "Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator ( a, b, c )"
+      },
+      {
+        "name": "zip4",
+        "comment": "",
+        "type": "Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator ( a, b, c, d )"
+      },
+      {
+        "name": "zip5",
+        "comment": "",
+        "type": "Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator ( a, b, c, d, e )"
+      },
+      {
+        "name": "zip6",
+        "comment": "",
+        "type": "Random.Generator a -> Random.Generator b -> Random.Generator c -> Random.Generator d -> Random.Generator e -> Random.Generator f -> Random.Generator ( a, b, c, d, e, f )"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Random.Int",
+    "comment": " List of Int Generators\n\n# Generators\n@docs anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "anyInt",
+        "comment": " Generator that generates any int that can be generate by the\nrandom generator algorithm.\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "intGreaterThan",
+        "comment": " Generator that generates an int greater than a given int\n",
+        "type": "Int -> Random.Generator Int"
+      },
+      {
+        "name": "intLessThan",
+        "comment": " Generator that generates an int less than a given int\n",
+        "type": "Int -> Random.Generator Int"
+      },
+      {
+        "name": "negativeInt",
+        "comment": " Generator that generates a negative int\n",
+        "type": "Random.Generator Int"
+      },
+      {
+        "name": "positiveInt",
+        "comment": " Generator that generates a positive int\n",
+        "type": "Random.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

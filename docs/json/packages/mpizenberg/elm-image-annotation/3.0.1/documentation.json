@@ -1,0 +1,185 @@
+[
+  {
+    "name": "DrawingArea",
+    "comment": " The DrawingArea module aims at collecting annotations.\n\n# Model\n@docs Tool, Model, init\n\n# Update\n@docs Msg, update\n\n# View\n@docs view, viewLastOnly, viewWithImage, selectHtml, selectToolView\n\n# Outputs\n@docs exportAnnotations, exportSelectionsPaths\n\n# Other\n@docs hasSelection\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " The model to manipulate drawing areas ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The messages used to Manipulate a DrawingArea ",
+        "args": [],
+        "cases": [
+          [
+            "ZoomIn",
+            []
+          ],
+          [
+            "ZoomOut",
+            []
+          ],
+          [
+            "Wheel",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "ChangeZoomLevel",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "ChangeOrigin",
+            [
+              "( Float, Float )"
+            ]
+          ],
+          [
+            "Center",
+            [
+              "( Float, Float )"
+            ]
+          ],
+          [
+            "Down",
+            [
+              "Bool",
+              "( Int, Int )"
+            ]
+          ],
+          [
+            "Move",
+            [
+              "( Int, Int )"
+            ]
+          ],
+          [
+            "Up",
+            []
+          ],
+          [
+            "ChangeImage",
+            [
+              "Maybe.Maybe Image.Model"
+            ]
+          ],
+          [
+            "CenterImage",
+            [
+              "( Int, Int )"
+            ]
+          ],
+          [
+            "CreateAnnotation",
+            []
+          ],
+          [
+            "DeleteAnnotation",
+            []
+          ],
+          [
+            "ResetAnnotation",
+            []
+          ],
+          [
+            "SelectAnnotation",
+            [
+              "Maybe.Maybe Int"
+            ]
+          ],
+          [
+            "SelectTool",
+            [
+              "DrawingArea.Tool"
+            ]
+          ],
+          [
+            "Annotations",
+            [
+              "AnnotationSet.Msg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Tool",
+        "comment": " The type of tool that can be used to draw selections ",
+        "args": [],
+        "cases": [
+          [
+            "NoTool",
+            []
+          ],
+          [
+            "RectangleTool",
+            []
+          ],
+          [
+            "OutlineTool",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "exportAnnotations",
+        "comment": " Export the complete model of the annotation set to a JS object ",
+        "type": "DrawingArea.Model -> Json.Encode.Value"
+      },
+      {
+        "name": "exportSelectionsPaths",
+        "comment": " Export only the seletions paths to a JS object ",
+        "type": "DrawingArea.Model -> Json.Encode.Value"
+      },
+      {
+        "name": "hasSelection",
+        "comment": " Indicates if the drawing area has at least one selection ",
+        "type": "DrawingArea.Model -> Bool"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize a DrawingArea.Model ",
+        "type": "( DrawingArea.Model, Platform.Cmd.Cmd DrawingArea.Msg )"
+      },
+      {
+        "name": "selectHtml",
+        "comment": " Create a select form tag to change dynamically the current annotation ",
+        "type": "DrawingArea.Model -> Html.Html DrawingArea.Msg"
+      },
+      {
+        "name": "selectToolView",
+        "comment": " A select form tag to change dynamically the current Tool ",
+        "type": "DrawingArea.Model -> Html.Html DrawingArea.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update a DrawingArea model ",
+        "type": "DrawingArea.Msg -> DrawingArea.Model -> ( DrawingArea.Model, Platform.Cmd.Cmd DrawingArea.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " View the svg tag representing the DrawingArea model ",
+        "type": "DrawingArea.Model -> Svg.Svg DrawingArea.Msg"
+      },
+      {
+        "name": "viewLastOnly",
+        "comment": " View with only the last annotation ",
+        "type": "DrawingArea.Model -> Svg.Svg DrawingArea.Msg"
+      },
+      {
+        "name": "viewWithImage",
+        "comment": " Same as view but with a background image given as argument ",
+        "type": "Maybe.Maybe Image.Model -> DrawingArea.Model -> Svg.Svg DrawingArea.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

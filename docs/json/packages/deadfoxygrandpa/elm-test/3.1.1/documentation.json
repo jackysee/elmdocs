@@ -1,0 +1,94 @@
+[
+  {
+    "name": "ElmTest",
+    "comment": " A unit testing framework for Elm.\n\n# Tests\n@docs Test, test, defaultTest, equals, suite\n\n# Assertions\n@docs Assertion, assert, assertEqual, assertNotEqual, lazyAssert, assertionList, pass, fail\n\n# Running Tests\n@docs elementRunner, consoleRunner, stringRunner\n\n",
+    "aliases": [
+      {
+        "name": "Assertion",
+        "comment": " The basic unit of testability.\n",
+        "args": [],
+        "type": "ElmTest.Assertion.Assertion"
+      },
+      {
+        "name": "Test",
+        "comment": " The core unit representing a runnable test, or a group of tests called a\nsuite.\n",
+        "args": [],
+        "type": "ElmTest.Test.Test"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assert",
+        "comment": " Basic function to assert that some expression is True\n",
+        "type": "Bool -> ElmTest.Assertion"
+      },
+      {
+        "name": "assertEqual",
+        "comment": " Basic function to assert that two expressions are equal in value.\n",
+        "type": "a -> a -> ElmTest.Assertion"
+      },
+      {
+        "name": "assertNotEqual",
+        "comment": " Basic function to assser that two expressions are not equal.\n",
+        "type": "a -> a -> ElmTest.Assertion"
+      },
+      {
+        "name": "assertionList",
+        "comment": " Given a list of values and another list of expected values, generates a\nlist of assertions that these values are equal.\n",
+        "type": "List a -> List a -> List ElmTest.Assertion"
+      },
+      {
+        "name": "consoleRunner",
+        "comment": " Run a test or a test suite with `laszlopandy/elm-console` and return an\n`IO ()` action which outputs the test results to console.\n",
+        "type": "ElmTest.Test -> Console.IO ()"
+      },
+      {
+        "name": "defaultTest",
+        "comment": " Create a `Test` with a default name automatically chosen based on the inputs.\nFor example, `defaultTest (assertEqual 5 5)` will be named \"5 == 5\".\n",
+        "type": "ElmTest.Assertion -> ElmTest.Test"
+      },
+      {
+        "name": "elementRunner",
+        "comment": " Run a test or a test suite and return an `Element` containing the\nformatted test results.\n",
+        "type": "ElmTest.Test -> Graphics.Element.Element"
+      },
+      {
+        "name": "equals",
+        "comment": " Create a `Test` which asserts equality between two expressions.\nFor example, `(7 + 10) `equals` (1 + 16)` will create a `Test` which tests for\nequality between the statements `(7 + 10)` and `(1 + 16)`.\n",
+        "type": "a -> a -> ElmTest.Test"
+      },
+      {
+        "name": "fail",
+        "comment": " Create an assertion that always fails, for reasons described by the given\nstring.\n",
+        "type": "String -> ElmTest.Assertion"
+      },
+      {
+        "name": "lazyAssert",
+        "comment": " A lazy version of `assert`. Delays execution of the expression until tests\nare run.\n",
+        "type": "(() -> Bool) -> ElmTest.Assertion"
+      },
+      {
+        "name": "pass",
+        "comment": " An assertion that always passes. This is useful when you have test results\nfrom another library but want to use ElmTest runners.\n",
+        "type": "ElmTest.Assertion"
+      },
+      {
+        "name": "stringRunner",
+        "comment": " Run a test or a test suite and return the results as a `String`. Mostly\nuseful if you want to implement a different type of output for your test\nresults. If you aren't sure whether or not to use this function, you should\nprobably use either `elementRunner` or `consoleRunner`.\n",
+        "type": "ElmTest.Test -> String"
+      },
+      {
+        "name": "suite",
+        "comment": " Convert a list of `Test`s to a test suite. Test suites are used to group\ntests into logical units, simplifying the management and running of many tests.\nTakes a name and a list of `Test`s. Since suites are also of type `Test`, they\ncan contain other suites, allowing for a more complex tree structure.\n",
+        "type": "String -> List ElmTest.Test -> ElmTest.Test"
+      },
+      {
+        "name": "test",
+        "comment": " A basic function to create a `Test`. Takes a name and an `Assertion`.\n",
+        "type": "String -> ElmTest.Assertion -> ElmTest.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

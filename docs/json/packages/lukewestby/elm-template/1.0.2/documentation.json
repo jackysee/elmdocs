@@ -1,0 +1,69 @@
+[
+  {
+    "name": "Template.Infix",
+    "comment": " Infix operators for more concise template construction\n\n@docs (<%), (%>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "%>",
+        "comment": " Operator alias for andString\n\n    template \"my string \" <% .hello %> \" another string\"\n",
+        "type": "Template.Template record -> String -> Template.Template record"
+      },
+      {
+        "name": "<%",
+        "comment": " Operator alias for andValue\n\n    template \"my string \" <% .hello\n",
+        "type": "Template.Template record -> (record -> String) -> Template.Template record"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Template",
+    "comment": " Type-safe string templating\n\n# types\n@docs Template\n\n# construction\n@docs template, withValue, withString, andValue, andString\n\n# rendering\n@docs render\n\n",
+    "aliases": [
+      {
+        "name": "Template",
+        "comment": " A list of the components of a template\n",
+        "args": [
+          "a"
+        ],
+        "type": "List (Template.Component a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andString",
+        "comment": " Attach a string to a template inline\n\n    template \"my string \" `andValue` .hello `andString` \" another string\"\n",
+        "type": "Template.Template record -> String -> Template.Template record"
+      },
+      {
+        "name": "andValue",
+        "comment": " Attach a record accessor to a template inline\n\n    template \"my string \" `andValue` .hello\n",
+        "type": "Template.Template record -> (record -> String) -> Template.Template record"
+      },
+      {
+        "name": "render",
+        "comment": " Walks through a template's components and renders them to a single string\n\n    render\n      (template \"my string \" `andValue` .hello)\n      ({ hello = \"world\" })\n",
+        "type": "Template.Template record -> record -> String"
+      },
+      {
+        "name": "template",
+        "comment": " Create an initial template starting with the given string\n\n    template \"my string \"\n",
+        "type": "String -> Template.Template record"
+      },
+      {
+        "name": "withString",
+        "comment": " Attach a string to a template\n\n    template \"my string \"\n        |> withValue .hello\n        |> withString \" another string\"\n",
+        "type": "String -> Template.Template record -> Template.Template record"
+      },
+      {
+        "name": "withValue",
+        "comment": " Attach a record accessor to a template\n\n    template \"my string \"\n        |> withValue .hello\n",
+        "type": "(record -> String) -> Template.Template record -> Template.Template record"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

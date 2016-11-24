@@ -1,0 +1,121 @@
+[
+  {
+    "name": "Validate",
+    "comment": " Validation library for elm supporting sync and async validation with state.\n# Validation state\n@docs State\n# Validation functions\n@docs isNotEmpty, isStringLengthBetween, isValidEmail\n# Validators\n@docs notEmpty, stringLengthBetween, email, basic, SyncValidator, AsyncValidator\n# Validation\n@docs combine, validator, Validator\n# Validation helpers\n@docs isValid, isInvalid, isValidModel, isInvalidModel, listModelErrors, toCmd\n",
+    "aliases": [
+      {
+        "name": "AsyncValidator",
+        "comment": " AsyncValidator does asynchronous validation.\n",
+        "args": [
+          "state",
+          "value"
+        ],
+        "type": "Validate.State state -> value -> Task.Task Basics.Never (Validate.State state)"
+      },
+      {
+        "name": "State",
+        "comment": " State holds validation state.\n",
+        "args": [
+          "state"
+        ],
+        "type": "{ state | error : Maybe.Maybe String }"
+      },
+      {
+        "name": "SyncValidator",
+        "comment": " SyncValidator does synchronous validation.\n",
+        "args": [
+          "state",
+          "value"
+        ],
+        "type": "Validate.State state -> value -> Validate.State state"
+      },
+      {
+        "name": "Validator",
+        "comment": " Validator takes a model, performs synchronous and asynchronous validation\nand procudes a model with updated validation state and possibly a deffered model transform\nto update asynchronous validation state.\n",
+        "args": [
+          "model"
+        ],
+        "type": "model -> ( model, Maybe.Maybe (Task.Task Basics.Never (model -> model)) )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "basic",
+        "comment": " basic does value based, synchronous validation. \\\n",
+        "type": "(value -> Bool) -> String -> Validate.SyncValidator state value"
+      },
+      {
+        "name": "combine",
+        "comment": " combine combines one or more validation functions and runs\nasync validations in sequence.\n",
+        "type": "List (Validate.Validator model) -> Validate.Validator model"
+      },
+      {
+        "name": "email",
+        "comment": " email validates that the given String value is a valid email address.\n",
+        "type": "String -> Validate.State state -> String -> Validate.State state"
+      },
+      {
+        "name": "isInvalid",
+        "comment": " isInvalid tests if the validation state has an error.\n",
+        "type": "Validate.State state -> Bool"
+      },
+      {
+        "name": "isInvalidModel",
+        "comment": " isInvalidModel, given a model, tests if any validation states are invalid.\n",
+        "type": "List (model -> Validate.State state) -> model -> Bool"
+      },
+      {
+        "name": "isNotEmpty",
+        "comment": " isNotEmpty returns True when the given String value is not empty.\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isStringLengthBetween",
+        "comment": " isStringLengthBetween returns True when the length of the String value\nis between minLength and maxLength inclusive.\n",
+        "type": "Int -> Int -> String -> Bool"
+      },
+      {
+        "name": "isValid",
+        "comment": " isValid tests if the validation state has no error.\n",
+        "type": "Validate.State state -> Bool"
+      },
+      {
+        "name": "isValidEmail",
+        "comment": " isValidEmail returns True when the given String value is a valid email address.\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isValidModel",
+        "comment": " isValidModel, given a model, tests if all the validation states are valid.\n",
+        "type": "List (model -> Validate.State state) -> model -> Bool"
+      },
+      {
+        "name": "listModelErrors",
+        "comment": " listModelErrors, given a model, extracts a list of errors for invalid validation states.\n",
+        "type": "List (model -> Validate.State state) -> model -> Maybe.Maybe (List String)"
+      },
+      {
+        "name": "notEmpty",
+        "comment": " notEmpty validates that the given String value is not empty.\n",
+        "type": "String -> Validate.State state -> String -> Validate.State state"
+      },
+      {
+        "name": "stringLengthBetween",
+        "comment": " stringLengthBetween validates that the given String value length is between\nminlength and maxLength inclusive.\n",
+        "type": "Int -> Int -> String -> Validate.State state -> String -> Validate.State state"
+      },
+      {
+        "name": "toCmd",
+        "comment": " toCmd maps the validation result model and effects transforms to a (model, Cmd msg),\nusing a tagger that turns the model transform into a msg.\n",
+        "type": "((model -> model) -> msg) -> ( model, Maybe.Maybe (Task.Task Basics.Never (model -> model)) ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "validator",
+        "comment": " validator creates a validator to validate a model using synchronous and asynchronous validation functions.\n\nOrder of validation:\n  1. Synchronous validation is done in sequence and returns on the first error encountered.\n  2. If synchronous validation deemed the value invalid, then the new validation state is returned and no asynchronous validation is done.\n  3. Otherwise, asynchronous validation is done in sequence on the value at the point of validation, starting with the new validation state, and returns on the first error encountered.\n  - When asynchronous validation needs to be done, the previous error will be kept to avoid flashing of valid status when used with debouncing. E.g. checking if a username is available\n",
+        "type": "(model -> value) -> (model -> Validate.State state) -> (Validate.State state -> model -> model) -> List (Validate.SyncValidator state value) -> List (Validate.AsyncValidator state value) -> Validate.Validator model"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

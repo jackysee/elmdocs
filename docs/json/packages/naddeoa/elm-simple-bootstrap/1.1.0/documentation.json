@@ -1,0 +1,546 @@
+[
+  {
+    "name": "Bootstrap.Components",
+    "comment": " This module contains some higher level widgets that are composed of the\nelements in `Bootstrap.Elements`. One big difference between these and the\nboostrap elements is the interface. Typically, things in here take very\nspecific inputs depending on what they are, while the element functions mostly\nall take the same things in.\n\n# Components\n@docs titleWithSub, textEntry, FormColumnSizes, contextBox, formSection\n",
+    "aliases": [
+      {
+        "name": "FormColumnSizes",
+        "comment": " Helpful alias for a big type signature. This is used for the `formSection`\nto allow you to override the default column widths on forms.\n",
+        "args": [],
+        "type": "List ( Bootstrap.Properties.Property, Bootstrap.Properties.Property )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "contextBox",
+        "comment": " Create a box that provides the user some styled information. It appears as\nsquare with some text in it, colored appropriately according to the\n`BackgroundProperty` that it receives.\n\n    contextBox \"This is a message\" Properties.SuccessBackground\n",
+        "type": "String -> Bootstrap.Properties.BackgroundProperty -> Html.Html a"
+      },
+      {
+        "name": "formSection",
+        "comment": " Create a formSection that renders a left hand side and a right hand side.\n\n    formSection\n        [(Column <| ExtraSmallColumn 4, Column <| ExtraSmallColumn 8)]\n        [...]\n        [...]\n\nThe `[...]` are just the typical `Html` that are in the core `Html` library\nalready. The first one is rendered into the left and the second is rendered\ninto the right.\n\nIn the example, you would get something like this, assuming the screen size was\nusing extra small media queries defined in bootstrap.\n\n         4                8\n    ----------------------------------\n    First Html |     Second Html\n    ----------------------------------\n\nIf no `FormColumnSizes` are given then the defaults are used;\n\n    ( [ Properties.Column <| Properties.MediumColumn 4 ]\n    , [ Properties.Column <| Properties.MediumColumn 8 ]\n    )\n\nThis generates pretty typical responsive forms that work well on browsers and phones.\n",
+        "type": "Bootstrap.Components.FormColumnSizes -> List (Html.Html a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "textEntry",
+        "comment": " Create a text entry that can be placed inside of a form. This create a\n`formSection` with a left and right column.\n\n    textEntry\n        \"Some label\"\n        \"html-id\"\n        \"Placeholder value\"\n        (Just \"$\")\n        (Just \"%\")\n        [...]\n        [(Column <| ExtraSmallColumn 4, Column <| ExtraSmallColumn 8)]\n\nThe `[...]` are just the typical `Html.Attributes` that are in the core `Html`\nlibrary already. The second list is a pair of ( Property, Property ), where the\nfirst `Property` will be applied to the left hand side (the label) and the\nsecond property is applied to the right hand side (the actual text box).\n\nSee `formSection` docs for more details. This list is just passed into that funciton.\n",
+        "type": "String -> String -> String -> Maybe.Maybe String -> Maybe.Maybe String -> List (Html.Attribute a) -> Bootstrap.Components.FormColumnSizes -> Html.Html a"
+      },
+      {
+        "name": "titleWithSub",
+        "comment": " Create a title with an optional subtitle.\n\n    titleWithSub \"Main page title\" (Just \"some supplementary text\")\n\nThis creates somethig like an `h1` tag with a `small` section under to the right\nof it.\n",
+        "type": "String -> Maybe.Maybe String -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Bootstrap.Elements",
+    "comment": " Docs\n\nThings in here mostly take the same stuff in, and mostly it matchhes the `Html` library with the key difference being the addition of a List Property as the first argument.\n\n# Core elements\n@docs button, form, div, span, h1, h2, h3, h4, h5, h6, thead, td, tr, th, p, table, tbody\n\n# Higher level elements\n@docs formGroup, formInput, inputGroup, formLabel, column, row, container, fluidContainer, responsiveTable\n\n# Building blocks\n@docs element\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "button",
+        "comment": " Create a button.\n\n    button [ Properties.SuccessButton ] [] [ Html.text \"Good Button\" ]\n    button [ Properties.SuccessButton, Properties.LargeButton ] [] [ Html.text \"Big, Good Button\" ]\n",
+        "type": "List Bootstrap.Properties.ButtonProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "column",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "container",
+        "comment": " TODO make classes enum\n",
+        "type": "List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "div",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "element",
+        "comment": " Docs private\n",
+        "type": "Bootstrap.Elements.StandardElmHtmlFunction a -> List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "fluidContainer",
+        "comment": " TODO make classes enum\n",
+        "type": "List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "form",
+        "comment": " Create an html form that lays its fields out horizontally. It was intended to house `formInput` elements in `formGruops`\n\n    form []\n        []\n        [ Elements.formGroup []\n            [ Attributes.style [ ( \"padding\", \"15px\" ) ] ]\n            [ Components.textEntry \"Field 1\" \"field-1\" \"Enter text\" [] []\n            , Components.textEntry \"Field 2\" \"field-2\" \"Enter text\" [] []\n            ]\n        ]\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "formGroup",
+        "comment": " Create a form group. It is intended to wrap a `formInput`. See `form` for an example.\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "formInput",
+        "comment": " TODO support input-group-addon for prefix symbols\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "formLabel",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h1",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h2",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h3",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h4",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h5",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "h6",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "inputGroup",
+        "comment": " Create a form group. It is intended to wrap a `formInput`. See `form` for an example.\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "p",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "responsiveTable",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.TableProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "row",
+        "comment": " Docs\n",
+        "type": "List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "span",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "table",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.TableProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "tbody",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "td",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.TableCellProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "th",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.TableCellProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "thead",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "tr",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.TableRowProperty -> List (Html.Attribute a) -> List (Html.Html a) -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Bootstrap.Properties",
+    "comment": " Docs\n\n\n@docs Property\n@docs ColumnProperty\n@docs ButtonProperty\n@docs AttributeProperty\n@docs TableProperty\n@docs TableRowProperty\n@docs TableCellProperty\n@docs BackgroundProperty\n@docs toAttributes\n@docs merge\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "AttributeProperty",
+        "comment": " This type allows you to specify aritrary attributes from the `Html` library.\nThis is needed because all of the properties in bootstrap have to map back to\nhtml classes in the end. That means that internally, this library has to use\n`Html.Attributes.class` to set class values. That also means that I end upd\nclobering your class values in the process.\n\nIt is very important that you specify html classes with `Properties.Class\n\"my-class\"` instead of using attriutes. Otherwise, class that comes second\n(mine) will win and the one you provdided will be lost.\n",
+        "args": [],
+        "cases": [
+          [
+            "Class",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "BackgroundProperty",
+        "comment": " This type reprents the different background classes in bootstrap css. i.w.,\nbg-danger, bg-info, etc.\n",
+        "args": [],
+        "cases": [
+          [
+            "PrimaryBackground",
+            []
+          ],
+          [
+            "SuccessBackground",
+            []
+          ],
+          [
+            "InfoBackground",
+            []
+          ],
+          [
+            "WarningBackground",
+            []
+          ],
+          [
+            "DangerBackground",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ButtonProperty",
+        "comment": " Docs\n",
+        "args": [],
+        "cases": [
+          [
+            "PrimaryButton",
+            []
+          ],
+          [
+            "NormalButton",
+            []
+          ],
+          [
+            "LargeButton",
+            []
+          ],
+          [
+            "SmallButton",
+            []
+          ],
+          [
+            "ExtraSmallButton",
+            []
+          ],
+          [
+            "BaseButton",
+            []
+          ],
+          [
+            "SuccessButton",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ColumnProperty",
+        "comment": " Docs\n",
+        "args": [],
+        "cases": [
+          [
+            "MediumColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "MediumOffsetColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "MediumPullColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "MediumPushColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "LargeColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "LargeOffsetColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "LargePullColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "LargePushColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SmallColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SmallOffsetColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SmallPullColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SmallPushColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ExtraSmallColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ExtraSmallOffsetColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ExtraSmallPullColumn",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ExtraSmallPushColumn",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Property",
+        "comment": " This is the main type of the bootstraplibrary. Utlimately, everything that\nis mapped onto `Html` elements is represented as a proeprty. Something like\n`Property.Row` will get mapped onto the class string `row` so that the twitter\nbootstrap CSS treats it as a row. You probably should't start with this type\nthough. You'll probably start with one of the types in `Bootstrap.Elements` or\n`Bootstrap.Components` and give it whatever it can take. For example, if you\nneed a button then you'll use `Bootstrap.Elements.button`, whose first argument\nhappens to be a `ButtonProperty`. Then, you'll just pass it whateer\n`ButtonProperty` you want.\n\nIf you want to make something more general then you may use\n`Bootstrap.Elements.elements`. You can create `button` yourself in that way. It\nwould look like the following.\n\n    Bootstrap.Elements.element Html.button (List.map Properties.Button (Properties.BaseButton :: properties)) attributes html\n\nIt is just a fancy wrapper over a function that maps a bunch of `ButtonProperty`\ninto `Button` and passes it into `Bootstrap.Elements.element`.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Column",
+            [
+              "Bootstrap.Properties.ColumnProperty"
+            ]
+          ],
+          [
+            "Button",
+            [
+              "Bootstrap.Properties.ButtonProperty"
+            ]
+          ],
+          [
+            "HtmlAttribute",
+            [
+              "Bootstrap.Properties.AttributeProperty"
+            ]
+          ],
+          [
+            "Table",
+            [
+              "Bootstrap.Properties.TableProperty"
+            ]
+          ],
+          [
+            "TableRow",
+            [
+              "Bootstrap.Properties.TableRowProperty"
+            ]
+          ],
+          [
+            "TableCell",
+            [
+              "Bootstrap.Properties.TableCellProperty"
+            ]
+          ],
+          [
+            "Background",
+            [
+              "Bootstrap.Properties.BackgroundProperty"
+            ]
+          ],
+          [
+            "Row",
+            []
+          ],
+          [
+            "Container",
+            []
+          ],
+          [
+            "FormLabel",
+            []
+          ],
+          [
+            "FormControl",
+            []
+          ],
+          [
+            "FormGroup",
+            []
+          ],
+          [
+            "InputGroup",
+            []
+          ],
+          [
+            "InputGroupAddon",
+            []
+          ],
+          [
+            "HorizontalFormGroup",
+            []
+          ],
+          [
+            "ResponsiveTableContainer",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TableCellProperty",
+        "comment": " Docs\n",
+        "args": [],
+        "cases": [
+          [
+            "SuccessCell",
+            []
+          ],
+          [
+            "ActiveCell",
+            []
+          ],
+          [
+            "InfoCell",
+            []
+          ],
+          [
+            "WarningCell",
+            []
+          ],
+          [
+            "DangerCell",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TableProperty",
+        "comment": " Docs\n",
+        "args": [],
+        "cases": [
+          [
+            "BorderedTable",
+            []
+          ],
+          [
+            "HoverTable",
+            []
+          ],
+          [
+            "CondensedTable",
+            []
+          ],
+          [
+            "StripedTable",
+            []
+          ],
+          [
+            "BaseTable",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TableRowProperty",
+        "comment": " Docs\n",
+        "args": [],
+        "cases": [
+          [
+            "SuccessRow",
+            []
+          ],
+          [
+            "ActiveRow",
+            []
+          ],
+          [
+            "InfoRow",
+            []
+          ],
+          [
+            "WarningRow",
+            []
+          ],
+          [
+            "DangerRow",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "merge",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a) -> List (Html.Attribute a)"
+      },
+      {
+        "name": "toAttributes",
+        "comment": " Docs\n",
+        "type": "List Bootstrap.Properties.Property -> List (Html.Attribute a)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

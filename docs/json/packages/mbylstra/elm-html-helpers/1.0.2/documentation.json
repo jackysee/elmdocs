@@ -1,0 +1,50 @@
+[
+  {
+    "name": "HtmlHelpers",
+    "comment": " Some helper functions for creating html }\n\n@docs aButton\n@docs emptyHtml\n@docs maybeHtml\n@docs maybeView\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "aButton",
+        "comment": " create an `a` tag with no href that can be used as a button\n",
+        "type": "msg -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "emptyHtml",
+        "comment": " A span tag with style set to display: none.\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "maybeHtml",
+        "comment": " Return empty html if the argument is Nothing\n",
+        "type": "Maybe.Maybe (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "maybeView",
+        "comment": " If the model is Nothing, then return emply html, else call the given\n  view function on the model.\n",
+        "type": "(model -> Html.Html msg) -> Maybe.Maybe model -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "HtmlHelpers.Events",
+    "comment": " Some event helpers\n\n@docs stopClickPropagation\n@docs onClickWithDefaultPrevented\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onClickWithDefaultPrevented",
+        "comment": " an onClick handler, where the default is prevented ",
+        "type": "msg -> Html.Attribute msg"
+      },
+      {
+        "name": "stopClickPropagation",
+        "comment": " Return an attribute that stops click propagation. A message must be supplied.\n    Pass a NoOp message if you don't want the click to do anything.\n",
+        "type": "msg -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

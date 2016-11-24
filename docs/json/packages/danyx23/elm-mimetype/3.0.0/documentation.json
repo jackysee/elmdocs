@@ -1,0 +1,210 @@
+[
+  {
+    "name": "MimeType",
+    "comment": " This modules provides the union type MimeType to model some of the most common\nmime types and a parsing function that tries to parse a MimeType. The possible values for\nMimeType are all union types as well that specify the Sub-type. It was originally developed to\nclassify files dropped into the browser via the HTML5 Drag and Drop api.\n\nThis library ATM provides only an incomplete, somewhat arbitrary mapping of the most common\nbrowser mime types.\nSee https://code.google.com/p/chromium/codesearch#chromium/src/net/base/mime_util.cc&l=201\nfor a full list of Mime types as implemented in chromium.\n\n# Mime type\n@docs MimeType\n\n# Parsing function & toString\n@docs parseMimeType, toString\n\n# Subtypes\n@docs MimeText, MimeImage, MimeAudio, MimeVideo, MimeApp\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "MimeApp",
+        "comment": " Models the most common app subtypes\n",
+        "args": [],
+        "cases": [
+          [
+            "Word",
+            []
+          ],
+          [
+            "WordXml",
+            []
+          ],
+          [
+            "Excel",
+            []
+          ],
+          [
+            "ExcelXml",
+            []
+          ],
+          [
+            "PowerPoint",
+            []
+          ],
+          [
+            "PowerPointXml",
+            []
+          ],
+          [
+            "Pdf",
+            []
+          ],
+          [
+            "OtherApp",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MimeAudio",
+        "comment": " Models the most common audio subtypes\n",
+        "args": [],
+        "cases": [
+          [
+            "Mp3",
+            []
+          ],
+          [
+            "Ogg",
+            []
+          ],
+          [
+            "Wav",
+            []
+          ],
+          [
+            "OtherAudio",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MimeImage",
+        "comment": " Models the most common image subtypes\n",
+        "args": [],
+        "cases": [
+          [
+            "Jpeg",
+            []
+          ],
+          [
+            "Png",
+            []
+          ],
+          [
+            "Gif",
+            []
+          ],
+          [
+            "OtherImage",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MimeText",
+        "comment": " Models the most common text subtypes\n",
+        "args": [],
+        "cases": [
+          [
+            "PlainText",
+            []
+          ],
+          [
+            "Html",
+            []
+          ],
+          [
+            "Css",
+            []
+          ],
+          [
+            "Xml",
+            []
+          ],
+          [
+            "Json",
+            []
+          ],
+          [
+            "OtherText",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MimeType",
+        "comment": " Models the major types image, audio, video and text\nwith a subtype or OtherMimeType\n",
+        "args": [],
+        "cases": [
+          [
+            "Image",
+            [
+              "MimeType.MimeImage"
+            ]
+          ],
+          [
+            "Audio",
+            [
+              "MimeType.MimeAudio"
+            ]
+          ],
+          [
+            "Video",
+            [
+              "MimeType.MimeVideo"
+            ]
+          ],
+          [
+            "Text",
+            [
+              "MimeType.MimeText"
+            ]
+          ],
+          [
+            "App",
+            [
+              "MimeType.MimeApp"
+            ]
+          ],
+          [
+            "OtherMimeType",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MimeVideo",
+        "comment": " Models the most common video subtypes\n",
+        "args": [],
+        "cases": [
+          [
+            "Mp4",
+            []
+          ],
+          [
+            "Mpeg",
+            []
+          ],
+          [
+            "Quicktime",
+            []
+          ],
+          [
+            "Avi",
+            []
+          ],
+          [
+            "Webm",
+            []
+          ],
+          [
+            "OtherVideo",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "parseMimeType",
+        "comment": " Tries to parse the Mime type from a string.\n\n    -- normal use of a type/subtype that is modelled:\n    parseMimeType \"image/jpeg\" == Just (Image Jpeg)\n\n    -- use of a subtype that is not modelled ATM\n    parseMimeType \"image/tiff\" == Just (Image OtherImage)\n\n    -- use with an empty string\n    parseMimeType \"\" == Nothing\n\n    -- use with something else\n    parseMimeType \"bla\" == Just OtherMimeType\n\n",
+        "type": "String -> Maybe.Maybe MimeType.MimeType"
+      },
+      {
+        "name": "toString",
+        "comment": " Transforms a MimeType back to a string represenation.\nNote that this only works properly for correctly recognized\nmime types at the moment. A future version of this library\nwill instead store the originally parsed mime type.\n\n    toString (Image Jpeg) == \"image/jpeg\"\n",
+        "type": "MimeType.MimeType -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

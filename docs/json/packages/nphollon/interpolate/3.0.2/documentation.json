@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Interpolate.Bicubic",
+    "comment": " This module uses [bicubic splines](https://en.wikipedia.org/wiki/Bicubic_interpolation)\nto interpolate surfaces. Bicubic interpolation is the 2D equivalent\nof cubic interpolation.\n\nFor example, if we have the following data:\n\n    y=|\n    9 | 1.9  2.1  5.5\n    6 | 2.2  3.1  5.4\n    3 | 3.8  4.0  4.3\n    0 | 1.1  2.3  3.8\n    -----------------\n     x=  2    4    6\n\nWe could construct a 2D spline this way:\n\n    data = rows [ [ 1.1, 2.3, 3.8 ]\n                , [ 3.8, 4.0, 4.3 ]\n                , [ 2.2, 3.1, 5.4 ]\n                , [ 1.9, 2.1, 5.5 ]\n                ]\n             |> Maybe.withDefault emptyData\n\n    start = { x = 2, y = 0 }\n    end = { x = 6, y = 9 }\n    delta = { x = 2, y = 3 }\n\n    -- These two splines are equivalent\n    splineOne = withRange start end data\n    splineTwo = withDelta start delta data\n\n\n# Creating data sets\n@docs rows, emptyData, Data\n\n# Creating splines\n@docs withRange, withDelta, Vector, Spline\n\n# Interpolating\n@docs valueAt, gradientAt, laplacianAt, surfaceAt, LocalSurface\n",
+    "aliases": [
+      {
+        "name": "LocalSurface",
+        "comment": "",
+        "args": [],
+        "type": "{ value : Float , gradient : Interpolate.Bicubic.Vector , laplacian : Float }"
+      },
+      {
+        "name": "Vector",
+        "comment": " Stores data with an x and a y component.\n",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Data",
+        "comment": "",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Spline",
+        "comment": "",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "emptyData",
+        "comment": " An empty data set. Useful as a default value when working \nwith the `rows` function. If you create a spline from it, the\nspline will be zero everywhere.\n",
+        "type": "Interpolate.Bicubic.Data"
+      },
+      {
+        "name": "gradientAt",
+        "comment": " Compute the [gradient](https://en.wikipedia.org/wiki/Gradient)\nof the spline at the given point. The gradient is the x and y\npartial derivatives of the spline.\n",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Spline -> Interpolate.Bicubic.Vector"
+      },
+      {
+        "name": "laplacianAt",
+        "comment": " Compute the [Laplacian](https://en.wikipedia.org/wiki/Laplace_operator)\nof the spline at the given point. The Laplacian is the divergence\nof the gradient. It is computed by adding the x and y second partial\nderivatives. ",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Spline -> Float"
+      },
+      {
+        "name": "rows",
+        "comment": " Construct a two-dimensional data set. The input is given in x-major order,\nso a grid of values like this:\n\n    f(0,0) = 1\n    f(1,0) = 2\n    f(0,1) = 3\n    f(1,1) = 4\n\nShould be passed to the function in this format:\n\n    rows [ [1,2], [3,4] ] -- returns Just Data\n\nIf every row has the same length, the function returns a `Data` object that\ncan be used to build a spline. If the rows are uneven (or empty), it returns\n`Nothing`.\n\n    rows [ [1,1,1], [1,1,1] ] -- returns Just Data\n\n    rows [ [1], [1], [1] ] -- returns Just Data\n\n    rows [ [1,1,1], [1] ] -- returns Nothing\n\n    rows [ [], [] ] -- returns Nothing\n\n    rows [ ] -- returns Nothing\n",
+        "type": "List (List Float) -> Maybe.Maybe Interpolate.Bicubic.Data"
+      },
+      {
+        "name": "surfaceAt",
+        "comment": " Returns `valueAt`, `gradientAt`, and `laplacianAt` results in\na single record.\n",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Spline -> Interpolate.Bicubic.LocalSurface"
+      },
+      {
+        "name": "valueAt",
+        "comment": " Evaluate the spline at the given point ",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Spline -> Float"
+      },
+      {
+        "name": "withDelta",
+        "comment": " Construct a spline, given the position of the lower left data sample\nand the dimensions of a grid cell.\n",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Data -> Interpolate.Bicubic.Spline"
+      },
+      {
+        "name": "withRange",
+        "comment": " Construct a spline, given the positions of the lower left (min-x, min-y)\nand upper right (max-x, max-y) data samples, and a data set.\n",
+        "type": "Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Vector -> Interpolate.Bicubic.Data -> Interpolate.Bicubic.Spline"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Interpolate.Cubic",
+    "comment": " This library interpolates cubic splines for one-dimensional sets of data.\n\nIt computes \"natural splines\", which means the second derivative at the endpoints\nis set to zero.\n\nFor more information on the mathematics used, check out\n[this paper.](http://web.archive.org/web/20090408054627/http://online.redwoods.cc.ca.us/instruct/darnold/laproj/Fall98/SkyMeg/Proj.PDF)\n\n# Creating splines\n@docs withRange, withDelta, Spline\n\n# Interpolating\n@docs valueAt, slopeAt, concavityAt, curveAt, LocalCurve\n",
+    "aliases": [
+      {
+        "name": "LocalCurve",
+        "comment": "",
+        "args": [],
+        "type": "{ value : Float, slope : Float, concavity : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Spline",
+        "comment": "",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "concavityAt",
+        "comment": " Return the second derivative of the curve at the given point\n",
+        "type": "Float -> Interpolate.Cubic.Spline -> Float"
+      },
+      {
+        "name": "curveAt",
+        "comment": " Return a record containing the value, slope, and concavity of the curve\nat the given point\n",
+        "type": "Float -> Interpolate.Cubic.Spline -> Interpolate.Cubic.LocalCurve"
+      },
+      {
+        "name": "slopeAt",
+        "comment": " Return the first derivative of the curve at the given point\n",
+        "type": "Float -> Interpolate.Cubic.Spline -> Float"
+      },
+      {
+        "name": "valueAt",
+        "comment": " Given `x1` and a spline `f(x)`, return `f(x1)`\n",
+        "type": "Float -> Interpolate.Cubic.Spline -> Float"
+      },
+      {
+        "name": "withDelta",
+        "comment": " Same as `withRange`, except instead of passing the endpoint as the\nsecond argument, you pass the x-distance between data points.\n\n    fSpline = withDelta 2 1 [ 1, 5.2, 3.2, 0.8 ]\n    -- equivalent to withRange 2 6 [ 1, 5.2, 3.2, 0.8 ]\n",
+        "type": "Float -> Float -> List Float -> Interpolate.Cubic.Spline"
+      },
+      {
+        "name": "withRange",
+        "comment": " Compute a spline, given the minimum and maximum values of `x` and a\nlist of data for `f(x)`. The data should be evenly spaced and in order of\nincreasing `x`. \n\nFor example, if we have the data\n\n    f(2) = 1\n    f(3) = 5.2\n    f(4) = 3.2\n    f(5) = 0.8\n\nThen we would generate a spline by calling\n\n    fSpline = withRange 2 6 [ 1, 5.2, 3.2, 0.8 ]\n\nIf there is only one data point, then the spline will be a horizontal line\npassing through that point. If the data is empty, the spline will be zero\neverywhere.\n",
+        "type": "Float -> Float -> List Float -> Interpolate.Cubic.Spline"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

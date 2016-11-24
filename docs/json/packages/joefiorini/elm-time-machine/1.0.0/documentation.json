@@ -1,0 +1,71 @@
+[
+  {
+    "name": "TimeMachine",
+    "comment": "This module is the entry point to the TimeMachine library. It works best if you wrap a record that is nested in your top-level state, rather than the top-level state itself.\n\nFor example, this would trigger a compile error:\n\n    type alias AppState =\n      { current : Maybe Contact\n      , history : TimeMachine.History AppState\n      }\n\nYou need to track the state on the `Contact` record instead like this:\n\n    type alias AppState =\n      { current : Maybe Contact\n      , history : TimeMachine.History (Maybe Contact)\n      }\n\n## Traveling through Time (Undo/Redo)\n@docs travelBackward, travelForward\n\n## Recording History\n@docs record, History\n\n|",
+    "aliases": [
+      {
+        "name": "History",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "History.History a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initialize",
+        "comment": "Returns a history record with the passed in\nobject as the initial state. Meant to be used in\nyour `initialState` function.\n\n    initialState =\n      { current = Nothing\n      , history = TimeMachine.initialize Model.initialState\n      }\n|",
+        "type": "a -> History a"
+      },
+      {
+        "name": "record",
+        "comment": "Record an entry in the history so you can travel\nto it later.\n\n  let history = History.initialize initialState\n  in\n     History.record newState history\n\n|",
+        "type": "History.History"
+      },
+      {
+        "name": "travelBackward",
+        "comment": "Returns a history record with `current` set to\n1 step backward in time, or `Nothing` if past the\nbeginning of time.\n\n    let history = TimeMachine.travelBackward state.history\n    in\n       case history.current of\n         Just s ->\n           { state | current \u003c- s\n                   , history \u003c- history\n           }\n         Nothing -> state\n|",
+        "type": "History.History -> History.History"
+      },
+      {
+        "name": "travelForward",
+        "comment": "Returns a history record with `current` set to\n1 step forward in time.\n\n    let history = TimeMachine.travelForward state.history\n    in\n       case history.current of\n         Just s ->\n           { state | current \u003c- s\n                   , history \u003c- history\n           }\n         Nothing -> state\n|",
+        "type": "History.History -> History.History"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "TimeMachine.History",
+    "comment": "Internal module containing implementation for\nHistory records\n|",
+    "aliases": [
+      {
+        "name": "History",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "type": "{ entries : List a, current : Maybe a, pointer : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "record",
+        "comment": "",
+        "type": "a -> History a -> History a"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "TimeMachine.Travel",
+    "comment": "Internal module containing implementation for time travel.\nYou might say it's what makes time travel possible. Like\nthe flux capacitor maybe?\n|",
+    "aliases": [],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "old"
+  }
+]

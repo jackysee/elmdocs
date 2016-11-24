@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Cache",
+    "comment": "This module makes it possible to integrate Elm with real-time storage services like Firebase or Parse.\nThe typical usage is:\n1. Send cache update commands from your JavaScript glue code.\n1. Define a cache for each entity type in your model which is stored in the cloud with `create`.\n1. When referencing a remote object, store a `Reference` and resolve it lazily with its `lookup` function.\n1. Collect the URLs of all remote objects for each type, and send them to your JavaScript code to observe them.\n\n# Defining a cache\n@docs Cache, Update, create\n\n# Referring values in a cache\n@docs Reference, reference",
+    "aliases": [
+      {
+        "name": "Reference",
+        "comment": "Represents a type-safe remote reference.\nUse this type in your model whenever you cross-reference objects stored in a cache.\n\n    type alias Book = {\n      title: String,\n      authors: List (Reference Writer)\n    }",
+        "args": [
+          "a"
+        ],
+        "type": "{ url : String, lookup : Cache a -> Maybe a }"
+      },
+      {
+        "name": "Update",
+        "comment": "A cache update command.\nIndicates that a new value has to be inserted to the cache or an existing value has to be removed from it.\n\n    port writerFeed : Signal (Cache.Update Writer)",
+        "args": [
+          "a"
+        ],
+        "type": "Maybe { url : String, value : Maybe a }"
+      },
+      {
+        "name": "Cache",
+        "comment": "Associates values to keys.\nIts main use case is caching remote objects by their URL.\n\n    writerCache : Signal (Cache Writer)",
+        "args": [
+          "a"
+        ],
+        "type": "Dict String a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "create",
+        "comment": "Maintains the state of a cache by processing an update feed.\nThe given function is used to decode raw values coming from the update feed to objects stored in the cache.\n\n    writerCache = writerFeed |> Cache.create identity",
+        "type": "(a -> b) -> Signal (Update a) -> Signal (Cache b)"
+      },
+      {
+        "name": "reference",
+        "comment": "Decodes a JavaScript string to a remote reference.\n\n    bookDecoder =\n      object2 Book\n        (\"title\" := string)\n        (\"authors\" := list reference)",
+        "type": "Decoder (Reference a)"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

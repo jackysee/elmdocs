@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Router.Parameter",
+    "comment": "\n@docs (/:)\n\n@docs int, float, string\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "/:",
+        "comment": " ",
+        "type": "(Router.Parameter.Parameters -> b -> a) -> Router.Parameter.Decoder b -> Router.Parameter.Decoder a",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "float",
+        "comment": " ",
+        "type": "String -> Router.Parameter.Parameters -> Float"
+      },
+      {
+        "name": "int",
+        "comment": " ",
+        "type": "String -> Router.Parameter.Parameters -> Int"
+      },
+      {
+        "name": "string",
+        "comment": " ",
+        "type": "String -> Router.Parameter.Parameters -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Router",
+    "comment": " Elm module for single page app routing\n\n```elm\nmodule Main where\n\n\nimport Result\nimport String\nimport Dict exposing (Dict)\nimport Router exposing ((:~>), (:=>))\nimport Router.Parameter exposing ((/:), int, string)\nimport Graphics.Element exposing (show)\n\n\ntype Page\n  = Home\n  | Article String Int\n  | AdminHome\n  | NotFound\n\n\nmatch =\n  Router.match router NotFound\n\n\nrouter =\n  [ \"/\" :~> always Home\n  , \"/user/:uid/article/:aid\" :~> always Article /: string \"uid\" /: int \"aid\"\n  -- nested router\n  , \"/admin\" :=> adminRouter\n  ]\n\n\nadminRouter =\n  [ \"/\" :~> always AdminHome\n  ]\n\n\nmain =\n  show <|\n    case match \"/user/poying/article/123\" of\n      Home -> \"Home\"\n      AdminHome -> \"AdminHome\"\n      Article uid aid -> \"Article \" ++ uid  ++ \" \" ++ toString aid\n      NotFound -> \"NotFound\"\n```\n\n@docs match\n\n# Types\n@docs Router\n\n# Operators\n@docs (:~>), (:=>)\n",
+    "aliases": [
+      {
+        "name": "Router",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "List (Router.Route a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": ":=>",
+        "comment": "\n```elm\n\"/admin\" :=> adminRouter\n```\n",
+        "type": "String -> Router.Router a -> Router.Route a",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": ":~>",
+        "comment": "\n```elm\n\"/article/:id\" :~> \\params -> Article << String.toInt << (Dict.get \"id\" params)\n```\n",
+        "type": "String -> (Router.Parameters -> a) -> Router.Route a",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "match",
+        "comment": "\n```elm\ncase match router NotFound \"/article/3\" of\n  Article id -> show id\n  NotFound -> show \"NotFound\"\n```\n",
+        "type": "Router.Router a -> a -> String -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

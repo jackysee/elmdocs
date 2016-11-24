@@ -1,0 +1,35 @@
+[
+  {
+    "name": "DateSelectorDropdown",
+    "comment": " Create a button that displays a `DateSelector` view below itself when\nclicked.\n\n## Default Button\n@docs view\n\n## Custom Button\n@docs viewWithButton\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " The default button is a read-only text input that displays the selected\ndate in \"yyyy-mm-dd\" format.\n\nThe first argument is the message you want to receive to toggle the dropdown;\nthe second argument constructs a message from the user-selected date. The third\nargument indicates whether or not the `DateSelector` view should be displayed.\nThe final three arguments are used to create the `DateSelector` view if\nnecessary.\n\n    DateSelectorDropdown.view\n      toggleDropdownMsg\n      toSelectDateMsg\n      isOpen\n      minimum\n      maximum\n      selected\n",
+        "type": "msg -> (Date.Date -> msg) -> Bool -> Date.Date -> Date.Date -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "viewWithButton",
+        "comment": " This function is almost the same as `view`, but takes, as its first\nargument, the function to create the custom button. The function to create the\ncustom button will receive _isOpen_ and _selected_, and the `Html` it creates\nis responsible for producing any `msg` needed to open the dropdown.\n\n    DateSelectorDropdown.viewWithButton\n      viewButton\n      closeDropdownMsg\n      toSelectDateMsg\n      isOpen\n      minimum\n      maximum\n      selected\n\nA full example is available [here](https://github.com/justinmimbs/elm-date-selector/blob/master/examples/3-custom-button.elm).\n",
+        "type": "(Bool -> Maybe.Maybe Date.Date -> Html.Html msg) -> msg -> (Date.Date -> msg) -> Bool -> Date.Date -> Date.Date -> Maybe.Maybe Date.Date -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "DateSelector",
+    "comment": " Create a user interface for selecting dates.\n\n@docs view\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " Create a date selector by providing the minimum and maximum selectable\ndates, and a selected date if there is one.\n\n    DateSelector.view\n      minimum\n      maximum\n      selected\n\nThe resulting `Html` produces `Date` messages when the user selects a date. The\n`Date` values produced will always be within the bounds provided.\n",
+        "type": "Date.Date -> Date.Date -> Maybe.Maybe Date.Date -> Html.Html Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

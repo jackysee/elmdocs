@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Dropdown",
+    "comment": " A customizable Dropdown component.\n\nThis Dropdown has a dynamic list of items.\n\nThe Dropdown consists of a div containing a value, a caret and a list of\npossible values.\n\nSee `Examples` folder for further details.\n\n# Definition\n@docs Dropdown, Msg\n\n# Init\n@docs init\n\n# Update\n@docs update\n\n# View\n@docs view, renderDropdownHtml\n\n# API\n@docs getValue\n\n",
+    "aliases": [
+      {
+        "name": "Dropdown",
+        "comment": " The Dropdown model. ",
+        "args": [],
+        "type": "{ value : String , valuesList : List String , placeholder : String , isOpen : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Different message types the Dropdown can receive. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getValue",
+        "comment": " Get the model value. ",
+        "type": "Dropdown.Dropdown -> String"
+      },
+      {
+        "name": "init",
+        "comment": " Initializing the model. ",
+        "type": "String -> List String -> String -> Dropdown.Dropdown"
+      },
+      {
+        "name": "renderDropdownHtml",
+        "comment": " Dropdown HTML creator method. ",
+        "type": "Dropdown.Dropdown -> Html.Html Dropdown.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Elm architecture reducer. ",
+        "type": "Dropdown.Msg -> Dropdown.Dropdown -> Dropdown.Dropdown"
+      },
+      {
+        "name": "view",
+        "comment": " Dropdown view. ",
+        "type": "Dropdown.Dropdown -> Html.Html Dropdown.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

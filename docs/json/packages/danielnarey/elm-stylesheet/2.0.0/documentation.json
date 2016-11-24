@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Stylesheet.Combinators",
+    "comment": "\n\n## An alternative syntax for constructing combinator and pseudo selectors\n\n# Combinators\n@docs descendantOf, childOf, siblingOf, adjacentTo\n\n# Pseudo Classes and Elements\n@docs pseudoClass, pseudoElement\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "adjacentTo",
+        "comment": " Constructor function to create an adjacent selector; intended to be used\nsemantically as an infix function\n\n    Tag \"ul\" `adjacentTo` Tag \"p\"\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "childOf",
+        "comment": " Constructor function to create a child selector; intended to be used\nsemantically as an infix function\n\n    Tag \"li\" `childOf` Tag \"ul\"\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "descendantOf",
+        "comment": " Constructor function to create a descendent selector; intended to be\nused semantically as an infix function\n\n    Tag \"p\" `descendantOf` Tag \"article\"\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "pseudoClass",
+        "comment": " Constructor function to create a pseudo class selector; intended to be used\nsemantically as an infix function\n\n    Tag \"li\" `pseudoClass` \"hover\"\n",
+        "type": "Stylesheet.Selector -> String -> Stylesheet.Selector"
+      },
+      {
+        "name": "pseudoElement",
+        "comment": " Constructor function to create a pseudo element selector; intended to be\nused semantically as an infix function\n\n    Tag \"li\" `pseudoElement` \"after\"\n",
+        "type": "Stylesheet.Selector -> String -> Stylesheet.Selector"
+      },
+      {
+        "name": "siblingOf",
+        "comment": " Constructor function to create a sibling selector; intended to be used\nsemantically as an infix function\n\n    Tag \"ul\" `siblingOf` Tag \"p\"\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Stylesheet",
+    "comment": "\n\n## A CSS implementation with helpful constructors for generating a global stylesheet\n\nThis library builds off of\n[CssBasics](http://package.elm-lang.org/packages/danielnarey/elm-css-basics/latest)\nto allow you to generate a stylesheet and embed it in your Elm\nprogram's view. The basic workflow for using this library is (1) create your\nrule sets, consisting of selectors (identifying elements) and declarations\n(defining styles), (2) add your rule sets to a new stylesheet along with any\nimport URLs needed to access external resources (e.g., Google fonts), and (3)\nembed the stylesheet at the root level of your HTML DOM.\n\nSee\n[examples/BasicUse.elm](https://github.com/danielnarey/elm-stylesheet/tree/master/examples)\nfor a full working example.\n\n\n# CSS Representation\n@docs Stylesheet, RuleSet, Selector, MatchValue\n\n# Constructing Rule Sets\n@docs newRuleSet, withSelectors, addSelector, withDeclarations, addDeclaration\n\n# Constructing a Stylesheet\n@docs newStylesheet, withImports, addImport, withPrepends, addPrepend\n@docs withRules, withRuleSets, addRuleSet, scoped\n\n# Compiling/Rendering a Stylesheet\n@docs toCssString, toStyleNode\n\n",
+    "aliases": [
+      {
+        "name": "RuleSet",
+        "comment": " A rule set consists of one or more selectors that define a set of elements\n(and/or pseudo-elements) and one or more style declarations that apply to those\nelements.\n",
+        "args": [
+          "number"
+        ],
+        "type": "{ selectors : List Stylesheet.Selector , declarations : List (CssBasics.Declaration number) }"
+      },
+      {
+        "name": "Stylesheet",
+        "comment": " A stylesheet consists of one or more rule sets and, optionally: (1) a list\nof external style resources to import; (2) a list of inline CSS code snippets\nto prepend above the stylesheet's rule statements. By default, a stylesheet\napplies globally to the HTML document, but it also contains a `scoped` attribute\nthat can be set to `True` to take advantage of CSS scoping in HTML 5\n(currently only implemented in the Firefox browser).\n",
+        "args": [
+          "number"
+        ],
+        "type": "{ imports : List String , prepends : List String , rules : List (Stylesheet.RuleSet number) , scoped : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "MatchValue",
+        "comment": " Represents an expression that defines a set of matching values for a given\nHTML attribute. Specifications for attribute selectors may be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors).\n`IsDefined` corresponds to [attr], `Exactly` corresponds to [attr=value],\n`Includes` corresponds to [attr~=value], `StartsWith` corresponds to\n[attr^=value], `EndsWith` corresponds to [attr$=value], `Contains`\ncorresponds to [attr*=value], and `Prefix` corresponds to [attr|=value].\n",
+        "args": [],
+        "cases": [
+          [
+            "IsDefined",
+            []
+          ],
+          [
+            "Exactly",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Includes",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StartsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "EndsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Contains",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Prefix",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Selector",
+        "comment": " A selector defines the set of elements (and/or pseudo-elements) to which a\nset of style declarations apply. Specifications for each of the selector types\nmay be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).\nHere are some use examples:\n\n    Tag \"div\"\n      --> div\n\n    Id \"identifier\"\n      --> #identifier\n\n    Class \"class-name\"\n      --> .class-name\n\n    Attribute (Tag \"a\", \"href\", StartsWith \"#\")\n      --> a[href^=\"#\"]\n\n    Descendant (Tag \"article\", Tag \"p\")\n      --> article p\n\n    Child (Tag \"ul\", Tag \"li\")\n      --> ul > li\n\n    Sibling (Tag \"p\", Tag \"ul\")\n      --> p ~ ul\n\n    Adjacent (Tag \"p\", Tag \"ul\")\n      --> p + ul\n\n    PseudoClass (Tag \"li\", [ \"nth-child(1)\", \"hover\" ])\n      --> li:nth-child(1):hover\n\n    PseudoElement (Tag \"li\", \"after\")\n      --> li::after\n\n    At (\"media\", \"screen and (min-width: 700px)\")\n      --> @media screen and (min-width: 700px)\n\nOn occasion, it might be simpler and more readable just to define the selector\nusing CSS code. That is what the `CssCode` type is for:\n\n    CssCode \"article p ~ ul > li:nth-child(1)\"\n      --> article p ~ ul > li:nth-child(1)\n\nSee\n[Stylesheet.Combinators](http://package.elm-lang.org/packages/danielnarey/elm-stylesheet/latest/Stylesheet/Combinators)\nfor an alternative syntax that may be used to\nconstruct combinator selectors.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Any",
+            []
+          ],
+          [
+            "Tag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Id",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Class",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Attribute",
+            [
+              "( Stylesheet.Selector, String, Stylesheet.MatchValue )"
+            ]
+          ],
+          [
+            "Descendant",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Child",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Sibling",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Adjacent",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "PseudoClass",
+            [
+              "( Stylesheet.Selector, List String )"
+            ]
+          ],
+          [
+            "PseudoElement",
+            [
+              "( Stylesheet.Selector, String )"
+            ]
+          ],
+          [
+            "At",
+            [
+              "( String, String )"
+            ]
+          ],
+          [
+            "CssCode",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addDeclaration",
+        "comment": " Add a new style declaration to a rule set, *retaining* any existing\ndeclarations\n",
+        "type": "CssBasics.Declaration number -> Stylesheet.RuleSet number -> Stylesheet.RuleSet number"
+      },
+      {
+        "name": "addImport",
+        "comment": " Add a new import to a stylesheet, *retaining* any existing imports\n",
+        "type": "String -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "addPrepend",
+        "comment": " Add a string of CSS code into a stylesheet after its imports (and after\nany existing prepends) and before its rule statements; this constructor will\n*retain* any existing prepends\n",
+        "type": "String -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "addRuleSet",
+        "comment": " Add a new rule set to a stylesheet, *retaining* any existing rule sets\n",
+        "type": "Stylesheet.RuleSet number -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "addSelector",
+        "comment": " Add a new selector to a rule set, *retaining* any existing selectors\n",
+        "type": "Stylesheet.Selector -> Stylesheet.RuleSet number -> Stylesheet.RuleSet number"
+      },
+      {
+        "name": "newRuleSet",
+        "comment": " Initialize a new rule set\n",
+        "type": "Stylesheet.RuleSet number"
+      },
+      {
+        "name": "newStylesheet",
+        "comment": " Initialize a new stylesheet\n",
+        "type": "Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "scoped",
+        "comment": " Set the stylesheet's `scoped` attribute to `True`. In an HTML 5 compliant\nbrowser, the stylesheet will only be applied to the element on which\n`embedStylesheet` is called and all of that element's children. As of October\n2016 this scoping feature is only embedded in the Firefox browser.\n",
+        "type": "Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "toCssString",
+        "comment": " Returns the compiled stylesheet as a string of CSS code\n",
+        "type": "Stylesheet.Stylesheet number -> String"
+      },
+      {
+        "name": "toStyleNode",
+        "comment": " Returns an `Html.node` with a `<style>` tag, which contains the stylesheet\nrendered as a string of CSS code\n",
+        "type": "Stylesheet.Stylesheet number -> Html.Html number"
+      },
+      {
+        "name": "withDeclarations",
+        "comment": " Add a list of style declarations to a rule set, *replacing* any existing\ndeclarations\n",
+        "type": "List (CssBasics.Declaration number) -> Stylesheet.RuleSet number -> Stylesheet.RuleSet number"
+      },
+      {
+        "name": "withImports",
+        "comment": " Add a list of imports to a stylesheet, *replacing* any existing imports\n",
+        "type": "List String -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "withPrepends",
+        "comment": " Insert one or more strings of CSS code into a stylesheet after its imports\nand before its rule statements; this constructor will *replace* any existing\nprepends\n",
+        "type": "List String -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "withRuleSets",
+        "comment": " Alias for `withRules`\n",
+        "type": "List (Stylesheet.RuleSet number) -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "withRules",
+        "comment": " Add a list of rule sets to a stylesheet, *replacing* any existing rule sets\n",
+        "type": "List (Stylesheet.RuleSet number) -> Stylesheet.Stylesheet number -> Stylesheet.Stylesheet number"
+      },
+      {
+        "name": "withSelectors",
+        "comment": " Add a list of selectors to a rule set, *replacing* any existing selectors\n",
+        "type": "List Stylesheet.Selector -> Stylesheet.RuleSet number -> Stylesheet.RuleSet number"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Defer",
+    "comment": " Defer one or more commands to run after the browser render-loop has run at\nleast once.\n\nThis is useful such as when setting focus on a newly-created element as we can\nbe sure that the element is in the actual DOM and and be manipulated via port\ncommands.\n\n# Wiring\n@docs Model, Msg, init, update, subscriptions\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Holds commands to be deferred, if any.\n",
+        "args": [],
+        "type": "List (Platform.Cmd.Cmd Defer.Msg)"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The `AddCmd` message is used by the parent module to add a command to be\ndeferred.\n",
+        "args": [],
+        "cases": [
+          [
+            "AddCmd",
+            [
+              "Platform.Cmd.Cmd Defer.Msg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initialize this component with a list of commands.\n",
+        "type": "List (Platform.Cmd.Cmd Defer.Msg) -> Defer.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscriptions used to manage deferred commands. Add this to the parent\nprogram's subscriptions.\n",
+        "type": "Defer.Model -> Platform.Sub.Sub Defer.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update the component model.\n",
+        "type": "Defer.Msg -> Defer.Model -> ( Defer.Model, Platform.Cmd.Cmd Defer.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

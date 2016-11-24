@@ -1,0 +1,210 @@
+[
+  {
+    "name": "IO.IO",
+    "comment": "\n\nA library for writing terminal-based scripts in elm.  The IO type\nprovides an interface for constructing \"computations\" that may perform\nIO effects. Something with type `IO a` is a lazy computation that when\nrun will produce an `a`, possibly IO side effects. See IO.Runner for\nhow to run such a computation.\n\n# Stdout\n@docs putChar, putStr, putStrLn\n\n# Stdin\n@docs getChar, getLine, readUntil\n\n# File Operations\n@docs writeFile\n\n# Exit code\n@docs exit",
+    "aliases": [
+      {
+        "name": "IOK",
+        "comment": "",
+        "args": [
+          "r",
+          "a"
+        ],
+        "type": "(a -> IOF r) -> IOF r"
+      }
+    ],
+    "types": [
+      {
+        "name": "IO",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Pure",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Impure",
+            [
+              "IOF (IO a)"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "IOF",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "PutS",
+            [
+              "String",
+              "() -> a"
+            ]
+          ],
+          [
+            "GetC",
+            [
+              "Char -> a"
+            ]
+          ],
+          [
+            "Exit",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "WriteF",
+            [
+              "{ file : String, content : String }",
+              "() -> a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "\u003c*>",
+        "comment": "Convenient operator for apply, similar to ~ in the Signal module",
+        "type": "IO (a -> b) -> IO a -> IO b"
+      },
+      {
+        "name": ">>=",
+        "comment": "Operator version of andThen",
+        "type": "IO a -> (a -> IO b) -> IO b"
+      },
+      {
+        "name": ">>>",
+        "comment": "Operator version of seq",
+        "type": "IO a -> IO b -> IO b"
+      },
+      {
+        "name": "andThen",
+        "comment": "Chain together IO computations",
+        "type": "IO a -> (a -> IO b) -> IO b"
+      },
+      {
+        "name": "apply",
+        "comment": "Apply an IO function to an IO value",
+        "type": "IO (a -> b) -> IO a -> IO b"
+      },
+      {
+        "name": "exit",
+        "comment": "Exit the program with the given exit code.",
+        "type": "Int -> IO ()"
+      },
+      {
+        "name": "foldIO",
+        "comment": "",
+        "type": "(a -> b) -> (IOF b -> b) -> IO a -> b"
+      },
+      {
+        "name": "forEach",
+        "comment": "Run an IO computation for each element of a list",
+        "type": "List a -> (a -> IO ()) -> IO ()"
+      },
+      {
+        "name": "forever",
+        "comment": "Run the same computation over and over again forever.",
+        "type": "IO a -> IO ()"
+      },
+      {
+        "name": "getChar",
+        "comment": "Read a character from stdin",
+        "type": "IO Char"
+      },
+      {
+        "name": "getLine",
+        "comment": "Read a line from stdin",
+        "type": "IO String"
+      },
+      {
+        "name": "map",
+        "comment": "Apply a pure function to an IO value",
+        "type": "(a -> b) -> IO a -> IO b"
+      },
+      {
+        "name": "mapF",
+        "comment": "",
+        "type": "(a -> b) -> IOF a -> IOF b"
+      },
+      {
+        "name": "mapIO",
+        "comment": "Alternative interface to forEach",
+        "type": "(a -> IO ()) -> List a -> IO ()"
+      },
+      {
+        "name": "pure",
+        "comment": "Use a pure value where an IO computation is expected.",
+        "type": "a -> IO a"
+      },
+      {
+        "name": "putChar",
+        "comment": "Print a character to stdout",
+        "type": "Char -> IO ()"
+      },
+      {
+        "name": "putStr",
+        "comment": "Print a string to stdout.",
+        "type": "String -> IO ()"
+      },
+      {
+        "name": "putStrLn",
+        "comment": "Print a string to stdout, followed by a newline.",
+        "type": "String -> IO ()"
+      },
+      {
+        "name": "readUntil",
+        "comment": "Read characters from stdin until one matches the given character.",
+        "type": "Char -> IO String"
+      },
+      {
+        "name": "seq",
+        "comment": "Run one computation and then another, ignoring the first's output",
+        "type": "IO a -> IO b -> IO b"
+      },
+      {
+        "name": "writeFile",
+        "comment": "Write content to a file",
+        "type": "{ file : String, content : String } -> IO ()"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  },
+  {
+    "name": "IO.Runner",
+    "comment": "Once you've constructed your IO computation `foo : IO ()`, you\ncan run it by adding the following to the file (Foo.elm) you're running:\n\nport requests : Signal IO.Runner.Request\nport requests = IO.Runner.run responses foo\n\nport responses : Signal IO.Runner.Response\n\nThen run `elm-make Foo.elm --output foo.js` to compile the program and\n`elm-io.sh foo.js` to run it. You will need `node` installed to run\nthe program. Also you will need `npm install jsdom` in the directory\nwhere you are running the file or globally. The `elm-io.sh` script can\nbe downloaded here:\nhttps://raw.githubusercontent.com/maxsnew/IO/master/elm-io.sh",
+    "aliases": [
+      {
+        "name": "Response",
+        "comment": "",
+        "args": [],
+        "type": "JSD.Value"
+      },
+      {
+        "name": "Request",
+        "comment": "",
+        "args": [],
+        "type": "JSD.Value"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": "",
+        "type": "Signal Response -> IO () -> Signal Request"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

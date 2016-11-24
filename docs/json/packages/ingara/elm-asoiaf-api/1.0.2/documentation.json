@@ -1,0 +1,176 @@
+[
+  {
+    "name": "Asoiaf.Api",
+    "comment": "\n\n# Characters\n@docs getCharacters, getCharacter, queryCharacters\n\n# Houses\n@docs getHouses, getHouse, queryHouses\n\n# Books\n@docs getBooks, getBook, queryBooks\n\n# Pagination\n@docs Pagination, defaultPagination\n\n# Queries\n@docs CharacterQuery, HouseQuery, BookQuery, defaultCharacterQuery, defaultHouseQuery, defaultBookQuery\n\n",
+    "aliases": [
+      {
+        "name": "BookQuery",
+        "comment": " Represents the fields we can query books by\n",
+        "args": [],
+        "type": "{ name : Maybe.Maybe String , fromReleaseDate : Maybe.Maybe Date.Date , toReleaseDate : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "CharacterQuery",
+        "comment": " Represents the fields we can query characters by\n",
+        "args": [],
+        "type": "{ name : Maybe.Maybe String , gender : Maybe.Maybe String , culture : Maybe.Maybe String , born : Maybe.Maybe Int , died : Maybe.Maybe Int , isAlive : Maybe.Maybe Bool }"
+      },
+      {
+        "name": "HouseQuery",
+        "comment": " Represents the fields we can query houses by\n",
+        "args": [],
+        "type": "{ name : Maybe.Maybe String , region : Maybe.Maybe String , words : Maybe.Maybe String , hasWords : Maybe.Maybe Bool , hasTitles : Maybe.Maybe Bool , hasSeats : Maybe.Maybe Bool , hasDiedOut : Maybe.Maybe Bool , hasAncestralWeapons : Maybe.Maybe Bool }"
+      },
+      {
+        "name": "Pagination",
+        "comment": " All requests are paginated. Use this to specify which page to request and\nwhat page size to use.\n",
+        "args": [],
+        "type": "{ page : Int, pageSize : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultBookQuery",
+        "comment": " Default book query. No fields specified.\n",
+        "type": "Asoiaf.Api.BookQuery"
+      },
+      {
+        "name": "defaultCharacterQuery",
+        "comment": " Default character query. No fields specified.\n",
+        "type": "Asoiaf.Api.CharacterQuery"
+      },
+      {
+        "name": "defaultHouseQuery",
+        "comment": " Default house query. No fields specified.\n",
+        "type": "Asoiaf.Api.HouseQuery"
+      },
+      {
+        "name": "defaultPagination",
+        "comment": " Default pagination.\n\n    { page = 1\n    , pageSize = 10\n    }\n",
+        "type": "Asoiaf.Api.Pagination"
+      },
+      {
+        "name": "getBook",
+        "comment": " Get a book by id\n",
+        "type": "Asoiaf.Models.Id -> Task.Task Http.Error Asoiaf.Models.Book"
+      },
+      {
+        "name": "getBooks",
+        "comment": " Get a list of books\n",
+        "type": "Asoiaf.Api.Pagination -> Task.Task Http.Error (List Asoiaf.Models.Book)"
+      },
+      {
+        "name": "getCharacter",
+        "comment": " Get a character by id\n",
+        "type": "Asoiaf.Models.Id -> Task.Task Http.Error Asoiaf.Models.Character"
+      },
+      {
+        "name": "getCharacters",
+        "comment": " Get a list of characters\n",
+        "type": "Asoiaf.Api.Pagination -> Task.Task Http.Error (List Asoiaf.Models.Character)"
+      },
+      {
+        "name": "getHouse",
+        "comment": " Get a house by id\n",
+        "type": "Asoiaf.Models.Id -> Task.Task Http.Error Asoiaf.Models.House"
+      },
+      {
+        "name": "getHouses",
+        "comment": " Get a list of houses\n",
+        "type": "Asoiaf.Api.Pagination -> Task.Task Http.Error (List Asoiaf.Models.House)"
+      },
+      {
+        "name": "queryBooks",
+        "comment": " Query books\n\n    pagination =\n      { page = 1\n      , pageSize = 25\n      }\n    query =\n      { defaultBookQuery\n      | name = Just \"A Game of Thrones\"\n      }\n    queryBooks pagination query == [ { name = \"A Game of Thrones\", ... } ]\n",
+        "type": "Asoiaf.Api.Pagination -> Asoiaf.Api.BookQuery -> Task.Task Http.Error (List Asoiaf.Models.Book)"
+      },
+      {
+        "name": "queryCharacters",
+        "comment": " Query characters\n\n    pagination =\n      { page = 1\n      , pageSize = 25\n      }\n    query =\n      { defaultCharacterQuery\n      | name = Just \"Jon Snow\"\n      }\n    queryCharacters pagination query == [ { name = \"Jon Snow\", ... } ]\n",
+        "type": "Asoiaf.Api.Pagination -> Asoiaf.Api.CharacterQuery -> Task.Task Http.Error (List Asoiaf.Models.Character)"
+      },
+      {
+        "name": "queryHouses",
+        "comment": " Query houses\n\n    pagination =\n      { page = 1\n      , pageSize = 25\n      }\n    query =\n      { defaultBookQuery\n      | words = Just \"Winter is Coming\"\n      }\n    queryHouses pagination query == [ { name = \"House Stark of Winterfell\", ... } ]\n",
+        "type": "Asoiaf.Api.Pagination -> Asoiaf.Api.HouseQuery -> Task.Task Http.Error (List Asoiaf.Models.House)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Asoiaf.Models",
+    "comment": " Models\n\n# Types\n@docs Character, House, Book, Url, Id\n\n# Utils\n@docs getId\n\n# Decoders\n@docs decodeCharacter, decodeHouse, decodeBook\n\n# Encoders\n@docs encodeCharacter, encodeHouse, encodeBook\n\n",
+    "aliases": [
+      {
+        "name": "Book",
+        "comment": " Represents a book\n",
+        "args": [],
+        "type": "{ url : String , name : String , isbn : String , authors : List String , numberOfPages : Int , publisher : String , country : String , mediaType : String , released : String , characters : List String , povCharacters : List String }"
+      },
+      {
+        "name": "Character",
+        "comment": " Represents a character\n",
+        "args": [],
+        "type": "{ url : String , name : String , gender : String , culture : String , born : String , died : String , titles : List String , aliases : List String , father : String , mother : String , spouse : String , allegiances : List String , books : List String , povBooks : List String , tvSeries : List String , playedBy : List String }"
+      },
+      {
+        "name": "House",
+        "comment": " Represents a house\n",
+        "args": [],
+        "type": "{ url : String , name : String , region : String , coatOfArms : String , words : String , titles : List String , seats : List String , currentLord : String , heir : String , overlord : String , founded : String , founder : String , diedOut : String , ancestralWeapons : List String , cadetBranches : List String , swornMembers : List String }"
+      },
+      {
+        "name": "Id",
+        "comment": " Represents an id\n",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "Url",
+        "comment": " Represents a url\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeBook",
+        "comment": " Json decode a book\n",
+        "type": "Json.Decode.Decoder Asoiaf.Models.Book"
+      },
+      {
+        "name": "decodeCharacter",
+        "comment": " Json decode a character\n",
+        "type": "Json.Decode.Decoder Asoiaf.Models.Character"
+      },
+      {
+        "name": "decodeHouse",
+        "comment": " Json decode a house\n",
+        "type": "Json.Decode.Decoder Asoiaf.Models.House"
+      },
+      {
+        "name": "encodeBook",
+        "comment": " Json encode a book\n",
+        "type": "Asoiaf.Models.Book -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeCharacter",
+        "comment": " Json encode a character\n",
+        "type": "Asoiaf.Models.Character -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeHouse",
+        "comment": " Json encode a House\n",
+        "type": "Asoiaf.Models.House -> Json.Encode.Value"
+      },
+      {
+        "name": "getId",
+        "comment": " Gets the id from the end of a URL as used in the ASOIAF API.\n\n    getId \"http://www.anapioficeandfire.com/api/houses/362\" == 362\n\nUseful for for example getting ids of the books a character is appearing in\n\n    getBookIds : Character -> List Int\n    getBookIds character =\n      List.map getId character.books\n",
+        "type": "Asoiaf.Models.Url -> Asoiaf.Models.Id"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

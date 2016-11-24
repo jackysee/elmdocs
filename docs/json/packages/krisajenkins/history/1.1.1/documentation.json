@@ -1,0 +1,47 @@
+[
+  {
+    "name": "History",
+    "comment": " Manage browser history and link creation using the HTML5 history API.\n\n@docs History, Router, Parser, Path, create\n",
+    "aliases": [
+      {
+        "name": "History",
+        "comment": " History's prime concern is turning URIs into views, and views into URIs.\n",
+        "args": [
+          "view"
+        ],
+        "type": "{ parser : String -> view, router : view -> String }"
+      },
+      {
+        "name": "Parser",
+        "comment": " ",
+        "args": [
+          "view"
+        ],
+        "type": "String -> view"
+      },
+      {
+        "name": "Path",
+        "comment": " A path is just a URI split up into sections. For example\n`/account/1234/settings` would convert to the path\n`[\"account\", \"1234\", \"settings\"]`.\n",
+        "args": [],
+        "type": "List String"
+      },
+      {
+        "name": "Router",
+        "comment": " ",
+        "args": [
+          "view"
+        ],
+        "type": "view -> String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "create",
+        "comment": " Create a history manager by supplying one function that goes from\n`Path` to `view`, and one that goes the other way from `view` to\n`Path`.\n",
+        "type": "(History.Path -> view) -> (view -> History.Path) -> History.History view"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

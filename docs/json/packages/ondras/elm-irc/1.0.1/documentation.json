@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Irc.App",
+    "comment": " elm-irc client library, the Elm Architecture wrapper\n@docs program\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " A specilized version of `Html.App.program` that features the extra `onIrc` callback ",
+        "type": "{ cfg : Irc.Types.Config , init : model , onIrc : Irc.Types.Message -> model -> Irc.Commands.CommandSet a -> ( model, Platform.Cmd.Cmd (Irc.App.Msg x) ) , update : x -> model -> Irc.Commands.CommandSet a -> ( model, Platform.Cmd.Cmd (Irc.App.Msg x) ) , view : model -> Html.Html x } -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Irc",
+    "comment": " elm-irc library, the core component\n@docs process, listen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "listen",
+        "comment": " subscribe to IRC events ",
+        "type": "Irc.Types.Config -> Platform.Sub.Sub Irc.Types.Message"
+      },
+      {
+        "name": "process",
+        "comment": " let the IRC client itself react to a particular message ",
+        "type": "Irc.Types.Config -> Irc.Types.Message -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Irc.Commands",
+    "comment": " elm-irc library, commands to be sent to the IRC server\n@docs commands, stringify, CommandSet\n",
+    "aliases": [
+      {
+        "name": "CommandSet",
+        "comment": " a set of commands for a particular server ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ join : String -> Platform.Cmd.Cmd msg , nick : String -> Platform.Cmd.Cmd msg , raw : String -> List String -> Platform.Cmd.Cmd msg , kick : String -> String -> Maybe.Maybe String -> Platform.Cmd.Cmd msg , register : Irc.Types.User -> Platform.Cmd.Cmd msg , query : String -> String -> Platform.Cmd.Cmd msg , message : String -> String -> Platform.Cmd.Cmd msg , part : String -> Maybe.Maybe String -> Platform.Cmd.Cmd msg , pong : String -> Platform.Cmd.Cmd msg , topic : String -> Maybe.Maybe String -> Platform.Cmd.Cmd msg }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "commands",
+        "comment": " generate command variants for a particular server configuration ",
+        "type": "Irc.Types.Config -> Irc.Commands.CommandSet x"
+      },
+      {
+        "name": "stringify",
+        "comment": " serialize individual IRC data to a raw string ",
+        "type": "String -> List String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Irc.Types",
+    "comment": " elm-irc library, types and definitions\n@docs Config, User, Message\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Server configuration: nickname, username, fullname ",
+        "args": [],
+        "type": "{ proxy : String, server : String, user : Irc.Types.User }"
+      },
+      {
+        "name": "User",
+        "comment": " User record: nickname, username, fullname ",
+        "args": [],
+        "type": "{ nick : String, username : String, fullname : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Message",
+        "comment": " IRC message type ",
+        "args": [],
+        "cases": [
+          [
+            "Unknown",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Ping",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Notice",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Query",
+            [
+              "{ from : Irc.Types.User, to : String, text : String }"
+            ]
+          ],
+          [
+            "Message",
+            [
+              "{ from : Irc.Types.User, channel : String, text : String }"
+            ]
+          ],
+          [
+            "Registered",
+            []
+          ],
+          [
+            "Joined",
+            [
+              "{ who : Irc.Types.User, channel : String }"
+            ]
+          ],
+          [
+            "Parted",
+            [
+              "{ who : Irc.Types.User , channel : String , reason : Maybe.Maybe String }"
+            ]
+          ],
+          [
+            "Topic",
+            [
+              "{ who : Irc.Types.User, channel : String, text : Maybe.Maybe String }"
+            ]
+          ],
+          [
+            "Nick",
+            [
+              "{ who : Irc.Types.User, nick : String }"
+            ]
+          ],
+          [
+            "Kicked",
+            [
+              "{ who : Irc.Types.User , whom : String , channel : String , reason : Maybe.Maybe String }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

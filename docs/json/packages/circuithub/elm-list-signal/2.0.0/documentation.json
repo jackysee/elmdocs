@@ -1,0 +1,205 @@
+[
+  {
+    "name": "List.Signal",
+    "comment": "Shorthands for all of the standard list operations lifted onto signals\n\n# Basics\n@docs sigIsEmpty, sigLength, sigReverse, sigMember, sig2Member\n\n# Sub-lists\n@docs sigHead, sigFilter, sigTake, sigDrop\n\n# Putting Lists Together\n@docs sigRepeat, sigCons, (:::), sigAppend, (+++), sigConcat, sigIntersperse\n\n# Taking Lists Apart\n@docs sigPartition, sigUnzip\n\n# Mapping\n@docs sigMap, sig2Map2, sig3Map3, sig4Map4, sig5Map5\n\n# Special Maps\n@docs sigFilterMap, sigConcatMap, sigIndexedMap\n\n# Folding\n@docs sigFoldr, sigFoldl\n\n# Special Folds\n@docs sigSum, sigProduct, sigMaximum, sigMinimum, sigAll, sigAny, sigScanl\n\n# Sorting\n@docs sigSort, sigSortBy, sigSortWith",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "+++",
+        "comment": "Binary-lifted version of `(++)`",
+        "type": "Signal (List a) -> Signal (List a) -> Signal (List a)",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": ":::",
+        "comment": "Binary-lifted version of `(::)`",
+        "type": "Signal a -> Signal (List a) -> Signal (List a)",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": "sig2Map2",
+        "comment": "Binary-, ternary-, etc-, lifted versions of `map2`, `map3`, `map4`, `map5`",
+        "type": "(a -> b -> result) -> Signal (List a) -> Signal (List b) -> Signal (List result)"
+      },
+      {
+        "name": "sig2Member",
+        "comment": "Binary-lifted version of `member`",
+        "type": "Signal a -> Signal (List a) -> Signal Bool"
+      },
+      {
+        "name": "sig3Map3",
+        "comment": "",
+        "type": "(a -> b -> c -> result) -> Signal (List a) -> Signal (List b) -> Signal (List c) -> Signal (List result)"
+      },
+      {
+        "name": "sig4Map4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> result) -> Signal (List a) -> Signal (List b) -> Signal (List c) -> Signal (List d) -> Signal (List result)"
+      },
+      {
+        "name": "sig5Map5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> result) -> Signal (List a) -> Signal (List b) -> Signal (List c) -> Signal (List d) -> Signal (List e) -> Signal (List result)"
+      },
+      {
+        "name": "sigAll",
+        "comment": "Lifted version of `all`",
+        "type": "(a -> Bool) -> Signal (List a) -> Signal Bool"
+      },
+      {
+        "name": "sigAny",
+        "comment": "Lifted version of `any`",
+        "type": "(a -> Bool) -> Signal (List a) -> Signal Bool"
+      },
+      {
+        "name": "sigAppend",
+        "comment": "Unary-lifted version of `append` and (++)",
+        "type": "List a -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigConcat",
+        "comment": "Lifted version of `concat`",
+        "type": "Signal (List (List a)) -> Signal (List a)"
+      },
+      {
+        "name": "sigConcatMap",
+        "comment": "Lifted version of `concatMap`",
+        "type": "(a -> List b) -> Signal (List a) -> Signal (List b)"
+      },
+      {
+        "name": "sigCons",
+        "comment": "Unary-lifted version of `(::)`",
+        "type": "a -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigDrop",
+        "comment": "Lifted version of `drop`",
+        "type": "Int -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigFilter",
+        "comment": "Lifted version of `filter`",
+        "type": "(a -> Bool) -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigFilterMap",
+        "comment": "Lifted version of `filterMap`",
+        "type": "(a -> Maybe b) -> Signal (List a) -> Signal (List b)"
+      },
+      {
+        "name": "sigFoldl",
+        "comment": "Lifted version of `foldl`",
+        "type": "(a -> b -> b) -> b -> Signal (List a) -> Signal b"
+      },
+      {
+        "name": "sigFoldr",
+        "comment": "Lifted version of `foldr`",
+        "type": "(a -> b -> b) -> b -> Signal (List a) -> Signal b"
+      },
+      {
+        "name": "sigHead",
+        "comment": "Lifted version of `head`",
+        "type": "Signal (List a) -> Signal (Maybe a)"
+      },
+      {
+        "name": "sigIndexedMap",
+        "comment": "Lifted version of `indexedMap`\n\n    sigIndexedMap = Signal.map \u003c\u003c List.indexedMap",
+        "type": "(Int -> a -> b) -> Signal (List a) -> Signal (List b)"
+      },
+      {
+        "name": "sigIntersperse",
+        "comment": "Lifted version of `intersperse`",
+        "type": "a -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigIsEmpty",
+        "comment": "Lifted version of `isEmpty`",
+        "type": "Signal (List a) -> Signal Bool"
+      },
+      {
+        "name": "sigLength",
+        "comment": "Lifted version of `length`",
+        "type": "Signal (List a) -> Signal Int"
+      },
+      {
+        "name": "sigMap",
+        "comment": "Lifted version of `map`\n\n    sigMap = Signal.map \u003c\u003c List.map",
+        "type": "(a -> b) -> Signal (List a) -> Signal (List b)"
+      },
+      {
+        "name": "sigMaximum",
+        "comment": "Lifted version of `maximum`",
+        "type": "Signal (List comparable) -> Signal (Maybe comparable)"
+      },
+      {
+        "name": "sigMember",
+        "comment": "Unary-lifted version of `member`",
+        "type": "a -> Signal (List a) -> Signal Bool"
+      },
+      {
+        "name": "sigMinimum",
+        "comment": "Lifted version of `minimum`",
+        "type": "Signal (List comparable) -> Signal (Maybe comparable)"
+      },
+      {
+        "name": "sigPartition",
+        "comment": "Lifted version of `partition`",
+        "type": "(a -> Bool) -> Signal (List a) -> Signal ( List a, List a )"
+      },
+      {
+        "name": "sigProduct",
+        "comment": "Lifted version of `product`",
+        "type": "Signal (List number) -> Signal number"
+      },
+      {
+        "name": "sigRepeat",
+        "comment": "Lifted version of `repeat`",
+        "type": "Int -> Signal a -> Signal (List a)"
+      },
+      {
+        "name": "sigReverse",
+        "comment": "Lifted version of `reverse`",
+        "type": "Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigScanl",
+        "comment": "Lifted version of `scanl`",
+        "type": "(a -> b -> b) -> b -> Signal (List a) -> Signal (List b)"
+      },
+      {
+        "name": "sigSort",
+        "comment": "Lifted version of `sort`",
+        "type": "Signal (List comparable) -> Signal (List comparable)"
+      },
+      {
+        "name": "sigSortBy",
+        "comment": "Lifted version of `sortBy`",
+        "type": "(a -> comparable) -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigSortWith",
+        "comment": "Lifted version of `sortWith`",
+        "type": "(a -> a -> Order) -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigSum",
+        "comment": "Lifted version of `sum`",
+        "type": "Signal (List number) -> Signal number"
+      },
+      {
+        "name": "sigTake",
+        "comment": "Lifted version of `take`",
+        "type": "Int -> Signal (List a) -> Signal (List a)"
+      },
+      {
+        "name": "sigUnzip",
+        "comment": "Lifted version of `unzip`",
+        "type": "Signal (List ( a, b )) -> Signal ( List a, List b )"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

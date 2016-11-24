@@ -1,0 +1,1504 @@
+[
+  {
+    "name": "Gigan.Knowledge",
+    "comment": " This module contains the \"Knowledge Base\" system, which is in essence a unique compromise between data binding\nand explicit fetching and writing.\n\nA Knowledge is datum whose state is concretely fuzzy because it must be retrieved from\nor synchronized with one or more remote services. The bulk of these functions are intended to be used together as a DSL\nthat provides very concise reductions and conditionally executed contingencies for bad data, as well as very\nsuccinct mapping from fuzzy knowledge states on to concrete views.\n\nIt is also possble to compose transformations and mapping\non to pending remote operation results, so that longer running asynchronous transformations (including fetching and manipulation)\ncan be composed as deeply as desired. The documentation is underway.\n\n# Definitions\n@docs Knowledge, KnowledgeBase, KnowledgeRecord, KnowledgeRecordStub, KnowledgeBaseDelta\n\n# Aliases for Knowledge of a KnowledgeBase or a KnowledgeRecord\n@docs BaseKnowledge, RecordKnowledge\n\n# Remote Synchronization\n@docs Remote, RemoteMap, RemoteConfig, RemoteMapConfig, QueryTask\n\n# Knowledge constructors\n@docs knowledgeOf, forbiddenKnowledge, pendingKnowledge, undecidedKnowledge, unknownKnowledge, voidKnowledge, knowledgeDo\n\n# Knowledge from Existing non-determinant Types\n@docs maybeOr, resultOr\n\n# Make Conditional Assumptions about Knowledge\n@docs assumeIf, assumeIfNot, assumeIfNow, assumeInCase, assumeInCaseNow, decideBy, doOperation, maybeKnownNow, reduceNotKnownNowTo, otherwise\n\n# Transforming Knowledge\n@docs therefore, within\n\n# Conditionally Dispatch Operations on Knowledge\n@docs dispatchIf, dispatchIfNot, dispatchInCase, dispatchInCaseNow\n\n# Basic Knowledge Predicates\n@docs isUnknown, isNotUnknown, isPending, isNotPending, isUndecided, isNotUndecided, isForbidden, isNotForbidden, isVoid, isNotVoid, isNil, isNotNil, isKnown, isNotKnown, isOperation, isNotOperation\n\n# Integrate Knowledge\n@docs knowledgeIntegrate, knowledgeQuery, knowledgeUpdate\n\n# Transforming Knowledge Base Deltas\n@docs baseDeltaMap, baseDeltaTherefore\n\n# Knowledge Base Operations\n@docs base, baseAt, baseDo, baseErrorHandler, baseIntegrate, baseMember, baseQuery, baseUpdate\n\n# Knowledge Record Operations\n@docs record, recordSet, recordAt, recordAtKey, recordBinding, recordContent, recordDo, recordErrorHandler, recordField, recordIntegrate, recordQuery, recordUpdate\n\n# Configuration\n@docs remoteConfig, remoteErrorConfig\n\n",
+    "aliases": [
+      {
+        "name": "BaseKnowledge",
+        "comment": " Knowledge of a KnowledgeBase. This adds basic support for nesting KnowledgeBase and KnowledgeBase\noperations using `within`, which approximates the active record pattern as well as I can in Elm so\nfar. ",
+        "args": [
+          "euser",
+          "comparable",
+          "v"
+        ],
+        "type": "Gigan.Knowledge.Knowledge (Gigan.Knowledge.KnowledgeBase euser comparable v)"
+      },
+      {
+        "name": "KnowledgeBase",
+        "comment": " A knowledge base has a dictionary of Knowledge. Use this to represent arbitrary collections of\nremote data with a uniform schema. You can support schemaless data with JSON, but that should really\nonly be done if you absolutely must, since it adds quite a bit of encoder/decoder overhead. ",
+        "args": [
+          "euser",
+          "comparable",
+          "v"
+        ],
+        "type": "{ base : Gigan.Knowledge.BaseImpl euser comparable v , deltas : Gigan.Knowledge.BaseImpl euser comparable v , deltaSink : Signal.Address (Gigan.Knowledge.BaseDeltaImpl euser comparable v) , config : Gigan.Knowledge.RemoteMapConfig euser comparable v }"
+      },
+      {
+        "name": "KnowledgeBaseDelta",
+        "comment": " This represents a change in Knowledge, a KnowledgeBase, or a KnowledgeRecord. ",
+        "args": [
+          "euser",
+          "comparable",
+          "v"
+        ],
+        "type": "Gigan.Knowledge.BaseDeltaImpl euser comparable v"
+      },
+      {
+        "name": "KnowledgeRecord",
+        "comment": " This is a wrapper for knowledge bases that are finite in size, and have a collection of\ndifferently typed fields. It is best for records which may only be partially known. A concrete\nexample of this would be a user's personal information, where everything they have hidden should\ncome back as `forbiddenKnowledge`. ",
+        "args": [
+          "euser",
+          "userrecord",
+          "comparable",
+          "v"
+        ],
+        "type": "{ kbase : Gigan.Knowledge.KnowledgeBase euser comparable v , writes : Dict.Dict comparable (Gigan.Knowledge.Knowledge euser v -> userrecord -> userrecord) , reads : Dict.Dict comparable (userrecord -> Gigan.Knowledge.Knowledge euser v) , record : userrecord }"
+      },
+      {
+        "name": "KnowledgeRecordStub",
+        "comment": " A knowledge record stub represents how to manage a knowledge record, with the record itself\nomitted. This type is outputted by the `record` function. Setting this for the first time using\n`recordSet` will result in a proper KnowledgeRecord.  ",
+        "args": [
+          "euser",
+          "userrecord",
+          "comparable",
+          "v"
+        ],
+        "type": "{ kbase : Gigan.Knowledge.KnowledgeBase euser comparable v , writes : Dict.Dict comparable (Gigan.Knowledge.Knowledge euser v -> userrecord -> userrecord) , reads : Dict.Dict comparable (userrecord -> Gigan.Knowledge.Knowledge euser v) }"
+      },
+      {
+        "name": "QueryTask",
+        "comment": " QueryTask is an opaque task that executes a Remote or a RemoteMap and sends the resulting deltas\nto the configured address for the Knowledge, KnowledgeBase, or KnowledgeRecord. ",
+        "args": [
+          "never"
+        ],
+        "type": "Task.Task never ()"
+      },
+      {
+        "name": "RecordKnowledge",
+        "comment": " Knowledge of a KnowledgeRecord. This adds support for nesting KnowledgeRecord and KnowledgeRecord\noperations using `within`, which approximates the active record pattern as well as I can in Elm so\nfar. ",
+        "args": [
+          "euser",
+          "userrecord",
+          "comparable",
+          "v"
+        ],
+        "type": "Gigan.Knowledge.Knowledge (Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v)"
+      },
+      {
+        "name": "Remote",
+        "comment": " This is a Task which represents some kind of synchronization with remote data. It can also easily\nbe used for long running arbitrary computations, too. It produces a Gigan Error or a Knowledge. ",
+        "args": [
+          "euser",
+          "v"
+        ],
+        "type": "Task.Task (Gigan.Error.Error euser) (Gigan.Knowledge.Knowledge euser v)"
+      },
+      {
+        "name": "RemoteConfig",
+        "comment": " Configures address to send remote results to, and an error handler for promoting Errors in to\nKnowledge. The default error handler simply promotes errors to Undecided. ",
+        "args": [
+          "euser",
+          "v"
+        ],
+        "type": "{ address : Signal.Address (Gigan.Knowledge.Knowledge euser v) , errorHandler : Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v }"
+      },
+      {
+        "name": "RemoteMap",
+        "comment": " This is a dictionary which represents a collection of Remote tasks which will be executed against\na KnowledgeBase or a KnowledgeRecord. ",
+        "args": [
+          "euser",
+          "comparable",
+          "v"
+        ],
+        "type": "Dict.Dict comparable (Gigan.Knowledge.Remote euser v)"
+      },
+      {
+        "name": "RemoteMapConfig",
+        "comment": " Configures an address per key to send remote results to, and an error handler per key for\npromoting Errors in to Knowledge. The default error handler simply promotes errors to Undecided.\nThe default configuration proxies a single address which accepts a KnowledgeBaseDelta. ",
+        "args": [
+          "euser",
+          "comparable",
+          "v"
+        ],
+        "type": "{ addressOf : comparable -> Signal.Address (Gigan.Knowledge.Knowledge euser v) , errorHandlerOf : comparable -> Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Knowledge",
+        "comment": " A knowledge item. ",
+        "args": [
+          "euser",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "assumeIf",
+        "comment": " If some predicate `satisfies` is satisfied by the knowledge `kb`, then we make the following\nassumption. If this knowledge is an operation, then the assumption will be applied to\nthe result of that operation. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Bool) -> v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "assumeIfNot",
+        "comment": " Negation of assumeIf. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Bool) -> v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "assumeIfNow",
+        "comment": " If the predicate is satisfied, replace the knowledge with some known value. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v' -> Bool) -> v' -> Gigan.Knowledge.Knowledge euser v' -> Gigan.Knowledge.Knowledge euser v'"
+      },
+      {
+        "name": "assumeInCase",
+        "comment": " If `possibleAssumption` yields some value `value'` when a Knowledge is applied, then\nthat value is used to overwrite the knowledge with an assumption `Known value'`, otherwise the\nKnowledge is unaffected. If this knowledge is an operation, then the assumption will be applied\nconditionally to the result of that operation. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Maybe.Maybe v) -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "assumeInCaseNow",
+        "comment": " This is the counterpart to assumeInCase which does _not_ abstract away whether or not this is\nsome pending remote operation. Concretely, we want this in the case that we are doing model to view\nreductions because a pending operation should still have some concrete visible representation, such\nas an ajax loader symbol. Of course, one should still correctly call *Integrate so that an operation\nis always a `pendingKnowledge` by the time it gets past the `stage` step. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v' -> Maybe.Maybe v') -> Gigan.Knowledge.Knowledge euser v' -> Gigan.Knowledge.Knowledge euser v'"
+      },
+      {
+        "name": "base",
+        "comment": " Create a new knowledge base. This takes an address which accepts knowledge base deltas in sequence.\nCurrently, you are responsible for dropping irrelevant deltas. ",
+        "type": "Signal.Address (Gigan.Knowledge.KnowledgeBaseDelta euser comparable v) -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "baseAt",
+        "comment": " Get the knowledge at a given key from the knowledge base. ",
+        "type": "comparable -> Gigan.Knowledge.KnowledgeBase euser comparable v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "baseDeltaMap",
+        "comment": " Transform a knowledge base delta using any knowledge primitive that does not change the knowledge\ntype. This is the meat and potatoes of KnowledgeBase. This can be used for operations and any of the\nreductions. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.KnowledgeBaseDelta euser comparable v -> Gigan.Knowledge.KnowledgeBaseDelta euser comparable v"
+      },
+      {
+        "name": "baseDeltaTherefore",
+        "comment": " Transform a knowledge base delta using `therefore`. This is very useful for mapping a signal of\ndeltas on to multiple knowledge types, then maintaining several synchronized knowledge bases very\nefficiently. ",
+        "type": "(v -> v') -> Gigan.Knowledge.KnowledgeBaseDelta euser comparable v -> Gigan.Knowledge.KnowledgeBaseDelta euser comparable v'"
+      },
+      {
+        "name": "baseDo",
+        "comment": " Use one of the many knowledge manipulation primitives on the knowledge at a particular location in a knowledge base. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v) -> comparable -> Gigan.Knowledge.KnowledgeBase euser comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "baseErrorHandler",
+        "comment": " Add an error handler to a knowledge base to replace the default error handler. The default error\nhandler simply promotes errors to undecidedKnowledge. You may way to give a definition in your own\nerror handler that distinguishes between undecidedKnowledge and forbiddenKnowledge. No promotion to\nforbiddenKnowledge is given by default because there is not sane default behavior that covers\nthe general case. ",
+        "type": "(Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.KnowledgeBase euser comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "baseIntegrate",
+        "comment": " Transform all new operations in to `pendingKnowledge` across the knowledge base. Note that this\nwill only traverse the knowledge which has changed since the last call to `baseIntegrate`, so this\nscales quite well to large knowledge bases. ",
+        "type": "Gigan.Knowledge.KnowledgeBase euser comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "baseMember",
+        "comment": " Determine if there is some knowledge at a given key that is not unknown. ",
+        "type": "comparable -> Gigan.Knowledge.KnowledgeBase euser comparable v -> Bool"
+      },
+      {
+        "name": "baseQuery",
+        "comment": " For every new operation in the knowledge base, get and aggregate the remote tasks, producing\nJust an opaque query task or Nothing in the case that no operations need to be done. Note that this\nwill only traverse the knowledge which has changed since the last call to `baseIntegrate`, so this\nscales quite well to large knowledge bases. ",
+        "type": "Gigan.Knowledge.KnowledgeBase euser comparable v -> Maybe.Maybe (Gigan.Knowledge.QueryTask never)"
+      },
+      {
+        "name": "baseUpdate",
+        "comment": " Apply a knowledge base delta to the knowledge base. You are responsible for determining the order\nof the updates. ",
+        "type": "Gigan.Knowledge.KnowledgeBaseDelta euser comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "decideBy",
+        "comment": " Offer a decision on some `undecidedKnowledge kb`. Undecided knowledge is the result of some\nproblem which may or may not be in control of the client. Such knowledge may be the result of\nanything that can result in an error in your application. If this knowledge is an operation, then\nthe assumption will be applied to the result of that operation.\n",
+        "type": "(Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "dispatchIf",
+        "comment": " If some predicate `satisfies` is satisfied by the knowledge `kb`, then we make the following\nremote operation. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Bool) -> Gigan.Knowledge.Remote euser v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "dispatchIfNot",
+        "comment": " Negation of dispatchIf ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Bool) -> Gigan.Knowledge.Remote euser v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "dispatchInCase",
+        "comment": " If `possibleOperation` yields some Remote task `remote` when a Knowledge is applied, then\nthe knowledge is replaced by the knowledge `doOperation remote`, otherwise the knowledge is\nunaffected. If this knowledge is an operation, then the result of that operation will be used as\nthe input to the provided function. In this way, operations can be chained arbitrarily deep,\nbut in a manner that helpfully abstracts away whether we are still waiting or already have the\nresult in the composition. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Maybe.Maybe (Gigan.Knowledge.Remote euser v)) -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "dispatchInCaseNow",
+        "comment": " This is the counterpart to dispatchInCase which does _not_ abstract away whether or not this is\nsome pending remote operation. This is useful in the case that we don't care what's going on right\nnow. We'd rather issue some operation, regardless. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Maybe.Maybe (Gigan.Knowledge.Remote euser v)) -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "doOperation",
+        "comment": " Define knowledge contingent on the future completion of some arbitrary operation. This is how\nwe hook up knowledge bases to sources of content. ",
+        "type": "Gigan.Knowledge.Remote euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "forbiddenKnowledge",
+        "comment": " The knowledge could not be obtained because the user of your program should not be allowed to\naccess it. This carries an error. To resolve `undecidedKnowledge`, one should use assumptions and or\noperations to map it back in to sensible knowledge. ",
+        "type": "Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "isForbidden",
+        "comment": " True if the knowledge is forbiddenKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isKnown",
+        "comment": " True if the knowledge is known. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNil",
+        "comment": " True if the knowledge is unknownKnowledge or voidKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotForbidden",
+        "comment": " False if the knowledge is forbiddenKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotKnown",
+        "comment": " False if the knowledge is known. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotNil",
+        "comment": " False if the knowledge is unknownKnowledge or voidKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotOperation",
+        "comment": " False if the knowledge is a pending operation. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotPending",
+        "comment": " False if the knowledge is pendingKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotUndecided",
+        "comment": " False if the knowledge is undecidedKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotUnknown",
+        "comment": " False if the knowledge is unknownKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isNotVoid",
+        "comment": " False if the knowledge is voidKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isOperation",
+        "comment": " True if the knowledge is a pending operation. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isPending",
+        "comment": " True if the knowledge is pendingKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isUndecided",
+        "comment": " True if the knowledge is undecidedKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isUnknown",
+        "comment": " True if the knowledge is unknownKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "isVoid",
+        "comment": " True if the knowledge is voidKnowledge. ",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Bool"
+      },
+      {
+        "name": "knowledgeDo",
+        "comment": " Do something to a knowledge. There is an ignored comparable argument here. This merely exists so\nthat the form of `knowledgeDo` is isomorphic to the form of `baseDo` and `recordDo`. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v) -> comparable -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "knowledgeIntegrate",
+        "comment": " Given some configuration and a knowledge, produce a pendingKnowledge in the case that the\nknowledge is an operation, otherwise give the same knowledge. ",
+        "type": "Gigan.Knowledge.RemoteConfig euser v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "knowledgeOf",
+        "comment": " A known thing. Carries a value of type `v` for `Knowledge euser v`. `knowledgeOf` anything can be\ninterpreted using `therefore` contingent upon it being a concrete `knowledgeOf` something. As described\nelsewhere, `therefore` has no effect on knowledge that satisfies `isNotKnown`. ",
+        "type": "v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "knowledgeQuery",
+        "comment": " Given some configuration and a knowledge, produce Just an opaque query task or Nothing\nwhen the knowledge is an operation or the knowledge is not an operation respectively. ",
+        "type": "Gigan.Knowledge.RemoteConfig euser v -> Gigan.Knowledge.Knowledge euser v -> Maybe.Maybe (Gigan.Knowledge.QueryTask never)"
+      },
+      {
+        "name": "knowledgeUpdate",
+        "comment": " Update knowledge with an incoming delta. Again, we ignore the comparable component of the\nknowledge base delta, but accept it to simplify the types. ",
+        "type": "Gigan.Knowledge.KnowledgeBaseDelta euser comparable v -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "maybeKnownNow",
+        "comment": " If a knowledge is known, then give Just it's value, otherwise Nothing. ",
+        "type": "Gigan.Knowledge.Knowledge euser v' -> Maybe.Maybe v'"
+      },
+      {
+        "name": "maybeOr",
+        "comment": " Map Maybe in to Knowledge. Since Maybe doesn't carry errors, semantically Nothing means\n\"definitely nothing\". For this reason, you may want to use it something like this:\n\n    maybeOr voidKnowledge myPossibleThing\n\nIf you implement an operation that uses some existing code that returns a Maybe, that would be a\ngood place to use this. Just be mindful that this _does not give you the power to handle errors_.\nResult should always be preferred in the case that there is any chance of things going wrong, and\n`resultOr` should definitely see a lot more mileage in a production app that deals with lots of\nunpredictable data.\n",
+        "type": "Gigan.Knowledge.Knowledge euser v -> Maybe.Maybe v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "otherwise",
+        "comment": " Preferred shorthand for `reduceNotKnownNowTo`. ",
+        "type": "v' -> Gigan.Knowledge.Knowledge euser v' -> v'"
+      },
+      {
+        "name": "pendingKnowledge",
+        "comment": " Something on which knowledge is still pending. The most conforming way to use this is to not\nuse it directly. Calling *Integrate should be done after every update sequence during staging, which\nresults in all operations in a knowledge base being replaced with pendingKnowledge. If you stick to\nthis, the presence of pendingKnowledge is a guarantee you'll be getting a delta back about it\nassuming your wiring's not broken. ",
+        "type": "Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "record",
+        "comment": " Create a knowledge record stub. The content of the knowledge base will be bound to the content\nof the record according to the `recordField` definitions you give. A knowledge record stub is not\nyet completed with a concrete userrecord. Use this in your definitions. Create instances of your\nknowledge record type by using `recordSet` on the result of `record`. ",
+        "type": "Signal.Address (Gigan.Knowledge.KnowledgeBaseDelta euser comparable v) -> Gigan.Knowledge.KnowledgeRecordStub euser userrecord comparable v"
+      },
+      {
+        "name": "recordAt",
+        "comment": " Retrieve a knowledge from the knowledge record using some getter. Avoiding stringly-typed nonsense that you can't protect from\nruntime errors is generally a good idea. Since records have an enumerable set of contant field names, it makes more sense to use\nthis method to get from records. This won't compile if it's wrong. For example:\n\n    recordAt .myFieldThatWillNotCompileIfItDoesntExist myRecord\n\n",
+        "type": "(userrecord -> Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "recordAtKey",
+        "comment": " Retrieve a knowledge at the given key. If you do this, you may as well be using knowledge base.\nHowever, you will get the benefit of console debug messages in the case that you try to access a\nfield that doesn't exist. ",
+        "type": "comparable -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "recordBinding",
+        "comment": " Get the underlying knowledge base of a knowledge record. ",
+        "type": "Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.KnowledgeBase euser comparable v"
+      },
+      {
+        "name": "recordContent",
+        "comment": " Get the current userrecord content of a knowledge record. ",
+        "type": "Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> userrecord"
+      },
+      {
+        "name": "recordDo",
+        "comment": " This is the knowledge record equivalent to baseDo for knowledge bases, using the same\nsemantics. ",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v) -> comparable -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v"
+      },
+      {
+        "name": "recordErrorHandler",
+        "comment": " Add an error handler to a `KnowledgeRecord` or a `KnowledgeRecordStub`. Refer to\n`baseErrorHandler` for a more detailed description of how adding error handlers works. ",
+        "type": "(Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v) -> { k | kbase : Gigan.Knowledge.KnowledgeBase euser comparable v } -> { k | kbase : Gigan.Knowledge.KnowledgeBase euser comparable v }"
+      },
+      {
+        "name": "recordField",
+        "comment": " Map a record field to a key in the knowledge base. The types in the record can be any odd combination\ngiven that the userrecord type can be anything. However, all fields in the record must have a mapping to\nand from some knowledge type which can represent any of the fields. This is not as tricky as one might\ninitially surmise. Your userrecord type should have a corresponding tag union type with a tag for each\nrecord field. To make this clean, you should have a bijection between the record fields and the tags. Here's\nan example:\n\n    type Fields = FooField Int | BarField String\n\n    type alias MyRecord =\n      { foo : Int\n      , bar : String\n      }\n\n    myRecordFields =\n      recordField (\\k r -> { r | foo = k }) (.foo >> FooField) \"foo\"\n      >> recordField (\\k r -> { r | bar = k }) (.bar >> BarField) \"bar\"\n\n    .....\n\n    myKnowledgeRecord =\n      record address { foo = 42, bar = \"answer\" } |> myRecordFields\n\n",
+        "type": "(Gigan.Knowledge.Knowledge euser v -> userrecord -> userrecord) -> (userrecord -> Gigan.Knowledge.Knowledge euser v) -> comparable -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v"
+      },
+      {
+        "name": "recordIntegrate",
+        "comment": " This is the knowledge record equivalent to baseIntegrate for knowledge bases, using the same\nsemantics. ",
+        "type": "Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v"
+      },
+      {
+        "name": "recordQuery",
+        "comment": " This is the knowledge record equivalent to baseQuery for knowledge bases, using the same\nsemantics. ",
+        "type": "Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Maybe.Maybe (Gigan.Knowledge.QueryTask never)"
+      },
+      {
+        "name": "recordSet",
+        "comment": " Completely replace the userrecord instance contained in a knowledge record or fill out a\nknowledge record stub for the first time. The second usage is likely to be more common. ",
+        "type": "userrecord -> { k | kbase : Gigan.Knowledge.KnowledgeBase euser comparable v, writes : Dict.Dict comparable (Gigan.Knowledge.Knowledge euser v -> userrecord -> userrecord), reads : Dict.Dict comparable (userrecord -> Gigan.Knowledge.Knowledge euser v) } -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v"
+      },
+      {
+        "name": "recordUpdate",
+        "comment": " This is the knowledge record equivalent to baseUpdate for knowledge bases, using the same\nsemantics. ",
+        "type": "Gigan.Knowledge.KnowledgeBaseDelta euser comparable v -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v -> Gigan.Knowledge.KnowledgeRecord euser userrecord comparable v"
+      },
+      {
+        "name": "reduceNotKnownNowTo",
+        "comment": " This is the special reduction we use to collapse away the Knowledge type, determining a final\nvalue to work with. While more pedantically named, I find it leaves something to be desired\naesthetically, so I use `otherwise` for the same task. ",
+        "type": "v' -> Gigan.Knowledge.Knowledge euser v' -> v'"
+      },
+      {
+        "name": "remoteConfig",
+        "comment": " Specifies a RemoteConfig with which to close off a remote operation by sending it's results or an\nerror describing it's failure to the given address. ",
+        "type": "Signal.Address (Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.RemoteConfig euser v"
+      },
+      {
+        "name": "remoteErrorConfig",
+        "comment": " Adds an optional special error handler for resolving totally unexpected errors. A final error\nhandler should be provided such that any errors not trapped by a decideBy application still\ngracefully recover. By default, a valid knowledge is produced from any error by promoting that\nError to Undecided. ",
+        "type": "(Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v) -> Gigan.Knowledge.RemoteConfig euser v -> Gigan.Knowledge.RemoteConfig euser v"
+      },
+      {
+        "name": "resultOr",
+        "comment": " Map Result in to Knowledge. You'll need this if you want to roll your own knowledge base remotes,\nwhich is quite easy to do due to the pluggability of the knowledge module. The function specifies how\nto interpret errors. This is important in the case that you have to deal with permissions systems.\nSome of your errors might be due to access denial, others might be due to unintentional errors. Use\nforbiddenKnowledge and undecidedKnowledge respectively for these cases. ",
+        "type": "(Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v) -> Result.Result (Gigan.Error.Error euser) v -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "therefore",
+        "comment": " transform the value itself, if known, producing a knowledge of some new value type value'.\ntherefores are composed on to the results of remote operations if they represent known knowledge or\nfurther operations to attempt. This allows us to compose async processing stages before knowledge\nis finally reduced to a displayed or usable result as deeply and interchangably as we want to,\nprovided that we always use \"therefore\" _first_ to lift the knowledge type out before listing\na sequence of simple or contingent reductions. ",
+        "type": "(v -> v') -> Gigan.Knowledge.Knowledge euser v -> Gigan.Knowledge.Knowledge euser v'"
+      },
+      {
+        "name": "undecidedKnowledge",
+        "comment": " The knowledge could not be obtained because something went wrong. This carries an error. To\nresolve `undecidedKnowledge`, one should use assumptions and or operations to map it back in to\nsensible knowledge. ",
+        "type": "Gigan.Error.Error euser -> Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "unknownKnowledge",
+        "comment": " Somthing that's totally unknown. This is the default result of retrieving an element that has\nno representation in a knowledge base, but also has obvious other uses as a placeholder that is\ntypely more powerful than Result or Maybe for production data management. ",
+        "type": "Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "voidKnowledge",
+        "comment": " Something that is _known not to exist_. This is not the same as unknownKnowledge or\nundecidedKnowledge. Void knowledge should arise from a remote operation which verified that there\nis definitely nothing there, so it is not an assumption. ",
+        "type": "Gigan.Knowledge.Knowledge euser v"
+      },
+      {
+        "name": "within",
+        "comment": " This is for nesting operations on knowledge bases. For example:\n\n    -- this'll write something at the patch foo.bar if \"bar\" is void.\n    baseDo (within <| baseDo (inquireIf isVoid myBarWriter) \"bar\") \"foo\" myBase\n\nThis code will work on a knowledge base of base knowledges, so that's a nested record. The active\nrecord pattern can be approximated like this, and I've found it extremely handy.\n\n",
+        "type": "(sub -> sub) -> Gigan.Knowledge.Knowledge euser sub -> Gigan.Knowledge.Knowledge euser sub"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Gigan.Stem",
+    "comment": " This module builds a more usable state machine snapshot with the Elm Architecture in mind on\ntop of the Gigan Core.\n\n# Definition\n@docs Stem\n\n# Constructor\n@docs stem\n\n# Get and Set the Model\n@docs stemModel, stemReplaceModel\n\n# Using Stems\n@docs stemDispatch, stemDispatchAs, stemDispatchment, stemDispatchmentAs, stemPresent, stemPresentAs, stemStage, stemStageAs, stemUpdate, stemIntegrate\n\n# Get and Set the Model of Maybe Stems\n@docs maybeStemModel, maybeStemReplaceModel\n\n# Using Maybe Stems\n@docs maybeStemDispatch, maybeStemDispatchAs, maybeStemDispatchment, maybeStemDispatchmentAs, maybeStemPresent, maybeStemPresentAs, maybeStemStage, maybeStemStageAs, maybeStemUpdate, maybeStemIntegrate\n\n",
+    "aliases": [
+      {
+        "name": "Stem",
+        "comment": " A Stem is an instantaneous description of some model associated with an OrbiterInput (see Core)\nthat specifies how it should be updated, staged and presented. ",
+        "args": [
+          "a",
+          "b",
+          "c",
+          "bad"
+        ],
+        "type": "{ input : Gigan.Core.OrbiterInput a b c bad , state : Gigan.Core.OrbiterSnapshot a b bad }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "maybeStemDispatch",
+        "comment": " ",
+        "type": "Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe ( Gigan.Stem.Stem a b c bad, Gigan.Core.TaskDispatchment bad a )"
+      },
+      {
+        "name": "maybeStemDispatchAs",
+        "comment": " ",
+        "type": "(List a -> List a') -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe ( Gigan.Stem.Stem a b c bad, Gigan.Core.TaskDispatchment bad a' )"
+      },
+      {
+        "name": "maybeStemDispatchment",
+        "comment": " ",
+        "type": "Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Gigan.Core.TaskDispatchment bad a"
+      },
+      {
+        "name": "maybeStemDispatchmentAs",
+        "comment": " ",
+        "type": "(List a -> List a') -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Gigan.Core.TaskDispatchment bad a'"
+      },
+      {
+        "name": "maybeStemIntegrate",
+        "comment": " ",
+        "type": "Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Stem.Stem a b c bad)"
+      },
+      {
+        "name": "maybeStemModel",
+        "comment": " ",
+        "type": "Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe b"
+      },
+      {
+        "name": "maybeStemPresent",
+        "comment": " ",
+        "type": "Signal.Address (List a) -> Time.Time -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Core.ViewOutput a c bad)"
+      },
+      {
+        "name": "maybeStemPresentAs",
+        "comment": " ",
+        "type": "(List a -> List a') -> Signal.Address (List a') -> Time.Time -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Core.ViewOutput a' c bad)"
+      },
+      {
+        "name": "maybeStemReplaceModel",
+        "comment": " ",
+        "type": "b -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Stem.Stem a b c bad)"
+      },
+      {
+        "name": "maybeStemStage",
+        "comment": " ",
+        "type": "Signal.Address (List a) -> Time.Time -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Stem.Stem a b c bad)"
+      },
+      {
+        "name": "maybeStemStageAs",
+        "comment": " ",
+        "type": "(List a -> List a') -> Signal.Address (List a') -> Time.Time -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Stem.Stem a b c bad)"
+      },
+      {
+        "name": "maybeStemUpdate",
+        "comment": " ",
+        "type": "List a -> Time.Time -> Maybe.Maybe (Gigan.Stem.Stem a b c bad) -> Maybe.Maybe (Gigan.Stem.Stem a b c bad)"
+      },
+      {
+        "name": "stem",
+        "comment": " Create a stem from an OrbiterInput ",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> Gigan.Stem.Stem a b c bad"
+      },
+      {
+        "name": "stemDispatch",
+        "comment": " Dispatch the tasks of a Stem. This function is in the depreciated family of `stemDispatch*`\nfunctions. Use `stemDispatchment*` and `stemIntegrate` instead. ",
+        "type": "Gigan.Stem.Stem a b c bad -> ( Gigan.Stem.Stem a b c bad, Gigan.Core.TaskDispatchment bad a )"
+      },
+      {
+        "name": "stemDispatchAs",
+        "comment": " Dispatch the tasks of a Stem using some transducer to translate the action list. This function\nis in the depreciated family of `stemDispatch*` functions. Use `stemDispatchment*` and\n`stemIntegrate` instead. ",
+        "type": "(List a -> List a') -> Gigan.Stem.Stem a b c bad -> ( Gigan.Stem.Stem a b c bad, Gigan.Core.TaskDispatchment bad a' )"
+      },
+      {
+        "name": "stemDispatchment",
+        "comment": " Get the currently waiting dispatchment. ",
+        "type": "Gigan.Stem.Stem a b c bad -> Gigan.Core.TaskDispatchment bad a"
+      },
+      {
+        "name": "stemDispatchmentAs",
+        "comment": " Get the currently waiting task dispatchment, but apply some action type transformation. ",
+        "type": "(List a -> List a') -> Gigan.Stem.Stem a b c bad -> Gigan.Core.TaskDispatchment bad a'"
+      },
+      {
+        "name": "stemIntegrate",
+        "comment": " Remove the currently waiting task dispatchment. This should be done only after retrieving any\npossibly waiting dispatchment. ",
+        "type": "Gigan.Stem.Stem a b c bad -> Gigan.Stem.Stem a b c bad"
+      },
+      {
+        "name": "stemModel",
+        "comment": " Get the model of a stem. ",
+        "type": "Gigan.Stem.Stem a b c bad -> b"
+      },
+      {
+        "name": "stemPresent",
+        "comment": " Run the present function from the configured OrbiterInput of the Stem on the Stem's current model to produce a ViewOutput, which includes the an element of the Stem's view type, and a TaskDispatchment for any desired asynchronous tasks.\nThis takes an address for actions to be sent to, the current time, and the Stem. ",
+        "type": "Signal.Address (List a) -> Time.Time -> Gigan.Stem.Stem a b c bad -> Gigan.Core.ViewOutput a c bad"
+      },
+      {
+        "name": "stemPresentAs",
+        "comment": " Same as stemPresent, but with a transformation to apply to action lists before they are sent to the address. ",
+        "type": "(List a -> List a') -> Signal.Address (List a') -> Time.Time -> Gigan.Stem.Stem a b c bad -> Gigan.Core.ViewOutput a' c bad"
+      },
+      {
+        "name": "stemReplaceModel",
+        "comment": " Create a stem with a different model from a replacement model and an original stem. ",
+        "type": "b -> Gigan.Stem.Stem a b c bad -> Gigan.Stem.Stem a b c bad"
+      },
+      {
+        "name": "stemStage",
+        "comment": " Run the update function from the configured OrbiterInput of the Stem on the Stem's current model to produce a new model and dispatch any asynchronous tasks desired.\nThis takes an address for actions to be sent to, the current time, and the Stem. ",
+        "type": "Signal.Address (List a) -> Time.Time -> Gigan.Stem.Stem a b c bad -> Gigan.Stem.Stem a b c bad"
+      },
+      {
+        "name": "stemStageAs",
+        "comment": " Same as stemStage, but with a transformation to apply to action lists before they are sent to the address. ",
+        "type": "(List a -> List a') -> Signal.Address (List a') -> Time.Time -> Gigan.Stem.Stem a b c bad -> Gigan.Stem.Stem a b c bad"
+      },
+      {
+        "name": "stemUpdate",
+        "comment": " Run the update function from the configured OrbiterInput of the Stem on the Stem's current model to produce a new model and dispatch any asynchronous tasks desired.\nThis takes a list of actions, the current time, and the Stem. ",
+        "type": "List a -> Time.Time -> Gigan.Stem.Stem a b c bad -> Gigan.Stem.Stem a b c bad"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Gigan.Error",
+    "comment": " This module contains the internal error type for Gigan and some helper functions for\nconstructing errors.\n\n# Definitions\n@docs DecodingFailure, Error, ErrorType\n\n# Constructors\n@docs reportError, reportErrorAndLog, unknownError, unknownErrorAndLog, decoderError, decoderErrorAndLog, userError, userErrorAndLog, decodingFailure\n\n",
+    "aliases": [
+      {
+        "name": "DecodingFailure",
+        "comment": " Represents a decoding task which failed. ",
+        "args": [],
+        "type": "{ source : String, reason : String }"
+      },
+      {
+        "name": "Error",
+        "comment": " Error record. ",
+        "args": [
+          "euser"
+        ],
+        "type": "{ error : Gigan.Error.ErrorType euser, desc : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "ErrorType",
+        "comment": " Type of error that occurred in Gigan. ",
+        "args": [
+          "euser"
+        ],
+        "cases": [
+          [
+            "UnknownError",
+            []
+          ],
+          [
+            "DecoderError",
+            [
+              "Gigan.Error.DecodingFailure"
+            ]
+          ],
+          [
+            "UserError",
+            [
+              "euser"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decoderError",
+        "comment": " Report a problem decoding something. ",
+        "type": "String -> Gigan.Error.DecodingFailure -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "decoderErrorAndLog",
+        "comment": " decoderError and log to console. ",
+        "type": "String -> Gigan.Error.DecodingFailure -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "decodingFailure",
+        "comment": " Given the source string on which decoding was attempted and the reason for the failure,\ngive a DecodingFailure ",
+        "type": "String -> String -> Gigan.Error.DecodingFailure"
+      },
+      {
+        "name": "reportError",
+        "comment": " Report an error. Given an ErrorType and a String describing what went wrong humanly, create\nan error record.  ",
+        "type": "String -> Gigan.Error.ErrorType euser -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "reportErrorAndLog",
+        "comment": " reportError and log to console.  ",
+        "type": "String -> Gigan.Error.ErrorType euser -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "unknownError",
+        "comment": " Report an error, the nature of which is not known. ",
+        "type": "String -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "unknownErrorAndLog",
+        "comment": " unknownError and log to console. ",
+        "type": "String -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "userError",
+        "comment": " Report a user defined error. ",
+        "type": "String -> euser -> Gigan.Error.Error euser"
+      },
+      {
+        "name": "userErrorAndLog",
+        "comment": " userError and log to console. ",
+        "type": "String -> euser -> Gigan.Error.Error euser"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Gigan.Core",
+    "comment": " The main application scaffolding. You can write a really pretty top level like this:\n\n    myOrbiter : OrbiterOutput MyAction MyModel Layout.Item Error\n    myOrbiter =\n      myProgram\n        `withSequenceInputs`\n          [ someVeryImportantBrowserEnvironmentInput\n          , someOtherOutsideSignal\n          ]\n        `orbitsWithWork`\n          (computeTask doMyComplicatedStartupWork withThisData)\n      +--> (it'sErrorTap myErrorHandler)\n      +--> itself\n\n\n    main : Signal Graphics.Element.Element\n    main = Layout.fromItem <~ myOrbiter.view'\n\n\n    port sink : Signal (Task z ())\n    port sink = sieve myOrbiter\n\n\n# Definitions\n@docs AgentStatus, ComputedResult, ComputedSuccess, OrbiterInput, OrbiterOutput, OrbiterSnapshot, OrbiterTap, OrbiterTask, TaskDispatchment, UpdatedModel, ViewOutput\n\n# Define Orbiter Programs\n@docs defProgram, defProgram'\n\n# Run Orbiter Programs\n@docs orbits, orbitsWithWork, withInputs, withLazySequenceInputs, withSequenceInputs, sieve, (+-->)\n\n# UpdatedModel and ViewOutput Manipulation\n@docs updated, presented, withTasks, withDispatchment, withChildren, viewOutputTask\n\n# Dispatch Actions and Errors\n@docs actionTask, actionTaskAsync, errorTask, computeTask, computedSuccess, computedSuccessAsync, noActions, nilTask\n\n# Intercept and Route Action and Error Outputs\n@docs itself, itselfAsync, it'sErrorTap, thisAddress, thisAddressAsync, thisForwardAddress, thisForwardAddressAsync, thisErrorTap, thisForwardTap, thisTap\n\n# Handling Tasks and TaskDispatchment\n@docs combineDispatchments, collapseTasks, dispatchTasks, dispatchmentHasWork, dispatchmentTask, promoteDispatchment\n\n# Manipulate Orbiter Snapshots\n@docs orbiterSnapshot, orbiterSnapshotAddDispatchment, orbiterSnapshotDispatch, orbiterSnapshotPresent, orbiterSnapshotStage, orbiterSnapshotUpdate, performCycle\n\n# Orbiter Task Agents\n@docs orbiterAgentSuccess, orbiterAgentFailure, orbiterAgent, orbiterSuccessAgent, orbiterFailureAgent, orbiterBinaryAgent, orbiterBlindAgent, orbiterNilAgent, orbiterResultAgent, ignoreError\n\n",
+    "aliases": [
+      {
+        "name": "ComputedResult",
+        "comment": " A ComputedResult is a Result which may be a ComputedSuccess or some error type on failure. This\nis used as the output type of the function passed to a `computeTask`. ",
+        "args": [
+          "bad",
+          "a"
+        ],
+        "type": "Result.Result bad (Gigan.Core.ComputedSuccess a)"
+      },
+      {
+        "name": "ComputedSuccess",
+        "comment": " This is the success type of an OrbiterTask. It consists of a sequence of actions to execute, and\na tag saying whether we want the actions executed all at once, or spread out asynchronously. This\nshould be treated as opaque; use the constructors `computedSuccess` and `computedSuccessAsync`. ",
+        "args": [
+          "a"
+        ],
+        "type": "{ sequence : List a, method : Gigan.Core.FeedbackMethod }"
+      },
+      {
+        "name": "OrbiterInput",
+        "comment": " This is the input type for Orbiter. It can be seen as roughly analogous to StartApp's Config\ntype, but carries the full configuration and input in one. This should be considered opaque. ",
+        "args": [
+          "a",
+          "b",
+          "c",
+          "bad"
+        ],
+        "type": "{ inputs : Lazy.List.LazyList (Signal.Signal (Lazy.List.LazyList a)) , model0 : b , present : Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.ViewOutput a c bad , stage : Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad , update : a -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad }"
+      },
+      {
+        "name": "OrbiterOutput",
+        "comment": " This is the output of an Orbiter program. This is not intended to be opaque. Any part of the\noutput structure is up for grabs. I do not reccomend usage of the lazyAddress externally.\n\n    view'     Signal with the current view.\n    model'    Signal with the current model.\n    now       Signal with the most recent execution time.\n    actions   Signal with the most recently atomically executed action list.\n    tasks     Signal with the most recent OrbiterTask output.\n    address   The address of the Orbiter program's Mailbox.\n\n",
+        "args": [
+          "a",
+          "b",
+          "c",
+          "bad"
+        ],
+        "type": "{ view' : Signal.Signal c , model' : Signal.Signal b , now : Signal.Signal Time.Time , actions : Signal.Signal (List a) , tasks : Signal.Signal (Gigan.Core.OrbiterTask bad a) , address : Signal.Address (List a) , lazyAddress : Signal.Address (Lazy.List.LazyList a) }"
+      },
+      {
+        "name": "OrbiterSnapshot",
+        "comment": " This represents an instantaneous description of an Orbiter program. It consists of the current\nmodel and a possible TaskDispatchment. This should be treated as opaque. ",
+        "args": [
+          "a",
+          "b",
+          "bad"
+        ],
+        "type": "{ model' : b, dispatchment : Gigan.Core.TaskDispatchment bad a }"
+      },
+      {
+        "name": "OrbiterTap",
+        "comment": " OrbiterTap is an alias for functions that transform OrbiterTasks by routing their actions to\nan address. You will probably not need to directly provide an OrbiterTap function, as the built in\nfamily of taps should be sufficient for just about any application. ",
+        "args": [
+          "bad",
+          "a"
+        ],
+        "type": "Signal.Address (List a) -> Gigan.Core.OrbiterTask bad a -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "OrbiterTask",
+        "comment": " A task with a ComputedSuccess result. These are used as the output task type of the Orbiter. ",
+        "args": [
+          "bad",
+          "a"
+        ],
+        "type": "Task.Task bad (Gigan.Core.ComputedSuccess a)"
+      },
+      {
+        "name": "TaskDispatchment",
+        "comment": " This is an opaque type representing an ordered list of tasks to execute. This is quite similar\nto Effects batching. ",
+        "args": [
+          "bad",
+          "a"
+        ],
+        "type": "{ taskExec : Lazy.List.LazyList (Gigan.Core.OrbiterTask bad a) }"
+      },
+      {
+        "name": "UpdatedModel",
+        "comment": " Represents the output of the `update` and `stage` functions configured in the OrbiterInput.\nThis type exists so that TaskDispatchments and OrbiterTasks can be cleanly included in the output\nof `stage` and `update` without the need to return an ugly pair or embed anything in the model. ",
+        "args": [
+          "a",
+          "b",
+          "bad"
+        ],
+        "type": "{ dispatchment : Gigan.Core.TaskDispatchment bad a, model' : b }"
+      },
+      {
+        "name": "ViewOutput",
+        "comment": " Represents the output of the `present` function configured in the OrbiterInput.\nThis type exists so that TaskDispatchments and OrbiterTasks can be cleanly included in the output\nof `present` without the need to return an ugly pair or embed anything in the model. ",
+        "args": [
+          "a",
+          "c",
+          "bad"
+        ],
+        "type": "{ dispatchment : Gigan.Core.TaskDispatchment bad a, view' : c }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AgentStatus",
+        "comment": " Represents the status of a given OrbiterAgent. Orbiter agents are a way of transforming the\nresults of arbitrary tasks in to actions and errors for the program to consume. ",
+        "args": [
+          "bad",
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "+-->",
+        "comment": " While it may be a case of \"your stupid infix operator\", I think it makes writing taps nicer\nsimply because I see `+---> itself` and I think \"oh, it has an edge going to itself\". This is one\nof those instances where the abstraction can actually help with comprehension because it acually looks\nlike a directed graph edge. See the main example for usage. _NOTE: you can use (|>) to be more\nstandard._ ",
+        "type": "Gigan.Core.OrbiterOutput a b c bad -> (Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad) -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "actionTask",
+        "comment": " An OrbiterTask that carries a list of actions to execute atomically.\n\nNote that a tap which is explicitly from the `*Async` family of taps will override this behavior,\ninstead producing the same behavior as actionTaskAsync. For that reason, asynchronous taps should\nmainly be used for one-way data flows that are not dependent on ordering. ",
+        "type": "List a -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "actionTaskAsync",
+        "comment": " An OrbiterTask that carries a list of actions to execute asynchronously, meaning they may be\ninterspersed with other feedback and inputs. ",
+        "type": "List a -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "collapseTasks",
+        "comment": " Collapse two action tasks by executing them sequentially and appending their resulting action\noutputs. ",
+        "type": "Gigan.Core.OrbiterTask bad a -> Gigan.Core.OrbiterTask bad a -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "combineDispatchments",
+        "comment": " Combine two TaskDispatchment instances. This appends the task list of the second to the task\nlist of the first. ",
+        "type": "Gigan.Core.TaskDispatchment bad a -> Gigan.Core.TaskDispatchment bad a -> Gigan.Core.TaskDispatchment bad a"
+      },
+      {
+        "name": "computeTask",
+        "comment": " An OrbiterTask that obtains some ComputedResult from user provided data and a user provided\nfunction, which is invoked during execution of the task. This just gives us basic support for\ndeferred computations. ",
+        "type": "(data -> Gigan.Core.ComputedResult bad a) -> data -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "computedSuccess",
+        "comment": " Produce a normal ComputedSuccess from a list of actions. These actions will be sent all at once,\nand thus will be executed atomically. ",
+        "type": "List a -> Gigan.Core.ComputedSuccess a"
+      },
+      {
+        "name": "computedSuccessAsync",
+        "comment": " Produce an asynchronous ComputedSuccess from a list of actions. These actions will be sent\none by one from sequential tasks, and thus their execution will be spread out with no guarantee that\nthe sequence of actions will be executed atomically.\n\nIf you need to run a list of a few thousand actions,\nand it is safe for those actions to be interspersed with other actions, you may be looking at a very\ngood use case for this function. Note also that this will never preempt an action list that is sent\nat once using `computeSuccess`, which is a product of how the Elm runtime works. ",
+        "type": "List a -> Gigan.Core.ComputedSuccess a"
+      },
+      {
+        "name": "defProgram",
+        "comment": " defProgram is the old declaration form for defining OrbiterInput. It is simpler, and does not\nsupport the `stage` function. Internally this uses the new form, but it has been left in for\ntwo reasons. One is of course backwards compatibility, but sometimes you just don't need that\nextra firepower, in which case it is mere clutter. ",
+        "type": "(Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.ViewOutput a c bad) -> (a -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad) -> b -> Gigan.Core.OrbiterInput a b c bad"
+      },
+      {
+        "name": "defProgram'",
+        "comment": " defProgram' is the complete way to define an OrbiterInput. OrbiterInput is configured with\nthree functions. `update` and `present` should be familiar to users of StartApp, except for the\nfact that they always have the current time. `stage` is a special addition which allows one to\nuse the program Mailbox address from a context in which the model can be updated.\n\nThe use case for `stage` which inspired it's existence is as follows: suppose you have a really\nbig model with a really, really big view. There is enough data that keen algorithms and data\nstructures, as well as avoiding redundant computations during presentation becomes a neccessity.\n\nYou can then structure your application as follows. Represent all these components as instances of\nStem. From inside `stage`, you can present _only the ones that will or should actually be seen_,\nand cache the results in the model. Since you can create an updated model from here, you can save\nanything that may be later needed during presentation.\n\n`stage` is called only once after an entire list of actions is executed. If you get a list of 1000\nactions, you can still guarantee the work in stage will be done only once, before presentation.\n_The primary reason stage has access to the address is because it enables you to call present on\nany sub components ahead of time for caching purposes._ ",
+        "type": "(Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.ViewOutput a c bad) -> (Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad) -> (a -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad) -> b -> Gigan.Core.OrbiterInput a b c bad"
+      },
+      {
+        "name": "dispatchTasks",
+        "comment": " Turn a list of OrbiterTasks in to a TaskDispatchment. ",
+        "type": "List (Gigan.Core.OrbiterTask bad a) -> Gigan.Core.TaskDispatchment bad a"
+      },
+      {
+        "name": "dispatchmentHasWork",
+        "comment": " True iff the TaskDispatchment has at least one OrbiterTask. ",
+        "type": "Gigan.Core.TaskDispatchment bad a -> Bool"
+      },
+      {
+        "name": "dispatchmentTask",
+        "comment": " Turn a TaskDispatchment in to an OrbiterTask. Doing this will make things a lot more opaque,\nso ask yourself if it is absolutely neccessary first. Mainly this is included for completeness. ",
+        "type": "Gigan.Core.TaskDispatchment bad a -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "errorTask",
+        "comment": " An OrbiterTask that carries an error. ",
+        "type": "bad -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "ignoreError",
+        "comment": " This makes any error in to noActions. ",
+        "type": "bad -> List a"
+      },
+      {
+        "name": "it'sErrorTap",
+        "comment": " Same semantics as `itself`, but for errors. Error taps do not have an asynchronous alternative. ",
+        "type": "(bad -> List a) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "itself",
+        "comment": " This is the most essential tap for almost any application. It routes the actions resulting from your TaskDispatchment output back to the program's main address. ",
+        "type": "Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "itselfAsync",
+        "comment": " Same as itself, but execute action lists asynchronously, such that they may be interspersed with other action lists. ",
+        "type": "Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "nilTask",
+        "comment": " An OrbiterTask that does nothing and produces noActions. ",
+        "type": "Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "noActions",
+        "comment": " A list of no actions. ",
+        "type": "List a"
+      },
+      {
+        "name": "orbiterAgent",
+        "comment": " The basic orbiter agent. Takes two functions, one of which transforms a successful result in to\nan AgentStatus, and one which does the same for task failure results. This transforms an arbitrary\ntask in to an OrbiterTask. Notice that we can easily succeed anyway even if the task failed, or vice\nversa, because we get an AgentStatus which may be successful or failing either way. This means you\ncan skip error handling altogether if you already know what to do with the failure from the scope\nyou're in; you can simply map the failure on to some actions that perform an appropriate\ncontingency. ",
+        "type": "(x -> Gigan.Core.AgentStatus bad a) -> (y -> Gigan.Core.AgentStatus bad a) -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterAgentFailure",
+        "comment": " Failed OrbiterAgent output. ",
+        "type": "bad -> Gigan.Core.AgentStatus bad a"
+      },
+      {
+        "name": "orbiterAgentSuccess",
+        "comment": " Successful OrbiterAgent output. ",
+        "type": "List a -> Gigan.Core.AgentStatus bad a"
+      },
+      {
+        "name": "orbiterBinaryAgent",
+        "comment": " A binary orbiter agent. This does not process any of the results, but simply always gives the\nsuccesful AgentStatus (the first one) on task success, otherwise it gives the failed AgentStatus. ",
+        "type": "Gigan.Core.AgentStatus bad a -> Gigan.Core.AgentStatus bad a -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterBlindAgent",
+        "comment": " If we don't care about the outcome of a task because it can't fail or produce a meaningful\nresult, we can just queue up something to do after it's done. This is perfect for using delay tasks. ",
+        "type": "Gigan.Core.AgentStatus bad a -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterFailureAgent",
+        "comment": " This is a combination of orbiterAgent and orbiterBinary agent which gives the successful agent\nstatus in the case of success, and processes failed results to get an AgentStatus otherwise . ",
+        "type": "Gigan.Core.AgentStatus bad a -> (y -> Gigan.Core.AgentStatus bad a) -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterNilAgent",
+        "comment": " No matter what, do nothing. This will get your task to run, but no kind of action or error\nfeedback will be produced. ",
+        "type": "Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterResultAgent",
+        "comment": " The other orbiter agents defined so far are less succinct because they take two arguments, one\nwhich applies to the success case and one which applies to the failure case. This one takes a single\nfunction which processes the task's outcome as a Result, and so is generally a bit shorter to write. ",
+        "type": "(Result.Result y x -> Gigan.Core.AgentStatus bad a) -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbiterSnapshot",
+        "comment": " Constructor for an OrbiterSnapshot. I reccomend using the Stem module instead of these functions. ",
+        "type": "b -> Gigan.Core.TaskDispatchment bad a -> Gigan.Core.OrbiterSnapshot a b bad"
+      },
+      {
+        "name": "orbiterSnapshotAddDispatchment",
+        "comment": " Add a dispatchment to an OrbiterSnapshot. ",
+        "type": "Gigan.Core.TaskDispatchment bad a -> Gigan.Core.OrbiterSnapshot a b bad -> Gigan.Core.OrbiterSnapshot a b bad"
+      },
+      {
+        "name": "orbiterSnapshotDispatch",
+        "comment": " Get the pending TaskDispatchment out of an OrbiterSnapshot and clear it from the snapshot in\none go. This gives an _ugly pair_. See the newer interface for this in Stem, and also see the way\nKnowledge works. It seems much better to separate this in to two stages. It leaves room for a mistake,\nwhich I was trying to avoid, but it's so much cleaner than way that it's worth it and actually\nleads to fewer mistakes as a result. ",
+        "type": "Gigan.Core.OrbiterSnapshot a b bad -> ( Gigan.Core.OrbiterSnapshot a b bad , Gigan.Core.TaskDispatchment bad a )"
+      },
+      {
+        "name": "orbiterSnapshotPresent",
+        "comment": " Run the `present` phase on an OrbiterSnapshot, yielding a ViewOutput. ",
+        "type": "{ k | present : Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.ViewOutput a c bad } -> Signal.Address (List a) -> Time.Time -> Gigan.Core.OrbiterSnapshot a b bad -> Gigan.Core.ViewOutput a c bad"
+      },
+      {
+        "name": "orbiterSnapshotStage",
+        "comment": " Run the `stage` phase on an OrbiterSnapshot. ",
+        "type": "{ k | stage : Signal.Address (List a) -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad } -> Signal.Address (List a) -> Time.Time -> Gigan.Core.OrbiterSnapshot a b bad -> Gigan.Core.OrbiterSnapshot a b bad"
+      },
+      {
+        "name": "orbiterSnapshotUpdate",
+        "comment": " Run the `update` phase on an OrbiterSnapshot. ",
+        "type": "{ k | update : a -> Time.Time -> b -> Gigan.Core.UpdatedModel a b bad } -> List a -> Time.Time -> Gigan.Core.OrbiterSnapshot a b bad -> Gigan.Core.OrbiterSnapshot a b bad"
+      },
+      {
+        "name": "orbiterSuccessAgent",
+        "comment": " This is a combination of orbiterAgent and orbiterBinary agent which processes successful results\nto get an AgentStatus, otherwise giving the failed agent status. ",
+        "type": "(x -> Gigan.Core.AgentStatus bad a) -> Gigan.Core.AgentStatus bad a -> Task.Task y x -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "orbits",
+        "comment": " Run an orbiter without any startup task.\n\n    orbits (myProgram `withSequenceInputs` [myInput, myInput2])\n\n",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "orbitsWithWork",
+        "comment": " This is the workhorse of Gigan.Core. Given an OrbiterInput and some starting OrbiterTask,\nrun the Orbiter program described by the input to give an OrbiterOutput. ",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> Gigan.Core.OrbiterTask bad a -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "performCycle",
+        "comment": " Perform a full cycle on an OrbiterSnapshot. This looks like:\n\n      state\n      |> orbiterSnapshotUpdate input actions now\n      |> orbiterSnapshotStage input address now\n      |> orbiterSnapshotDispatch\n\ninternally. The point of performCycle is to be used in foldp, which it is inside orbitsWithWork\nand orbits (which really just calls orbitsWithWork with nilTask).\n",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> Signal.Address (List a) -> ( Time.Time, List a ) -> ( Gigan.Core.OrbiterSnapshot a b bad , Gigan.Core.TaskDispatchment bad a ) -> ( Gigan.Core.OrbiterSnapshot a b bad , Gigan.Core.TaskDispatchment bad a )"
+      },
+      {
+        "name": "presented",
+        "comment": " Give a ViewOutput from your view type, carrying an empty TaskDispatchment. ",
+        "type": "c -> Gigan.Core.ViewOutput a c bad"
+      },
+      {
+        "name": "promoteDispatchment",
+        "comment": " Using some transformation function, create a TaskDispatchment with a different action type. ",
+        "type": "(List a -> List a') -> Gigan.Core.TaskDispatchment bad a -> Gigan.Core.TaskDispatchment bad a'"
+      },
+      {
+        "name": "sieve",
+        "comment": " The sieve is the final stop for OrbiterOutput. This should be attached at a port to get your\ntasks running. ",
+        "type": "Gigan.Core.OrbiterOutput a b c bad -> Signal.Signal (Task.Task z ())"
+      },
+      {
+        "name": "thisAddress",
+        "comment": " Route the resulting actions from your TaskDispatchments to some action list address. ",
+        "type": "Signal.Address (List a) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisAddressAsync",
+        "comment": " Same as thisAddress, but asynchronously as described above. ",
+        "type": "Signal.Address (List a) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisErrorTap",
+        "comment": " Transform any errors in to lists of actions, then route them to the address. ",
+        "type": "Signal.Address (List a) -> (bad -> List a) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisForwardAddress",
+        "comment": " Same as thisAddress, but with forwarding. ",
+        "type": "Signal.Address target -> (List a -> target) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisForwardAddressAsync",
+        "comment": " Same as thisForwardAddress, but asynchronously as described above. ",
+        "type": "Signal.Address target -> (List a -> target) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisForwardTap",
+        "comment": " Same as thisTap but uses Address forwarding to transform action lists in to some other target type\nfor your address. ",
+        "type": "Gigan.Core.OrbiterTap bad a -> Signal.Address target -> (List a -> target) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "thisTap",
+        "comment": " A tap defined using an OrbiterTap and some address. The OrbiterTasks that pass through this tap will be\nrouted to the given address. This is a bit lower level than is needed in most cases. ",
+        "type": "Gigan.Core.OrbiterTap bad a -> Signal.Address (List a) -> Gigan.Core.OrbiterOutput a b c bad -> Gigan.Core.OrbiterOutput a b c bad"
+      },
+      {
+        "name": "updated",
+        "comment": " Give an UpdatedModel from a model, carrying an empty TaskDispatchment. ",
+        "type": "b -> Gigan.Core.UpdatedModel a b bad"
+      },
+      {
+        "name": "viewOutputTask",
+        "comment": " Get an OrbiterTask from a ViewOutput. This is DEPRECIATED. Use TaskDispatchment wherever\npossible. ",
+        "type": "Gigan.Core.ViewOutput a c bad -> Gigan.Core.OrbiterTask bad a"
+      },
+      {
+        "name": "withChildren",
+        "comment": " This takes a list of UpdatedModel or ViewOutput instances, and appends each one to the\nTaskDispatchment of the current output. This is preferred when doing model composition with Stem.\nFor example:\n\n    staged { collectionModel | memberViews = memberOutputs } `withChildren` memberOutputs\n\nwhere memberOutputs is a list of stemPresent or stemPresentAs outputs in the example.\n",
+        "type": "List { anything | dispatchment : Gigan.Core.TaskDispatchment bad a } -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a } -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a }"
+      },
+      {
+        "name": "withDispatchment",
+        "comment": " This is the same as `withTasks`, but it takes an already existing TaskDispatchment. ",
+        "type": "Gigan.Core.TaskDispatchment bad a -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a } -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a }"
+      },
+      {
+        "name": "withInputs",
+        "comment": " withInputs is the oldest way in Gigan of using action inputs, from before we started using\nlists of actions. Lists of actions are much more powerful because not only can they be used to\nmake sure sequences of actions run atomically, but it also gives us an obvious and tagless way to\nrepresent noop. Here's how it looked:\n\n    defProgram myPresent myUpdate myModel0 `withInputs` [actionSignal0, actionSignal1]\n\nThis is DEPRECIATED.\n",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> List (Signal.Signal a) -> Gigan.Core.OrbiterInput a b c bad"
+      },
+      {
+        "name": "withLazySequenceInputs",
+        "comment": " Since action lists are internally combined using lazy lists, one may want to just hand over their\nLazyList without converting it to a list. This may sometimes be appropriate, but beware of unbounded\nlaziness. Profiling is your friend here. ",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> List (Signal.Signal (Lazy.List.LazyList a)) -> Gigan.Core.OrbiterInput a b c bad"
+      },
+      {
+        "name": "withSequenceInputs",
+        "comment": " withSequenceInputs is the preferred way of piping outside sources of actions in to an orbiter\nprogram. You'll notice from the way this is used that OrbiterInput definitions made by defProgram'\nor defProgram refrain from including any inputs right away. The reason for this is that a program\nand the _source_ of it's input are two distinctly separate concerns, though the _content_ of it's\ninput is not. In Stem, the inputs of an OrbiterInput are not used. This way, OrbiterInput is also\nusable for defining Stem state machines as well as Orbiter programs.\n\n    defProgram' myPresent myStage myUpdate myModel0 `withSequenceInputs` [actionListSignal0, actionListSignal1]\n\n",
+        "type": "Gigan.Core.OrbiterInput a b c bad -> List (Signal.Signal (List a)) -> Gigan.Core.OrbiterInput a b c bad"
+      },
+      {
+        "name": "withTasks",
+        "comment": " Add some tasks to the output of any of the three Orbiter functions.\n\n    updated model `withTasks` [actionTask [Jump, Run]]\n    presented viewstuff `withTasks` [errorTask [reportError \"You done goofed.\"]]\n\nThis is definitely the most elegant way to build a TaskDispatchment as well, especially in the\ncontext of declaring causality.\n",
+        "type": "List (Gigan.Core.OrbiterTask bad a) -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a } -> { anything | dispatchment : Gigan.Core.TaskDispatchment bad a }"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Gigan.Layout",
+    "comment": " A very nice ruler snapping system for layouts. Actual documentation underway.\n\n# Definitions\n@docs Axis, Bounds, Group, Item, Rule\n\n# Ruler Guide Manipulation\n@docs adjustedRule, horizontalRule, horizontalRuleBetween, horizontalRuleCentered, itemHorizontalRule, itemRule, itemVerticalRule, ruleBetween, ruleCenter, snapToRule, towardsRule, towardsRuleRelative, verticalRule, verticalRuleBetween, verticalRuleCentered\n\n# Grouping and Group Operations\n@docs appendGroup, group, groupAt, groupAtBefore, groupElements, groupFromArray, groupFromDict, groupSize, prependGroup, computed, butBefore, butBeforeAt, butBeforeSlice, thenDo, thenDoAt, thenDoSlice, flatten, flattenOutTo, flattenTo, flattenWithin, flattenWithinOutTo\n\n# Group Spacing and Distribution.\n@docs spacedBetween, spacedBy, regularly, vertically, horizontally\n\n# Bounds Definitions\n@docs defBounds, autoBounds, boundsHeight, boundsLower, boundsSize, boundsUpper, boundsWidth, clampedBounds, clampedInnerBounds, clampedOuterBounds\n\n# Item Grabs\n@docs grabItem, grabItemRelative, grabItemRelativeX, grabItemRelativeY, grabItemX, grabItemY\n\n# Item Metrics\n@docs itemBounds, itemWidth, itemHeight, itemSize\n\n# Item Placement\n@docs lerpOf, move, moveX, moveY, place, placeX, placeY\n\n# Create and Display Items\n@docs emptyItem, toItem, fromItem\n\n",
+    "aliases": [
+      {
+        "name": "Item",
+        "comment": " An item, which represents an Elm Element with a position and a handle. ",
+        "args": [],
+        "type": "{ elem : Graphics.Element.Element , x : Int , u : Int , y : Int , v : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Axis",
+        "comment": " An axis along which to evenly distribute by spacing or handle position. ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Bounds",
+        "comment": " A bounding box, given as a minimum and a maximum. ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Group",
+        "comment": " Group is an opaque type that represents a grouped set of items with a pending set of transformations. ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Rule",
+        "comment": " A guide ruler defined as either a vertical or a horizontal axis aligned line. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "adjustedRule",
+        "comment": " Adjust a horizontal or vertical ruler. ",
+        "type": "(Int -> Gigan.Layout.Rule) -> Int -> Gigan.Layout.Rule -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "appendGroup",
+        "comment": " Append two groups, resulting a group containing the elements from `grp` first and the\nelements of `grp'` second. ",
+        "type": "Gigan.Layout.Group -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "autoBounds",
+        "comment": " Automatic bounds. ",
+        "type": "Gigan.Layout.Bounds"
+      },
+      {
+        "name": "boundsHeight",
+        "comment": " Get the width of a bounding box, defined as boundsSize >> snd ",
+        "type": "Gigan.Layout.Bounds -> Int"
+      },
+      {
+        "name": "boundsLower",
+        "comment": " Get the minimum bound if a minimum bound is defined. ",
+        "type": "Gigan.Layout.Bounds -> Maybe.Maybe ( Int, Int )"
+      },
+      {
+        "name": "boundsSize",
+        "comment": " Get the size of a bounding box if both maximum and minimum bounds are defined, otherwise (0, 0). ",
+        "type": "Gigan.Layout.Bounds -> ( Int, Int )"
+      },
+      {
+        "name": "boundsUpper",
+        "comment": " Get the maximum bound if a maximum bound is defined. ",
+        "type": "Gigan.Layout.Bounds -> Maybe.Maybe ( Int, Int )"
+      },
+      {
+        "name": "boundsWidth",
+        "comment": " Get the width of a bounding box, defined as boundsSize >> fst ",
+        "type": "Gigan.Layout.Bounds -> Int"
+      },
+      {
+        "name": "butBefore",
+        "comment": " Apply some transformation to every item in the group before the pending transformations. ",
+        "type": "(Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "butBeforeAt",
+        "comment": " Apply some transformation to the item at a particular index in the group before the pending transformations. ",
+        "type": "Int -> (Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "butBeforeSlice",
+        "comment": " Apply some transformation to the items in a particular slice of the group before the pending transformations. ",
+        "type": "Int -> Int -> (Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "clampedBounds",
+        "comment": " Clamp a bounding box to some inner bounding box and some outer bounding box. Either the inner\nor the outer bounding box may be autoBounds, so this may also only clamp an inner or an outer limit,\nor neither. ",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Bounds -> Gigan.Layout.Bounds -> Gigan.Layout.Bounds"
+      },
+      {
+        "name": "clampedInnerBounds",
+        "comment": " clampedInnerBounds myBounds = clampedBounds myBounds autoBounds ",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Bounds -> Gigan.Layout.Bounds"
+      },
+      {
+        "name": "clampedOuterBounds",
+        "comment": " clampedOuterBounds myBounds = clampedBounds autoBounds myBounds ",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Bounds -> Gigan.Layout.Bounds"
+      },
+      {
+        "name": "computed",
+        "comment": " Run any pending transformations on all group items. For the most part, this can be avoided, but it should be\ndone if you are planning to get a lot of items back from the group transformed, or else the work of applying the\npending group transforms will be done at least twice, once when you retrieve the item using groupAt and once when\nyou flatten the group to produce an item. ",
+        "type": "Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "defBounds",
+        "comment": " Define a definite bounding box. ",
+        "type": "Int -> Int -> Int -> Int -> Gigan.Layout.Bounds"
+      },
+      {
+        "name": "emptyItem",
+        "comment": " An empty layout item. ",
+        "type": "Gigan.Layout.Item"
+      },
+      {
+        "name": "flatten",
+        "comment": " Flatten a group using automatic bounds for the inner and outer bounds. This will produce the\ntightest bounding box possible around the target, and place the handle at (0, 0) relative to the resulting\nbounding box. This can result in the handle being placed outside of the group, but this can be desirable for\npositioning. For example, I may want to grab something at (-5, -5), so I can position it's top left\ncorner relative to some outer box with (5, 5) padding. ",
+        "type": "Gigan.Layout.Group -> Gigan.Layout.Item"
+      },
+      {
+        "name": "flattenOutTo",
+        "comment": " Flatten a group using only an inner bound, which is equivalent to\n\n    flattenWithinOutTo outer autoBounds\n",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Group -> Gigan.Layout.Item"
+      },
+      {
+        "name": "flattenTo",
+        "comment": " Flatten a group using an exact bound. If this is specified to be autoBounds, then the following\nequivalency holds:\n\n    flattenTo autoBounds group == flatten group\n\nOtherwise, the items in the group are positioned in the resulting item relative to the top left corner of the bounds and\nthe resulting item shall have the exact size of the given bounds. ",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Group -> Gigan.Layout.Item"
+      },
+      {
+        "name": "flattenWithin",
+        "comment": " Flatten a group using only an outer bound, which is equivalent to\n\n    flattenWithinOutTo autoBounds outer\n",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Group -> Gigan.Layout.Item"
+      },
+      {
+        "name": "flattenWithinOutTo",
+        "comment": " Flatten a group using an inner and an outer bound to clamp the size of the resulting item.\n",
+        "type": "Gigan.Layout.Bounds -> Gigan.Layout.Bounds -> Gigan.Layout.Group -> Gigan.Layout.Item"
+      },
+      {
+        "name": "fromItem",
+        "comment": " Get the Graphics Element from an Item. Note that this will get the original Element back,\nunaffected by any positioning done using placement and group operations. To produce Graphics\nElements with finished layouts, refer to the flatten functions. ",
+        "type": "Gigan.Layout.Item -> Graphics.Element.Element"
+      },
+      {
+        "name": "grabItem",
+        "comment": " Grab an item, producing a handle. This defines a point on the item called the \"handle\" that is\nplaced exactly at item's coordinates. If I say\n\n  grabItem 0 0\n\nthen that would grab the top left corner. u and v and given as window coordinates relative to the\ntop left corner of the item. ",
+        "type": "Int -> Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "grabItemRelative",
+        "comment": " Grab an item in normalized coordinates relative to it's size. This means that (1, 1) is the\nbottom right corner, and (0, 0) is the top left corner. ",
+        "type": "Float -> Float -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "grabItemRelativeX",
+        "comment": " Grab an item by it's x coordinate relative to the item's size. ",
+        "type": "Float -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "grabItemRelativeY",
+        "comment": " Grab an item by it's y coordinate relative to the item's size. ",
+        "type": "Float -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "grabItemX",
+        "comment": " Grab an item by it's x coordinate. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "grabItemY",
+        "comment": " Grab an item by it's y coordinate. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "group",
+        "comment": " Create an item group from a list. ",
+        "type": "List Gigan.Layout.Item -> Gigan.Layout.Group"
+      },
+      {
+        "name": "groupAt",
+        "comment": " Retrieve the item at a given index in the group, or Nothing if the index is out of bounds. If\nthere are waiting transformations, a copy of the item with those transformations applied will be\ngiven. ",
+        "type": "Int -> Gigan.Layout.Group -> Maybe.Maybe Gigan.Layout.Item"
+      },
+      {
+        "name": "groupAtBefore",
+        "comment": " Retrieve the item at a given index in the group, or Nothing if the index is out of bounds. The\nitem will be retrieved in it's original state without any pending group transformations applied. ",
+        "type": "Int -> Gigan.Layout.Group -> Maybe.Maybe Gigan.Layout.Item"
+      },
+      {
+        "name": "groupElements",
+        "comment": " This is a shortcut for grouping graphics elements, which is very useful for compositing graphics\nelements such as images directly for layering effects. ",
+        "type": "List Graphics.Element.Element -> Gigan.Layout.Group"
+      },
+      {
+        "name": "groupFromArray",
+        "comment": " Create an item group from an array. ",
+        "type": "Array.Array Gigan.Layout.Item -> Gigan.Layout.Group"
+      },
+      {
+        "name": "groupFromDict",
+        "comment": " Create an item group from a dictionary. ",
+        "type": "Dict.Dict comparable Gigan.Layout.Item -> Gigan.Layout.Group"
+      },
+      {
+        "name": "groupSize",
+        "comment": " Get the size of the group. ",
+        "type": "Gigan.Layout.Group -> Int"
+      },
+      {
+        "name": "horizontalRule",
+        "comment": " Create a new horizontal ruler at the given y coordinate. ",
+        "type": "Int -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "horizontalRuleBetween",
+        "comment": " Shorthand for ruleBetween horizontalRule ",
+        "type": "Int -> Int -> Float -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "horizontalRuleCentered",
+        "comment": " Shorthand for ruleCenter horizontalRule ",
+        "type": "Int -> Int -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "horizontally",
+        "comment": " Do a distribution horizontally. ",
+        "type": "Gigan.Layout.Axis"
+      },
+      {
+        "name": "itemBounds",
+        "comment": " Get the resultant bounding box of an item, given it's placement and handle. ",
+        "type": "Gigan.Layout.Item -> Gigan.Layout.Bounds"
+      },
+      {
+        "name": "itemHeight",
+        "comment": " Get the height of an item. ",
+        "type": "Gigan.Layout.Item -> Int"
+      },
+      {
+        "name": "itemHorizontalRule",
+        "comment": " Create a horizontal ruler aligned with an item. ",
+        "type": "Gigan.Layout.Item -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "itemRule",
+        "comment": " Create a vertical or a horizontal ruler aligned with an item. ",
+        "type": "(Int -> Gigan.Layout.Rule) -> Gigan.Layout.Item -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "itemSize",
+        "comment": " Get the size of an Item. ",
+        "type": "Gigan.Layout.Item -> ( Int, Int )"
+      },
+      {
+        "name": "itemVerticalRule",
+        "comment": " Create a vertical ruler aligned with an item. ",
+        "type": "Gigan.Layout.Item -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "itemWidth",
+        "comment": " Get the width of an item. ",
+        "type": "Gigan.Layout.Item -> Int"
+      },
+      {
+        "name": "lerpOf",
+        "comment": " Modify any of the item manipulation primitives by linearly interpolating the handle and coordinates\nbetween the current and output values. This provides the basic building block for transitional animations.\nEasing functions could quite easily be implemented on top of this. ",
+        "type": "(Gigan.Layout.Item -> Gigan.Layout.Item) -> Float -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "move",
+        "comment": " Move an item. ",
+        "type": "Int -> Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "moveX",
+        "comment": " Move an item horizontally. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "moveY",
+        "comment": " Move an item vertically. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "place",
+        "comment": " Place the handle of an item at these coordinates. ",
+        "type": "Int -> Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "placeX",
+        "comment": " Place the handle of an item at this x coordinate. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "placeY",
+        "comment": " Place the handle of an item at this y coordinate. ",
+        "type": "Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "prependGroup",
+        "comment": " Prepend a group before another, resulting a group containing the elements from `grp` second and\nthe elements of `grp'` first. ",
+        "type": "Gigan.Layout.Group -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "regularly",
+        "comment": " Distribute the items in the group along some Axis given a starting coordinate and an ending\ncoordinate, such that the handles of the items are evenly distributed between the starting and the\nending coordinates. The height or width of this vertical or horizontal distribution is dependent on\nthe positioning of the handles on the items, and the coordinate not effected by the distribution is\nleft in place. ",
+        "type": "Gigan.Layout.Axis -> Int -> Int -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "ruleBetween",
+        "comment": " Given a ruler direction (verticalRule or horizontalRule), a lower and an upper bound, and some\nfloat t between 0 and 1, linearly interpolate between the lower and upper bound by t. ",
+        "type": "(Int -> Gigan.Layout.Rule) -> Int -> Int -> Float -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "ruleCenter",
+        "comment": " Given a ruler direction (verticalRule or horizontalRule), a lower bound, and an upper bound,\ncenter a ruler between the lower and the upper bound. The following equivalencies hold:\n\n    ruleCenter verticalRule x0 x1 == ruleBetween verticalRule x0 x1 0.5\n    ruleCenter horizontalRule y0 y1 == ruleBetween horizontalRule y0 y1 0.5\n\n",
+        "type": "(Int -> Gigan.Layout.Rule) -> Int -> Int -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "snapToRule",
+        "comment": " Snap an item's handle to a vertical or horizontal ruler. ",
+        "type": "Gigan.Layout.Rule -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "spacedBetween",
+        "comment": " Distribute the items in the group along some Axis given a starting coordinate and an ending\ncoordinate, such that the spaces between all of the items are even, resulting in a justified layout.\nVertical distribution is done top to bottom, horizontal distribution is done left to right.\n\nThe height or width of this vertical or horizontal distribution is\n\n    to - from\n\nand the coordinate not effected by the distribution is left in place.\n",
+        "type": "Gigan.Layout.Axis -> Int -> Int -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "spacedBy",
+        "comment": " Distribute the items in the group along some Axis given a starting coordinate and spacing given\nin window coordinates, resulting in an evenly spaced horizontal or vertical distribution. Vertical\ndistribution is done top to bottom, horizontal distribution is done left to right.\n\nThe height or width of this vertical or horizontal distribution is\n\n    from + siz * (n - 1) + (sum itemHeight items)\n\nand the coordinate not effected by the distribution is left in place.\n\n",
+        "type": "Gigan.Layout.Axis -> Int -> Int -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "thenDo",
+        "comment": " Apply some transformation to every item in the group after the pending transformations. ",
+        "type": "(Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "thenDoAt",
+        "comment": " Apply some transformation to the item at a particular index in the group after the pending transformations. ",
+        "type": "Int -> (Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "thenDoSlice",
+        "comment": " Apply some transformation to the items in a particular slice of the group after the pending transformations. ",
+        "type": "Int -> Int -> (Gigan.Layout.Item -> Gigan.Layout.Item) -> Gigan.Layout.Group -> Gigan.Layout.Group"
+      },
+      {
+        "name": "toItem",
+        "comment": " Convert a Graphics Element to an Item ",
+        "type": "Graphics.Element.Element -> Gigan.Layout.Item"
+      },
+      {
+        "name": "towardsRule",
+        "comment": " Move an item's handle toward a vertical or horizontal ruler by some constant amount. ",
+        "type": "Gigan.Layout.Rule -> Int -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "towardsRuleRelative",
+        "comment": " Move an item's handle toward a vertical or horizontal ruler by some factor t  ",
+        "type": "Gigan.Layout.Rule -> Float -> Gigan.Layout.Item -> Gigan.Layout.Item"
+      },
+      {
+        "name": "verticalRule",
+        "comment": " Create a new vertical ruler at the given x coordinate. ",
+        "type": "Int -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "verticalRuleBetween",
+        "comment": " Shorthand for ruleBetween verticalRule ",
+        "type": "Int -> Int -> Float -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "verticalRuleCentered",
+        "comment": " Shorthand for ruleCenter verticalRule ",
+        "type": "Int -> Int -> Gigan.Layout.Rule"
+      },
+      {
+        "name": "vertically",
+        "comment": " Do a distribution vertically. ",
+        "type": "Gigan.Layout.Axis"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

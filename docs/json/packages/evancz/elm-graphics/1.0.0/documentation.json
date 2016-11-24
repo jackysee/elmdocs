@@ -1,0 +1,699 @@
+[
+  {
+    "name": "Collage",
+    "comment": " The collage API is for freeform graphics. You can move, rotate, scale, etc.\nall sorts of forms including lines, shapes, images, and elements.\n\nCollages use the same coordinate system you might see in an algebra or physics\nproblem. The origin (0,0) is at the center of the collage, not the top left\ncorner as in some other graphics libraries. Furthermore, the y-axis points up,\nso moving a form 10 units in the y-axis will move it up on screen.\n\n# Unstructured Graphics\n@docs collage, Form\n\n# Creating Forms\n@docs toForm, filled, textured, gradient, outlined, traced, text, outlinedText\n\n# Transforming Forms\n@docs move, moveX, moveY, scale, rotate, alpha\n\n# Grouping Forms\nGrouping forms makes it easier to write modular graphics code. You can create\na form that is a composite of many subforms. From there it is easy to transform\nit as a single unit.\n\n@docs group, groupTransform\n\n# Shapes\n@docs Shape, rect, oval, square, circle, ngon, polygon\n\n# Paths\n@docs Path, segment, path\n\n# Line Styles\n@docs solid, dashed, dotted, LineStyle, LineCap, LineJoin, defaultLine\n\n",
+    "aliases": [
+      {
+        "name": "LineStyle",
+        "comment": " All of the attributes of a line style. This lets you build up a line style\nhowever you want. You can also update existing line styles with record updates.\n",
+        "args": [],
+        "type": "{ color : Color.Color , width : Float , cap : Collage.LineCap , join : Collage.LineJoin , dashing : List Int , dashOffset : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Form",
+        "comment": " A visual `Form` has a shape and texture. This can be anything from a red\nsquare to a circle textured with stripes.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "LineCap",
+        "comment": " The shape of the ends of a line. ",
+        "args": [],
+        "cases": [
+          [
+            "Flat",
+            []
+          ],
+          [
+            "Round",
+            []
+          ],
+          [
+            "Padded",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "LineJoin",
+        "comment": " The shape of the &ldquo;joints&rdquo; of a line, where each line segment\nmeets. `Sharp` takes an argument to limit the length of the joint. This\ndefaults to 10.\n",
+        "args": [],
+        "cases": [
+          [
+            "Smooth",
+            []
+          ],
+          [
+            "Sharp",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Clipped",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Path",
+        "comment": " A 2D path. Paths are a sequence of points. They do not have a color.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Shape",
+        "comment": " A 2D shape. Shapes are closed polygons. They do not have a color or\ntexture, that information can be filled in later.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "alpha",
+        "comment": " Set the alpha of a `Form`. The default is 1, and 0 is totally transparent. ",
+        "type": "Float -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "circle",
+        "comment": " A circle with a given radius. ",
+        "type": "Float -> Collage.Shape"
+      },
+      {
+        "name": "collage",
+        "comment": " Create a collage with certain dimensions and content. It takes width and height\narguments to specify dimensions, and then a list of 2D forms to decribe the content.\n\nUnlike with `Element`s, these 2D forms can be moved and rotated however you like.\nThe forms are drawn in the order of the list, i.e., `collage w h [a, b]` will\ndraw `b` on top of `a`.\n",
+        "type": "Int -> Int -> List Collage.Form -> Element.Element"
+      },
+      {
+        "name": "dashed",
+        "comment": " Create a dashed line style with a given color. Dashing equals `[8,4]`. ",
+        "type": "Color.Color -> Collage.LineStyle"
+      },
+      {
+        "name": "defaultLine",
+        "comment": " The default line style, which is solid black with flat caps and sharp joints.\nYou can use record updates to build the line style you\nwant. For example, to make a thicker line, you could say:\n\n    { defaultLine | width = 10 }\n",
+        "type": "Collage.LineStyle"
+      },
+      {
+        "name": "dotted",
+        "comment": " Create a dotted line style with a given color. Dashing equals `[3,3]`. ",
+        "type": "Color.Color -> Collage.LineStyle"
+      },
+      {
+        "name": "filled",
+        "comment": " Create a filled in shape. ",
+        "type": "Color.Color -> Collage.Shape -> Collage.Form"
+      },
+      {
+        "name": "gradient",
+        "comment": " Fill a shape with a [gradient](Color#linear). ",
+        "type": "Color.Gradient -> Collage.Shape -> Collage.Form"
+      },
+      {
+        "name": "group",
+        "comment": " Flatten many forms into a single `Form`. This lets you move and rotate them\nas a single unit, making it possible to build small, modular components.\nForms will be drawn in the order that they are listed, as in `collage`.\n",
+        "type": "List Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "groupTransform",
+        "comment": " Flatten many forms into a single `Form` and then apply a matrix\ntransformation. Forms will be drawn in the order that they are listed, as in\n`collage`.\n",
+        "type": "Transform.Transform -> List Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "move",
+        "comment": " Move a form by the given amount (x, y). This is a relative translation so\n`(move (5,10) form)` would move `form` five pixels to the right and ten pixels up.\n",
+        "type": "( Float, Float ) -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "moveX",
+        "comment": " Move a shape in the x direction. This is relative so `(moveX 10 form)` moves\n`form` 10 pixels to the right.\n",
+        "type": "Float -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "moveY",
+        "comment": " Move a shape in the y direction. This is relative so `(moveY 10 form)` moves\n`form` upwards by 10 pixels.\n",
+        "type": "Float -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "ngon",
+        "comment": " A regular polygon with N sides. The first argument specifies the number\nof sides and the second is the radius. So to create a pentagon with radius\n30 you would say:\n\n    ngon 5 30\n",
+        "type": "Int -> Float -> Collage.Shape"
+      },
+      {
+        "name": "outlined",
+        "comment": " Outline a shape with a given line style. ",
+        "type": "Collage.LineStyle -> Collage.Shape -> Collage.Form"
+      },
+      {
+        "name": "outlinedText",
+        "comment": " Create some outlined text. Since we are just outlining the text, the color\nis taken from the `LineStyle` attribute instead of the `Text`.\n",
+        "type": "Collage.LineStyle -> Text.Text -> Collage.Form"
+      },
+      {
+        "name": "oval",
+        "comment": " An oval with a given width and height. ",
+        "type": "Float -> Float -> Collage.Shape"
+      },
+      {
+        "name": "path",
+        "comment": " Create a path that follows a sequence of points. ",
+        "type": "List ( Float, Float ) -> Collage.Path"
+      },
+      {
+        "name": "polygon",
+        "comment": " Create an arbitrary polygon by specifying its corners in order.\n`polygon` will automatically close all shapes, so the given list\nof points does not need to start and end with the same position.\n",
+        "type": "List ( Float, Float ) -> Collage.Shape"
+      },
+      {
+        "name": "rect",
+        "comment": " A rectangle with a given width and height. ",
+        "type": "Float -> Float -> Collage.Shape"
+      },
+      {
+        "name": "rotate",
+        "comment": " Rotate a form by a given angle. Rotate takes standard Elm angles (radians)\nand turns things counterclockwise. So to turn `form` 30&deg; to the left\nyou would say, `(rotate (degrees 30) form)`.\n",
+        "type": "Float -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "scale",
+        "comment": " Scale a form by a given factor. Scaling by 2 doubles both dimensions,\nand quadruples the area.\n",
+        "type": "Float -> Collage.Form -> Collage.Form"
+      },
+      {
+        "name": "segment",
+        "comment": " Create a path along a given line segment. ",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Collage.Path"
+      },
+      {
+        "name": "solid",
+        "comment": " Create a solid line style with a given color. ",
+        "type": "Color.Color -> Collage.LineStyle"
+      },
+      {
+        "name": "square",
+        "comment": " A square with a given edge length. ",
+        "type": "Float -> Collage.Shape"
+      },
+      {
+        "name": "text",
+        "comment": " Create some text. Details like size and color are part of the `Text` value\nitself, so you can mix colors and sizes and fonts easily.\n",
+        "type": "Text.Text -> Collage.Form"
+      },
+      {
+        "name": "textured",
+        "comment": " Create a textured shape. The texture is described by some url and is\ntiled to fill the entire shape.\n",
+        "type": "String -> Collage.Shape -> Collage.Form"
+      },
+      {
+        "name": "toForm",
+        "comment": " Turn any `Element` into a `Form`. This lets you use text, gifs, and video\nin your collage. This means you can move, rotate, and scale\nan `Element` however you want.\n",
+        "type": "Element.Element -> Collage.Form"
+      },
+      {
+        "name": "traced",
+        "comment": " Trace a path with a given line style. ",
+        "type": "Collage.LineStyle -> Collage.Path -> Collage.Form"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Element",
+    "comment": " Graphical elements that snap together to build complex widgets and layouts.\nEach Element is a rectangle with a known width and height, making them easy to\ncombine and position.\n\n# Elements\n@docs Element, toHtml\n\n# Show Anything\n@docs show\n\n# Images\n@docs image, fittedImage, croppedImage, tiledImage\n\n# Text\nEach of the following functions places [`Text`](Text) into a box. The function\nyou use determines the alignment of the text.\n\n@docs leftAligned, rightAligned, centered, justified\n\n# Styling\n@docs width, height, size, color, opacity, link, tag\n\n# Inspection\n@docs widthOf, heightOf, sizeOf\n\n# Layout\n@docs flow, Direction, up, down, left, right, inward, outward\n\n## Layout Aliases\nThere are also some convenience functions for working\nwith `flow` in specific cases:\n\n@docs layers, above, below, beside\n\n# Positioning\n@docs empty, spacer, container\n\n## Specific Positions\n\n@docs Position, middle, midTop, midBottom, midLeft, midRight, topLeft,\n  topRight, bottomLeft, bottomRight\n\nIf you need more precision, you can create custom positions.\n\n@docs Pos, absolute, relative, middleAt, midTopAt, midBottomAt, midLeftAt,\n      midRightAt, topLeftAt, topRightAt, bottomLeftAt, bottomRightAt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Direction",
+        "comment": " Represents a `flow` direction for a list of elements.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Element",
+        "comment": " A graphical element that can be rendered on screen. Every element is a\nrectangle with a known width and height, so they can be composed and stacked\neasily.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Pos",
+        "comment": " Specifies a distance from a particular location within a `container`, like\n“20 pixels right and up from the center”. You can use `absolute` or `relative`\nto specify a `Pos` in pixels or as a percentage of the container.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Position",
+        "comment": " Specifies a position for an element within a `container`, like “the top\nleft corner”.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "above",
+        "comment": " Stack elements vertically.\nTo put `a` above `b` you would say: ``a `above` b``\n",
+        "type": "Element.Element -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "absolute",
+        "comment": " A position specified in pixels. If you want something 10 pixels to the\nright of the middle of a container, you would write this:\n\n    middleAt (absolute 10) (absolute 0)\n\n",
+        "type": "Int -> Element.Pos"
+      },
+      {
+        "name": "below",
+        "comment": " Stack elements vertically.\nTo put `a` below `b` you would say: ``a `below` b``\n",
+        "type": "Element.Element -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "beside",
+        "comment": " Put elements beside each other horizontally.\nTo put `a` beside `b` you would say: ``a `beside` b``\n",
+        "type": "Element.Element -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "bottomLeft",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "bottomLeftAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "bottomRight",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "bottomRightAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "centered",
+        "comment": " Center text in the text block. There is equal spacing on either side of a\nline of text.\n",
+        "type": "Text.Text -> Element.Element"
+      },
+      {
+        "name": "color",
+        "comment": " Create an `Element` with a given background color. ",
+        "type": "Color.Color -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "container",
+        "comment": " Put an element in a container. This lets you position the element really\neasily, and there are tons of ways to set the `Position`.\nTo center `element` exactly in a 300-by-300 square you would say:\n\n    container 300 300 middle element\n\nBy setting the color of the container, you can create borders.\n",
+        "type": "Int -> Int -> Element.Position -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "croppedImage",
+        "comment": " Create a cropped image. Take a rectangle out of the picture starting\nat the given top left coordinate. If you have a 140-by-140 image,\nthe following will cut a 100-by-100 square out of the middle of it.\n\n    croppedImage (20,20) 100 100 \"yogi.jpg\"\n",
+        "type": "( Int, Int ) -> Int -> Int -> String -> Element.Element"
+      },
+      {
+        "name": "down",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "empty",
+        "comment": " An Element that takes up no space. Good for things that appear conditionally:\n\n    flow down [ img1, if showMore then img2 else empty ]\n",
+        "type": "Element.Element"
+      },
+      {
+        "name": "fittedImage",
+        "comment": " Create a fitted image given a width, height, and image source.\nThis will crop the picture to best fill the given dimensions.\n",
+        "type": "Int -> Int -> String -> Element.Element"
+      },
+      {
+        "name": "flow",
+        "comment": " Have a list of elements flow in a particular direction.\nThe `Direction` starts from the first element in the list.\n\n    flow right [a,b,c]\n\n        +---+---+---+\n        | a | b | c |\n        +---+---+---+\n",
+        "type": "Element.Direction -> List Element.Element -> Element.Element"
+      },
+      {
+        "name": "height",
+        "comment": " Create an `Element` with a given height. ",
+        "type": "Int -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "heightOf",
+        "comment": " Get the height of an Element ",
+        "type": "Element.Element -> Int"
+      },
+      {
+        "name": "image",
+        "comment": " Create an image given a width, height, and image source. ",
+        "type": "Int -> Int -> String -> Element.Element"
+      },
+      {
+        "name": "inward",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "justified",
+        "comment": " Align text along the left and right sides of the text block. Word spacing is\nadjusted to make this possible.\n",
+        "type": "Text.Text -> Element.Element"
+      },
+      {
+        "name": "layers",
+        "comment": " Layer elements on top of each other, starting from the bottom:\n`layers == flow outward`\n",
+        "type": "List Element.Element -> Element.Element"
+      },
+      {
+        "name": "left",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "leftAligned",
+        "comment": " Align text along the left side of the text block. This is sometimes known as\n*ragged right*.\n",
+        "type": "Text.Text -> Element.Element"
+      },
+      {
+        "name": "link",
+        "comment": " Create an `Element` that is a hyper-link. ",
+        "type": "String -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "midBottom",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "midBottomAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "midLeft",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "midLeftAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "midRight",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "midRightAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "midTop",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "midTopAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "middle",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "middleAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "opacity",
+        "comment": " Create an `Element` with a given opacity. Opacity is a number between 0 and 1\nwhere 0 means totally clear.\n",
+        "type": "Float -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "outward",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "relative",
+        "comment": " A position specified as a percentage. If you want something 10% away from\nthe top left corner, you would say:\n\n    topLeftAt (relative 0.1) (relative 0.1)\n",
+        "type": "Float -> Element.Pos"
+      },
+      {
+        "name": "right",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "rightAligned",
+        "comment": " Align text along the right side of the text block. This is sometimes known\nas *ragged left*.\n",
+        "type": "Text.Text -> Element.Element"
+      },
+      {
+        "name": "show",
+        "comment": " Convert anything to its textual representation and make it displayable in\nthe browser. Excellent for debugging.\n\n    show value =\n      leftAligned (Text.monospace (Text.fromString (toString value)))\n",
+        "type": "a -> Element.Element"
+      },
+      {
+        "name": "size",
+        "comment": " Create an `Element` with a new width and height. ",
+        "type": "Int -> Int -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "sizeOf",
+        "comment": " Get the width and height of an Element ",
+        "type": "Element.Element -> ( Int, Int )"
+      },
+      {
+        "name": "spacer",
+        "comment": " Create an empty box. This is useful for getting your spacing right and\nfor making borders.\n",
+        "type": "Int -> Int -> Element.Element"
+      },
+      {
+        "name": "tag",
+        "comment": " Create an `Element` with a tag. This lets you link directly to it.\nThe element `(tag \"all-about-badgers\" thirdParagraph)` can be reached\nwith a link like this: `/facts-about-animals.elm#all-about-badgers`\n",
+        "type": "String -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "tiledImage",
+        "comment": " Create a tiled image. Repeat the image to fill the given width and height.\n\n    tiledImage 100 100 \"yogi.jpg\"\n",
+        "type": "Int -> Int -> String -> Element.Element"
+      },
+      {
+        "name": "toHtml",
+        "comment": " Convert an element into HTML, so it can be embedded anywhere in your\nprogram.\n",
+        "type": "Element.Element -> Html.Html msg"
+      },
+      {
+        "name": "topLeft",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "topLeftAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "topRight",
+        "comment": "",
+        "type": "Element.Position"
+      },
+      {
+        "name": "topRightAt",
+        "comment": "",
+        "type": "Element.Pos -> Element.Pos -> Element.Position"
+      },
+      {
+        "name": "up",
+        "comment": "",
+        "type": "Element.Direction"
+      },
+      {
+        "name": "width",
+        "comment": " Create an `Element` with a given width. ",
+        "type": "Int -> Element.Element -> Element.Element"
+      },
+      {
+        "name": "widthOf",
+        "comment": " Get the width of an Element ",
+        "type": "Element.Element -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Transform",
+    "comment": " A library for performing [2D matrix transformations][affine].  It\nis used primarily with the `groupTransform` function from\n[`Graphics.Collage`](Graphics-Collage) and allows you to do things\nlike rotation, scaling, translation, shearing, and reflection.\n\nNote that all the matrices in this library are 3x3 matrices of homogeneous\ncoordinates, used for [affine transformations][affine]. Since the bottom row as\nalways `0 0 1` in these matrices, it is omitted in the diagrams below.\n\n [affine]: http://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations\n\n# Transforms\n@docs Transform, identity, matrix, rotation, translation, scale, scaleX, scaleY\n\n# Multiplication\n@docs multiply\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Transform",
+        "comment": " A matrix representing a 2D transformation.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "identity",
+        "comment": " Create an identity transform. Transforming by the identity does\nnot change anything, but it can come in handy as a default or\nbase case.\n\n        / 1 0 0 \\\n        \\ 0 1 0 /\n",
+        "type": "Transform.Transform"
+      },
+      {
+        "name": "matrix",
+        "comment": " Create a transformation matrix. This lets you create transforms\nsuch as scales, shears, reflections, and translations.\n\n    matrix a b c d x y\n\n        / a b x \\\n        \\ c d y /\n\nNote that `x` and `y` are the translation values.\n",
+        "type": "Float -> Float -> Float -> Float -> Float -> Float -> Transform.Transform"
+      },
+      {
+        "name": "multiply",
+        "comment": " Multiply two transforms together.\n\n    multiply m n\n\n        / ma mb mx \\     / na nb nx \\\n        | mc md my |  .  | nc nd ny |\n        \\  0  0  1 /     \\  0  0  1 /\n",
+        "type": "Transform.Transform -> Transform.Transform -> Transform.Transform"
+      },
+      {
+        "name": "rotation",
+        "comment": " Create a [rotation matrix](http://en.wikipedia.org/wiki/Rotation_matrix).\nGiven an angle t, it creates a counterclockwise rotation matrix:\n\n    rotation t\n\n        / cos t  -sin t  0 \\\n        \\ sin t   cos t  0 /\n",
+        "type": "Float -> Transform.Transform"
+      },
+      {
+        "name": "scale",
+        "comment": " Creates a transformation matrix for scaling by a all directions.\n\n    scale s\n\n      / s 0 0 \\\n      \\ 0 s 0 /\n",
+        "type": "Float -> Transform.Transform"
+      },
+      {
+        "name": "scaleX",
+        "comment": " Create a transformation for horizontal scaling. ",
+        "type": "Float -> Transform.Transform"
+      },
+      {
+        "name": "scaleY",
+        "comment": " Create a transformation for vertical scaling. ",
+        "type": "Float -> Transform.Transform"
+      },
+      {
+        "name": "translation",
+        "comment": " Create a transformation matrix for translation.\n\n    translation x y\n\n        / 1 0 x \\\n        \\ 0 1 y /\n",
+        "type": "Float -> Float -> Transform.Transform"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Text",
+    "comment": " A library for styling and displaying text. While the\n[`String`](String) library focuses on representing and manipulating\nstrings of character strings, the `Text` library focuses on how those\nstrings should look on screen. It lets you make text bold or italic,\nset the typeface, set the text size, etc.\n\n# Text\n@docs Text\n\n# Creating Text\n@docs fromString, empty, append, concat, join\n\n# Links and Style\n@docs link, typeface, monospace, height, color, bold, italic, line, Line,\n    style, Style, defaultStyle\n\n",
+    "aliases": [
+      {
+        "name": "Style",
+        "comment": " Represents all the ways you can style `Text`. If the `typeface` list is\nempty or the `height` is `Nothing`, the users will fall back on their browser's\ndefault settings. The following `Style` is black, 16 pixel tall, underlined, and\nTimes New Roman (assuming that typeface is available on the user's computer):\n\n    { typeface = [ \"Times New Roman\", \"serif\" ]\n    , height   = Just 16\n    , color    = black\n    , bold     = False\n    , italic   = False\n    , line     = Just Under\n    }\n",
+        "args": [],
+        "type": "{ typeface : List String , height : Maybe.Maybe Float , color : Color.Color , bold : Bool , italic : Bool , line : Maybe.Maybe Text.Line }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Line",
+        "comment": " Styles for lines on text. This allows you to add an underline, an overline,\nor a strike out text:\n\n    line Under   (fromString \"underline\")\n    line Over    (fromString \"overline\")\n    line Through (fromString \"strike out\")\n",
+        "args": [],
+        "cases": [
+          [
+            "Under",
+            []
+          ],
+          [
+            "Over",
+            []
+          ],
+          [
+            "Through",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Text",
+        "comment": " Represents styled text. It can be rendered with collages or with elements.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "append",
+        "comment": " Put two chunks of text together.\n\n    append (fromString \"hello \") (fromString \"world\") == fromString \"hello world\"\n",
+        "type": "Text.Text -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "bold",
+        "comment": " Make text bold.\n\n    fromString \"sometimes you want \" ++ bold (fromString \"emphasis\")\n",
+        "type": "Text.Text -> Text.Text"
+      },
+      {
+        "name": "color",
+        "comment": " Set the color of some text.\n\n    color red (fromString \"Red\")\n",
+        "type": "Color.Color -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "concat",
+        "comment": " Put many chunks of text together.\n\n    concat\n      [ fromString \"type \"\n      , bold (fromString \"Maybe\")\n      , fromString \" = Just a | Nothing\"\n      ]\n",
+        "type": "List Text.Text -> Text.Text"
+      },
+      {
+        "name": "defaultStyle",
+        "comment": " Plain black text. It uses the browsers default typeface and text height.\nNo decorations are used.\n\n    { typeface = []\n    , height = Nothing\n    , color = black\n    , bold = False\n    , italic = False\n    , line = Nothing\n    }\n",
+        "type": "Text.Style"
+      },
+      {
+        "name": "empty",
+        "comment": " Text with nothing in it.\n\n    empty = fromString \"\"\n",
+        "type": "Text.Text"
+      },
+      {
+        "name": "fromString",
+        "comment": " Convert a string into text which can be styled and displayed. To show the\nstring `\"Hello World!\"` on screen in italics, you could say:\n\n    main = leftAligned (italic (fromString \"Hello World!\"))\n",
+        "type": "String -> Text.Text"
+      },
+      {
+        "name": "height",
+        "comment": " Set the height of some text.\n\n    height 40 (fromString \"Title\")\n",
+        "type": "Float -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "italic",
+        "comment": " Make text italic.\n\n    fromString \"make it \" ++ italic (fromString \"important\")\n",
+        "type": "Text.Text -> Text.Text"
+      },
+      {
+        "name": "join",
+        "comment": " Put many chunks of text together with a separator.\n\n    chunks : List Text\n    chunks = List.map fromString [\"lions\",\"tigers\",\"bears\"]\n\n    join (fromString \", \") chunks == fromString \"lions, tigers, bears\"\n",
+        "type": "Text.Text -> List Text.Text -> Text.Text"
+      },
+      {
+        "name": "line",
+        "comment": " Put lines on text.\n\n    line Under   (fromString \"underlined\")\n    line Over    (fromString \"overlined\")\n    line Through (fromString \"strike out\")\n",
+        "type": "Text.Line -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "link",
+        "comment": " Create a link by providing a URL and the text of the link.\n\n    link \"http://elm-lang.org\" (fromString \"Elm Website\")\n",
+        "type": "String -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "monospace",
+        "comment": " Switch to a monospace typeface. Good for code snippets.\n\n    monospace (fromString \"foldl (+) 0 [1,2,3]\")\n",
+        "type": "Text.Text -> Text.Text"
+      },
+      {
+        "name": "style",
+        "comment": " Set the style of some text. For example, if you design a `Style` called\n`footerStyle` that is specifically for the bottom of your page, you could apply\nit to text like this:\n\n    style footerStyle (fromString \"the old prince / 2007\")\n",
+        "type": "Text.Style -> Text.Text -> Text.Text"
+      },
+      {
+        "name": "typeface",
+        "comment": " Provide a list of preferred typefaces for some text.\n\n    [\"helvetica\",\"arial\",\"sans-serif\"]\n\nNot every browser has access to the same typefaces, so rendering will use the\nfirst typeface in the list that is found on the user's computer. If there are\nno matches, it will use their default typeface. This works the same as the CSS\nfont-family property.\n",
+        "type": "List String -> Text.Text -> Text.Text"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

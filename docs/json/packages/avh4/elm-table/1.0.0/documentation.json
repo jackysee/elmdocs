@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Table",
+    "comment": "\n\nThis module provides functions to render tabular views of data.\n\n@docs table",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "table",
+        "comment": "Renders a tabular view of a list of data, where each row represents a single item in the list.\n\nYou must provide column definitions which specify the header text and a function\nto convert items into displayed text.\n\n```\nimport Table\n\ndata =\n    [ [ 1, 2, 3, 4 ]\n    , [ 10, 5, 24, 3, 7]\n    , [ 2, 7, 23903, 4039 , 1024, 2 ]\n    ]\n\nmain =\n    data\n    |> Table.table\n        [ (\"sum\", List.sum >> toString)\n        , (\"min\", List.foldr min 9999 >> toString)\n        , (\"max\", List.foldr max -9999 >> toString)\n        ]\n```",
+        "type": "List ( String, a -> String ) -> List a -> Html.Html"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

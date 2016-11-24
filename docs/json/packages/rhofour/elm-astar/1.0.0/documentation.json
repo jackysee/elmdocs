@@ -1,0 +1,21 @@
+[
+  {
+    "name": "AStar",
+    "comment": " This module contains an implementation of the\n[A* pathfinding algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).\nThe tests are likely the best place to see how it is used.\n\n# Convenience function\n@docs aStar\n\n# For more performance\n@docs aStarArray\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "aStar",
+        "comment": "\n    aStar getNeighbors heuristic sources goals\n\nReturns a shortest path from a source node to a goal node.\nIf a path does not exist `Nothing` is returned.\n\nArguments:\n* getNeighbors: A function which given a node returns a list of tuples with\nboth that node's neighbors and their distance from that node.\n* heuristic: A function which takes a point and returns a value used to\nprioritize exploration. Often this is either the manhattan or euclidean\ndistance to a goal. This function must be [admissable](https://en.wikipedia.org/wiki/Admissible_heuristic).\n* sources: A list of inital points to start from\n* goals: A set of goals\n",
+        "type": "(comparable -> List ( comparable, number )) -> (comparable -> number) -> List comparable -> Set.Set comparable -> Maybe.Maybe (List comparable)"
+      },
+      {
+        "name": "aStarArray",
+        "comment": " Works identically to [`aStar`](aStar) except it return the underlying\n`Array` used rather than converting it into a `List`.\n",
+        "type": "(comparable -> List ( comparable, number )) -> (comparable -> number) -> List comparable -> Set.Set comparable -> Maybe.Maybe (Array.Array comparable)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Csv",
+    "comment": " A CSV parser.\n\n## Parser\n@docs Csv, parse, split\n",
+    "aliases": [
+      {
+        "name": "Csv",
+        "comment": " The `Csv` type structure.\n",
+        "args": [],
+        "type": "{ headers : List String, records : List (List String) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Convert a string of comma-separated values into a `Csv` structure.\n\n    -- { headers = [\"id\", \"value\"], records = [[\"1\", \"one\"], [\"2\", \"two\"]] }\n\n    Csv.parse \"id,value\\n1,one\\n2,two\\n\"\n",
+        "type": "String -> Csv.Csv"
+      },
+      {
+        "name": "split",
+        "comment": " Convert a string of comma-separated values into a list of lists.\n\n    -- [[\"id\", \"value\"], [\"1\", \"one\"], [\"2\", \"two\"]]\n\n    Csv.split \"id,value\\n1,one\\n2,two\\n\"\n",
+        "type": "String -> List (List String)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

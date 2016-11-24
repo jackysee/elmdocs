@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Router",
+    "comment": "Simple Router library for performing operations based on a list of string\nroutes. This is particularly useful for routing pages in single page applications\nwhere the given list of strings are list of url paths.\n\n\n# Types\n@docs Route, Router\n\n# Route Matching\n@docs match, (:->)\n\n# Useful Helper\n@docs matchPrefix",
+    "aliases": [
+      {
+        "name": "Router",
+        "comment": "A Router is a tuple containing a string and its associated route",
+        "args": [
+          "a"
+        ],
+        "type": "( String, Route a )"
+      },
+      {
+        "name": "Route",
+        "comment": "A Route is a function from a string to some value or computation.",
+        "args": [
+          "a"
+        ],
+        "type": "String -> a"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": ":->",
+        "comment": "Operator to offer easy-to-read DSL for matching routes. This is an alias\nfor the `(,)` tuple constructor function.",
+        "type": "String -> Route a -> Router a"
+      },
+      {
+        "name": "match",
+        "comment": "`match` allows you to select an appropriate route depending on the\ngiven input string. `match` takes a list of routers and a default route,\nwhich acts as a catch-all and returns a route. Returning a route allows\nfor nested routes.\n\nExample:\n\n    mainRoute : Route Html\n    mainRoute = match\n      [ \"/\"           :-> displayHomePage\n      , \"/index.html\" :-> displayHomePage\n      , \"/blog\"       :-> blogRoute\n      , \"/contact\"    :-> displayContactsPage\n      ] display404Page\n\n    blogRoute : Route Html\n    blogRoute = match\n      [ \"/\"             :-> displayBlogPostListing\n      , \"/entry1.html\"  :-> displayEntry1\n      , \"/entry2.html\"  :-> displayEntry2\n      ] display404Page\n\n\nIn some cases, it important to understand how `match` works. Suppose you have\nthe input path \"/users/4873/profile.html\" and there is a router that matches\n\"/users\" with an associated route `usersRoute`. The `usersRoute` function will\nget called with \"/4873/profile.html\" as a parameter. This means that `match`\nwill strip away the string it has matched from the input string before passing\nit onto the route. `match` will also match routes in the order you have stated\nthem. This means that if you have the following route:\n\n    myRoute = match\n      [ \"/user\"   :-> userRoute\n      , \"/users\"  :-> displayUserListing\n      ] display404Page\n\nThere is no way for `displayUserListing` to ever be called. Say you pass in\n\"/users.html\", then this will be matched by \"/user\" which will pass \"s.html\"\nto `userRoute`. To solve this, you may wish to reverse the order of the routes\nas follows:\n\n    myRoute = match\n      [ \"/users\"  :-> displayUserListing\n      , \"/user\"   :-> userRoute\n      ] display404Page\n\nAnd now things will work as intended.\n\nYou may notice that in the first example, I use \"/\" as a route at the very top.\nThis is because `match` special cases \"/\" and the empty string due to their\nprevalence.",
+        "type": "List (Router a) -> Route a -> Route a"
+      },
+      {
+        "name": "matchPrefix",
+        "comment": "Takes a reference string and a string to match and returns the second string\nstripped of the matched reference string. Used to implement `match`.\n\n    matchPrefix \"he\" \"hello\" === Just \"llo\"\n\n    matchPrefix \"yo\" \"halo\" === Nothing",
+        "type": "String -> String -> Maybe String"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

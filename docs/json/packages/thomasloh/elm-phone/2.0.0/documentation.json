@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Phone",
+    "comment": " A library for converting plain number to desired country's phone format.\n    Supports ISO2 codes for 232 countries/\n\n@docs format\n@docs getAllCountries\n@docs getCountryByISO2\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "format",
+        "comment": " Formats a phone number by country (in form of iso2)\n\nFor example:\n\n    import Phone\n\n    output = Phone.format \"us\" \"2345678912\"\n\n    --> output == \"+1 (234) 567-8912\"\n\n    -----------------------------------------------\n\n    import Phone\n\n    output = Phone.format \"gb\" \"2345678912\"\n\n    --> output == \"+44 2345 678912\"\n\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "getAllCountries",
+        "comment": " Get all countries\n",
+        "type": "List ( String, String, String, Maybe.Maybe String )"
+      },
+      {
+        "name": "getCountryByISO2",
+        "comment": " Get country tuple by ISO2\n",
+        "type": "String -> Maybe.Maybe ( String, String, String, Maybe.Maybe String )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

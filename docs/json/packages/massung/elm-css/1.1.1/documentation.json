@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Css",
+    "comment": " This module is designed to allow you to add type-safe CSS styling\nto your rendered Html via style tags. It has basic support for @import\ndirectives and CSS rules.\n\nAssuming you have types for id and class attributes, you \"compile\" a\nStylesheet with the stylesheet function and use the functions returned\nin the Stylesheet to generate id and class attributes.\n\nFor example:\n\n    type Id = MyId\n    type Class = MyClass\n    \n    -- import some google fonts\n    imports =\n        [\"https://fonts.googleapis.com/css?family=Droid+Sans:400,700\"\n        ]\n\n    -- create ruels, notice the use of MyId and MyClass. \n    rules =\n        [ { selectors = [ Css.Id MyId ]\n          , descriptor = [ (\"color\", \"red\") ]\n          }\n        , { selectors = [ Css.Class MyClass ]\n          , descriptor = [ (\"color\", \"blue\") ]\n          }\n        ]\n    \n    -- compile a stylesheet with imports and a single rule\n    stylesheet = Css.stylesheet imports rules\n    \n    -- now, add the style node, and safely use your ids and classes\n    html =\n        div []\n            [ Css.style [ Html.Attributes.scoped True ] stylesheet\n            , div [ stylesheet.id MyId ] [ text \"Using MyId\" ]\n            , div [ stylesheet.class MyClass ] [ text \"Using MyClass\" ]\n            ]\n\n# Types\n@docs Stylesheet, Sel, Pseudo, Descriptor, Rule\n\n# Functions\n@docs stylesheet, style\n",
+    "aliases": [
+      {
+        "name": "Descriptor",
+        "comment": " A list of key/value style properties. ",
+        "args": [],
+        "type": "List ( String, String )"
+      },
+      {
+        "name": "Rule",
+        "comment": " A Rule is a list of matching selectors and a descriptor, which is\na list of key/value style pairs. Each selector is a separate possible match\nfor the rule. For example:\n\n    [ Sel.Id MyId\n    , Sel.Class MyClass\n    , Sel.Type \"div\"\n    , Sel.Sibling (Sel.Type \"a\") (Sel.Type \"hr\")\n    ]\n    \nThat list of selectors would be the same as the following rule in CSS:\n\n    #MyId, .MyClass, div, hr a { ... }\n",
+        "args": [
+          "id",
+          "cls"
+        ],
+        "type": "{ selectors : List (Css.Sel id cls), descriptor : Css.Descriptor }"
+      },
+      {
+        "name": "Stylesheet",
+        "comment": " A Stylesheet is a \"compiled\" Html text node, as well as functions\nthat allow you to safely create Html.Attributes for the id and class of\nyour tags. It is returned by the stylesheet function.\n",
+        "args": [
+          "id",
+          "cls",
+          "msg"
+        ],
+        "type": "{ node : Html.Html msg , id : id -> Html.Attribute msg , class : cls -> Html.Attribute msg , classes : List cls -> Html.Attribute msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Pseudo",
+        "comment": " Pseudo CSS selectors and elements. These are chained together in the\nPseudo selector.\n",
+        "args": [],
+        "cases": [
+          [
+            "Any",
+            []
+          ],
+          [
+            "Default",
+            []
+          ],
+          [
+            "Link",
+            []
+          ],
+          [
+            "Visited",
+            []
+          ],
+          [
+            "Hover",
+            []
+          ],
+          [
+            "Active",
+            []
+          ],
+          [
+            "Focus",
+            []
+          ],
+          [
+            "Target",
+            []
+          ],
+          [
+            "Enabled",
+            []
+          ],
+          [
+            "Disabled",
+            []
+          ],
+          [
+            "Checked",
+            []
+          ],
+          [
+            "Indeterminate",
+            []
+          ],
+          [
+            "Invalid",
+            []
+          ],
+          [
+            "Valid",
+            []
+          ],
+          [
+            "Fullscreen",
+            []
+          ],
+          [
+            "Root",
+            []
+          ],
+          [
+            "Scope",
+            []
+          ],
+          [
+            "FirstChild",
+            []
+          ],
+          [
+            "LastChild",
+            []
+          ],
+          [
+            "NthChild",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "NthLastChild",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "NthOfType",
+            [
+              "String"
+            ]
+          ],
+          [
+            "NthLastOfType",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FirstOfType",
+            []
+          ],
+          [
+            "LastOfType",
+            []
+          ],
+          [
+            "OnlyOfType",
+            []
+          ],
+          [
+            "Empty",
+            []
+          ],
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Lang",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Dir",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FirstLetter",
+            []
+          ],
+          [
+            "FirstLine",
+            []
+          ],
+          [
+            "Before",
+            []
+          ],
+          [
+            "After",
+            []
+          ],
+          [
+            "Selection",
+            []
+          ],
+          [
+            "Backdrop",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Sel",
+        "comment": " CSS rule selectors follow the all the selectors found [here](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors)\nexcept for attribute selectors.\n\nThe most common selectors are the Type, Id, and Class selectors. The others\nare combinator selectors or pseudo-class/element selectors. Some examples:\n\n    -- div { ... }\n    Type \"div\"\n    \n    -- #MyId { ... }\n    Id MyId\n    \n    -- .MyClass { ... }\n    Class MyClass\n    \n    -- div #Content { ... }\n    Descendant (Id Content) (Type \"div\")\n    \n    -- span > .MyClass { ... }\n    Child (Class MyClass) (Type \"span\")\n    \n    -- hr ~ p:first-line:first-letter { ... }\n    Pseudo [FirstLine, FirstLetter] <| Sibling (Type \"p\") (Type \"hr\")\n\nTake a moment to notice that for combinators, the most specific element being\nstyled (what would be last in the selector) appears first in code.\n",
+        "args": [
+          "id",
+          "cls"
+        ],
+        "cases": [
+          [
+            "Type",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Id",
+            [
+              "id"
+            ]
+          ],
+          [
+            "Class",
+            [
+              "cls"
+            ]
+          ],
+          [
+            "Descendant",
+            [
+              "Css.Sel id cls",
+              "Css.Sel id cls"
+            ]
+          ],
+          [
+            "Child",
+            [
+              "Css.Sel id cls",
+              "Css.Sel id cls"
+            ]
+          ],
+          [
+            "Sibling",
+            [
+              "Css.Sel id cls",
+              "Css.Sel id cls"
+            ]
+          ],
+          [
+            "Adjacent",
+            [
+              "Css.Sel id cls",
+              "Css.Sel id cls"
+            ]
+          ],
+          [
+            "Pseudo",
+            [
+              "List Css.Pseudo",
+              "Css.Sel id cls"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "style",
+        "comment": " Render a style tag node. ",
+        "type": "List (Html.Attribute msg) -> Css.Stylesheet id cls msg -> Html.Html msg"
+      },
+      {
+        "name": "stylesheet",
+        "comment": " Compiles a Stylesheet if given a list of urls to @import and\na list of Rules to generate. The Stylesheet contains the imports,\nrules (rendered as strings) and functions for creating type-safe\nid and class attributes.\n",
+        "type": "List String -> List (Css.Rule id cls) -> Css.Stylesheet id cls msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

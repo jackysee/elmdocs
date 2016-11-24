@@ -1,0 +1,31 @@
+[
+  {
+    "name": "ElmTestBDDStyle",
+    "comment": " BDD style functions for ElmTest\n\n@docs it, expect, to, toBe\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "expect",
+        "comment": " Expectation to actually run the test, it receives\ntwo values and try to match then with a matcher\n",
+        "type": "a -> ElmTestBDDStyle.Conjunction -> (b -> a -> Expect.Expectation) -> b -> Expect.Expectation"
+      },
+      {
+        "name": "it",
+        "comment": " Describes a behaviour you expect from your code\n",
+        "type": "String -> Expect.Expectation -> Test.Test"
+      },
+      {
+        "name": "to",
+        "comment": " Just a word to make it more idiomatic\n",
+        "type": "ElmTestBDDStyle.Conjunction"
+      },
+      {
+        "name": "toBe",
+        "comment": " Just a word to make it more idiomatic\n",
+        "type": "ElmTestBDDStyle.Conjunction"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

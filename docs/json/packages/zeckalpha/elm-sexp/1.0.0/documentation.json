@@ -1,0 +1,85 @@
+[
+{
+  "name": "Sexp",
+  "comment": "Parses S-expressions.\n\n@docs parse, show",
+  "aliases": [],
+  "types": [
+    {
+      "name": "Sexp",
+      "comment": "",
+      "args": [],
+      "cases": [
+        [
+          "SexpList",
+          [
+            {
+              "tag": "app",
+              "func": {
+                "tag": "type",
+                "name": "List"
+              },
+              "args": [
+                {
+                  "tag": "type",
+                  "name": "Sexp"
+                }
+              ]
+            }
+          ]
+        ],
+        [
+          "SexpElement",
+          [
+            {
+              "tag": "type",
+              "name": "String"
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "values": [
+    {
+      "name": "parse",
+      "comment": "Parses an S-expression",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "String"
+        },
+        "out": {
+          "tag": "app",
+          "func": {
+            "tag": "type",
+            "name": "Maybe"
+          },
+          "args": [
+            {
+              "tag": "type",
+              "name": "Sexp"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "show",
+      "comment": "Shows an S-expression",
+      "type": {
+        "tag": "lambda",
+        "in": {
+          "tag": "type",
+          "name": "Sexp"
+        },
+        "out": {
+          "tag": "type",
+          "name": "String"
+        }
+      }
+    }
+  ]
+}
+
+]

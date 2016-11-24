@@ -1,0 +1,108 @@
+[
+  {
+    "name": "Phoenix.Channel.Helpers",
+    "comment": " Helpers\n\nConvert your response type from a string to a message\n@docs assignResponseType\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "assignResponseType",
+        "comment": " Converts a string into a Msg\n",
+        "type": "String -> Phoenix.Channel.Update.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Phoenix.Channel.Update",
+    "comment": "\n\nThe possible messages from the server\n@docs Msg\n\nThe update function for dealing with that\n@docs update\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": "\n  - SuccessfulResponse is only triggered when \"ok\" is the status\n  - ErrorResponse is everything else\n",
+        "args": [],
+        "cases": [
+          [
+            "SuccessfulResponse",
+            [
+              "Phoenix.Channel.Model.SocketMessage"
+            ]
+          ],
+          [
+            "ErrorResponse",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SendMessage",
+            [
+              "Phoenix.Channel.Model.MessageToSend"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "update",
+        "comment": " Take a msg from a channel, and update the model based on the msg recieved\n",
+        "type": "Phoenix.Channel.Update.Msg -> Phoenix.Channel.Model.Model a -> ( Phoenix.Channel.Model.Model a , Platform.Cmd.Cmd Phoenix.Channel.Update.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Phoenix.Channel.Model",
+    "comment": " Types used for representing things that come from a phoenix channel\n\nOur model used in our Program components\n@docs Model\n\nDealing with server responses\n@docs decodeSocketMessage\n@docs SocketMessage, ResponsePayload, Response\n\nSending stuff to the server\n@docs encodeMessageToSend\n@docs MessageToSend\n",
+    "aliases": [
+      {
+        "name": "MessageToSend",
+        "comment": " Like a socket message, but comes with a pre-encoded payload\n",
+        "args": [],
+        "type": "{ topic : String , ref : Int , payload : Json.Encode.Value , event : String }"
+      },
+      {
+        "name": "Model",
+        "comment": " We demand that any model must store the socket events, the current refNumber, and\nthe state of connection\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | socketEvents : List Phoenix.Channel.Model.SocketMessage, refNumber : Int, connected : Bool, socketUrl : String }"
+      },
+      {
+        "name": "Response",
+        "comment": " A response from the server\n",
+        "args": [],
+        "type": "{ reason : String }"
+      },
+      {
+        "name": "ResponsePayload",
+        "comment": " The status of the response paired with the response itself\n",
+        "args": [],
+        "type": "{ status : String, response : Phoenix.Channel.Model.Response }"
+      },
+      {
+        "name": "SocketMessage",
+        "comment": " Each socket response has the topic (room) as a string, along with a ref count\n    the event to trigger, and the payload of what the server actually sent\n",
+        "args": [],
+        "type": "{ topic : String , ref : Int , payload : Phoenix.Channel.Model.ResponsePayload , event : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeSocketMessage",
+        "comment": " Decode a socket response.\n",
+        "type": "Json.Decode.Decoder Phoenix.Channel.Model.SocketMessage"
+      },
+      {
+        "name": "encodeMessageToSend",
+        "comment": " Encode a message to send\n",
+        "type": "Phoenix.Channel.Model.MessageToSend -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

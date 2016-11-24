@@ -1,0 +1,171 @@
+[
+  {
+    "name": "Blackjack",
+    "comment": " This library provides a few utility functions\nfor a Blackjack application. It can compare hands\nand calculate the best score for a given set of cards.\n\n# Types\n@docs Hand, Card, CardType, CardSuit\n\n# Construction\n@docs newHand, newCard, addCardToHand, suitOfCard, typeOfCard\n\n# Utility Functions\n@docs isSplittable, isBust, hasAce, isBlackjack, isTwentyOne, isHandBetterThan, isHandTiedWith, bestScore\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Card",
+        "comment": " Represents a standard playing card.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "CardSuit",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Clubs",
+            []
+          ],
+          [
+            "Diamonds",
+            []
+          ],
+          [
+            "Hearts",
+            []
+          ],
+          [
+            "Spades",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CardType",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "Ace",
+            []
+          ],
+          [
+            "King",
+            []
+          ],
+          [
+            "Queen",
+            []
+          ],
+          [
+            "Jack",
+            []
+          ],
+          [
+            "Ten",
+            []
+          ],
+          [
+            "Nine",
+            []
+          ],
+          [
+            "Eight",
+            []
+          ],
+          [
+            "Seven",
+            []
+          ],
+          [
+            "Six",
+            []
+          ],
+          [
+            "Five",
+            []
+          ],
+          [
+            "Four",
+            []
+          ],
+          [
+            "Three",
+            []
+          ],
+          [
+            "Two",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Hand",
+        "comment": " Represents a hand in Blackjack. Can be\nan arbitrary number of cards.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addCardToHand",
+        "comment": " Add a card to an existing hand. Order of\ncards is irrelavent.\n",
+        "type": "Blackjack.Card -> Blackjack.Hand -> Blackjack.Hand"
+      },
+      {
+        "name": "bestScore",
+        "comment": " Returns the highest score a hand can have.\nIf all possible scores are greater than 21, 0\nis returned.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Seven Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Five Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n      |> addCardToHand (newCard Nine Hearts)\n\n    bestScore hand1 == 18\n    bestScore hand2 == 0\n",
+        "type": "Blackjack.Hand -> Int"
+      },
+      {
+        "name": "hasAce",
+        "comment": " Test if one of the cards in the hand\nis an Ace. Useful if you want to prompt\nthe user to double-down.\n\n    hand = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n\n    hasAce hand == True\n",
+        "type": "Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isBlackjack",
+        "comment": " Test if a hand is a Blackjack.\nA hand is Blackjack if it is composed of\none Ace and one face card or 10.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n\n    isBlackjack hand1 == True\n    isBlackjack hand2 == False\n",
+        "type": "Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isBust",
+        "comment": " Test if a hand is busted. A hand\nis busted if all possible values are\ngreater than 21.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Ten Diamonds)\n      |> addCardToHand (newCard Queen Clubs)\n      |> addCardToHand (newCard Two Clubs)\n\n    isBust hand1 == False\n    isBust hand2 == True\n",
+        "type": "Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isHandBetterThan",
+        "comment": " Test if one hand has a better score than\nanother hand. Useful to compare a player's\nhand against a dealer's. The hand with the\nhighest score while less than or equal to 21\nis the best hand.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Seven Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Five Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n\n    isHandBetterThan hand1 hand2 == True\n",
+        "type": "Blackjack.Hand -> Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isHandTiedWith",
+        "comment": " Test if one hand has the same score as\nanother hand. Useful to compare a player's\nhand against a dealer's.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Seven Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Five Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n      |> addCardToHand (newCard Two Hearts)\n\n    isHandTiedWith hand1 hand2 == True\n",
+        "type": "Blackjack.Hand -> Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isSplittable",
+        "comment": " Test if a hand is splittable. A hand\nis only splittable if it has two cards,\nboth of the same value.\n\n    hand = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n\n    isSplittable hand == True\n",
+        "type": "Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "isTwentyOne",
+        "comment": " Test if a hand's value is 21. This\nwill return True for Blackjack hands as\nwell as non-Blackjack hands.\n\n    hand1 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ten Clubs)\n    hand2 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n    hand3 = newHand\n      |> addCardToHand (newCard Ace Diamonds)\n      |> addCardToHand (newCard Ace Clubs)\n      |> addCardToHand (newCard Nine Clubs)\n\n    isTwentyOne hand1 == True\n    isTwentyOne hand2 == False\n    isTwentyOne hand3 == True\n",
+        "type": "Blackjack.Hand -> Bool"
+      },
+      {
+        "name": "newCard",
+        "comment": " Construct a card given the type and suit.\n",
+        "type": "Blackjack.CardType -> Blackjack.CardSuit -> Blackjack.Card"
+      },
+      {
+        "name": "newHand",
+        "comment": " Construct an empty hand. Can be\neither a player's or dealer's hand.\n",
+        "type": "Blackjack.Hand"
+      },
+      {
+        "name": "suitOfCard",
+        "comment": " Returns the suit of a given card.\n",
+        "type": "Blackjack.Card -> Blackjack.CardSuit"
+      },
+      {
+        "name": "typeOfCard",
+        "comment": " Returns the type of a given card.\n",
+        "type": "Blackjack.Card -> Blackjack.CardType"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

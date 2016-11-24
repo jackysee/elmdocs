@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Tfl",
+    "comment": " This is a wrapper for the TfL (Transport for London) public API.\n\nThe API is described at https://api.tfl.gov.uk and https://api-portal.tfl.gov.uk/docs.\n\n# Predictions\n\n@docs Prediction, getPredictions\n\n# StopPoint\n\n@docs StopPoint, getStopPoint\n\n",
+    "aliases": [
+      {
+        "name": "Prediction",
+        "comment": " A Prediction for a single line and platform.\n",
+        "args": [],
+        "type": "{ destinationName : String , expectedArrival : Time.Time , lineName : String , platformName : String , stationName : String , towards : String , modeName : String , timestamp : Time.Time }"
+      },
+      {
+        "name": "StopPoint",
+        "comment": " A stop point.\n",
+        "args": [],
+        "type": "{ commonName : String , latitude : Float , longitude : Float , modes : List String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "getPredictions",
+        "comment": " Get the list of arrival predictions for given line id.\n\nSee:\n\n- https://api.tfl.gov.uk/#StopPoint\n- https://api.tfl.gov.uk/#/StopPoint/{id}/Arrivals .\n",
+        "type": "String -> Task.Task Http.Error (List Tfl.Prediction)"
+      },
+      {
+        "name": "getStopPoint",
+        "comment": " Get the StopPoint corresponding to the given stop id.\n\nSee:\n\n- https://api.tfl.gov.uk/#StopPoint\n- https://api.tfl.gov.uk/#/StopPoint/{id} .\n",
+        "type": "String -> Task.Task Http.Error Tfl.StopPoint"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

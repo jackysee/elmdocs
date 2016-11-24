@@ -1,0 +1,45 @@
+[
+  {
+    "name": "TimeTravel.Navigation",
+    "comment": " Each functions in this module has the same interface as [Navigation](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation)\n\n# Create a Program\n@docs program, programWithFlags\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " See [Navigation.program](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#program)\n",
+        "type": "Navigation.Parser data -> { init : data -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , urlUpdate : data -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " See [Navigation.programWithFlags](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#programWithFlags)\n",
+        "type": "Navigation.Parser data -> { init : flags -> data -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , urlUpdate : data -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "TimeTravel.Html.App",
+    "comment": " Each functions in this module has the same interface as [Html.App](http://package.elm-lang.org/packages/elm-lang/html/1.0.0/Html-App)\n\n# Start your Program\n@docs beginnerProgram, program, programWithFlags\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "beginnerProgram",
+        "comment": " See [Html.App.beginnerProgram](http://package.elm-lang.org/packages/elm-lang/html/1.0.0/Html-App#beginnerProgram)\n",
+        "type": "{ model : model , view : model -> Html.Html msg , update : msg -> model -> model } -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "program",
+        "comment": " See [Html.App.program](http://package.elm-lang.org/packages/elm-lang/html/1.0.0/Html-App#program)\n",
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " See [Html.App.programWithFlags](http://package.elm-lang.org/packages/elm-lang/html/1.0.0/Html-App#programWithFlags)\n",
+        "type": "{ init : flags -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

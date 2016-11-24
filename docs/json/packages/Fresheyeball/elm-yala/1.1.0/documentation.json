@@ -1,0 +1,127 @@
+[
+  {
+    "name": "Math.Vec2",
+    "comment": "\n\n# Vec2 type\n@docs Vec2, x, y, zero\n\n# Operations\n@docs bimap, mapBoth, add, sub, mul, div, neg, scale\n\n# Measure\n@docs distance, dot, magnitude, direction, angle, lerp\n\n# Misc\n@docs fromTuple, normalize\n",
+    "aliases": [
+      {
+        "name": "Vec2",
+        "comment": " a 2d Vector ",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": "\nVector addition\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "angle",
+        "comment": "",
+        "type": "Math.Vec2.Vec2 -> Float"
+      },
+      {
+        "name": "bimap",
+        "comment": "\nApply a function accross `x`'s and `y`'s\n",
+        "type": "(Float -> Float -> Float) -> Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "direction",
+        "comment": "\nThe normalized direction from b to a: (a - b) / |a - b|\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "distance",
+        "comment": "\nGet the distance between two Vectors\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Float"
+      },
+      {
+        "name": "div",
+        "comment": "\nVector division\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "dot",
+        "comment": "\nDot Product\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Float"
+      },
+      {
+        "name": "fromTuple",
+        "comment": " Convert (x,y) tuple into a Vec2 ",
+        "type": "( Float, Float ) -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "lerp",
+        "comment": "\nFind the Vec between 2 Vecs at a given position\nfor example:\n```\nx(0,2)\n    z(1,3.5)\n          y(2,5)\n\nz = lerp 0.5 x y\n```\nwhere 0.5 is the placement of z between x and y\n ",
+        "type": "Float -> Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "magnitude",
+        "comment": "\nGet magnitude of a Vector (length of the Vector)\n",
+        "type": "Math.Vec2.Vec2 -> Float"
+      },
+      {
+        "name": "mapBoth",
+        "comment": "\nTransform both x and y with the same function\n",
+        "type": "(Float -> Float) -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "mul",
+        "comment": "\nVector multiplication\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "neg",
+        "comment": "\nNegate a Vector (flip x and y to negative)\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "normalize",
+        "comment": "\nA unit vector with the same direction as the given vector: a / |a|\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "scale",
+        "comment": "\nScalar Vector multiplication\n",
+        "type": "Float -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "sub",
+        "comment": "\nVector subtraction\n",
+        "type": "Math.Vec2.Vec2 -> Math.Vec2.Vec2 -> Math.Vec2.Vec2"
+      },
+      {
+        "name": "x",
+        "comment": "",
+        "type": "Focus.Focus { b | x : a } a"
+      },
+      {
+        "name": "y",
+        "comment": "",
+        "type": "Focus.Focus { b | y : a } a"
+      },
+      {
+        "name": "zero",
+        "comment": " An empty Vector ",
+        "type": "Math.Vec2.Vec2"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Math.Interpolate",
+    "comment": "\n@docs lerp\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "lerp",
+        "comment": "\nInterpolate the space between 2 values. For example consider\nthe int range from 10 to 20. A `lerp 0.5 10 20  == 15` as `15` is half way (`0.5`) between `10` and `20`\n\n\n",
+        "type": "Float -> Float -> Float -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

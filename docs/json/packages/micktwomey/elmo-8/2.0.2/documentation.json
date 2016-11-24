@@ -1,0 +1,151 @@
+[
+  {
+    "name": "Elmo8.Pico8",
+    "comment": " (Mostly) PICO-8 Compatible API\n\nFor folks familiar with the PICO-8 this module exposes function calls which (mostly) match up to the PICO-8's.\n\nAims to match (as much as is reasonable) the API here: http://www.lexaloffle.com/pico-8.php?page=manual\n\nEven if a function has the full PICO-8 function signature note all flags might be implemented (yet).\n\n# Drawing\n\n@docs pset, spr, print\n\n# Colours\n\nThe PICO-8 has a fairly snazzy palette of 16 colours, identified by an int from 0 to 15. You can also use these handy identifiers.\n\nYou can view the palette (and download appropriate palettes for your apps) here: http://www.romanzolotarev.com/pico-8-color-palette/\n\n@docs black, darkblue, darkpurple, darkgreen, brown, darkgrey, lightgrey, white, red, orange, yellow, green, blue, indigo, pink, peach\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "black",
+        "comment": " Black (0)\n",
+        "type": "Int"
+      },
+      {
+        "name": "blue",
+        "comment": " Blue (12)\n",
+        "type": "Int"
+      },
+      {
+        "name": "brown",
+        "comment": " Brown (4)\n",
+        "type": "Int"
+      },
+      {
+        "name": "darkblue",
+        "comment": " Dark Blue (1)\n",
+        "type": "Int"
+      },
+      {
+        "name": "darkgreen",
+        "comment": " Dark Green (3)\n",
+        "type": "Int"
+      },
+      {
+        "name": "darkgrey",
+        "comment": " Dark Grey (5)\n",
+        "type": "Int"
+      },
+      {
+        "name": "darkpurple",
+        "comment": " Dark Purple (2)\n",
+        "type": "Int"
+      },
+      {
+        "name": "green",
+        "comment": " Green (11)\n",
+        "type": "Int"
+      },
+      {
+        "name": "indigo",
+        "comment": " Indigo (13)\n",
+        "type": "Int"
+      },
+      {
+        "name": "lightgrey",
+        "comment": " Light Grey (6)\n",
+        "type": "Int"
+      },
+      {
+        "name": "orange",
+        "comment": " Orange (9)\n",
+        "type": "Int"
+      },
+      {
+        "name": "peach",
+        "comment": " Peach (15)\n",
+        "type": "Int"
+      },
+      {
+        "name": "pink",
+        "comment": " Ping (14)\n",
+        "type": "Int"
+      },
+      {
+        "name": "print",
+        "comment": " Print string (str) at (x,y) using colour (c)\n\nSame as PICO-8's `print str [x y [col]]`.\n\n(Not implemented) If only str is supplied, and the cursor reaches the end of the screen, a carriage return and vertical scroll is automatically applied. (terminal-like behaviour)\n",
+        "type": "String -> Int -> Int -> Int -> Elmo8.Console.Command"
+      },
+      {
+        "name": "pset",
+        "comment": " Set the colour of a pixel at (x,y) using colour (c)\n\nSame as PICO-8's `pset x y [c]`.\n\n- x and y should be 0 - 127\n- c should be 0 - 15.\n\n",
+        "type": "Int -> Int -> Int -> Elmo8.Console.Command"
+      },
+      {
+        "name": "red",
+        "comment": " Red (8)\n",
+        "type": "Int"
+      },
+      {
+        "name": "spr",
+        "comment": " Draw a sprite n at (x,y)\n\nSames as PICO-8's `spr n x y [w h] [flip_x] [flip_y]`\n\nNote that `[w h] [flip_x] [flip_y]` is currently not implemented (it will be).\n\n- draw sprite n (0..255) at position x,y\n- (Not implemented) width and height are 1,1 by default and specify how many sprites wide to blit.\n- (Not implemented) Colour 0 drawn as transparent by default (see palt())\n- (Not implemented) flip_x=true to flip horizontally\n- (Not implemented) flip_y=true to flip vertically\n",
+        "type": "Int -> Int -> Int -> Int -> Int -> Bool -> Bool -> Elmo8.Console.Command"
+      },
+      {
+        "name": "white",
+        "comment": " White (7)\n",
+        "type": "Int"
+      },
+      {
+        "name": "yellow",
+        "comment": " Yellow (10)\n",
+        "type": "Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmo8.Console",
+    "comment": " The ELMO-8 Fantasy Console\n\nThis is a PICO-8 inspired fantasy \"console\". This isn't really a console emulator but a simple graphics and game library for creating 8-bit retro games.\n\n# Initialization\n\nTo start up the console you need to do a little bit of configuration (the pattern matches Elm's normal model/view/update):\n\n    import Elmo8.Console as Console\n    import Elmo8.Pico8 as Pico8\n\n    type alias Model = {}\n\n    draw : Model ->  List Console.Command\n    draw model =\n        [ Console.putPixel 0 0 Pico8.peach\n        , Console.print \"Hello World\" 10 50 Pico8.orange\n        , Console.sprite 0 60 90\n        ]\n\n    update : Model -> Model\n    update model = model\n\n    main : Program Never\n    main =\n        Console.boot\n            { draw = draw\n            , init = {}\n            , update = update\n            , spritesUrl = \"birdwatching.png\"\n            }\n\n@docs boot, Config\n\n# Drawing\n\n- The screen size is 128x128\n- Co-ordinates go from (0,0) (top left) to (127,127) (bottom right)\n- Colours are given as ints to look up in the palette, 0 - 15. Look in `Elmo8.Pico8` for colours, or http://www.romanzolotarev.com/pico-8-color-palette/\n\n@docs putPixel, print, sprite\n\n# Actions\n@docs Command\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Console configuration\n\ndraw (Model -> List Command) emits a bunch of commands to update the console (e.g. drawing). It is given your model which is updated in `update`. Note that currently sprites and text are cleared between each draw command. This will change in future. Assume this is called at 30 fps.\n\nupdate (Model -> Model) takes the previous model (state) and returns and updated version. In future it might be given more information (e.g. time deltas between frames). Assume this is called at 30 fps.\n\ninit (Model) returns an initial state for the model.\n\nspriteUrl (String) is a URL pointing to a 128x128 sprite sheet (16x16 8x8 sprites). You reference them by index (e.g. 0 represents a rectangle (0,0) -> (8,8) on the sprite sheet). If this is invalid then sprite rendering won't work.\n\n",
+        "args": [
+          "model"
+        ],
+        "type": "{ draw : model -> List Elmo8.Console.Command , update : model -> model , init : model , spritesUrl : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Command",
+        "comment": " Commands to give to the console\n\nNormally you don't create these directly, instead use the drawing functions to interact with the console.\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "boot",
+        "comment": " Boot your console!\n\nSupply a Config.\n\n",
+        "type": "Elmo8.Console.Config model -> Platform.Program Basics.Never (Elmo8.Console.Model model) Elmo8.Console.Msg"
+      },
+      {
+        "name": "print",
+        "comment": " Print a string at the given position\n\n",
+        "type": "String -> Int -> Int -> Elmo8.Console.Colour -> Elmo8.Console.Command"
+      },
+      {
+        "name": "putPixel",
+        "comment": " Draw a pixel at the given position (x, y)\n\ne.g. putPixel 64 64 9 -> draw a pixel in the middle and set the colour to orange (9).\n\nEquivalent to PICO-8's `pset x y c`.\n\n",
+        "type": "Int -> Int -> Elmo8.Console.Colour -> Elmo8.Console.Command"
+      },
+      {
+        "name": "sprite",
+        "comment": " Render a sprite (n) at the given position (x, y)\n\nSprite sheets are 128x128 images (usually a PNG). They are sliced into 8x8 squares, with the index used to pick a sprite. 0 is top left, 255 is bottom right.\n\nNote that sprites are rendered on top of each other in the order given, if you want to layer them make sure to issue the draw commands with the top sprite last.\n\nTo render sprite 0 at (10, 10):\n\n    sprite 0 10 10\n\n",
+        "type": "Int -> Int -> Int -> Elmo8.Console.Command"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

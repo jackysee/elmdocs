@@ -1,0 +1,123 @@
+[
+  {
+    "name": "RouteParser.QueryString",
+    "comment": " Tools for query string parsing and extraction\n\n@docs QueryString, parse\n",
+    "aliases": [
+      {
+        "name": "QueryString",
+        "comment": " A parsed query string is a Dict of param names to param value list.\n",
+        "args": [],
+        "type": "Dict.Dict String (List String)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse a query string. Parsed string must include the leading \"?\" char.\n",
+        "type": "String -> RouteParser.QueryString.QueryString"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "RouteParser",
+    "comment": " A typed router in Elm, with a nice DSL built on top of parser cominators\n(see [README](https://github.com/etaque/elm-route-parser) for usage).\n\n# DSL for simple cases\n@docs int, string, customParam, static, dyn1, dyn2, dyn3\n\n# Other route matcher builders\n@docs parserMatcher, rawMatcher, mapMatcher, mapMatchers\n\n# Because eventually you'll have to run the router\n@docs match, router\n\n# Types\n@docs Matcher, Param, Router\n",
+    "aliases": [
+      {
+        "name": "Router",
+        "comment": " A router is composed of a route parser, and a path generator.\n",
+        "args": [
+          "route"
+        ],
+        "type": "{ fromPath : String -> Maybe.Maybe route, toPath : route -> String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Matcher",
+        "comment": " A single route parser\n",
+        "args": [
+          "route"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Param",
+        "comment": " A param parser in a route\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "customParam",
+        "comment": " Build a custom param extractor from a parser instance\n",
+        "type": "Combine.Parser () a -> RouteParser.Param a"
+      },
+      {
+        "name": "dyn1",
+        "comment": " Matcher for a path with one dynamic param.\n\n    type Route = Topic Int\n    matchers = [ dyn1 Topic \"/topic/\" int \"/edit\" ]\n\n    match matchers \"/topic/1/edit\" == Just (Topic 1)\n",
+        "type": "(a -> route) -> String -> RouteParser.Param a -> String -> RouteParser.Matcher route"
+      },
+      {
+        "name": "dyn2",
+        "comment": " Matcher for a path with two dynamic params.\n\n    type Route = SubTopic Int Int\n    matchers = [ dyn2 SubTopic \"/topic/\" int \"/\" int \"\" ]\n\n    match matchers \"/topic/1/2\" == Just (SubTopic 1 2)\n",
+        "type": "(a -> b -> route) -> String -> RouteParser.Param a -> String -> RouteParser.Param b -> String -> RouteParser.Matcher route"
+      },
+      {
+        "name": "dyn3",
+        "comment": " Matcher for a path with three dynamic params.\n\n    type Route = Something String String String\n    matchers = [ dyn3 Something \"/some/\" string \"/thing/\" string \"/here/\" string \"\" ]\n\n    match matchers \"/some/cool/thing/must-be/here/i-guess\" == Just (Something \"cool\" \"must-be\" \"i-guess\")\n",
+        "type": "(a -> b -> c -> route) -> String -> RouteParser.Param a -> String -> RouteParser.Param b -> String -> RouteParser.Param c -> String -> RouteParser.Matcher route"
+      },
+      {
+        "name": "int",
+        "comment": " Extract an Int param\n",
+        "type": "RouteParser.Param Int"
+      },
+      {
+        "name": "mapMatcher",
+        "comment": " Map the result of the match\n",
+        "type": "(a -> b) -> RouteParser.Matcher a -> RouteParser.Matcher b"
+      },
+      {
+        "name": "mapMatchers",
+        "comment": " map a list of matchers from a route type to another route type.\nUseful for subrouting, like delegating one of the routes to another type :\n\n    -- global routing:\n\n    type Route = Home | Admin AdminRoute\n\n    matchers =\n      [ static Home \"/\" ] ++ (mapMatchers Admin adminMatchers)\n\n    -- can be delegated to a component without knowdedge of global routing:\n\n    type AdminRoute = Dashboard | Users\n\n    adminMatchers =\n      [ static Dashboard \"/admin\", static Users \"/users\" ]\n",
+        "type": "(a -> b) -> List (RouteParser.Matcher a) -> List (RouteParser.Matcher b)"
+      },
+      {
+        "name": "match",
+        "comment": " Given a list of matchers and a path, return the first successful match of the path.\n",
+        "type": "List (RouteParser.Matcher route) -> String -> Maybe.Maybe route"
+      },
+      {
+        "name": "parserMatcher",
+        "comment": " Build a route from a Parser instance\n",
+        "type": "Combine.Parser () route -> RouteParser.Matcher route"
+      },
+      {
+        "name": "rawMatcher",
+        "comment": " Build a route from a raw matcher function\n",
+        "type": "(String -> Maybe.Maybe route) -> RouteParser.Matcher route"
+      },
+      {
+        "name": "router",
+        "comment": " Full-featured router. A record with two properties:\n\n* `fromPath` to maybe get the route from a path,\n* `toPath`to build the path from the route, typically for links in the views.\n",
+        "type": "List (RouteParser.Matcher route) -> (route -> String) -> RouteParser.Router route"
+      },
+      {
+        "name": "static",
+        "comment": " Matcher for a static path.\n\n    type Route = About\n    matchers = [ static About \"/about\" ]\n\n    match matchers \"/about\" == Just About\n",
+        "type": "route -> String -> RouteParser.Matcher route"
+      },
+      {
+        "name": "string",
+        "comment": " Extract a String param\n",
+        "type": "RouteParser.Param String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

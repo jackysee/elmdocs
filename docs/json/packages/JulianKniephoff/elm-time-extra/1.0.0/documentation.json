@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Time.Extra",
+    "comment": " Utility functions that aren't in the `Time` module\nfrom  `elm-lang/core`.\n\n# Conversions\n@docs fromFps, toFps\n\n# Signals\n@docs timestamps, everyWhen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "everyWhen",
+        "comment": " Same as the `Time.every` function,\nbut you can turn it on and off.\n",
+        "type": "Time.Time -> Signal.Signal Bool -> Signal.Signal Time.Time"
+      },
+      {
+        "name": "fromFps",
+        "comment": " Converts a number of ticks per second\ninto the corresponding interval between to ticks.\n",
+        "type": "Float -> Time.Time"
+      },
+      {
+        "name": "timestamps",
+        "comment": " Extract the timestamps of the updates of the given signal.\n",
+        "type": "Signal.Signal a -> Signal.Signal Time.Time"
+      },
+      {
+        "name": "toFps",
+        "comment": " Get the FPS corresponding to a given time between to frames.\n",
+        "type": "Time.Time -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

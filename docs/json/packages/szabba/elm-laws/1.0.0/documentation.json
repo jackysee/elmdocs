@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Laws",
+    "comment": " An aletrnative to the claim DSL from Elm Check. See the README for more\ndetails.\n\n@docs claim, suite\n\n# Helpers\n@docs equivalent, true, false, equal\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "claim",
+        "comment": " Creates a claim given a string describing it, a pair of functions and a\nproducer of values. The two functions are applied to values obtained from the\nproducer.\n\n    import Laws exposing (claim)\n    import Check.Producer exposing (list int)\n\n    notAppliedTwiceReturnsArgument =\n        claim \"not, applied twice, returns it's initial argument\"\n            (not << not, identity)\n            (list int)\n\nThere are helpers around for creating these kinds of function pairs.\n\n",
+        "type": "String -> ( a -> b, a -> b ) -> Check.Producer.Producer a -> Check.Claim"
+      },
+      {
+        "name": "equal",
+        "comment": " Helps test value equality.\n\n    import Laws exposing (claim, equal)\n    import Check.Producer exposing (unit)\n\n    oneMinusOneIsZero =\n        claim \"1 - 1 = 0\"\n            (1 - 1 `equal` 0)\n            unit\n\n",
+        "type": "a -> a -> ( b -> a, b -> a )"
+      },
+      {
+        "name": "equivalent",
+        "comment": " Helps test that the result of two functions is the same.\n\n    import Laws exposing (claim, equivalent)\n    import Check.Producer exposing (int)\n\n    oneIsIdentityOfMultiplication =\n        claim \"1 is the identity of multiplication\"\n            ((*) 1 `equivalent` identity)\n            int\n\n",
+        "type": "(a -> b) -> (a -> b) -> ( a -> b, a -> b )"
+      },
+      {
+        "name": "false",
+        "comment": " Helps test that a property is false.\n\n    import Laws exposing (claim, true)\n    import Check.Producer exposing (list, unit)\n\n    empthyIsEmpty\n        claim \"half a list is longer than i's thole\"\n            (true <| \\l -> List.length l < List.length // 2)\n            (list unit)\n\n",
+        "type": "(a -> Bool) -> ( a -> Bool, a -> Bool )"
+      },
+      {
+        "name": "suite",
+        "comment": " Creates a claim that groups other claims.\n\n    import Laws exposing (suite, true, false)\n    import Check.Producer exposing (unit)\n\n    contradictory =\n        suite \"the world is full of contradictions\"\n            [ claim \"of course\"\n                (true <| always True)\n                unit\n            , claim \"of course NOT\"\n                (false <| always True)\n                unit\n            ]\n\n",
+        "type": "String -> List Check.Claim -> Check.Claim"
+      },
+      {
+        "name": "true",
+        "comment": " Helps test that a property is true.\n\n    import Laws exposing (claim, true)\n    import Check.Producer exposing (list, unit)\n\n    halfAListIsNoMoreThanTheWhole =\n        claim \"half of a list is no longer than the entire list\"\n            (true <| \\l -> List.length l >= List.length // 2)\n            (list unit)\n\n",
+        "type": "(a -> Bool) -> ( a -> Bool, a -> Bool )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

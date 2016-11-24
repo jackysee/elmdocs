@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Animation",
+    "comment": "\n\n@docs Animation, run, animate\n\n# Building\n@docs immediately, interval, time\n\n# Queries\n@docs sample, timeLeft, isDone\n\n# Transforms\n@docs reverse, reset\n\n# Combining\n@docs append, continue, map, andMap\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Animation",
+        "comment": " An animation describes how a value changes over a finite period of time.\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Applies functions produced by one animation to values produced by another\none. In tandem with [`map`](#map), this allows you to combine several animations\nusing a multiple-parameter function.\n\n    type alias Position =\n        { x : Float, y : Float }\n\n    position : Animation Position\n    position =\n        Position `Animation.map` x `Animation.andMap` y\n\n    y : Animation Float\n    y =\n        Animation.interval pi\n        |> Animation.map cos\n\n    x : Animation Float\n    x = Animation.interval pi\n\n\n",
+        "type": "Animation.Animation (a -> b) -> Animation.Animation a -> Animation.Animation b"
+      },
+      {
+        "name": "animate",
+        "comment": " Like [`run`](#run), but it also includes the amount of time *not* used up by\nthe animation.\n\n",
+        "type": "Time.Time -> Animation.Animation a -> ( Animation.Animation a, Time.Time )"
+      },
+      {
+        "name": "append",
+        "comment": " Glues two animations together.\n\n",
+        "type": "Animation.Animation a -> Animation.Animation a -> Animation.Animation a"
+      },
+      {
+        "name": "continue",
+        "comment": " Glues on a new period of time to an animation.\n\n    2\n        |> Animation.immediately\n        |> Animation.continue (2 * Time.second) (\\x t -> x + 2 * t)\n\n",
+        "type": "Time.Time -> (a -> Float -> a) -> Animation.Animation a -> Animation.Animation a"
+      },
+      {
+        "name": "immediately",
+        "comment": " Creates an animation that takes no time and assumes the specified value.\n\n",
+        "type": "a -> Animation.Animation a"
+      },
+      {
+        "name": "interval",
+        "comment": " Runs linearily from 0 to 1 over the time specified.\n\nFor negative values you'll get the zero interval.\n\n",
+        "type": "Time.Time -> Animation.Animation Float"
+      },
+      {
+        "name": "isDone",
+        "comment": " True when the animation is over.\n\n",
+        "type": "Animation.Animation a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Builds an animation with the values transformed by a function. If you want\nto use a function with multiple arguments, you're looking for\n[`andMap`](#andMap)\n\n",
+        "type": "(a -> b) -> Animation.Animation a -> Animation.Animation b"
+      },
+      {
+        "name": "reset",
+        "comment": " Moves the animation back to it's starting point - it's state before it\nconsumed any time.\n\n",
+        "type": "Animation.Animation a -> Animation.Animation a"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverses the arrow of time in the animation.\n\n",
+        "type": "Animation.Animation a -> Animation.Animation a"
+      },
+      {
+        "name": "run",
+        "comment": " Runs an animation for some time. If you need to know when the animation\n\"ends early\", leaving time to spare, consider using [`animate`](#animate)\ninstead.\n\n",
+        "type": "Time.Time -> Animation.Animation a -> Animation.Animation a"
+      },
+      {
+        "name": "sample",
+        "comment": " Gets the current value of the animation.\n\n",
+        "type": "Animation.Animation a -> a"
+      },
+      {
+        "name": "time",
+        "comment": " Runs linearily from 0 to the time specified over the time specified.\n\nFor negative values you'll get the zero interval.\n\n",
+        "type": "Time.Time -> Animation.Animation Time.Time"
+      },
+      {
+        "name": "timeLeft",
+        "comment": " The time left until the animation ends.\n\n",
+        "type": "Animation.Animation a -> Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

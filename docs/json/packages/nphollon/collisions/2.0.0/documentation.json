@@ -1,0 +1,88 @@
+[
+  {
+    "name": "Collision3D",
+    "comment": " Collision detection in three dimensions\n\n# Building a Hull\n@docs Vec3, Hull, vec3, fromTriangles\n\n# Collision Detection\n@docs isInside, isOutside\n",
+    "aliases": [
+      {
+        "name": "Vec3",
+        "comment": " A vector with x, y, and z components\n",
+        "args": [],
+        "type": "Vec3.Vec3"
+      }
+    ],
+    "types": [
+      {
+        "name": "Hull",
+        "comment": " A collection of faces that together represent a shape. This library interprets\nthe faces as forming the smallest possible convex polyhedron.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromTriangles",
+        "comment": " Given a list of triangles, compute a hull. For a triangle of points (a,b,c),\nthe resulting normal will be the normalized cross product `(a to b) x (b to c)`. In\nother words, if the triangle vertexes are going counter-clockwise from your point\nof view, the normal will be pointing towards from you.\n\nThe triangles passed to this function should form a polyhedron that is\n* convex (no dents)\n* closed (no holes)\n",
+        "type": "List ( Collision3D.Vec3, Collision3D.Vec3, Collision3D.Vec3 ) -> Collision3D.Hull"
+      },
+      {
+        "name": "isInside",
+        "comment": " Returns `True` if the given position is on or in the given hull.\nDefaults to `False` if the hull has no sides.\n\n    hull =\n      fromTriangles\n        [ (vec3 0 0 0, vec3 0 0 5, vec3 10 0 0)\n        , (vec3 0 0 0, vec3 0 5 0, vec3 0 0 5)\n        , (vec3 0 0 0, vec3 10 0 0, vec3 0 5 0)\n        , (vec3 10 0 0, vec3 0 0 5, vec3 0 5 0)\n        ]\n\n    isInside hull (vec3 5 1 1) == True\n\n    isInside hull (vec3 -1 2 -1) == False\n\n    isInside hull (vec3 0 0 0) == True\n",
+        "type": "Collision3D.Vec3 -> Collision3D.Hull -> Bool"
+      },
+      {
+        "name": "isOutside",
+        "comment": " Returns `True` if the given position is outside the given hull.\nThe logical inverse of `isInside`.\n",
+        "type": "Collision3D.Vec3 -> Collision3D.Hull -> Bool"
+      },
+      {
+        "name": "vec3",
+        "comment": " Build a Vec3 given x, y, and z\n\n    vec3 1 2 3 -- x = 1, y = 2, z = 3\n",
+        "type": "Float -> Float -> Float -> Collision3D.Vec3"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Collision2D",
+    "comment": " Collision detection in two dimensions\n\n# Building a Hull\n@docs Vec2, Hull, vec2, fromVectors\n\n# Collision Detection\n@docs isInside, isOutside\n",
+    "aliases": [
+      {
+        "name": "Vec2",
+        "comment": " A vector with x and y components\n",
+        "args": [],
+        "type": "Vec2.Vec2"
+      }
+    ],
+    "types": [
+      {
+        "name": "Hull",
+        "comment": " A collection of sides that together represent a hull. This library\ninterprets the sides as forming the smallest possible convex polygon.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromVectors",
+        "comment": " Given the vertexes of a polygon, compute a hull. Vertexes must be ordered\ncounter-clockwise around the center of the shape. Only works for convex polygons.\n\nReturns an empty hull if given less than three vertexes.\n",
+        "type": "List Collision2D.Vec2 -> Collision2D.Hull"
+      },
+      {
+        "name": "isInside",
+        "comment": " Returns `True` if the given position is on or in the given hull.\nDefaults to `False` if the hull has no sides.\n\n    hull =\n      fromVertexes\n        [ vec2 0 1\n        , vec2 3 4\n        , vec2 1 0\n        ]\n\n    isInside hull (vec2 1 1) == True\n\n    isInside hull (vec2 -1 2) == False\n\n    isInside hull (vec2 0 0) == True\n\n",
+        "type": "Collision2D.Vec2 -> Collision2D.Hull -> Bool"
+      },
+      {
+        "name": "isOutside",
+        "comment": " Returns `True` if the given position is outside the given hull.\nThe logical inverse of `isInside`.\n",
+        "type": "Collision2D.Vec2 -> Collision2D.Hull -> Bool"
+      },
+      {
+        "name": "vec2",
+        "comment": " Build a Vec2 given x and y\n\n    vec2 1 2 -- x = 1, y = 2\n",
+        "type": "Float -> Float -> Collision2D.Vec2"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

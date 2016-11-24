@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Array.Experimental",
+    "comment": " Array.Experimental is a testing playground for various Array related functions. It contains functions that are experimental, unidiomatic, controversial or downright silly. This is specifically to not clutter Array and Array.Extra, and also have an isolated place to test crazy ideas.\n\n*Do not* use this module in production code. Try your best to come up with equivalent functionality or solve your problem in a different way, and if you fail, consider contributing to Array and Array.Extra packages.\n\n*Do not* import functions from this module unqualified if you do use it.\n\nThis package has the lowest possible bar for inclusion of Array related functions. If you have some code that you want to publish somewhere, but not necessarily contribute to core libraries, feel absolutely free to contribute here. Treat this package as a safe sandbox. The GitHub page for ideas, suggestions, discussions, and pull requests is:\n\nhttps://github.com/sindikat/elm-maybe-experimental\n\n# Array functions\n@docs get, set, update, take, drop\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "drop",
+        "comment": " Drop *n* first elements from an array. In other words, slice an array from an index until the very end.\n\n    drop 5 (fromList [0..9]) == fromList [5,6,7,8,9]\n",
+        "type": "Int -> Array.Array a -> Array.Array a"
+      },
+      {
+        "name": "get",
+        "comment": " Return `Just` the element at the index. Given negative argument, counts the element from end. Returns `Nothing` if the index ≥ abs (length array).\n\n    get  0 (fromList [0,1,2]) == Just 0\n    get  2 (fromList [0,1,2]) == Just 2\n    get  5 (fromList [0,1,2]) == Nothing\n    get -1 (fromList [0,1,2]) == Just 2\n\n`Array.get` from core libraries do not support negative arguments, but it might in the future.\n",
+        "type": "Int -> Array.Array a -> Maybe.Maybe a"
+      },
+      {
+        "name": "set",
+        "comment": " Sets the element at the index. Given negative argument, counts the element from end. Returns the array unchanged if the index ≥ abs (length array).\n\n    set  1 7 (fromList [1,2,3]) == fromList [1,7,3]\n    set -1 7 (fromList [1,2,3]) == fromList [1,2,7]\n\n`Array.set` from core libraries do not support negative arguments, but it might in the future.\n",
+        "type": "Int -> a -> Array.Array a -> Array.Array a"
+      },
+      {
+        "name": "take",
+        "comment": " Take *n* first elements from an array. In other words, slice an array from the very beginning until index not including.\n\n    take 5 (fromList [0..9]) == fromList [0,1,2,3,4]\n",
+        "type": "Int -> Array.Array a -> Array.Array a"
+      },
+      {
+        "name": "update",
+        "comment": " Update the element at the index using a function. Given negative argument, counts the element from end. Returns the array unchanged if the index ≥ abs (length array).\n\n    update  1 ((+)10) (fromList [1,2,3]) == fromList [1,12,3]\n    update -1 ((+)10) (fromList [1,2,3]) == fromList [1,2,13]\n\nThere is no `Array.update` in the core libraries.\n",
+        "type": "Int -> (a -> a) -> Array.Array a -> Array.Array a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

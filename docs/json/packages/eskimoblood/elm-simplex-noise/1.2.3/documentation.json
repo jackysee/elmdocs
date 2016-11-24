@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Noise",
+    "comment": " This is a library to generate simplex noise in Elm.\n\nThe code is a port of the [simplex noise JavaScript version](https:--github.com/jwagner/simplex-noise.js) by Jonas Wagner.\n\n## Example usage\n\n    (perm, newSeed) = permutationTable (initialSeed 42) -- generate the permutation table\n    noiseValue = noise3d perm 1 1 1\n\n# Permutation tables\n@docs permutationTable, PermutationTable\n\n# Genarate noise\n@docs noise4d, noise3d, noise2d\n\n",
+    "aliases": [
+      {
+        "name": "PermutationTable",
+        "comment": "\nPermutation table that is needed to generate the noise value.\n",
+        "args": [],
+        "type": "{ perm : Array.Array Int, permMod12 : Array.Array Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "noise2d",
+        "comment": "\nGenerates a noise value between `-1` and `1` based on the given x and y value and a seeded permutation table.\nUsing the same permutation table will always return the same result for the same coordinate.\n",
+        "type": "Noise.PermutationTable -> Float -> Float -> Float"
+      },
+      {
+        "name": "noise3d",
+        "comment": "\nGenerates a noise value between `-1` and `1` based on the given x, y and z value and a seeded permutation table.\nUsing the same permutation table will always return the same result for the same coordinate.\n",
+        "type": "Noise.PermutationTable -> Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "noise4d",
+        "comment": "\nGenerates a noise value between `-1` and `1` based on the given x, y, z and w value and a seeded permutation table.\nUsing the same permutation table will always return the same result for the same coordinate.\n",
+        "type": "Noise.PermutationTable -> Float -> Float -> Float -> Float -> Float"
+      },
+      {
+        "name": "permutationTable",
+        "comment": "\nGenrate the permutation tables that are needed to calculate the noise value.\nThe function takes a seed and returns the table and  a new seed.\n",
+        "type": "Random.Seed -> ( Noise.PermutationTable, Random.Seed )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

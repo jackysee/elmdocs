@@ -1,0 +1,224 @@
+[
+  {
+    "name": "Lagrangian",
+    "comment": "\nWe can compute the behavior of a system if we start with special equation called\na Lagrangian.\n\n    Lagrangian = KineticEnergy - PotentialEnergy\n\n@docs solve, toAcceleration\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "solve",
+        "comment": " Given a Lagrangian, try to compute the acceleration of the system. The result\nis a list of expressions describing the acceleration of each coordinate.\n\n    import Expression exposing (..)\n\n    -- An object in freefall. Coordinate 0 is horizontal, coordinate 1 is vertical.\n\n    kineticEnergy =\n            ((num 0.5) `times` ((square (velocity 0)) `plus` (square (velocity 1))))\n\n    potentialEnergy =\n            ((num 10) `times` (coordinate 1))\n\n    freefallLagrangian = kineticEnergy `minus` potentialEnergy\n\n    solve freefallLagrangian\n    -- equals Just [ num 0, num -10 ]\n\n\nThis function will return `Nothing` if the Lagrangian does not have a diagonal\n[Hessian matrix](https://en.wikipedia.org/wiki/Hessian_matrix).\nIn other words, the Lagrangian should obey the following rules:\n\n* Every coordinate index must have a velocity-squared term.\n* Velocities with different indexes can be added but not combined in other ways.\n\nBelow are examples of good and bad inputs:\n\n    -- Good\n    sum [ square (velocity 0), square (velocity 1), square (velocity 2) ]\n\n    -- Good: It is OK to multiply coordinates and velocities\n    (square (velocity 0)) `plus` ((coordinate 0) `times` (square (velocity 1)))\n\n    -- Bad: The expression has (coordinate 1) but no (square (velocity 1))\n    (square (velocity 0)) `plus` (coordinate 0) `plus` (coordinate 1)\n\n    -- Bad: velocities 1 and 2 are missing\n    sum [ square (velocity 0), square (velocity 3) ]\n\n    -- Bad: (velocity 0) and (velocity 1) are multiplied\n    (square (velocity 0)) `times` (square (velocity 1))\n",
+        "type": "Expression.Expression -> Maybe.Maybe (List Expression.Expression)"
+      },
+      {
+        "name": "toAcceleration",
+        "comment": " The same as `solve`, but returns the solution as a `Mechanics.Acceleration`.\nThe result can be plugged directly into `Mechanics.evolve`.\n\n    freefallAcceleration =\n        toAcceleration freefallLagrangian\n            |> Maybe.withDefault (Mechanics.acceleration (always []))\n\n    startState = Mechanics.state2 (0, 6) (0, 0)\n\n    dt = 0.5\n\n    Mechanics.evolve freefallAcceleration dt startState\n    -- equals Mechanics.state 0.5 [ (3, 6) ( -1.25, -5 ) ]\n",
+        "type": "Expression.Expression -> Maybe.Maybe Mechanics.Acceleration"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Expression",
+    "comment": " Create symbolic mathematic expressions. For use with the `Lagrangian` module. The variable names are designed to correspond with the fields in `Mechanics.State`.\n\n# Using expressions\n@docs Expression, eval\n\n# Expression primitives\n@docs num, time, coordinate, velocity\n\n# Expression arithmetic\n@docs sum, plus, minus, product, times, over, negative, inverse, square, expt, sine, cosine, ln\n\n# Inspecting expressions\n@docs dimension, getFloat, print\n\n# Taking derivatives\n@docs partial\n",
+    "aliases": [
+      {
+        "name": "Expression",
+        "comment": " ",
+        "args": [],
+        "type": "Types.Expression"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "coordinate",
+        "comment": " A variable representing the coordinate with the given index.\n\n    print (coordinate 0) == \"x_0\"\n",
+        "type": "Int -> Expression.Expression"
+      },
+      {
+        "name": "cosine",
+        "comment": " Take the cosine of an expression.\n\n    print (cosine time) == \"(cos t)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "dimension",
+        "comment": " Return the size of the coordinate/velocity vector used by the expression.\nThis is one plus the highest index used.\n\n    dimension (num 8) == 0\n    dimension (sine (time)) == 0\n    dimension (((num 2) `times` time) `plus` (coordinate 0)) == 1\n    dimension ((coordinate 0) `times` (coordinate 1)) == 2\n    dimension (square (velocity 2)) == 3\n",
+        "type": "Expression.Expression -> Int"
+      },
+      {
+        "name": "eval",
+        "comment": " Evaluate an expression, replacing the variables in the expression with the\ndata in the state.\n\n    data = Mechanics.state1 (3, 5)\n\n    expression = (square (velocity 0)) `minus` (coordinate 0)\n\n    eval expression data == 22\n\nIf the expression has a greater dimension than the state, the extra coordinate/velocity\ncomponents are assumed to be zero.\n\n    Mechanics.state1 (3, 5)\n        |> eval (velocity 1) == 0\n",
+        "type": "Expression.Expression -> Mechanics.State -> Float"
+      },
+      {
+        "name": "expt",
+        "comment": " Raise the first expression to the power of the second expression.\n\n    print (expt (num 2) (num 3)) == \"8\"\n    print (expt (num 2) time) == \"(2 ^ t)\"\n    print (expt (expt (coordinate 0) time) (num 2)) == \"(x_0 ^ (2 t))\"\n    print (expt time (num 0)) == \"1\"\n    print (expt time (num 1)) == \"t\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "getFloat",
+        "comment": " If the expression equals a constant, return the constant. Otherwise, return `Nothing`.\n\n    getFloat (num 3) == Just 3\n    getFloat ((num 3) `times` (coordinate 0)) == Nothing\n    getFloat ((num 0) `times` (coordinate 0)) == Just 0\n",
+        "type": "Expression.Expression -> Maybe.Maybe Float"
+      },
+      {
+        "name": "inverse",
+        "comment": " Raise an expression to the power of -1.\n\n    print (inverse time) == \"(t ^ -1)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "ln",
+        "comment": " Take the natural logarithm of an expression.\n\n    print (ln (num e)) == \"1\"\n    print (ln (coordinate 1)) == \"(ln x_1)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "minus",
+        "comment": " Subtract two expressions.\n\n    print ((num 3) `minus` time) == \"(3 + (-1 t))\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "negative",
+        "comment": " Multiply an expression by -1.\n\n    print (negative (num 2)) == \"-2\"\n    print (negative time) == \"(-1 t)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "num",
+        "comment": " Encode a number as an expression.\n\n    print (num 3.14) == \"3.14\"\n",
+        "type": "Float -> Expression.Expression"
+      },
+      {
+        "name": "over",
+        "comment": " Divide two expressions.\n\n    print ((num 2) `over` time) == \"(2 (t ^ -1))\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "partial",
+        "comment": " Take the partial derivative of the second expression with respect to the first.\n\n    print (partial time (expt time (num 3))) == \"(3 (t ^ 2))\"\n    print (partial (coordinate 0) (sine (coordinate 0))) == \"(cos x_0)\"\n    print (partial time ((velocity 0) `times` (coordinate 0))) == \"0\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "plus",
+        "comment": " Add two expressions.\n\n    print ((num 3) `plus` (num 4)) == \"7\"\n    print ((num 3) `plus` (velocity 2)) == \"(3 + v_2)\"\n    print ((coordinate 1) `plus` (num 0)) == \"x_1\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "print",
+        "comment": " Convert the expression to a string. Examples are all over this page.\n",
+        "type": "Expression.Expression -> String"
+      },
+      {
+        "name": "product",
+        "comment": " Multiply a list of factors.\n\n    print (product [ num -5, time, coordinate 0, num 8 ]) == \"(-40 t x_0)\"\n",
+        "type": "List Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "sine",
+        "comment": " Take the sine of an expression.\n\n    print (sine time) == \"(sin t)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "square",
+        "comment": " Raise an expression to the power of 2.\n\n    print (square (velocity 0)) == \"(v_0 ^ 2)\"\n",
+        "type": "Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "sum",
+        "comment": " Add a list of expressions\n\n    print (sum [ num -5, time, coordinate 0, num 8 ]) == \"(-3 + t + x_0)\"\n",
+        "type": "List Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "time",
+        "comment": " A variable representing time.\n\n    print time == \"t\"\n",
+        "type": "Expression.Expression"
+      },
+      {
+        "name": "times",
+        "comment": " Multiply two expressions.\n\n    print ((num 14) `times` (num 0.5)) == \"7\"\n    print ((num 2) `times` time) == \"(2 t)\"\n    print ((num 0) `times` time) == \"0\"\n    print ((num 1) `times` time) == \"t\"\n",
+        "type": "Expression.Expression -> Expression.Expression -> Expression.Expression"
+      },
+      {
+        "name": "velocity",
+        "comment": " A variable representing the velocity with the given index.\n\n    print (velocity 0) == \"v_0\"\n",
+        "type": "Int -> Expression.Expression"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Mechanics",
+    "comment": "\n# Building states\n@docs State, state, state1, state2, state3\n\n# Inspecting states\n@docs aboutEqual, dimension, time, coordinate, velocity\n\n# Changing states\n@docs Acceleration, acceleration, evolve\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Acceleration",
+        "comment": " An acceleration describes how the velocities of a state change with time.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " A state describes a physical system at a moment in time. It contains three types of numbers:\n\n* Time.\n* Coordinates describing the position of the system. If you took a snapshot of the system, what would it look like?\n* Velocities describing the rates of change for each coordinate. If you took another snapshot a split-second later, how much would it have changed?\n\nCoordinates and velocities do not need to be rectangular (in X-Y-Z space). For example, a satellite orbiting the Earth could be described by spherical coordinates (altitude, latitude, and longitude).\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "aboutEqual",
+        "comment": "\n    aboutEqual tolerance a b\n\nCompares all numbers in state A and state B. Returns `True` if they differ by\nless than the given tolerance. States with different dimensions are never equal.\n\n    aboutEqual 1e-3 (state1 (0, 0)) (state1 (0, 1e-4)) -- returns True\n\n    aboutEqual 1e-6 (state1 (0, 0)) (state1 (0, 1e-4)) -- returns False\n\n    aboutEqual 1e-6 (state1 (0, 0)) (state2 (0, 0) (0, 0)) -- returns False\n",
+        "type": "Float -> Mechanics.State -> Mechanics.State -> Bool"
+      },
+      {
+        "name": "acceleration",
+        "comment": " Create an acceleration from a function. The function takes a state and\nreturns a list of changes to the velocities.\n\nExample 1: An object in freefall. The state has 2 dimensions, X and Y.\n\n    gravity = -10\n    fallingAccel = acceleration (always [0, gravity])\n\nExample 2: A weight attached to a spring. The weight is pushed/pulled towards\nthe resting position of the spring. The state has 1 dimension, X.\n\n    springStrength = 2.0\n    restPosition = 5.0\n    mass = 1.0\n\n    hookesLaw position =\n      mass * springStrength * (restPosition - position)\n\n    springAccel = acceleration (\\s -> [ hookesLaw (coordinate 0 s) ])\n",
+        "type": "(Mechanics.State -> List Float) -> Mechanics.Acceleration"
+      },
+      {
+        "name": "coordinate",
+        "comment": " For a given index `n`, returns the `n`th coordinate of a state. This works\nsimilarly to `Array.get`. The index is zero-based. An out-of-bounds index returns\nzero.\n\n    theState = state3 (1, 2) (3, 4) (5, 6)\n\n    coordinate 0 theState -- returns 1\n    coordinate 2 theState -- returns 5\n    coordinate 3 theState -- returns 0\n    coordinate -1 theState -- returns 0\n",
+        "type": "Int -> Mechanics.State -> Float"
+      },
+      {
+        "name": "dimension",
+        "comment": " Returns the number of coordinates in a state.\n\n    dimension (state1 (0, 0)) -- returns 1\n    dimension (state3 (0, 0) (0, 0) (0, 0)) -- returns 3\n",
+        "type": "Mechanics.State -> Int"
+      },
+      {
+        "name": "evolve",
+        "comment": " Given an acceleration, a change in time, and a state, evolve the state\nforward in time. (Under the hood, `evolve` uses the\n[Runge-Kutta method](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods).)\n\n    start = state2 (0, 1) (10, 0)\n\n    oneSecondLater = evolve fallingAccel 1.0 start\n    -- returns state 0.5 [ (1, 1) (5, -10) ]\n\nToss this sucker into a `foldp`, and watch the Universe come to life before\nyour eyes!\n\n    model = Signal.foldp (evolve fallingAccel) start (Time.fps 30)\n",
+        "type": "Mechanics.Acceleration -> Float -> Mechanics.State -> Mechanics.State"
+      },
+      {
+        "name": "state",
+        "comment": " Create a state with the given time, coordinates, and velocities. Because coordinates and velocities correspond, they are given as a list of pairs.\n\n    t = 10.0 -- seconds\n    x = 0.0 -- meters\n    y = 10.0 -- meters\n    xSpeed = 0.0 -- meters per second\n    ySpeed = -1.0 -- meters per second\n\n    state = t [ (x, xSpeed), (y, ySpeed) ]\n",
+        "type": "Float -> List ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state1",
+        "comment": " Create a 1-dimensional state. The time is set to zero.\n\n    state1 (x, v) -- equals state 0 [ (x, v) ]\n",
+        "type": "( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state2",
+        "comment": " Create a 2-dimensional state. The time is set to zero.\n\n    state2 (x, vx) (y, vy)\n    -- equals state 0 [ (x, vx), (y, vy) ]\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state3",
+        "comment": " Create a 3-dimensional state. The time is set to zero.\n\n    state2 (x, vx) (y, vy) (z, vz)\n    -- equals state 0 [ (x, vx), (y, vy), (z, vz) ]\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "time",
+        "comment": " Returns the time of a state.\n\n    time (state1 (1, 5)) -- returns 0\n    time (state 3.5 [ (0, 0) ]) -- returns 3.5\n",
+        "type": "Mechanics.State -> Float"
+      },
+      {
+        "name": "velocity",
+        "comment": " Returns the `n`th velocity of a state.\n\n    theState = state3 (1, 2) (3, 4) (5, 6)\n\n    velocity 0 theState -- returns 2\n    velocity 2 theState -- returns 6\n    velocity 3 theState -- returns 0\n\n",
+        "type": "Int -> Mechanics.State -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

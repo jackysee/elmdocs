@@ -1,0 +1,99 @@
+[
+  {
+    "name": "IsOnline",
+    "comment": " IsOnline functions and Msg.\n\n# Model\n@docs Model, initialModel, init\n\n# Message\n@docs Msg, Status\n\n# Update function\n@docs update\n\n# View function\n@docs view\n\n# Common Helpers\n@docs setRandomHost, getTime\n\n# Static data\n@docs hosts\n\n# Custom Events\n@docs onLoad\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model\n",
+        "args": [],
+        "type": "{ online : IsOnline.Status , host : Maybe.Maybe String , now : Maybe.Maybe Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A union type representing The Elm Architect's `Msg`\n",
+        "args": [],
+        "cases": [
+          [
+            "Onload",
+            []
+          ],
+          [
+            "SetHost",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SetTime",
+            [
+              "Maybe.Maybe Time.Time"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Status",
+        "comment": " Online Status type\n",
+        "args": [],
+        "cases": [
+          [
+            "Online",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "Offline",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getTime",
+        "comment": " Get and Set the current time for image cache busting\n",
+        "type": "Platform.Cmd.Cmd IsOnline.Msg"
+      },
+      {
+        "name": "hosts",
+        "comment": " One or more hosts to check.\n",
+        "type": "List String"
+      },
+      {
+        "name": "init",
+        "comment": " initialise the model\n",
+        "type": "( IsOnline.Model, Platform.Cmd.Cmd IsOnline.Msg )"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Initial model\n",
+        "type": "IsOnline.Model"
+      },
+      {
+        "name": "onLoad",
+        "comment": " Capture image load event.\n",
+        "type": "msg -> Html.Attribute msg"
+      },
+      {
+        "name": "setRandomHost",
+        "comment": " Generate a random Int for us to pluck a host out of the list of strings.\n",
+        "type": "Platform.Cmd.Cmd IsOnline.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " The Elm Architect's update function.\n",
+        "type": "IsOnline.Msg -> IsOnline.Model -> ( IsOnline.Model, Platform.Cmd.Cmd IsOnline.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Check we have the `host` & `time` & render an image\n",
+        "type": "IsOnline.Model -> Html.Html IsOnline.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

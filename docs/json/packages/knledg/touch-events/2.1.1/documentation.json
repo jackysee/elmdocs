@@ -1,0 +1,96 @@
+[
+  {
+    "name": "TouchEvents",
+    "comment": " The is a library to provide touch event helpers\n\n# Types\n@docs TouchEvent, Direction, Touch\n\n# Helpers\n@docs emptyTouch, getDirectionX, getDirectionY\n\n# Event Handlers\n@docs onTouchEvent, onTouchEnd, onTouchStart, onTouchMove\n\n",
+    "aliases": [
+      {
+        "name": "Touch",
+        "comment": " Type alias for the touch record on the touch event object\n",
+        "args": [],
+        "type": "{ clientX : Float, clientY : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Direction",
+        "comment": " Supported touch directions\n",
+        "args": [],
+        "cases": [
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TouchEvent",
+        "comment": " Supported touch event types\n",
+        "args": [],
+        "cases": [
+          [
+            "TouchStart",
+            []
+          ],
+          [
+            "TouchEnd",
+            []
+          ],
+          [
+            "TouchMove",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "emptyTouch",
+        "comment": " Returns a `Touch` record with 0 as default values\n",
+        "type": "TouchEvents.Touch"
+      },
+      {
+        "name": "getDirectionX",
+        "comment": " Gets the direction of the swipe on the x axis (`Left` or `Right`)\n",
+        "type": "Float -> Float -> TouchEvents.Direction"
+      },
+      {
+        "name": "getDirectionY",
+        "comment": " Gets the direction of the swipe on the y axis (`Up` or `Down`)\n",
+        "type": "Float -> Float -> TouchEvents.Direction"
+      },
+      {
+        "name": "onTouchEnd",
+        "comment": " Lower level \"touchend\" event handler\n\nTakes the application `Msg` type which should take `TouchEvents.Touch`\nas a payload\n\n```\ntype Msg\n  = UserSwipeEnd TouchEvents.Touch\n\nview model =\n  div\n    [ TouchEvents.onTouchEnd UserSwipeEnd\n    ]\n    []\n```\n",
+        "type": "(TouchEvents.Touch -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onTouchEvent",
+        "comment": " Higher level touch event handler\n\nThis takes a TouchEvent type and application `Msg` type.\nThe `Msg` type should take a `TouchEvent.Touch` type.\n\n```\ntype Msg\n  = UserSwipeStart TouchEvents.Touch\n\nview model =\n  div\n    [ TouchEvents.onTouchEvent TouchEvents.TouchStart UserSwipeStart\n    ]\n    []\n```\n",
+        "type": "TouchEvents.TouchEvent -> (TouchEvents.Touch -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onTouchMove",
+        "comment": " Lower level \"touchmove\" event handler\n",
+        "type": "(TouchEvents.Touch -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onTouchStart",
+        "comment": " Lower level \"touchstart\" event handler\n\nTakes the application `Msg` type which should take `TouchEvents.Touch`\nas a payload\n\n```\ntype Msg\n  = UserSwipeStart TouchEvents.Touch\n\nview model =\n  div\n    [ TouchEvents.onTouchStart UserSwipeStart\n    ]\n    []\n```\n",
+        "type": "(TouchEvents.Touch -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

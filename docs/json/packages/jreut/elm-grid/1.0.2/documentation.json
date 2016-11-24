@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Grid",
+    "comment": " This library provides a data type to represent two-dimensional arrays.\n\n# Definition\n@docs Grid, Coordinate\n\n# Creating `Grid`s\n@docs rectangle, square, repeat, repeatSquare\n\n# Get and set\n@docs set, get, row, column\n\n# Coordinates\n@docs toColumn, toRow, toCoordinate\n",
+    "aliases": [
+      {
+        "name": "Coordinate",
+        "comment": " Type to use when indexing into `Grid`.\n",
+        "args": [],
+        "type": "( Int, Int )"
+      },
+      {
+        "name": "Grid",
+        "comment": " Data type representing a two-dimensional array. Use this to declare types\nin your program. For example, if you wanted to have a `Grid` of Integers, you\ncould write this:\n\n    type alias MyType = Grid Int\n",
+        "args": [
+          "a"
+        ],
+        "type": "Array.Array (Array.Array a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "column",
+        "comment": " Fetch the column at the given index.\n\n    column 2 (square 3 (+)) == Array.fromList [2, 3, 4]\n    column 2 (square 8 (^)) == Array.fromList [1, 2, 4, 8, 16, 32, 64, 128]\n",
+        "type": "Int -> Grid.Grid a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "get",
+        "comment": " Fetch the occupant at a given `Coordinate`.\n\n    get (2,4) (square 6 (*)) == Just 8\n",
+        "type": "Grid.Coordinate -> Grid.Grid a -> Maybe.Maybe a"
+      },
+      {
+        "name": "rectangle",
+        "comment": " Create a grid `width` units by `height` units, filling each cell according\nto the cell's coordinate.\n\n    get (2, 1) (rectangle 4 2 (+)) == Just 3\n",
+        "type": "Int -> Int -> Grid.Filler a -> Grid.Grid a"
+      },
+      {
+        "name": "repeat",
+        "comment": " Create a grid just like [`Grid#rectangle`](Grid#rectangle), except just\ncopy a value into each cell.\n\n    get (2, 1) (rectangle 4 2 \"foo\") == Just \"foo\"\n",
+        "type": "Int -> Int -> a -> Grid.Grid a"
+      },
+      {
+        "name": "repeatSquare",
+        "comment": " Like `repeat`, except make a square grid.\n",
+        "type": "Int -> a -> Grid.Grid a"
+      },
+      {
+        "name": "row",
+        "comment": " Fetch the row at the given index.\n\n    row 3 (repeat 1 4 \"bun\") == Just (Array.fromList [\"bun\"])\n",
+        "type": "Int -> Grid.Grid a -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "set",
+        "comment": " Overwrite the occupant at a given `Coordinate`\n",
+        "type": "Grid.Coordinate -> a -> Grid.Grid a -> Grid.Grid a"
+      },
+      {
+        "name": "square",
+        "comment": " Like `rectangle`, except always make a square grid\n",
+        "type": "Int -> Grid.Filler a -> Grid.Grid a"
+      },
+      {
+        "name": "toColumn",
+        "comment": " Fetch the column index from a `Coordinate`. Useful with `column`\n",
+        "type": "Grid.Coordinate -> Int"
+      },
+      {
+        "name": "toCoordinate",
+        "comment": " Convert a pair of numbers to a coordinate. Column index goes first, then\nthe row index.\n",
+        "type": "Int -> Int -> Grid.Coordinate"
+      },
+      {
+        "name": "toRow",
+        "comment": " Fetch the row index from a `Coordinate`. Useful with `row`.\n",
+        "type": "Grid.Coordinate -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

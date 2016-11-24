@@ -1,0 +1,51 @@
+[
+  {
+    "name": "History",
+    "comment": "Elm bindings to HTML5 History API.\n\n# Changing the URL path\n@docs setPath, replacePath\n\n# Going back and forth in the browser history\n@docs back, forward, go\n\n# URL path as input\n@docs path, hash, length",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "back",
+        "comment": "Moves the browser history back by 1. Equivalent\nto pressing the back button on the browser or calling\n`go -1`.",
+        "type": "Task error ()"
+      },
+      {
+        "name": "forward",
+        "comment": "Moves the browser history forward by 1. Equivalent\nto pressing the forward button on the browser or calling\n`go 1`.",
+        "type": "Task error ()"
+      },
+      {
+        "name": "go",
+        "comment": "Move backwards or forwards in the browser history\nby the given amount. If given a positive number, `go`\nwill move the browser history forward by that amount.\nIf given a negative number, `go` will move the browser\nhistory back by the absolute value of that amount. This\nresults in a no-op if there are no available pages to\ngo to in the browser history.",
+        "type": "Int -> Task error ()"
+      },
+      {
+        "name": "hash",
+        "comment": "The current hash value of the url. The value is updated\nwhenever it is changed, usually through interaction.\nWhen you click on an `a` tag, the browser focuses on the area\naround the tag and does not refresh the page. This change is\nmirrored in the url where often a `#` is added. It is often\nuseful to track these changes and perform different operations\ndepending on the state of the hash.\n\nHashes are of the form: `#myTag`",
+        "type": "Signal String"
+      },
+      {
+        "name": "length",
+        "comment": "The length of the browser history. This number does not\nstate where you are in relation to the browser history but\nsimply how long that history is.",
+        "type": "Signal Int"
+      },
+      {
+        "name": "path",
+        "comment": "The current path value of the url. The value is updated\nwhenever it is changed, either through interaction or code.\nThis is the main way you can create single page applications.\nBy incorporating the `path` as an input of your application,\nyou are able to react to changes to these paths and route\nand re-route your pages accordingly in order to show the most\nappropriate information given the path.\n\nPaths are of the form: `/myPath.html` or `/users/4873/profile.html`",
+        "type": "Signal String"
+      },
+      {
+        "name": "replacePath",
+        "comment": "Replaces the path of the url by the given path.\nIf you are familiar with the HTML5 History API,\n`replacePath` calls `history.replaceState()` which means\nthat in performing this task, the browser history\ndoes not move forward. In other words, pressing the back\nbutton will not lead you to where you were prior to\nperforming this task. This is useful for things such as\nslideshows of login pages where the paths are transient\nand you do not wish to clutter the back button. If you\nwant to simply point users towards a different page,\nconsider using `setPath`.",
+        "type": "String -> Task error ()"
+      },
+      {
+        "name": "setPath",
+        "comment": "Sets the path of the url to the given path.\nIf you are familiar with the HTML5 History API,\n`setPath` calls `history.pushState()` which means\nthat in performing this task, the browser history\nmoves forward. In other words, pressing the back\nbutton will lead you where you were prior to performing\nthis task.\n\n    setPath \"/blog.html\"",
+        "type": "String -> Task error ()"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

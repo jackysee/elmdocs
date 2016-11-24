@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Css",
+    "comment": " A library to create and use css stylesheets in Elm.\n\n# Type Definitions\n@docs Node\n\n# Constructors\n@docs stylesheet, assign, declare, declares\n\n# Html Elements\n@docs style\n\n# Operators\n@docs (:-), (=>), (==>)\n",
+    "aliases": [
+      {
+        "name": "Node",
+        "comment": " A Css stylesheet node. It can be a Rule, an @Rule, a Declaration, a\nSelector...\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": ":-",
+        "comment": " For Property :- Value. Alias of assign.\n",
+        "type": "Css.Node -> Css.Node -> Css.Node"
+      },
+      {
+        "name": "==>",
+        "comment": " For [Selector] ==> [Declaration]. Alias of declares.\n",
+        "type": "List Css.Node -> List Css.Node -> Css.Node"
+      },
+      {
+        "name": "=>",
+        "comment": " For Node => [Node]. Alias of declare.\n",
+        "type": "Css.Node -> List Css.Node -> Css.Node"
+      },
+      {
+        "name": "assign",
+        "comment": " Constructs a Declaration from a Property and a Value.\n",
+        "type": "Css.Node -> Css.Node -> Css.Node"
+      },
+      {
+        "name": "declare",
+        "comment": " Constructs a Block from a Head (Node) and a Body (List of Node).\n",
+        "type": "Css.Node -> List Css.Node -> Css.Node"
+      },
+      {
+        "name": "declares",
+        "comment": " Constructs a Block from a Head (List of Node) and a Body (List of Node).\n",
+        "type": "List Css.Node -> List Css.Node -> Css.Node"
+      },
+      {
+        "name": "style",
+        "comment": " Html style tag.\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "stylesheet",
+        "comment": " Constructs an Html Style Element from a List of Node.\n",
+        "type": "List Css.Node -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

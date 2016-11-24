@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Tagged",
+    "comment": "\n\nA module that allows you to \"tag\" a value.\n\n@docs Tagged, tag, retag, untag, map, ap, bind, extend\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Tagged",
+        "comment": "\nA Type that pairs a `value` with a `tag`.\n\nThe `tag` is ignored at runtime as evidenced by the only value constructor:\n\n```elm\nTagged : value -> Tagged tag value\n```\n",
+        "args": [
+          "tag",
+          "value"
+        ],
+        "cases": [
+          [
+            "Tagged",
+            [
+              "value"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "ap",
+        "comment": "\nUseful for composing functions together infix:\n\n```elm\nfoo =\n  Array.set `map` index `ap` value `ap` arr\n```\n",
+        "type": "Tagged.Tagged tag (oldValue -> newValue) -> Tagged.Tagged tag oldValue -> Tagged.Tagged tag newValue"
+      },
+      {
+        "name": "bind",
+        "comment": "\nUseful for restricting the tag created in a polymorphic function.\n",
+        "type": "(oldValue -> Tagged.Tagged tag newValue) -> Tagged.Tagged tag oldValue -> Tagged.Tagged tag newValue"
+      },
+      {
+        "name": "extend",
+        "comment": "\nUseful when you have a function that throws away a tag prematurely,\nbut you still need the tag later.\n",
+        "type": "(Tagged.Tagged tag oldValue -> newValue) -> Tagged.Tagged tag oldValue -> Tagged.Tagged tag newValue"
+      },
+      {
+        "name": "map",
+        "comment": "\nUseful for composing functions together infix:\n\n```elm\nfoo =\n  Array.set `map` index `ap` value `ap` arr\n```\n",
+        "type": "(oldValue -> newValue) -> Tagged.Tagged tag oldValue -> Tagged.Tagged tag newValue"
+      },
+      {
+        "name": "retag",
+        "comment": "\nExplicitly changes the tag of a value.\n\nForces you to recognize that the value is being interpreted differently from before.\n",
+        "type": "Tagged.Tagged oldTag value -> Tagged.Tagged newTag value"
+      },
+      {
+        "name": "tag",
+        "comment": "\nAn alias for the `Tagged` value constructor.\n",
+        "type": "value -> Tagged.Tagged tag value"
+      },
+      {
+        "name": "untag",
+        "comment": "\nWe can remove the tag when we're done making additional compile-time assertions.\n",
+        "type": "Tagged.Tagged tag value -> value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

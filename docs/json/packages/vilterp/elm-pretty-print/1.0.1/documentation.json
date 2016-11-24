@@ -1,0 +1,72 @@
+[
+  {
+    "name": "PrettyPrint.Util",
+    "comment": "\n@docs bracket\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bracket",
+        "comment": " For when you want an open marker, an indented portion (by the given indent),\nand a close marker ",
+        "type": "Int -> ( List Html.Attribute, String ) -> PrettyPrint.Doc -> ( List Html.Attribute, String ) -> PrettyPrint.Doc"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "PrettyPrint",
+    "comment": " Based on [Wadler's paper][wadler]\n\nPerhaps some of the primitives and combinators from\n[Daan Leijen's Haskell library][leijen] which builds on it could be added.\n\n[wadler]: http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf\n[leijen]: https://hackage.haskell.org/package/wl-pprint-1.2/docs/Text-PrettyPrint-Leijen.html\n\n# Constructors\n@docs Doc, empty, concat, nest, text, line\n\n# Combinators\n@docs group\n\n# Render\n@docs prettyHtml, prettyString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Doc",
+        "comment": "",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "concat",
+        "comment": "",
+        "type": "PrettyPrint.Doc -> PrettyPrint.Doc -> PrettyPrint.Doc"
+      },
+      {
+        "name": "empty",
+        "comment": "",
+        "type": "PrettyPrint.Doc"
+      },
+      {
+        "name": "group",
+        "comment": " Specify that the Doc should be printed without newlines if it fits in the\navailable space, or without them if it doesn't ",
+        "type": "PrettyPrint.Doc -> PrettyPrint.Doc"
+      },
+      {
+        "name": "line",
+        "comment": " Line break ",
+        "type": "PrettyPrint.Doc"
+      },
+      {
+        "name": "nest",
+        "comment": " Indent the given doc by the given number of spaces. ",
+        "type": "Int -> PrettyPrint.Doc -> PrettyPrint.Doc"
+      },
+      {
+        "name": "prettyHtml",
+        "comment": " Pretty print the document to HTML which fits within the\nmax width (in characters; font size up to you) ",
+        "type": "Int -> PrettyPrint.Doc -> Html.Html"
+      },
+      {
+        "name": "prettyString",
+        "comment": " Pretty print the document to string which fits within the\nmax width (in characters) ",
+        "type": "Int -> PrettyPrint.Doc -> String"
+      },
+      {
+        "name": "text",
+        "comment": "",
+        "type": "List Html.Attribute -> String -> PrettyPrint.Doc"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

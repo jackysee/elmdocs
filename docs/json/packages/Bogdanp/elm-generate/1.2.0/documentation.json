@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Generate",
+    "comment": " Generate is a library for lazy list manipulation.\n\n# Types\n@docs Generator\n\n## Converting to and from Generators\n@docs singleton, fromList, toList\n\n## Extracting values\n@docs next\n\n## Transforming Generators\n@docs map, filter, remove, reverse, take, drop\n\n## Producing values\n@docs foldl, foldr, any, all, sum, product, length\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Generator",
+        "comment": " Generators are lists whose transformations are applied lazily as\nitems are requested.  This makes is so that expressions like:\n\n    import Generate as G\n\n    G.fromList [1, 2, 3]\n      |> G.map ((+) 1)\n      |> G.filter (\\x -> x % 2 == 0)\n      |> G.map toString\n      |> G.toList\n\nOnly end up iterating through the list once while still providing the\nsame results as their List module counterparts.\n\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Determine if all of the Generator's elements match the predicate.\n\n    > fromList [2, 4, 6] |> all (\\x -> x % 2 == 0)\n    True : Bool\n\n    > fromList [1, 2, 3] |> all (\\x -> x % 2 == 0)\n    False : Bool\n\n",
+        "type": "(a -> Bool) -> Generate.Generator x a -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine if any of the Generator's elements match the predicate.\n\n    > fromList [1, 2, 3] |> any (\\x -> x % 2 == 0)\n    True : Bool\n\n    > fromList [1, 3, 5] |> any (\\x -> x % 2 == 0)\n    False : Bool\n\n",
+        "type": "(a -> Bool) -> Generate.Generator x a -> Bool"
+      },
+      {
+        "name": "drop",
+        "comment": " Drop the first `n` elements from a Generator.\n\n    > fromList [1, 2, 3] |> drop 1 |> toList\n    [2, 3] : List number\n\n*Note*: This function is applied to the *original* list:\n\n    > fromList [1, 2, 3] |> filter ((/=) 1) |> drop 1 |> toList\n    [2, 3] : List number\n\n",
+        "type": "Int -> Generate.Generator a b -> Generate.Generator a b"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter the elements of a Generator.\n\n    > fromList [1, 2, 3] |> filter (flip (>) 1) |> toList\n    [2, 3] : List number\n\n",
+        "type": "(b -> Bool) -> Generate.Generator a b -> Generate.Generator a b"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold a Generator from the left.\n\n    > fromList [1, 2, 3] |> foldl (::) []\n    [3, 2, 1] : List number\n\n",
+        "type": "(b -> c -> c) -> c -> Generate.Generator a b -> c"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold a Generator from the right.\n\n    > fromList [1, 2, 3] |> foldr (::) []\n    [1, 2, 3] : List number\n\n",
+        "type": "(b -> c -> c) -> c -> Generate.Generator a b -> c"
+      },
+      {
+        "name": "fromList",
+        "comment": " Construct a Generator from a List.\n\n    > fromList [1, 2, 3]\n    Generator { items = [1,2,3], transform = <function> }\n      : Generate.Generator number number\n\n",
+        "type": "List a -> Generate.Generator a a"
+      },
+      {
+        "name": "length",
+        "comment": " Compute the length of a Generator.\n\n    > fromList [1, 2, 3] |> length\n    3 : Int\n\n",
+        "type": "Generate.Generator a b -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the elements of a Generator.\n\n\n    > fromList [1, 2, 3] |> map ((+) 1) |> toList\n    [2, 3, 4] : List number\n\n",
+        "type": "(b -> c) -> Generate.Generator a b -> Generate.Generator a c"
+      },
+      {
+        "name": "next",
+        "comment": " Get the next element in the generator after transforming it.\n\n    > fromList [1, 2, 3] |> filter ((/=) 1) |> next\n    (Just 2, Generator { items = [3], transform = <function> })\n      : ( Maybe.Maybe number, Generate.Generator number number )\n\n    > fromList [1, 2, 3] |> filter ((==) 5) |> next\n    (Nothing, Generator { items = [], transform = <function> })\n      : ( Maybe.Maybe number, Generate.Generator number number )\n\n",
+        "type": "Generate.Generator a b -> ( Maybe.Maybe b, Generate.Generator a b )"
+      },
+      {
+        "name": "product",
+        "comment": " Compute the product of the Generator's elements.\n\n    > fromList [1, 2, 3] |> product\n    6 : number\n\n",
+        "type": "Generate.Generator a number -> number"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove elements that match the given predicate from the Generator.\n\n    > fromList [1, 2, 3] |> remove (\\x -> x % 2 == 0) |> toList\n    [1, 3] : List number\n\n",
+        "type": "(b -> Bool) -> Generate.Generator a b -> Generate.Generator a b"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse a Generator's elements. ",
+        "type": "Generate.Generator a b -> Generate.Generator a b"
+      },
+      {
+        "name": "singleton",
+        "comment": " Construct a Generator from a single value.\n\n    > singleton 1\n    Generator { items = [1], transform = <function> }\n      : Generate.Generator number number\n",
+        "type": "a -> Generate.Generator a a"
+      },
+      {
+        "name": "sum",
+        "comment": " Compute the product of the Generator's elements.\n\n    > fromList [1, 2, 3] |> sum\n    6 : number\n\n",
+        "type": "Generate.Generator a number -> number"
+      },
+      {
+        "name": "take",
+        "comment": " Take the first `n` elements from a Generator.\n\n    > fromList [1, 2, 3] |> take 1 |> toList\n    [1] : List number\n\n*Note*: This function is applied to the *original* list:\n\n    > fromList [1, 2, 3] |> filter ((/=) 1) |> take 1 |> toList\n    [] : List number\n\n",
+        "type": "Int -> Generate.Generator a b -> Generate.Generator a b"
+      },
+      {
+        "name": "toList",
+        "comment": " Construct a List from a Generator.\n\n    > fromList [1, 2, 3] |> toList\n    [1, 2, 3] : List number\n\n",
+        "type": "Generate.Generator a b -> List b"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

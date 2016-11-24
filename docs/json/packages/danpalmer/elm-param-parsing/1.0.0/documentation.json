@@ -1,0 +1,36 @@
+[
+  {
+    "name": "UrlParameterParser",
+    "comment": " Parse URL parameters. To use this, you'll need to create an input port, pass the search string to Elm,\nand then parse them with this function, then that can populate your model.\n\nFor instance, in the web page:\n```\n   var app = Elm.fullscreen(Elm.YourModule,\n               { locationSearch: window.location.search });\n```\nin YourModule.elm:\n```\nport locationSearch : String\n```\n\nThen parse the value of the port - this example discards errors:\n```\nparameters : Dict String String\nparameters =\n  case (parseSearchString locationSearch) of\n    Error _ -> Dict.empty\n    UrlParams dict -> dict\n```\n\nThen use that dict when you call your init function that needs the value of the parameter. It'll get a Maybe String.\n```\ninit (Dict.get parameters \"customerID\")\n\ninit : Maybe String -> Model\ninit maybeID = ...\n```\n\n# Method\n@docs parseSearchString\n\n# Return type\n@docs ParseResult\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ParseResult",
+        "comment": " If parsing is successful, you get a UrlParams containing a dictionary of keys to values.\nOtherwise, an error string.\nIf there are no parameters, you'll get an error description.\n",
+        "args": [],
+        "cases": [
+          [
+            "Error",
+            [
+              "String"
+            ]
+          ],
+          [
+            "UrlParams",
+            [
+              "Dict.Dict String String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "parseSearchString",
+        "comment": " Given a search string of the form \"?key=value&key2=val2\"\nparse these into a dictionary of key to value.\n",
+        "type": "String -> UrlParameterParser.ParseResult"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

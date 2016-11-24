@@ -1,0 +1,179 @@
+[
+  {
+    "name": "Html.Decoder",
+    "comment": "List of Decoders made to capture DOM events. The types match their\nequivalent DOM interfaces.\n\n# Mouse Events\n@docs MouseEvent, mouseEvent\n\n# Wheel Events\n@docs WheelEvent, wheelEvent, dom_delta_pixel, dom_delta_line, dom_delta_page\n\n# Keyboard Events\n@docs KeyboardEvent, keyboardEvent, dom_key_location_standard, dom_key_location_left, dom_key_location_right, dom_key_location_right, dom_key_location_numpad\n\n# Composition Events\n@docs CompositionEvent, compositionEvent\n\n# Gamepad Events\n@docs GamepadEvent, gamepadEvent, Gamepad, gamepad, GamepadButton, gamepadButton\n\n# Animation Events\n@docs AnimationEvent, animationEvent\n\n# Device Motion / Orientation Events\n@docs DeviceMotionEvent, deviceMotionEvent, DeviceOrientationEvent, deviceOrientationEvent, deviceAcceleration, deviceAcceleration, DeviceRotationRate, deviceRotationRate",
+    "aliases": [
+      {
+        "name": "DeviceRotationRate",
+        "comment": "",
+        "args": [],
+        "type": "{ alpha : Float, beta : Float, gamma : Float }"
+      },
+      {
+        "name": "DeviceAcceleration",
+        "comment": "",
+        "args": [],
+        "type": "{ x : Float, y : Float, z : Float }"
+      },
+      {
+        "name": "DeviceOrientationEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ alpha : Float, beta : Float, gamma : Float, absolute : Bool }"
+      },
+      {
+        "name": "DeviceMotionEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ acceleration : DeviceAcceleration , accelerationIncludingGravity : DeviceAcceleration , rotationRate : DeviceRotationRate , interval : Float }"
+      },
+      {
+        "name": "AnimationEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ animationName : String , elapsedTime : Float , pseudoElement : String }"
+      },
+      {
+        "name": "GamepadEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ gamepad : Gamepad }"
+      },
+      {
+        "name": "GamepadButton",
+        "comment": "",
+        "args": [],
+        "type": "{ pressed : Bool, value : Float }"
+      },
+      {
+        "name": "Gamepad",
+        "comment": "",
+        "args": [],
+        "type": "{ id : String , index : Int , connected : Bool , timestamp : Float , mapping : String , axes : List Float , buttons : List GamepadButton }"
+      },
+      {
+        "name": "CompositionEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ data : String }"
+      },
+      {
+        "name": "KeyboardEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ key : String , code : String , location : Int , ctrlKey : Bool , shiftKey : Bool , altKey : Bool , metaKey : Bool , repeat : Bool , isComposing : Bool }"
+      },
+      {
+        "name": "WheelEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ screenX : Int , screenY : Int , clientX : Int , clientY : Int , ctrlKey : Bool , shiftKey : Bool , altKey : Bool , metaKey : Bool , button : Int , deltaX : Float , deltaY : Float , deltaZ : Float , deltaMode : Int }"
+      },
+      {
+        "name": "MouseEvent",
+        "comment": "",
+        "args": [],
+        "type": "{ screenX : Int , screenY : Int , clientX : Int , clientY : Int , ctrlKey : Bool , shiftKey : Bool , altKey : Bool , metaKey : Bool , button : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "animationEvent",
+        "comment": "",
+        "type": "Decoder AnimationEvent"
+      },
+      {
+        "name": "compositionEvent",
+        "comment": "",
+        "type": "Decoder CompositionEvent"
+      },
+      {
+        "name": "deviceAcceleration",
+        "comment": "",
+        "type": "Decoder DeviceAcceleration"
+      },
+      {
+        "name": "deviceMotionEvent",
+        "comment": "",
+        "type": "Decoder DeviceMotionEvent"
+      },
+      {
+        "name": "deviceOrientationEvent",
+        "comment": "",
+        "type": "Decoder DeviceOrientationEvent"
+      },
+      {
+        "name": "deviceRotationRate",
+        "comment": "",
+        "type": "Decoder DeviceRotationRate"
+      },
+      {
+        "name": "dom_delta_line",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_delta_page",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_delta_pixel",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_key_location_left",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_key_location_numpad",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_key_location_right",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "dom_key_location_standard",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "gamepad",
+        "comment": "",
+        "type": "Decoder Gamepad"
+      },
+      {
+        "name": "gamepadButton",
+        "comment": "",
+        "type": "Decoder GamepadButton"
+      },
+      {
+        "name": "gamepadEvent",
+        "comment": "",
+        "type": "Decoder GamepadEvent"
+      },
+      {
+        "name": "keyboardEvent",
+        "comment": "",
+        "type": "Decoder KeyboardEvent"
+      },
+      {
+        "name": "mouseEvent",
+        "comment": "",
+        "type": "Decoder MouseEvent"
+      },
+      {
+        "name": "wheelEvent",
+        "comment": "",
+        "type": "Decoder WheelEvent"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

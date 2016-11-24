@@ -1,0 +1,516 @@
+[
+  {
+    "name": "WebGL",
+    "comment": " The WebGL API is for high performance rendering. Definitely read about\n[how WebGL works](https://github.com/johnpmayer/elm-webgl/blob/master/README.md)\nand look at some examples before trying to do too much with just the\ndocumentation provided here.\n\n# Main Types\n@docs Texture, TextureFilter, Shader, Renderable, Error, Drawable\n\n# Entities\n@docs render, renderWithConfig\n\n# WebGL Html\n@docs toHtml, toHtmlWith, defaultConfiguration\n\n# WebGL API Calls\n@docs FunctionCall\n\n# WebGL API Types\n@docs Capability, BlendOperation, BlendMode, CompareMode, FaceMode, ZMode\n\n# Loading Textures\n@docs loadTexture, loadTextureWithFilter, textureSize\n\n# Unsafe Shader Creation (for library writers)\n@docs unsafeShader\n\n# Functions\n@docs computeAPICall, computeAPICalls, computeBlendModeString, computeBlendOperationString, computeCapabilityString, computeCompareModeString, computeFaceModeString, computeZModeString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "BlendMode",
+        "comment": " The `BlendMode` type allows you to define which blend mode to use.\n",
+        "args": [],
+        "cases": [
+          [
+            "Add",
+            []
+          ],
+          [
+            "Subtract",
+            []
+          ],
+          [
+            "ReverseSubtract",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "BlendOperation",
+        "comment": " The `BlendOperation` type allows you to define which blend operation to use.\n",
+        "args": [],
+        "cases": [
+          [
+            "Zero",
+            []
+          ],
+          [
+            "One",
+            []
+          ],
+          [
+            "SrcColor",
+            []
+          ],
+          [
+            "OneMinusSrcColor",
+            []
+          ],
+          [
+            "DstColor",
+            []
+          ],
+          [
+            "OneMinusDstColor",
+            []
+          ],
+          [
+            "SrcAlpha",
+            []
+          ],
+          [
+            "OneMinusSrcAlpha",
+            []
+          ],
+          [
+            "DstAlpha",
+            []
+          ],
+          [
+            "OneMinusDstAlpha",
+            []
+          ],
+          [
+            "ConstantColor",
+            []
+          ],
+          [
+            "OneMinusConstantColor",
+            []
+          ],
+          [
+            "ConstantAlpha",
+            []
+          ],
+          [
+            "OneMinusConstantAlpha",
+            []
+          ],
+          [
+            "SrcAlphaSaturate",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Capability",
+        "comment": " The `Capability` type is used to enable/disable server-side GL capabilities.\n\n+ `Blend`: If enabled, blend the computed fragment color values\nwith the values in the color buffers.\n+ `CullFace`: If enabled, cull polygons based on their winding in window coordinates.\n+ `DepthTest`: If enabled, do depth comparisons and update the depth buffer.\n+ `Dither`: If enabled, dither color components.\nor indices before they are written to the color buffer.\n+ `PolygonOffsetFill`: If enabled, an offset is added\nto depth values of a polygon's fragments produced by rasterization.\n+ `SampleAlphaToCoverage`: If enabled, compute a temporary coverage value\nwhere each bit is determined by the alpha value at the corresponding sample location.\nThe temporary coverage value is then ANDed with the fragment coverage value.\n+ `SampleCoverage`: If enabled, the fragment's coverage\nis ANDed with the temporary coverage value.\n+ `ScissorTest`: If enabled, discard fragments that are outside the scissor rectangle\n+ `StencilTest`: If enabled, do stencil testing and update the stencil buffer.\n",
+        "args": [],
+        "cases": [
+          [
+            "Blend",
+            []
+          ],
+          [
+            "CullFace",
+            []
+          ],
+          [
+            "DepthTest",
+            []
+          ],
+          [
+            "Dither",
+            []
+          ],
+          [
+            "PolygonOffsetFill",
+            []
+          ],
+          [
+            "SampleAlphaToCoverage",
+            []
+          ],
+          [
+            "SampleCoverage",
+            []
+          ],
+          [
+            "ScissorTest",
+            []
+          ],
+          [
+            "StencilTest",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CompareMode",
+        "comment": " The `CompareMode` type allows you to define how to compare values.\n",
+        "args": [],
+        "cases": [
+          [
+            "Never",
+            []
+          ],
+          [
+            "Always",
+            []
+          ],
+          [
+            "Less",
+            []
+          ],
+          [
+            "LessOrEqual",
+            []
+          ],
+          [
+            "Equal",
+            []
+          ],
+          [
+            "GreaterOrEqual",
+            []
+          ],
+          [
+            "Greater",
+            []
+          ],
+          [
+            "NotEqual",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Drawable",
+        "comment": "\nWebGl has a number of rendering modes available. Each of the tagged union types\nmaps to a separate rendering mode.\n\nTriangles are the basic building blocks of a mesh. You can put them together\nto form any shape. Each corner of a triangle is called a *vertex* and contains a\nbunch of *attributes* that describe that particular corner. These attributes can\nbe things like position and color.\n\nSo when you create a `Triangle` you are really providing three sets of attributes\nthat describe the corners of a triangle.\n\nSee: [Library reference](https://msdn.microsoft.com/en-us/library/dn302395%28v=vs.85%29.aspx) for the description of each type.\n",
+        "args": [
+          "attributes"
+        ],
+        "cases": [
+          [
+            "Triangle",
+            [
+              "List ( attributes, attributes, attributes )"
+            ]
+          ],
+          [
+            "Lines",
+            [
+              "List ( attributes, attributes )"
+            ]
+          ],
+          [
+            "LineStrip",
+            [
+              "List attributes"
+            ]
+          ],
+          [
+            "LineLoop",
+            [
+              "List attributes"
+            ]
+          ],
+          [
+            "Points",
+            [
+              "List attributes"
+            ]
+          ],
+          [
+            "TriangleFan",
+            [
+              "List attributes"
+            ]
+          ],
+          [
+            "TriangleStrip",
+            [
+              "List attributes"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Error",
+        "comment": " An error which occured in the graphics context ",
+        "args": [],
+        "cases": [
+          [
+            "Error",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "FaceMode",
+        "comment": " The `FaceMode` type defines which face of the stencil state is updated.\n",
+        "args": [],
+        "cases": [
+          [
+            "Front",
+            []
+          ],
+          [
+            "Back",
+            []
+          ],
+          [
+            "FrontAndBack",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "FunctionCall",
+        "comment": " The `FunctionCall` provides a typesafe way to call\nall pre-fragment operations and some special functions.\n\n`Enable(capability: Capability)`\n+ enable server-side GL capabilities\n\n`Disable(cap: Capability)`\n+ disable server-side GL capabilities\n\n`BlendColor(red: Float, green: Float, blue: Float, alpha: Float)`\n+ set the blend color\n\n`BlendEquation(mode: BlendMode)`\n+ specify the equation used for both the\nRGB blend equation and the Alpha blend equation\n+ `mode`: specifies how source and destination colors are combined\n\n`BlendEquationSeparate(modeRGB: BlendMode, modeAlpha: BlendMode)`\n+ set the RGB blend equation and the alpha blend equation separately\n+ `modeRGB`: specifies the RGB blend equation, how the red, green,\nand blue components of the source and destination colors are combined\n+ `modeAlpha`: specifies the alpha blend equation, how the alpha component\nof the source and destination colors are combined\n\n`BlendFunc(srcFactor: BlendMode, dstFactor: BlendMode)`\n+ specify pixel arithmetic\n+ `srcFactor`: Specifies how the red, green, blue,\nand alpha source blending factors are computed\n+ `dstFactor`: Specifies how the red, green, blue,\nand alpha destination blending factors are computed\n+ `SrcAlphaSaturate` should only be used for the srcFactor);\n+ Both values may not reference a `ConstantColor` value;\n\n`SampleCoverageFunc(value: Float, invert: Bool)`\n+ specify multisample coverage parameters\n+ `value`: Specify a single floating-point sample coverage value.\nThe value is clamped to the range 0 1 . The initial value is `1`\n+ `invert`: Specify a single boolean value representing\nif the coverage masks should be inverted. The initial value is `False`\n\n`StencilFunc(func: CompareMode, ref: Int, mask: Int)`\n+ set front and back function and reference value for stencil testing\n+ `func`: Specifies the test function.  The initial value is `Always`\n+ `ref`: Specifies the reference value for the stencil test. ref is\nclamped to the range 0 2 n - 1 , n is the number of bitplanes\nin the stencil buffer. The initial value is `0`.\n+ `mask`: Specifies a mask that is ANDed with both the reference value\nand the stored stencil value when the test is done.\nThe initial value is all `1`'s.\n\n`StencilFuncSeparate(face: FaceMode, func: CompareMode, ref: Int, mask: Int)`\n+ set front and/or back function and reference value for stencil testing\n+ `face`: Specifies whether front and/or back stencil state is updated\n+ see the description of `StencilFunc` for info about the other parameters\n\n`StencilOperation(fail: ZMode, zfail: ZMode, pass: ZMode)`\n+ set front and back stencil test actions\n+ `fail`: Specifies the action to take when the stencil test fails.\nThe initial value is `Keep`\n+ `zfail`: Specifies the stencil action when the stencil test passes,\nbut the depth test fails. The initial value is `Keep`\n+ `pass`: Specifies the stencil action when both the stencil test\nand the depth test pass, or when the stencil test passes and either\nthere is no depth buffer or depth testing is not enabled.\nThe initial value is `Keep`\n\n`StencilOperationSeparate(face: FaceMode, fail: ZMode, zfail: ZMode, pass: Zmode)`\n+ set front and/or back stencil test actions\n+ `face`: Specifies whether front and/or back stencil state is updated.\n+ See the description of `StencilOperation` for info about the other parameters.\n",
+        "args": [],
+        "cases": [
+          [
+            "Enable",
+            [
+              "WebGL.Capability"
+            ]
+          ],
+          [
+            "Disable",
+            [
+              "WebGL.Capability"
+            ]
+          ],
+          [
+            "BlendColor",
+            [
+              "( Float, Float, Float, Float )"
+            ]
+          ],
+          [
+            "BlendEquation",
+            [
+              "WebGL.BlendMode"
+            ]
+          ],
+          [
+            "BlendEquationSeparate",
+            [
+              "( WebGL.BlendMode, WebGL.BlendMode )"
+            ]
+          ],
+          [
+            "BlendFunc",
+            [
+              "( WebGL.BlendOperation, WebGL.BlendOperation )"
+            ]
+          ],
+          [
+            "DepthFunc",
+            [
+              "WebGL.CompareMode"
+            ]
+          ],
+          [
+            "SampleCoverageFunc",
+            [
+              "( Float, Bool )"
+            ]
+          ],
+          [
+            "StencilFunc",
+            [
+              "( WebGL.CompareMode, Int, Int )"
+            ]
+          ],
+          [
+            "StencilFuncSeparate",
+            [
+              "( WebGL.FaceMode, WebGL.CompareMode, Int, Int )"
+            ]
+          ],
+          [
+            "StencilOperation",
+            [
+              "( WebGL.ZMode, WebGL.ZMode, WebGL.ZMode )"
+            ]
+          ],
+          [
+            "StencilOperationSeparate",
+            [
+              "( WebGL.FaceMode, WebGL.ZMode, WebGL.ZMode, WebGL.ZMode )"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Renderable",
+        "comment": " Conceptually, an encapsulataion of the instructions to render something ",
+        "args": [],
+        "cases": [
+          [
+            "Renderable",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Shader",
+        "comment": " Shader is a phantom data type. Don't instantiate it yourself. See below.\n",
+        "args": [
+          "attributes",
+          "uniforms",
+          "varyings"
+        ],
+        "cases": [
+          [
+            "Shader",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Texture",
+        "comment": " A `Texture` loads a texture with linear filtering enabled. If you do not\nwant filtering, create a `RawTexture` with `loadTextureRaw`.\n",
+        "args": [],
+        "cases": [
+          [
+            "Texture",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TextureFilter",
+        "comment": " Textures work in two ways when looking up a pixel value - Linear or Nearest\n",
+        "args": [],
+        "cases": [
+          [
+            "Linear",
+            []
+          ],
+          [
+            "Nearest",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ZMode",
+        "comment": " The `ZMode` type allows you to define what to do with the stencil buffer value.\n\n+ `Keep`: Keeps the current value.\n+ `None`: Sets the stencil buffer value to 0.\n+ `Replace`: Sets the stencil buffer value to `ref`,\nSee `StencilFunc` for more information.\n+ `Increment`: Increments the current stencil buffer value.\nClamps to the maximum representable unsigned value.\n+ `Decrement`: Decrements the current stencil buffer value. Clamps to 0.\n+ `Invert`: Bitwise inverts the current stencil buffer value.\n+ `IncrementWrap`: Increments the current stencil buffer value.\nWraps stencil buffer value to zero when incrementing\nthe maximum representable unsigned value.\n+ `DecrementWrap`: Decrements the current stencil buffer value.\nWraps stencil buffer value to the maximum representable unsigned\nvalue when decrementing a stencil buffer value of zero.\n",
+        "args": [],
+        "cases": [
+          [
+            "Keep",
+            []
+          ],
+          [
+            "None",
+            []
+          ],
+          [
+            "Replace",
+            []
+          ],
+          [
+            "Increment",
+            []
+          ],
+          [
+            "Decrement",
+            []
+          ],
+          [
+            "Invert",
+            []
+          ],
+          [
+            "IncrementWrap",
+            []
+          ],
+          [
+            "DecrementWrap",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "computeAPICall",
+        "comment": " ",
+        "type": "WebGL.FunctionCall -> a -> b"
+      },
+      {
+        "name": "computeAPICalls",
+        "comment": " ",
+        "type": "List WebGL.FunctionCall -> List (a -> b)"
+      },
+      {
+        "name": "computeBlendModeString",
+        "comment": " ",
+        "type": "WebGL.BlendMode -> String"
+      },
+      {
+        "name": "computeBlendOperationString",
+        "comment": " ",
+        "type": "WebGL.BlendOperation -> String"
+      },
+      {
+        "name": "computeCapabilityString",
+        "comment": " ",
+        "type": "WebGL.Capability -> String"
+      },
+      {
+        "name": "computeCompareModeString",
+        "comment": " ",
+        "type": "WebGL.CompareMode -> String"
+      },
+      {
+        "name": "computeFaceModeString",
+        "comment": " ",
+        "type": "WebGL.FaceMode -> String"
+      },
+      {
+        "name": "computeZModeString",
+        "comment": " ",
+        "type": "WebGL.ZMode -> String"
+      },
+      {
+        "name": "defaultConfiguration",
+        "comment": " Default configuration that is used as\nthe implicit configurations for `webgl`.\n",
+        "type": "List WebGL.FunctionCall"
+      },
+      {
+        "name": "loadTexture",
+        "comment": " Loads a texture from the given url. PNG and JPEG are known to work, but\nother formats have not been as well-tested yet.\n",
+        "type": "String -> Task.Task WebGL.Error WebGL.Texture"
+      },
+      {
+        "name": "loadTextureWithFilter",
+        "comment": " Loads a texture from the given url. PNG and JPEG are known to work, but\nother formats have not been as well-tested yet. Configurable filter.\n",
+        "type": "WebGL.TextureFilter -> String -> Task.Task WebGL.Error WebGL.Texture"
+      },
+      {
+        "name": "render",
+        "comment": " Same as `renderWithConfig` but without using\ncustom per-render configurations.\n",
+        "type": "WebGL.Shader attributes uniforms varyings -> WebGL.Shader {} uniforms varyings -> WebGL.Drawable attributes -> uniforms -> WebGL.Renderable"
+      },
+      {
+        "name": "renderWithConfig",
+        "comment": " Packages a vertex shader, a fragment shader, a mesh, and uniform variables\nas an `Renderable`. This specifies a full rendering pipeline to be run on the GPU.\nYou can read more about the pipeline\n[here](https://github.com/johnpmayer/elm-webgl/blob/master/README.md).\n\nValues will be cached intelligently, so if you have already sent a shader or\nmesh to the GPU, it will not be resent. This means it is fairly cheap to create\nnew entities if you are reusing shaders and meshes that have been used before.\n",
+        "type": "List WebGL.FunctionCall -> WebGL.Shader attributes uniforms varyings -> WebGL.Shader {} uniforms varyings -> WebGL.Drawable attributes -> uniforms -> WebGL.Renderable"
+      },
+      {
+        "name": "textureSize",
+        "comment": " Return the (width, height) size of a texture. Useful for sprite sheets\nor other times you may want to use only a potion of a texture image.\n",
+        "type": "WebGL.Texture -> ( Int, Int )"
+      },
+      {
+        "name": "toHtml",
+        "comment": " Same as toHtmlWith but with default configurations,\nimplicitly configured for you. See `defaultConfiguration` for more information.\n",
+        "type": "List (Html.Attribute msg) -> List WebGL.Renderable -> Html.Html msg"
+      },
+      {
+        "name": "toHtmlWith",
+        "comment": " Render a WebGL scene with the given dimensions and entities. Shaders and\nmeshes are cached so that they do not get resent to the GPU, so it should be\nrelatively cheap to create new entities out of existing values.\n",
+        "type": "List WebGL.FunctionCall -> List (Html.Attribute msg) -> List WebGL.Renderable -> Html.Html msg"
+      },
+      {
+        "name": "unsafeShader",
+        "comment": " Shaders are programs for running many computations on the GPU in parallel.\nThey are written in a language called\n[GLSL](http://en.wikipedia.org/wiki/OpenGL_Shading_Language). Read more about\nshaders [here](https://github.com/johnpmayer/elm-webgl/blob/master/README.md).\n\nNormally you specify a shader with a `shader` block. This is because shaders\nmust be compiled before they are used, imposing an overhead that it is best to\navoid in general. This function lets you create a shader with a raw string of\nGLSL. It is intended specifically for libary writers who want to create shader\ncombinators.\n",
+        "type": "String -> WebGL.Shader attribute uniform varying"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

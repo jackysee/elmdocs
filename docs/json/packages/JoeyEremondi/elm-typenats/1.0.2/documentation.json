@@ -1,0 +1,25 @@
+[
+  {
+    "name": "TypeNat",
+    "comment": "\nEasy to remember names for type-level natural numbers.\nThese are intended only to be used as \"phantom types:\"\nthat is, there are no values of type `Zero` or `OnePlus a`.\nInstead, they should be arguments to other type constructors.\n\nUse this to represent natural numbers at the type level.\nFor example:\n\n    OnePlus (OnePlus (OnePlus Zero)) -- 3\n\nElm doesn't have DataKinds, so please don't do anything silly like\n`OnePlus (OnePlus (OnePlus (List (Int, Int))))`\ni.e. please only give another TypeNat as the argument to\nOnePlus.\n\n@docs Zero, OnePlus\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "OnePlus",
+        "comment": "A phantom type constructor to increment a TypeNat,\ncreating a larger TypeNat. ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Zero",
+        "comment": " A phantom type for 0, our base TypeNat. ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

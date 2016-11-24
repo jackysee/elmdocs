@@ -1,0 +1,210 @@
+[
+  {
+    "name": "IntDict.Safe",
+    "comment": " Safe API wrappers for `IntDict`s build and query operators \nto prevent integer overflows with JavaScripts number type.\n\nPrior to delegating to their 'unsafe' equivalent, these functions verify\nthe validity of the key via `IntDict.isValidKey`.\n\n# Return type\n@docs InvalidKey, SafeKeyResult\n# Build\n@docs safeInsert, safeUpdate, safeRemove\n# Query\n@docs safeMember, safeGet\n\n",
+    "aliases": [
+      {
+        "name": "SafeKeyResult",
+        "comment": " A value of this type is returned by all functions in this module. \nSee the core libraries' `Result` documentation for how to cope with it. ",
+        "args": [
+          "a"
+        ],
+        "type": "Result.Result IntDict.Safe.InvalidKey a"
+      }
+    ],
+    "types": [
+      {
+        "name": "InvalidKey",
+        "comment": " An error type signaling an invalid key. ",
+        "args": [],
+        "cases": [
+          [
+            "InvalidKey",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "safeGet",
+        "comment": " Version of `IntDict.get` that validates the key. ",
+        "type": "Int -> IntDict.IntDict v -> IntDict.Safe.SafeKeyResult (Maybe.Maybe v)"
+      },
+      {
+        "name": "safeInsert",
+        "comment": " Version of `IntDict.insert` that validates the key. ",
+        "type": "Int -> v -> IntDict.IntDict v -> IntDict.Safe.SafeKeyResult (IntDict.IntDict v)"
+      },
+      {
+        "name": "safeMember",
+        "comment": " Version of `IntDict.member` that validates the key. ",
+        "type": "Int -> IntDict.IntDict v -> IntDict.Safe.SafeKeyResult Bool"
+      },
+      {
+        "name": "safeRemove",
+        "comment": " Version of `IntDict.remove` that validates the key. ",
+        "type": "Int -> IntDict.IntDict v -> IntDict.Safe.SafeKeyResult (IntDict.IntDict v)"
+      },
+      {
+        "name": "safeUpdate",
+        "comment": " Version of `IntDict.update` that validates the key. ",
+        "type": "Int -> (Maybe.Maybe v -> Maybe.Maybe v) -> IntDict.IntDict v -> IntDict.Safe.SafeKeyResult (IntDict.IntDict v)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "IntDict",
+    "comment": " # IntDict\n\nThis module exposes the same API as `Dict`.\n\n# Technicalities\n\nSince JavaScript's number type is kind of messed up, Elm's `Int` is not particularly\nwell-behaved wrt. bitwise operations. Currently, JS supports 32 bit integers, so there is\nprobably enough room for key picks. **However, when sanitizing user input, it is mandatory\nthat a prior `isValidKey` or one of the safe versions in `IntDict.Safe` is used!** This is\nto prevent the overflow behavior.\n\nThis library is inspired by Haskells [IntMap](http://hackage.haskell.org/package/containers-0.2.0.1/docs/Data-IntMap.html),\nwhich in turn implements Okasaki and Gill's [Fast mergable integer maps](http://ittc.ku.edu/~andygill/papers/IntMap98.pdf).\n\nAs noted in the [references](http://ittc.ku.edu/~andygill/papers/IntMap98.pdf), here are some runtimes:\n\n*O(min(n, W))*: `insert`, `update`, `remove`, `get`, `member`\n\n*O(n + m)*: `uniteWith`, `union`, `intersection`, `diff`, `merge`\n\nwhere *n* and *m* are the sizes of the first and second dictionary respectively and *W*\nis the number of bits in `Int` (so a constant with current value 32).\n\n# Data\n@docs IntDict, isValidKey\n# Build\n@docs empty, singleton, insert, update, remove\n# Query\n@docs isEmpty, size, member, get, findMin, findMax\n# Combine\n@docs uniteWith, union, intersect, diff, merge\n# Lists\n@docs keys, values, toList, fromList\n# Transform\n@docs map, foldl, foldr, filter, partition\n# String representation\n@docs toString'\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "IntDict",
+        "comment": " A dictionary mapping `Int`s to values of a type `v`. Analogous to\n`Dict Int v`.\n",
+        "args": [
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\nPreference is given to the first dictionary. ",
+        "type": "IntDict.IntDict v -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary. ",
+        "type": "IntDict.IntDict v"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate. ",
+        "type": "(Int -> v -> Bool) -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "findMax",
+        "comment": " Find the maximum key and value in the dictionary. ",
+        "type": "IntDict.IntDict v -> Maybe.Maybe ( Int, v )"
+      },
+      {
+        "name": "findMin",
+        "comment": " Find the minimum key and value in the dictionary. ",
+        "type": "IntDict.IntDict v -> Maybe.Maybe ( Int, v )"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from lowest\nkey to highest key. ",
+        "type": "(Int -> v -> a -> a) -> a -> IntDict.IntDict v -> a"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from highest\nkey to lowest key. ",
+        "type": "(Int -> v -> a -> a) -> a -> IntDict.IntDict v -> a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary. ",
+        "type": "List ( Int, v ) -> IntDict.IntDict v"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`. This is useful when you are not sure if a key will be in the\ndictionary. ",
+        "type": "Int -> IntDict.IntDict v -> Maybe.Maybe v"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces value when there is\na collision. ",
+        "type": "Int -> v -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. ",
+        "type": "IntDict.IntDict v -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Check if the dictionary contains no items. ",
+        "type": "IntDict.IntDict v -> Bool"
+      },
+      {
+        "name": "isValidKey",
+        "comment": " Validates that a given integer is usable as a key.\nThis is necessary due to JavaScript's weird number type.\nBasically this assures that we can use the functions\nfrom `Bitwise` without risking integer overflow.\n\n**This function is a necessity for sanitizing user input!** Alternatively,\nuse the safe functions from `IntDict.Safe` which perform the check for you.\n\nAs with the current version of JavaScript (2015), only 32 bit signed integers are supported.\nIf this ever changes, contact me! Certain parts of the implementation depend on this! ",
+        "type": "Int -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary. ",
+        "type": "IntDict.IntDict v -> List Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary. ",
+        "type": "(Int -> a -> b) -> IntDict.IntDict a -> IntDict.IntDict b"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a key is in a dictionary. ",
+        "type": "Int -> IntDict.IntDict v -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two dictionaries. You provide three\naccumulators for when a given key appears:\n  1. Only in the left dictionary.\n  2. In both dictionaries.\n  3. Only in the right dictionary.\nYou then traverse all the keys from lowest to highest, building up whatever\nyou want.\n\nNote that `uniteWith`, `union`, `intersect` and `diff` could all be implemented\nin terms of this function. The only reason that's not the case is to have more\nsharing of substructure.\n\n  uniteWith merger l r =\n    merge insert merger insert l r empty\n  union l r =\n    merge insert (\\k a _ d -> insert k a d) insert l r empty\n  intersect l r =\n    merge (\\_ _ d -> d) (\\k a _ d -> insert k a d) (\\_ _ d -> d) l r empty\n  diff l r =\n    merge insert (\\_ _ _ d -> d) (\\_ _ d -> d) l r empty\n\n",
+        "type": "(Int -> a -> result -> result) -> (Int -> a -> b -> result -> result) -> (Int -> b -> result -> result) -> IntDict.IntDict a -> IntDict.IntDict b -> result -> result"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest. ",
+        "type": "(Int -> v -> Bool) -> IntDict.IntDict v -> ( IntDict.IntDict v, IntDict.IntDict v )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made. ",
+        "type": "Int -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair. ",
+        "type": "Int -> v -> IntDict.IntDict v"
+      },
+      {
+        "name": "size",
+        "comment": " The number of items in the dictionary. `O(1)`.",
+        "type": "IntDict.IntDict v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs. ",
+        "type": "IntDict.IntDict v -> List ( Int, v )"
+      },
+      {
+        "name": "toString'",
+        "comment": " Generates a string representation similar to what `toString`\ngenerates for `Dict`. ",
+        "type": "IntDict.IntDict v -> String"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If there is a collision, preference is given\nto the first dictionary. ",
+        "type": "IntDict.IntDict v -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "uniteWith",
+        "comment": " `uniteWith merger l r` combines two dictionaries. If there is a collision, `merger`\nis called with the conflicting key, the value from `l` and that from `r`. ",
+        "type": "(Int -> v -> v -> v) -> IntDict.IntDict v -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of a dictionary for a specific key with a given function. ",
+        "type": "Int -> (Maybe.Maybe v -> Maybe.Maybe v) -> IntDict.IntDict v -> IntDict.IntDict v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary. ",
+        "type": "IntDict.IntDict v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

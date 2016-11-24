@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Response",
+    "comment": "\nResponse utilities for Elm Architecture. Build responses from tasks, pipe them, map over.\n\n# Construct\n@docs Response, res, taskRes, withCmd, withTask, withNone\n\n# Transform\n@docs mapModel, mapCmd, mapBoth\n",
+    "aliases": [
+      {
+        "name": "Response",
+        "comment": " A response is an updated model and some cmd.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "mapBoth",
+        "comment": " Map over model and cmd.\n",
+        "type": "(m -> n) -> (a -> b) -> Response.Response m a -> Response.Response n b"
+      },
+      {
+        "name": "mapCmd",
+        "comment": " Map over cmd.\n",
+        "type": "(a -> b) -> Response.Response m a -> Response.Response m b"
+      },
+      {
+        "name": "mapModel",
+        "comment": " Map over model.\n",
+        "type": "(m -> n) -> Response.Response m a -> Response.Response n a"
+      },
+      {
+        "name": "res",
+        "comment": " Canonical usage: construct a result from model and cmd.\n",
+        "type": "model -> Platform.Cmd.Cmd msg -> Response.Response model msg"
+      },
+      {
+        "name": "taskRes",
+        "comment": " Construct a response from a model and task.\n",
+        "type": "model -> (Result.Result x a -> msg) -> Task.Task x a -> Response.Response model msg"
+      },
+      {
+        "name": "withCmd",
+        "comment": " Construct a result from model and cmd, flipped for piping:\n\n    { model | foo = bar }\n      |> withCmd someCmd\n",
+        "type": "Platform.Cmd.Cmd a -> m -> Response.Response m a"
+      },
+      {
+        "name": "withNone",
+        "comment": " Construct a result from model without cmd, flipped for piping:\n\n    { model | foo = bar }\n      |> withNone\n",
+        "type": "m -> Response.Response m a"
+      },
+      {
+        "name": "withTask",
+        "comment": " Construct a result from model and task, flipped for piping:\n\n    { model | foo = bar }\n      |> withTask someTask\n",
+        "type": "(Result.Result x a -> msg) -> Task.Task x a -> model -> Response.Response model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

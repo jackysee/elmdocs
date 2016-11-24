@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Spring",
+    "comment": "Module for spring-based animations in Elm.\n\n# Create Springs\n@docs Spring, create, createAt\n\n# Query and Modify Springs\n@docs current, setDestination, animationHasEnded, animationsHaveEnded\n\n# Animate Springs\n@docs animate, animateNested\n\n# Connect Springs\n@docs connect, connectMany\n\n# All the maps!\n@docs map, map2, map3, map4, map5, andMap",
+    "aliases": [
+      {
+        "name": "Spring",
+        "comment": "Main Spring Type.\nA spring's behavior is defined by its stiffness and damping parameters.",
+        "args": [
+          "a"
+        ],
+        "type": "{ stiffness : Float , damping : Float , position : a , velocity : a , destination : a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": "Chain mapping operations together",
+        "type": "Spring.Spring (a -> b) -> Spring.Spring a -> Spring.Spring b"
+      },
+      {
+        "name": "animate",
+        "comment": "Animate a spring given a framerate.\n\n    animate framerate spring",
+        "type": "Time.Time -> Spring.Spring Float -> Spring.Spring Float"
+      },
+      {
+        "name": "animateNested",
+        "comment": "Animate a nested field inside a spring with a focus.",
+        "type": "Focus.Focus a Float -> Time.Time -> Spring.Spring a -> Spring.Spring a"
+      },
+      {
+        "name": "animationHasEnded",
+        "comment": "Detect if a spring animation has ended.\nA spring animation is considered to have ended if the spring\nhas reached its destination and has 0 velocity.",
+        "type": "Spring.Spring Float -> Bool"
+      },
+      {
+        "name": "animationsHaveEnded",
+        "comment": "Given a list of foci, detect if a spring animation has ended.\nA spring animation is considered to have ended if the spring\nhas reached its destination and has 0 velocity and this function will\nonly consider the fields defined by the foci.",
+        "type": "List (Focus.Focus a Float) -> Spring.Spring a -> Bool"
+      },
+      {
+        "name": "connect",
+        "comment": "Connect two springs together. This function will modify the second spring\nto have the first spring's position as its destination.",
+        "type": "Spring.Spring a -> Spring.Spring a -> Spring.Spring a"
+      },
+      {
+        "name": "connectMany",
+        "comment": "Connect multiple strings end to end. The first spring's destination will be\nset to the provided destination. The second spring's destination will be set to\nthe first spring's position. The third spring's destination will be set to\nthe second spring's position. And so on...",
+        "type": "a -> List (Spring.Spring a) -> List (Spring.Spring a)"
+      },
+      {
+        "name": "create",
+        "comment": "Create a Spring Float given values for stiffness and damping.\nThe Spring Float is the basic type of Spring and is the only one that\ncan be animated with the `animate` functon. You can use this as a building\nblock to create more complex Springs using functions like `map` or `andMap`.",
+        "type": "Float -> Float -> Spring.Spring Float"
+      },
+      {
+        "name": "createAt",
+        "comment": "Create a spring with a given position.",
+        "type": "Float -> Float -> Float -> Spring.Spring Float"
+      },
+      {
+        "name": "current",
+        "comment": "Get the current value of the spring.",
+        "type": "Spring.Spring a -> a"
+      },
+      {
+        "name": "map",
+        "comment": "Map a function onto a spring.",
+        "type": "(a -> b) -> Spring.Spring a -> Spring.Spring b"
+      },
+      {
+        "name": "map2",
+        "comment": "",
+        "type": "(a -> b -> c) -> Spring.Spring a -> Spring.Spring b -> Spring.Spring c"
+      },
+      {
+        "name": "map3",
+        "comment": "",
+        "type": "(a -> b -> c -> d) -> Spring.Spring a -> Spring.Spring b -> Spring.Spring c -> Spring.Spring d"
+      },
+      {
+        "name": "map4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e) -> Spring.Spring a -> Spring.Spring b -> Spring.Spring c -> Spring.Spring d -> Spring.Spring e"
+      },
+      {
+        "name": "map5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> f) -> Spring.Spring a -> Spring.Spring b -> Spring.Spring c -> Spring.Spring d -> Spring.Spring e -> Spring.Spring f"
+      },
+      {
+        "name": "setDestination",
+        "comment": "Set the destination of a spring.",
+        "type": "a -> Spring.Spring a -> Spring.Spring a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

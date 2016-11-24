@@ -1,0 +1,90 @@
+[
+  {
+    "name": "SelectionList",
+    "comment": "Module defining a selection list data structure.\n\nA selection list is a collection that keeps track of which item in\nthe collection is currently selected. This data structure is especially\nuseful when working with components such as tabs, pages, slideshows and\nanything pagination related.\n\n# Definition\n@docs SelectionList\n\n# Cycle through items\n@docs next, previous, goto\n\n# Query Selection List\n@docs length, selectedIndex\n\n# Common Operations\n@docs map, map2, andMap, indexedMap, selectedMap, updateSelected, updateN\n\n# Conversion\n@docs fromList, toList",
+    "aliases": [
+      {
+        "name": "SelectionList",
+        "comment": "Selection List type.\nA selection list is composed of two lists and a single value representing\nthe currently selected value.",
+        "args": [
+          "a"
+        ],
+        "type": "{ previous : List a, selected : a, next : List a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": "Chain multiple `map` operations together.",
+        "type": "SelectionList.SelectionList (a -> b) -> SelectionList.SelectionList a -> SelectionList.SelectionList b"
+      },
+      {
+        "name": "fromList",
+        "comment": "Construct a selection list from a list and an initial value which is\nconsidered to be selected.",
+        "type": "a -> List a -> SelectionList.SelectionList a"
+      },
+      {
+        "name": "goto",
+        "comment": "Go to the nth item in the list.\nIf the index is out of bounds, it will go to the index closest to the given\nindex. In essence, if you provide an index that is too great,\nit will go to the last index. Similarly if you provide an index that is\ntoo small, it will go to the very first index.",
+        "type": "Int -> SelectionList.SelectionList a -> SelectionList.SelectionList a"
+      },
+      {
+        "name": "indexedMap",
+        "comment": "Map a function over a selection list. The function provided will be\npassed the index of each item it is called with.",
+        "type": "(Int -> a -> b) -> SelectionList.SelectionList a -> SelectionList.SelectionList b"
+      },
+      {
+        "name": "length",
+        "comment": "Get the length of a selection list.",
+        "type": "SelectionList.SelectionList a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": "Map a function over a selection list.",
+        "type": "(a -> b) -> SelectionList.SelectionList a -> SelectionList.SelectionList b"
+      },
+      {
+        "name": "map2",
+        "comment": "Map a function over two selection lists.\n\nBe careful, this is a naive map over two selection lists. It is recomended\nto use this function only on two lists whose selected item is the very first\nitem. This will avoid truncation problems due to the lengths of the previous\nand next elements in each list not matching.",
+        "type": "(a -> b -> c) -> SelectionList.SelectionList a -> SelectionList.SelectionList b -> SelectionList.SelectionList c"
+      },
+      {
+        "name": "next",
+        "comment": "Go to the next item in the selection list.\nThis is a no-op if the selected item is the last item.",
+        "type": "SelectionList.SelectionList a -> SelectionList.SelectionList a"
+      },
+      {
+        "name": "previous",
+        "comment": "Go to the previous item in the selection list.\nThis is a no-op if the selected item is the first item.",
+        "type": "SelectionList.SelectionList a -> SelectionList.SelectionList a"
+      },
+      {
+        "name": "selectedIndex",
+        "comment": "Get the selected index of the selected item.",
+        "type": "SelectionList.SelectionList a -> Int"
+      },
+      {
+        "name": "selectedMap",
+        "comment": "Map a function over a selection list. The function provided will be\npassed `True` only for the selected item. This allows one apply different\nfunctions depending on whether the item is selected or not.",
+        "type": "(Bool -> a -> b) -> SelectionList.SelectionList a -> SelectionList.SelectionList b"
+      },
+      {
+        "name": "toList",
+        "comment": "Convert a selection list to a list",
+        "type": "SelectionList.SelectionList a -> List a"
+      },
+      {
+        "name": "updateN",
+        "comment": "Update only the nth value of a selection list.\nThis is a no-op if the index is out of bounds.",
+        "type": "Int -> (a -> a) -> SelectionList.SelectionList a -> SelectionList.SelectionList a"
+      },
+      {
+        "name": "updateSelected",
+        "comment": "Update only the selected item.",
+        "type": "(a -> a) -> SelectionList.SelectionList a -> SelectionList.SelectionList a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

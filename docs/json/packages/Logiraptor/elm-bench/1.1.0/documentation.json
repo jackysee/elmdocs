@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Bench.Runner",
+    "comment": "\nRunner makes it easier to run sets of benchmarks with the Bench\npackage.\n\n#Core API\n@docs app, Example, Suite\n\n",
+    "aliases": [
+      {
+        "name": "Example",
+        "comment": "\nExample is a named Bench.Action. The name is rendered in the final result ui.\n\n",
+        "args": [
+          "a"
+        ],
+        "type": "( String, Bench.Action a )"
+      },
+      {
+        "name": "Suite",
+        "comment": "\nSuie defines a set of examples to run in the app.\n",
+        "args": [
+          "a"
+        ],
+        "type": "List (Bench.Runner.Example a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "app",
+        "comment": "\napp creates a program which runs the provided benchmarks and renders the result\n\n    Runner.app [(\"Old Implementation\", (Bench.repeat testfunc)), (\"New Implementation\", (Bench.repeat testfunc2))]\n\n",
+        "type": "Bench.Runner.Suite a -> Platform.Program Basics.Never"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Bench",
+    "comment": "\n\nThe Bench API makes it easy to profile elm functions. Because time is a side effect,\nthis package produces commands that can be run in order to get timing information.\n\n#Core API\n@docs Timing, Action, benchmark\n\n#Helpers\n@docs repeat\n\n",
+    "aliases": [
+      {
+        "name": "Action",
+        "comment": "\nAction represents some computation to be performed N times. This is the code that you want to profile.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Int -> a"
+      },
+      {
+        "name": "Timing",
+        "comment": "\nTiming represents the result of a benchmark run.\n",
+        "args": [],
+        "type": "{ operationsPerSecond : Float , totalCalls : Int , timePerOp : Time.Time }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "benchmark",
+        "comment": "\nbenchmark takes an Action and executes it with different values of N until a reliable timing can be determined.\nYour app will receive a message with the Timing information when the benchmark is complete.\n\n    type Msg =\n        TimingReceived Bench.Timing\n\n    runBenchmark : Cmd Msg\n    runBenchmark =\n        Bench.benchmark TimingReceived (\\n -> List.sum (List.repeat n [1]))\n",
+        "type": "(Bench.Timing -> msg) -> Bench.Action a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "repeat",
+        "comment": "\nrepeat makes it easy to turn any function into an Action.\n\n    repeat (\\() -> \"A\" + \"B\")\n",
+        "type": "(() -> a) -> Bench.Action ()"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Typography.Scale",
+    "comment": "Module for creating and using typographic scales.\n\n# Definition\n@docs Scale, makeScale\n\n# Golden Ratio\n@docs goldenRatio\n\n# Musical Scales\n\n### Major Scales\n@docs majorSecond, majorThird, majorSixth, majorSeventh\n\n### Minor Scales\n@docs minorSecond, minorThird, minorSixth, minorSeventh\n\n### Perfect Scales\n@docs perfectFourth, perfectFifth, perfectOctave\n\n### Augmented Scales\n@docs augmentedSecond, augmentedThird, augmentedFourth, augmentedFifth, augmentedSixth, augmentedSeventh, augmentedOctave",
+    "aliases": [
+      {
+        "name": "Scale",
+        "comment": "Scale type.\n\nA Scale is a function that scales some pre-defined base value by some\npre-defined factor and a given exponent.",
+        "args": [],
+        "type": "Int -> Float"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "augmentedFifth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedFourth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedOctave",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedSecond",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedSeventh",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedSixth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "augmentedThird",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "goldenRatio",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "majorSecond",
+        "comment": "In music theory, a major second is the interval encompassing two adjacent\nnotes (or between notes two semitones apart).\n\nThe size of the interval is `9 : 8`",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "majorSeventh",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "majorSixth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "majorThird",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "makeScale",
+        "comment": "Function to create a scale.\n\n`makeScale` is defined as follows :\n\n    makeScale : Float -> Float -> Scale\n    makeScale factor base exponent =\n      base * (factor ^ toFloat exponent)\n\nThis can easily allow you to create all sorts of scales,\nfor example:\n\n    majorThird = makeScale 1.250\n\n\nSo, say you start from a baseline of `12pt`. If you apply this\nscale with different exponents you get:\n\n    majorThird 12 0 == 12 * (1.250 ^ 0) == 12\n\n    majorThird 12 1 == 12 * (1.250 ^ 1) == 15\n\n    majorThird 12 2 == 12 * (1.250 ^ 1) == 18.75\n\nAnd, now, by just incrementing and decrementing the exponent, you\ncan set the font sizes for you titles, headings, body, legalese, etc...",
+        "type": "Float -> Float -> Scale"
+      },
+      {
+        "name": "minorSecond",
+        "comment": "In music theory, a minor second is the interval between two adjacent notes\n(or notes a semitone apart).\n\nThis size of the interval is `16 : 15`.",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "minorSeventh",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "minorSixth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "minorThird",
+        "comment": "In music theory, a minor third is the interval encompassing three semitones.\n\nThe size of the interval is `6 : 5`",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "perfectFifth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "perfectFourth",
+        "comment": "",
+        "type": "Float -> Scale"
+      },
+      {
+        "name": "perfectOctave",
+        "comment": "",
+        "type": "Float -> Scale"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Window",
+    "comment": " Your application lives in some sort of window. This library helps you\nfigure out how big that window is.\n\n# Window Size\n@docs Size, size, width, height, resizes\n\n",
+    "aliases": [
+      {
+        "name": "Size",
+        "comment": " The size of the window in pixels.\n",
+        "args": [],
+        "type": "{ width : Int, height : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "height",
+        "comment": " Get the current window height.\n",
+        "type": "Task.Task x Int"
+      },
+      {
+        "name": "resizes",
+        "comment": " Subscribe to any changes in window size.\n",
+        "type": "(Window.Size -> msg) -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "size",
+        "comment": " Get the current window size.\n",
+        "type": "Task.Task x Window.Size"
+      },
+      {
+        "name": "width",
+        "comment": " Get the current window width.\n",
+        "type": "Task.Task x Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

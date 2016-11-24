@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Cursor",
+    "comment": " Alternative way to build elm app,\n    this module contains all low level primitives\n    to build elm app with high level cursor abstraction.\n\n# Cursor\n@docs Cursor\n\n# Composition operator\n@docs (>=>)\n\n# Cursor helpers\n@docs cursor, start\n\n# Cursor modifiers\n@docs get, set, update\n\n",
+    "aliases": [
+      {
+        "name": "Cursor",
+        "comment": " Base type, the triplet of state, signal and lens\n ",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "{ receiver : Signal.Address a, state : a, lens : Focus.Focus a b }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": ">=>",
+        "comment": " Composition operator, allow to go deeper in state via lens\n ",
+        "type": "Cursor.Cursor a b -> Focus.Focus b c -> Cursor.Cursor a c"
+      },
+      {
+        "name": "cursor",
+        "comment": " Helper to create a Cursor form signal mail box and initial state data\n",
+        "type": "Signal.Mailbox a -> a -> Cursor.Cursor a a"
+      },
+      {
+        "name": "get",
+        "comment": " Get cursor value\n ",
+        "type": "Cursor.Cursor a b -> b"
+      },
+      {
+        "name": "set",
+        "comment": " Set cursor value\n ",
+        "type": "Cursor.Cursor a b -> b -> Signal.Message"
+      },
+      {
+        "name": "start",
+        "comment": " Create render loop for cursor\n",
+        "type": "a -> (Cursor.Cursor a a -> b) -> Signal.Signal b"
+      },
+      {
+        "name": "update",
+        "comment": " Update cursor value via f\n ",
+        "type": "Cursor.Cursor a b -> (b -> b) -> Signal.Message"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

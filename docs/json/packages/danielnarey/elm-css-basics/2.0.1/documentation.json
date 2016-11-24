@@ -1,0 +1,175 @@
+[
+  {
+    "name": "CssBasics",
+    "comment": "\n## Some basic helpers for generating CSS style declarations\n\n# CSS Representation\n@docs Declaration, CssValue, UnitType, important\n\n# Encoding CSS Values and Declarations\n@docs encodeCssValue, encodeDeclaration\n\n# Rendering to a Style Attribute\n@docs toStyleAttribute\n\n",
+    "aliases": [
+      {
+        "name": "Declaration",
+        "comment": " A declaration is a key-value pair consisting of a style\n[property](http://www.w3schools.com/cssref/default.asp)\nname and the value assigned to that property. The property is given as a string\nand the value is given as a `CssValue`.\n",
+        "args": [
+          "number"
+        ],
+        "type": "( String, CssBasics.CssValue number )"
+      }
+    ],
+    "types": [
+      {
+        "name": "CssValue",
+        "comment": " Represents the types of values that may be assigned to a style property.\n\n__Examples:__\n\n    (\"text-align\", Str \"center\")\n      --> text-align:center;\n\n    (\"color\", Col (Color.rgb 0 102 255))\n      --> color:rgba(0,102,255,1);\n\n    (\"font-weight\", Num 700)\n      --> font-weight:700;\n\n    (\"font-size\", Unit 2 Em)\n      --> font-size:2em;\n\n    (\"font-family\", FontStack [\"Helvetica Neue\", \"Roboto\", \"sans-serif\"])\n      --> font-family:'Helvetica Neue',Roboto,sans-serif;\n\n    (\"margin\", Sides [Unit 10 Px, Unit 20 Px])\n      --> margin:10px 20px;\n\n    (\"border\", Multiple \" \" [Unit 2 Px, Str \"dashed\", Str \"green\"])\n      --> border:2px dashed green;\n\n    (\"padding\", Important (Unit 0 NoUnit))\n      --> padding:0!important;\n\n    (\"color\", Undefined)\n      --> color:inherit;\n\nNote that `Undefined` is not a null value, but a default used for error\nhandling. When rendered to a string or attribute, a property with an `Undefined`\nvalue will be assigned the value\n[`inherit`](https://developer.mozilla.org/en-US/docs/Web/CSS/inherit).\n\n",
+        "args": [
+          "number"
+        ],
+        "cases": [
+          [
+            "Str",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Col",
+            [
+              "Color.Color"
+            ]
+          ],
+          [
+            "Num",
+            [
+              "number"
+            ]
+          ],
+          [
+            "Unit",
+            [
+              "number",
+              "CssBasics.UnitType"
+            ]
+          ],
+          [
+            "FontStack",
+            [
+              "List String"
+            ]
+          ],
+          [
+            "Sides",
+            [
+              "List (CssBasics.CssValue number)"
+            ]
+          ],
+          [
+            "Multiple",
+            [
+              "String",
+              "List (CssBasics.CssValue number)"
+            ]
+          ],
+          [
+            "Important",
+            [
+              "CssBasics.CssValue number"
+            ]
+          ],
+          [
+            "Undefined",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "UnitType",
+        "comment": " Represents an absolute or relative unit of length. A length of zero may be\nrepresented as `Unit 0 NoUnit`, or simply as `Num 0`.\n",
+        "args": [],
+        "cases": [
+          [
+            "Percent",
+            []
+          ],
+          [
+            "Em",
+            []
+          ],
+          [
+            "Ex",
+            []
+          ],
+          [
+            "Ch",
+            []
+          ],
+          [
+            "Rem",
+            []
+          ],
+          [
+            "Px",
+            []
+          ],
+          [
+            "Cm",
+            []
+          ],
+          [
+            "Mm",
+            []
+          ],
+          [
+            "In",
+            []
+          ],
+          [
+            "Pt",
+            []
+          ],
+          [
+            "Pc",
+            []
+          ],
+          [
+            "Vh",
+            []
+          ],
+          [
+            "Vw",
+            []
+          ],
+          [
+            "Vmin",
+            []
+          ],
+          [
+            "Vmax",
+            []
+          ],
+          [
+            "NoUnit",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "encodeCssValue",
+        "comment": " Convert a `CssValue` to a properly formatted string\n",
+        "type": "CssBasics.CssValue number -> String"
+      },
+      {
+        "name": "encodeDeclaration",
+        "comment": " Convert a `Declaration` to a string of CSS code, formatted as\n`\"property:value;\"`\n",
+        "type": "CssBasics.Declaration number -> String"
+      },
+      {
+        "name": "important",
+        "comment": " Add \"!important\" to a style declaration\n",
+        "type": "CssBasics.Declaration number -> CssBasics.Declaration number"
+      },
+      {
+        "name": "toStyleAttribute",
+        "comment": " Given a list of declarations, return a `style` attribute that may be\napplied to an `Html` node\n",
+        "type": "List (CssBasics.Declaration number) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

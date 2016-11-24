@@ -1,0 +1,21 @@
+[
+  {
+    "name": "AnimationFrame",
+    "comment": " This library is modeled after Elm's time module. It provides Signals that\nare synchronized with the monitor's frame rate by binding javascript's\nrequestAnimationFrame. `AnimationFrame.frame` and `AnimationFrame.frameWhen` are similar\nto `(Time.fps 60)` and `(Time.fpsWhen 60)` respectively, but they more reliably\nfire once per frame.\n\n#Tickers\n@docs frame, frameWhen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "frame",
+        "comment": " Signal that fires once per frame with the time delta since the last frame.\nNote that \"once per frame\" is an intent, not a guarantee.\n",
+        "type": "Signal.Signal Time.Time"
+      },
+      {
+        "name": "frameWhen",
+        "comment": " Same as the frame function, but you can turn it on and off. Allows you\nto do brief animations based on user input without major inefficiencies.\nThe first time delta after a pause is always zero, no matter how long\nthe pause was. This way summing the deltas will actually give the amount\nof time that the output signal has been running.\n",
+        "type": "Signal.Signal Bool -> Signal.Signal Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

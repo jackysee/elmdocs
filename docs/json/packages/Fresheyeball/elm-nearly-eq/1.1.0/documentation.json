@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Nearly",
+    "comment": "\n\n@docs nearly, (~=), epsillon\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "epsillon",
+        "comment": "\nepsillon\n",
+        "type": "Float"
+      },
+      {
+        "name": "nearly",
+        "comment": "\nNearly is used to curry an epsillon into a fuzzy equality.\nFor example:\n\n```\nTrue == let toThreePlaces = nearly 0.0001\n        in 0.1234588 `toThreePlaces` 0.1234565\n```\n",
+        "type": "Float -> Float -> Float -> Bool"
+      },
+      {
+        "name": "~=",
+        "comment": "\nPre-baked fuzzy equality, with `1.0e-5` as epsillon.\n```\n(~=) = nearly 1.0e-5\n```\n",
+        "type": "Float -> Float -> Bool",
+        "associativity": "right",
+        "precedence": 6
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

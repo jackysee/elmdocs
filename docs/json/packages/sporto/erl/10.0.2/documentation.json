@@ -1,0 +1,99 @@
+[
+  {
+    "name": "Erl",
+    "comment": " Library for parsing and constructing URLs\n\n# Types\n@docs Url, Query\n\n# Parse\n@docs parse\n\n# Parse helpers\n@docs extractHash, extractHost, extractPath, extractProtocol, extractPort, extractQuery\n\n# Construct\n@docs new\n\n# Mutation helpers\n@docs addQuery, setQuery, removeQuery, clearQuery, appendPathSegments\n\n# Serialize\n@docs toString\n\n# Serialization helpers\n@docs queryToString\n\n",
+    "aliases": [
+      {
+        "name": "Query",
+        "comment": " A Dict that holds keys and values for the query string\n",
+        "args": [],
+        "type": "Dict.Dict String String"
+      },
+      {
+        "name": "Url",
+        "comment": " Record that holds url attributes\n",
+        "args": [],
+        "type": "{ protocol : String , username : String , password : String , host : List String , port_ : Int , path : List String , hasLeadingSlash : Bool , hasTrailingSlash : Bool , hash : String , query : Erl.Query }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addQuery",
+        "comment": " Set key/value in query string\n\n    Erl.addQuery key value url\n",
+        "type": "String -> String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "appendPathSegments",
+        "comment": " Append some path segments to a url\n\n    Erl.appendPathSegments [\"hello\", \"world\"] url\n",
+        "type": "List String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "clearQuery",
+        "comment": " Clears the current query string\n\n    Erl.clearQuery url\n",
+        "type": "Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "extractHash",
+        "comment": " Extract the hash (hash) from the url\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractHost",
+        "comment": " Extract the host from the url\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractPath",
+        "comment": " Extract the path from the url\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractPort",
+        "comment": " Extract the port from the url\n\nIf no port is included in the url then Erl will attempt to add a default port:\n\nHttp -> 80\nHttps -> 443\nFTP -> 21\nSFTP -> 22\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "extractProtocol",
+        "comment": " Extract the protocol from the url\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractQuery",
+        "comment": " Extract the query string from the url\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "new",
+        "comment": " Generate an empty Erl.Url record\n\n    Erl.new ==\n\n    { protocol = \"\"\n    , username = \"\"\n    , password = \"\"\n    , host = []\n    , path = []\n    , hasLeadingSlash = False\n    , hasTrailingSlash = False\n    , port_ = 0\n    , hash = \"\"\n    , query = Dict.empty\n    }\n\n",
+        "type": "Erl.Url"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse a url string, returns an Erl.Url record\n\n    Erl.parse \"http://api.example.com/users/1#x/1?a=1\" == Erl.Url{...}\n",
+        "type": "String -> Erl.Url"
+      },
+      {
+        "name": "queryToString",
+        "comment": " Convert to a string only the query component of an url, this includes '?'\n\n    Erl.queryToString url == \"?a=1&b=2\"\n",
+        "type": "Erl.Url -> String"
+      },
+      {
+        "name": "removeQuery",
+        "comment": " Removes key from query string\n\n    Erl.removeQuery key url\n",
+        "type": "String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "setQuery",
+        "comment": " Set key/value in query string, removes any existing ones\n\n    Erl.setQuery key value url\n",
+        "type": "String -> String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "toString",
+        "comment": " Generate url string from an Erl.Url record\n\n    url = { protocol = \"http\",\n          , username = \"\",\n          , password = \"\",\n          , host = [\"www\", \"foo\", \"com\"],\n          , path = [\"users\", \"1\"],\n          , hasLeadingSlash = False\n          , hasTrailingSlash = False\n          , port_ = 2000,\n          , hash = \"a/b\",\n          , query = Dict.empty |> Dict.insert \"q\" \"1\" |> Dict.insert \"k\" \"2\"\n          }\n\n    Erl.toString url == \"http://www.foo.com:2000/users/1?k=2&q=1#a/b\"\n\n",
+        "type": "Erl.Url -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

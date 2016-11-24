@@ -1,0 +1,159 @@
+[
+  {
+    "name": "Plot",
+    "comment": "\n This is a library to build configurable plots in svg. It aims to\n have sane defaults without compromising flexibility in custom styling.\n\n The api is inspired by the standard elm-html library, resulting in the\n following structure.\n\n    view =\n        plot\n            [ dimensions ( 300, 400 ) ]\n            [ line [ stroke \"red\" ] points\n            , xAxis [ customViewTick myCustomTick ]\n            , yAxis [ tickList [ -20, 20, 40, 82 ] ]\n            ]\n\n You always have the top element `plot` and its first argument is its attributes\n and its second argument is its children elements. Similarily, the child elements'\n first argument is always a list of attributes.\n\n\n# Definitions\n@docs Element, PlotAttr, AxisAttr, GridAttr, AreaAttr, LineAttr\n\n# Plot\n@docs plot\n\n## Attributes\n@docs size, padding, plotStyle\n\n# Series\n@docs Point, area, line\n\n## Attributes\n@docs lineStyle, areaStyle\n\n# Axis\n@docs xAxis, yAxis\n\n## Attributes\n@docs tickList, stepSize, amountOfTicks, customViewTick, customViewLabel, axisLineStyle\n\n# Grid\n@docs horizontalGrid, verticalGrid\n\n## Attributes\n@docs gridStyle, gridTickList\n\n",
+    "aliases": [
+      {
+        "name": "Point",
+        "comment": " Convinience type to represent coordinates\n",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [
+      {
+        "name": "AreaAttr",
+        "comment": " Represents an attribute for the serie.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "AxisAttr",
+        "comment": " Represents an attribute for the axis.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Element",
+        "comment": " Represents the type which are allowed in the plots list of children.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "GridAttr",
+        "comment": " Represents an attribute for the grid.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "LineAttr",
+        "comment": " Represents an attribute for the serie.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "PlotAttr",
+        "comment": " Represents an attribute for the plot.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "amountOfTicks",
+        "comment": " Specify a _guiding_ amount of ticks which the library will use to calculate \"nice\" axis values.\n\n    xAxis [ amountOfTicks 5 ]\n\n",
+        "type": "Int -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "area",
+        "comment": " Draws a area serie.\n\n    area [] [ (2, 4), (3, 6), (5, 3.4) ]\n",
+        "type": "List Plot.AreaAttr -> List Plot.Point -> Plot.Element msg"
+      },
+      {
+        "name": "areaStyle",
+        "comment": " Specify the area serie style.\n\n    area [ areaStyle [ ( \"stroke\", \"blue\", \"fill\", \"green\" ) ] ]\n",
+        "type": "List ( String, String ) -> Plot.AreaAttr"
+      },
+      {
+        "name": "axisLineStyle",
+        "comment": " Specify style of the axis.\n\n    yAxis [ axisLineStyle [ ( \"stroke\", \"red\" ) ] ]\n\n",
+        "type": "List ( String, String ) -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "customViewLabel",
+        "comment": " Specify the html to use for each label.\n\n    myCustomLabel : Float -> Svg.Svg a\n    myCustomLabel tick =\n        Svg.text' [] [ Svg.tspan [] [ Svg.text ((toString tick) ++ \" ms\") ] ]\n\n\n    view : Html msg\n    view =\n        plot [] [ xAxis [ customViewLabel myCustomTick ] ]\n\n",
+        "type": "(Float -> Svg.Svg msg) -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "customViewTick",
+        "comment": " Specify the html to use for each tick. If you want to displace the tick, it\n can be recommended to use `Svg.Attributes.transform` in your tick view.\n\n    myCustomTick : Float -> Svg.Svg a\n    myCustomTick tick =\n        Svg.text' [] [ Svg.tspan [] [ Svg.text \"⚡️\" ] ]\n\n\n    view : Html msg\n    view =\n        plot [] [ xAxis [ customViewTick myCustomTick ] ]\n\n",
+        "type": "(Float -> Svg.Svg msg) -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "gridStyle",
+        "comment": " Specify the styling for the grid.\n\n    verticalGrid [ gridStyle [ ( \"stroke\", \"#cee0e2\" ) ] ]\n\n",
+        "type": "List ( String, String ) -> Plot.GridAttr"
+      },
+      {
+        "name": "gridTickList",
+        "comment": " Specify the styling for the grid.\n\n    verticalGrid [ gridTickList [ 200, 400, 600 ] ]\n\n**Note:** This will _eventually_ be changed to a Maybe type and will default to\nalign with whatever ticks are on your axis.\n",
+        "type": "List Float -> Plot.GridAttr"
+      },
+      {
+        "name": "horizontalGrid",
+        "comment": " Draws  a horizontal grid.\n\n    horizontalGrid [ gridTickList [ 20 30 40 ] ]\n",
+        "type": "List Plot.GridAttr -> Plot.Element msg"
+      },
+      {
+        "name": "line",
+        "comment": " Draws a line serie.\n\n    area [] [ (2, 3), (3, 8), (5, 7) ]\n",
+        "type": "List Plot.LineAttr -> List Plot.Point -> Plot.Element msg"
+      },
+      {
+        "name": "lineStyle",
+        "comment": " Specify the area serie style.\n\n    line [ lineStyle [ ( \"stroke\", \"blue\" ) ] ]\n",
+        "type": "List ( String, String ) -> Plot.LineAttr"
+      },
+      {
+        "name": "padding",
+        "comment": " Specify padding on the y axis (in pixels)\n\n    paddingTop : Int\n    paddingTop =\n        40\n\n    paddingBottom : Int\n    paddingBottom =\n        30\n\n    view : Html msg\n    view =\n        plot [ padding (paddingBottom, paddingTop) ] []\n\n",
+        "type": "( Int, Int ) -> Plot.PlotAttr"
+      },
+      {
+        "name": "plot",
+        "comment": " The parent to all your plot elements. Specify a list attributes as the first argument and a list\nof plot elements as the second.\n\n\n    attributes : List PlotAttr\n    attributes =\n        [ dimensions ( 300, 400 ) ]\n\n    children : List (Element msg)\n    children =\n        [ line [ stroke \"red\" ] points\n        , xAxis [ customViewTick myCustomTick ]\n        , yAxis []\n        ]\n\n    view =\n        plot attributes children\n\n",
+        "type": "List Plot.PlotAttr -> List (Plot.Element msg) -> Svg.Svg msg"
+      },
+      {
+        "name": "plotStyle",
+        "comment": " Specify a list of styles to apply to the svg element.\n",
+        "type": "List ( String, String ) -> Plot.PlotAttr"
+      },
+      {
+        "name": "size",
+        "comment": " Specify the width and height in pixels.\n",
+        "type": "( Int, Int ) -> Plot.PlotAttr"
+      },
+      {
+        "name": "stepSize",
+        "comment": " Specify the step size between the ticks.\n\n    xAxis [ stepSize 5 ]\n\n",
+        "type": "Float -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "tickList",
+        "comment": " Specify the list of ticks to be show in on the axis.\n\n    xAxis [ tickList [ 10 25 32 47 ] ]\n\n",
+        "type": "List Float -> Plot.AxisAttr msg"
+      },
+      {
+        "name": "verticalGrid",
+        "comment": " Draws a vertical grid.\n\n    verticalGrid [ gridTickList [ 10 40 90 ] ]\n",
+        "type": "List Plot.GridAttr -> Plot.Element msg"
+      },
+      {
+        "name": "xAxis",
+        "comment": " Draws a x-axis.\n",
+        "type": "List (Plot.AxisAttr msg) -> Plot.Element msg"
+      },
+      {
+        "name": "yAxis",
+        "comment": " Draws a y-axis.\n",
+        "type": "List (Plot.AxisAttr msg) -> Plot.Element msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

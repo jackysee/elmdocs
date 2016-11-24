@@ -1,0 +1,104 @@
+[
+  {
+    "name": "TreeDiagram",
+    "comment": " This library provides functions drawing diagrams of trees.\n\n# Building a tree\n@docs Tree, node\n\n# Drawing a tree using cavas\n@docs CanvasNode, CanvasEdge, drawCollage\n\n# Drawing a tree using SVG\n@docs SvgNode, SvgEdge, drawSvg\n\n# Tree layout options\n@docs TreeLayout, defaultTreeLayout, TreeOrientation, leftToRight, rightToLeft, bottomToTop, topToBottom\n",
+    "aliases": [
+      {
+        "name": "CanvasEdge",
+        "comment": " Alias for functions that draw edges using Canvas\n",
+        "args": [],
+        "type": "TreeDiagram.Coord -> TreeDiagram.Coord -> Collage.Form"
+      },
+      {
+        "name": "CanvasNode",
+        "comment": " Alias for functions that draw nodes using Canvas\n",
+        "args": [
+          "a"
+        ],
+        "type": "a -> Collage.Form"
+      },
+      {
+        "name": "SvgEdge",
+        "comment": " Alias for functions that draw edges using SVG\n",
+        "args": [
+          "b"
+        ],
+        "type": "TreeDiagram.Coord -> TreeDiagram.Coord -> Svg.Svg b"
+      },
+      {
+        "name": "SvgNode",
+        "comment": " Alias for functions that draw nodes using SVG\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "a -> Svg.Svg b"
+      },
+      {
+        "name": "TreeLayout",
+        "comment": " Options to be passed to `draw` for laying out the tree:\n  * orientation: direction of the tree from root to leaves.\n  * levelHeight: vertical distance between parent and child nodes.\n  * subtreeDistance: horizontal distance between subtrees.\n  * siblingDistance: horizontal distance between siblings. This is usually set\n    below `subtreeDistance` to produce a clearer distinction between sibling\n    nodes and non-siblings on the same level of the tree.\n  * padding: amount of space to leave around the edges of the diagram.\n",
+        "args": [],
+        "type": "{ orientation : TreeDiagram.TreeOrientation , levelHeight : Int , siblingDistance : Int , subtreeDistance : Int , padding : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Tree",
+        "comment": " A tree data structure\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "TreeOrientation",
+        "comment": " Direction of the tree from root to leaves\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "bottomToTop",
+        "comment": " Bottom-to-top tree orientation\n",
+        "type": "TreeDiagram.TreeOrientation"
+      },
+      {
+        "name": "defaultTreeLayout",
+        "comment": " A set of default values that should be modified to create your TreeLayout\n",
+        "type": "TreeDiagram.TreeLayout"
+      },
+      {
+        "name": "drawCollage",
+        "comment": " Draws the tree using the provided functions for drawings nodes and edges.\n    TreeLayout contains some more options for positioning the tree.\n    Returns a Canvas Element\n",
+        "type": "TreeDiagram.TreeLayout -> TreeDiagram.CanvasNode a -> TreeDiagram.CanvasEdge -> TreeDiagram.Tree a -> VirtualDom.Node b"
+      },
+      {
+        "name": "drawSvg",
+        "comment": " Draws the tree using the provided functions for drawings nodes and edges.\n    TreeLayout contains some more options for positioning the tree.\n    Returns a Svg\n",
+        "type": "TreeDiagram.TreeLayout -> TreeDiagram.SvgNode a b -> TreeDiagram.SvgEdge b -> TreeDiagram.Tree a -> Svg.Svg b"
+      },
+      {
+        "name": "leftToRight",
+        "comment": " Left-to-right tree orientation\n",
+        "type": "TreeDiagram.TreeOrientation"
+      },
+      {
+        "name": "node",
+        "comment": " Constructs a tree out of a root value and a list of subtrees\n",
+        "type": "a -> List (TreeDiagram.Tree a) -> TreeDiagram.Tree a"
+      },
+      {
+        "name": "rightToLeft",
+        "comment": " Right-to-left tree orientation\n",
+        "type": "TreeDiagram.TreeOrientation"
+      },
+      {
+        "name": "topToBottom",
+        "comment": " Top-to-bottom tree orientation\n",
+        "type": "TreeDiagram.TreeOrientation"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

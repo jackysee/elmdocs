@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Route",
+    "comment": " This module exposes combinators for creating route parsers.\n\n@docs Route, Router\n\n## Routing\n@docs route, (:=), router, match, reverse\n\n## Route combinators\n@docs static, custom, string, int, and, (</>)\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Route",
+        "comment": " Routes represent concrete parsers for paths. Routes can be combined\nand they keep track of their path components in order to provide\nautomatic reverse routing.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Router",
+        "comment": " A Router is, at its core, a List of Routes.\n\n    sitemap : Router a\n    sitemap = router [routeA, routeB]\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": ":=",
+        "comment": " A synonym for `route`.\n\n    type Sitemap\n      = HomeR\n\n    homeR : Route Sitemap\n    homeR = HomeR := static \"\"\n\n",
+        "type": "a -> Route.Route (a -> b) -> Route.Route b",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "</>",
+        "comment": " A synonym for `and`.\n\n    type Sitemap\n      = AddR Int Int\n\n    addR = AddR := int </> int\n    sitemap = router [addR]\n\n    > match sitemap \"/1/2\"\n    Just (AddR 1 2) : Maybe Sitemap\n\n",
+        "type": "Route.Route (a -> b) -> Route.Route (b -> c) -> Route.Route (a -> c)",
+        "associativity": "left",
+        "precedence": 8
+      },
+      {
+        "name": "and",
+        "comment": " Compose two Routes.\n\n    type Sitemap\n      = AddR Int Int\n\n    addR = AddR := int `and` int\n    sitemap = router [addR]\n\n    > match sitemap \"/1/2\"\n    Just (AddR 1 2) : Maybe Sitemap\n\n",
+        "type": "Route.Route (a -> b) -> Route.Route (b -> c) -> Route.Route (a -> c)"
+      },
+      {
+        "name": "custom",
+        "comment": " Create a Route with a custom Parser.\n\n    import Combine exposing (..)\n    import Combine.Infix exposing (..)\n\n    type Category\n      = Snippet\n      | Post\n\n    type Sitemap\n      = CategoryR Category\n\n    categoryR = CategoryR := static \"categories\" </> custom categoryParser\n    sitemap = router [categoryR]\n\n    > match sitemap \"/categories/a\"\n    Nothing : Maybe Sitemap\n\n    > match sitemap \"/categories/Post\"\n    Just (CategoryR Post) : Maybe Sitemap\n\n    > match sitemap \"/categories/Snippet\"\n    Just (CategoryR Snippet) : Maybe Sitemap\n\nSee `examples/Custom.elm` for a complete example.\n\n",
+        "type": "Combine.Parser () a -> Route.Route ((a -> b) -> b)"
+      },
+      {
+        "name": "int",
+        "comment": " A Route that matches any integer.\n\n    type Sitemap\n      = UserR Int\n\n    userR = UserR := static \"users\" </> int\n    sitemap = router [userR]\n\n    > match sitemap \"/users/a\"\n    Nothing : Maybe Sitemap\n\n    > match sitemap \"/users/1\"\n    Just (UserR 1) : Maybe Sitemap\n\n    > match sitemap \"/users/-1\"\n    Just (UserR -1) : Maybe Sitemap\n\n",
+        "type": "Route.Route ((Int -> a) -> a)"
+      },
+      {
+        "name": "match",
+        "comment": " Given a Router and an arbitrary String representing a path, this\nfunction will return the first Route that matches that path.\n\n    type Sitemap\n      = HomeR\n      | UsersR\n      | UserR Int\n\n    homeR = HomeR := static \"\"\n    usersR = UsersR := static \"users\"\n    usersR = UserR := static \"users\" </> int\n    sitemap = router [homeR, userR, usersR]\n\n    > match sitemap \"/a\"\n    Nothing : Maybe Sitemap\n\n    > match sitemap \"/\"\n    Just HomeR : Maybe Sitemap\n\n    > match sitemap \"/users\"\n    Just UsersR : Maybe Sitemap\n\n    > match sitemap \"/users/1\"\n    Just (UserR 1) : Maybe Sitemap\n\n    > match sitemap \"/users/1\"\n    Just (UserR 1) : Maybe Sitemap\n\n",
+        "type": "Route.Router a -> String -> Maybe.Maybe a"
+      },
+      {
+        "name": "reverse",
+        "comment": " Render a path given a Route and a list of route components.\n\n    type Sitemap\n      = HomeR\n      | UsersR\n      | UserR Int\n\n    homeR = HomeR := static \"\"\n    usersR = UsersR := static \"users\"\n    usersR = UserR := static \"users\" </> int\n    sitemap = router [homeR, userR, usersR]\n\n    > reverse homeR []\n    \"/\"\n\n    > reverse usersR []\n    \"/users\"\n\n    > reverse userR [\"1\"]\n    \"/users/1\"\n\nIf you are willing to write some boilerplate, `reverse` can be used to\nconstruct a type safe reverse routing function specific to your\napplication:\n\n    toString : Sitemap -> String\n    toString r =\n      case r of\n        HomeR  -> reverse homeR []\n        UsersR  -> reverse usersR []\n        UserR uid -> reverse userR [toString uid]\n\n    > toString HomeR\n    \"/\"\n\n    > toString UsersR\n    \"/users\"\n\n    > toString (UserR 1)\n    \"/users/1\"\n\n`reverse` will crash at runtime if there is a mismatch between the\nroute and the list of arguments that is passed in. For example:\n\n    > reverse deepR []\n    Error: Ran into a `Debug.crash` in module `Route`\n\n    This was caused by the `case` expression between lines 145 and 175.\n    One of the branches ended with a crash and the following value got through:\n\n        ([],[CInt,CInt,CInt])\n\n    The message provided by the code author is:\n\n        'reverse' called with an unexpected number of arguments\n\n    > reverse deepR [\"a\"]\n    Error: Ran into a `Debug.crash` in module `Route`\n\n    This was caused by the `case` expression between lines 171 and 176.\n    One of the branches ended with a crash and the following value got through:\n\n        Err (\"could not convert string 'a' to an Int\")\n\n    The message provided by the code author is:\n\n        could not convert string 'a' to an Int in a call to 'reverse'\n\n",
+        "type": "Route.Route a -> List String -> String"
+      },
+      {
+        "name": "route",
+        "comment": " Declare a Route.\n\n    type Sitemap\n      = HomeR\n\n    homeR : Route Sitemap\n    homeR = route HomeR (static \"\")\n\n",
+        "type": "a -> Route.Route (a -> b) -> Route.Route b"
+      },
+      {
+        "name": "router",
+        "comment": " Construct a Router from a list of Routes.\n\n    type Sitemap\n      = HomeR\n      | BlogR\n\n    homeR = HomeR := static \"\"\n    blogR = BlogR := static \"blog\"\n    sitemap = router [homeR, blogR]\n\n",
+        "type": "List (Route.Route a) -> Route.Router a"
+      },
+      {
+        "name": "static",
+        "comment": " Create a Route that matches a static String.\n\n    type Sitemap\n      = BlogR\n\n    blogR = BlogR := static \"blog\"\n    sitemap = router [blogR]\n\n    > match sitemap \"/blog\"\n    Just BlogR : Maybe Sitemap\n\n",
+        "type": "String -> Route.Route (a -> a)"
+      },
+      {
+        "name": "string",
+        "comment": " A Route that matches any string.\n\n    type Sitemap\n      = PostR String\n\n    postR = PostR := static \"posts\" </> string\n    sitemap = router [postR]\n\n    > match sitemap \"/posts/\"\n    Nothing : Maybe Sitemap\n\n    > match sitemap \"/posts/hello-world/test\"\n    Nothing : Maybe Sitemap\n\n    > match sitemap \"/posts/hello-world\"\n    Just (PostR \"hello-world\") : Maybe Sitemap\n\n",
+        "type": "Route.Route ((String -> a) -> a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

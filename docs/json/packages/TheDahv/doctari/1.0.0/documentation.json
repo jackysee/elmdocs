@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Doctari",
+    "comment": " This library exposes a component following the Elm Architecture that offers\nan ordered, organizable live-Markdown document editor that can serialize its\ncontents to JSON.\n\nThat is certainly a mouthful, but the idea is to offer users to create documents\nin a structured and organized way. Headings group related and supporting ideas\nthat can be re-organized or re-emphasized as the document evolves.\n\nAgain, since the component designs around the Elm Architecture, clients should\nbe able to weave it in to the existing Model/Update/View scaffolding of their\napplication.\n\nProbably the most annoying part is:\n\n- setting up a model\n- grafting the component action `Msg`s into that of your application\n\nFor the first issue, Doctari exposes an `empty` value that offers a good\nstarting point for the component's states with sane defaults.\n\nFor the second issue, I'd like to come up with a way to keep `Msg` values with\nno relevance to the outside world internally contained. Until I figure that\nout, they are emitted, mapped, and rerouted back into the component by the\nconsuming app:\n\n    type Msg = DoctariMsg Doctari.Msg\n\n    update msg model =\n        case msg of\n            DoctariMsg msg ->\n                { model |\n                    doctariModel =\n                        Doctari.update msg model.doctariModel\n                }\n\n    view : Model -> Html Msg\n    view model =\n        div [] [ App.map DoctariMsg Doctari.view ]\n\nYou can see more complete usage in the [example][].\n\nTODO:\n\n- Find the most intelligent way to ask for a serialized version of the\ncurrent value of the component's state\n- Find a decent way to create a component with an initial serialized state\n    (useful for rendering a version of the document stored on the server)\n\n[example]: https://github.com/thedahv/doctari/tree/master/examples/basic/main.elm\n\n# Model\n@docs Model\n@docs empty\n\n# Update\n@docs Msg\n@docs update\n\n# View\n@docs view\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " The most important part of Doctari's state is the representation of its\ncontents. The `document` field models a heading's ID, title, content, and\nlist of children (which also happen to have the same structure).\n\nThe rest of the fields represent changes in the organization of the headings\nwithin the document structure.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Msg represents all the user actions to request changes to the document\ncontent or structure\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " The empty document has a sample document title that the user can change,\nand no children. Users of this component should initialize it with this value.\n",
+        "type": "Doctari.Model"
+      },
+      {
+        "name": "update",
+        "comment": " update follows the standard pattern of producing a new version of the\ndocument contents and/or structure based on user action.\n",
+        "type": "Doctari.Msg -> Doctari.Model -> Doctari.Model"
+      },
+      {
+        "name": "view",
+        "comment": " view renders a document based on its contents and structure, as well as\nuser controls to manipulate the document\n",
+        "type": "Doctari.Model -> Html.Html Doctari.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

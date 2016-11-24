@@ -1,0 +1,41 @@
+[
+  {
+    "name": "EasyEvents",
+    "comment": "\n# Event helpers\n@docs onInput, onInputInt, onInputFloat, onSpecificKeyPress, onEnterPress, onChange\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onChange",
+        "comment": " Takes an address of a type, and a function that produces a value of that\ntype from a string. That value will be send to the address in a message\nwhen a \"change\" event is fired.\n\nYou'll probably use this to send an action to your update function when\nan HTML `select` is changed.\n",
+        "type": "Signal.Address a -> (String -> a) -> Html.Attribute"
+      },
+      {
+        "name": "onEnterPress",
+        "comment": " Takes an address, and an action, and sends the action to the address only\nwhen the enter key is pressed on the parent element.\n",
+        "type": "Signal.Address action -> action -> Html.Attribute"
+      },
+      {
+        "name": "onInput",
+        "comment": " Accepts an action, and a function that turns a string into an action.\n\nExample:\n\n```\ntype Action = UpdateName String\n\nfoo address model =\n    input\n        [ type' \"text\"\n        , onInput address UpdateName\n        , value model\n        ]\n```\n\nThe code above would send an UpdateName action to `adress` whenever an input\nevent is fired on the input element.\n",
+        "type": "Signal.Address action -> (String -> action) -> Html.Attribute"
+      },
+      {
+        "name": "onInputFloat",
+        "comment": " Like `onInput`, but for Floats instead of Strings\n",
+        "type": "Signal.Address action -> (Float -> action) -> Html.Attribute"
+      },
+      {
+        "name": "onInputInt",
+        "comment": " Like `onInput`, but for Ints instead of Strings\n",
+        "type": "Signal.Address action -> (Int -> action) -> Html.Attribute"
+      },
+      {
+        "name": "onSpecificKeyPress",
+        "comment": " Takes an address, a key code, and an action. Sends the action to the address\nwhenever that specific key code is pressed with the parent element focused.\n\nThis is useful for reacting only to specific key-presses (like submitting a\nform when the enter key is pressed, for example).\n",
+        "type": "Signal.Address action -> Int -> action -> Html.Attribute"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

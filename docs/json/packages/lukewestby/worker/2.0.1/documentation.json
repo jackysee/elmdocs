@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Worker",
+    "comment": " Start Elm applications without a view\n\n@docs programWithFlags, program\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " Start a worker program, including extra Cmds to wrap init and update in case\nyou want to include port calls on every Msg.\n\n    port modelOut : Model -> Cmd msg\n\n    main : Program Never\n    main =\n        Worker.worker modelOut\n            { init = init\n            , update = update\n            , subscriptions = subscriptions\n            }\n",
+        "type": "(model -> Platform.Cmd.Cmd msg) -> { init : ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Start a worker program with flags from the outside world, including extra\nCmds to wrap init and update in case you want to include port calls on every\nMsg.\n\nIn your Elm program\n\n    port modelOut : Model -> Cmd msg\n\n    main : Program { userId: String, token : String }\n    main =\n        Worker.workerWithFlags modelOut\n            { init = \\{ userId, token } -> init userId token\n            , update = update\n            , subscriptions = subscriptions\n            }\n\nIn JavaScript\n\n    var app = Elm.MyApp.worker({\n        userId: 'Tom',\n        token: '12345'\n    });\n",
+        "type": "(model -> Platform.Cmd.Cmd msg) -> { init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

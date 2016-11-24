@@ -1,0 +1,91 @@
+[
+  {
+    "name": "Trinary",
+    "comment": "\nTrinary logic using `T`, `M`, `F` for `True`, `Maybe`, `False`.\nInfixes are prefixed with `#` because `Shift + 3`.\n\n# Definition\n@docs Trit\n\n# Logic\n@docs not, and, or, implies, eq\n\n# Infixes\n@docs (#!), (#&), (#|), (#>), (#=)\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Trit",
+        "comment": " Trinary logic has three truth values. The first letter is used\nbecause `True` and `False` are reserved and `Maybe` is a default\nimport.\n",
+        "args": [],
+        "cases": [
+          [
+            "T",
+            []
+          ],
+          [
+            "M",
+            []
+          ],
+          [
+            "F",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "#!",
+        "comment": " Infix for `not`\n",
+        "type": "Trinary.Trit -> Trinary.Trit",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "#&",
+        "comment": " Infix for `and`\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "#=",
+        "comment": " Infix for `eq`\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "#>",
+        "comment": " Infix for `implies`\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "#|",
+        "comment": " Infix for `or`\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit",
+        "associativity": "left",
+        "precedence": 2
+      },
+      {
+        "name": "and",
+        "comment": "\n```\n| ∧     | True  | Maybe | False |\n| ----- | ----- | ----- | ----- |\n| True  | True  | Maybe | False |\n| Maybe | Maybe | Maybe | False |\n| False | False | False | False |\n```\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit"
+      },
+      {
+        "name": "eq",
+        "comment": "\n```\n| ≡     | True  | Maybe | False |\n| ----- | ----- | ----- | ----- |\n| True  | True  | Maybe | False |\n| Maybe | Maybe | Maybe | Maybe |\n| False | False | Maybe | True  |\n```\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit"
+      },
+      {
+        "name": "implies",
+        "comment": "\n```\n| ⊃     | True | Maybe | False |\n|------ | ---- | ----- |------ |\n| True  | True | Maybe | False |\n| Maybe | True | Maybe | Maybe |\n| False | True | True  | True  |\n```\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit"
+      },
+      {
+        "name": "not",
+        "comment": "\n```\n| ¬             |\n| ------------- |\n| True  | False |\n| Maybe | Maybe |\n| False | True  |\n```\n",
+        "type": "Trinary.Trit -> Trinary.Trit"
+      },
+      {
+        "name": "or",
+        "comment": "\n```\n| ∨     | True | Maybe | False |\n| ----- | ---- | ----- | ----- |\n| True  | True | True  | True  |\n| Maybe | True | Maybe | Maybe |\n| False | True | Maybe | False |\n```\n",
+        "type": "Trinary.Trit -> Trinary.Trit -> Trinary.Trit"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

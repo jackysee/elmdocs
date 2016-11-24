@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Location",
+    "comment": " Facilities related to the browser's `window.location` object.\n\n@docs Location, location, reload, Source, assign, replace\n",
+    "aliases": [
+      {
+        "name": "Location",
+        "comment": " The parts of a location object. Note `port'`, since `port` is a reserved word. ",
+        "args": [],
+        "type": "{ href : String , protocol : String , host : String , hostname : String , port' : String , pathname : String , search : String , hash : String , origin : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Source",
+        "comment": " Whether to force `reload` to use the server, or allow use of the cache. ",
+        "args": [],
+        "cases": [
+          [
+            "ForceServer",
+            []
+          ],
+          [
+            "AllowCache",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "assign",
+        "comment": " A task which, when executed, loads the resource at the provided URL,\nor provides an error message upon failure. This actually loads a new\nresource -- it does not merely change the URL in the title bar.\n\nNote that only Firefox appears to reliably report an error -- other browsers\nsilently fail if an invalid URL is provided.\n",
+        "type": "String -> Task.Task String ()"
+      },
+      {
+        "name": "location",
+        "comment": " A task which, when executed, gets the browser's `window.location` object. ",
+        "type": "Task.Task x Location.Location"
+      },
+      {
+        "name": "reload",
+        "comment": " Reloads the page from the current URL. ",
+        "type": "Location.Source -> Task.Task String ()"
+      },
+      {
+        "name": "replace",
+        "comment": " Like `assign`, loads the resource at the provided URL, but replaces the\ncurrent page in the browser's history. This actually loads a new\nresource -- it does not merely change the URL in the title bar.\n\nNote that only Firefox appears to reliably report an error -- other browsers\nsilently fail if an invalid URL is provided.\n",
+        "type": "String -> Task.Task String ()"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "History",
+    "comment": " Elm bindings to HTML5 History API.\n\n# Changing the URL path\n@docs setPath, replacePath, setHash\n\n# Going back and forth in the browser history\n@docs back, forward, go\n\n# URL path as input\n@docs path, hash, href, length\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "back",
+        "comment": " Moves the browser history back by 1. Equivalent\nto pressing the back button on the browser or calling\n`go -1`.\n",
+        "type": "Task.Task error ()"
+      },
+      {
+        "name": "forward",
+        "comment": " Moves the browser history forward by 1. Equivalent\nto pressing the forward button on the browser or calling\n`go 1`.\n",
+        "type": "Task.Task error ()"
+      },
+      {
+        "name": "go",
+        "comment": " Move backwards or forwards in the browser history\nby the given amount. If given a positive number, `go`\nwill move the browser history forward by that amount.\nIf given a negative number, `go` will move the browser\nhistory back by the absolute value of that amount. This\nresults in a no-op if there are no available pages to\ngo to in the browser history.\n",
+        "type": "Int -> Task.Task error ()"
+      },
+      {
+        "name": "hash",
+        "comment": " The current hash value of the url. The value is updated\nwhenever it is changed, usually through interaction.\nWhen you click on an `a` tag, the browser focuses on the area\naround the tag and does not refresh the page. This change is\nmirrored in the url where often a `#` is added. It is often\nuseful to track these changes and perform different operations\ndepending on the state of the hash.\n\nHashes are of the form: `#myTag`\n",
+        "type": "Signal.Signal String"
+      },
+      {
+        "name": "href",
+        "comment": " The current href value of the url. The value is updated\nwhenever it is changed, either through interaction or code.\nThis is the main way you can create single page applications.\nBy incorporating the `href` as an input of your application,\nyou are able to react to changes to these hrefs and route\nand re-route your pages accordingly in order to show the most\nappropriate information given the href.\n\nHrefs are of the form: `https://localhost:1337/myPath.html`\n",
+        "type": "Signal.Signal String"
+      },
+      {
+        "name": "length",
+        "comment": " The length of the browser history. This number does not\nstate where you are in relation to the browser history but\nsimply how long that history is.\n",
+        "type": "Signal.Signal Int"
+      },
+      {
+        "name": "path",
+        "comment": " The current path value of the url. The value is updated\nwhenever it is changed, either through interaction or code.\nThis is the main way you can create single page applications.\nBy incorporating the `path` as an input of your application,\nyou are able to react to changes to these paths and route\nand re-route your pages accordingly in order to show the most\nappropriate information given the path.\n\nPaths are of the form: `/myPath.html` or `/users/4873/profile.html`\n",
+        "type": "Signal.Signal String"
+      },
+      {
+        "name": "replacePath",
+        "comment": " Replaces the path of the url by the given path.\nIf you are familiar with the HTML5 History API,\n`replacePath` calls `history.replaceState()` which means\nthat in performing this task, the browser history\ndoes not move forward. In other words, pressing the back\nbutton will not lead you to where you were prior to\nperforming this task. This is useful for things such as\nslideshows of login pages where the paths are transient\nand you do not wish to clutter the back button. If you\nwant to simply point users towards a different page,\nconsider using `setPath`.\n",
+        "type": "String -> Task.Task error ()"
+      },
+      {
+        "name": "setHash",
+        "comment": " Sets the path fragment (\"hash\") of the url.\nThis directly corresponds to setting the `location.hash`\nvalue. If the new value differs from the old one,\ndoing this will push a new state to the history stack.\n\n    setHash \"stringified-state\"\n",
+        "type": "String -> Task.Task error ()"
+      },
+      {
+        "name": "setPath",
+        "comment": " Sets the path of the url to the given path.\nIf you are familiar with the HTML5 History API,\n`setPath` calls `history.pushState()` which means\nthat in performing this task, the browser history\nmoves forward. In other words, pressing the back\nbutton will lead you where you were prior to performing\nthis task.\n\n    setPath \"/blog.html\"\n",
+        "type": "String -> Task.Task error ()"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

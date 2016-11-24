@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Json.Decode.Extra",
+    "comment": " Convenience functions for working with Json\n\n# Date\n@docs date\n\n# Incremental Decoding\n@docs andMap, (|:)\n\n# List\n@docs sequence\n\n# Set\n@docs set\n\n# Dict\n@docs dict2\n\n# Maybe\n@docs withDefault\n\n# Result\n@docs fromResult\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Can be helpful when decoding large objects incrementally.\n\nSee [the `andMap` docs](https://github.com/elm-community/json-extra/blob/2.0.0/docs/andMap.md)\nfor an explanation of how `andMap` works and how to use it.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "date",
+        "comment": " Extract a date using [`Date.fromString`](http://package.elm-lang.org/packages/elm-lang/core/latest/Date#fromString)\n",
+        "type": "Json.Decode.Decoder Date.Date"
+      },
+      {
+        "name": "dict2",
+        "comment": " Extract a dict using separate decoders for keys and values.\n",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder v -> Json.Decode.Decoder (Dict.Dict comparable v)"
+      },
+      {
+        "name": "fromResult",
+        "comment": " Transform a result into a decoder\n\nSometimes it can be useful to use functions that primarily operate on\n`Result` in decoders. An example of this is `Json.Decode.Extra.date`. It\nuses the built-in `Date.fromString` to parse a `String` as a `Date`, and\nthen converts the `Result` from that conversion into a decoder which has\neither already succeeded or failed based on the outcome.\n\n    date : Decoder Date\n    date =\n        string |> andThen (Date.fromString >> fromResult)\n",
+        "type": "Result.Result String a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "sequence",
+        "comment": " This function turns a list of decoders into a decoder that returns a list.\n\nThe returned decoder will zip the list of decoders with a list of values, matching each decoder with exactly one value at the same position. This is most often useful in cases when you find yourself needing to dynamically generate a list of decoders based on some data, and decode some other data with this list of decoders. There are other functions that seem similar:\n\n- `Json.Decode.oneOf`, which will try every decoder for every value in the list, might be too lenient (e.g. a `4.0` will be interpreted as an `Int` just fine).\n- `Json.Decode.tuple1-8`, which do something similar, but have a hard-coded length. As opposed to these functions, where you can decode several different types and combine them, you'll need to manually unify all those types in one sum type to use `sequence`.\n\nNote that this function, unlike `List.map2`'s behaviour, expects the list of decoders to have the same length as the list of values in the JSON.\n\n    type FloatOrInt\n        = I Int\n        | F Float\n\n    -- we'd like a list like [I, F, I] from this\n    -- fairly contrived example, but data like this does exist!\n    json = \"[1, 2.0, 3]\"\n\n    intDecoder = Decode.map I Decode.int\n    floatDecoder = Decode.map F Decode.float\n\n    decoder : Decoder (List FloatOrInt)\n    decoder =\n        sequence [ intDecoder, floatDecoder, intDecoder ]\n\n    decoded = Decode.decodeString decoder json\n    -- Ok ([I 1,F 2,I 3]) : Result String (List FloatOrInt)\n\n",
+        "type": "List (Json.Decode.Decoder a) -> Json.Decode.Decoder (List a)"
+      },
+      {
+        "name": "set",
+        "comment": " Extract a set.\n",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder (Set.Set comparable)"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Try running the given decoder; if that fails, then succeed with the given\nfallback value.\n\n    -- If this field is missing or malformed, it will decode to [].\n    field \"optionalNames\" (list string)\n      |> (withDefault [])\n\n",
+        "type": "a -> Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "|:",
+        "comment": " Infix version of `andMap` that makes for a nice DSL when decoding objects.\n\nSee [the `(|:)` docs](https://github.com/elm-community/json-extra/blob/2.0.0/docs/infixAndMap.md)\nfor an explanation of how `(|:)` works and how to use it.\n",
+        "type": "Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Json.Encode.Extra",
+    "comment": " Convenience functions for turning Elm values into Json values.\n\n# Maybe\n@docs maybe\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "maybe",
+        "comment": " Encode a Maybe value. If the value is `Nothing` it will be encoded as `null`\n\n    maybe int Nothing == Value null\n    maybe int (Just 50) == Value 50\n\n",
+        "type": "(a -> Json.Encode.Value) -> Maybe.Maybe a -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

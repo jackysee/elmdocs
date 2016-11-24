@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Monoid",
+    "comment": " A module to define generic functions for monoid.\nFor instance, we defined generic `concat` in this module using `Monoid` type as follows.\n\n```\nconcat : Monoid a -> List a -> a\nconcat m = List.foldr (append m) (empty m)\n\n>>> concat string [\"foo\", \"bar\", \"baz\"]\n\"foobarbaz\"\n>>> concat list [[1, 2, 3], [4, 5], [6]]\n[1, 2, 3, 4, 5, 6]\n```\n\n# Types\n\n@docs Monoid\n\n# Constructors\n\n@docs monoid\n\n# Functions for unwraping Monoid\n\n@docs empty\n@docs append\n\n# Convenient functions for monoid\n\n@docs concat\n\n# Monoid types for popular types\n\n@docs string\n@docs list\n@docs array\n@docs dict\n@docs set\n@docs cmd\n@docs sub\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Monoid",
+        "comment": " Main type.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "append",
+        "comment": " Take the way to append a monoids.\n",
+        "type": "Monoid.Monoid a -> a -> a -> a"
+      },
+      {
+        "name": "array",
+        "comment": " `Monoid` type for `Array`.\n",
+        "type": "Monoid.Monoid (Array.Array a)"
+      },
+      {
+        "name": "cmd",
+        "comment": " `Monoid` type for `Cmd`.\n",
+        "type": "Monoid.Monoid (Platform.Cmd.Cmd comparable)"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate list of monoid.\n",
+        "type": "Monoid.Monoid a -> List a -> a"
+      },
+      {
+        "name": "dict",
+        "comment": " `Monoid` type for `Dict`.\n",
+        "type": "Monoid.Monoid (Dict.Dict comparable a)"
+      },
+      {
+        "name": "empty",
+        "comment": " Take the identity element of a monoid.\n",
+        "type": "Monoid.Monoid a -> a"
+      },
+      {
+        "name": "list",
+        "comment": " `Monoid` type for `List`.\n",
+        "type": "Monoid.Monoid (List a)"
+      },
+      {
+        "name": "monoid",
+        "comment": " Constructor for `Monoid`.\n",
+        "type": "a -> (a -> a -> a) -> Monoid.Monoid a"
+      },
+      {
+        "name": "set",
+        "comment": " `Monoid` type for `Set`.\n",
+        "type": "Monoid.Monoid (Set.Set comparable)"
+      },
+      {
+        "name": "string",
+        "comment": " `Monoid` type for `String`.\n",
+        "type": "Monoid.Monoid String"
+      },
+      {
+        "name": "sub",
+        "comment": " `Monoid` type for `Sub`.\n",
+        "type": "Monoid.Monoid (Platform.Sub.Sub comparable)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

@@ -1,0 +1,655 @@
+[
+  {
+    "name": "GraphicSVG",
+    "comment": " A library for creating SVG graphics in a way that is compatible with Elm's\nold Graphics library. Also includes built-in functions for creating games and\nother applications including keyboard presses and mouse movements.\n# Basic Types\n@docs Stencil, Shape\n# Rendering To Screen\n@docs collage\n# Graphics App\n@docs graphicsApp\n# Notifications App\n@docs notificationsApp\n# Game App\n@docs GetKeyState, Keys, KeyState, gameApp\n# Stencils\n@docs line, polygon, openPolygon, ngon, triangle, square, rect, rectangle, roundedRect, circle, oval, wedge, graphPaper\n# Creating Shapes by Filling and Outlining Stencils\n@docs filled, outlined, addOutline, rgb, rgba, hsl, hsla\n# Grouping Shapes\n@docs group\n# Curves\n@docs curve, Pull\n# Line Styles\n@docs solid, dotted, dashed, longdash, dotdash, increasing, custom\n# Text\n@docs text, size, bold, italic, underline, strikethrough, centered, sansserif, serif, fixedwidth, customFont\n# Transformations\n@docs move, rotate, scale, scaleX, scaleY, mirrorX, mirrorY\n# Notifications\n@docs notifyTap, notifyTapAt, notifyEnter, notifyEnterAt, notifyLeave, notifyLeaveAt, notifyMouseMoveAt, notifyMouseDown, notifyMouseDownAt, notifyMouseUp, notifyMouseUpAt, notifyTouchStart, notifyTouchStartAt, notifyTouchEnd, notifyTouchEndAt, notifyTouchMoveAt\n# Miscallaneous\n@docs makeTransparent, addHyperlink\n# Let there be colours!\n@docs black,blank,blue,brown,charcoal,darkBlue,darkBrown,darkCharcoal,darkGray,darkGreen,darkGrey,darkOrange,darkPurple,darkRed,darkYellow,gray,green,grey,hotPink,lightBlue,lightBrown,lightCharcoal,lightGray,lightGreen,lightGrey,lightOrange,lightPurple,lightRed,lightYellow,orange,pink,purple,red,white,yellow\n\n",
+    "aliases": [
+      {
+        "name": "GetKeyState",
+        "comment": " GetKeyState returns a triple where the first argument is of type (Keys -> KeyState)\nso you can ask if a certain key is presses. The other two are tuples of arrow keys and\nWASD keys, respectively. They're in the form (x,y) which represents the key presses\nof each player.\n",
+        "args": [],
+        "type": "( GraphicSVG.Keys -> GraphicSVG.KeyState , ( Float, Float ) , ( Float, Float ) )"
+      }
+    ],
+    "types": [
+      {
+        "name": "KeyState",
+        "comment": " The possible states when you ask for a key's state.\n\n    JustDown is the frame after the key went down (will show up exactly once per press)\n    Down is a press that is continuing for more than one frame\n    JustUp is the frame after the key went up / stopped being pressed (will show up exactly once per press)\n    Up means the key is not currently being pressed nor was it recently released.\n",
+        "args": [],
+        "cases": [
+          [
+            "JustDown",
+            []
+          ],
+          [
+            "Down",
+            []
+          ],
+          [
+            "JustUp",
+            []
+          ],
+          [
+            "Up",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Keys",
+        "comment": " Includes all the regular keys. Ask for letters and numbers using \"Key String.\"\n",
+        "args": [],
+        "cases": [
+          [
+            "Key",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Backspace",
+            []
+          ],
+          [
+            "Tab",
+            []
+          ],
+          [
+            "Enter",
+            []
+          ],
+          [
+            "Shift",
+            []
+          ],
+          [
+            "Ctrl",
+            []
+          ],
+          [
+            "Alt",
+            []
+          ],
+          [
+            "Caps",
+            []
+          ],
+          [
+            "LeftArrow",
+            []
+          ],
+          [
+            "UpArrow",
+            []
+          ],
+          [
+            "RightArrow",
+            []
+          ],
+          [
+            "DownArrow",
+            []
+          ],
+          [
+            "Delete",
+            []
+          ],
+          [
+            "Space",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Pull",
+        "comment": " To make it easier to read the code defining a curve,\nand to make sure we always use the right number of curve points\nand pull points (which is one more curve point than pull points),\nwe define a special Pull type, whose first point is the point\nwe pull towards, and second point is the end point for this\ncurve segmentsment.\n",
+        "args": [],
+        "cases": [
+          [
+            "Pull",
+            [
+              "( Float, Float )",
+              "( Float, Float )"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Shape",
+        "comment": " A filled object that can be drawn to the screen using collage.\n",
+        "args": [
+          "notification"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Stencil",
+        "comment": " A primitive template representing the eventual Shape you wish to draw. This must be turned into\na Shape before being drawn to the screen with collage.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addHyperlink",
+        "comment": " Add a hyperlink to any `Shape`.\n\n    circle 10\n        |> filled red\n        |> addHyperLink \"www.redcircle.com\"\n",
+        "type": "String -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "addOutline",
+        "comment": " Add an outline to an already-filled Shape.\n\n    circle 10\n        |> filled red\n        |> addOutline (solid 5) white\n",
+        "type": "GraphicSVG.LineType -> GraphicSVG.Color -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "black",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "blank",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "blue",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "bold",
+        "comment": " Apply to a Stencil to make any text in the Stencil bold.\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "brown",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "centered",
+        "comment": " Apply to a Stencil to centre any text in the Stencil.\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "charcoal",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "circle",
+        "comment": " Creates a circle with a given radius.\n",
+        "type": "Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "collage",
+        "comment": " Creates a blank canvas on which you can draw shapes. Takes a width, height and a\nlist of Shape. Use this in your \"view\" functions in the three types of Apps above.\n\n    view = collage 500 500\n        [ circle 10 |> filled red\n        ]\n",
+        "type": "Float -> Float -> List (GraphicSVG.Shape notification) -> GraphicSVG.Collage notification"
+      },
+      {
+        "name": "curve",
+        "comment": " Creates a curve starting at a point, pulled towards a point, ending at a third point.\n\n    curve (0,0) [Pull (0,10) (0,20)] - a curve starting at (0,0), pulled towards (0,10), ending at (0,20)\n\n\nThink about curves as what you get when you take a bunch of\nbendy sticks with their ends glued down to a board, and then pulling each stick\ntowards another point.\n\nYou always need an initial point and at least one Pull, but you can add as many Pulls as you want to\nadd additional curve segments, but each curve segment can only bend one way, since it is pulled in one direction.\n",
+        "type": "( Float, Float ) -> List GraphicSVG.Pull -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "custom",
+        "comment": " A custom line defined by a list of (on,off).\n\n    custom [(10,5)] 5 -- a line that with dashes 10 long and spaces 5 long\n    custom [(10,5),(20,5)] -- on for 10, off 5, on 20, off 5\n",
+        "type": "List ( Float, Float ) -> Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "customFont",
+        "comment": " Use a font of your choosing by specifying its string name. Use this sparingly as support for each font\nwill vary accross browsers and devices.\n",
+        "type": "String -> GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "darkBlue",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkBrown",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkCharcoal",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkGray",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkGreen",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkGrey",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkOrange",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkPurple",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkRed",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "darkYellow",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "dashed",
+        "comment": " Define a dashed line type with the given width.  Dashes are short line segments, versus dots which are theoretically points, but may be drawn with very sort line segments.\n",
+        "type": "Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "dotdash",
+        "comment": " Define a line type with the given width, including alternating dots and dashes.\n",
+        "type": "Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "dotted",
+        "comment": " Define a dotted line type with the given width.\n",
+        "type": "Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "filled",
+        "comment": " Fill a Stencil with a Color, creating a Shape.\n\n    circle 10\n        |> filled red\n",
+        "type": "GraphicSVG.Color -> GraphicSVG.Stencil -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "fixedwidth",
+        "comment": " Apply to a Stencil to render any text in the Stencil with a font in which every character has the same width so that that letters line up from line to line which is important in programming languages like Elm.\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "gameApp",
+        "comment": " Automatically maps time and keyboard presses to your program. This should\nbe all you need for making complex interactive games and animations.\n\ngameApp takes two parameters: one is your own type of the form (GetKeyState -> Float -> CustomMsg) and the other is\n    {\n        model = model\n    ,   view = view\n    ,   update = update\n    }\n",
+        "type": "GraphicSVG.InputHandler msgs -> GraphicSVG.GraphicsApp model msgs -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "graphPaper",
+        "comment": " Creates a graph paper with squares of a given size.\n",
+        "type": "Float -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "graphicsApp",
+        "comment": " The simplest way to render graphics to the screen. These graphics will be\nstatic (they don't move) and you can't interact with them. Great for beginners\nor for when you just need basic graphics. Note that your view function is bare,\nwith no parameters:\n\n    view = collage 500 500\n        [ circle 10 |> filled red\n        ]\n\ngraphicsApp takes a parameter like this:\n    {\n        view = view\n    }\n",
+        "type": "GraphicSVG.JustGraphics a -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "gray",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "green",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "grey",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "group",
+        "comment": " Combine n number of Shape types into one Shape that can be\ntransformed as one.\n",
+        "type": "List (GraphicSVG.Shape notification) -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "hotPink",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "hsl",
+        "comment": " Create a custom colour given its hue, saturation and light components.\n",
+        "type": "Float -> Float -> Float -> GraphicSVG.Color"
+      },
+      {
+        "name": "hsla",
+        "comment": " Create a custom colour given its hue, saturation, light and alpha components.\nAlpha is a Float from 0-1 representing the Shape's level of transparency.\nlp\n",
+        "type": "Float -> Float -> Float -> Float -> GraphicSVG.Color"
+      },
+      {
+        "name": "increasing",
+        "comment": " A line of increasing spaces from start to end with a given thickness.\n\n    increasing 1 10 5 -- increases from 1 to 10 with a thickness of 5.\n",
+        "type": "Float -> Float -> Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "italic",
+        "comment": " Apply to a Stencil to make any text in the Stencil italic (ie slanted).\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "lightBlue",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightBrown",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightCharcoal",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightGray",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightGreen",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightGrey",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightOrange",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightPurple",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightRed",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "lightYellow",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "line",
+        "comment": " Create a line from a point to a point. Use \"outlined\" to convert to a viewable\nShape.\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "longdash",
+        "comment": " Define a dashed line type with the given width, where the dashes are longer than normal.\n",
+        "type": "Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "makeTransparent",
+        "comment": " Make a Shape transparent by the fraction given. Multiplies on top of other transparencies:\n\n    circle 10\n        |> filled red\n        |> makeTransparent 0.5\n    --results in a transparency of 0.5 (half vislible)\n\n    circle 10\n        |> filled red\n        |> makeTransparent 0.5\n        |> makeTransparent 0.5\n    --results in a transparency of 0.25 (a quarter visible)\n",
+        "type": "Float -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "mirrorX",
+        "comment": " Flip a Shape along the x-axis.\n",
+        "type": "GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "mirrorY",
+        "comment": " Flip a shape along the y-axis.\n",
+        "type": "GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "move",
+        "comment": " Move a Shape by a number of units in x and y.\n",
+        "type": "( Float, Float ) -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "ngon",
+        "comment": " Create a regular polygon with a given number of sides and radius. Examples:\n\n    ngon 3 50 - triangle\n    ngon 5 50 - pentagon\n    ngon 8 50 - octogon\n",
+        "type": "Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "notificationsApp",
+        "comment": " Like graphicsApp, but you can add interactivity to your graphics by using the\n\"notify\" functions. This allows you to learn Elm's architecture in a fun way with\ngraphics. Note that your view function needs a parameter now:\n\n    view model = collage 500 500\n        [ circle 10 |> filled red\n        ]\n\nnotificationApp takes a parameter like:\n    {\n        model = model\n    ,   view = view\n    ,   update = update\n    }\n",
+        "type": "GraphicSVG.GraphicsApp model msgs -> Platform.Program Basics.Never"
+      },
+      {
+        "name": "notifyEnter",
+        "comment": " Receive a notification when the mouse enters a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyEnterAt",
+        "comment": " Receive a notification with a tuple of position when mouse enters a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyLeave",
+        "comment": " Receive a notification when the mouse leaves a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyLeaveAt",
+        "comment": " Receive a notification with a tuple of position when the mouse leaves a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyMouseDown",
+        "comment": " Receive a notification when the mouse button is down over a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyMouseDownAt",
+        "comment": " Receive a notification with a tuple of position when the mouse button is down over a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyMouseMoveAt",
+        "comment": " Receive a notification with a tuple of position when the mouse is moved accross a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyMouseUp",
+        "comment": " Receive a notification when the mouse button goes up over a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyMouseUpAt",
+        "comment": " Receive a notification with a tuple of position when the mouse goes up over a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTap",
+        "comment": " Receive a notification when a Shape is tapped or clicked.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTapAt",
+        "comment": " Receive a notification with a tuple of position when the screen is tapped / clicked.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTouchEnd",
+        "comment": " Receive a notification when the user stops touching a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTouchEndAt",
+        "comment": " Receive a notification with a tuple of position when the user stops touching a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTouchMoveAt",
+        "comment": " Receive a notification with a tuple of position when the moves their finger over a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTouchStart",
+        "comment": " Receive a notification when the user begins touching a Shape.\n",
+        "type": "msgs -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "notifyTouchStartAt",
+        "comment": " Receive a notification with a tuple of position when the user begins touching a Shape.\n",
+        "type": "(( Float, Float ) -> msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs) -> GraphicSVG.Shape (GraphicSVG.Msg msgs)"
+      },
+      {
+        "name": "openPolygon",
+        "comment": " Create an open shape given a list of points. Unlike with polygon, the first and\nlast points will not join up automatically. Can use \"outlined\" or \"filled\" to\nconvert to a Shape.\n",
+        "type": "List ( Float, Float ) -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "orange",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "outlined",
+        "comment": " Outline a Stencil with a LineType and Color, creating a Shape.\n\n    circle 10\n        |> outlined (solid 5) red\n",
+        "type": "GraphicSVG.LineType -> GraphicSVG.Color -> GraphicSVG.Stencil -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "oval",
+        "comment": " Creates an oval with a given width and height.\n",
+        "type": "Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "pink",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "polygon",
+        "comment": " Create a closed shape given a list of points. Can use \"outlined\" or \"filled\" to\nconvert to a Shape.\n",
+        "type": "List ( Float, Float ) -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "purple",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "rect",
+        "comment": " Creates a rectangle with a given width and height.\n",
+        "type": "Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "rectangle",
+        "comment": " Synonym for rect.\n",
+        "type": "Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "red",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "rgb",
+        "comment": " Create a custom colour given its red, green and blue components.\n",
+        "type": "Float -> Float -> Float -> GraphicSVG.Color"
+      },
+      {
+        "name": "rgba",
+        "comment": " Create a custom colour given its red, green, blue and alpha components.\nAlpha is a Float from 0-1 representing the Shape's level of transparency.\n",
+        "type": "Float -> Float -> Float -> Float -> GraphicSVG.Color"
+      },
+      {
+        "name": "rotate",
+        "comment": " Rotate a Shape by the specified degrees (in radians). Use the \"degrees\" function to convert\nfrom degrees into radians.\n",
+        "type": "Float -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "roundedRect",
+        "comment": " Creates a rectangle with a given width, height, and circular rounded\ncorners with the given radius.\n",
+        "type": "Float -> Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "sansserif",
+        "comment": " Apply to a Stencil to render any text in the Stencil with a Sans Serif font (ie one without thinner and thicker bits).\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "scale",
+        "comment": " Scale a Shape by a given factor.\n",
+        "type": "Float -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "scaleX",
+        "comment": " Scale a Shape in the x-axis by a given factor.\n",
+        "type": "Float -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "scaleY",
+        "comment": " Scale a Shape in the y-axis by a given factor.\n",
+        "type": "Float -> GraphicSVG.Shape notification -> GraphicSVG.Shape notification"
+      },
+      {
+        "name": "serif",
+        "comment": " Apply to a Stencil to render any text in the Stencil with a Serif font (ie one with thinner and thicker bits).\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "size",
+        "comment": " Apply to a Stencil to render any text in the Stencil in the size given (in points), which depends on the size and type of screen used, but try 12 to start.\n",
+        "type": "Float -> GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "solid",
+        "comment": " Define a solid line type with the given width.\n",
+        "type": "Float -> GraphicSVG.LineType"
+      },
+      {
+        "name": "square",
+        "comment": " Creates a square with a given side length. (Synonym for rect s s)\n",
+        "type": "Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "strikethrough",
+        "comment": " Apply to a Stencil to draw a line through any text in the Stencil.\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "text",
+        "comment": " Creates a text stencil. You can change this stencil using the text helper\nfunctions. Note that \"filled\" or \"outlined\" must go at the *end* of the infixes\n(ie note that all these functions are Stencil -> Stencil).\n\n    text \"Hello World\"\n        |> bold\n        |> size 14\n        |> filled black\n",
+        "type": "String -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "triangle",
+        "comment": " Synonym for \"ngon 3\". Creates a triangle with a given size.\n",
+        "type": "Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "underline",
+        "comment": " Apply to a Stencil to underline any text in the Stencil.\n",
+        "type": "GraphicSVG.Stencil -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "wedge",
+        "comment": " Creates a wedge with a given radius, and a given fraction of a circle.\n\n    wedge 50 0.5 - semi-circle\n    wedge 50 0.25 - quarter-circle\n    wedge 50 0.75 - three-quarter circle\n",
+        "type": "Float -> Float -> GraphicSVG.Stencil"
+      },
+      {
+        "name": "white",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      },
+      {
+        "name": "yellow",
+        "comment": " ",
+        "type": "GraphicSVG.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

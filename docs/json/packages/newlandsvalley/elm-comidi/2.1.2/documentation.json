@@ -1,0 +1,232 @@
+[
+  {
+    "name": "CoMidi",
+    "comment": " Library for parsing MIDI files\n\n# API Reference\n@docs normalise, parse, translateRunningStatus\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "normalise",
+        "comment": " normalise the input before we parse by masking off all but the least significant 8 bits\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "parse",
+        "comment": " entry point - Parse a normalised MIDI file image\n",
+        "type": "String -> Result.Result String MidiTypes.MidiRecording"
+      },
+      {
+        "name": "translateRunningStatus",
+        "comment": " translate the Running Status messages in each track to the expanded form (NoteOn/NoteOff etc)\n",
+        "type": "Result.Result String MidiTypes.MidiRecording -> Result.Result String MidiTypes.MidiRecording"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "MidiTypes",
+    "comment": " Type Definition of a MIDI recording\n\n# Data Types\n@docs Header, Track, MidiEvent, MidiMessage,  MidiRecording\n\n",
+    "aliases": [
+      {
+        "name": "Header",
+        "comment": " Midi Header\n",
+        "args": [],
+        "type": "{ formatType : Int, trackCount : Int, ticksPerBeat : Int }"
+      },
+      {
+        "name": "MidiMessage",
+        "comment": " Midi Message\n",
+        "args": [],
+        "type": "( MidiTypes.Ticks, MidiTypes.MidiEvent )"
+      },
+      {
+        "name": "MidiRecording",
+        "comment": " Midi Recording\n",
+        "args": [],
+        "type": "( MidiTypes.Header, List MidiTypes.Track )"
+      },
+      {
+        "name": "Track",
+        "comment": " Midi Track\n",
+        "args": [],
+        "type": "List MidiTypes.MidiMessage"
+      }
+    ],
+    "types": [
+      {
+        "name": "MidiEvent",
+        "comment": " Midi Event\n",
+        "args": [],
+        "cases": [
+          [
+            "SequenceNumber",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Text",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Copyright",
+            [
+              "String"
+            ]
+          ],
+          [
+            "TrackName",
+            [
+              "String"
+            ]
+          ],
+          [
+            "InstrumentName",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Lyrics",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Marker",
+            [
+              "String"
+            ]
+          ],
+          [
+            "CuePoint",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ChannelPrefix",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Tempo",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SMPTEOffset",
+            [
+              "Int",
+              "Int",
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "TimeSignature",
+            [
+              "Int",
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "KeySignature",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "SequencerSpecific",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SysEx",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Unspecified",
+            [
+              "Int",
+              "List Int"
+            ]
+          ],
+          [
+            "NoteOn",
+            [
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "NoteOff",
+            [
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "NoteAfterTouch",
+            [
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "ControlChange",
+            [
+              "Int",
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "ProgramChange",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "ChannelAfterTouch",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "PitchBend",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "RunningStatus",
+            [
+              "Int",
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

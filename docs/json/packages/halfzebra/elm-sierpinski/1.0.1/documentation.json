@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Sierpinski",
+    "comment": " This module provides a set of helpers for generating Seierpinski fractal\nusing Graphics module.\n\n# Definition\n@docs Point, Triangle, Painted\n\n# Type casting Helpers\n@docs toPolygon, toPainted, toFilled\n\n# Geometrical Helpers\n@docs equaliteral, midpoint\n\n# Fractal generation\n@docs recursive, embedded, children\n\n",
+    "aliases": [
+      {
+        "name": "Painted",
+        "comment": " A triangle with color value, ready to be rendered on to Collage.\n\n    painted =\n            toPainted (rgb 240 173 0) (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | color : Color.Color }"
+      },
+      {
+        "name": "Point",
+        "comment": " A point woth coordinates.\n\n    midpoint (Point 0 0) (Point 5 5) -- Point 2.5 2.5\n",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      },
+      {
+        "name": "Triangle",
+        "comment": " Type alias for representing a triangle.\n\n    triangle =\n        Triangle (Point 0 0) (Point 5 5) (Point 0 5)\n\n\n    toPolygon triangle --\n",
+        "args": [],
+        "type": "{ a : Sierpinski.Point, b : Sierpinski.Point, c : Sierpinski.Point }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "children",
+        "comment": " Produces a list of child triangles from container Triangle and embedded Triangle.\n\n\n    parent =\n        (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n\n    current =\n        embedded parent\n\n    children parent current\n",
+        "type": "Sierpinski.Triangle -> Sierpinski.Triangle -> List Sierpinski.Triangle"
+      },
+      {
+        "name": "embedded",
+        "comment": " Create a new triangle, using midpoints of parent's sides.\n\n    embedded (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n",
+        "type": "Sierpinski.Triangle -> Sierpinski.Triangle"
+      },
+      {
+        "name": "equaliteral",
+        "comment": " Produces an initial container equaliteral triangle for the fractal.\n\n    equaliteral ((toFloat Window.width) / 3)\n",
+        "type": "Float -> Sierpinski.Triangle"
+      },
+      {
+        "name": "midpoint",
+        "comment": " Calculate the midpoint between two points.\n\n    midpoint (Point 0 0) (Point 5 5)\n",
+        "type": "Sierpinski.Point -> Sierpinski.Point -> Sierpinski.Point"
+      },
+      {
+        "name": "recursive",
+        "comment": " Recursive function for generating the fractal, requires depth,\nlist of existing Triangles(used in recursion) and container Triangle for the fractal.\n\n    recursive 5 [] (equaliteral ((toFloat Window.width) / 3))\n",
+        "type": "Int -> List Sierpinski.Triangle -> Sierpinski.Triangle -> List Sierpinski.Triangle"
+      },
+      {
+        "name": "toFilled",
+        "comment": " Converts a triangle in to a polygon, filled with color.\n\n    painted =\n            toPainted (rgb 240 173 0) (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n\n    toFilled painted\n",
+        "type": "Sierpinski.Painted Sierpinski.Triangle -> Collage.Form"
+      },
+      {
+        "name": "toPainted",
+        "comment": " Convert triangle in to Painted Triangle, which can be filled with a color and rendered.\n\n    toPainted (rgb 240 173 0) (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n",
+        "type": "Color.Color -> Sierpinski.Triangle -> Sierpinski.Painted Sierpinski.Triangle"
+      },
+      {
+        "name": "toPolygon",
+        "comment": " Convert Triangle in to polygon Shape.\n\n    toPolygon (Triangle (Point 0 0) (Point 5 5) (Point 0 5))\n",
+        "type": "Sierpinski.Triangle -> Collage.Shape"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

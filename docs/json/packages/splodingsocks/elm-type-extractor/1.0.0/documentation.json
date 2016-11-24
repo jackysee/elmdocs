@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TypeExtractor",
+    "comment": " This small module will take a string of Elm source, and extract all top-level type declarations.\n\n# Types\n@docs TypeDef\n\n# Functions\n@docs extractTypes\n",
+    "aliases": [
+      {
+        "name": "TypeDef",
+        "comment": " ",
+        "args": [],
+        "type": "{ identifier : String, type' : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "extractTypes",
+        "comment": " Will turn a string of Elm source into either an error message, or an Ast.\n",
+        "type": "String -> Result.Result String (List TypeExtractor.TypeDef)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

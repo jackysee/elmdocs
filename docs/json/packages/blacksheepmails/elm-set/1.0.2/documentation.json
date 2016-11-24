@@ -1,0 +1,105 @@
+[
+  {
+    "name": "AllSet",
+    "comment": "A set of unique values. The values can be any type `v` where:\n  `a` and `b` are type `v` and `(toString a) == (toString b)` if `a == b`\n\nInsert, remove, and query operations all take *O(K log n) * time where `n` is the number of elements and `K` is the runtime of `toString` on an element. Set equality with\n`(==)` is unreliable and should not be used.\n\n# AllSet\n@docs Set\n\n# Build\n@docs empty, singleton, insert, remove\n\n# Query\n@docs isEmpty, member, size\n\n# Combine\n@docs union, intersect, diff\n\n# Lists\n@docs toList, fromList\n\n# Transform\n@docs map, foldl, foldr, filter, partition",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Set",
+        "comment": "Represents a set of unique values. So `(Set Int)` is a set of integers and\n`(Set String)` is a set of strings.",
+        "args": [
+          "t"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": "Get the difference between the first set and the second. Keeps values\nthat do not appear in the second set.",
+        "type": "AllSet.Set a -> AllSet.Set a -> AllSet.Set a"
+      },
+      {
+        "name": "empty",
+        "comment": "Create an empty set.",
+        "type": "AllSet.Set a"
+      },
+      {
+        "name": "filter",
+        "comment": "Create a new set consisting only of elements which satisfy a predicate.",
+        "type": "(a -> Bool) -> AllSet.Set a -> AllSet.Set a"
+      },
+      {
+        "name": "foldl",
+        "comment": "Fold over the values in a set, in order from lowest to highest.",
+        "type": "(a -> b -> b) -> b -> AllSet.Set a -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": "Fold over the values in a set, in order from highest to lowest.",
+        "type": "(a -> b -> b) -> b -> AllSet.Set a -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": "Convert a list into a set, removing any duplicates.",
+        "type": "List a -> AllSet.Set a"
+      },
+      {
+        "name": "insert",
+        "comment": "Insert a value into a set.",
+        "type": "a -> AllSet.Set a -> AllSet.Set a"
+      },
+      {
+        "name": "intersect",
+        "comment": "Get the intersection of two sets. Keeps values that appear in both sets.",
+        "type": "AllSet.Set a -> AllSet.Set a -> AllSet.Set a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": "Determine if a set is empty.",
+        "type": "AllSet.Set a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": "Map a function onto a set, creating a new set with no duplicates.",
+        "type": "(a -> a') -> AllSet.Set a -> AllSet.Set a'"
+      },
+      {
+        "name": "member",
+        "comment": "Determine if a value is in a set.",
+        "type": "a -> AllSet.Set a -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": "Create two new sets; the first consisting of elements which satisfy a\npredicate, the second consisting of elements which do not.",
+        "type": "(a -> Bool) -> AllSet.Set a -> ( AllSet.Set a, AllSet.Set a )"
+      },
+      {
+        "name": "remove",
+        "comment": "Remove a value from a set. If the value is not found, no changes are made.",
+        "type": "a -> AllSet.Set a -> AllSet.Set a"
+      },
+      {
+        "name": "singleton",
+        "comment": "Create a set with one value.",
+        "type": "a -> AllSet.Set a"
+      },
+      {
+        "name": "size",
+        "comment": "Determine the number of elements in a set.",
+        "type": "AllSet.Set a -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": "Convert a set into a list.",
+        "type": "AllSet.Set a -> List a"
+      },
+      {
+        "name": "union",
+        "comment": "Get the union of two sets. Keep all values.",
+        "type": "AllSet.Set a -> AllSet.Set a -> AllSet.Set a"
+      }
+    ],
+    "generated-with-elm-version": "0.15.1"
+  }
+]

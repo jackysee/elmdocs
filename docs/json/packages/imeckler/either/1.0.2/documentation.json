@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Either",
+    "comment": " A simple module providing an Either type.\n\n# Types\n@docs Either\n\n# Maps\n@docs mapLeft, mapRight, mapBoth\n\n# Elimination\n@docs elim, isLeft, isRight\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Either",
+        "comment": " For when you want a function that needs to take/return values of\n    two different types and you don't want to define a whole type. ",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": [
+          [
+            "Left",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Right",
+            [
+              "b"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "elim",
+        "comment": " There's only one possible implementation of this function! Try to guess\n    what it is. ",
+        "type": "(a -> c) -> (b -> c) -> Either.Either a b -> c"
+      },
+      {
+        "name": "isLeft",
+        "comment": " ",
+        "type": "Either.Either a b -> Bool"
+      },
+      {
+        "name": "isRight",
+        "comment": " ",
+        "type": "Either.Either a b -> Bool"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " There's only one possible implementation of this function! Try to guess\n    what it is. ",
+        "type": "(a -> a') -> (b -> b') -> Either.Either a b -> Either.Either a' b'"
+      },
+      {
+        "name": "mapLeft",
+        "comment": " There's only one possible implementation of this function! Try to guess\n    what it is. ",
+        "type": "(a -> a') -> Either.Either a b -> Either.Either a' b"
+      },
+      {
+        "name": "mapRight",
+        "comment": " There's only one possible implementation of this function! Try to guess\n    what it is. ",
+        "type": "(b -> b') -> Either.Either a b -> Either.Either a b'"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

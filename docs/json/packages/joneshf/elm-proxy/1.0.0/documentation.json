@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Proxy",
+    "comment": "\nA module that allow you to pass around type level information for compile-time verification.\n\n@docs Proxy, reproxy\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Proxy",
+        "comment": "\nRoughly equivalent to `()` with type level information.\n\nCan be used to disambiguate between values at the type level.\nCan also be used to pass \"dummy\" values to functions.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Proxy",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "reproxy",
+        "comment": "\nUseful for easily changing the type of a proxy value.\n\nFor example, if you needed to enforce a different invariant in an algorithm,\nyou could `reproxy` the current invariant without headache.\n",
+        "type": "Proxy.Proxy a -> Proxy.Proxy b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

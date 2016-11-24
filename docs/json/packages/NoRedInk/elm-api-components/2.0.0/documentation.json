@@ -1,0 +1,119 @@
+[
+  {
+    "name": "Component.Filter.View",
+    "comment": " A view display for a filter\n@docs view, viewFilterCheckbox\n\n## Css stuff\n@docs CssClasses, filterNamespace\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CssClasses",
+        "comment": " The CSS classes used in this view\n",
+        "args": [],
+        "cases": [
+          [
+            "FilterGroup",
+            []
+          ],
+          [
+            "FilterEntry",
+            []
+          ],
+          [
+            "Checkbox",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "filterNamespace",
+        "comment": " Our namespace for these filters\n",
+        "type": "Html.CssHelpers.Namespace String a b Component.Filter.Update.Action"
+      },
+      {
+        "name": "view",
+        "comment": " Displays all filters in the model side-by-side\n",
+        "type": "Component.Filter.Model.Model b c -> Html.Html Component.Filter.Update.Action"
+      },
+      {
+        "name": "viewFilterCheckbox",
+        "comment": " Displays a single filter field\n",
+        "type": "Component.Filter.Model.FilterField a -> Html.Html Component.Filter.Update.Action"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Component.Filter.Update",
+    "comment": " Our API for a filtering component\n@docs Action, update\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " The actions defined here can be considered our external API\nThe top level component will be able to trigger these actions,\nas well as the local component\n",
+        "args": [],
+        "cases": [
+          [
+            "NoOp",
+            []
+          ],
+          [
+            "SetFilterDisabled",
+            [
+              "String",
+              "Bool"
+            ]
+          ],
+          [
+            "SetFilterChecked",
+            [
+              "String",
+              "Bool"
+            ]
+          ],
+          [
+            "SetFilterVisible",
+            [
+              "String",
+              "Bool"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "update",
+        "comment": " Takes the addresses record, the action, and the model\nRuns the defined action on the model\n",
+        "type": "Component.Filter.Update.Action -> Component.Filter.Model.Model b c -> ( Component.Filter.Model.Model b c , Platform.Cmd.Cmd Component.Filter.Update.Action )"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "Component.Filter.Model",
+    "comment": " Our filter API\n\n@docs Model, FilterField\n\n",
+    "aliases": [
+      {
+        "name": "FilterField",
+        "comment": "\nEach filter field has a bunch of properties useful for displaying data\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ name : String , isDisabled : Bool , isChecked : Bool , isVisible : Bool , value : String , text : String , type' : a }"
+      },
+      {
+        "name": "Model",
+        "comment": " Demand that the model has a filter property. This means you can either use\na top level model like\n```\ntype alias Model = { filters : [] }\n```\nor\n```\ntype alias Model = { filterA : { filters [] } }\n```\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "{ a | filters : List (Component.Filter.Model.FilterField b) }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

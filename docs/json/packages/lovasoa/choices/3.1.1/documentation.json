@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Choices",
+    "comment": " This library allows you to draw an HTML GUI for choices  between different values\n\n# Model\n@docs Model, Answer, makeModel, makeModelFromTuples, getAllSelected, getSelected, setSelected\n\n# View\n@docs ViewParams, ViewType, view, genericView\n\n# Update\n@docs Msg, update\n",
+    "aliases": [
+      {
+        "name": "Answer",
+        "comment": " Represents a choice (one of the possible answers) and its human description",
+        "args": [
+          "valueType"
+        ],
+        "type": "{ value : valueType, selected : Bool, description : String }"
+      },
+      {
+        "name": "Model",
+        "comment": " A list of answsers (or choices) ",
+        "args": [
+          "valueType"
+        ],
+        "type": "List (Choices.Answer valueType)"
+      },
+      {
+        "name": "ViewParams",
+        "comment": " Parameters of a view\n  * viewType : html element to use\n  * name : name HTML element\n",
+        "args": [],
+        "type": "{ viewType : Choices.ViewType, name : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Indicate how to update the model",
+        "args": [
+          "valueType"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ViewType",
+        "comment": " What Html element to use in order to draw the GUI.\n  * **InputCheckbox** : Use `<input type='checkbox'>`\n  * **InputRadio** : Use `<input type='radio'>`\n  * **HtmlSelect** *allowMultiple*: Use `<select [multiple]>`\n",
+        "args": [],
+        "cases": [
+          [
+            "InputCheckbox",
+            []
+          ],
+          [
+            "InputRadio",
+            []
+          ],
+          [
+            "HtmlSelect",
+            [
+              "Bool"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "genericView",
+        "comment": " Given a ViewParams and a Model, create the corresponding Html elements\n",
+        "type": "Choices.ViewParams -> Choices.Model valueType -> Html.Html (Choices.Msg valueType)"
+      },
+      {
+        "name": "getAllSelected",
+        "comment": " get a list of all answers that have been selected\n\n    getAllSelected\n      [\n        {value: 1, selected:True, description:\"This is answer number 1\"}\n        {value: 2, selected:False, description:\"This is answer number 2\"}\n        {value: 3, selected:True, description:\"This is answer number 2\"}\n      ]\n        == [1,3]\n",
+        "type": "Choices.Model valueType -> List valueType"
+      },
+      {
+        "name": "getSelected",
+        "comment": " get the first selected answer\n\n    getSelected\n      [\n        {value: 1, selected:False, description:\"This is answer number 1\"}\n        {value: 2, selected:False, description:\"This is answer number 2\"}\n      ]\n        == Nothing\n\n    getSelected\n      [\n        {value: 1, selected:False, description:\"This is answer number 1\"}\n        {value: 2, selected:True, description:\"This is answer number 2\"}\n      ]\n        == Just 1\n",
+        "type": "Choices.Model valueType -> Maybe.Maybe valueType"
+      },
+      {
+        "name": "makeModel",
+        "comment": " Make a model from a list of values a function associating a value to its description\n\n    makeModel (\\n -> \"This is answer number \" ++ toString n) [1,2] ==\n      [\n        {value: 1, selected:False, description:\"This is answer number 1\"}\n        {value: 2, selected:False, description:\"This is answer number 2\"}\n      ]\n\n    makeModel snd [(True, \"Yes\"), (False, \"No\")]\n",
+        "type": "(a -> String) -> List a -> Choices.Model a"
+      },
+      {
+        "name": "makeModelFromTuples",
+        "comment": " Make a model from a list of (value, description) tuples\n\n    makeModelFromTuples  [(True, \"Yes\"), (False, \"No\")]\n",
+        "type": "List ( a, String ) -> Choices.Model a"
+      },
+      {
+        "name": "setSelected",
+        "comment": "Set the set of selected elements",
+        "type": "List valueType -> Choices.Model valueType -> Choices.Model valueType"
+      },
+      {
+        "name": "update",
+        "comment": " update the model ",
+        "type": "Choices.Msg valueType -> Choices.Model valueType -> Choices.Model valueType"
+      },
+      {
+        "name": "view",
+        "comment": " A view that uses the InputRadio display, and that has its input name set to \"ElmChoices\" ",
+        "type": "Choices.Model valueType -> Html.Html (Choices.Msg valueType)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

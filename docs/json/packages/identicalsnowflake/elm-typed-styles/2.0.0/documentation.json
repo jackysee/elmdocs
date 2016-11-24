@@ -1,0 +1,759 @@
+[
+  {
+    "name": "TypedStyles",
+    "comment": "\n\n# Typed Styles for Elm\n\nAdds typed styles on top of elm-html. Example usage:\n\n```haskell\nimport Html(..)\nimport Html.Attributes(..)\nimport TypedStyles(..)\n\nmain : Html\nmain = div [\n    style [\n        fontSize 30 px\n      , backgroundColor blue\n      , textCenter\n      , padding 20 px\n      , color white]\n      ]\n    [text \"this is an example\" ]\n\n```\n\nPrimed variants of most functions are provided for use with my style effects\nlibrary.\n\n* I will add more stuff as I have time; in particular I want to try to get\nanimation, transition, and transformation bindings.",
+    "aliases": [
+      {
+        "name": "CSSKey",
+        "comment": "",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "CSSValue",
+        "comment": "",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "BorderStyle",
+        "comment": "BorderStyle - static type enumeration",
+        "args": [],
+        "cases": [
+          [
+            "Solid",
+            []
+          ],
+          [
+            "Dotted",
+            []
+          ],
+          [
+            "Dashed",
+            []
+          ],
+          [
+            "Double",
+            []
+          ],
+          [
+            "Groove",
+            []
+          ],
+          [
+            "Ridge",
+            []
+          ],
+          [
+            "Inset",
+            []
+          ],
+          [
+            "Outset",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Length",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "InEms",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InExs",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InChs",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InRems",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InVhs",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InVws",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InVmins",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InPixels",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InMillimeters",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InCentimeters",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InInchs",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InPoints",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InPicas",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "InPercents",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "CssOptionalValue",
+        "comment": "",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "CssOptionalJust",
+            [
+              "a"
+            ]
+          ],
+          [
+            "None",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "backgroundColor",
+        "comment": "backgroundColor - shorthand for providing colors to background-color.\n Example: backgroundColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "backgroundColor'",
+        "comment": "backgroundColor' - shorthand for providing colors to background-color for use with animation.\n Example: backgroundColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "border",
+        "comment": "border - shorthand syntax. Example: border 10 px solid white",
+        "type": "Int -> (Int -> Length) -> CssOptionalValue BorderStyle -> Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderBottomColor",
+        "comment": "borderBottomColor - shorthand for providing colors to border-bottom-color.\n Example: borderBottomColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderBottomColor'",
+        "comment": "borderBottomColor' - shorthand for providing colors to border-bottom-color for use with animation.\n Example: borderBottomColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderBottomLeftRadius",
+        "comment": "borderBottomLeftRadius - shorthand for providing lengths to border-bottom-left-radius.\n Example: borderBottomLeftRadius 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderBottomLeftRadius'",
+        "comment": "borderBottomLeftRadius' - shorthand for providing lengths to border-bottom-left-radius for use with animation.\n Example: borderBottomLeftRadius' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderBottomRightRadius",
+        "comment": "borderBottomRightRadius - shorthand for providing lengths to border-bottom-right-radius.\n Example: borderBottomRightRadius 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderBottomRightRadius'",
+        "comment": "borderBottomRightRadius' - shorthand for providing lengths to border-bottom-right-radius for use with animation.\n Example: borderBottomRightRadius' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderBottomWidth",
+        "comment": "borderBottomWidth - shorthand for providing lengths to border-bottom-width.\n Example: borderBottomWidth 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderBottomWidth'",
+        "comment": "borderBottomWidth' - shorthand for providing lengths to border-bottom-width for use with animation.\n Example: borderBottomWidth' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderColor",
+        "comment": "borderColor - shorthand for providing colors to border-color.\n Example: borderColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderColor'",
+        "comment": "borderColor' - shorthand for providing colors to border-color for use with animation.\n Example: borderColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderLeftColor",
+        "comment": "borderLeftColor - shorthand for providing colors to border-left-color.\n Example: borderLeftColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderLeftColor'",
+        "comment": "borderLeftColor' - shorthand for providing colors to border-left-color for use with animation.\n Example: borderLeftColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderLeftWidth",
+        "comment": "borderLeftWidth - shorthand for providing lengths to border-left-width.\n Example: borderLeftWidth 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderLeftWidth'",
+        "comment": "borderLeftWidth' - shorthand for providing lengths to border-left-width for use with animation.\n Example: borderLeftWidth' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderRadius",
+        "comment": "borderRadius - shorthand for providing lengths to border-radius.\n Example: borderRadius 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderRadius'",
+        "comment": "borderRadius' - shorthand for providing lengths to border-radius for use with animation.\n Example: borderRadius' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderRightColor",
+        "comment": "borderRightColor - shorthand for providing colors to border-right-color.\n Example: borderRightColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderRightColor'",
+        "comment": "borderRightColor' - shorthand for providing colors to border-right-color for use with animation.\n Example: borderRightColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderRightWidth",
+        "comment": "borderRightWidth - shorthand for providing lengths to border-right-width.\n Example: borderRightWidth 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderRightWidth'",
+        "comment": "borderRightWidth' - shorthand for providing lengths to border-right-width for use with animation.\n Example: borderRightWidth' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderStyle",
+        "comment": "borderStyle - optional border style. Example: borderStyle solid",
+        "type": "CssOptionalValue BorderStyle -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderStyleSerializer",
+        "comment": "BorderStyleSerializer - serializer for BorderStyle",
+        "type": "BorderStyle -> String"
+      },
+      {
+        "name": "borderTopColor",
+        "comment": "borderTopColor - shorthand for providing colors to border-top-color.\n Example: borderTopColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderTopColor'",
+        "comment": "borderTopColor' - shorthand for providing colors to border-top-color for use with animation.\n Example: borderTopColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderTopLeftRadius",
+        "comment": "borderTopLeftRadius - shorthand for providing lengths to border-top-left-radius.\n Example: borderTopLeftRadius 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderTopLeftRadius'",
+        "comment": "borderTopLeftRadius' - shorthand for providing lengths to border-top-left-radius for use with animation.\n Example: borderTopLeftRadius' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderTopRightRadius",
+        "comment": "borderTopRightRadius - shorthand for providing lengths to border-top-right-radius.\n Example: borderTopRightRadius 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderTopRightRadius'",
+        "comment": "borderTopRightRadius' - shorthand for providing lengths to border-top-right-radius for use with animation.\n Example: borderTopRightRadius' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderTopWidth",
+        "comment": "borderTopWidth - shorthand for providing lengths to border-top-width.\n Example: borderTopWidth 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderTopWidth'",
+        "comment": "borderTopWidth' - shorthand for providing lengths to border-top-width for use with animation.\n Example: borderTopWidth' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "borderWidth",
+        "comment": "borderWidth - shorthand for providing lengths to border-width.\n Example: borderWidth 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "borderWidth'",
+        "comment": "borderWidth' - shorthand for providing lengths to border-width for use with animation.\n Example: borderWidth' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "bottom",
+        "comment": "bottom - shorthand for providing lengths to bottom.\n Example: bottom 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "bottom'",
+        "comment": "bottom' - shorthand for providing lengths to bottom for use with animation.\n Example: bottom' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "ch",
+        "comment": "ch - shorthand constructor for type Ch.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "cm",
+        "comment": "cm - shorthand constructor for type Centimeter.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "color",
+        "comment": "color - shorthand for providing colors to color.\n Example: color blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "color'",
+        "comment": "color' - shorthand for providing colors to color for use with animation.\n Example: color' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "cssColor",
+        "comment": "cssColor - convert from a standard Elm color into a CSS color\n Example: cssColor blue",
+        "type": "Color -> CSSValue"
+      },
+      {
+        "name": "dashed",
+        "comment": "dashed - shorthand constructor for CSSOptional Dashed",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "dotted",
+        "comment": "dotted - shorthand constructor for CSSOptional Dotted",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "double",
+        "comment": "double - shorthand constructor for CSSOptional Double",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "em",
+        "comment": "em - shorthand constructor for type Em.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "ex",
+        "comment": "ex - shorthand constructor for type Ex.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "fontSize",
+        "comment": "fontSize - shorthand for providing lengths to font-size.\n Example: fontSize 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "fontSize'",
+        "comment": "fontSize' - shorthand for providing lengths to font-size for use with animation.\n Example: fontSize' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "groove",
+        "comment": "groove - shorthand constructor for CSSOptional Groove",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "height",
+        "comment": "height - shorthand for providing lengths to height.\n Example: height 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "height'",
+        "comment": "height' - shorthand for providing lengths to height for use with animation.\n Example: height' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "inches",
+        "comment": "inches - shorthand constructor for type Inch.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "inset",
+        "comment": "inset - shorthand constructor for CSSOptional Inset",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "left",
+        "comment": "left - shorthand for providing lengths to left.\n Example: left 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "left'",
+        "comment": "left' - shorthand for providing lengths to left for use with animation.\n Example: left' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "letterSpacing",
+        "comment": "letterSpacing - shorthand for providing lengths to letter-spacing.\n Example: letterSpacing 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "letterSpacing'",
+        "comment": "letterSpacing' - shorthand for providing lengths to letter-spacing for use with animation.\n Example: letterSpacing' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "lineHeight",
+        "comment": "lineHeight - shorthand for providing lengths to line-height.\n Example: lineHeight 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "lineHeight'",
+        "comment": "lineHeight' - shorthand for providing lengths to line-height for use with animation.\n Example: lineHeight' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "margin",
+        "comment": "margin - shorthand for providing lengths to margin.\n Example: margin 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "margin'",
+        "comment": "margin' - shorthand for providing lengths to margin for use with animation.\n Example: margin' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "marginBottom",
+        "comment": "marginBottom - shorthand for providing lengths to margin-bottom.\n Example: marginBottom 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "marginBottom'",
+        "comment": "marginBottom' - shorthand for providing lengths to margin-bottom for use with animation.\n Example: marginBottom' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "marginLeft",
+        "comment": "marginLeft - shorthand for providing lengths to margin-left.\n Example: marginLeft 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "marginLeft'",
+        "comment": "marginLeft' - shorthand for providing lengths to margin-left for use with animation.\n Example: marginLeft' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "marginRight",
+        "comment": "marginRight - shorthand for providing lengths to margin-right.\n Example: marginRight 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "marginRight'",
+        "comment": "marginRight' - shorthand for providing lengths to margin-right for use with animation.\n Example: marginRight' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "marginTop",
+        "comment": "marginTop - shorthand for providing lengths to margin-top.\n Example: marginTop 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "marginTop'",
+        "comment": "marginTop' - shorthand for providing lengths to margin-top for use with animation.\n Example: marginTop' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "maxHeight",
+        "comment": "maxHeight - shorthand for providing lengths to max-height.\n Example: maxHeight 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "maxHeight'",
+        "comment": "maxHeight' - shorthand for providing lengths to max-height for use with animation.\n Example: maxHeight' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "minHeight",
+        "comment": "minHeight - shorthand for providing lengths to min-height.\n Example: minHeight 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "minHeight'",
+        "comment": "minHeight' - shorthand for providing lengths to min-height for use with animation.\n Example: minHeight' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "mm",
+        "comment": "mm - shorthand constructor for type Millimeter.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "none",
+        "comment": "none - used with optional css values (e.g., display none)",
+        "type": "CssOptionalValue a"
+      },
+      {
+        "name": "opacity",
+        "comment": "opacity - alpha from 0.0 to 1.0. Example: opacity 0.5",
+        "type": "Float -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "opacity'",
+        "comment": "opacity' - two-state opacity for animation. Example: opacity' 0.5 1.0",
+        "type": "Float -> Float -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "outlineColor",
+        "comment": "outlineColor - shorthand for providing colors to outline-color.\n Example: outlineColor blue",
+        "type": "Color -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "outlineColor'",
+        "comment": "outlineColor' - shorthand for providing colors to outline-color for use with animation.\n Example: outlineColor' black blue",
+        "type": "Color -> Color -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "outset",
+        "comment": "outset - shorthand constructor for CSSOptional Outset",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "padding",
+        "comment": "padding - shorthand for providing lengths to padding.\n Example: padding 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "padding'",
+        "comment": "padding' - shorthand for providing lengths to padding for use with animation.\n Example: padding' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "paddingBottom",
+        "comment": "paddingBottom - shorthand for providing lengths to padding-bottom.\n Example: paddingBottom 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "paddingBottom'",
+        "comment": "paddingBottom' - shorthand for providing lengths to padding-bottom for use with animation.\n Example: paddingBottom' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "paddingLeft",
+        "comment": "paddingLeft - shorthand for providing lengths to padding-left.\n Example: paddingLeft 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "paddingLeft'",
+        "comment": "paddingLeft' - shorthand for providing lengths to padding-left for use with animation.\n Example: paddingLeft' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "paddingRight",
+        "comment": "paddingRight - shorthand for providing lengths to padding-right.\n Example: paddingRight 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "paddingRight'",
+        "comment": "paddingRight' - shorthand for providing lengths to padding-right for use with animation.\n Example: paddingRight' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "paddingTop",
+        "comment": "paddingTop - shorthand for providing lengths to padding-top.\n Example: paddingTop 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "paddingTop'",
+        "comment": "paddingTop' - shorthand for providing lengths to padding-top for use with animation.\n Example: paddingTop' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "pica",
+        "comment": "pica - shorthand constructor for type Pica.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "prc",
+        "comment": "prc - shorthand constructor for type Percent.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "pt",
+        "comment": "pt - shorthand constructor for type Point.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "px",
+        "comment": "px - shorthand constructor for type Pixel.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "rem",
+        "comment": "rem - shorthand constructor for type Rem.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "ridge",
+        "comment": "ridge - shorthand constructor for CSSOptional Ridge",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "right",
+        "comment": "right - shorthand for providing lengths to right.\n Example: right 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "right'",
+        "comment": "right' - shorthand for providing lengths to right for use with animation.\n Example: right' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "serializeCssOptionalValue",
+        "comment": "serializeCssOptionalValue - serializer for CssOptionalValue",
+        "type": "CssOptionalValue a -> (a -> CSSValue) -> CSSValue"
+      },
+      {
+        "name": "serializeLength",
+        "comment": "serializeLength - transform to CSSValue",
+        "type": "Length -> CSSValue"
+      },
+      {
+        "name": "solid",
+        "comment": "solid - shorthand constructor for CSSOptional Solid",
+        "type": "CssOptionalValue BorderStyle"
+      },
+      {
+        "name": "textCenter",
+        "comment": "textCenter - center text",
+        "type": "( CSSKey, CSSValue )"
+      },
+      {
+        "name": "textIndent",
+        "comment": "textIndent - shorthand for providing lengths to text-indent.\n Example: textIndent 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "textIndent'",
+        "comment": "textIndent' - shorthand for providing lengths to text-indent for use with animation.\n Example: textIndent' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "textJustify",
+        "comment": "textJustify - justify text",
+        "type": "( CSSKey, CSSValue )"
+      },
+      {
+        "name": "textLeft",
+        "comment": "textLeft - align text to the left",
+        "type": "( CSSKey, CSSValue )"
+      },
+      {
+        "name": "textRight",
+        "comment": "textRight - align text to the right",
+        "type": "( CSSKey, CSSValue )"
+      },
+      {
+        "name": "top",
+        "comment": "top - shorthand for providing lengths to top.\n Example: top 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "top'",
+        "comment": "top' - shorthand for providing lengths to top for use with animation.\n Example: top' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "vh",
+        "comment": "vh - shorthand constructor for type Vh.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "vmax",
+        "comment": "vmax - shorthand constructor for type Vmin.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "vw",
+        "comment": "vw - shorthand constructor for type Vw.",
+        "type": "Int -> Length"
+      },
+      {
+        "name": "width",
+        "comment": "width - shorthand for providing lengths to width.\n Example: width 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "width'",
+        "comment": "width' - shorthand for providing lengths to width for use with animation.\n Example: width' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      },
+      {
+        "name": "wordSpacing",
+        "comment": "wordSpacing - shorthand for providing lengths to word-spacing.\n Example: wordSpacing 10 px",
+        "type": "Int -> (Int -> Length) -> ( CSSKey, CSSValue )"
+      },
+      {
+        "name": "wordSpacing'",
+        "comment": "wordSpacing' - shorthand for providing lengths to word-spacing for use with animation.\n Example: wordSpacing' 10 px 20 px",
+        "type": "Int -> (Int -> Length) -> Int -> (Int -> Length) -> ( CSSKey, CSSValue, CSSValue )"
+      }
+    ],
+    "generated-with-elm-version": "old"
+  }
+]

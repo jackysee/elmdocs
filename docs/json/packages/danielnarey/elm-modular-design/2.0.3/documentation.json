@@ -1,0 +1,736 @@
+[
+  {
+    "name": "ModularDesign.Stylesheet",
+    "comment": "\n\n## A CSS implementation for the Modular Design framework\n\nThis library allows you to embed a stylesheet within an HTML document using\nthe `<style>` tag. In a browser that fully complies with the HTML 5\nspecification, you would be able to \"scope\" the stylesheet so that it is only\napplied to its parent element and all of that element's children, allowing you\nto embed multiple stylesheets that apply to different sections of the document.\nUnfortunately, as of September 2016, Firefox is the only browser that has\nimplemented this scoping feature. Thus, for the time being, recommended use of\nthis library is to follow standard practice and create one stylesheet that\napplies globally to the document. Instead of linking to an external CSS file,\nhowever, this library allows you to embed CSS code between `<style>` tags in the\nbody of the HTML DOM.\n\nWhereas it is standard practice to include `<style>` tags in the `<head>` of the\ndocument, Elm does not currently provide an interface to insert code into the\ndocument's `<head>`. This seems not to be a problem, as no difference in\nperformance is apparent when `<style>` tags are inserted in the `<body>` of the\ndocument instead. Thus, the recommended use of this library is to embed a\nglobal stylesheet at the root node of the HTML tree prior to calling\n`assembleHtml` to render the view.\n\nThe approach to generating CSS used in this library is based on the\n[elm-css package](https://github.com/massung/elm-css) by Jeffrey Massung,\nversion 1.1, licensed under BSD-3. I retained Massung's basic approach to\n\"compiling\" a stylesheet that will be applied when rendering a view, but\nrewrote much of the code so that it would be compatible with my Modular Design\nframework and would conform to my stylistic preferences for Elm. I also made\nsome changes in implementation. Most significantly, I chose to encode CSS id and\nclass variables as strings rather than union types in order to simplify the\nrepresentation. Finally, I added support for attribute selectors and custom\nat-rule expressions.\n\nThe basic workflow for using this library is (1) create your rule sets,\nconsisting of selectors (identifying elements) and declarations (defining\nstyles), (2) add your rule sets to a new stylesheet along with any import URLs\nneeded to access external resources (e.g., Google fonts), and (3) embed the\nstylesheet at the root level of your HTML tree. The constructor functions\nincluded with this library allow for semantically pleasing code that uses\nfunctional operators to chain expressions, making it easy to read and modify\nyour CSS as you iterate your UI design.\n\nSee\n[examples/Stylesheet.elm](https://github.com/danielnarey/elm-modular-design/tree/master/examples)\nfor a full working example.\n\n\n# CSS Representation\n@docs Selector, MatchValue, RuleSet, Stylesheet\n\n# Constructing Rule Sets\n@docs newRuleSet, withSelectors, addSelector, withDeclarations, addDeclaration\n\n# Constructing a Stylesheet\n@docs newStylesheet, withImports, addImport, withPrepends, addPrepend\n@docs withRules, addRuleSet, scoped\n\n# Embedding a Stylesheet in an HTML Tree\n@docs embedStylesheet\n\n# Helpers for Constructing Combinator Selectors\n@docs descendantOf, childOf, siblingOf, adjacentTo, pseudoClass\n@docs pseudoElement\n\n# Helpers for Importing Google Fonts\n@docs FontFamily, newFontFamily, withVariants, addVariant, withSubsets\n@docs addSubset, importGoogleFonts\n",
+    "aliases": [
+      {
+        "name": "FontFamily",
+        "comment": " Represents a family of fonts that may have multiple variants and character\nsubsets. Used to construct import directives for Google Fonts.\n",
+        "args": [],
+        "type": "{ name : String, variants : List String, subsets : List String }"
+      },
+      {
+        "name": "RuleSet",
+        "comment": " A rule set consists of one or more selectors that define a set of elements\n(and/or pseudo-elements) and one or more style declarations that apply to those\nelements.\n",
+        "args": [],
+        "type": "{ selectors : List ModularDesign.Stylesheet.Selector , declarations : List ( String, String ) }"
+      },
+      {
+        "name": "Stylesheet",
+        "comment": " A stylesheet consists of one or more rule sets and, optionally: (1) a list\nof external style resources to import; (2) a list of inline CSS code snippets\nto prepend above the stylesheet's rule statements. By default, a stylesheet\napplies globally to the HTML document, but it also contains a `scoped` attribute\nthat can be set to `True` to take advantage of CSS scoping in HTML 5\n(currently only implemented in the Firefox browser).\n",
+        "args": [],
+        "type": "{ imports : List String , prepends : List String , rules : List ModularDesign.Stylesheet.RuleSet , scoped : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "MatchValue",
+        "comment": " Represents an expression that defines a set of matching values for a given\nHTML attribute. Specifications for attribute selectors may be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors).\n`IsDefined` corresponds to [attr], `Exactly` corresponds to [attr=value],\n`Includes` corresponds to [attr~=value], `StartsWith` corresponds to\n[attr^=value], `EndsWith` corresponds to [attr$=value], `Contains`\ncorresponds to [attr*=value], and `Prefix` corresponds to [attr|=value].\n",
+        "args": [],
+        "cases": [
+          [
+            "IsDefined",
+            []
+          ],
+          [
+            "Exactly",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Includes",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StartsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "EndsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Contains",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Prefix",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Selector",
+        "comment": " Represents a CSS selector, which defines the set of elements (and/or\npseudo-elements) to which a set of style declarations apply. Specifications\nfor each of the selector types may be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).\nHere are some use examples:\n\n    Tag \"div\"   --> div\n\n    Id \"identifier\"   --> #identifier\n\n    Class \"class-name\"   --> .class-name\n\n    Attribute (Tag \"a\", \"href\", StartsWith \"#\")   --> a[href^=\"#\"]\n\n    Descendant (Tag \"article\", Tag \"p\")    --> article p\n\n    Child (Class \"content\", Child (Tag \"ul\", Tag \"li\"))   --> .content > ul > li\n\n    Sibling (Tag \"p\", Child (Tag \"ul\", Tag \"li\"))   --> p ~ ul > li\n\n    Adjacent (Tag \"p\", Child (Tag \"ul\", Tag \"li\"))    --> p + ul > li\n\n    PseudoClass (Tag \"li\", [ \"nth-child(1)\", \"hover\" ])    --> li:nth-child(1):hover\n\n    PseudoElement (PseudoClass (Tag \"li\", [ \"hover\" ]), \"after\")   --> li:hover::after\n\n    At (\"media\", \"screen and (min-width: 700px)\")   --> @media screen and (min-width: 700px)\n\nOn occasion, it might be simpler and more readable just to define the selector\nusing CSS code. That is what the `CssCode` type is for:\n\n    CssCode \"article p ~ ul > li:nth-child(1)\"   --> article p ~ ul > li:nth-child(1)\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Any",
+            []
+          ],
+          [
+            "Tag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Id",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Class",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Attribute",
+            [
+              "( ModularDesign.Stylesheet.Selector , String , ModularDesign.Stylesheet.MatchValue )"
+            ]
+          ],
+          [
+            "Descendant",
+            [
+              "( ModularDesign.Stylesheet.Selector , ModularDesign.Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Child",
+            [
+              "( ModularDesign.Stylesheet.Selector , ModularDesign.Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Sibling",
+            [
+              "( ModularDesign.Stylesheet.Selector , ModularDesign.Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Adjacent",
+            [
+              "( ModularDesign.Stylesheet.Selector , ModularDesign.Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "PseudoClass",
+            [
+              "( ModularDesign.Stylesheet.Selector, List String )"
+            ]
+          ],
+          [
+            "PseudoElement",
+            [
+              "( ModularDesign.Stylesheet.Selector, String )"
+            ]
+          ],
+          [
+            "At",
+            [
+              "( String, String )"
+            ]
+          ],
+          [
+            "CssCode",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addDeclaration",
+        "comment": " Add a new style declaration to a rule set, *retaining* any existing\ndeclarations\n",
+        "type": "( String, String ) -> ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.RuleSet"
+      },
+      {
+        "name": "addImport",
+        "comment": " Add a new import to a stylesheet, *retaining* any existing imports\n",
+        "type": "String -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addPrepend",
+        "comment": " Add a string of CSS code into a stylesheet after its imports (and after\nany existing prepends) and before its rule statements; this constructor will\n*retain* any existing prepends\n",
+        "type": "String -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addRuleSet",
+        "comment": " Add a new rule set to a stylesheet, *retaining* any existing rule sets\n",
+        "type": "ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addSelector",
+        "comment": " Add a new selector to a rule set, *retaining* any existing selectors\n",
+        "type": "ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.RuleSet"
+      },
+      {
+        "name": "addSubset",
+        "comment": " Add a new character subset to a font family, *retaining* any existing\nsubsets\n",
+        "type": "String -> ModularDesign.Stylesheet.FontFamily -> ModularDesign.Stylesheet.FontFamily"
+      },
+      {
+        "name": "addVariant",
+        "comment": " Add a new variant to a font family, *retaining* any existing variants\n",
+        "type": "String -> ModularDesign.Stylesheet.FontFamily -> ModularDesign.Stylesheet.FontFamily"
+      },
+      {
+        "name": "adjacentTo",
+        "comment": " Constructor function to create an adjacent selector; intended to be used\nsemantically as an infix function\n\n    Tag \"ul\" `adjacentTo` Tag \"p\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "childOf",
+        "comment": " Constructor function to create a child selector; intended to be used\nsemantically as an infix function\n\n    Tag \"li\" `childOf` Tag \"ul\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "descendantOf",
+        "comment": " Constructor function to create a descendent selector; intended to be\nused semantically as an infix function\n\n    Tag \"p\" `descendantOf` Tag \"article\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "embedStylesheet",
+        "comment": " Using `<style>` tags, embed the stylesheet above the root node of an HTML\ntree as its sibling, inserting a new `<div>` as the common parent\n",
+        "type": "ModularDesign.Stylesheet.Stylesheet -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "importGoogleFonts",
+        "comment": " Given a list of `FontFamily` records and a stylesheet, add an import\ndirective containing an API query that will retreive the specified\nfamilies/variants from Google Fonts\n",
+        "type": "List ModularDesign.Stylesheet.FontFamily -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "newFontFamily",
+        "comment": " Initialize a new font family; the string argument provides the font name\n",
+        "type": "String -> ModularDesign.Stylesheet.FontFamily"
+      },
+      {
+        "name": "newRuleSet",
+        "comment": " Initialize a new rule set\n",
+        "type": "ModularDesign.Stylesheet.RuleSet"
+      },
+      {
+        "name": "newStylesheet",
+        "comment": " Initialize a new stylesheet\n",
+        "type": "ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "pseudoClass",
+        "comment": " Constructor function to create a pseudo class selector; intended to be used\nsemantically as an infix function\n\n    Tag \"li\" `pseudoClass` \"hover\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> String -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "pseudoElement",
+        "comment": " Constructor function to create a pseudo element selector; intended to be\nused semantically as an infix function\n\n    Tag \"li\" `pseudoElement` \"after\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> String -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "scoped",
+        "comment": " Set the stylesheet's `scoped` attribute to `True`. In an HTML 5 compliant\nbrowser, the stylesheet will only be applied to the element on which\n`embedStylesheet` is called and all of that element's children. As of September\n2016 this scoping feature is only embedded in the Firefox browser.\n",
+        "type": "ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "siblingOf",
+        "comment": " Constructor function to create a sibling selector; intended to be used\nsemantically as an infix function\n\n    Tag \"ul\" `siblingOf` Tag \"p\"\n",
+        "type": "ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.Selector"
+      },
+      {
+        "name": "withDeclarations",
+        "comment": " Add a list of style declarations to a rule set, *replacing* any existing\ndeclarations\n",
+        "type": "List ( String, String ) -> ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.RuleSet"
+      },
+      {
+        "name": "withImports",
+        "comment": " Add a list of imports to a stylesheet, *replacing* any existing imports\n",
+        "type": "List String -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withPrepends",
+        "comment": " Insert one or more strings of CSS code into a stylesheet after its imports\nand before its rule statements; this constructor will *replace* any existing\nprepends\n",
+        "type": "List String -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withRules",
+        "comment": " Add a list of rule sets to a stylesheet, *replacing* any existing rule sets\n",
+        "type": "List ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.Stylesheet -> ModularDesign.Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withSelectors",
+        "comment": " Add a list of selectors to a rule set, *replacing* any existing selectors\n",
+        "type": "List ModularDesign.Stylesheet.Selector -> ModularDesign.Stylesheet.RuleSet -> ModularDesign.Stylesheet.RuleSet"
+      },
+      {
+        "name": "withSubsets",
+        "comment": " Add a list of character subsets (e.g., \"cyrillic\") to a font family,\n*replacing* any existing subsets\n",
+        "type": "List String -> ModularDesign.Stylesheet.FontFamily -> ModularDesign.Stylesheet.FontFamily"
+      },
+      {
+        "name": "withVariants",
+        "comment": " Add a list of variants to a font family, *replacing* any existing variants\n",
+        "type": "List String -> ModularDesign.Stylesheet.FontFamily -> ModularDesign.Stylesheet.FontFamily"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "ModularDesign.FormInput",
+    "comment": "\n\n## Built-in functions for capturing and validating form input\n\nModularDesign's `FormInput` library provides an API for capturing,\naccessing, and validating input from HTML `form` elements. Rather than capturing\nuser input from each individual `input` element on a page, it is often more\nconvenient to wrap multiple `input` elements in a `form` with a `submit` button\nthat triggers input capture. Because Elm's `Html` package does not include a\nbuilt-in set of functions for handling form input, a custom event handler and\ncustom Json decoders are needed to capture input in response to a \"submit\" event\non a form. The `FormInput` library includes constructor functions that make it\neasy to initialize an event handler that will capture form input, decoding it\ninto a dictionary keyed by input `id`. The library also includes reader\nfunctions that enable type-checking on input values, as well as a function that\nconverts a dictionary of input values to JSON.\n\n# Capturing Form Input\n@docs FormInput, formControl, captureOnSubmit, fieldDecoder, formDecoder\n\n# Accessing Form Input\n@docs getInputAt, readStringAt\n\n# Converting Form Input to JSON\n@docs formInputToJson, toTypedJson, extractRawJson\n\n# Reading `TypedInput` Values\n@docs readInputAsString, readStringInput, readIntInput, readFloatInput\n@docs readBoolInput, readCustomInput\n\n",
+    "aliases": [
+      {
+        "name": "FormInput",
+        "comment": " Represents input captured from a form with multiple fields. Implemented as a\ndictionary, where the *key* is the `id` of the input element and the *value* is\nits captured value as `TypedInput`.\n",
+        "args": [],
+        "type": "Dict.Dict String ModularDesign.TypedInput"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "captureOnSubmit",
+        "comment": " Constructor that takes a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nas an argument and returns an\n[`Html.Attribute`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#Attribute)\nencoding an event handler triggered by \"submit\". The decoder specifies the input\nfield(s) to be captured and the type that will be returned when the input is\ndecoded.\n\n    container \"form\" [ inputField, submitButton ]\n      |> withObserver (captureOnSubmit inputDecoder)\n\nSee CaptureOnSubmit.elm for a full working example.\n",
+        "type": "Json.Decode.Decoder msg -> Html.Attribute msg"
+      },
+      {
+        "name": "extractRawJson",
+        "comment": " Return a JavaScript value from `TypedInput` without attempting to decode. If\nthe `TypedInput` value has been captured from an input element, the returned\nvalue will always be a JavaScript string. Useful for debugging.\n\n    formInput\n      |> getInputAt \"userAge\"\n      |> Result.withDefault (IntInput Json.Encode.null)\n      |> extractRawJson\n\n    --> \"33\" : Json.Decode.Value\n",
+        "type": "ModularDesign.TypedInput -> Json.Decode.Value"
+      },
+      {
+        "name": "fieldDecoder",
+        "comment": " Constructor that takes an `HtmlElement` representing a form field and\nreturns a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder).\nWhen triggered by a \"submit\" event on the parent form, this decoder will return\na tuple containing the input element's `id` attribute and its current `value`,\nencoded as `TypedInput`. For the decoder work properly, the input element must\nbe assigned a unique `id` and its `inputType` must be defined.\n\n    inputDecoder =\n      rootElement inputField\n        |> fieldDecoder\n\nSee FieldDecoder.elm for a full working example.\n",
+        "type": "ModularDesign.HtmlElement msg -> Json.Decode.Decoder ( String, ModularDesign.TypedInput )"
+      },
+      {
+        "name": "formControl",
+        "comment": " Given a list of `HtmlTree` nodes, construct a `form` element with an\nobserver that captures values from each input element contained in the list and\nreturns those values as `FormInput`. The first argument (a constructor that\naccepts `FormInput`) specifies the message that will be passed to the program's\nupdate function when a \"submit\" event is triggered on the form. The `HtmlTree`\nthat is returned will have the `form` element at the root, with the listed nodes\nas its children.\n\nSee FormControl.elm for a full working example.\n",
+        "type": "(ModularDesign.FormInput.FormInput -> msg) -> List (ModularDesign.HtmlTree msg) -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "formDecoder",
+        "comment": " Constructor that takes a list of `HtmlTree` nodes representing internal\nelements within a `form` and returns a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder).\nWhen triggered by a \"submit\" event on the form, this decoder will return a\n[`Dict`](http://package.elm-lang.org/packages/elm-lang/core/latest/Dict#Decoder)\ncontaining values for each `input` element, keyed by `id`. For the decoder work\nproperly, each input element must be assigned a unique `id` string and its\n`inputType` must be defined.\n\n    inputDict =\n      formDecoder [ input1, input2 ]\n        |> Json.map Submit\n\n    form =\n      container \"form\" [ input1, input2, submitButton ]\n        |> withObserver (captureOnSubmit inputDict)\n\nSee FormDecoder.elm for a full working example.\n",
+        "type": "List (ModularDesign.HtmlTree msg) -> Json.Decode.Decoder ModularDesign.FormInput.FormInput"
+      },
+      {
+        "name": "formInputToJson",
+        "comment": " Convert `FormInput` to JSON with the\n[`Json.Encode.object`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Encode#object)\nfunction. Before encoding, the `toTypedJson` function is used to perform type\nchecking and conversion on input values.\n\n    formInput\n      |> formInputToJson\n\n    --> { userAge = 33, userName = \"Bob\" } : Json.Decode.Value\n",
+        "type": "ModularDesign.FormInput.FormInput -> Json.Decode.Value"
+      },
+      {
+        "name": "getInputAt",
+        "comment": " Given a string representing an `id`, look up the value of the associated\ninput element in `FormInput` and return the result as `TypedInput`, or return\nan error message.\n\n    --simulated input\n    input1 = ( \"userName\", StringInput (Json.Encode.string \"Bob\") )\n    input2 = (\"userAge\", IntInput (Json.Encode.string \"33\") )\n    formInput = Dict.fromList [ input1, input2 ]\n\n    formInput\n      |> getInputAt \"userName\"\n\n    --> Ok (StringInput \"Bob\")\n",
+        "type": "String -> ModularDesign.FormInput.FormInput -> Result.Result String ModularDesign.TypedInput"
+      },
+      {
+        "name": "readBoolInput",
+        "comment": " Decode a `BoolInput` value as a string, then attempt to convert the string\nto a `Bool`; return an error message if the string decoder fails, if type\nconversion fails, or if the argument is a type other than `BoolInput`. Type\nconversion expects a string value of \"true\" or \"false\", ignoring case.\n\n    formInput\n      |> getInputAt \"over18Years\"\n      |> Result.withDefault (BoolInput Json.Encode.null)\n      |> readBoolInput\n\n    --> Ok True\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String Bool"
+      },
+      {
+        "name": "readCustomInput",
+        "comment": " Given a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder),\nattempt to decode a `CustomInput` value; return an error message if the decoder\nfails or if the argument is a type other than `CustomInput`.\n",
+        "type": "Json.Decode.Decoder a -> ModularDesign.TypedInput -> Result.Result String a"
+      },
+      {
+        "name": "readFloatInput",
+        "comment": " Decode a `FloatInput` value as a string, then attempt to convert the string\nto a `Float`; return an error message if the string decoder fails, if type\nconversion fails, or if the argument is a type other than `FloatInput`.\n\n    formInput\n      |> getInputAt \"userWeight\"\n      |> Result.withDefault (FloatInput Json.Encode.null)\n      |> readFloatInput\n\n    --> Ok 160.5\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String Float"
+      },
+      {
+        "name": "readInputAsString",
+        "comment": " Decode `TypedInput` as a string, or return an error message if the decoder\nfails.\n\n    formInput\n      |> getInputAt \"userAge\"\n      |> Result.withDefault (IntInput Json.Encode.null)\n      |> readInputAsString\n\n    --> Ok \"33\"\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String String"
+      },
+      {
+        "name": "readIntInput",
+        "comment": " Decode an `IntInput` value as a string, then attempt to convert the string\nto an `Int`; return an error message if the string decoder fails, if type\nconversion fails, or if the argument is a type other than `IntInput`.\n\n    formInput\n      |> getInputAt \"userAge\"\n      |> Result.withDefault (IntInput Json.Encode.null)\n      |> readIntInput\n\n    --> Ok 33\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String Int"
+      },
+      {
+        "name": "readStringAt",
+        "comment": " Given a string representing an `id`, look up the value of the associated\ninput element and decode the result as a `String`, or return an error message.\n\n    formInput\n      |> readStringAt \"userName\"\n\n    --> Ok \"Bob\"\n",
+        "type": "String -> ModularDesign.FormInput.FormInput -> Result.Result String String"
+      },
+      {
+        "name": "readStringInput",
+        "comment": " Decode a `StringInput` value as a string; return an error message if the\ndecoder fails or if the argument is a type other than `StringInput`.\n\n    formInput\n      |> getInputAt \"userName\"\n      |> Result.withDefault (StringInput Json.Encode.null)\n      |> readStringInput\n\n    --> Ok \"Bob\"\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String String"
+      },
+      {
+        "name": "toTypedJson",
+        "comment": " Convert `TypedInput` to a Json `Value` of the corresponding type. Because\ninput from a form element is always captured as a JavaScript string, numeric or\nboolean input must first be decoded to a `String` before it can be encoded as a\nJavaScript number or boolean. This function takes care of both steps and passes\nalong any error messages in type conversion.\n\n    formInput\n      |> getInputAt \"userAge\"\n      |> Result.withDefault (IntInput Json.Encode.null)\n      |> toTypedJson\n\n    --> Ok 33 : Result String Json.Decode.Value\n",
+        "type": "ModularDesign.TypedInput -> Result.Result String Json.Decode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "ModularDesign",
+    "comment": "\n\n## Assemble your UI from modular, modifiable HTML components\n\nThe `ModularDesign` package provides an alternative, non-standard API for\ngenerating HTML and building reactive user interfaces in Elm. The package is\nbuilt on top of the standard `VirtualDom` and `Html` libraries, so the\nunderlying JavaScript implementation is no different.\n\nThe main disadvantage of the standard API is that once a chunk of HTML has been\nconstructed, e.g.,\n\n    welcomeMessage =\n      div [] [ p [] [ text \"Hello, World!\" ] ]\n\nthere is no direct way of looking inside that chunk to get information about its\nelements or their attributes. For example, it would not be possible to pass\n`welcomeMessage` to a function that would add a style attribute to the `p`\nelement or change the text to \"Hello, Universe!\" and return the result. With the\nstandard libraries, to make either of these modifications, we would need to\nre-write the nested `Html` function calls with modified arguments or insert\nconditionals that would change the arguments passed to the function in response\nto data. This limitation takes away some of the appeal of using a functional\nstyle of programming for front-end web development.\n\nThe `ModularDesign` library solves this problem by creating a set of types that\nprovide a representation of the HTML DOM in Elm, allowing access to each node's\ninternal data. In the Modular Design API, an `HtmlElement` is a record that\nencodes an element's tag, assigned class names, other assigned attributes, and,\nwhen applicable, its internal text, event handlers, and/or the type of input it\ncaptures. The union type `HtmlTree` defines a recursive tree where each node\ncontains an `HtmlElement` and some nodes also contain a list of child `HtmlTree`\nnodes. This data structure allows an `HtmlTree` to be passed to a function that\nwill access its internal data, build a modified `HtmlTree`, and return the\nresult, just as one can do with any other Elm type.\n\nWith the Modular Design API, the code to produce `welcomeMessage` may be\nwritten like this:\n\n    welcomeMessage =\n      container \"div\" [textWrapper \"p\" \"Hello, world!\"]\n\nOr, using functional operators, like this:\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> wrapList\n        |> container \"div\"\n\nSuppose that we would like to be able to change the style of the text after this\nchunk of HTML has been encoded and assigned to a variable name. We can do this\nby adding a CSS class to the `p` element as follows:\n\n    welcomeMessage\n      |> modifyMatchingTag (\"p\", addClass \"large-bold-text\")\n\nNote, however, that if there were multiple `p` elements in the tree, this\nfunction call would add the class \"large-bold-text\" to all of them. An\nalternative is to define the `id` attribute of the element we wish to modify and\nthen use the function `modifyMatchingId`:\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withId \"messageText\"\n        |> wrapList\n        |> container \"div\"\n\n    welcomeMessage\n      |> modifyMatchingId (\"messageText\", addClass \"large-bold-text\")\n\nThe text of the message can be modified in a similar way:\n\n    welcomeMessage\n      |> modifyMatchingId (\"messageText\", withText \"Hello, Universe!\")\n\nAnd so on.\n\nFull working examples can be found\n[here](https://github.com/danielnarey/elm-modular-design/tree/master/examples).\n\nThe core package library includes basic constructors for `HtmlTree` nodes, sets\nof functions for modifying the element records of root nodes and internal nodes,\na function to render an `HtmlTree` to `VirtualDom`, and various helpers. A\nseparate package module, `ModularDesign.FormInput` provides an API for\ncapturing, accessing, and validating form input.\n\n**New in this release (2.0.0):**\n\n- Function names for constructors have been standardized: Names starting with\n`with` replace then contents of the corresponding record field; names\nstarting with `add` append new content after existing content.\n\n- Support for markdown syntax using the `textAsMarkdown` function\n\n- `ModularDesign.Stylesheet` provides a framework for generating CSS rules and\nimport directives, allowing you to embed a global stylesheet in your `HtmlTree`.\n\n- `ModularDesign.Operators` includes some custom infix operators for use with\nthe Modular Design framework\n\n- Generic helper functions can now be found in `ModularDesign.Helpers`\n\nComponent and pattern libraries for UI design are planned for future releases.\n\n\n# HTML DOM Representation\n@docs HtmlElement, TypedInput, HtmlTree\n\n# Rendering an `HtmlTree` to `VirtualDom`\n@docs assembleHtml\n\n# Node Constructors\n@docs leaf, textWrapper, container\n\n# Modifying the Root Node\n@docs appendNodes, withTag, withAttributes, addAttribute, withActions\n@docs addAction, withClasses, addClass, removeClass, withStyles, addStyle\n@docs withText, addText, prependText, textAsMarkdown, withObserver\n@docs setInputType, withId\n\n# Modifying Internal Nodes\n@docs modifyMatchingId, modifyMatchingTag, modifyAll, modifyAny\n\n# Accessing `HtmlElement` Records\n@docs rootElement, listElements, getElementsByTag\n\n# Accessing Record Fields\n@docs getAttrValue, getId, hasValue\n\n",
+    "aliases": [
+      {
+        "name": "HtmlElement",
+        "comment": " Represents a HTML element with the following record fields:\n\n- __htmlTag__: A valid [HTML tag](http://www.w3schools.com/tags/). When\nrendering to `VirtualDom`, the tag is passed as a string argument to the\n[`Html.node`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#node)\nfunction.\n\n- __attributes__: A list of *name-value* pairs representing\n[HTML attributes](http://www.w3schools.com/tags/ref_attributes.asp). The\n[`Html.Attributes`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes)\nfunction corresponding to *name* will be called and, where necessary, the\n*value* will be converted from a string to the appropriate type (note that\nerrors in converting a boolean string to a `Bool` default to `False`). Any\n*name* for which there is no corresponding function will be passed to\n[`Html.Attributes.attribute`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#attribute)\nalong with its *value*, creating a custom attribute.\n\n- __actions__: A list of *action-message* pairs. As defined here, \"actions\"\ninclude all events that __do not__ capture form input. Following the typical\npattern of an Elm program, a \"message\" is a user-defined type that tells the\nprogram what updates to perform on the model via pattern matching.\n\n- __classes__: A list of class names. The list is concatinated into one string\nand passed to\n[Html.Attributes.class](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#class).\n\n- __styles__: A list of *name-value* pairs representing\n[CSS properties](http://www.w3schools.com/cssref/).\nThe list is passed to\n[Html.Attributes.style](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#style).\nIt is generally better practice to set CSS classes on elements and the define\nstyles in a CSS file, but the style attribute can be used to override class\ndefaults.\n\n- __text__: A string of text, or `Nothing`. When rendered as HTML, text will be\ninserted after the element tag and before any child elements.\n\n- __markdown__: A boolean value indicating whether the element's text should\nbe parsed as [markdown](https://en.wikipedia.org/wiki/Markdown)\n\n- __observer__: An\n[`Html.Attribute`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#Attribute)\nencoding an event handler that captures form input, or `Nothing`. An \"observer\"\ndiffers from an \"action\" in that it captures one or more input values, and so\nrequires a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nto read that input. The built-in observers in the `Html.Events` library\nare\n[`onInput`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onInput)\nand\n[`onCheck`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onCheck).\nCustom observers may be created using the\n[`Html.Events.on`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#on)\nfunction, which takes an\n[event name](http://www.w3schools.com/jsref/dom_obj_event.asp) (as a string,\nwithout the \"on\" prefix) and a\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nas arguments. The Modular Design API also includes the helper functions\n`captureOnSubmit`, `fieldDecoder`, and `formDecoder`, which make it easier\nto construct observers for capturing form input.\n\n- __inputType__: A constructor that accepts a `Json` `Value` and returns\n`TypedInput`, or `Nothing`. The constructor may be one of: `StringInput`,\n`IntInput`, `FloatInput`, `BoolInput`, `NullInput`, `CustomInput`. This record\nfield is ignored when rendering the element to `VirtualDom`; its purpose is to\nallow form data to be aggregated while preserving type specifications on input\nfields, such that type checking can occur downstream in the program.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ htmlTag : String , attributes : List ( String, String ) , actions : List ( String, msg ) , classes : List String , styles : List ( String, String ) , text : Maybe.Maybe String , markdown : Bool , observer : Maybe.Maybe (Html.Attribute msg) , inputType : Maybe.Maybe (Json.Decode.Value -> ModularDesign.TypedInput) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HtmlTree",
+        "comment": " Represents a node in the DOM tree that may have some children (a `Stem`) or\nno children (a `Leaf`).\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "Leaf",
+            [
+              "ModularDesign.HtmlElement msg"
+            ]
+          ],
+          [
+            "Stem",
+            [
+              "ModularDesign.HtmlElement msg",
+              "List (ModularDesign.HtmlTree msg)"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "TypedInput",
+        "comment": " Represents a JavaScript value with a type specification. Used to implement\ntype-checking in functions for capturing and reading form input. See the\n`ModularDesign.FormInput` documentation to find out how this works.\n",
+        "args": [],
+        "cases": [
+          [
+            "StringInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "IntInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "FloatInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "BoolInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "NullInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "CustomInput",
+            [
+              "Json.Decode.Value"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addAction",
+        "comment": " Add a new action to the element at the root node of an `HtmlTree`. If a new\n*action-message* pair has the same *action* as an existing one, the new\n*message* replaces the old one; otherwise, existing *action-message* pairs are\nretained.\n\n    myTextElement\n      |> addAction (\"click\", HideMessage)\n\n",
+        "type": "( String, msg ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "addAttribute",
+        "comment": " Add a new attribute (*name-value* pair) to the element at the root\nnode of an `HtmlTree`. If the new attribute has the same *name* as an existing\nattribute, the new *value* replaces the old one; otherwise, existing attributes\nare retained.\n\n    welcomeMessage\n      |> addAttribute (\"id\", \"welcomeMessage\")\n",
+        "type": "( String, String ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "addClass",
+        "comment": " Add a new class assignment to the element at the root node of an `HtmlTree`,\n*retaining* any existing class assignments.\n\n    welcomeMessage\n        |> addClass \"align-center\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "addStyle",
+        "comment": " Add a new style declaration (*name-value* pair) to the element at the root\nnode of an `HtmlTree`. If a new style has the same *name* as an\nexisting style, the new *value* replaces the old one; otherwise, existing\nstyle declarations are retained.\n\n    welcomeMessage\n        |> addStyle (\"text-align\", \"center\")\n",
+        "type": "( String, String ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "addText",
+        "comment": " Add new text to the element at the root node of an `HtmlTree`, *appended\nafter* any existing text.\n\n    welcomeMessage\n        |> addText \"!!\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "appendNodes",
+        "comment": " Append child nodes to the root node of an `HtmlTree`, replacing any existing\nchildren, and return the result. The main use of this function is to convert a\n`Leaf` to a `Stem`, which is helpful when nesting text elements.\n\n    \"Hello, world!\"\n      |> textWrapper \"p\"\n      |> appendNodes\n        [ leaf \"br\"\n        , \"Awesome!\" |> textWrapper \"strong\"\n        ]\n      |> container \"div\"\n\n    --> <div><p>Hello, world!<br><strong>Awesome!</strong></p></div>\n",
+        "type": "List (ModularDesign.HtmlTree msg) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "assembleHtml",
+        "comment": " To render HTML in the browser, an `HtmlTree` must be converted to a\n[`VirtualDom.Node`](http://package.elm-lang.org/packages/elm-lang/virtual-dom/latest/VirtualDom#Node)\n(note that `Html.Html` is an alias for `VirtualDom.Node`). Calling\n`assembleHtml` on an `HtmlTree` recurses down the tree, constructing the\n`VirtualDom` representation node by node.\n",
+        "type": "ModularDesign.HtmlTree msg -> Html.Html msg"
+      },
+      {
+        "name": "container",
+        "comment": " Create a `Stem` node with no attributes and no text.\n\n    \"Hello, world!\"\n      |> textWrapper \"p\"\n      |> container \"div\"\n\n    --> <div><p>Hello, world!</p></div>\n",
+        "type": "String -> List (ModularDesign.HtmlTree msg) -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "getAttrValue",
+        "comment": " Given an `HtmlElement`, return the *value* for the attribute whose *name*\nmatching the first argument, or `Nothing` if no attribute with that *name* has\nbeen defined.\n\n    myElement\n      |> getAttrValue \"disabled\"\n",
+        "type": "String -> ModularDesign.HtmlElement msg -> Maybe.Maybe String"
+      },
+      {
+        "name": "getElementsByTag",
+        "comment": " Given an `HtmlTree`, return a list containing every `HtmlElement` with an\n`htmlTag` matching the first argument.\n\n    myPage\n      |> getElementsByTag \"a\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> List (ModularDesign.HtmlElement msg)"
+      },
+      {
+        "name": "getId",
+        "comment": " Given an `HtmlElement`, return the *value* of its `id` attribute, or\n`Nothing` if the `id` attribute has not been defined.\n",
+        "type": "ModularDesign.HtmlElement msg -> Maybe.Maybe String"
+      },
+      {
+        "name": "hasValue",
+        "comment": " Given an `HtmlElement`, lookup the attribute whose *name* matches the first\nargument; if its *value* matches the second argument, return `True`; if the\n*value* does not match, or the *name* is not found, return `False`.\n\n    if (rootElement myButton |> \"disabled\" `hasValue` \"True\") then\n      myButton\n        |> addAttribute (\"disabled\", \"False\")\n    else\n      myButton\n",
+        "type": "String -> String -> ModularDesign.HtmlElement msg -> Bool"
+      },
+      {
+        "name": "leaf",
+        "comment": " Create a `Leaf` node with no attributes and no text.\n\n    leaf \"br\"   --> <br>\n",
+        "type": "String -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "listElements",
+        "comment": " Given an `HtmlTree`, return a list containing every `HtmlElement` in the\ntree. This flattens the tree to provide more convenient access to record\nfields.\n",
+        "type": "ModularDesign.HtmlTree msg -> List (ModularDesign.HtmlElement msg)"
+      },
+      {
+        "name": "modifyAll",
+        "comment": " Apply the modify function to every node in the tree.\n\n    newAttribute =\n      wrapList (\"hidden\", \"True\")\n\n    page\n      |> modifyAll (withAttributes newAttribute)\n",
+        "type": "(ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "modifyAny",
+        "comment": " Given an expression generator that accepts an `HtmlElement` and returns a\n`Bool` and a modify function that accepts and `HtmlTree` and returns a modified\n`HtmlTree`, apply the modify function to every node in the tree for which the\nresulting expression evaluates to `True`.\n\n    let\n      disabledIsTrue =\n        getAttrValue \"disabled\"\n          >> Maybe.withDefault \"false\"\n          >> String.toLower\n          >> (==) \"true\"\n\n    in\n      page\n        |> modifyAny\n          ( disabledIsTrue\n          , addAttribute (\"disabled\", \"false\")\n          )\n",
+        "type": "( ModularDesign.HtmlElement msg -> Bool , ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "modifyMatchingId",
+        "comment": " Given a string representing an `id` and a modify function that accepts an\n`HtmlTree` and returns a modified `HtmlTree`, apply the modify function to\nevery node in the tree whose root element has a matching `id`. Note that HTML\nelements should be assigned unique `id` strings, so in theory the modify\nfunction should only be applied to one node.\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withId \"messageText\"\n        |> wrapList\n        |> container \"div\"\n\n    welcomeMessage\n      |> modifyMatchingId\n        ( \"messageText\"\n        , withText \"Hello, Universe!\"\n        )\n",
+        "type": "( String, ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "modifyMatchingTag",
+        "comment": " Given a string representing an HTML tag and a modify function that accepts an\n`HtmlTree` and returns a modified `HtmlTree`, apply the modify function to\nevery node in the tree whose root element has a matching HTML tag.\n\n      page\n        |> modifyMatchingTag\n          ( \"button\"\n          , addAttribute (\"disabled\", \"True\")\n          )\n",
+        "type": "( String, ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "prependText",
+        "comment": " Add new text to the element at the root node of an `HtmlTree`, *prepended\nbefore* any existing text.\n\n    welcomeMessage\n        |> prependText \"#\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "removeClass",
+        "comment": " Remove a class name from the element at the root node of an `HtmlTree`.\n\n    welcomeMessage\n      |> removeClass \"large-text\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "rootElement",
+        "comment": " Given an `HtmlTree`, return the `HtmlElement` at its root node.\n",
+        "type": "ModularDesign.HtmlTree msg -> ModularDesign.HtmlElement msg"
+      },
+      {
+        "name": "setInputType",
+        "comment": " Set an input type for the root node of an `HtmlTree`. May be one of:\n`StringInput`, `IntInput`, `FloatInput`, `BoolInput`, `NullInput`,\n`CustomInput`.\n\n    leaf \"input\"\n      |> withAttributes\n        [ (\"type\", \"text\")\n        , (\"id\", \"birthYear\")\n        ]\n      |> setInputType IntInput\n\nSee\n[examples/FieldDecoder.elm](https://github.com/danielnarey/elm-modular-design/tree/master/examples)\nfor a full working example.\n",
+        "type": "(Json.Decode.Value -> ModularDesign.TypedInput) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "textAsMarkdown",
+        "comment": " Flag the text at the root node of an `HtmlTree` as\n[markdown](https://en.wikipedia.org/wiki/Markdown); when\n`assembleHtml` is called, the text will be rendered using\n[`Markdown.toHtml`](package.elm-lang.org/packages/evancz/elm-markdown/latest/Markdown#toHtml)\n",
+        "type": "ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "textWrapper",
+        "comment": " Create a `Leaf` node with text and no attributes.\n\n    \"Hello, world!\"\n      |> textWrapper \"p\"\n\n    --> <p>Hello, world!</p>\n",
+        "type": "String -> String -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withActions",
+        "comment": " Add a list of actions to the element at the root node of an `HtmlTree`,\n*replacing* any existing actions. Actions must be encoded as *action-message*\npairs. As defined here, \"actions\" include all events that __do not__ capture\nform input. Following the typical pattern of an Elm program, a \"message\" is a\nuser-defined type that tells the program what updates to perform on the model\nvia pattern matching.\n\n    \"Click here and see what happens!\"\n      |> textWrapper \"p\"\n      |> withAttributes\n        [ (\"hidden\", toString model) ]\n      |> withActions\n        [ (\"click\", HideMessage) ]\n\nSee [examples/Actions.elm](https://github.com/danielnarey/elm-modular-design/tree/master/examples)\nfor a full working example.\n",
+        "type": "List ( String, msg ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withAttributes",
+        "comment": " Add a list of attributes (*name-value* pairs) to the element at the root\nnode of an `HtmlTree`, *replacing* any existing attributes\n\n    welcomeMessage\n      |> withAttributes\n        [ (\"id\", \"welcomeMessage\")\n        , (\"title\", \"Hello again!\")\n        ]\n",
+        "type": "List ( String, String ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withClasses",
+        "comment": " Add a list of class names to the element at the root node of an `HtmlTree`,\n*replacing* any existing class assignments.\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withClasses\n          [ \"large-text\"\n          , \"align-center\"\n          ]\n",
+        "type": "List String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withId",
+        "comment": " Convenience function to add an `id` attribute to the root element of an\n`HtmlTree`. Calls `addAttribute`.\n\n    welcomeMessage\n      |> withId \"welcomeMessage\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withObserver",
+        "comment": " Add an observer to the element at the root node of an `HtmlTree`, encoded as\nan [`Html.Attribute`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#Attribute).\nAn \"observer\" differs from an \"action\" in that it captures one or more input\nvalues, and so requires a `Json`\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nto read that input. The built-in observers in the `Html.Events` package\nare\n[`onInput`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onInput)\nand\n[`onCheck`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#onCheck).\nCustom observers may be created using the\n[`Html.Events.on`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Events#on)\nfunction, which takes an\n[event name](http://www.w3schools.com/jsref/dom_obj_event.asp) (as a string,\nwithout the \"on\" prefix) and a\n[`Decoder`](http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode#Decoder)\nas arguments. The Modular Design API also includes the helper functions\n`captureOnSubmit`, `fieldDecoder`, and `formDecoder`, which make it easier\nto construct observers for capturing form input.\n\n    leaf \"input\"\n      |> withAttributes\n        [ (\"type\", \"checkbox\")\n        , (\"checked\", toString model)\n        ]\n      |> withObserver (Events.onCheck Checked)\n\nSee\n[examples/Checkboxes.elm](https://github.com/danielnarey/elm-modular-design/tree/master/examples)\nand\n[examples/RadioButtons.elm](https://github.com/danielnarey/elm-modular-design/tree/master/examples)\nfor full working examples.\n",
+        "type": "Html.Attribute msg -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withStyles",
+        "comment": " Add a list of style declarations (*name-value* pairs) to the element at the\nroot node of an `HtmlTree`, *replacing* any existing styles. Style declarations\nadded in this way are defined via the element's `style` attribute, which means\nthey override style declarations assigned to tag, class, and id selectors in\nglobal stylesheets.\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n        |> withStyles\n          [ (\"font-size\", \"2em\")\n          , (\"text-align\", \"center\")\n          ]\n\nSee `ModularDesign.Stylesheet` for a more general approach to defining CSS rules\nand generating a global stylesheet in Elm.\n",
+        "type": "List ( String, String ) -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withTag",
+        "comment": " Modify the HTML tag of the element at the root node of an `HtmlTree`.\nReplaces the existing tag.\n\n    welcomeMessage =\n      \"Hello, world!\"\n        |> textWrapper \"p\"\n\n    welcomeMessage\n      |> withTag \"span\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      },
+      {
+        "name": "withText",
+        "comment": " Add text to the element at the root node of an `HtmlTree`, *replacing*\nany existing text\n\n    welcomeMessage =\n      leaf \"p\"\n        |> withText \"Hello, world!\"\n",
+        "type": "String -> ModularDesign.HtmlTree msg -> ModularDesign.HtmlTree msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "ModularDesign.Operators",
+    "comment": "\n\n## Infix operators for use with the Modular Design framework\n\nAs I have been developing the Modular Design package, I have also been\nevolving a personal style guide for Elm programming (not yet released). My\nstyle guide conforms to the\n[official Elm style guide](http://elm-lang.org/docs/style-guide),\nbut makes some very opinionated choices so that code blocks are always formatted\nin a consistent way. The main principle motivating these choices is the idea\nthat a programmer should be able to readily discern the sequence of function\ncalls in a code block by visually scanning the code from top to bottom, and then\nfrom left to right.\n\nAccording to this principle, the \"data\" — that is, the value or set of values\nthat the function is called *on* — should always appear at the top of the code\nblock, with functions called on the data appearing on subsequent lines. A\nnested series of function calls can appear on one line, but more complex code\nchunks should be broken up into self-contained functions using `let..in`\nstatements. Nested list brackets and complex code chunks within list brackets\nshould generally be avoided.\n\nWith the above principle, the `|>` operator is used very liberally, the `>>`\noperator is used only in rare cases, and there is no use case for \"reverse\"\n(right-to-left) functional operators. The modular approch to HTML and CSS\nI have implemented in the Modular Design package allows this style to be\nmaintained when coding view components. The evolving style guide, in turn, has\nbeen part of the motivation behind various semantic/syntactical choices in my\nimplementation of the package.\n\nIn addition to liberal use of the `|>` operator, I have found use cases for a\nsmall set of custom operators that help to maintain consistent visual formatting\nand enhance readability of code blocks. While I recognize it is advisable to\nkeep custom operators to a minimum so that code does not become needlessly\nobscure, I intend the operators included in this module to become a standard\npart of the Modular Design framework, so users of this framework should learn\nto recognize them and apply them where appropriate.\n\n# Appending Things\n@docs (|++), (|::), (:+:)\n\n# Function Application with Lists\n@docs (.|>), (:|>)\n\n# Error Handling with `Maybe` and `Result` Values\n@docs (?=), (!=), (?|>), (!|>)\n\n# Uncurry Operators\n@docs (@@|>), (@@@|>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!=",
+        "comment": " Forward operator for Result.withDefault\n\n    String.toInt \"123\" != 0   --> 123\n    String.toInt \"abc\" != 0   --> 0\n",
+        "type": "Result.Result x a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "!|>",
+        "comment": " Forward operator for Result.map\n\n    Ok 4.0 !|> sqrt             --> Ok 2.0\n    Err \"bad input\" !|> sqrt    --> Err \"bad input\"\n\n",
+        "type": "Result.Result x a -> (a -> value) -> Result.Result x value",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ".|>",
+        "comment": " Forward operator for List.map\n\n    [1,4,9] .|> sqrt    --> [1,2,3]\n",
+        "type": "List a -> (a -> b) -> List b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ":+:",
+        "comment": " Construct a list from the LHS and RHS; precedence is 5 and associativity is\nright (same as `++`)\n\n    1 :+: 2   --> [1, 2]\n",
+        "type": "a -> a -> List a",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": ":|>",
+        "comment": " Wrap LHS in a list, then apply RHS function\n\n    1 :|> List.head   --> Just 1\n",
+        "type": "a -> (List a -> b) -> b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?=",
+        "comment": " Forward operator for Maybe.withDefault\n\n    Just 42 ?= 100    --> 42\n    Nothing ?= 100    --> 100\n",
+        "type": "Maybe.Maybe a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?|>",
+        "comment": " Forward operator for Maybe.map\n\n    Just 9 ?|> sqrt     --> Just 3\n    Nothing ?|> sqrt    --> Nothing\n\n",
+        "type": "Maybe.Maybe a -> (a -> b) -> Maybe.Maybe b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "@@@|>",
+        "comment": " Forward operator for `uncurry` with 3 parameters\n\n    (10, 20, 30) @@@|> clamp    --> 20\n",
+        "type": "( a, b, c ) -> (a -> b -> c -> d) -> d",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "@@|>",
+        "comment": " Forward operator for `uncurry` with 2 parameters\n\n    (1,2) @@|> (+)    --> 3\n",
+        "type": "( a, b ) -> (a -> b -> c) -> c",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|++",
+        "comment": " Append the RHS to the end of the LHS; equivalent to `++`, but\nleft-associative with precedence set to `0` (same as `|>`)\n\n    (\"ba\" |> String.reverse) ++ \"c\"       --> \"abc\"\n    \"ba\" |> String.reverse ++ \"c\"         --> ERROR\n    \"ba\" |> String.reverse |++ \"c\"        --> \"abc\"\n\n",
+        "type": "appendable -> appendable -> appendable",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|::",
+        "comment": " Append the item on the RHS to the end of the list on the LHS\n\n    [1] |:: 2         --> [1,2]\n    [1] |:: 2 |:: 3   --> [1,2,3]\n",
+        "type": "List a -> a -> List a",
+        "associativity": "left",
+        "precedence": 0
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  },
+  {
+    "name": "ModularDesign.Helpers",
+    "comment": "\n\n## Some generic helper functions for use with the Modular Design framework\n\n# Lists\n@docs wrapList\n\n# Error Handling\n@docs thenTry\n\n# Type Conversion\n@docs toBool\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "thenTry",
+        "comment": " Same as\n[`Result.andThen`](http://package.elm-lang.org/packages/elm-lang/core/latest/Result#andThen),\nbut flips the order of the arguments, allowing for cleaner syntax when used with\nthe `|>` operator.\n\n    formInput\n      |> getInputAt \"birthYear\"\n      |> thenTry readIntInput\n      != -1\n",
+        "type": "(a -> Result.Result x b) -> Result.Result x a -> Result.Result x b"
+      },
+      {
+        "name": "toBool",
+        "comment": " Convert a boolean string to a `Bool`, ignoring case\n\n    toBool \"true\"     --> Ok True\n    toBool \"True\"     --> Ok True\n    toBool \"false\"    --> Ok False\n    toBool \"False\"    --> Ok False\n    toBool \"blah\"     --> Err \"String argument must be 'true' or 'false' (case ignored)\"\n",
+        "type": "String -> Result.Result String Bool"
+      },
+      {
+        "name": "wrapList",
+        "comment": " Return a one-item list containing the argument\n\n    (\"key\", \"value\") |> wrapList   --> [ (\"key\", \"value\") ]\n",
+        "type": "a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.0"
+  }
+]

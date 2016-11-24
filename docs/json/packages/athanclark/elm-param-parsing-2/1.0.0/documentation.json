@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Query",
+    "comment": "\nThis library works with URI query strings; a string that's\neither empty, or, beginning with `?` (question mark), is followed by\none or more strings, each of which separated by a `&` (ampersand).\nThese strings may or may not be split between a `=` (equals sign).\n\n> In this library, we consider only the **first** `=` as the split,\n> and all further occurances remain intact in the resulting `Just v` value.\n\nIf there is at least one `=` in the string, then the resulting split\nwill be `(k, Just v)`. Likewise, if there is no `=`, then the\nresult will just be `(k, Nothing)`. Critically, if the `=` is included,\nbut there is no string before the next `&` (i.e. `...&foo=&...`), then\nthe result will be `(\"foo\", Just \"\")`. Empty strings (i.e. `...&&...`)\nare represented as `(\"\", Nothing)`.\n\nWe then have a list of pairs of strings with a nullable right value.\nThis is a precise type denoting the query string, opposed to a `Dict` -\nit retains both the ordering information of the query strings, and their\npossible value. A more general type might be `List String`, so the resulting\ntype would be a list of lists `List (List String)`, but this library is\nintended to assume a more practical use case.\n\n## Laws:\n\n### Isomorphism\n\nforall query strings `x:String` (i.e. `x-www-uriencode` formatted strings, separated\nby `=` and `&`, beginning with a `?`):\n\n```\nprintQuery (parseQuery x) == x\n```\n\nand likewise, forall query string sets `xs:[(String, Maybe String)]`:\n\n```\nparseQuery (printQuery xs) == xs\n```\n\n> If you can think of others, please let me know!\n\n@docs parseQuery, printQuery\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parseQuery",
+        "comment": "\nParse everything after the path and before the fragment,\nspecifically `/path/to/resource.foo...#fragment`. This\nfunction's behaviour is unspecified if you give this whole\nstring, and not only the portion marked as `...`, usually\nin the form of `?foo=bar&baz&qux=2` *including* the initial `?`.\nNote that this also decodes the `x-www-uriencode` data as well\nwith `Http.uriDecode`.\n",
+        "type": "String -> List ( String, Maybe.Maybe String )"
+      },
+      {
+        "name": "printQuery",
+        "comment": "\nPrints out the query Dict such that a `?` is placed\nonly if the Dict is _non-empty_. Also uses `Http.uriEncode` from\n[evancz's http package](https://package.elm-lang.org/packages/evancz/elm-http),\nand does _not_ place a `&` if the value is `Nothing`.\n",
+        "type": "List ( String, Maybe.Maybe String ) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]
