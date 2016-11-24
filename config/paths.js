@@ -9,5 +9,6 @@ module.exports = {
   json: path.resolve('./src/json'),
   ownModules: path.resolve(__dirname, '../node_modules'),
   scripts: path.resolve(__dirname, '../scripts'),
-  elmMake: path.resolve(__dirname, '../node_modules/.bin/elm-make')
+  elmMake: path.resolve(__dirname, '../node_modules/.bin/elm-make'),
+  ga: path.resolve('./src/ga.js'),
 };
