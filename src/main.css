@@ -1,7 +1,9 @@
+html{
+  font-size: 14px;
+}
 body {
   margin: 0;
   color: #444;
-  font-size: 14px;
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
 }
@@ -32,7 +34,6 @@ a{
 .nav-list{
     height: calc(100vh - 2rem);
     overflow-y: scroll;
-    width: 17rem;
 }
 .nav-item{
     padding: 0.1rem 0.5rem;
@@ -131,6 +132,7 @@ a{
     overflow: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .doc-content{
     flex: 1;
@@ -231,4 +233,14 @@ a{
     background: none;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.nav-drag-handle{
+    position: absolute;
+    width: 0.5rem;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    cursor: col-resize;
 }

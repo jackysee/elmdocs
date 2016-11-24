@@ -1,6 +1,7 @@
 module Models exposing (..)
 
 import Utils exposing (findFirst)
+import Mouse exposing (Position)
 
 
 type alias Model =
@@ -14,6 +15,14 @@ type alias Model =
     , searchPackageText : String
     , showConfirmDeleteDoc : Maybe DocId
     , selectedIndex : Int
+    , navWidth : Int
+    , drag : Maybe Drag
+    }
+
+
+type alias Drag =
+    { start : Position
+    , current : Position
     }
 
 

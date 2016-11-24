@@ -18,6 +18,7 @@ import Msgs exposing (..)
 import Icons
 import Utils exposing (..)
 import Navigation
+import Mouse
 
 
 init : Maybe StoreModel -> Location -> ( Model, Cmd Msg )
@@ -38,6 +39,8 @@ init storeModel location =
     , searchPackageText = ""
     , showConfirmDeleteDoc = Nothing
     , selectedIndex = 0
+    , navWidth = 238
+    , drag = Nothing
     }
         ! [ getAllPackages (storeModel == Nothing) location
           ]
@@ -304,11 +307,28 @@ update msg model =
         LinkToDisabledDoc name version path ->
             ( model, Navigation.newUrl <| "#disabled/" ++ name ++ "/" ++ version ++ "/" ++ path )
 
+        DragStart xy ->
+            ( { model | drag = Just (Drag xy xy) }, Cmd.none )
+
+        DragAt xy ->
+            ( { model
+                | navWidth = model.navWidth + (Maybe.map (\{ current } -> xy.x - current.x) model.drag |> Maybe.withDefault 0)
+                , drag = Maybe.map (\drag -> Drag drag.start xy) model.drag
+              }
+            , Cmd.none
+            )
+
+        DragEnd xy ->
+            ( { model | drag = Nothing }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
     div [ class "main" ]
-        [ div [ class "nav" ]
+        [ div
+            [ class "nav"
+            , style [ ( "width", (toString model.navWidth) ++ "px" ) ]
+            ]
             [ div [ class "nav-top " ]
                 [ input
                     [ class "search-input"
@@ -329,90 +349,96 @@ view model =
                     ]
             ]
         , div [ class "doc" ] <|
-            case model.page of
-                Home ->
-                    [ div
-                        [ class "doc-empty-title" ]
-                        [ span [] [ text "ElmDocs" ]
-                        , Markdown.toHtml
-                            [ class "doc-info" ]
-                            """ Written in [Elm](http://elm-lang.org) by [jackysee](http://github.com/jackysee/elmdocs)"""
-                        ]
-                    ]
-
-                DocOverview docId ->
-                    case getDocById model docId of
-                        Just doc ->
-                            [ h1
-                                [ class "doc-title" ]
-                                [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-                            , div
-                                [ class "doc-content" ]
-                                [ viewDocOverview doc ]
-                            ]
-
-                        Nothing ->
-                            []
-
-                DocModule docId modulePath ->
-                    case getDocById model docId of
-                        Just doc ->
-                            [ h1
-                                [ class "doc-title" ]
-                                [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-                            , div
-                                [ class "doc-content" ]
-                                [ viewModule model modulePath doc ]
-                            ]
-
-                        Nothing ->
-                            []
-
-                DisabledDoc doc modulePath ->
-                    [ h1
-                        [ class "doc-title" ]
-                        [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-                    , div
-                        [ class "doc-content" ]
-                      <|
-                        [ div [ class "doc-disabled-info" ]
-                            [ text "This documentation is disabled."
-                            , button
-                                [ class "btn-link"
-                                , onClick <|
-                                    MsgBatch
-                                        [ PinDoc [] (Ok doc)
-                                        , LinkToPinnedDoc modulePath doc.id
-                                        ]
-                                ]
-                                [ text "Enable it" ]
+            [ div
+                [ class "nav-drag-handle"
+                , on "mousedown" (Json.Decode.map DragStart Mouse.position)
+                ]
+                []
+            ]
+                ++ case model.page of
+                    Home ->
+                        [ div
+                            [ class "doc-empty-title" ]
+                            [ span [] [ text "ElmDocs" ]
+                            , Markdown.toHtml
+                                [ class "doc-info" ]
+                                """ Written in [Elm](http://elm-lang.org) by [jackysee](http://github.com/jackysee/elmdocs)"""
                             ]
                         ]
-                            ++ if modulePath == "" then
-                                [ viewDocOverview doc
-                                , h2 [] [ text "Modules" ]
+
+                    DocOverview docId ->
+                        case getDocById model docId of
+                            Just doc ->
+                                [ h1
+                                    [ class "doc-title" ]
+                                    [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
                                 , div
-                                    [ class "module-list" ]
-                                  <|
-                                    List.map
-                                        (\m ->
-                                            div
-                                                [ class "btn-link"
-                                                , onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
-                                                ]
-                                                [ text m.name ]
-                                        )
-                                        doc.modules
+                                    [ class "doc-content" ]
+                                    [ viewDocOverview doc ]
                                 ]
-                               else
-                                [ viewModule model modulePath doc ]
-                    ]
 
-                NotFound ->
-                    [ div
-                        [ class "doc-empty-title" ]
-                        [ span [] [ text "Document not found" ] ]
-                    ]
+                            Nothing ->
+                                []
+
+                    DocModule docId modulePath ->
+                        case getDocById model docId of
+                            Just doc ->
+                                [ h1
+                                    [ class "doc-title" ]
+                                    [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                                , div
+                                    [ class "doc-content" ]
+                                    [ viewModule model modulePath doc ]
+                                ]
+
+                            Nothing ->
+                                []
+
+                    DisabledDoc doc modulePath ->
+                        [ h1
+                            [ class "doc-title" ]
+                            [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                        , div
+                            [ class "doc-content" ]
+                          <|
+                            [ div [ class "doc-disabled-info" ]
+                                [ text "This documentation is disabled."
+                                , button
+                                    [ class "btn-link"
+                                    , onClick <|
+                                        MsgBatch
+                                            [ PinDoc [] (Ok doc)
+                                            , LinkToPinnedDoc modulePath doc.id
+                                            ]
+                                    ]
+                                    [ text "Enable it" ]
+                                ]
+                            ]
+                                ++ if modulePath == "" then
+                                    [ viewDocOverview doc
+                                    , h2 [] [ text "Modules" ]
+                                    , div
+                                        [ class "module-list" ]
+                                      <|
+                                        List.map
+                                            (\m ->
+                                                div
+                                                    [ class "btn-link"
+                                                    , onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
+                                                    ]
+                                                    [ text m.name ]
+                                            )
+                                            doc.modules
+                                    ]
+                                   else
+                                    [ viewModule model modulePath doc ]
+                        ]
+
+                    NotFound ->
+                        [ div
+                            [ class "doc-empty-title" ]
+                            [ span [] [ text "Document not found" ] ]
+                        ]
         ]
 
 
@@ -962,7 +988,15 @@ replaceFullPathVar str =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    case model.drag of
+        Nothing ->
+            Sub.none
+
+        Just _ ->
+            Sub.batch
+                [ Mouse.moves DragAt
+                , Mouse.ups DragEnd
+                ]
 
 
 port scrollToElement : String -> Cmd msg

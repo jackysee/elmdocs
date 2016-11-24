@@ -3,6 +3,7 @@ module Msgs exposing (..)
 import Models exposing (..)
 import Http
 import Navigation exposing (Location)
+import Mouse exposing (Position)
 
 
 type Msg
@@ -24,3 +25,6 @@ type Msg
     | DocNavExpand Bool DocId
     | LinkToPinnedDoc String DocId
     | LinkToDisabledDoc String String String
+    | DragStart Position
+    | DragAt Position
+    | DragEnd Position
