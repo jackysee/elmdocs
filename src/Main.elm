@@ -5,14 +5,14 @@ import Models exposing (Model, StoreModel, Page)
 import Msgs exposing (..)
 import Navigation exposing (Location)
 import UrlParser exposing (Parser, parseHash, oneOf, map, s, string, top, (</>))
+import String
+import Json.Decode
 
 
 -- import String.Extra
 
-import String
 
-
-main : Program (Maybe StoreModel) Model Msg
+main : Program (Maybe Json.Decode.Value) Model Msg
 main =
     Navigation.programWithFlags
         locFor

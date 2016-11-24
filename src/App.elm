@@ -21,29 +21,45 @@ import Navigation
 import Mouse
 
 
-init : Maybe StoreModel -> Location -> ( Model, Cmd Msg )
-init storeModel location =
-    { allPackages = []
-    , pinnedDocs =
-        storeModel
-            |> Maybe.map .docs
-            |> Maybe.withDefault []
-    , page = Home
-    , searchIndex =
-        storeModel
-            |> Maybe.map .searchIndex
-            |> Maybe.withDefault []
-    , searchResult = []
-    , searchText = ""
-    , showDisabled = False
-    , searchPackageText = ""
-    , showConfirmDeleteDoc = Nothing
-    , selectedIndex = 0
-    , navWidth = 238
-    , drag = Nothing
-    }
-        ! [ getAllPackages (storeModel == Nothing) location
-          ]
+init : Maybe Json.Decode.Value -> Location -> ( Model, Cmd Msg )
+init value location =
+    let
+        storeModel =
+            value
+                |> Maybe.map
+                    (\value_ ->
+                        case Json.Decode.decodeValue decodeStoreModel value_ of
+                            Ok m ->
+                                m
+
+                            Err err ->
+                                let
+                                    a =
+                                        Debug.log "error" err
+                                in
+                                    defaultStoreModel
+                     --|> Result.withDefault defaultStoreModel
+                    )
+                |> Maybe.withDefault defaultStoreModel
+
+        model =
+            { allPackages = []
+            , pinnedDocs = storeModel.docs
+            , page = Home
+            , searchIndex = storeModel.searchIndex
+            , searchResult = []
+            , searchText = ""
+            , showDisabled = False
+            , searchPackageText = ""
+            , showConfirmDeleteDoc = Nothing
+            , selectedIndex = 0
+            , navWidth = storeModel.navWidth
+            , drag = Nothing
+            }
+    in
+        model
+            ! [ getAllPackages (value == Nothing) location
+              ]
 
 
 getAllPackages : Bool -> Location -> Cmd Msg
@@ -310,12 +326,20 @@ update msg model =
             ( { model | drag = Just (Drag xy xy) }, Cmd.none )
 
         DragAt xy ->
-            ( { model
-                | navWidth = model.navWidth + (Maybe.map (\{ current } -> xy.x - current.x) model.drag |> Maybe.withDefault 0)
-                , drag = Maybe.map (\drag -> Drag drag.start xy) model.drag
-              }
-            , Cmd.none
-            )
+            let
+                navWidth =
+                    model.navWidth
+                        + (model.drag
+                            |> Maybe.map (\{ current } -> xy.x - current.x)
+                            |> Maybe.withDefault 0
+                          )
+            in
+                ( { model
+                    | navWidth = navWidth
+                    , drag = Maybe.map (\drag -> Drag drag.start xy) model.drag
+                  }
+                , saveNavWidth navWidth
+                )
 
         DragEnd xy ->
             ( { model | drag = Nothing }, Cmd.none )
@@ -1005,3 +1029,6 @@ port saveLocal : { doc : Doc, searchIndex : List ( String, String ) } -> Cmd msg
 
 
 port removeLocal : { doc : Doc, searchIndex : List ( String, String ) } -> Cmd msg
+
+
+port saveNavWidth : Int -> Cmd msg

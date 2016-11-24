@@ -42,24 +42,24 @@ app.ports.saveLocal.subscribe(function(obj){
         return docEqual(d, obj.doc);
     });
     if(!found){
-        window.localStorage.setItem("storeModel",
-            JSON.stringify({
-                docs: docs.concat(obj.doc),
-                searchIndex: obj.searchIndex
-            })
-        );
+        storedModel.docs = docs.concat(obj.doc);
+        storedModel.searchIndex = obj.searchIndex;
+        window.localStorage.setItem("storeModel", JSON.stringify(storedModel));
     }
 });
 
 app.ports.removeLocal.subscribe(function(obj) {
     var storedModel = getStoredModel();
     var docs = storedModel.docs || [];
-    window.localStorage.setItem("storeModel",
-        JSON.stringify({
-            docs: docs.filter(function(d){
-                return !docEqual(d, obj.doc);
-            }),
-            searchIndex: obj.searchIndex
-        })
-    );
+    storedModel.docs = docs.filter(function(d){
+        return !docEqual(d, obj.doc);
+    }),
+    storedModel.searchIndex = obj.searchIndex;
+    window.localStorage.setItem("storeModel", JSON.stringify(storedModel));
+});
+
+app.ports.saveNavWidth.subscribe(function(navWidth){
+    var storedModel = getStoredModel();
+    storedModel.navWidth = navWidth;
+    window.localStorage.setItem("storeModel", JSON.stringify(storedModel));
 });

@@ -42,6 +42,15 @@ type DocNavItem
 type alias StoreModel =
     { docs : List Doc
     , searchIndex : List ( String, String )
+    , navWidth : Int
+    }
+
+
+defaultStoreModel : StoreModel
+defaultStoreModel =
+    { docs = []
+    , searchIndex = []
+    , navWidth = 238
     }
 
 

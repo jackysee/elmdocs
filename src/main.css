@@ -175,6 +175,7 @@ a{
     background: #eee;
     padding: 1rem;
     overflow: auto;
+    border-radius: 3px;
 }
 
 .module-doc-comment code,
@@ -243,4 +244,13 @@ a{
     left: 0;
     bottom: 0;
     cursor: col-resize;
+    display:flex;
+    align-items: center;
+}
+.nav-drag-handle:after{
+    content: '';
+    display: block;
+    height: 5rem;
+    width: 0.3rem;
+    border-right: 1px solid #ccc;
 }
