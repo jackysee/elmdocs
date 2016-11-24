@@ -44,14 +44,15 @@ getDoc : String -> String -> Task Http.Error Doc
 getDoc moduleName version =
     Task.map2
         (\doc readme -> { doc | readme = readme })
-        (Http.toTask <|
-            Http.get
-                ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/documentation.json")
-                (decodeDoc moduleName version)
+        (Http.get
+            ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/documentation.json")
+            (decodeDoc moduleName version)
+            |> Http.toTask
         )
-        (Http.toTask <|
-            Http.getString
-                ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/README.md")
+        (Http.getString
+            ("json/packages/" ++ moduleName ++ "/" ++ version ++ "/README.md")
+            |> Http.toTask
+            |> Task.onError (\_ -> Task.succeed "")
         )
 
 
