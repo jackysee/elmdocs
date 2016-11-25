@@ -1,0 +1,43 @@
+[
+  {
+    "name": "RemoteStatus",
+    "comment": " RemoteStatus is used to track the progress of multiple remote operations.\n\n# Definition\n@docs Model, initial\n\n# Operations\n@docs start, enqueue, finishOne\n\n# Querying\n@docs isFinished\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " Store the status of a remote operation.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "enqueue",
+        "comment": " Increase the number of remote operations to track.\n",
+        "type": "RemoteStatus.Model -> Int -> RemoteStatus.Model"
+      },
+      {
+        "name": "finishOne",
+        "comment": " Increase the number of operations that have been completed by 1.\n",
+        "type": "RemoteStatus.Model -> RemoteStatus.Model"
+      },
+      {
+        "name": "initial",
+        "comment": " Default the status to not started.\n",
+        "type": "RemoteStatus.Model"
+      },
+      {
+        "name": "isFinished",
+        "comment": " Determine whether the operation has completed.\n",
+        "type": "RemoteStatus.Model -> Bool"
+      },
+      {
+        "name": "start",
+        "comment": " Start tracking the remote operation if it has not yet been started.\n",
+        "type": "RemoteStatus.Model -> RemoteStatus.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
