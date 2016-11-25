@@ -31,3 +31,4 @@ type Msg
     | DragEnd Position
     | DomFocus String
     | ListScrollTo Int
+    | SetSearchFocused Bool

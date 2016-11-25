@@ -2,7 +2,7 @@ port module App exposing (..)
 
 import Html exposing (Html, text, div, input, h1, h2, h3, br, span, button, a)
 import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList, href, target, autofocus)
-import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions)
+import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions, onFocus, onBlur)
 import Http
 import String
 import String.Extra
@@ -44,6 +44,7 @@ init value location =
                 , searchIndex = storeModel.searchIndex
                 , searchResult = []
                 , searchText = ""
+                , searchFocused = False
                 , showDisabled = False
                 , showNewOnly = True
                 , searchPackageText = ""
@@ -165,8 +166,9 @@ update msg model =
                     else
                         Navigation.newUrl location.hash
             in
-                ( model_, cmd_ )
+                model_ ! [ cmd_, focus "search-input" ]
 
+        -- ( model_, cmd_ )
         LoadAllPackages loadDefault location (Err _) ->
             ( model, Cmd.none )
 
@@ -359,10 +361,18 @@ update msg model =
             ( { model | drag = Nothing }, Cmd.none )
 
         DomFocus id ->
-            ( model, Task.attempt (\_ -> NoOp) (Dom.focus id) )
+            ( model, focus id )
 
         ListScrollTo index ->
             ( model, listScrollTo <| "item-" ++ toString index )
+
+        SetSearchFocused focused ->
+            ( { model | searchFocused = focused }, Cmd.none )
+
+
+focus : String -> Cmd Msg
+focus id =
+    Task.attempt (\_ -> NoOp) (Dom.focus id)
 
 
 view : Model -> Html Msg
@@ -380,6 +390,8 @@ view model =
                     , value model.searchText
                     , placeholder "Search..."
                     , id "search-input"
+                    , onFocus (SetSearchFocused True)
+                    , onBlur (SetSearchFocused False)
                     ]
                     []
                 ]
@@ -1112,6 +1124,8 @@ keyMap model key =
                     _ ->
                         NoOp
             )
+    else if not model.searchFocused && key == "." then
+        DomFocus "search-input"
     else
         NoOp
 

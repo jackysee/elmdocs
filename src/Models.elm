@@ -13,6 +13,7 @@ type alias Model =
     , searchIndex : List ( String, String )
     , searchResult : List ( String, String )
     , searchText : String
+    , searchFocused : Bool
     , showDisabled : Bool
     , showNewOnly : Bool
     , searchPackageText : String
