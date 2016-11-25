@@ -8,6 +8,7 @@ type alias Model =
     { allPackages : List Package
     , newPackages : List String
     , pinnedDocs : List Doc
+    , navList : List DocNavItem
     , page : Page
     , searchIndex : List ( String, String )
     , searchResult : List ( String, String )
@@ -144,26 +145,27 @@ disabledPackages model =
             )
 
 
-toDocNavItemList : Model -> List DocNavItem
-toDocNavItemList model =
-    (model.pinnedDocs
-        |> List.map
-            (\d ->
-                [ DocNav d ]
-                    ++ if d.navExpanded then
-                        d.modules
-                            |> List.sortBy .name
-                            |> List.map (\m -> ModuleNav m d.id)
-                       else
-                        []
+updateNavList : Model -> Model
+updateNavList model =
+    { model
+        | navList =
+            (model.pinnedDocs
+                |> List.map
+                    (\d ->
+                        [ DocNav d ]
+                            ++ if d.navExpanded then
+                                d.modules
+                                    |> List.sortBy .name
+                                    |> List.map (\m -> ModuleNav m d.id)
+                               else
+                                []
+                    )
+                |> List.concat
             )
-        |> List.concat
-    )
-        ++ [ DisabledHandleNav ]
-        ++ if model.showDisabled then
-            [ DisabledInputNav ]
-                ++ (disabledPackages model
-                        |> List.map DisabledDocNav
-                   )
-           else
-            []
+                ++ [ DisabledHandleNav ]
+                ++ if model.showDisabled then
+                    [ DisabledInputNav ]
+                        ++ (List.map DisabledDocNav <| disabledPackages model)
+                   else
+                    []
+    }

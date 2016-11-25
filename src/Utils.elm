@@ -18,6 +18,14 @@ findFirst predicate list =
                 findFirst predicate xs
 
 
+atIndex : Int -> List a -> Maybe a
+atIndex index list =
+    list
+        |> List.indexedMap (,)
+        |> findFirst (\( i, _ ) -> i == index)
+        |> Maybe.map Tuple.second
+
+
 onNothing : Maybe a -> Maybe a -> Maybe a
 onNothing a b =
     case b of

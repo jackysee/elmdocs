@@ -35,21 +35,23 @@ init value location =
                 |> Maybe.withDefault defaultStoreModel
 
         model =
-            { allPackages = []
-            , newPackages = []
-            , pinnedDocs = storeModel.docs
-            , page = Home
-            , searchIndex = storeModel.searchIndex
-            , searchResult = []
-            , searchText = ""
-            , showDisabled = False
-            , showNewOnly = True
-            , searchPackageText = ""
-            , showConfirmDeleteDoc = Nothing
-            , selectedIndex = 0
-            , navWidth = storeModel.navWidth
-            , drag = Nothing
-            }
+            updateNavList
+                { allPackages = []
+                , newPackages = []
+                , pinnedDocs = storeModel.docs
+                , navList = []
+                , page = Home
+                , searchIndex = storeModel.searchIndex
+                , searchResult = []
+                , searchText = ""
+                , showDisabled = False
+                , showNewOnly = True
+                , searchPackageText = ""
+                , showConfirmDeleteDoc = Nothing
+                , selectedIndex = 0
+                , navWidth = storeModel.navWidth
+                , drag = Nothing
+                }
     in
         model ! [ getAllPackages (value == Nothing) location ]
 
@@ -151,10 +153,11 @@ update msg model =
         LoadAllPackages loadDefault location (Ok ( allPackages, newPackages )) ->
             let
                 model_ =
-                    { model
-                        | allPackages = allPackages
-                        , newPackages = newPackages
-                    }
+                    updateNavList
+                        { model
+                            | allPackages = allPackages
+                            , newPackages = newPackages
+                        }
 
                 cmd_ =
                     if loadDefault then
@@ -175,12 +178,13 @@ update msg model =
                 searchIndex =
                     List.filter (\( path, docId ) -> doc.id /= docId) model.searchIndex
             in
-                { model
-                    | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
-                    , searchIndex = searchIndex
-                    , showConfirmDeleteDoc = Nothing
-                    , page = Home
-                }
+                updateNavList
+                    { model
+                        | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
+                        , searchIndex = searchIndex
+                        , showConfirmDeleteDoc = Nothing
+                        , page = Home
+                    }
                     ! [ removeLocal { doc = doc, searchIndex = searchIndex } ]
 
         PinDoc rest (Ok doc) ->
@@ -188,10 +192,11 @@ update msg model =
                 searchIndex =
                     buildSearchIndex model.searchIndex doc
             in
-                { model
-                    | pinnedDocs = model.pinnedDocs ++ [ doc ]
-                    , searchIndex = searchIndex
-                }
+                updateNavList
+                    { model
+                        | pinnedDocs = model.pinnedDocs ++ [ doc ]
+                        , searchIndex = searchIndex
+                    }
                     ! [ getDocs rest
                       , saveLocal { doc = doc, searchIndex = searchIndex }
                       ]
@@ -254,37 +259,41 @@ update msg model =
             )
 
         Search text ->
-            ( { model
-                | searchText = text
-                , selectedIndex = 0
-                , page =
-                    if String.isEmpty text then
-                        Home
-                    else
-                        model.page
-                , searchResult =
-                    if String.isEmpty text then
-                        []
-                    else
-                        model.searchIndex
-                            |> List.filter
-                                (\( path, docId ) ->
-                                    String.contains
-                                        (String.toLower text)
-                                        (String.toLower path)
-                                )
-              }
+            ( updateNavList
+                { model
+                    | searchText = text
+                    , selectedIndex = 0
+                    , page =
+                        if String.isEmpty text then
+                            Home
+                        else
+                            model.page
+                    , searchResult =
+                        if String.isEmpty text then
+                            []
+                        else
+                            model.searchIndex
+                                |> List.filter
+                                    (\( path, docId ) ->
+                                        String.contains
+                                            (String.toLower text)
+                                            (String.toLower path)
+                                    )
+                }
             , Cmd.none
             )
 
         SearchPackage text ->
-            ( { model | searchPackageText = text }, Cmd.none )
+            ( updateNavList
+                { model | searchPackageText = text }
+            , Cmd.none
+            )
 
         SetShowDisabled show ->
-            ( { model | showDisabled = show }, Cmd.none )
+            ( updateNavList { model | showDisabled = show }, Cmd.none )
 
         SetShowNewOnly show ->
-            ( { model | showNewOnly = show }, Cmd.none )
+            ( updateNavList { model | showNewOnly = show }, Cmd.none )
 
         SetShowConfirmDeleteDoc docId ->
             ( { model | showConfirmDeleteDoc = docId }, Cmd.none )
@@ -293,30 +302,31 @@ update msg model =
             ( { model | selectedIndex = i }, Cmd.none )
 
         DocNavExpand expand docId ->
-            ( { model
-                | pinnedDocs =
-                    List.map
-                        (\d ->
-                            if d.id == docId then
-                                { d | navExpanded = expand }
-                            else
-                                d
-                        )
-                        model.pinnedDocs
-                , selectedIndex =
-                    findFirst
-                        (\( i, navItem ) ->
-                            case navItem of
-                                DocNav d ->
-                                    d.id == docId
+            ( updateNavList
+                { model
+                    | pinnedDocs =
+                        List.map
+                            (\d ->
+                                if d.id == docId then
+                                    { d | navExpanded = expand }
+                                else
+                                    d
+                            )
+                            model.pinnedDocs
+                    , selectedIndex =
+                        findFirst
+                            (\( i, navItem ) ->
+                                case navItem of
+                                    DocNav d ->
+                                        d.id == docId
 
-                                _ ->
-                                    False
-                        )
-                        (List.indexedMap (,) (toDocNavItemList model))
-                        |> Maybe.map (\( i, _ ) -> i)
-                        |> Maybe.withDefault 0
-              }
+                                    _ ->
+                                        False
+                            )
+                            (List.indexedMap (,) model.navList)
+                            |> Maybe.map (\( i, _ ) -> i)
+                            |> Maybe.withDefault 0
+                }
             , Cmd.none
             )
 
@@ -524,7 +534,7 @@ viewSearchResult model =
 navList : Model -> Html Msg
 navList model =
     div [ class "nav-list" ]
-        (toDocNavItemList model
+        (model.navList
             |> List.indexedMap
                 (\i navItem ->
                     case navItem of
@@ -1016,7 +1026,7 @@ keyMap model key =
         let
             len =
                 if model.searchText == "" then
-                    List.length <| toDocNavItemList model
+                    List.length model.navList
                 else
                     List.length model.searchResult
 
@@ -1029,14 +1039,12 @@ keyMap model key =
             index =
                 max 0 (model.selectedIndex - 1)
         in
-            MsgBatch <|
-                [ SetSelectedIndex index ]
-                    ++ focusMsg model index
+            MsgBatch <| [ SetSelectedIndex index ] ++ focusMsg model index
     else if key == "enter" then
         if model.searchText == "" then
             selectedItemMsg
                 model.selectedIndex
-                (toDocNavItemList model)
+                model.navList
                 (\navItem ->
                     case navItem of
                         DocNav d ->
@@ -1065,7 +1073,7 @@ keyMap model key =
     else if key == "right" && model.searchText == "" then
         selectedItemMsg
             model.selectedIndex
-            (toDocNavItemList model)
+            model.navList
             (\navItem ->
                 case navItem of
                     DocNav d ->
@@ -1080,7 +1088,7 @@ keyMap model key =
     else if key == "left" && model.searchText == "" then
         selectedItemMsg
             model.selectedIndex
-            (toDocNavItemList model)
+            model.navList
             (\navItem ->
                 case navItem of
                     DocNav d ->
@@ -1106,11 +1114,10 @@ focusMsg model index =
     else if model.selectedIndex == 0 && index == 0 then
         [ DomFocus "search-input" ]
     else
-        toDocNavItemList model
-            |> List.indexedMap (,)
-            |> findFirst (\( i, _ ) -> i == index)
+        model.navList
+            |> Utils.atIndex index
             |> Maybe.map
-                (\( i, navItem ) ->
+                (\navItem ->
                     case navItem of
                         DisabledInputNav ->
                             [ DomFocus "package-search-input" ]
