@@ -772,18 +772,31 @@ docTitle doc =
         [ span
             [ class "btn-link" ]
             [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-        , a
-            [ class "browse-source btn-link"
-            , href <| "https://github.com/" ++ doc.packageName
-            , target "_blank"
-            , onWithOptions "click"
-                { stopPropagation = True
-                , preventDefault = False
-                }
-                (Json.Decode.succeed NoOp)
+        , div
+            []
+            [ remoteLink
+                ("http://package.elm-lang.org/packages/" ++ doc.packageName ++ "/" ++ doc.packageVersion)
+                "elm packages"
+            , remoteLink
+                ("https://github.com/" ++ doc.packageName)
+                "Browse Source"
             ]
-            [ text "Browse source" ]
         ]
+
+
+remoteLink : String -> String -> Html Msg
+remoteLink url label =
+    a
+        [ class "btn-link"
+        , href url
+        , target "_blank"
+        , onWithOptions "click"
+            { stopPropagation = True
+            , preventDefault = False
+            }
+            (Json.Decode.succeed NoOp)
+        ]
+        [ text label ]
 
 
 viewModule : Model -> String -> Doc -> Html Msg
