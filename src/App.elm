@@ -19,6 +19,7 @@ import Icons
 import Utils exposing (..)
 import Navigation
 import Mouse
+import Dom
 
 
 init : Maybe Json.Decode.Value -> Location -> ( Model, Cmd Msg )
@@ -279,8 +280,8 @@ update msg model =
         SearchPackage text ->
             ( { model | searchPackageText = text }, Cmd.none )
 
-        ToggleShowDisabled ->
-            ( { model | showDisabled = not model.showDisabled }, Cmd.none )
+        SetShowDisabled show ->
+            ( { model | showDisabled = show }, Cmd.none )
 
         SetShowNewOnly show ->
             ( { model | showNewOnly = show }, Cmd.none )
@@ -312,7 +313,7 @@ update msg model =
                                 _ ->
                                     False
                         )
-                        (List.indexedMap (,) (toDocNavItemList model.pinnedDocs))
+                        (List.indexedMap (,) (toDocNavItemList model))
                         |> Maybe.map (\( i, _ ) -> i)
                         |> Maybe.withDefault 0
               }
@@ -347,6 +348,9 @@ update msg model =
         DragEnd xy ->
             ( { model | drag = Nothing }, Cmd.none )
 
+        DomFocus id ->
+            ( model, Task.attempt (\_ -> NoOp) (Dom.focus id) )
+
 
 view : Model -> Html Msg
 view model =
@@ -362,17 +366,14 @@ view model =
                     , onInput Search
                     , value model.searchText
                     , placeholder "Search..."
+                    , id "search-input"
                     ]
                     []
                 ]
             , if model.searchText /= "" then
                 viewSearchResult model
               else
-                div
-                    [ class "nav-list" ]
-                    [ viewPinnedDocs model
-                    , viewDiasabledDocs model
-                    ]
+                navList model
             ]
         , div
             [ class "doc" ]
@@ -520,10 +521,10 @@ viewSearchResult model =
             ]
 
 
-viewPinnedDocs : Model -> Html Msg
-viewPinnedDocs model =
-    div [ class "nav-pinned" ]
-        (toDocNavItemList model.pinnedDocs
+navList : Model -> Html Msg
+navList model =
+    div [ class "nav-list" ]
+        (toDocNavItemList model
             |> List.indexedMap
                 (\i navItem ->
                     case navItem of
@@ -596,119 +597,105 @@ viewPinnedDocs model =
                                         ]
                                 ]
                                 [ span [] [ text m.name ] ]
+
+                        DisabledHandleNav ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-packages-disabled-handle", True )
+                                    , ( "is-selected", i == model.selectedIndex )
+                                    ]
+                                , onClick (SetShowDisabled <| not model.showDisabled)
+                                ]
+                                [ span
+                                    [ class "icon" ]
+                                    [ if model.showDisabled then
+                                        Icons.caretDown
+                                      else
+                                        Icons.caretRight
+                                    ]
+                                , span
+                                    [ class "flex-wide" ]
+                                    [ text <| "Disabled (" ++ (disabledPackages model |> List.length |> toString) ++ ")"
+                                    ]
+                                , if model.showDisabled then
+                                    div []
+                                        [ span
+                                            [ classList
+                                                [ ( "btn-pill", True )
+                                                , ( "is-selected", model.showNewOnly )
+                                                ]
+                                            , onClickInside (SetShowNewOnly True)
+                                            ]
+                                            [ text "new" ]
+                                        , span
+                                            [ classList
+                                                [ ( "btn-pill", True )
+                                                , ( "is-selected", not model.showNewOnly )
+                                                ]
+                                            , onClickInside (SetShowNewOnly False)
+                                            ]
+                                            [ text "all" ]
+                                        ]
+                                  else
+                                    text ""
+                                ]
+
+                        DisabledInputNav ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-package-search", True )
+                                    , ( "is-selected", i == model.selectedIndex )
+                                    ]
+                                ]
+                                [ input
+                                    [ class "search-package-input"
+                                    , value model.searchPackageText
+                                    , onInput SearchPackage
+                                    , placeholder "Search Package..."
+                                    , id "package-search-input"
+                                    ]
+                                    []
+                                ]
+
+                        DisabledDocNav p ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-doc-item nav-packages-doc-item", True )
+                                    , ( "is-selected", i == model.selectedIndex )
+                                    ]
+                                ]
+                                [ span
+                                    [ class "nav-doc-package"
+                                    , title <| "show " ++ p.name
+                                    , case List.head p.versions of
+                                        Just version ->
+                                            onClick (LinkToDisabledDoc p.name version "")
+
+                                        Nothing ->
+                                            onClick NoOp
+                                    ]
+                                    [ text p.name ]
+                                , span
+                                    [ class "nav-doc-version" ]
+                                  <|
+                                    case List.head p.versions of
+                                        Just version_ ->
+                                            [ span
+                                                [ class "nav-doc-version-str" ]
+                                                [ text version_ ]
+                                            , span
+                                                [ class "nav-doc-version-action btn-link"
+                                                , title "add to search index"
+                                                , onClick (AddDoc ( p.name, version_ ))
+                                                ]
+                                                [ text "Add" ]
+                                            ]
+
+                                        Nothing ->
+                                            []
+                                ]
                 )
         )
-
-
-viewDiasabledDocs : Model -> Html Msg
-viewDiasabledDocs model =
-    div
-        [ class "nav-packages" ]
-        [ div
-            [ class "nav-packages-disabled-handle"
-            , onClick ToggleShowDisabled
-            ]
-            [ span
-                [ class "icon" ]
-                [ if model.showDisabled then
-                    Icons.caretDown
-                  else
-                    Icons.caretRight
-                ]
-            , span
-                [ class "flex-wide" ]
-                [ text <| "Disabled (" ++ (disabledPackages model |> List.length |> toString) ++ ")"
-                ]
-            , if model.showDisabled then
-                div []
-                    [ span
-                        [ classList
-                            [ ( "btn-pill", True )
-                            , ( "is-selected", model.showNewOnly )
-                            ]
-                        , onClickInside (SetShowNewOnly True)
-                        ]
-                        [ text "new" ]
-                    , span
-                        [ classList
-                            [ ( "btn-pill", True )
-                            , ( "is-selected", not model.showNewOnly )
-                            ]
-                        , onClickInside (SetShowNewOnly False)
-                        ]
-                        [ text "all" ]
-                    ]
-              else
-                text ""
-            ]
-        , if model.showDisabled then
-            div [ class "nav-packages-disabled" ] <|
-                [ div [ class "nav-item nav-package-search" ]
-                    [ input
-                        [ class "search-package-input"
-                        , value model.searchPackageText
-                        , onInput SearchPackage
-                        , placeholder "Search Package..."
-                        ]
-                        []
-                    ]
-                ]
-                    ++ (disabledPackages model
-                            |> List.map
-                                (\p ->
-                                    div
-                                        [ class "nav-item nav-doc-item nav-packages-doc-item" ]
-                                        [ span
-                                            [ class "nav-doc-package"
-                                            , title <| "show " ++ p.name
-                                            , case List.head p.versions of
-                                                Just version ->
-                                                    onClick (LinkToDisabledDoc p.name version "")
-
-                                                Nothing ->
-                                                    onClick NoOp
-                                            ]
-                                            [ text p.name ]
-                                        , span
-                                            [ class "nav-doc-version" ]
-                                          <|
-                                            case List.head p.versions of
-                                                Just version_ ->
-                                                    [ span
-                                                        [ class "nav-doc-version-str" ]
-                                                        [ text version_ ]
-                                                    , span
-                                                        [ class "nav-doc-version-action btn-link"
-                                                        , title "add to search index"
-                                                        , onClick (AddDoc ( p.name, version_ ))
-                                                        ]
-                                                        [ text "Add" ]
-                                                    ]
-
-                                                Nothing ->
-                                                    []
-                                        ]
-                                )
-                       )
-          else
-            text ""
-        ]
-
-
-disabledPackages : Model -> List Package
-disabledPackages model =
-    model.allPackages
-        |> List.filter
-            (\p ->
-                (not <| List.member p.name (List.map .packageName model.pinnedDocs))
-                    && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
-                    && if model.searchPackageText /= "" then
-                        String.contains
-                            (String.toLower model.searchPackageText)
-                            (String.toLower p.name)
-                       else
-                        True
-            )
 
 
 viewDocOverview : Doc -> Html Msg
@@ -1026,22 +1013,30 @@ subscriptions model =
 keyMap : Model -> String -> Msg
 keyMap model key =
     if key == "down" then
-        SetSelectedIndex <|
-            let
-                len =
-                    if model.searchText == "" then
-                        List.length <| toDocNavItemList model.pinnedDocs
-                    else
-                        List.length model.searchResult
-            in
+        let
+            len =
+                if model.searchText == "" then
+                    List.length <| toDocNavItemList model
+                else
+                    List.length model.searchResult
+
+            index =
                 min (model.selectedIndex + 1) (len - 1)
+        in
+            MsgBatch <| [ SetSelectedIndex index ] ++ focusMsg model index
     else if key == "up" then
-        SetSelectedIndex <| max 0 (model.selectedIndex - 1)
+        let
+            index =
+                max 0 (model.selectedIndex - 1)
+        in
+            MsgBatch <|
+                [ SetSelectedIndex index ]
+                    ++ focusMsg model index
     else if key == "enter" then
         if model.searchText == "" then
             selectedItemMsg
                 model.selectedIndex
-                (toDocNavItemList model.pinnedDocs)
+                (toDocNavItemList model)
                 (\navItem ->
                     case navItem of
                         DocNav d ->
@@ -1049,6 +1044,17 @@ keyMap model key =
 
                         ModuleNav m docId ->
                             LinkToPinnedDoc m.name docId
+
+                        DisabledDocNav p ->
+                            case List.head p.versions of
+                                Just version ->
+                                    LinkToDisabledDoc p.name version ""
+
+                                Nothing ->
+                                    NoOp
+
+                        _ ->
+                            NoOp
                 )
         else
             selectedItemMsg model.selectedIndex
@@ -1059,11 +1065,14 @@ keyMap model key =
     else if key == "right" && model.searchText == "" then
         selectedItemMsg
             model.selectedIndex
-            (toDocNavItemList model.pinnedDocs)
+            (toDocNavItemList model)
             (\navItem ->
                 case navItem of
                     DocNav d ->
                         DocNavExpand True d.id
+
+                    DisabledHandleNav ->
+                        SetShowDisabled True
 
                     _ ->
                         NoOp
@@ -1071,7 +1080,7 @@ keyMap model key =
     else if key == "left" && model.searchText == "" then
         selectedItemMsg
             model.selectedIndex
-            (toDocNavItemList model.pinnedDocs)
+            (toDocNavItemList model)
             (\navItem ->
                 case navItem of
                     DocNav d ->
@@ -1079,9 +1088,37 @@ keyMap model key =
 
                     ModuleNav m docId ->
                         DocNavExpand False docId
+
+                    DisabledHandleNav ->
+                        SetShowDisabled False
+
+                    _ ->
+                        NoOp
             )
     else
         NoOp
+
+
+focusMsg : Model -> Int -> List Msg
+focusMsg model index =
+    if model.searchText /= "" then
+        []
+    else if model.selectedIndex == 0 && index == 0 then
+        [ DomFocus "search-input" ]
+    else
+        toDocNavItemList model
+            |> List.indexedMap (,)
+            |> findFirst (\( i, _ ) -> i == index)
+            |> Maybe.map
+                (\( i, navItem ) ->
+                    case navItem of
+                        DisabledInputNav ->
+                            [ DomFocus "package-search-input" ]
+
+                        _ ->
+                            []
+                )
+            |> Maybe.withDefault []
 
 
 port scrollToElement : String -> Cmd msg

@@ -40,6 +40,9 @@ type Page
 type DocNavItem
     = DocNav Doc
     | ModuleNav Module DocId
+    | DisabledHandleNav
+    | DisabledInputNav
+    | DisabledDocNav Package
 
 
 type alias StoreModel =
@@ -125,9 +128,25 @@ getDocById model docId =
         findFirst (\d -> d.id == docId) model.pinnedDocs
 
 
-toDocNavItemList : List Doc -> List DocNavItem
-toDocNavItemList list =
-    list
+disabledPackages : Model -> List Package
+disabledPackages model =
+    model.allPackages
+        |> List.filter
+            (\p ->
+                (not <| List.member p.name (List.map .packageName model.pinnedDocs))
+                    && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
+                    && if model.searchPackageText /= "" then
+                        String.contains
+                            (String.toLower model.searchPackageText)
+                            (String.toLower p.name)
+                       else
+                        True
+            )
+
+
+toDocNavItemList : Model -> List DocNavItem
+toDocNavItemList model =
+    (model.pinnedDocs
         |> List.map
             (\d ->
                 [ DocNav d ]
@@ -139,3 +158,12 @@ toDocNavItemList list =
                         []
             )
         |> List.concat
+    )
+        ++ [ DisabledHandleNav ]
+        ++ if model.showDisabled then
+            [ DisabledInputNav ]
+                ++ (disabledPackages model
+                        |> List.map DisabledDocNav
+                   )
+           else
+            []

@@ -17,7 +17,7 @@ type Msg
     | SetDisabledDocModule String
     | SetCurrentDocFromId String DocId
     | Search String
-    | ToggleShowDisabled
+    | SetShowDisabled Bool
     | SetShowNewOnly Bool
     | SearchPackage String
     | SetShowConfirmDeleteDoc (Maybe DocId)
@@ -29,3 +29,4 @@ type Msg
     | DragStart Position
     | DragAt Position
     | DragEnd Position
+    | DomFocus String
