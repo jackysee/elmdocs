@@ -965,17 +965,130 @@ viewType indexes str =
                 |> replaceFullPathVar
     in
         if String.length str_ < 64 then
-            [ span [] [ text <| " : " ++ str_ ] ]
+            [ span [] [ text " : " ] ]
+                ++ linkToName indexes str
         else
-            str_
-                |> splitTypeArgs
+            str
+                |> splitTypeArgs2
+                |> Debug.log "splitted"
                 |> List.indexedMap
                     (\i s ->
                         if i == 0 then
-                            div [ class "indent" ] [ text <| " : " ++ s ]
+                            div [ class "indent" ] <|
+                                [ span [] [ text " : " ] ]
+                                    ++ linkToName indexes s
                         else
-                            div [ class "indent" ] [ text <| " -> " ++ s ]
+                            div [ class "indent" ] <|
+                                [ span [] [ text " -> " ] ]
+                                    ++ linkToName indexes s
                     )
+
+
+linkToName : List ( String, String ) -> String -> List (Html Msg)
+linkToName indexes str =
+    let
+        matches =
+            findNameMatches indexes str |> List.sortBy .index
+
+        replace =
+            \index matches str ->
+                case matches of
+                    [] ->
+                        [ span [] [ text <| String.slice index (String.length str) str ] ]
+
+                    x :: xs ->
+                        let
+                            txt =
+                                String.slice index x.index str
+
+                            name =
+                                String.slice x.index (x.index + String.length x.match) str
+
+                            txtSpan =
+                                if txt == "" then
+                                    Nothing
+                                else
+                                    Just <| span [] [ text txt ]
+
+                            nameSpan =
+                                Just <|
+                                    span
+                                        [ class "btn-link"
+                                        , title name
+                                        ]
+                                        [ text <| String.Extra.rightOfBack "." name ]
+
+                            parts =
+                                [ txtSpan, nameSpan ] |> List.filterMap identity
+                        in
+                            parts ++ (replace (x.index + String.length x.match) xs str)
+
+        -- spans =
+        --     Debug.log "spans" (replace 0 matches str)
+    in
+        -- str
+        replace 0 matches str
+
+
+findNameMatches : List ( String, String ) -> String -> List Regex.Match
+findNameMatches indexes str =
+    case indexes of
+        [] ->
+            []
+
+        ( path, _ ) :: xs ->
+            let
+                matches =
+                    Regex.find
+                        Regex.All
+                        (Regex.regex <| Regex.escape path)
+                        str
+            in
+                matches ++ findNameMatches xs str
+
+
+splitTypeArgs2 : String -> List String
+splitTypeArgs2 str =
+    let
+        find =
+            \atMost str ->
+                let
+                    match_ =
+                        Regex.find (Regex.AtMost atMost) (Regex.regex "->") str
+                            |> List.reverse
+                            |> List.head
+                in
+                    case match_ of
+                        Just match ->
+                            let
+                                s1 =
+                                    String.slice 0 match.index str
+
+                                s2 =
+                                    String.slice (match.index + 2) (String.length str) str
+                            in
+                                if isBracketBalanced "(" ")" s1 && isBracketBalanced "{" "}" s1 then
+                                    Just ( s1, s2 )
+                                else
+                                    find (atMost + 1) str
+
+                        Nothing ->
+                            Nothing
+    in
+        case find 1 str of
+            Just ( s1, s2 ) ->
+                s1 :: (splitTypeArgs2 s2)
+
+            Nothing ->
+                [ str ]
+
+
+isBracketBalanced : String -> String -> String -> Bool
+isBracketBalanced open end str =
+    if String.contains open str || String.contains end str then
+        String.Extra.countOccurrences open str == String.Extra.countOccurrences end str
+    else
+        True
 
 
 splitTypeArgs : String -> List String
@@ -989,8 +1102,14 @@ splitTypeArgs str =
     in
         case result of
             { match } :: xs ->
-                String.slice 0 (String.length match - 2) match
-                    :: (splitTypeArgs <| String.Extra.rightOf match str)
+                let
+                    a =
+                        Debug.log "match" match
+                in
+                    String.slice 0 (String.length match - 2) match
+                        :: (splitTypeArgs <|
+                                String.slice (String.length match) (String.length str) str
+                           )
 
             [] ->
                 [ str ]
