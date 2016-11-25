@@ -369,6 +369,20 @@ update msg model =
         SetSearchFocused focused ->
             ( { model | searchFocused = focused }, Cmd.none )
 
+        LinkToModule modulePath ->
+            case model.page of
+                DocOverview docId ->
+                    ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath )
+
+                DocModule docId path ->
+                    ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath )
+
+                DisabledDoc doc path ->
+                    ( model, Navigation.newUrl <| "#remote/" ++ doc.packageName ++ "/" ++ doc.packageVersion ++ "/" ++ modulePath )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 focus : String -> Cmd Msg
 focus id =
@@ -884,16 +898,19 @@ viewPart moduleName entry indexes =
                 , id <| moduleName ++ "." ++ alias.name
                 ]
                 [ h3 [] <|
-                    [ div []
+                    [ div [] <|
                         [ text "type alias "
                         , span [ class "entry-name" ] [ text alias.name ]
-                        , if List.length alias.args > 0 then
-                            text <| " " ++ String.join " " alias.args
-                          else
-                            text ""
-                        , text " = "
                         ]
-                    , div [ class "indent" ] [ text <| replaceTypesAliasValues indexes alias.type_ ]
+                            ++ (if List.length alias.args > 0 then
+                                    (" " ++ String.join " " alias.args)
+                                        |> linkToName indexes
+                                else
+                                    []
+                               )
+                            ++ [ text " = " ]
+                    , div [ class "indent" ] <|
+                        linkToName indexes alias.type_
                     ]
                 , Markdown.toHtml [ class "entry-comment" ] alias.comment
                 ]
@@ -906,8 +923,8 @@ viewPart moduleName entry indexes =
                 [ h3 [] <|
                     [ text "type "
                     , span [ class "entry-name" ] [ text tipe.name ]
-                    , text <| " " ++ String.join " " tipe.args
                     ]
+                        ++ ((" " ++ String.join " " tipe.args) |> linkToName indexes)
                         ++ (if List.length tipe.cases > 0 then
                                 tipe.cases |> List.indexedMap viewCase
                             else
@@ -965,28 +982,29 @@ viewType indexes str =
                 |> replaceFullPathVar
     in
         if String.length str_ < 64 then
-            [ text <| " : " ++ str_ ]
-            -- [ span [] [ text " : " ] ]
-            --     ++ linkToName indexes str
+            --    [ text <| " : " ++ str_ ]
+            [ span [] [ text " : " ] ]
+                ++ linkToName indexes str
         else
-            -- str
-            str_
-                -- |> splitTypeArgs2
+            str
+                -- str_
                 |>
-                    splitTypeArgs
-                |> List.indexedMap
-                    (\i s ->
-                        if i == 0 then
-                            div [ class "indent" ] <|
-                                [ text <| " : " ++ s ]
-                            -- [ span [] [ text " : " ] ]
-                            --     ++ linkToName indexes s
-                        else
-                            div [ class "indent" ] <|
-                                [ text <| " -> " ++ s ]
-                     -- [ span [] [ text " -> " ] ]
-                     --     ++ linkToName indexes s
-                    )
+                    splitTypeArgs2
+                -- |> splitTypeArgs
+                |>
+                    List.indexedMap
+                        (\i s ->
+                            if i == 0 then
+                                div [ class "indent" ] <|
+                                    --  [ text <| " : " ++ s ]
+                                    [ span [] [ text " : " ] ]
+                                        ++ linkToName indexes s
+                            else
+                                div [ class "indent" ] <|
+                                    --    [ text <| " -> " ++ s ]
+                                    [ span [] [ text " -> " ] ]
+                                        ++ linkToName indexes s
+                        )
 
 
 linkToName : List ( String, String ) -> String -> List (Html Msg)
@@ -999,7 +1017,12 @@ linkToName indexes str =
             \index matches str ->
                 case matches of
                     [] ->
-                        [ span [] [ text <| String.slice index (String.length str) str ] ]
+                        [ span []
+                            [ String.slice index (String.length str) str
+                                |> replaceFullPathVar
+                                |> text
+                            ]
+                        ]
 
                     x :: xs ->
                         let
@@ -1013,13 +1036,14 @@ linkToName indexes str =
                                 if txt == "" then
                                     Nothing
                                 else
-                                    Just <| span [] [ text txt ]
+                                    Just <| span [] [ text <| replaceFullPathVar txt ]
 
                             nameSpan =
                                 Just <|
                                     span
                                         [ class "btn-link"
                                         , title name
+                                        , onClick (LinkToModule name)
                                         ]
                                         [ text <| String.Extra.rightOfBack "." name ]
 
@@ -1027,11 +1051,7 @@ linkToName indexes str =
                                 [ txtSpan, nameSpan ] |> List.filterMap identity
                         in
                             parts ++ (replace (x.index + String.length x.match) xs str)
-
-        -- spans =
-        --     Debug.log "spans" (replace 0 matches str)
     in
-        -- str
         replace 0 matches str
 
 
@@ -1136,15 +1156,22 @@ replaceTypesAliasValues indexes str =
 
 replaceFullPathVar : String -> String
 replaceFullPathVar str =
-    Regex.replace Regex.All
-        (Regex.regex "(?:[a-zA-Z0-9_]+\\.)+([a-zA-Z0-9_]+)")
-        (\m ->
-            m.submatches
-                |> List.filterMap identity
-                |> List.head
-                |> Maybe.withDefault ""
-        )
-        str
+    let
+        a =
+            if String.contains "VirtualDom" str then
+                Debug.log "rr" str
+            else
+                str
+    in
+        Regex.replace Regex.All
+            (Regex.regex "(?:[a-zA-Z0-9_]+\\.)+([a-zA-Z0-9_]+)")
+            (\m ->
+                m.submatches
+                    |> List.filterMap identity
+                    |> List.head
+                    |> Maybe.withDefault ""
+            )
+            str
 
 
 subscriptions : Model -> Sub Msg

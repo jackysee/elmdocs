@@ -32,3 +32,4 @@ type Msg
     | DomFocus String
     | ListScrollTo Int
     | SetSearchFocused Bool
+    | LinkToModule String
