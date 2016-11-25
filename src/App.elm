@@ -1,7 +1,7 @@
 port module App exposing (..)
 
 import Html exposing (Html, text, div, input, h1, h2, h3, br, span, button, a)
-import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList, href, target)
+import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList, href, target, autofocus)
 import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions)
 import Http
 import String
@@ -320,10 +320,10 @@ update msg model =
             )
 
         LinkToPinnedDoc path docId ->
-            ( model, Navigation.newUrl <| "#packages/" ++ docId ++ "/" ++ path )
+            ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ path )
 
         LinkToDisabledDoc name version path ->
-            ( model, Navigation.newUrl <| "#disabled/" ++ name ++ "/" ++ version ++ "/" ++ path )
+            ( model, Navigation.newUrl <| "#remote/" ++ name ++ "/" ++ version ++ "/" ++ path )
 
         DragStart xy ->
             ( { model | drag = Just (Drag xy xy) }, Cmd.none )
@@ -362,7 +362,6 @@ view model =
                     , onInput Search
                     , value model.searchText
                     , placeholder "Search..."
-                      -- , on "keyup" <| Json.Decode.map (inputKeyUp model) keyCode
                     ]
                     []
                 ]

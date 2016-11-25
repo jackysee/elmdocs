@@ -30,22 +30,22 @@ route =
             (\user package version path ->
                 SetCurrentDocFromId path (String.join "/" [ user, package, version ])
             )
-            (s "packages" </> string </> string </> string </> string)
+            (s "local" </> string </> string </> string </> string)
         , map
             (\user package version ->
                 SetCurrentDocFromId "" (String.join "/" [ user, package, version ])
             )
-            (s "packages" </> string </> string </> string)
+            (s "local" </> string </> string </> string)
         , map
             (\user package version path ->
                 GetCurrentDocFromPackage (user ++ "/" ++ package) version path
             )
-            (s "disabled" </> string </> string </> string </> string)
+            (s "remote" </> string </> string </> string </> string)
         , map
             (\user package version ->
                 GetCurrentDocFromPackage (user ++ "/" ++ package) version ""
             )
-            (s "disabled" </> string </> string </> string)
+            (s "remote" </> string </> string </> string)
         , map (SetCurrentDocFromId "" "") top
         ]
 
