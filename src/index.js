@@ -71,3 +71,23 @@ document.onkeypress = function(ev){
         app.ports.keypress.send(key);
     }
 };
+
+app.ports.listScrollTo.subscribe(function(id){
+    var el = document.getElementById(id);
+    if(el){
+        requestAnimationFrame(function(){
+            var parent = el.offsetParent;
+            var parentScrollTop = parent.scrollTop;
+            var elOffsetTop = el.offsetTop;
+            if(parentScrollTop > elOffsetTop){
+                parent.scrollTop = elOffsetTop;
+                return;
+            }
+            var parentOffsetHeight = parent.offsetHeight;
+            var elOffsetHeight = el.offsetHeight;
+            if(elOffsetTop + elOffsetHeight > parentScrollTop + parentOffsetHeight ){
+                parent.scrollTop = elOffsetTop + elOffsetHeight - parentOffsetHeight;
+            }
+        });
+    }
+});

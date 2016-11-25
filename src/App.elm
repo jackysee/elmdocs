@@ -361,6 +361,9 @@ update msg model =
         DomFocus id ->
             ( model, Task.attempt (\_ -> NoOp) (Dom.focus id) )
 
+        ListScrollTo index ->
+            ( model, listScrollTo <| "item-" ++ toString index )
+
 
 view : Model -> Html Msg
 view model =
@@ -506,6 +509,7 @@ viewSearchResult model =
                                 [ LinkToPinnedDoc path docId
                                 , SetSelectedIndex i
                                 ]
+                        , id <| "item-" ++ toString i
                         ]
                         [ span
                             [ class "nav-result-path"
@@ -549,6 +553,7 @@ navList model =
                                         [ LinkToPinnedDoc "" d.id
                                         , SetSelectedIndex i
                                         ]
+                                , id <| "item-" ++ toString i
                                 ]
                                 [ span
                                     [ class "icon"
@@ -605,6 +610,7 @@ navList model =
                                         [ LinkToPinnedDoc m.name docId
                                         , SetSelectedIndex i
                                         ]
+                                , id <| "item-" ++ toString i
                                 ]
                                 [ span [] [ text m.name ] ]
 
@@ -615,6 +621,7 @@ navList model =
                                     , ( "is-selected", i == model.selectedIndex )
                                     ]
                                 , onClick (SetShowDisabled <| not model.showDisabled)
+                                , id <| "item-" ++ toString i
                                 ]
                                 [ span
                                     [ class "icon" ]
@@ -636,7 +643,7 @@ navList model =
                                                 ]
                                             , onClickInside (SetShowNewOnly True)
                                             ]
-                                            [ text "new" ]
+                                            [ text ".18" ]
                                         , span
                                             [ classList
                                                 [ ( "btn-pill", True )
@@ -656,6 +663,7 @@ navList model =
                                     [ ( "nav-item nav-package-search", True )
                                     , ( "is-selected", i == model.selectedIndex )
                                     ]
+                                , id <| "item-" ++ toString i
                                 ]
                                 [ input
                                     [ class "search-package-input"
@@ -673,6 +681,7 @@ navList model =
                                     [ ( "nav-item nav-doc-item nav-packages-doc-item", True )
                                     , ( "is-selected", i == model.selectedIndex )
                                     ]
+                                , id <| "item-" ++ toString i
                                 ]
                                 [ span
                                     [ class "nav-doc-package"
@@ -747,7 +756,7 @@ docTitle doc =
                 }
                 (Json.Decode.succeed NoOp)
             ]
-            [ text "Browser source" ]
+            [ text "Browse source" ]
         ]
 
 
@@ -1109,23 +1118,24 @@ keyMap model key =
 
 focusMsg : Model -> Int -> List Msg
 focusMsg model index =
-    if model.searchText /= "" then
-        []
-    else if model.selectedIndex == 0 && index == 0 then
-        [ DomFocus "search-input" ]
-    else
-        model.navList
-            |> Utils.atIndex index
-            |> Maybe.map
-                (\navItem ->
-                    case navItem of
-                        DisabledInputNav ->
-                            [ DomFocus "package-search-input" ]
+    [ ListScrollTo index ]
+        ++ if model.searchText /= "" then
+            []
+           else if model.selectedIndex == 0 && index == 0 then
+            [ DomFocus "search-input" ]
+           else
+            model.navList
+                |> Utils.atIndex index
+                |> Maybe.map
+                    (\navItem ->
+                        case navItem of
+                            DisabledInputNav ->
+                                [ DomFocus "package-search-input" ]
 
-                        _ ->
-                            []
-                )
-            |> Maybe.withDefault []
+                            _ ->
+                                []
+                    )
+                |> Maybe.withDefault []
 
 
 port scrollToElement : String -> Cmd msg
@@ -1141,3 +1151,6 @@ port saveNavWidth : Int -> Cmd msg
 
 
 port keypress : (String -> msg) -> Sub msg
+
+
+port listScrollTo : String -> Cmd msg

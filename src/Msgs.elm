@@ -30,3 +30,4 @@ type Msg
     | DragAt Position
     | DragEnd Position
     | DomFocus String
+    | ListScrollTo Int
