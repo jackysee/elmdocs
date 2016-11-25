@@ -1090,7 +1090,10 @@ keyMap model key =
                 model.searchResult
                 (\( path, docId ) -> LinkToPinnedDoc path docId)
     else if key == "esc" then
-        Search ""
+        MsgBatch
+            [ Search ""
+            , DomFocus "search-input"
+            ]
     else if key == "right" && model.searchText == "" then
         selectedItemMsg
             model.selectedIndex
