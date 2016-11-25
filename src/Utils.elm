@@ -1,6 +1,6 @@
 module Utils exposing (..)
 
-import Html
+import Html exposing (a)
 import Html.Events exposing (onWithOptions)
 import Json.Decode
 

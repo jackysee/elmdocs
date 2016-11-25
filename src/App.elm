@@ -1,7 +1,7 @@
 port module App exposing (..)
 
-import Html exposing (Html, text, div, input, h1, h2, h3, br, span, button)
-import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList)
+import Html exposing (Html, text, div, input, h1, h2, h3, br, span, button, a)
+import Html.Attributes exposing (class, style, value, placeholder, id, title, tabindex, classList, href, target)
 import Html.Events exposing (onClick, onInput, on, keyCode, onWithOptions)
 import Http
 import String
@@ -28,17 +28,8 @@ init value location =
             value
                 |> Maybe.map
                     (\value_ ->
-                        case Json.Decode.decodeValue decodeStoreModel value_ of
-                            Ok m ->
-                                m
-
-                            Err err ->
-                                let
-                                    a =
-                                        Debug.log "error" err
-                                in
-                                    defaultStoreModel
-                     --|> Result.withDefault defaultStoreModel
+                        Json.Decode.decodeValue decodeStoreModel value_
+                            |> Result.withDefault defaultStoreModel
                     )
                 |> Maybe.withDefault defaultStoreModel
 
@@ -350,7 +341,8 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "main" ]
+    div
+        [ class "main" ]
         [ div
             [ class "nav"
             , style [ ( "width", (toString model.navWidth) ++ "px" ) ]
@@ -374,7 +366,9 @@ view model =
                     , viewDiasabledDocs model
                     ]
             ]
-        , div [ class "doc" ] <|
+        , div
+            [ class "doc" ]
+          <|
             [ div
                 [ class "nav-drag-handle"
                 , on "mousedown" (Json.Decode.map DragStart Mouse.position)
@@ -395,9 +389,7 @@ view model =
                     DocOverview docId ->
                         case getDocById model docId of
                             Just doc ->
-                                [ h1
-                                    [ class "doc-title" ]
-                                    [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                                [ docTitle doc
                                 , div
                                     [ class "doc-content" ]
                                     [ viewDocOverview doc ]
@@ -409,9 +401,7 @@ view model =
                     DocModule docId modulePath ->
                         case getDocById model docId of
                             Just doc ->
-                                [ h1
-                                    [ class "doc-title" ]
-                                    [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                                [ docTitle doc
                                 , div
                                     [ class "doc-content" ]
                                     [ viewModule model modulePath doc ]
@@ -421,9 +411,7 @@ view model =
                                 []
 
                     DisabledDoc doc modulePath ->
-                        [ h1
-                            [ class "doc-title" ]
-                            [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+                        [ docTitle doc
                         , div
                             [ class "doc-content" ]
                           <|
@@ -470,59 +458,67 @@ view model =
 
 inputKeyUp : Model -> Int -> Msg
 inputKeyUp model code =
-    if code == 40 then
-        SetSelectedIndex <|
+    let
+        a =
+            Debug.log "keyup" code
+    in
+        if code == 40 then
+            SetSelectedIndex <|
+                let
+                    len =
+                        if model.searchText == "" then
+                            List.length <| toDocNavItemList model.pinnedDocs
+                        else
+                            List.length model.searchResult
+                in
+                    min (model.selectedIndex + 1) (len - 1)
+        else if code == 38 then
+            SetSelectedIndex <| max 0 (model.selectedIndex - 1)
+        else if code == 13 then
             if model.searchText == "" then
-                min (model.selectedIndex + 1) (List.length (toDocNavItemList model.pinnedDocs) - 1)
+                selectedItemMsg
+                    model.selectedIndex
+                    (toDocNavItemList model.pinnedDocs)
+                    (\navItem ->
+                        case navItem of
+                            DocNav d ->
+                                LinkToPinnedDoc "" d.id
+
+                            ModuleNav m docId ->
+                                LinkToPinnedDoc m.name docId
+                    )
             else
-                min (model.selectedIndex + 1) (List.length model.searchResult - 1)
-    else if code == 38 then
-        SetSelectedIndex <| max 0 (model.selectedIndex - 1)
-    else if code == 13 then
-        if model.searchText == "" then
+                selectedItemMsg model.selectedIndex
+                    model.searchResult
+                    (\( path, docId ) -> LinkToPinnedDoc path docId)
+        else if code == 27 then
+            Search ""
+        else if code == 39 && model.searchText == "" then
             selectedItemMsg
                 model.selectedIndex
                 (toDocNavItemList model.pinnedDocs)
                 (\navItem ->
                     case navItem of
                         DocNav d ->
-                            LinkToPinnedDoc "" d.id
+                            DocNavExpand True d.id
+
+                        _ ->
+                            NoOp
+                )
+        else if code == 37 && model.searchText == "" then
+            selectedItemMsg
+                model.selectedIndex
+                (toDocNavItemList model.pinnedDocs)
+                (\navItem ->
+                    case navItem of
+                        DocNav d ->
+                            DocNavExpand False d.id
 
                         ModuleNav m docId ->
-                            LinkToPinnedDoc m.name docId
+                            DocNavExpand False docId
                 )
         else
-            selectedItemMsg model.selectedIndex
-                model.searchResult
-                (\( path, docId ) -> LinkToPinnedDoc path docId)
-    else if code == 27 then
-        Search ""
-    else if code == 39 && model.searchText == "" then
-        selectedItemMsg
-            model.selectedIndex
-            (toDocNavItemList model.pinnedDocs)
-            (\navItem ->
-                case navItem of
-                    DocNav d ->
-                        DocNavExpand True d.id
-
-                    _ ->
-                        NoOp
-            )
-    else if code == 37 && model.searchText == "" then
-        selectedItemMsg
-            model.selectedIndex
-            (toDocNavItemList model.pinnedDocs)
-            (\navItem ->
-                case navItem of
-                    DocNav d ->
-                        DocNavExpand False d.id
-
-                    ModuleNav m docId ->
-                        DocNavExpand False docId
-            )
-    else
-        NoOp
+            NoOp
 
 
 selectedItemMsg : Int -> List a -> (a -> Msg) -> Msg
@@ -614,18 +610,20 @@ viewPinnedDocs model =
                                                 [ class "nav-doc-version-remove"
                                                 , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
                                                 ]
-                                                [ span [ class "nav-doc-version-remove-text" ] [ text "Remove" ]
+                                                [ span
+                                                    [ class "nav-doc-version-remove-text btn-link" ]
+                                                    [ text "Remove" ]
                                                 ]
                                           else if model.showConfirmDeleteDoc == Just d.id then
                                             span
                                                 []
                                                 [ span
-                                                    [ class "nav-doc-version-remove-confirm confirm-danger"
+                                                    [ class "nav-doc-version-remove-confirm btn-link confirm-danger"
                                                     , onClickInside (RemoveDoc d)
                                                     ]
                                                     [ text "Remove" ]
                                                 , span
-                                                    [ class "nav-doc-version-remove-confirm"
+                                                    [ class "nav-doc-version-remove-confirm btn-link"
                                                     , onClickInside (SetShowConfirmDeleteDoc Nothing)
                                                     ]
                                                     [ text "/ Cancel" ]
@@ -717,7 +715,7 @@ viewDiasabledDocs model =
                                                         [ class "nav-doc-version-str" ]
                                                         [ text version_ ]
                                                     , span
-                                                        [ class "nav-doc-version-action"
+                                                        [ class "nav-doc-version-action btn-link"
                                                         , title "add to search index"
                                                         , onClick (AddDoc ( p.name, version_ ))
                                                         ]
@@ -736,12 +734,9 @@ viewDiasabledDocs model =
 
 viewDocOverview : Doc -> Html Msg
 viewDocOverview doc =
-    div
-        [ class "doc-overview" ]
-    <|
+    div [ class "doc-overview" ] <|
         if String.isEmpty doc.readme then
-            [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
-            ]
+            [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
                 ++ (doc.modules
                         |> List.sortBy .name
                         |> List.map
@@ -755,6 +750,29 @@ viewDocOverview doc =
                    )
         else
             [ Markdown.toHtml [ class "doc-overview" ] doc.readme ]
+
+
+docTitle : Doc -> Html Msg
+docTitle doc =
+    h1
+        [ class "doc-title"
+        , onClick (LinkToPinnedDoc "" doc.id)
+        ]
+        [ span
+            [ class "btn-link" ]
+            [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+        , a
+            [ class "browse-source btn-link"
+            , href <| "https://github.com/" ++ doc.packageName
+            , target "_blank"
+            , onWithOptions "click"
+                { stopPropagation = True
+                , preventDefault = False
+                }
+                (Json.Decode.succeed NoOp)
+            ]
+            [ text "Browser source" ]
+        ]
 
 
 viewModule : Model -> String -> Doc -> Html Msg
