@@ -353,7 +353,7 @@ view model =
                     , onInput Search
                     , value model.searchText
                     , placeholder "Search..."
-                    , on "keyup" <| Json.Decode.map (inputKeyUp model) keyCode
+                      -- , on "keyup" <| Json.Decode.map (inputKeyUp model) keyCode
                     ]
                     []
                 ]
@@ -454,71 +454,6 @@ view model =
                             [ span [] [ text "Document not found" ] ]
                         ]
         ]
-
-
-inputKeyUp : Model -> Int -> Msg
-inputKeyUp model code =
-    let
-        a =
-            Debug.log "keyup" code
-    in
-        if code == 40 then
-            SetSelectedIndex <|
-                let
-                    len =
-                        if model.searchText == "" then
-                            List.length <| toDocNavItemList model.pinnedDocs
-                        else
-                            List.length model.searchResult
-                in
-                    min (model.selectedIndex + 1) (len - 1)
-        else if code == 38 then
-            SetSelectedIndex <| max 0 (model.selectedIndex - 1)
-        else if code == 13 then
-            if model.searchText == "" then
-                selectedItemMsg
-                    model.selectedIndex
-                    (toDocNavItemList model.pinnedDocs)
-                    (\navItem ->
-                        case navItem of
-                            DocNav d ->
-                                LinkToPinnedDoc "" d.id
-
-                            ModuleNav m docId ->
-                                LinkToPinnedDoc m.name docId
-                    )
-            else
-                selectedItemMsg model.selectedIndex
-                    model.searchResult
-                    (\( path, docId ) -> LinkToPinnedDoc path docId)
-        else if code == 27 then
-            Search ""
-        else if code == 39 && model.searchText == "" then
-            selectedItemMsg
-                model.selectedIndex
-                (toDocNavItemList model.pinnedDocs)
-                (\navItem ->
-                    case navItem of
-                        DocNav d ->
-                            DocNavExpand True d.id
-
-                        _ ->
-                            NoOp
-                )
-        else if code == 37 && model.searchText == "" then
-            selectedItemMsg
-                model.selectedIndex
-                (toDocNavItemList model.pinnedDocs)
-                (\navItem ->
-                    case navItem of
-                        DocNav d ->
-                            DocNavExpand False d.id
-
-                        ModuleNav m docId ->
-                            DocNavExpand False docId
-                )
-        else
-            NoOp
 
 
 selectedItemMsg : Int -> List a -> (a -> Msg) -> Msg
@@ -675,7 +610,7 @@ viewDiasabledDocs model =
                         [ class "search-package-input"
                         , value model.searchPackageText
                         , onInput SearchPackage
-                        , placeholder "Search Package"
+                        , placeholder "Search Package..."
                         ]
                         []
                     ]
@@ -1034,13 +969,75 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.drag of
         Nothing ->
-            Sub.none
+            Sub.batch
+                [ keypress <| keyMap model ]
 
         Just _ ->
             Sub.batch
                 [ Mouse.moves DragAt
                 , Mouse.ups DragEnd
                 ]
+
+
+keyMap : Model -> String -> Msg
+keyMap model key =
+    if key == "down" then
+        SetSelectedIndex <|
+            let
+                len =
+                    if model.searchText == "" then
+                        List.length <| toDocNavItemList model.pinnedDocs
+                    else
+                        List.length model.searchResult
+            in
+                min (model.selectedIndex + 1) (len - 1)
+    else if key == "up" then
+        SetSelectedIndex <| max 0 (model.selectedIndex - 1)
+    else if key == "enter" then
+        if model.searchText == "" then
+            selectedItemMsg
+                model.selectedIndex
+                (toDocNavItemList model.pinnedDocs)
+                (\navItem ->
+                    case navItem of
+                        DocNav d ->
+                            LinkToPinnedDoc "" d.id
+
+                        ModuleNav m docId ->
+                            LinkToPinnedDoc m.name docId
+                )
+        else
+            selectedItemMsg model.selectedIndex
+                model.searchResult
+                (\( path, docId ) -> LinkToPinnedDoc path docId)
+    else if key == "esc" then
+        Search ""
+    else if key == "right" && model.searchText == "" then
+        selectedItemMsg
+            model.selectedIndex
+            (toDocNavItemList model.pinnedDocs)
+            (\navItem ->
+                case navItem of
+                    DocNav d ->
+                        DocNavExpand True d.id
+
+                    _ ->
+                        NoOp
+            )
+    else if key == "left" && model.searchText == "" then
+        selectedItemMsg
+            model.selectedIndex
+            (toDocNavItemList model.pinnedDocs)
+            (\navItem ->
+                case navItem of
+                    DocNav d ->
+                        DocNavExpand False d.id
+
+                    ModuleNav m docId ->
+                        DocNavExpand False docId
+            )
+    else
+        NoOp
 
 
 port scrollToElement : String -> Cmd msg
@@ -1053,3 +1050,6 @@ port removeLocal : { doc : Doc, searchIndex : List ( String, String ) } -> Cmd m
 
 
 port saveNavWidth : Int -> Cmd msg
+
+
+port keypress : (String -> msg) -> Sub msg

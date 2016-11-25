@@ -63,3 +63,11 @@ app.ports.saveNavWidth.subscribe(function(navWidth){
     storedModel.navWidth = navWidth;
     window.localStorage.setItem("storeModel", JSON.stringify(storedModel));
 });
+
+var keycode = require("./keycode");
+document.onkeypress = function(ev){
+    var key = keycode(ev);
+    if(key){
+        app.ports.keypress.send(key);
+    }
+};
