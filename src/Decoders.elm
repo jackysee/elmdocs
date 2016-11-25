@@ -1,4 +1,4 @@
-module Decoders exposing (decodeAllPackages, decodeDoc, decodeStoreModel)
+module Decoders exposing (decodeAllPackages, decodeNewPackages, decodeDoc, decodeStoreModel)
 
 import Json.Decode as Json
 import Models exposing (..)
@@ -12,6 +12,11 @@ decodeAllPackages =
             (Json.field "summary" Json.string)
             (Json.field "versions" (Json.list Json.string))
         )
+
+
+decodeNewPackages : Json.Decoder (List String)
+decodeNewPackages =
+    Json.list Json.string
 
 
 decodeDoc : String -> String -> Json.Decoder Doc

@@ -35,12 +35,14 @@ init value location =
 
         model =
             { allPackages = []
+            , newPackages = []
             , pinnedDocs = storeModel.docs
             , page = Home
             , searchIndex = storeModel.searchIndex
             , searchResult = []
             , searchText = ""
             , showDisabled = False
+            , showNewOnly = True
             , searchPackageText = ""
             , showConfirmDeleteDoc = Nothing
             , selectedIndex = 0
@@ -48,15 +50,16 @@ init value location =
             , drag = Nothing
             }
     in
-        model
-            ! [ getAllPackages (value == Nothing) location
-              ]
+        model ! [ getAllPackages (value == Nothing) location ]
 
 
 getAllPackages : Bool -> Location -> Cmd Msg
 getAllPackages loadDefault location =
-    Http.get "json/all-packages.json" decodeAllPackages
-        |> Http.send (LoadAllPackages loadDefault location)
+    Task.map2
+        (,)
+        (Http.get "json/all-packages.json" decodeAllPackages |> Http.toTask)
+        (Http.get "json/new-packages.json" decodeNewPackages |> Http.toTask)
+        |> Task.attempt (LoadAllPackages loadDefault location)
 
 
 getDoc : String -> String -> Task Http.Error Doc
@@ -144,10 +147,13 @@ update msg model =
                 ( model, Cmd.none )
                 list
 
-        LoadAllPackages loadDefault location (Ok list) ->
+        LoadAllPackages loadDefault location (Ok ( allPackages, newPackages )) ->
             let
                 model_ =
-                    { model | allPackages = list }
+                    { model
+                        | allPackages = allPackages
+                        , newPackages = newPackages
+                    }
 
                 cmd_ =
                     if loadDefault then
@@ -209,10 +215,10 @@ update msg model =
                         if doc.id == name ++ "/" ++ version then
                             ( { model | page = DisabledDoc doc modulePath }, Cmd.none )
                         else
-                            ( model, loadDoc )
+                            ( { model | page = Loading }, loadDoc )
 
                     _ ->
-                        ( model, loadDoc )
+                        ( { model | page = Loading }, loadDoc )
 
         SetDisabledDoc doc path ->
             ( { model | page = DisabledDoc doc path }
@@ -275,6 +281,9 @@ update msg model =
 
         ToggleShowDisabled ->
             ( { model | showDisabled = not model.showDisabled }, Cmd.none )
+
+        SetShowNewOnly show ->
+            ( { model | showNewOnly = show }, Cmd.none )
 
         SetShowConfirmDeleteDoc docId ->
             ( { model | showConfirmDeleteDoc = docId }, Cmd.none )
@@ -453,6 +462,12 @@ view model =
                             [ class "doc-empty-title" ]
                             [ span [] [ text "Document not found" ] ]
                         ]
+
+                    Loading ->
+                        [ div
+                            [ class "doc-empty-title" ]
+                            [ span [] [ text "Loading" ] ]
+                        ]
         ]
 
 
@@ -601,7 +616,31 @@ viewDiasabledDocs model =
                   else
                     Icons.caretRight
                 ]
-            , span [] [ text <| "Disabled" ]
+            , span
+                [ class "flex-wide" ]
+                [ text <| "Disabled (" ++ (disabledPackages model |> List.length |> toString) ++ ")"
+                ]
+            , if model.showDisabled then
+                div []
+                    [ span
+                        [ classList
+                            [ ( "btn-pill", True )
+                            , ( "is-selected", model.showNewOnly )
+                            ]
+                        , onClickInside (SetShowNewOnly True)
+                        ]
+                        [ text "new" ]
+                    , span
+                        [ classList
+                            [ ( "btn-pill", True )
+                            , ( "is-selected", not model.showNewOnly )
+                            ]
+                        , onClickInside (SetShowNewOnly False)
+                        ]
+                        [ text "all" ]
+                    ]
+              else
+                text ""
             ]
         , if model.showDisabled then
             div [ class "nav-packages-disabled" ] <|
@@ -615,17 +654,7 @@ viewDiasabledDocs model =
                         []
                     ]
                 ]
-                    ++ (model.allPackages
-                            |> List.filter
-                                (\p ->
-                                    (not <| List.member p.name (List.map .packageName model.pinnedDocs))
-                                        && if model.searchPackageText /= "" then
-                                            String.contains
-                                                (String.toLower model.searchPackageText)
-                                                (String.toLower p.name)
-                                           else
-                                            True
-                                )
+                    ++ (disabledPackages model
                             |> List.map
                                 (\p ->
                                     div
@@ -665,6 +694,22 @@ viewDiasabledDocs model =
           else
             text ""
         ]
+
+
+disabledPackages : Model -> List Package
+disabledPackages model =
+    model.allPackages
+        |> List.filter
+            (\p ->
+                (not <| List.member p.name (List.map .packageName model.pinnedDocs))
+                    && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
+                    && if model.searchPackageText /= "" then
+                        String.contains
+                            (String.toLower model.searchPackageText)
+                            (String.toLower p.name)
+                       else
+                        True
+            )
 
 
 viewDocOverview : Doc -> Html Msg

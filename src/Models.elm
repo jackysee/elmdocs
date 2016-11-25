@@ -6,12 +6,14 @@ import Mouse exposing (Position)
 
 type alias Model =
     { allPackages : List Package
+    , newPackages : List String
     , pinnedDocs : List Doc
     , page : Page
     , searchIndex : List ( String, String )
     , searchResult : List ( String, String )
     , searchText : String
     , showDisabled : Bool
+    , showNewOnly : Bool
     , searchPackageText : String
     , showConfirmDeleteDoc : Maybe DocId
     , selectedIndex : Int
@@ -32,6 +34,7 @@ type Page
     | DocModule DocId String
     | DisabledDoc Doc String
     | NotFound
+    | Loading
 
 
 type DocNavItem

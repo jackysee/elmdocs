@@ -8,7 +8,7 @@ import Mouse exposing (Position)
 
 type Msg
     = NoOp
-    | LoadAllPackages Bool Location (Result Http.Error (List Package))
+    | LoadAllPackages Bool Location (Result Http.Error ( List Package, List String ))
     | AddDoc ( String, String )
     | RemoveDoc Doc
     | PinDoc (List ( String, String )) (Result Http.Error Doc)
@@ -18,6 +18,7 @@ type Msg
     | SetCurrentDocFromId String DocId
     | Search String
     | ToggleShowDisabled
+    | SetShowNewOnly Bool
     | SearchPackage String
     | SetShowConfirmDeleteDoc (Maybe DocId)
     | SetSelectedIndex Int
