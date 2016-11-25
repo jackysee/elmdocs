@@ -65,7 +65,7 @@ app.ports.saveNavWidth.subscribe(function(navWidth){
 });
 
 var keycode = require("./keycode");
-document.onkeypress = function(ev){
+document.onkeydown = function(ev){
     var key = keycode(ev);
     if(key){
         app.ports.keypress.send(key);

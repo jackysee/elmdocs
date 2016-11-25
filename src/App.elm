@@ -965,22 +965,27 @@ viewType indexes str =
                 |> replaceFullPathVar
     in
         if String.length str_ < 64 then
-            [ span [] [ text " : " ] ]
-                ++ linkToName indexes str
+            [ text <| " : " ++ str_ ]
+            -- [ span [] [ text " : " ] ]
+            --     ++ linkToName indexes str
         else
-            str
-                |> splitTypeArgs2
-                |> Debug.log "splitted"
+            -- str
+            str_
+                -- |> splitTypeArgs2
+                |>
+                    splitTypeArgs
                 |> List.indexedMap
                     (\i s ->
                         if i == 0 then
                             div [ class "indent" ] <|
-                                [ span [] [ text " : " ] ]
-                                    ++ linkToName indexes s
+                                [ text <| " : " ++ s ]
+                            -- [ span [] [ text " : " ] ]
+                            --     ++ linkToName indexes s
                         else
                             div [ class "indent" ] <|
-                                [ span [] [ text " -> " ] ]
-                                    ++ linkToName indexes s
+                                [ text <| " -> " ++ s ]
+                     -- [ span [] [ text " -> " ] ]
+                     --     ++ linkToName indexes s
                     )
 
 
@@ -1102,14 +1107,10 @@ splitTypeArgs str =
     in
         case result of
             { match } :: xs ->
-                let
-                    a =
-                        Debug.log "match" match
-                in
-                    String.slice 0 (String.length match - 2) match
-                        :: (splitTypeArgs <|
-                                String.slice (String.length match) (String.length str) str
-                           )
+                String.slice 0 (String.length match - 2) match
+                    :: (splitTypeArgs <|
+                            String.slice (String.length match) (String.length str) str
+                       )
 
             [] ->
                 [ str ]
