@@ -66,6 +66,7 @@ type alias Package =
     { name : String
     , summary : String
     , versions : List String
+    , availableVersions : List String
     }
 
 

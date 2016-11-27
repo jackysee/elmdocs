@@ -7,10 +7,11 @@ import Models exposing (..)
 decodeAllPackages : Json.Decoder (List Package)
 decodeAllPackages =
     Json.list
-        (Json.map3 Package
+        (Json.map4 Package
             (Json.field "name" Json.string)
             (Json.field "summary" Json.string)
             (Json.field "versions" (Json.list Json.string))
+            (Json.field "availableVersions" (Json.list Json.string))
         )
 
 
