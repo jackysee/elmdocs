@@ -39,9 +39,15 @@ function getList(list){
         return getList(list.slice(1));
     }
 
-    return get(file, dest).then(data => {
-        return getList(list.slice(1));
-    });
+    return get(file, dest).then(
+        data => {
+            return getList(list.slice(1));
+        }, 
+        err => {
+            console.error("Cannot get file ", err);
+            return Promise.reject(err);
+        }
+    );
     
 }
 
@@ -68,7 +74,11 @@ Promise.all(
             return p;
         });
         console.log("updating all-packages.json");
-        return fsP.writeFileSync(target +"all-packages.json", beautify(allPackages_, null, 2, 100));
+        return fsP.writeFileSync(
+            target +"all-packages.json", 
+            beautify(allPackages_, null, 2, 100)
+        );
+
     });
 });
 
