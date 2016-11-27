@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Scenario",
+    "comment": " A type safe DSL for CLI or Conversational User Interface.\n\n# Common Types\n\n@docs Scenario\n\n# Convenient functions to construct scenario\n\n@docs print\n@docs read\n@docs andThen\n@docs andAlways\n\n# Functions to run scenario model\n\n@docs update\n@docs pushAnswer\n\n# Configurations for running scenario\n\n@docs Config\n@docs config\n\n# Rarely used but important functions\n\n@docs succeed\n@docs map\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration for running scenario\n",
+        "args": [
+          "msg",
+          "c",
+          "t",
+          "v"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Scenario",
+        "comment": " Main type of this module to represent scenario.\n",
+        "args": [
+          "c",
+          "t",
+          "v",
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andAlways",
+        "comment": " Similar to `andThen`, but ignores previous state.\n",
+        "type": "Scenario.Scenario c t v b -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Combine two scenarios to make one scenario.\n",
+        "type": "(a -> Scenario.Scenario c t v b) -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "config",
+        "comment": " Constructor for `Config`\n",
+        "type": "(t -> Platform.Cmd.Cmd msg) -> Platform.Cmd.Cmd msg -> (c -> Platform.Cmd.Cmd msg) -> Scenario.Config msg c t v"
+      },
+      {
+        "name": "map",
+        "comment": " Convert scenario state by given function.\n",
+        "type": "(a -> b) -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "print",
+        "comment": " Construct scenario contains only one print message event.\n",
+        "type": "t -> Scenario.Scenario c t v ()"
+      },
+      {
+        "name": "pushAnswer",
+        "comment": " Push answer to a scenario and get next scenario\n",
+        "type": "v -> Scenario.Scenario c t v a -> Scenario.Scenario c t v a"
+      },
+      {
+        "name": "read",
+        "comment": " Construct scenario contains only one read input event.\n",
+        "type": "c -> Scenario.Scenario c t v v"
+      },
+      {
+        "name": "succeed",
+        "comment": " Construct scenario with any state.\n",
+        "type": "a -> Scenario.Scenario c t v a"
+      },
+      {
+        "name": "update",
+        "comment": " Run scenario step by step.\n",
+        "type": "Scenario.Config msg c t v -> Scenario.Scenario c t v a -> ( Scenario.Scenario c t v a, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

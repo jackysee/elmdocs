@@ -1,0 +1,297 @@
+[
+  {
+    "name": "Plot",
+    "comment": "\n This library aims to allow you to visualize a variety of graphs in\n an intuitve manner without comprimising flexibility regarding configuration.\n It is insprired by the elm-html api, using the `element attrs children` pattern.\n\n# Elements\n@docs Element, plot, area, scatter, line, xAxis, yAxis, Point, Style\n\n# Configuration\n\n## Meta configuration\n@docs MetaAttr, size, padding, plotClasses, plotStyle\n\n## Line configuration\n@docs LineAttr, lineStyle\n\n## Area configuration\n@docs AreaAttr, areaStyle\n\n## Scatter configuration\n@docs ScatterAttr, scatterRadius, scatterStyle\n\n## Axis configuration\n@docs AxisAttr, axisClasses, axisStyle, axisLineStyle\n\n### Tick values configuration\n@docs tickValues, tickDelta, tickRemoveZero\n\n### Tick view configuration\n@docs TickViewAttr, tickConfigView, tickConfigViewFunc, tickLength, tickWidth, tickClasses, tickStyle, tickCustomView, tickCustomViewIndexed\n\n### Label values configuration\n@docs labelValues, labelFilter\n\n### Label values configuration\n@docs LabelViewAttr, labelConfigView, labelConfigViewFunc, labelFormat, labelDisplace, labelClasses, labelStyle, labelCustomView, labelCustomViewIndexed\n\n## Grid configuration\n@docs verticalGrid, horizontalGrid, gridMirrorTicks, gridValues, gridClasses, gridStyle\n\n",
+    "aliases": [
+      {
+        "name": "AreaAttr",
+        "comment": " The type representing an area configuration.\n",
+        "args": [],
+        "type": "Plot.AreaConfig -> Plot.AreaConfig"
+      },
+      {
+        "name": "AxisAttr",
+        "comment": " The type representing an axis configuration.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "LabelViewAttr",
+        "comment": " Type representing a label view configuration attribute.\n",
+        "args": [],
+        "type": "Plot.LabelViewConfig -> Plot.LabelViewConfig"
+      },
+      {
+        "name": "LineAttr",
+        "comment": " The type representing a line configuration.\n",
+        "args": [],
+        "type": "Plot.LineConfig -> Plot.LineConfig"
+      },
+      {
+        "name": "MetaAttr",
+        "comment": " The type representing an a meta configuration.\n",
+        "args": [],
+        "type": "Plot.MetaConfig -> Plot.MetaConfig"
+      },
+      {
+        "name": "Point",
+        "comment": " Convinience type to represent coordinates.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "ScatterAttr",
+        "comment": " The type representing an scatter configuration.\n",
+        "args": [],
+        "type": "Plot.ScatterConfig -> Plot.ScatterConfig"
+      },
+      {
+        "name": "Style",
+        "comment": " Convinience type to represent style.\n",
+        "args": [],
+        "type": "List ( String, String )"
+      },
+      {
+        "name": "TickViewAttr",
+        "comment": " Type representing a tick view configuration attribute.\n",
+        "args": [],
+        "type": "Plot.TickViewConfig -> Plot.TickViewConfig"
+      }
+    ],
+    "types": [
+      {
+        "name": "Element",
+        "comment": " Represents child element of the plot.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "area",
+        "comment": " This returns an area element resulting in an area serie rendered in your plot.\n\n    main =\n        plot [] [ area []  [ ( 0, -2 ), ( 2, 0 ), ( 3, 1 ) ] ]\n",
+        "type": "List Plot.AreaAttr -> List Plot.Point -> Plot.Element msg"
+      },
+      {
+        "name": "areaStyle",
+        "comment": " Add styles to your area serie.\n\n    main =\n        plot\n            []\n            [ area\n                [ areaStyle\n                    [ ( \"fill\", \"deeppink\" )\n                    , ( \"stroke\", \"deeppink\" )\n                    , ( \"opacity\", \"0.5\" ) ]\n                    ]\n                ]\n                areaDataPoints\n            ]\n",
+        "type": "Plot.Style -> Plot.AreaConfig -> Plot.AreaConfig"
+      },
+      {
+        "name": "axisClasses",
+        "comment": " Add classes to the container holding your axis.\n\n    main =\n        plot\n            []\n            [ xAxis [ axisClasses [ \"my-class\" ] ] ]\n\n Default: `[]`\n",
+        "type": "List String -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "axisLineStyle",
+        "comment": " Add styling to the axis line.\n\n    main =\n        plot\n            []\n            [ xAxis [ axisLineStyle [ ( \"stroke\", \"blue\" ) ] ] ]\n\n Default: `[]`\n",
+        "type": "Plot.Style -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "axisStyle",
+        "comment": " Add style to the container holding your axis. Most properties are\n conveniently inherited by your ticks and labels.\n\n    main =\n        plot\n            []\n            [ xAxis [ axisStyle [ ( \"stroke\", \"red\" ) ] ] ]\n\n Default: `[]`\n",
+        "type": "Plot.Style -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "gridClasses",
+        "comment": " Specify classes for the grid.\n\n    plot\n        []\n        [ verticalGrid\n            [ gridMirrorTicks\n            , gridClasses [ \"my-class\" ]\n            ]\n        ]\n\n Remember that if you do not specify either `gridMirrorTicks`\n or `gridValues`, then we will default to not showing any grid lines.\n",
+        "type": "List String -> Plot.GridConfig -> Plot.GridConfig"
+      },
+      {
+        "name": "gridMirrorTicks",
+        "comment": " Adds grid lines where the ticks on the corresponding axis are.\n\n    main =\n        plot\n            []\n            [ verticalGrid [ gridMirrorTicks ]\n            , xAxis []\n            ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `gridValues` attribute, then this attribute will have no effect.\n",
+        "type": "Plot.GridConfig -> Plot.GridConfig"
+      },
+      {
+        "name": "gridStyle",
+        "comment": " Specify styles for the gridlines.\n\n    plot\n        []\n        [ verticalGrid\n            [ gridMirrorTicks\n            , gridStyle myGridStyles\n            ]\n        ]\n\n Remember that if you do not specify either `gridMirrorTicks`\n or `gridValues`, then we will default to not showing any grid lines.\n",
+        "type": "Plot.Style -> Plot.GridConfig -> Plot.GridConfig"
+      },
+      {
+        "name": "gridValues",
+        "comment": " Specify a list of ticks where you want grid lines drawn.\n\n    plot [] [ verticalGrid [ gridValues [ 1, 2, 4, 8 ] ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `gridMirrorTicks` attribute, then this attribute will have no effect.\n",
+        "type": "List Float -> Plot.GridConfig -> Plot.GridConfig"
+      },
+      {
+        "name": "horizontalGrid",
+        "comment": " This returns an grid element resulting in vertical grid lines being rendered in your plot.\n\n    main =\n        plot [] [ horizontalGrid [] ]\n",
+        "type": "List Plot.GridAttr -> Plot.Element msg"
+      },
+      {
+        "name": "labelClasses",
+        "comment": " Add classes to the label.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigView\n                    [ labelClasses [ \"my-class\" ] ]\n                ]\n            ]\n",
+        "type": "List String -> Plot.LabelViewConfig -> Plot.LabelViewConfig"
+      },
+      {
+        "name": "labelConfigView",
+        "comment": " Configure the label view specifying a list of label view attributes.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigView\n                    [ labelFormat (\\t -> toString t ++ \" s\") ]\n                ]\n            ]\n",
+        "type": "List Plot.LabelViewAttr -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "labelConfigViewFunc",
+        "comment": " Configure the label view specifying a function returning a list of label view attributes.\n The function will be passed:\n 1) An integer representing the amount of ticks away from the origin, the current tick is.\n 2) A float value represeting the value of the tick.\n\n    toLabelConfig : Int -> Float -> List TickViewAttr\n    toLabelConfig index tick =\n        if isOdd index then\n            [ labelFormat (\\t -> toString t ++ \" s\") ]\n        else\n            [ labelFormat (always \"\") ]\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigViewFunc toLabelConfig ]\n            ]\n",
+        "type": "Plot.LabelAttrFunc -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "labelCustomView",
+        "comment": " Add a custom view for rendering your label.\n\n    viewLabel : Float -> Svg.Svg a\n    viewLabel tick =\n        text_ mySpecialAttributes mySpecialLabelDisplay\n\n    main =\n        plot\n            []\n            [ xAxis [ labelCustomView viewLabel ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `labelFormat` attribute, then this attribute will have no effect.\n",
+        "type": "(Float -> Svg.Svg msg) -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "labelCustomViewIndexed",
+        "comment": " Same as `labelCustomView`, except this view is also passed the value being\n the amount of ticks the current tick is away from zero.\n\n    viewLabel : Int -> Float -> Svg.Svg a\n    viewLabel fromZero tick =\n        let\n            attrs =\n                if isOdd fromZero then oddAttrs\n                else evenAttrs\n        in\n            text_ attrs labelHtml\n\n    main =\n        plot\n            []\n            [ xAxis [ labelCustomViewIndexed viewLabel ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `labelFormat` attribute, then this attribute will have no effect.\n",
+        "type": "(Int -> Float -> Svg.Svg msg) -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "labelDisplace",
+        "comment": " Move the position of the label.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigView [ labelDisplace ( 0, 27 ) ] ]\n            ]\n",
+        "type": "( Int, Int ) -> Plot.LabelViewConfig -> Plot.LabelViewConfig"
+      },
+      {
+        "name": "labelFilter",
+        "comment": " Add a filter determining which of the ticks are added a label. The first argument passed\n to the filter is a number describing how many ticks a way the current tick is. The second argument\n is the value of the tick.\n\n    onlyEvenTicks : Int -> Float -> Bool\n    onlyEvenTicks index value =\n        rem 2 index == 0\n\n    main =\n        plot\n            []\n            [ xAxis [ labelValues onlyEvenTicks ] ]\n\n Default: `(\\a b -> True)`\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `labelValues` attribute, then this attribute will have no effect.\n",
+        "type": "(Int -> Float -> Bool) -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "labelFormat",
+        "comment": " Format the label based on its value.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigView\n                    [ labelFormat (\\l -> toString l ++ \" DKK\") ]\n                ]\n            ]\n",
+        "type": "(Float -> String) -> Plot.LabelViewConfig -> Plot.LabelViewConfig"
+      },
+      {
+        "name": "labelStyle",
+        "comment": " Move the position of the label.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ labelConfigView\n                    [ labelStyle [ (\"stroke\", \"blue\" ) ] ]\n                ]\n            ]\n",
+        "type": "Plot.Style -> Plot.LabelViewConfig -> Plot.LabelViewConfig"
+      },
+      {
+        "name": "labelValues",
+        "comment": " Add a list of values where labels will be added.\n\n    main =\n        plot\n            []\n            [ xAxis [ labelValues [ 20, 40, 60 ] ] ]\n",
+        "type": "List Float -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "line",
+        "comment": " This returns a line element resulting in an line serie rendered in your plot.\n\n    main =\n        plot [] [ line [] [ ( 0, 1 ), ( 2, 2 ), ( 3, 4 ) ] ]\n",
+        "type": "List Plot.LineAttr -> List Plot.Point -> Plot.Element msg"
+      },
+      {
+        "name": "lineStyle",
+        "comment": " Add styles to your line serie.\n\n    main =\n        plot\n            []\n            [ line\n                [ lineStyle [ ( \"fill\", \"deeppink\" ) ] ]\n                lineDataPoints\n            ]\n",
+        "type": "Plot.Style -> Plot.LineConfig -> Plot.LineConfig"
+      },
+      {
+        "name": "padding",
+        "comment": " Add padding to your plot, meaning extra space below\n and above the lowest and highest point in your plot.\n The unit is pixels.\n\n Default: `( 0, 0 )`\n",
+        "type": "( Int, Int ) -> Plot.MetaConfig -> Plot.MetaConfig"
+      },
+      {
+        "name": "plot",
+        "comment": " This is the function processing your entire plot configuration.\n Pass your meta attributes and plot elements to this function and\n a svg plot will be returned!\n",
+        "type": "List Plot.MetaAttr -> List (Plot.Element msg) -> Svg.Svg msg"
+      },
+      {
+        "name": "plotClasses",
+        "comment": " Add classes to the svg element.\n\n Default: `[]`\n",
+        "type": "List String -> Plot.MetaConfig -> Plot.MetaConfig"
+      },
+      {
+        "name": "plotStyle",
+        "comment": " Add styles to the svg element.\n\n Default: `[ ( \"padding\", \"30px\" ), ( \"stroke\", \"#000\" ) ]`\n",
+        "type": "Plot.Style -> Plot.MetaConfig -> Plot.MetaConfig"
+      },
+      {
+        "name": "scatter",
+        "comment": " This returns a scatter element resulting in a scatter series rendered in your plot.\n\n    main =\n        plot [] [ scatter []  [ ( 0, -2 ), ( 2, 0 ), ( 3, 1 ) ] ]\n",
+        "type": "List Plot.ScatterAttr -> List Plot.Point -> Plot.Element msg"
+      },
+      {
+        "name": "scatterRadius",
+        "comment": " Add a radius to your scatter circles\n\n    main =\n        plot\n            []\n            [ scatter\n                [ scatterStyle\n                    [ ( \"stroke\", \"deeppink\" )\n                    , ( \"opacity\", \"0.5\" ) ]\n                    ]\n                , scatterRadius 4\n                ]\n                scatterDataPoints\n            ]\n",
+        "type": "Float -> Plot.ScatterConfig -> Plot.ScatterConfig"
+      },
+      {
+        "name": "scatterStyle",
+        "comment": " Add styles to your scatter series\n\n    main =\n        plot\n            []\n            [ scatter\n                [ scatterStyle\n                    [ ( \"stroke\", \"deeppink\" )\n                    , ( \"opacity\", \"0.5\" ) ]\n                    ]\n                , scatterRadius 4\n                ]\n                scatterDataPoints\n            ]\n",
+        "type": "Plot.Style -> Plot.ScatterConfig -> Plot.ScatterConfig"
+      },
+      {
+        "name": "size",
+        "comment": " Specify the size of your plot in pixels.\n\n Default: `( 800, 500 )`\n",
+        "type": "( Int, Int ) -> Plot.MetaConfig -> Plot.MetaConfig"
+      },
+      {
+        "name": "tickClasses",
+        "comment": " Add classes to the tick.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigView\n                    [ tickClasses [ \"my-class\" ] ]\n                ]\n            ]\n",
+        "type": "List String -> Plot.TickViewConfig -> Plot.TickViewConfig"
+      },
+      {
+        "name": "tickConfigView",
+        "comment": " Defines how the tick will be displayed by specifying a list of tick view attributes.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigView\n                    [ tickLength 10\n                    , tickWidth 2\n                    , tickStyle [ ( \"stroke\", \"red\" ) ]\n                    ]\n                ]\n            ]\n\n If you do not define another view configuration,\n the default will be `[ tickLength 7, tickWidth 1, tickStyle [] ]`\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickCustomView`, `tickConfigViewFunc` or a `tickCustomViewIndexed` attribute,\n then this attribute will have no effect.\n",
+        "type": "List Plot.TickViewAttr -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickConfigViewFunc",
+        "comment": " Defines how the tick will be displayed by specifying a list of tick view attributes.\n\n    toTickConfig : Int -> Float -> List TickViewAttr\n    toTickConfig index tick =\n        if isOdd index then\n            [ tickLength 7\n            , tickStyle [ ( \"stroke\", \"#e4e3e3\" ) ]\n            ]\n        else\n            [ tickLength 10\n            , tickStyle [ ( \"stroke\", \"#b9b9b9\" ) ]\n            ]\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigViewFunc toTickConfig ]\n            ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickConfigView`, `tickCustomView` or a `tickCustomViewIndexed` attribute,\n then this attribute will have no effect.\n",
+        "type": "Plot.TickAttrFunc -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickCustomView",
+        "comment": " Defines how the tick will be displayed by specifying a function which returns your tick html.\n\n    viewTick : Float -> Svg.Svg a\n    viewTick tick =\n        text_\n            [ transform (\"translate(-5, 10)\") ]\n            [ tspan [] [ text \"✨\" ] ]\n\n    main =\n        plot [] [ xAxis [ tickCustomView viewTick ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickConfigView` or a `tickCustomViewIndexed` attribute, then this attribute will have no effect.\n",
+        "type": "(Float -> Svg.Svg msg) -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickCustomViewIndexed",
+        "comment": " Same as `tickCustomConfig`, but the functions is also passed a value\n which is how many ticks away the current tick is from the zero tick.\n\n    viewTick : Int -> Float -> Svg.Svg a\n    viewTick index tick =\n        text_\n            [ transform (\"translate(-5, 10)\") ]\n            [ tspan\n                []\n                [ text (if isOdd index then \"🌟\" else \"⭐\") ]\n            ]\n\n    main =\n        plot [] [ xAxis [ tickCustomViewIndexed viewTick ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickConfigView` or a `tickCustomView` attribute, then this attribute will have no effect.\n",
+        "type": "(Int -> Float -> Svg.Svg msg) -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickDelta",
+        "comment": " Defines what ticks will be shown on the axis by specifying the delta between the ticks.\n The delta will be added from zero.\n\n    main =\n        plot\n            []\n            [ xAxis [ tickDelta 4 ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickValues` attribute, then this attribute will have no effect.\n",
+        "type": "Float -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickLength",
+        "comment": " Set the length of the tick.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigView [ tickLength 10 ] ]\n            ]\n",
+        "type": "Int -> Plot.TickViewConfig -> Plot.TickViewConfig"
+      },
+      {
+        "name": "tickRemoveZero",
+        "comment": " Remove tick at origin. Useful when two axis' are crossing and you do not\n want the origin the be cluttered with labels.\n\n    main =\n        plot\n            []\n            [ xAxis [ tickRemoveZero ] ]\n",
+        "type": "Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickStyle",
+        "comment": " Sets the style of the tick\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigView\n                    [ tickStyle [ ( \"stroke\", \"blue\" ) ] ]\n                ]\n            ]\n",
+        "type": "Plot.Style -> Plot.TickViewConfig -> Plot.TickViewConfig"
+      },
+      {
+        "name": "tickValues",
+        "comment": " Defines what ticks will be shown on the axis by specifying a list of values.\n\n    main =\n        plot\n            []\n            [ xAxis [ tickValues [ 0, 1, 2, 4, 8 ] ] ]\n\n **Note:** If in the list of axis attributes, this attribute is followed by a\n `tickDelta` attribute, then this attribute will have no effect.\n",
+        "type": "List Float -> Plot.AxisConfig msg -> Plot.AxisConfig msg"
+      },
+      {
+        "name": "tickWidth",
+        "comment": " Set the width of the tick.\n\n    main =\n        plot\n            []\n            [ xAxis\n                [ tickConfigView [ tickWidth 2 ] ]\n            ]\n",
+        "type": "Int -> Plot.TickViewConfig -> Plot.TickViewConfig"
+      },
+      {
+        "name": "verticalGrid",
+        "comment": " This returns an axis element resulting in horizontal grid lines being rendered in your plot.\n\n    main =\n        plot [] [ verticalGrid [] ]\n",
+        "type": "List Plot.GridAttr -> Plot.Element msg"
+      },
+      {
+        "name": "xAxis",
+        "comment": " This returns an axis element resulting in an x-axis being rendered in your plot.\n\n    main =\n        plot [] [ xAxis [] ]\n",
+        "type": "List (Plot.AxisAttr msg) -> Plot.Element msg"
+      },
+      {
+        "name": "yAxis",
+        "comment": " This returns an axis element resulting in an y-axis being rendered in your plot.\n\n    main =\n        plot [] [ yAxis [] ]\n",
+        "type": "List (Plot.AxisAttr msg) -> Plot.Element msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
