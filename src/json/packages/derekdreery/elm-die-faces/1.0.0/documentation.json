@@ -1,0 +1,16 @@
+[
+  {
+    "name": "DieFaces",
+    "comment": " This very small library provides face dot locations for a 6-sided die.\n\nIt is expected that this library will be used with svg or similar, but I don't\nwant to either restrict usage to svg, or pull in possibly unnecessary\ndependencies.\n\n@docs dotLocations\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dotLocations",
+        "comment": " Given a number between one and six, returns a list of points to draw that\nface of a die. Example usage (assuming Svg and Svg.Attributes are imported):\n\n    faceMapper : (Float, Float) -> Svg Msg\n    faceMapper (x, y) =\n      circle\n        [ cx (toString x)\n        , cy (toString y)\n        , r \"0.05\"\n        ] []\n\n    dieFace : Int -> Svg Msg\n    dieFace face =\n      svg\n        [ width \"100\"\n        , height \"100\"\n        , viewBox \"0 0 1 1\"\n        ]\n        dieFace face\n\nwith `face = 2` would give\n\n```html\n<svg width=\"100\" height=\"100\" viewBox=\"0 0 1 1\">\n  <circle cx=\"0.5\" cy=\"0.3\" r=\"0.05\" />\n  <circle cx=\"0.5\" cy=\"0.7\" r=\"0.05\" />\n</svg>\n```\n\n",
+        "type": "Int -> List ( Float, Float )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

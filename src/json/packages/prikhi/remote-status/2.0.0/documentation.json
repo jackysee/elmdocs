@@ -1,0 +1,53 @@
+[
+  {
+    "name": "RemoteStatus",
+    "comment": " RemoteStatus is used to track the progress of multiple remote operations.\n\n# Definition\n@docs Status, initial\n\n# Operations\n@docs start, enqueue, finishOne\n\n# Querying\n@docs isInProgress, isFinished, percentageCompleted\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Status",
+        "comment": " Store the status of a remote operation, differentiating between unstarted,\nin progress and completed states.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "enqueue",
+        "comment": " Increase the number of remote operations to track.\n",
+        "type": "RemoteStatus.Status -> Int -> RemoteStatus.Status"
+      },
+      {
+        "name": "finishOne",
+        "comment": " Increase the number of operations that have been completed by 1.\n",
+        "type": "RemoteStatus.Status -> RemoteStatus.Status"
+      },
+      {
+        "name": "initial",
+        "comment": " Default the status to not started.\n",
+        "type": "RemoteStatus.Status"
+      },
+      {
+        "name": "isFinished",
+        "comment": " Determine whether the operations have completed.\n",
+        "type": "RemoteStatus.Status -> Bool"
+      },
+      {
+        "name": "isInProgress",
+        "comment": " Determine whether the operations are still in progress.\n",
+        "type": "RemoteStatus.Status -> Bool"
+      },
+      {
+        "name": "percentageCompleted",
+        "comment": " Determine the percentage of completed operations if operations are in progress.\n",
+        "type": "RemoteStatus.Status -> Maybe.Maybe Int"
+      },
+      {
+        "name": "start",
+        "comment": " Start tracking the remote operation if the status is in it's initial state.\n",
+        "type": "RemoteStatus.Status -> RemoteStatus.Status"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
