@@ -35,7 +35,7 @@ function getList(list){
     var file = list[0].file;
 
     if(fs.existsSync(dest)){
-        console.log("File existed, skipped : " + dest);
+        //console.log("File existed, skipped : " + dest);
         return getList(list.slice(1));
     }
 
