@@ -68,6 +68,9 @@ var keycode = require("./keycode");
 document.onkeydown = function(ev){
     var key = keycode(ev);
     if(key){
+        if (key === "up" || key === "down"){
+            ev.preventDefault();
+        }
         app.ports.keypress.send(key);
     }
 };

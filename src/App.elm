@@ -760,7 +760,11 @@ navList model =
                                 [ if List.length p.versions > 1 then
                                     span
                                         [ class "icon"
-                                        , onClickInside (DisabledDocNavExpand (not p.versionExpanded) p)
+                                        , onClickInside <|
+                                            MsgBatch
+                                                [ DisabledDocNavExpand (not p.versionExpanded) p
+                                                , SetSelectedIndex i
+                                                ]
                                         ]
                                         [ if p.versionExpanded then
                                             Icons.caretDown
@@ -774,7 +778,11 @@ navList model =
                                     , title <| "show " ++ p.name
                                     , case List.head p.versions of
                                         Just version ->
-                                            onClick (LinkToDisabledDoc p.name version "")
+                                            onClick <|
+                                                MsgBatch
+                                                    [ LinkToDisabledDoc p.name version ""
+                                                    , SetSelectedIndex i
+                                                    ]
 
                                         Nothing ->
                                             onClick NoOp
