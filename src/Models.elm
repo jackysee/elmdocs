@@ -1,7 +1,8 @@
 module Models exposing (..)
 
-import Utils exposing (findFirst)
+import Utils exposing (findFirst, joinMaybe)
 import Mouse exposing (Position)
+import String.Extra
 
 
 type alias Model =
@@ -46,6 +47,7 @@ type DocNavItem
     | DisabledHandleNav
     | DisabledInputNav
     | DisabledDocNav Package
+    | DisabledDocOtherVersionNav Package String
 
 
 type AddDocState
@@ -73,6 +75,7 @@ type alias Package =
     , summary : String
     , versions : List String
     , availableVersions : List String
+    , versionExpanded : Bool
     }
 
 
@@ -139,41 +142,139 @@ getDocById model docId =
 
 disabledPackages : Model -> List Package
 disabledPackages model =
-    model.allPackages
-        |> List.filter
-            (\p ->
-                (not <| List.member p.name (List.map .packageName model.pinnedDocs))
-                    && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
-                    && if model.searchPackageText /= "" then
-                        String.contains
-                            (String.toLower model.searchPackageText)
-                            (String.toLower p.name)
-                       else
-                        True
-            )
+    let
+        pinnedDocVersions =
+            List.map
+                (\d -> ( d.packageName, d.packageVersion ))
+                model.pinnedDocs
+    in
+        model.allPackages
+            |> List.filter
+                (\p ->
+                    (not
+                        (p.versions
+                            |> List.map (\v -> ( p.name, v ))
+                            |> List.all (\d -> List.member d pinnedDocVersions)
+                        )
+                    )
+                        && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
+                        && if model.searchPackageText /= "" then
+                            String.contains
+                                (String.toLower model.searchPackageText)
+                                (String.toLower p.name)
+                           else
+                            True
+                )
 
 
 updateNavList : Model -> Model
 updateNavList model =
-    { model
-        | navList =
-            (model.pinnedDocs
-                |> List.map
-                    (\d ->
-                        [ DocNav d ]
-                            ++ if d.navExpanded then
-                                d.modules
-                                    |> List.sortBy .name
-                                    |> List.map (\m -> ModuleNav m d.id)
-                               else
-                                []
-                    )
-                |> List.concat
-            )
-                ++ [ DisabledHandleNav ]
-                ++ if model.showDisabled then
-                    [ DisabledInputNav ]
-                        ++ (List.map DisabledDocNav <| disabledPackages model)
-                   else
-                    []
+    let
+        pinnedDocVersions =
+            List.map
+                (\d -> ( d.packageName, d.packageVersion ))
+                model.pinnedDocs
+    in
+        { model
+            | navList =
+                (model.pinnedDocs
+                    |> List.map
+                        (\d ->
+                            [ DocNav d ]
+                                ++ if d.navExpanded then
+                                    d.modules
+                                        |> List.sortBy .name
+                                        |> List.map (\m -> ModuleNav m d.id)
+                                   else
+                                    []
+                        )
+                    |> List.concat
+                )
+                    ++ [ DisabledHandleNav ]
+                    ++ if model.showDisabled then
+                        [ DisabledInputNav ]
+                            ++ (disabledPackages model
+                                    |> List.map
+                                        (\p ->
+                                            [ DisabledDocNav p ]
+                                                ++ if List.length p.versions > 1 && p.versionExpanded then
+                                                    p.versions
+                                                        |> List.filter
+                                                            (\v ->
+                                                                not <| List.member ( p.name, v ) pinnedDocVersions
+                                                            )
+                                                        |> List.map (DisabledDocOtherVersionNav p)
+                                                   else
+                                                    []
+                                        )
+                                    |> List.concat
+                               )
+                       else
+                        []
+        }
+
+
+type alias Version =
+    { major : Int
+    , minor : Int
+    , patch : Int
     }
+
+
+versionDesc : String -> String -> Order
+versionDesc v1_ v2_ =
+    let
+        v1 =
+            toVersion v1_
+
+        v2 =
+            toVersion v2_
+
+        flippedCompare =
+            \a b ->
+                case compare a b of
+                    LT ->
+                        GT
+
+                    GT ->
+                        LT
+
+                    EQ ->
+                        EQ
+    in
+        if v1.major /= v2.major then
+            flippedCompare v1.major v2.major
+        else if v1.minor /= v2.minor then
+            flippedCompare v1.minor v2.minor
+        else
+            flippedCompare v1.patch v2.patch
+
+
+toVersion : String -> Version
+toVersion str =
+    let
+        arr =
+            String.split "." str
+                |> List.map String.toInt
+                |> List.map (Result.withDefault 0)
+    in
+        case arr of
+            major :: minor :: patch :: [] ->
+                { major = major, minor = minor, patch = patch }
+
+            _ ->
+                { major = 0, minor = 0, patch = 0 }
+
+
+getLatestVerByDocId : Model -> DocId -> Maybe String
+getLatestVerByDocId model docId =
+    model.allPackages
+        |> findFirst (\p -> String.Extra.leftOfBack "/" docId == p.name)
+        |> Maybe.map (\p -> List.head p.versions)
+        |> joinMaybe
+
+
+isPinned : Model -> String -> String -> Bool
+isPinned model package version =
+    model.pinnedDocs
+        |> List.any (\d -> d.id == package ++ "/" ++ version)

@@ -33,3 +33,4 @@ type Msg
     | ListScrollTo Int
     | SetSearchFocused Bool
     | LinkToModule String
+    | DisabledDocNavExpand Bool Package

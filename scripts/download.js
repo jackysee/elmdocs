@@ -16,7 +16,7 @@ function get(file, dest){
             process.stdout.write("saved.\n");
             return pify(mkdirp)(path.dirname(dest))
                 .then(() => fsP.writeFileSync(dest, data))
-                .then(() => JSON.parse(data));
+                .then(() => data);
         },
         err => {
             process.stdout.write("failed.\n");
@@ -57,12 +57,27 @@ Promise.all(
     ]
 )
 .then( arr =>{
-    var allPackages = arr[0];
+    var allPackages = JSON.parse(arr[0]);
 
-    var list = allPackages.map(p => {
-        var p = "packages/" +  p.name + "/" + p.versions[0] + "/documentation.json"
-        return { file: p , dest: target + p };
-    });
+    var list = allPackages
+        .map(p => {
+            var p = "packages/" +  p.name + "/" + p.versions[0];
+            var arr =  [ 
+                {   
+                    file: p + "/documentation.json" , 
+                    dest: target + p + "/documentation.json" 
+                }, 
+                { 
+                    file: p + "/README.md" , 
+                    dest: target + p + "/README.md" 
+                }
+            ];
+            return arr;
+        })
+        .reduce((sum, current) => {
+            return sum.concat(current);
+        }, []);
+
 
     getList(list).then(function(){
         var allPackages_ = allPackages.map(p => {
@@ -81,7 +96,6 @@ Promise.all(
 
     });
 });
-
 
 
 

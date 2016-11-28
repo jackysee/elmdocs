@@ -36,6 +36,16 @@ onNothing a b =
             b
 
 
+joinMaybe : Maybe (Maybe a) -> Maybe a
+joinMaybe mx =
+    case mx of
+        Just x ->
+            x
+
+        Nothing ->
+            Nothing
+
+
 onClickInside : msg -> Html.Attribute msg
 onClickInside msg =
     onWithOptions "click"

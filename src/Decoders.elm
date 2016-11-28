@@ -6,13 +6,15 @@ import Models exposing (..)
 
 decodeAllPackages : Json.Decoder (List Package)
 decodeAllPackages =
-    Json.list
-        (Json.map4 Package
+    Json.list <|
+        Json.map5 Package
             (Json.field "name" Json.string)
             (Json.field "summary" Json.string)
-            (Json.field "versions" (Json.list Json.string))
+            (Json.field "versions" (Json.list Json.string)
+                |> Json.andThen (Json.succeed << List.sortWith versionDesc)
+            )
             (Json.field "availableVersions" (Json.list Json.string))
-        )
+            (Json.succeed False)
 
 
 decodeNewPackages : Json.Decoder (List String)

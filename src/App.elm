@@ -385,6 +385,22 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        DisabledDocNavExpand expand package ->
+            ( updateNavList
+                { model
+                    | allPackages =
+                        List.map
+                            (\p ->
+                                if p.name == package.name then
+                                    { p | versionExpanded = expand }
+                                else
+                                    p
+                            )
+                            model.allPackages
+                }
+            , Cmd.none
+            )
+
 
 focus : String -> Cmd Msg
 focus id =
@@ -439,7 +455,7 @@ view model =
                     DocOverview docId ->
                         case getDocById model docId of
                             Just doc ->
-                                [ docTitle doc False
+                                [ docTitle model doc False
                                 , div
                                     [ class "doc-content" ]
                                     [ viewDocOverview doc False ]
@@ -451,7 +467,7 @@ view model =
                     DocModule docId modulePath ->
                         case getDocById model docId of
                             Just doc ->
-                                [ docTitle doc False
+                                [ docTitle model doc False
                                 , div
                                     [ class "doc-content" ]
                                     [ viewModule model modulePath doc ]
@@ -461,7 +477,7 @@ view model =
                                 []
 
                     DisabledDoc doc modulePath ->
-                        [ docTitle doc True
+                        [ docTitle model doc True
                         , div
                             [ class "doc-content" ]
                           <|
@@ -698,7 +714,19 @@ navList model =
                                     ]
                                 , id <| "item-" ++ toString i
                                 ]
-                                [ span
+                                [ if List.length p.versions > 1 then
+                                    span
+                                        [ class "icon"
+                                        , onClickInside (DisabledDocNavExpand (not p.versionExpanded) p)
+                                        ]
+                                        [ if p.versionExpanded then
+                                            Icons.caretDown
+                                          else
+                                            Icons.caretRight
+                                        ]
+                                  else
+                                    span [ class "no-icon" ] []
+                                , span
                                     [ class "nav-doc-package"
                                     , title <| "show " ++ p.name
                                     , case List.head p.versions of
@@ -709,28 +737,65 @@ navList model =
                                             onClick NoOp
                                     ]
                                     [ text p.name ]
-                                , span
-                                    [ class "nav-doc-version" ]
-                                  <|
-                                    case List.head p.versions of
-                                        Just version_ ->
-                                            [ span
-                                                [ class "nav-doc-version-str" ]
-                                                [ text version_ ]
-                                            , if model.addDocState == AddDocLoading ( p.name, version_ ) then
-                                                text "...loading"
-                                              else
-                                                span
-                                                    [ class "nav-doc-version-action btn-link"
-                                                    , title "add to search index"
-                                                    , onClick <| AddDoc ( p.name, version_ )
-                                                    ]
-                                                    [ text "Add" ]
-                                            ]
+                                , span [ class "nav-doc-version" ] <|
+                                    if p.versionExpanded then
+                                        []
+                                    else
+                                        case List.head p.versions of
+                                            Just version_ ->
+                                                [ span
+                                                    [ class "nav-doc-version-str" ]
+                                                    [ text version_ ]
+                                                , if model.addDocState == AddDocLoading ( p.name, version_ ) then
+                                                    text "...loading"
+                                                  else
+                                                    span
+                                                        [ class "nav-doc-version-action btn-link"
+                                                        , title "add to search index"
+                                                        , onClick <| AddDoc ( p.name, version_ )
+                                                        ]
+                                                        [ text "Add" ]
+                                                ]
 
-                                        Nothing ->
-                                            []
+                                            Nothing ->
+                                                []
                                 ]
+
+                        DisabledDocOtherVersionNav p version ->
+                            div
+                                [ classList
+                                    [ ( "nav-item nav-doc-item nav-packages-doc-item nav-packages-doc-other-version", True )
+                                    , ( "is-selected", i == model.selectedIndex )
+                                    ]
+                                , id <| "item-" ++ toString i
+                                ]
+                            <|
+                                if List.any ((==) version) p.availableVersions then
+                                    [ span
+                                        [ class "nav-doc-package"
+                                        , title <| "show " ++ p.name
+                                        , onClick (LinkToDisabledDoc p.name version "")
+                                        ]
+                                        [ text version ]
+                                    , span [ class "nav-doc-version" ] <|
+                                        [ if model.addDocState == AddDocLoading ( p.name, version ) then
+                                            text "...loading"
+                                          else
+                                            span
+                                                [ class "btn-link"
+                                                , title "add to search index"
+                                                , onClick <| AddDoc ( p.name, version )
+                                                ]
+                                                [ text "Add" ]
+                                        ]
+                                    ]
+                                else
+                                    [ remoteLink
+                                        ("http://package.elm-lang.org/packages/" ++ p.name ++ "/" ++ version)
+                                        [ text version
+                                        , span [ class "btn-link-icon" ] [ Icons.externalLink ]
+                                        ]
+                                    ]
                 )
         )
 
@@ -755,11 +820,12 @@ viewDocOverview doc disabled =
                             ]
                     )
     in
-        div [ class "doc-overview" ] <|
-            if String.isEmpty doc.readme then
+        if String.isEmpty doc.readme then
+            div [ class "doc-overview-no-readme" ] <|
                 [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
                     ++ listModules
-            else
+        else
+            div [ class "doc-overview" ] <|
                 [ Markdown.toHtml
                     [ class "doc-overview-readme" ]
                     doc.readme
@@ -768,31 +834,53 @@ viewDocOverview doc disabled =
                 ]
 
 
-docTitle : Doc -> Bool -> Html Msg
-docTitle doc disabled =
+docTitle : Model -> Doc -> Bool -> Html Msg
+docTitle model doc disabled =
     h1
-        [ class "doc-title"
-        , if disabled then
-            onClick (LinkToDisabledDoc doc.packageName doc.packageVersion "")
-          else
-            onClick (LinkToPinnedDoc "" doc.id)
-        ]
-        [ span
-            [ class "btn-link" ]
-            [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+        [ class "doc-title" ]
+        [ div []
+            [ span
+                [ class "btn-link"
+                , if disabled then
+                    onClick (LinkToDisabledDoc doc.packageName doc.packageVersion "")
+                  else
+                    onClick (LinkToPinnedDoc "" doc.id)
+                ]
+                [ text <| doc.packageName ++ "/" ++ doc.packageVersion ]
+            , case getLatestVerByDocId model doc.id of
+                Just ver ->
+                    if ver /= doc.packageVersion then
+                        span [ class "doc-title-latest" ]
+                            [ text "(latest "
+                            , span
+                                [ class "btn-link"
+                                , if isPinned model doc.packageName ver then
+                                    onClick (LinkToPinnedDoc "" (doc.packageName ++ "/" ++ ver))
+                                  else
+                                    onClick (LinkToDisabledDoc doc.packageName ver "")
+                                ]
+                                [ text ver ]
+                            , text ")"
+                            ]
+                    else
+                        text ""
+
+                Nothing ->
+                    text ""
+            ]
         , div
             []
             [ remoteLink
                 ("http://package.elm-lang.org/packages/" ++ doc.packageName ++ "/" ++ doc.packageVersion)
-                "elm packages"
+                [ text "elm packages" ]
             , remoteLink
                 ("https://github.com/" ++ doc.packageName)
-                "Browse Source"
+                [ text "Browse Source" ]
             ]
         ]
 
 
-remoteLink : String -> String -> Html Msg
+remoteLink : String -> List (Html Msg) -> Html Msg
 remoteLink url label =
     a
         [ class "btn-link"
@@ -804,7 +892,7 @@ remoteLink url label =
             }
             (Json.Decode.succeed NoOp)
         ]
-        [ text label ]
+        label
 
 
 viewModule : Model -> String -> Doc -> Html Msg
@@ -1217,6 +1305,12 @@ keyMap model key =
                     DisabledHandleNav ->
                         SetShowDisabled True
 
+                    DisabledDocNav p ->
+                        if List.length p.versions > 0 then
+                            DisabledDocNavExpand True p
+                        else
+                            NoOp
+
                     _ ->
                         NoOp
             )
@@ -1234,6 +1328,15 @@ keyMap model key =
 
                     DisabledHandleNav ->
                         SetShowDisabled False
+
+                    DisabledDocNav p ->
+                        if List.length p.versions > 0 then
+                            DisabledDocNavExpand False p
+                        else
+                            NoOp
+
+                    DisabledDocOtherVersionNav p version ->
+                        DisabledDocNavExpand False p
 
                     _ ->
                         NoOp
