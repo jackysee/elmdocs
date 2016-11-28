@@ -926,10 +926,14 @@ docTitle model doc disabled =
             []
             [ remoteLink
                 ("http://package.elm-lang.org/packages/" ++ doc.packageName ++ "/" ++ doc.packageVersion)
-                [ text "elm packages" ]
+                [ text "elm packages"
+                , span [ class "btn-link-icon" ] [ Icons.externalLink ]
+                ]
             , remoteLink
                 ("https://github.com/" ++ doc.packageName)
-                [ text "Browse Source" ]
+                [ text "Browse Source"
+                , span [ class "btn-link-icon" ] [ Icons.externalLink ]
+                ]
             ]
         ]
 
