@@ -1,0 +1,101 @@
+[
+  {
+    "name": "SemanticUi",
+    "comment": " Elm bindings for Semantic UI using a declarative API and useful\nabstractions.\n\n# Rendering\n\n@docs render\n\n# Styling\n\n@docs Size, size, fluid, placeholder\n\n# Events\n\n@docs events\n\n# Elements\n\n## Grid\n\n@docs container, row, col\n\n## Button\n\n@docs button\n\n## Input\n\n@docs input\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Size",
+        "comment": " Some elements might have different sizes. ",
+        "args": [],
+        "cases": [
+          [
+            "Mini",
+            []
+          ],
+          [
+            "Tiny",
+            []
+          ],
+          [
+            "Small",
+            []
+          ],
+          [
+            "Medium",
+            []
+          ],
+          [
+            "Large",
+            []
+          ],
+          [
+            "Big",
+            []
+          ],
+          [
+            "Huge",
+            []
+          ],
+          [
+            "Massive",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "button",
+        "comment": " A button with a text. ",
+        "type": "String -> SemanticUi.Element (SemanticUi.Button msg) msg"
+      },
+      {
+        "name": "col",
+        "comment": " Create the `Html msg` for a grid col.\n\n    col \"two\" [ div [] [] ]\n",
+        "type": "String -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "container",
+        "comment": " Create the `Html msg` for a grid container.\n\n    container [html content]\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "events",
+        "comment": " Set placeholder for input element\n\n    input [] |> events [ onInput InputTextMsg ]\n",
+        "type": "List (Html.Attribute msg) -> SemanticUi.Element (SemanticUi.EventEmitter a msg) msg -> SemanticUi.Element (SemanticUi.EventEmitter a msg) msg"
+      },
+      {
+        "name": "fluid",
+        "comment": " Add fluid class to input element\n\n    input [] |> fluid\n",
+        "type": "SemanticUi.Element (SemanticUi.WithAttributes a msg) msg -> SemanticUi.Element (SemanticUi.WithAttributes a msg) msg"
+      },
+      {
+        "name": "input",
+        "comment": " A inout with a html attributes ",
+        "type": "List (Html.Attribute msg) -> SemanticUi.Element (SemanticUi.Input msg) msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " Set placeholder for input element\n\n    input [] |> placeholder \"write here...\"\n",
+        "type": "String -> SemanticUi.Element (SemanticUi.Writable a) msg -> SemanticUi.Element (SemanticUi.Writable a) msg"
+      },
+      {
+        "name": "render",
+        "comment": " Create the `Html msg` for a Semantic UI `Element`.\n\n    button \"click\" |> render\n",
+        "type": "SemanticUi.Element a msg -> Html.Html msg"
+      },
+      {
+        "name": "row",
+        "comment": " Create the `Html msg` for a grid row.\n\n    row [] [ div [] [] ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "size",
+        "comment": " Adjust the size of an element.\n\n    button \"click\" |> size Huge\n ",
+        "type": "SemanticUi.Size -> SemanticUi.Element (SemanticUi.Sized a) msg -> SemanticUi.Element (SemanticUi.Sized a) msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
