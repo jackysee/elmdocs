@@ -91,3 +91,7 @@ app.ports.listScrollTo.subscribe(function(id){
         });
     }
 });
+
+app.ports.openLink.subscribe(function(url){
+    window.open(url, "_blank");
+});

@@ -401,6 +401,9 @@ update msg model =
             , Cmd.none
             )
 
+        OpenRemoteLink url ->
+            ( model, openLink url )
+
 
 focus : String -> Cmd Msg
 focus id =
@@ -547,14 +550,12 @@ viewSearchResult model =
                             , title path
                             ]
                             [ text <| path ]
-                          {--, span
-                            [ class "nav-result-doc" ]
-                            [ text
-                                (docId
-                                    |> String.Extra.rightOf "/"
-                                    |> String.Extra.leftOf "#"
-                                )
-                            ] --}
+                        , if hasDuplicate (\( path_, docId ) -> path_ == path) model.searchResult then
+                            span
+                                [ class "nav-result-doc" ]
+                                [ text <| String.Extra.rightOfBack "/" docId ]
+                          else
+                            text ""
                         ]
                 )
                 model.searchResult
@@ -564,6 +565,31 @@ viewSearchResult model =
                 [ class "nav-item" ]
                 [ text "No result found" ]
             ]
+
+
+hasDuplicate : (a -> Bool) -> List a -> Bool
+hasDuplicate predicate list =
+    let
+        search =
+            \list count ->
+                case list of
+                    [] ->
+                        False
+
+                    x :: xs ->
+                        let
+                            count_ =
+                                if predicate x then
+                                    count + 1
+                                else
+                                    count
+                        in
+                            if count_ == 2 then
+                                True
+                            else
+                                search xs count_
+    in
+        search list 0
 
 
 navList : Model -> Html Msg
@@ -774,7 +800,11 @@ navList model =
                                     [ span
                                         [ class "nav-doc-package"
                                         , title <| "show " ++ p.name
-                                        , onClick (LinkToDisabledDoc p.name version "")
+                                        , onClick <|
+                                            MsgBatch
+                                                [ LinkToDisabledDoc p.name version ""
+                                                , SetSelectedIndex i
+                                                ]
                                         ]
                                         [ text version ]
                                     , span [ class "nav-doc-version" ] <|
@@ -1281,6 +1311,12 @@ keyMap model key =
                                 Nothing ->
                                     NoOp
 
+                        DisabledDocOtherVersionNav p version ->
+                            if List.member version p.availableVersions then
+                                LinkToDisabledDoc p.name version ""
+                            else
+                                OpenRemoteLink <| "http://package.elm-lang.org/packages/" ++ p.name ++ "/" ++ version
+
                         _ ->
                             NoOp
                 )
@@ -1385,3 +1421,6 @@ port keypress : (String -> msg) -> Sub msg
 
 
 port listScrollTo : String -> Cmd msg
+
+
+port openLink : String -> Cmd msg

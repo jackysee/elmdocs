@@ -34,3 +34,4 @@ type Msg
     | SetSearchFocused Bool
     | LinkToModule String
     | DisabledDocNavExpand Bool Package
+    | OpenRemoteLink String
