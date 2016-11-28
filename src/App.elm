@@ -437,10 +437,10 @@ view model =
                     DocOverview docId ->
                         case getDocById model docId of
                             Just doc ->
-                                [ docTitle doc
+                                [ docTitle doc False
                                 , div
                                     [ class "doc-content" ]
-                                    [ viewDocOverview doc ]
+                                    [ viewDocOverview doc False ]
                                 ]
 
                             Nothing ->
@@ -449,7 +449,7 @@ view model =
                     DocModule docId modulePath ->
                         case getDocById model docId of
                             Just doc ->
-                                [ docTitle doc
+                                [ docTitle doc False
                                 , div
                                     [ class "doc-content" ]
                                     [ viewModule model modulePath doc ]
@@ -459,7 +459,7 @@ view model =
                                 []
 
                     DisabledDoc doc modulePath ->
-                        [ docTitle doc
+                        [ docTitle doc True
                         , div
                             [ class "doc-content" ]
                           <|
@@ -475,25 +475,12 @@ view model =
                                     ]
                                     [ text "Enable it" ]
                                 ]
+                            , viewModule model modulePath doc
+                            , if modulePath == "" then
+                                viewDocOverview doc True
+                              else
+                                viewModule model modulePath doc
                             ]
-                                ++ if modulePath == "" then
-                                    [ viewDocOverview doc
-                                    , h2 [] [ text "Modules" ]
-                                    , div
-                                        [ class "module-list" ]
-                                      <|
-                                        List.map
-                                            (\m ->
-                                                div
-                                                    [ class "btn-link"
-                                                    , onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
-                                                    ]
-                                                    [ text m.name ]
-                                            )
-                                            doc.modules
-                                    ]
-                                   else
-                                    [ viewModule model modulePath doc ]
                         ]
 
                     NotFound ->
@@ -743,31 +730,47 @@ navList model =
         )
 
 
-viewDocOverview : Doc -> Html Msg
-viewDocOverview doc =
-    div [ class "doc-overview" ] <|
-        if String.isEmpty doc.readme then
-            [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
-                ++ (doc.modules
-                        |> List.sortBy .name
-                        |> List.map
-                            (\m ->
-                                div
-                                    [ class "btn-link"
-                                    , onClick (SetCurrentDocFromId m.name doc.id)
-                                    ]
-                                    [ text m.name ]
-                            )
-                   )
-        else
-            [ Markdown.toHtml [ class "doc-overview" ] doc.readme ]
+viewDocOverview : Doc -> Bool -> Html Msg
+viewDocOverview doc disabled =
+    let
+        listModules =
+            doc.modules
+                |> List.sortBy .name
+                |> List.map
+                    (\m ->
+                        div []
+                            [ div
+                                [ class "btn-link"
+                                , if disabled then
+                                    onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
+                                  else
+                                    onClick (SetCurrentDocFromId m.name doc.id)
+                                ]
+                                [ text m.name ]
+                            ]
+                    )
+    in
+        div [ class "doc-overview" ] <|
+            if String.isEmpty doc.readme then
+                [ h1 [] [ text <| doc.packageName ++ "/" ++ doc.packageVersion ] ]
+                    ++ listModules
+            else
+                [ Markdown.toHtml
+                    [ class "doc-overview-readme" ]
+                    doc.readme
+                , div [ class "doc-overview-modules" ]
+                    listModules
+                ]
 
 
-docTitle : Doc -> Html Msg
-docTitle doc =
+docTitle : Doc -> Bool -> Html Msg
+docTitle doc disabled =
     h1
         [ class "doc-title"
-        , onClick (LinkToPinnedDoc "" doc.id)
+        , if disabled then
+            onClick (LinkToDisabledDoc doc.packageName doc.packageVersion "")
+          else
+            onClick (LinkToPinnedDoc "" doc.id)
         ]
         [ span
             [ class "btn-link" ]
@@ -839,7 +842,7 @@ viewModule model path doc =
                     ]
 
             Nothing ->
-                div [] [ text "module not found." ]
+                text ""
 
 
 buildEntryDict : Module -> Dict String Entry
@@ -969,10 +972,7 @@ viewCase i ( case_, caseArgs ) =
                 "|"
 
         caseStr =
-            [ prefix
-            , case_
-            , String.join " " caseArgs
-            ]
+            [ prefix, case_, String.join " " caseArgs ]
                 |> String.join " "
     in
         div [ class "indent" ] [ text caseStr ]
@@ -990,34 +990,25 @@ viewType : List ( String, String ) -> String -> List (Html Msg)
 viewType indexes str =
     let
         str_ =
-            str
-                |> replaceTypesAliasValues indexes
-                |> replaceFullPathVar
+            replaceFullPathVar str
     in
         if String.length str_ < 64 then
-            --    [ text <| " : " ++ str_ ]
             [ span [] [ text " : " ] ]
                 ++ linkToName indexes str
         else
             str
-                -- str_
-                |>
-                    splitTypeArgs2
-                -- |> splitTypeArgs
-                |>
-                    List.indexedMap
-                        (\i s ->
-                            if i == 0 then
-                                div [ class "indent" ] <|
-                                    --  [ text <| " : " ++ s ]
-                                    [ span [] [ text " : " ] ]
-                                        ++ linkToName indexes s
-                            else
-                                div [ class "indent" ] <|
-                                    --    [ text <| " -> " ++ s ]
-                                    [ span [] [ text " -> " ] ]
-                                        ++ linkToName indexes s
-                        )
+                |> splitTypeArgs
+                |> List.indexedMap
+                    (\i s ->
+                        if i == 0 then
+                            div [ class "indent" ] <|
+                                [ span [] [ text " : " ] ]
+                                    ++ linkToName indexes s
+                        else
+                            div [ class "indent" ] <|
+                                [ span [] [ text " -> " ] ]
+                                    ++ linkToName indexes s
+                    )
 
 
 linkToName : List ( String, String ) -> String -> List (Html Msg)
@@ -1041,27 +1032,27 @@ linkToName indexes str =
                         let
                             txt =
                                 String.slice index x.index str
+                                    |> (\txt ->
+                                            if txt == "" then
+                                                Nothing
+                                            else
+                                                Just <| span [] [ text <| replaceFullPathVar txt ]
+                                       )
 
                             name =
                                 String.slice x.index (x.index + String.length x.match) str
-
-                            txtSpan =
-                                if txt == "" then
-                                    Nothing
-                                else
-                                    Just <| span [] [ text <| replaceFullPathVar txt ]
-
-                            nameSpan =
-                                Just <|
-                                    span
-                                        [ class "btn-link"
-                                        , title name
-                                        , onClick (LinkToModule name)
-                                        ]
-                                        [ text <| String.Extra.rightOfBack "." name ]
+                                    |> (\name ->
+                                            Just <|
+                                                span
+                                                    [ class "btn-link"
+                                                    , title name
+                                                    , onClick (LinkToModule name)
+                                                    ]
+                                                    [ text <| String.Extra.rightOfBack "." name ]
+                                       )
 
                             parts =
-                                [ txtSpan, nameSpan ] |> List.filterMap identity
+                                [ txt, name ] |> List.filterMap identity
                         in
                             parts ++ (replace (x.index + String.length x.match) xs str)
     in
@@ -1085,8 +1076,8 @@ findNameMatches indexes str =
                 matches ++ findNameMatches xs str
 
 
-splitTypeArgs2 : String -> List String
-splitTypeArgs2 str =
+splitTypeArgs : String -> List String
+splitTypeArgs str =
     let
         find =
             \atMost str ->
@@ -1115,7 +1106,7 @@ splitTypeArgs2 str =
     in
         case find 1 str of
             Just ( s1, s2 ) ->
-                s1 :: (splitTypeArgs2 s2)
+                s1 :: (splitTypeArgs s2)
 
             Nothing ->
                 [ str ]
@@ -1129,62 +1120,17 @@ isBracketBalanced open end str =
         True
 
 
-splitTypeArgs : String -> List String
-splitTypeArgs str =
-    let
-        result =
-            Regex.find
-                (Regex.AtMost 1)
-                (Regex.regex "^\\s*(?:\\([^\\(\\)]*\\)|{[^{}]*}|[^(->)]*)\\s*->")
-                str
-    in
-        case result of
-            { match } :: xs ->
-                String.slice 0 (String.length match - 2) match
-                    :: (splitTypeArgs <|
-                            String.slice (String.length match) (String.length str) str
-                       )
-
-            [] ->
-                [ str ]
-
-
-replaceTypesAliasValues : List ( String, String ) -> String -> String
-replaceTypesAliasValues indexes str =
-    case indexes of
-        [] ->
-            str
-
-        ( path, _ ) :: xs ->
-            let
-                str_ =
-                    Regex.replace
-                        Regex.All
-                        (Regex.regex <| Regex.escape path)
-                        (\m -> String.Extra.rightOfBack "." m.match)
-                        str
-            in
-                replaceTypesAliasValues xs str_
-
-
 replaceFullPathVar : String -> String
 replaceFullPathVar str =
-    let
-        a =
-            if String.contains "VirtualDom" str then
-                Debug.log "rr" str
-            else
-                str
-    in
-        Regex.replace Regex.All
-            (Regex.regex "(?:[a-zA-Z0-9_]+\\.)+([a-zA-Z0-9_]+)")
-            (\m ->
-                m.submatches
-                    |> List.filterMap identity
-                    |> List.head
-                    |> Maybe.withDefault ""
-            )
-            str
+    Regex.replace Regex.All
+        (Regex.regex "(?:[a-zA-Z0-9_]+\\.)+([a-zA-Z0-9_]+)")
+        (\m ->
+            m.submatches
+                |> List.filterMap identity
+                |> List.head
+                |> Maybe.withDefault ""
+        )
+        str
 
 
 subscriptions : Model -> Sub Msg
