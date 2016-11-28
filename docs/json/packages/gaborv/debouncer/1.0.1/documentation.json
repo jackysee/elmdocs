@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Debouncer",
+    "comment": "\n\nThis is a delay-based debouncer. You can create it by defining a delay time.\nFor every bounce the timer \"restarts\" and the new message takes over. \nIf there is no new message for a given id in the specified delay time frame, the last message is sent to your app. \n\n\n## Debouncer State\n\n@docs DebouncerState\n@docs create\n\n\n## Starting and bouncing the Debouncer\n\n@docs BounceDetails\n@docs bounce\n\n\n## Internal message handling\n\n@docs SelfMsg\n@docs process\n\n",
+    "aliases": [
+      {
+        "name": "BounceDetails",
+        "comment": " Pass these details to the bounce function to start / bounce the debouncer\n",
+        "args": [
+          "appMsg"
+        ],
+        "type": "{ id : Debouncer.Id, msgToSend : appMsg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "DebouncerState",
+        "comment": " The state of tagged debouncers\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "SelfMsg",
+        "comment": " Forward SelfMsgs to the process function\n",
+        "args": [
+          "appMsg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "bounce",
+        "comment": " Call bounce to start the debouncer as well as anytime the desired outccome changes.\n",
+        "type": "Debouncer.BounceDetails appMsg -> Debouncer.DebouncerState -> ( Debouncer.DebouncerState , Platform.Cmd.Cmd (Debouncer.SelfMsg appMsg) )"
+      },
+      {
+        "name": "create",
+        "comment": " Create tagged debouncers with a given delay time (shared accross all of them)\n",
+        "type": "Time.Time -> Debouncer.DebouncerState"
+      },
+      {
+        "name": "process",
+        "comment": " Forward the debouncer's `SelfMsg`s to this function so that debouncer can manage its state and fire the delayed commands when it is neccessary\n",
+        "type": "Debouncer.SelfMsg appMsg -> Debouncer.DebouncerState -> ( Debouncer.DebouncerState, Platform.Cmd.Cmd appMsg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
