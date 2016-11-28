@@ -1,0 +1,133 @@
+[
+  {
+    "name": "Euclid.Rectangle",
+    "comment": " Defines a Rectangle type\n\n# Types\n@docs Rectangle\n\n# Properties\n@docs width, height, left, right, top, bottom, opposite\n\n# Misc\n@docs hasPoint\n",
+    "aliases": [
+      {
+        "name": "Rectangle",
+        "comment": " A polymorphic rectangle defined by its top left corner and its size ",
+        "args": [
+          "n"
+        ],
+        "type": "{ corner : Euclid.Vector.Vector n, size : Euclid.Vector.Vector n }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "bottom",
+        "comment": " Bottom side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle number -> number"
+      },
+      {
+        "name": "hasPoint",
+        "comment": " Does the rectangle contain the point ",
+        "type": "Euclid.Rectangle.Rectangle comparable -> Euclid.Vector.Vector comparable -> Bool"
+      },
+      {
+        "name": "height",
+        "comment": " Height of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle n -> n"
+      },
+      {
+        "name": "left",
+        "comment": " Left side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle n -> n"
+      },
+      {
+        "name": "opposite",
+        "comment": " Opposite corner of a rectangle (bottom right) ",
+        "type": "Euclid.Rectangle.Rectangle number -> Euclid.Vector.Vector number"
+      },
+      {
+        "name": "right",
+        "comment": " Right side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle number -> number"
+      },
+      {
+        "name": "top",
+        "comment": " Top side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle number -> number"
+      },
+      {
+        "name": "width",
+        "comment": " Width of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle n -> n"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Euclid.Vector",
+    "comment": " Defines a polymorphic Vector type\n\n# Types\n@docs Vector\n\n# Construction\n@docs vec\n\n# Arithmetic\n@docs add, subtract, negate, conjugate\n\n# Transform\n@docs map, map2, dotwise, fold, x, y\n\n",
+    "aliases": [
+      {
+        "name": "Vector",
+        "comment": " A 2D vector ",
+        "args": [
+          "n"
+        ],
+        "type": "{ x : n, y : n }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add two vectors component-wise ",
+        "type": "Euclid.Vector.Vector number -> Euclid.Vector.Vector number -> Euclid.Vector.Vector number"
+      },
+      {
+        "name": "conjugate",
+        "comment": " The complex conjugate (Y component is negated) ",
+        "type": "Euclid.Vector.Vector number -> Euclid.Vector.Vector number"
+      },
+      {
+        "name": "dotwise",
+        "comment": " Apply some function to two vectors component-wise (like map for two vectors)  ",
+        "type": "(a -> a -> b) -> Euclid.Vector.Vector a -> Euclid.Vector.Vector a -> Euclid.Vector.Vector b"
+      },
+      {
+        "name": "fold",
+        "comment": " Reduce a Vector to a single value by applying some function to its components ",
+        "type": "(a -> a -> b) -> Euclid.Vector.Vector a -> b"
+      },
+      {
+        "name": "map",
+        "comment": " Apply some function to each component ",
+        "type": "(a -> b) -> Euclid.Vector.Vector a -> Euclid.Vector.Vector b"
+      },
+      {
+        "name": "map2",
+        "comment": " See 'dotwise' ",
+        "type": "(a -> a -> b) -> Euclid.Vector.Vector a -> Euclid.Vector.Vector a -> Euclid.Vector.Vector b"
+      },
+      {
+        "name": "negate",
+        "comment": " Negate both components ",
+        "type": "Euclid.Vector.Vector number -> Euclid.Vector.Vector number"
+      },
+      {
+        "name": "subtract",
+        "comment": " Subtract two vectors component-wise ",
+        "type": "Euclid.Vector.Vector number -> Euclid.Vector.Vector number -> Euclid.Vector.Vector number"
+      },
+      {
+        "name": "vec",
+        "comment": " Construct a vector from an X and a Y value  ",
+        "type": "n -> n -> Euclid.Vector.Vector n"
+      },
+      {
+        "name": "x",
+        "comment": " Apply some function to the X component ",
+        "type": "(a -> a) -> Euclid.Vector.Vector a -> Euclid.Vector.Vector a"
+      },
+      {
+        "name": "y",
+        "comment": " Apply some function to the y component ",
+        "type": "(a -> a) -> Euclid.Vector.Vector a -> Euclid.Vector.Vector a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
