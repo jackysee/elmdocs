@@ -125,7 +125,14 @@ buildSearchIndex list doc =
                             ++ List.map
                                 (\name -> m.name ++ "." ++ name)
                                 (List.map .name m.aliases
-                                    ++ List.map .name m.types
+                                    ++ (m.types
+                                            |> List.map
+                                                (\m ->
+                                                    [ m.name ]
+                                                        ++ List.map (\( name, _ ) -> m.name ++ " " ++ name) m.cases
+                                                )
+                                            |> List.concat
+                                       )
                                     ++ List.map .name m.values
                                 )
                     )
@@ -259,7 +266,9 @@ update msg model =
                             Nothing ->
                                 NotFound
               }
-            , scrollToElement modulePath
+            , modulePath
+                |> Regex.replace Regex.All (Regex.regex "%20") (\_ -> "-")
+                |> scrollToElement
             )
 
         Search text ->
@@ -1087,18 +1096,25 @@ viewPart moduleName entry indexes =
                 [ class "entry"
                 , id <| moduleName ++ "." ++ tipe.name
                 ]
-                [ h3 [] <|
-                    [ text "type "
-                    , span [ class "entry-name" ] [ text tipe.name ]
-                    ]
-                        ++ ((" " ++ String.join " " tipe.args) |> linkToName indexes)
-                        ++ (if List.length tipe.cases > 0 then
-                                tipe.cases |> List.indexedMap viewCase
-                            else
-                                [ text "" ]
-                           )
-                , Markdown.toHtml [ class "entry-comment" ] tipe.comment
-                ]
+            <|
+                (List.map
+                    (\( c, _ ) ->
+                        span [ id <| moduleName ++ "." ++ tipe.name ++ "-" ++ c ] []
+                    )
+                    tipe.cases
+                )
+                    ++ [ h3 [] <|
+                            [ text "type "
+                            , span [ class "entry-name" ] [ text tipe.name ]
+                            ]
+                                ++ ((" " ++ String.join " " tipe.args) |> linkToName indexes)
+                                ++ (if List.length tipe.cases > 0 then
+                                        tipe.cases |> List.indexedMap viewCase
+                                    else
+                                        [ text "" ]
+                                   )
+                       , Markdown.toHtml [ class "entry-comment" ] tipe.comment
+                       ]
 
         ValueEntry value ->
             div
@@ -1126,7 +1142,8 @@ viewCase i ( case_, caseArgs ) =
             [ prefix, case_, String.join " " caseArgs ]
                 |> String.join " "
     in
-        div [ class "indent" ] [ text caseStr ]
+        div [ class "indent" ]
+            [ text caseStr ]
 
 
 viewValueEntryName : String -> String
