@@ -283,6 +283,23 @@ update msg model =
                                             (String.toLower text)
                                             (String.toLower path)
                                     )
+                                |> List.sortBy
+                                    (\( pathId, docId ) ->
+                                        let
+                                            name =
+                                                String.Extra.rightOfBack "." pathId
+                                        in
+                                            ( if text == name then
+                                                1
+                                              else if String.startsWith text name then
+                                                2
+                                              else if String.contains text name then
+                                                3
+                                              else
+                                                4
+                                            , pathId
+                                            )
+                                    )
                 }
             , Cmd.none
             )
