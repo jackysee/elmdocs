@@ -21,6 +21,7 @@ type alias Model =
     , selectedIndex : Int
     , navWidth : Int
     , drag : Maybe Drag
+    , addDocState : AddDocState
     }
 
 
@@ -45,6 +46,11 @@ type DocNavItem
     | DisabledHandleNav
     | DisabledInputNav
     | DisabledDocNav Package
+
+
+type AddDocState
+    = AddDocLoading ( String, String )
+    | AddDocIdle
 
 
 type alias StoreModel =

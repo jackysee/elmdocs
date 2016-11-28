@@ -52,6 +52,7 @@ init value location =
                 , selectedIndex = 0
                 , navWidth = storeModel.navWidth
                 , drag = Nothing
+                , addDocState = AddDocIdle
                 }
     in
         model ! [ getAllPackages (value == Nothing) location ]
@@ -173,7 +174,7 @@ update msg model =
             ( model, Cmd.none )
 
         AddDoc p ->
-            ( model, getDocs [ p ] )
+            ( { model | addDocState = AddDocLoading p }, getDocs [ p ] )
 
         RemoveDoc doc ->
             let
@@ -198,13 +199,14 @@ update msg model =
                     { model
                         | pinnedDocs = model.pinnedDocs ++ [ doc ]
                         , searchIndex = searchIndex
+                        , addDocState = AddDocIdle
                     }
                     ! [ getDocs rest
                       , saveLocal { doc = doc, searchIndex = searchIndex }
                       ]
 
         PinDoc rest (Err err) ->
-            ( model, getDocs rest )
+            ( { model | addDocState = AddDocIdle }, getDocs rest )
 
         GetCurrentDocFromPackage name version modulePath ->
             let
@@ -715,12 +717,15 @@ navList model =
                                             [ span
                                                 [ class "nav-doc-version-str" ]
                                                 [ text version_ ]
-                                            , span
-                                                [ class "nav-doc-version-action btn-link"
-                                                , title "add to search index"
-                                                , onClick (AddDoc ( p.name, version_ ))
-                                                ]
-                                                [ text "Add" ]
+                                            , if model.addDocState == AddDocLoading ( p.name, version_ ) then
+                                                text "...loading"
+                                              else
+                                                span
+                                                    [ class "nav-doc-version-action btn-link"
+                                                    , title "add to search index"
+                                                    , onClick <| AddDoc ( p.name, version_ )
+                                                    ]
+                                                    [ text "Add" ]
                                             ]
 
                                         Nothing ->
