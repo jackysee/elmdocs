@@ -477,7 +477,10 @@ view model =
                             [ span [] [ text "ElmDocs" ]
                             , Markdown.toHtml
                                 [ class "doc-info" ]
-                                """ Written in [Elm](http://elm-lang.org) by [jackysee](http://github.com/jackysee/elmdocs)"""
+                                """[elmdocs](http://github.com/jackysee/elmdocs)
+                                is written in [Elm](http://elm-lang.org)
+                                by [jackysee](http://twitter.com/jackysee).
+                                """
                             ]
                         ]
 
