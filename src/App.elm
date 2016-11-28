@@ -513,7 +513,6 @@ view model =
                                     ]
                                     [ text "Enable it" ]
                                 ]
-                            , viewModule model modulePath doc
                             , if modulePath == "" then
                                 viewDocOverview doc True
                               else
