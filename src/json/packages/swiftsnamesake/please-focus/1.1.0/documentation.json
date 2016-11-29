@@ -1,0 +1,48 @@
+[
+  {
+    "name": "Focus",
+    "comment": " Sort-of lenses\n\n# Types\n@docs Setter\n\n# Operators\n@docs compose, (=>), (.=), ($=), (&)\n\n",
+    "aliases": [
+      {
+        "name": "Setter",
+        "comment": " 'Setter's work by applying a function to a given field ",
+        "args": [
+          "s",
+          "t",
+          "a",
+          "b"
+        ],
+        "type": "(a -> b) -> s -> t"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "$=",
+        "comment": " Apply setter to constant value (TODO: Rename?) ",
+        "type": "Focus.Setter s t a b -> (a -> b) -> s -> t"
+      },
+      {
+        "name": "&",
+        "comment": " Reverse type application ",
+        "type": "a -> (a -> b) -> b"
+      },
+      {
+        "name": ".=",
+        "comment": " Apply setter to constant value (TODO: Rename?) ",
+        "type": "Focus.Setter s t a b -> b -> s -> t"
+      },
+      {
+        "name": "=>",
+        "comment": " Synonym for compose (TODO: Rename?) ",
+        "type": "Focus.Setter s t a b -> Focus.Setter a b c d -> Focus.Setter s t c d"
+      },
+      {
+        "name": "compose",
+        "comment": " Compose two setters ",
+        "type": "Focus.Setter s t a b -> Focus.Setter a b c d -> Focus.Setter s t c d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
