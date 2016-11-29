@@ -80,10 +80,18 @@ simpleMatch text path =
 
 
 sortPath : String -> String -> String -> ( Int, String )
-sortPath separator text pathId =
+sortPath separator text_ pathId =
     let
         name =
-            String.Extra.rightOfBack separator pathId
+            pathId
+                |> String.Extra.rightOfBack separator
+                |> String.toLower
+
+        text =
+            String.toLower text_
+
+        path =
+            String.toLower pathId
     in
         ( if text == name then
             1
@@ -91,9 +99,13 @@ sortPath separator text pathId =
             2
           else if String.contains text name then
             3
-          else
+          else if String.startsWith text path then
             4
-        , pathId
+          else if String.contains text path then
+            5
+          else
+            6
+        , path
         )
 
 
