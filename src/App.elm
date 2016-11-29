@@ -605,248 +605,258 @@ viewSearchResult model =
 
 navList : Model -> Html Msg
 navList model =
-    div [ class "nav-list" ]
-        (model.navList
-            |> List.indexedMap
-                (\i navItem ->
-                    case navItem of
-                        DocNav d ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-doc-item", True )
-                                    , ( "is-selected", i == model.selectedIndex )
-                                    ]
-                                , onClick <|
-                                    MsgBatch
-                                        [ LinkToPinnedDoc "" d.id
-                                        , SetSelectedIndex i
-                                        ]
-                                , id <| "item-" ++ toString i
+    div [ class "nav-list" ] <|
+        List.indexedMap (viewNavItem model) model.navList
+
+
+viewNavItem : Model -> Int -> DocNavItem -> Html Msg
+viewNavItem model i navItem =
+    case navItem of
+        DocNav d ->
+            div
+                [ classList
+                    [ ( "nav-item nav-doc-item", True )
+                    , ( "is-selected", i == model.selectedIndex )
+                    ]
+                , onClick <|
+                    MsgBatch
+                        [ LinkToPinnedDoc "" d.id
+                        , SetSelectedIndex i
+                        ]
+                , id <| "item-" ++ toString i
+                ]
+                [ span
+                    [ class "icon"
+                    , onClickInside (DocNavExpand (not d.navExpanded) d.id)
+                    ]
+                    [ if d.navExpanded then
+                        Icons.caretDown
+                      else
+                        Icons.caretRight
+                    ]
+                , span [ class "nav-doc-package" ] [ text d.packageName ]
+                , span [ class "nav-doc-version" ]
+                    [ div
+                        [ class "nav-doc-version-str" ]
+                        [ text d.packageVersion ]
+                    , div [ class "nav-doc-version-action" ]
+                        [ if model.showConfirmDeleteDoc == Nothing then
+                            span
+                                [ class "nav-doc-version-remove"
+                                , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
                                 ]
                                 [ span
-                                    [ class "icon"
-                                    , onClickInside (DocNavExpand (not d.navExpanded) d.id)
-                                    ]
-                                    [ if d.navExpanded then
-                                        Icons.caretDown
-                                      else
-                                        Icons.caretRight
-                                    ]
-                                , span [ class "nav-doc-package" ] [ text d.packageName ]
-                                , span [ class "nav-doc-version" ]
-                                    [ div
-                                        [ class "nav-doc-version-str" ]
-                                        [ text d.packageVersion ]
-                                    , div [ class "nav-doc-version-action" ]
-                                        [ if model.showConfirmDeleteDoc == Nothing then
-                                            span
-                                                [ class "nav-doc-version-remove"
-                                                , onClickInside (SetShowConfirmDeleteDoc (Just d.id))
-                                                ]
-                                                [ span
-                                                    [ class "nav-doc-version-remove-text btn-link" ]
-                                                    [ text "Remove" ]
-                                                ]
-                                          else if model.showConfirmDeleteDoc == Just d.id then
-                                            span
-                                                []
-                                                [ span
-                                                    [ class "nav-doc-version-remove-confirm btn-link confirm-danger"
-                                                    , onClickInside (RemoveDoc d)
-                                                    ]
-                                                    [ text "Remove" ]
-                                                , span
-                                                    [ class "nav-doc-version-remove-confirm btn-link"
-                                                    , onClickInside (SetShowConfirmDeleteDoc Nothing)
-                                                    ]
-                                                    [ text "/ Cancel" ]
-                                                ]
-                                          else
-                                            text ""
-                                        ]
-                                    ]
+                                    [ class "nav-doc-version-remove-text btn-link" ]
+                                    [ text "Remove" ]
                                 ]
-
-                        ModuleNav m docId ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-doc-module", True )
-                                    , ( "is-selected", i == model.selectedIndex )
-                                    ]
-                                , onClick <|
-                                    MsgBatch
-                                        [ LinkToPinnedDoc m.name docId
-                                        , SetSelectedIndex i
-                                        ]
-                                , id <| "item-" ++ toString i
-                                ]
-                                [ span [] [ text m.name ] ]
-
-                        DisabledHandleNav ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-packages-disabled-handle", True )
-                                    , ( "is-selected", i == model.selectedIndex )
-                                    ]
-                                , onClick (SetShowDisabled <| not model.showDisabled)
-                                , id <| "item-" ++ toString i
-                                ]
+                          else if model.showConfirmDeleteDoc == Just d.id then
+                            span
+                                []
                                 [ span
-                                    [ class "icon" ]
-                                    [ if model.showDisabled then
-                                        Icons.caretDown
-                                      else
-                                        Icons.caretRight
+                                    [ class "nav-doc-version-remove-confirm btn-link confirm-danger"
+                                    , onClickInside (RemoveDoc d)
                                     ]
+                                    [ text "Remove" ]
                                 , span
-                                    [ class "flex-wide" ]
-                                    [ text <| "Disabled (" ++ (disabledPackages model |> List.length |> toString) ++ ")"
+                                    [ class "nav-doc-version-remove-confirm btn-link"
+                                    , onClickInside (SetShowConfirmDeleteDoc Nothing)
                                     ]
-                                , if model.showDisabled then
-                                    div []
-                                        [ span
-                                            [ classList
-                                                [ ( "btn-pill", True )
-                                                , ( "is-selected", model.showNewOnly )
-                                                ]
-                                            , onClickInside (SetShowNewOnly True)
-                                            ]
-                                            [ text ".18" ]
-                                        , span
-                                            [ classList
-                                                [ ( "btn-pill", True )
-                                                , ( "is-selected", not model.showNewOnly )
-                                                ]
-                                            , onClickInside (SetShowNewOnly False)
-                                            ]
-                                            [ text "all" ]
-                                        ]
+                                    [ text "/ Cancel" ]
+                                ]
+                          else
+                            text ""
+                        ]
+                    ]
+                ]
+
+        ModuleNav m docId ->
+            div
+                [ classList
+                    [ ( "nav-item nav-doc-module", True )
+                    , ( "is-selected", i == model.selectedIndex )
+                    ]
+                , onClick <|
+                    MsgBatch
+                        [ LinkToPinnedDoc m.name docId
+                        , SetSelectedIndex i
+                        ]
+                , id <| "item-" ++ toString i
+                ]
+                [ span [] [ text m.name ] ]
+
+        DisabledHandleNav ->
+            div
+                [ classList
+                    [ ( "nav-item nav-packages-disabled-handle", True )
+                    , ( "is-selected", i == model.selectedIndex )
+                    ]
+                , onClick (SetShowDisabled <| not model.showDisabled)
+                , id <| "item-" ++ toString i
+                ]
+                [ span
+                    [ class "icon" ]
+                    [ if model.showDisabled then
+                        Icons.caretDown
+                      else
+                        Icons.caretRight
+                    ]
+                , span
+                    [ class "flex-wide" ]
+                    [ text <| "Disabled (" ++ (disabledPackages model |> List.length |> toString) ++ ")"
+                    ]
+                , if model.showDisabled then
+                    div []
+                        [ span
+                            [ classList
+                                [ ( "btn-pill", True )
+                                , ( "is-selected", model.showNewOnly )
+                                ]
+                            , onClickInside (SetShowNewOnly True)
+                            ]
+                            [ text ".18" ]
+                        , span
+                            [ classList
+                                [ ( "btn-pill", True )
+                                , ( "is-selected", not model.showNewOnly )
+                                ]
+                            , onClickInside (SetShowNewOnly False)
+                            ]
+                            [ text "all" ]
+                        ]
+                  else
+                    text ""
+                ]
+
+        DisabledInputNav ->
+            div
+                [ classList
+                    [ ( "nav-item nav-package-search", True )
+                    , ( "is-selected", i == model.selectedIndex )
+                    ]
+                , id <| "item-" ++ toString i
+                ]
+                [ input
+                    [ class "search-package-input"
+                    , value model.searchPackageText
+                    , onInput SearchPackage
+                    , placeholder "Search Package..."
+                    , id "package-search-input"
+                    ]
+                    []
+                ]
+
+        DisabledDocNav p ->
+            div
+                [ classList
+                    [ ( "nav-item nav-doc-item nav-packages-doc-item", True )
+                    , ( "is-selected", i == model.selectedIndex )
+                    ]
+                , id <| "item-" ++ toString i
+                ]
+                [ if List.length p.versions > 1 then
+                    span
+                        [ class "icon"
+                        , onClickInside <|
+                            MsgBatch
+                                [ DisabledDocNavExpand (not p.versionExpanded) p
+                                , SetSelectedIndex i
+                                ]
+                        ]
+                        [ if p.versionExpanded then
+                            Icons.caretDown
+                          else
+                            Icons.caretRight
+                        ]
+                  else
+                    span [ class "no-icon" ] []
+                , span
+                    [ class "nav-doc-package"
+                    , title <| "show " ++ p.name
+                    , case List.head p.versions of
+                        Just version ->
+                            onClick <|
+                                MsgBatch
+                                    [ LinkToDisabledDoc p.name version ""
+                                    , SetSelectedIndex i
+                                    ]
+
+                        Nothing ->
+                            onClick NoOp
+                    ]
+                    [ text p.name ]
+                , span [ class "nav-doc-version" ] <|
+                    if p.versionExpanded then
+                        []
+                    else
+                        case List.head p.versions of
+                            Just version_ ->
+                                [ span
+                                    [ class "nav-doc-version-str" ]
+                                    [ text version_ ]
+                                , if model.addDocState == AddDocLoading ( p.name, version_ ) then
+                                    text "...loading"
                                   else
-                                    text ""
-                                ]
-
-                        DisabledInputNav ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-package-search", True )
-                                    , ( "is-selected", i == model.selectedIndex )
-                                    ]
-                                , id <| "item-" ++ toString i
-                                ]
-                                [ input
-                                    [ class "search-package-input"
-                                    , value model.searchPackageText
-                                    , onInput SearchPackage
-                                    , placeholder "Search Package..."
-                                    , id "package-search-input"
-                                    ]
-                                    []
-                                ]
-
-                        DisabledDocNav p ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-doc-item nav-packages-doc-item", True )
-                                    , ( "is-selected", i == model.selectedIndex )
-                                    ]
-                                , id <| "item-" ++ toString i
-                                ]
-                                [ if List.length p.versions > 1 then
                                     span
-                                        [ class "icon"
-                                        , onClickInside <|
-                                            MsgBatch
-                                                [ DisabledDocNavExpand (not p.versionExpanded) p
-                                                , SetSelectedIndex i
-                                                ]
+                                        [ class "nav-doc-version-action btn-link"
+                                        , title "add to search index"
+                                        , onClick <| AddDoc ( p.name, version_ )
                                         ]
-                                        [ if p.versionExpanded then
-                                            Icons.caretDown
-                                          else
-                                            Icons.caretRight
-                                        ]
-                                  else
-                                    span [ class "no-icon" ] []
-                                , span
-                                    [ class "nav-doc-package"
-                                    , title <| "show " ++ p.name
-                                    , case List.head p.versions of
-                                        Just version ->
-                                            onClick <|
-                                                MsgBatch
-                                                    [ LinkToDisabledDoc p.name version ""
-                                                    , SetSelectedIndex i
-                                                    ]
-
-                                        Nothing ->
-                                            onClick NoOp
-                                    ]
-                                    [ text p.name ]
-                                , span [ class "nav-doc-version" ] <|
-                                    if p.versionExpanded then
-                                        []
-                                    else
-                                        case List.head p.versions of
-                                            Just version_ ->
-                                                [ span
-                                                    [ class "nav-doc-version-str" ]
-                                                    [ text version_ ]
-                                                , if model.addDocState == AddDocLoading ( p.name, version_ ) then
-                                                    text "...loading"
-                                                  else
-                                                    span
-                                                        [ class "nav-doc-version-action btn-link"
-                                                        , title "add to search index"
-                                                        , onClick <| AddDoc ( p.name, version_ )
-                                                        ]
-                                                        [ text "Add" ]
-                                                ]
-
-                                            Nothing ->
-                                                []
+                                        [ text "Add" ]
                                 ]
 
-                        DisabledDocOtherVersionNav p version ->
-                            div
-                                [ classList
-                                    [ ( "nav-item nav-doc-item nav-packages-doc-item nav-packages-doc-other-version", True )
-                                    , ( "is-selected", i == model.selectedIndex )
+                            Nothing ->
+                                []
+                ]
+
+        DisabledDocOtherVersionNav p version ->
+            let
+                available =
+                    List.any ((==) version) p.availableVersions
+
+                remoteUrl =
+                    "http://package.elm-lang.org/packages/" ++ p.name ++ "/" ++ version
+            in
+                div
+                    [ classList
+                        [ ( "nav-item nav-doc-item nav-packages-doc-item nav-packages-doc-other-version", True )
+                        , ( "is-selected", i == model.selectedIndex )
+                        ]
+                    , id <| "item-" ++ toString i
+                    , if not available then
+                        onClick (OpenRemoteLink remoteUrl)
+                      else
+                        onClick NoOp
+                    ]
+                <|
+                    if available then
+                        [ span
+                            [ class "nav-doc-package"
+                            , title <| "show " ++ p.name
+                            , onClick <|
+                                MsgBatch
+                                    [ LinkToDisabledDoc p.name version ""
+                                    , SetSelectedIndex i
                                     ]
-                                , id <| "item-" ++ toString i
-                                ]
-                            <|
-                                if List.any ((==) version) p.availableVersions then
-                                    [ span
-                                        [ class "nav-doc-package"
-                                        , title <| "show " ++ p.name
-                                        , onClick <|
-                                            MsgBatch
-                                                [ LinkToDisabledDoc p.name version ""
-                                                , SetSelectedIndex i
-                                                ]
-                                        ]
-                                        [ text version ]
-                                    , span [ class "nav-doc-version" ] <|
-                                        [ if model.addDocState == AddDocLoading ( p.name, version ) then
-                                            text "...loading"
-                                          else
-                                            span
-                                                [ class "btn-link"
-                                                , title "add to search index"
-                                                , onClick <| AddDoc ( p.name, version )
-                                                ]
-                                                [ text "Add" ]
-                                        ]
+                            ]
+                            [ text version ]
+                        , span [ class "nav-doc-version" ] <|
+                            [ if model.addDocState == AddDocLoading ( p.name, version ) then
+                                text "...loading"
+                              else
+                                span
+                                    [ class "btn-link"
+                                    , title "add to search index"
+                                    , onClick <| AddDoc ( p.name, version )
                                     ]
-                                else
-                                    [ remoteLink
-                                        ("http://package.elm-lang.org/packages/" ++ p.name ++ "/" ++ version)
-                                        [ text version
-                                        , span [ class "btn-link-icon" ] [ Icons.externalLink ]
-                                        ]
-                                    ]
-                )
-        )
+                                    [ text "Add" ]
+                            ]
+                        ]
+                    else
+                        [ remoteLink remoteUrl
+                            [ text version
+                            , span [ class "btn-link-icon" ] [ Icons.externalLink ]
+                            ]
+                        ]
 
 
 viewDocOverview : Doc -> Bool -> Html Msg
