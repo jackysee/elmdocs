@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Context",
+    "comment": "\nA collection of helpers for dealing with elm-mdl render functions.\nThis is motivated by the following observations:\n\n- The triplet of `Mdl index model.mdl` occurs frequently in elm-mdl.\n- Dealing with indices is a bit tedious.\n\nInstead of\n\n    viewButton model index =\n        Button.render Mdl (0 :: index) model.mdl\n            [ Button.onClick Increment ]\n            [ text \"Add\" ]\n\nThis becomes\n\n    viewButton context model =\n        (Button.render |> with context)\n            [ Button.onClick Increment ]\n            [ text \"Add\" ]\n\n@docs Context, init, with, withIndex, child\n\n",
+    "aliases": [
+      {
+        "name": "Context",
+        "comment": " Encapsulates the three arguments that are usually found together in elm-mdl.\nIn elm-mdl apps, these are typically:\n\n- toMsg: Mdl\n- index: [ 0 ] or (i :: index) in larger apps\n- container: model.mdl\n",
+        "args": [
+          "container",
+          "msg"
+        ],
+        "type": "{ toMsg : Context.MsgWrapper container msg , index : Parts.Index (List Int) , container : container }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "child",
+        "comment": " Create a context for passing to a child component.\nThis just prepends `i` to the context's index list.\n",
+        "type": "Context.Context container msg -> Int -> Context.Context container msg"
+      },
+      {
+        "name": "init",
+        "comment": " Create a context record.\nConstruct this in your main view function, NOT in your model.\nTypical usage:\n\n    view model =\n        let\n            context = Context.init Mdl model.mdl\n        in\n            ...\n",
+        "type": "Context.MsgWrapper container msg -> container -> Context.Context container msg"
+      },
+      {
+        "name": "with",
+        "comment": " Apply the message and container arguments to a render function.\nUse this for view functions that do not take an index, such as the root view function.\n\n    view : Model -> Html Msg\n    view model =\n        let\n            context =\n                Context.init Mdl model.mdl\n        in\n            (Layout.render |> with context)\n                [ Layout.fixedHeader\n                ]\n                { header = []\n                , drawer = []\n                , tabs = ( [], [] )\n                , main = viewMain context model\n                }\n",
+        "type": "Context.Context container msg -> (Context.MsgWrapper container msg -> container -> viewFunction) -> viewFunction"
+      },
+      {
+        "name": "withIndex",
+        "comment": " Apply the message, index, and container arguments to a render function.\nUse this for render functions which take an index argument, such as buttons.\n\nInstead of\n\n    Button.render Mdl (0 :: index) model.mdl\n        [ Button.onClick Increment ]\n        [ text \"+\" ]\n\nit becomes\n\n    (Button.render |> withIndex context 0)\n        [ Button.onClick Increment ]\n        [ text \"+\" ]\n",
+        "type": "Context.Context container msg -> Int -> (Context.MsgWrapper container msg -> Parts.Index (List Int) -> container -> viewFunction) -> viewFunction"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
