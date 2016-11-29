@@ -313,19 +313,22 @@ update msg model =
             )
 
         SetShowDisabled show ->
-            ( updateNavList
-                { model
-                    | showDisabled = show
-                    , selectedIndex =
-                        if show then
-                            model.selectedIndex
-                        else
-                            model.navList
-                                |> findIndex (\n -> n == DisabledHandleNav)
-                                |> Maybe.withDefault model.selectedIndex
-                }
-            , Cmd.none
-            )
+            let
+                index =
+                    if show then
+                        model.selectedIndex
+                    else
+                        model.navList
+                            |> findIndex (\n -> n == DisabledHandleNav)
+                            |> Maybe.withDefault model.selectedIndex
+            in
+                ( updateNavList
+                    { model
+                        | showDisabled = show
+                        , selectedIndex = index
+                    }
+                , listScrollTo <| "item-" ++ toString index
+                )
 
         SetShowNewOnly show ->
             ( updateNavList { model | showNewOnly = show }, Cmd.none )
@@ -395,6 +398,9 @@ update msg model =
         DomFocus id ->
             ( model, focus id )
 
+        DomBlur id ->
+            ( model, Task.attempt (\_ -> NoOp) (Dom.blur id) )
+
         ListScrollTo index ->
             ( model, listScrollTo <| "item-" ++ toString index )
 
@@ -416,24 +422,27 @@ update msg model =
                     ( model, Cmd.none )
 
         DisabledDocNavExpand expand package ->
-            ( updateNavList
-                { model
-                    | allPackages =
-                        List.map
-                            (\p ->
-                                if p.name == package.name then
-                                    { p | versionExpanded = expand }
-                                else
-                                    p
-                            )
-                            model.allPackages
-                    , selectedIndex =
-                        model.navList
-                            |> findIndex ((==) (DisabledDocNav package))
-                            |> Maybe.withDefault model.selectedIndex
-                }
-            , Cmd.none
-            )
+            let
+                index =
+                    model.navList
+                        |> findIndex ((==) (DisabledDocNav package))
+                        |> Maybe.withDefault model.selectedIndex
+            in
+                ( updateNavList
+                    { model
+                        | allPackages =
+                            List.map
+                                (\p ->
+                                    if p.name == package.name then
+                                        { p | versionExpanded = expand }
+                                    else
+                                        p
+                                )
+                                model.allPackages
+                        , selectedIndex = index
+                    }
+                , listScrollTo <| "item-" ++ toString (index + List.length package.versions)
+                )
 
         OpenRemoteLink url ->
             ( model, openLink url )
@@ -1444,7 +1453,9 @@ focusMsg model index =
                                 [ DomFocus "package-search-input" ]
 
                             _ ->
-                                []
+                                [ DomFocus <| "item-" ++ toString index
+                                , DomBlur "package-search-input"
+                                ]
                     )
                 |> Maybe.withDefault []
 

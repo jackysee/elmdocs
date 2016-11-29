@@ -30,6 +30,7 @@ type Msg
     | DragAt Position
     | DragEnd Position
     | DomFocus String
+    | DomBlur String
     | ListScrollTo Int
     | SetSearchFocused Bool
     | LinkToModule String

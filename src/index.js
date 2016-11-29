@@ -12,6 +12,7 @@ app.ports.scrollToElement.subscribe(function(id){
             return;
         }
         var target = document.getElementById(id);
+        console.log(target);
         if(!target){
             return;
         }
