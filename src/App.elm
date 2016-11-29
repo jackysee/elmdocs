@@ -117,28 +117,34 @@ getDefaultDocs model =
 buildSearchIndex : List ( String, String ) -> Doc -> List ( String, String )
 buildSearchIndex list doc =
     let
-        docIndexes =
-            doc.modules
-                |> List.concatMap
-                    (\m ->
-                        [ m.name ]
-                            ++ List.map
-                                (\name -> m.name ++ "." ++ name)
-                                (List.map .name m.aliases
-                                    ++ (m.types
-                                            |> List.map
-                                                (\m ->
-                                                    [ m.name ]
-                                                        ++ List.map (\( name, _ ) -> m.name ++ " " ++ name) m.cases
-                                                )
-                                            |> List.concat
-                                       )
-                                    ++ List.map .name m.values
-                                )
-                    )
-                |> List.map (\path -> ( path, doc.id ))
+        aliasesName m =
+            List.map .name m.aliases
+
+        typesName m =
+            List.concatMap
+                (\m ->
+                    [ m.name ]
+                        ++ List.map (\( name, _ ) -> m.name ++ " " ++ name) m.cases
+                )
+                m.types
+
+        valuesName m =
+            List.map .name m.values
     in
-        list ++ docIndexes
+        list
+            ++ (doc.modules
+                    |> List.concatMap
+                        (\m ->
+                            [ m.name ]
+                                ++ List.map
+                                    (\name -> m.name ++ "." ++ name)
+                                    (aliasesName m
+                                        ++ typesName m
+                                        ++ valuesName m
+                                    )
+                        )
+                    |> List.map (\path -> ( path, doc.id ))
+               )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -176,7 +182,6 @@ update msg model =
             in
                 model_ ! [ cmd_, focus "search-input" ]
 
-        -- ( model_, cmd_ )
         LoadAllPackages loadDefault location (Err _) ->
             ( model, Cmd.none )
 
@@ -308,7 +313,19 @@ update msg model =
             )
 
         SetShowDisabled show ->
-            ( updateNavList { model | showDisabled = show }, Cmd.none )
+            ( updateNavList
+                { model
+                    | showDisabled = show
+                    , selectedIndex =
+                        if show then
+                            model.selectedIndex
+                        else
+                            model.navList
+                                |> findIndex (\n -> n == DisabledHandleNav)
+                                |> Maybe.withDefault model.selectedIndex
+                }
+            , Cmd.none
+            )
 
         SetShowNewOnly show ->
             ( updateNavList { model | showNewOnly = show }, Cmd.none )
@@ -332,17 +349,16 @@ update msg model =
                             )
                             model.pinnedDocs
                     , selectedIndex =
-                        findFirst
-                            (\( i, navItem ) ->
-                                case navItem of
-                                    DocNav d ->
-                                        d.id == docId
+                        model.navList
+                            |> findIndex
+                                (\navItem ->
+                                    case navItem of
+                                        DocNav d ->
+                                            d.id == docId
 
-                                    _ ->
-                                        False
-                            )
-                            (List.indexedMap (,) model.navList)
-                            |> Maybe.map (\( i, _ ) -> i)
+                                        _ ->
+                                            False
+                                )
                             |> Maybe.withDefault 0
                 }
             , Cmd.none
@@ -411,6 +427,10 @@ update msg model =
                                     p
                             )
                             model.allPackages
+                    , selectedIndex =
+                        model.navList
+                            |> findIndex ((==) (DisabledDocNav package))
+                            |> Maybe.withDefault model.selectedIndex
                 }
             , Cmd.none
             )
@@ -581,31 +601,6 @@ viewSearchResult model =
                 [ class "nav-item" ]
                 [ text "No result found" ]
             ]
-
-
-hasDuplicate : (a -> Bool) -> List a -> Bool
-hasDuplicate predicate list =
-    let
-        search =
-            \list count ->
-                case list of
-                    [] ->
-                        False
-
-                    x :: xs ->
-                        let
-                            count_ =
-                                if predicate x then
-                                    count + 1
-                                else
-                                    count
-                        in
-                            if count_ == 2 then
-                                True
-                            else
-                                search xs count_
-    in
-        search list 0
 
 
 navList : Model -> Html Msg
@@ -1403,7 +1398,10 @@ keyMap model key =
 
                     DisabledDocNav p ->
                         if List.length p.versions > 0 then
-                            DisabledDocNavExpand False p
+                            if p.versionExpanded then
+                                DisabledDocNavExpand False p
+                            else
+                                SetShowDisabled False
                         else
                             NoOp
 

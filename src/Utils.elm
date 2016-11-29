@@ -28,6 +28,14 @@ atIndex index list =
         |> Maybe.map Tuple.second
 
 
+findIndex : (a -> Bool) -> List a -> Maybe Int
+findIndex predicate list =
+    list
+        |> List.indexedMap (,)
+        |> findFirst (\( i, a ) -> predicate a)
+        |> Maybe.map Tuple.first
+
+
 onNothing : Maybe a -> Maybe a -> Maybe a
 onNothing a b =
     case b of
@@ -87,3 +95,28 @@ sortPath separator text pathId =
             4
         , pathId
         )
+
+
+hasDuplicate : (a -> Bool) -> List a -> Bool
+hasDuplicate predicate list =
+    let
+        search =
+            \list count ->
+                case list of
+                    [] ->
+                        False
+
+                    x :: xs ->
+                        let
+                            count_ =
+                                if predicate x then
+                                    count + 1
+                                else
+                                    count
+                        in
+                            if count_ == 2 then
+                                True
+                            else
+                                search xs count_
+    in
+        search list 0
