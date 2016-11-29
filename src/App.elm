@@ -287,27 +287,12 @@ update msg model =
                         else
                             model.searchIndex
                                 |> List.filter
-                                    (\( path, docId ) ->
-                                        String.contains
-                                            (String.toLower text)
-                                            (String.toLower path)
+                                    (\( pathId, docId ) ->
+                                        simpleMatch text pathId
                                     )
                                 |> List.sortBy
                                     (\( pathId, docId ) ->
-                                        let
-                                            name =
-                                                String.Extra.rightOfBack "." pathId
-                                        in
-                                            ( if text == name then
-                                                1
-                                              else if String.startsWith text name then
-                                                2
-                                              else if String.contains text name then
-                                                3
-                                              else
-                                                4
-                                            , pathId
-                                            )
+                                        sortPath "." text pathId
                                     )
                 }
             , Cmd.none
@@ -477,9 +462,9 @@ view model =
                             [ span [] [ text "ElmDocs" ]
                             , Markdown.toHtml
                                 [ class "doc-info" ]
-                                """[elmdocs](http://github.com/jackysee/elmdocs)
-                                is written in [Elm](http://elm-lang.org)
-                                by [jackysee](http://twitter.com/jackysee).
+                                """[elmdocs](http://github.com/jackysee/elmdocs)\x0D
+                                is written in [Elm](http://elm-lang.org)\x0D
+                                by [jackysee](http://twitter.com/jackysee).\x0D
                                 """
                             ]
                         ]

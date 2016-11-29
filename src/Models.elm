@@ -1,6 +1,6 @@
 module Models exposing (..)
 
-import Utils exposing (findFirst, joinMaybe)
+import Utils exposing (findFirst, joinMaybe, simpleMatch, sortPath)
 import Mouse exposing (Position)
 import String.Extra
 
@@ -159,11 +159,13 @@ disabledPackages model =
                     )
                         && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
                         && if model.searchPackageText /= "" then
-                            String.contains
-                                (String.toLower model.searchPackageText)
-                                (String.toLower p.name)
+                            simpleMatch model.searchPackageText p.name
                            else
                             True
+                )
+            |> List.sortBy
+                (\p ->
+                    sortPath "/" model.searchPackageText p.name
                 )
 
 

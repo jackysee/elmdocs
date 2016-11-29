@@ -3,6 +3,8 @@ module Utils exposing (..)
 import Html exposing (a)
 import Html.Events exposing (onWithOptions)
 import Json.Decode
+import Regex
+import String.Extra
 
 
 findFirst : (a -> Bool) -> List a -> Maybe a
@@ -53,3 +55,35 @@ onClickInside msg =
         , preventDefault = True
         }
         (Json.Decode.succeed msg)
+
+
+simpleMatch : String -> String -> Bool
+simpleMatch text path =
+    let
+        re =
+            String.split "" text
+                |> List.map Regex.escape
+                |> String.join ".*"
+                |> (\s -> "^.*" ++ s ++ ".*$")
+                |> Regex.regex
+                |> Regex.caseInsensitive
+    in
+        Regex.contains re path
+
+
+sortPath : String -> String -> String -> ( Int, String )
+sortPath separator text pathId =
+    let
+        name =
+            String.Extra.rightOfBack separator pathId
+    in
+        ( if text == name then
+            1
+          else if String.startsWith text name then
+            2
+          else if String.contains text name then
+            3
+          else
+            4
+        , pathId
+        )
