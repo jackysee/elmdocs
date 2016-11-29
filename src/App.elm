@@ -288,7 +288,10 @@ update msg model =
                             model.searchIndex
                                 |> List.filter
                                     (\( pathId, docId ) ->
-                                        simpleMatch text pathId
+                                        if Regex.contains (Regex.regex "^\\.*$") text then
+                                            False
+                                        else
+                                            simpleMatch text pathId
                                     )
                                 |> List.sortBy
                                     (\( pathId, docId ) ->

@@ -3,6 +3,7 @@ module Models exposing (..)
 import Utils exposing (findFirst, joinMaybe, simpleMatch, sortPath)
 import Mouse exposing (Position)
 import String.Extra
+import Regex
 
 
 type alias Model =
@@ -159,7 +160,10 @@ disabledPackages model =
                     )
                         && ((model.showNewOnly && List.member p.name model.newPackages) || not model.showNewOnly)
                         && if model.searchPackageText /= "" then
-                            simpleMatch model.searchPackageText p.name
+                            if Regex.contains (Regex.regex "^\\/*$") model.searchPackageText then
+                                False
+                            else
+                                simpleMatch model.searchPackageText p.name
                            else
                             True
                 )
