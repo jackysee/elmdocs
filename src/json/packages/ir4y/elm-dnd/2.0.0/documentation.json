@@ -1,0 +1,65 @@
+[
+  {
+    "name": "DnD",
+    "comment": "\nThis library allows you to build great UI with drag-and-drop simple.\nIt is abstracting you from mouse events and other low-level staff.\nYou can operate high-level things such as draggable and droppable areas.\n\nThe idea of package API is you should be able to wrap elements with `draggable meta` to add an ability to drag it.\nThe dragged object will get some meta information.\nAlso, you could wrap another element with `droppable OnDrop`,\nso if you drop element over that element, the message `OnDrop meta` will be fired.\n\nYou can find examples [here](https://github.com/ir4y/elm-dnd/tree/master/example/src).\n\n# Draggable types and its constructor\n@docs DraggableInit, Draggable, init\n\n# Helpers to get information about draggable object\n@docs atDroppable, getMeta\n\n# Message type\n@docs Msg\n\n# Update function\n@docs update\n\n# View helper\n@docs dragged\n\n",
+    "aliases": [
+      {
+        "name": "DraggableInit",
+        "comment": "\nThe type of init function result.\nSee `init` for more information.\n",
+        "args": [
+          "a",
+          "m"
+        ],
+        "type": "{ model : DnD.Draggable a m , subscriptions : DnD.Draggable a m -> Platform.Sub.Sub m , draggable : a -> List (Html.Attribute m) -> List (Html.Html m) -> Html.Html m , droppable : (a -> m) -> List (Html.Attribute m) -> List (Html.Html m) -> Html.Html m }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Draggable",
+        "comment": "\nType of Draggable object.\nIt is parametrized by the type of meta information and\nmessage constructor that will be invoked on Drop event\nYou should place it inside your Model.\n```\ntype alias Model =\n    { draggable : DnD.Draggable Int Msg\n    , count : Int\n    }\n```\n",
+        "args": [
+          "a",
+          "m"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Inner messages, you should pass them to DnD.update at your update function.\n```\ntype Msg\n    = Dropped Item\n    | DnDMsg (DnD.Msg Int Msg)\n```\n",
+        "args": [
+          "a",
+          "m"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "atDroppable",
+        "comment": "\nHelper that return you a message that will be invoked.\nif an object will be dropped at the current area.\nIt is useful to check is it area allow you to drop an object and highlight it for example.\n```\nDnD.droppable Dropped\n  DnDMsg\n   [ style\n     [ \"background-color\"\n       => case DnD.atDroppable model.draggable of\n         Just (Dropped _) ->\n           \"cyan\"\n\n         _ ->\n           \"white\"\n     ]\n   ]\n   []\n```\n",
+        "type": "DnD.Draggable a m -> Maybe.Maybe m"
+      },
+      {
+        "name": "dragged",
+        "comment": "\nView helper for a draggable object, it draws HTML of dragged object under your mouse in process of drag.\n```\nbox : Int -> Html Msg\ndragged item =\n    p [] [ text item.text]\n\nDnD.dragged\n  model.draggable\n  box\n```\n",
+        "type": "DnD.Draggable a m -> (a -> Html.Html m) -> Html.Html m"
+      },
+      {
+        "name": "getMeta",
+        "comment": "\nHelper that allow you to get meta information from a current draggable object.\nYou can use it to remove draggable object from the list\n```\nelements = model.elements\n    |> List.filter\n        (e -> model.draggable\n            |>  getMeta\n            |> Maybe.map (meta -> meta.id /= e.id )\n        )\n```\n",
+        "type": "DnD.Draggable a m -> Maybe.Maybe a"
+      },
+      {
+        "name": "init",
+        "comment": "\nInitialize Draggable state and function\nThis helper returns initModel, subscription, draggable and droppable functions\nfor your message wrapper.\n\n```\ntype Msg\n    = NoOp\n    ..\n    | Dropped String\n    | DnDMsg (DnD.Msg String Msg)\n\n\ndnd = DnD.init DnDMsg\ntype alias Model =\n    { ...\n    , draggable = dnd.model\n    }\n```\n\nSubscriptions alow you to get drop event.\n```\nsubscriptions : Model -> Sub Msg\nsubscriptions model =\n    dnd.subscriptions model.draggable\n```\nView wrapper for draggable object, you could drag object wrapped by this helper\n```\ndraggable\n    : (Html.Attribute Msg)\n    -> List (Html Msg)\n    -> Html Msg\ndraggable =  dnd.draggable meta\n```\nView helper for the droppable area, you could drop object to this area,\nafter that, your `Drop meta` message will be sended.\n```\ndroppable\n  : (Html.Attribute Msg)\n  -> List (Html Msg)\n  -> Html Msg\ndroppable = dnd.droppable Dropped\n```\n",
+        "type": "(DnD.Msg a m -> m) -> DnD.DraggableInit a m"
+      },
+      {
+        "name": "update",
+        "comment": " Update function handle all low-level staff\n```\nupdate : Msg -> Model -> Model\nupdate msg model =\n    case msg of\n        Dropped item ->\n            { model | count = item + 1 }\n\n        DnDMsg msg ->\n            { model\n                | draggable\n                    = DnD.update msg model.draggable }\n``\n",
+        "type": "DnD.Msg a m -> DnD.Draggable a m -> DnD.Draggable a m"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
