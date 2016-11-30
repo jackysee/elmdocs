@@ -1267,9 +1267,6 @@ splitTypeArgs str =
                     case match_ of
                         Just match ->
                             let
-                                a =
-                                    Debug.log "match" match
-
                                 s1 =
                                     String.slice 0 match.index str
 
@@ -1284,7 +1281,7 @@ splitTypeArgs str =
                         Nothing ->
                             Nothing
     in
-        case find 1 (Debug.log "splitTypeArgs" str) of
+        case find 1 str of
             Just ( s1, s2 ) ->
                 s1 :: (splitTypeArgs s2)
 
