@@ -7,6 +7,7 @@ import Navigation exposing (Location)
 import UrlParser exposing (Parser, parseHash, oneOf, map, s, string, top, (</>))
 import String
 import Json.Decode
+import Views exposing (view)
 
 
 -- import String.Extra

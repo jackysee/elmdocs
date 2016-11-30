@@ -1,6 +1,6 @@
 module Models exposing (..)
 
-import Utils exposing (findFirst, joinMaybe, simpleMatch, sortPath)
+import Utils exposing (findFirst, joinMaybe, simpleMatch, sortPath, findIndex)
 import Mouse exposing (Position)
 import String.Extra
 import Regex
@@ -200,6 +200,11 @@ updateNavList model =
                     ++ if model.showDisabled then
                         [ DisabledInputNav ]
                             ++ (disabledPackages model
+                                    |> List.sortBy
+                                        (\package ->
+                                            findIndex ((==) package.name) model.newPackages
+                                                |> Maybe.withDefault (List.length model.newPackages)
+                                        )
                                     |> List.map
                                         (\p ->
                                             [ DisabledDocNav p ]
