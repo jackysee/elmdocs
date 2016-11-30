@@ -26,6 +26,8 @@ type Msg
     | DocNavExpand Bool DocId
     | LinkToPinnedDoc String DocId
     | LinkToDisabledDoc String String String
+    | LinkToModule String
+    | LinkToHome
     | DragStart Position
     | DragAt Position
     | DragEnd Position
@@ -33,6 +35,5 @@ type Msg
     | DomBlur String
     | ListScrollTo Int
     | SetSearchFocused Bool
-    | LinkToModule String
     | DisabledDocNavExpand Bool Package
     | OpenRemoteLink String

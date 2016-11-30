@@ -374,6 +374,9 @@ update msg model =
             Return.singleton model
                 |> Return.command (Navigation.newUrl <| "#remote/" ++ name ++ "/" ++ version ++ "/" ++ path)
 
+        LinkToHome ->
+            Return.return model <| Navigation.newUrl "#"
+
         DragStart xy ->
             Return.singleton { model | drag = Just (Drag xy xy) }
 

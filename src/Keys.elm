@@ -63,6 +63,7 @@ keyMap model key =
         MsgBatch
             [ Search ""
             , DomFocus "search-input"
+            , LinkToHome
             ]
     else if key == "right" && model.searchText == "" then
         selectedItemMsg
