@@ -1,0 +1,256 @@
+[
+  {
+    "name": "Euclid.Rectangle",
+    "comment": " Defines a Rectangle type\n\n# Types\n@docs Rectangle\n\n# Properties\n@docs width, height, left, right, top, bottom, opposite\n\n# Misc\n@docs hasPoint\n",
+    "aliases": [
+      {
+        "name": "Rectangle",
+        "comment": " A polymorphic rectangle defined by its top left corner and its size ",
+        "args": [
+          "v"
+        ],
+        "type": "{ corner : v, size : v }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "bottom",
+        "comment": " Bottom side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.V2 number) -> number"
+      },
+      {
+        "name": "hasPoint",
+        "comment": " Does the rectangle contain the point? ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.V2 comparable) -> Euclid.Vector.V2 comparable -> Bool"
+      },
+      {
+        "name": "height",
+        "comment": " Height of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.HasY v n) -> n"
+      },
+      {
+        "name": "left",
+        "comment": " Left side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.HasX v n) -> n"
+      },
+      {
+        "name": "opposite",
+        "comment": " Opposite corner of a rectangle (bottom right) ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.V2 number) -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "right",
+        "comment": " Right side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.V2 number) -> number"
+      },
+      {
+        "name": "top",
+        "comment": " Top side of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.V2 number) -> number"
+      },
+      {
+        "name": "width",
+        "comment": " Width of a rectangle ",
+        "type": "Euclid.Rectangle.Rectangle (Euclid.Vector.HasX v n) -> n"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Euclid.Vector",
+    "comment": " Defines a polymorphic Vector type. Due to limits of Elm's type system and also due to my own requirements, many functions will\n   only work with 2D vectors.\n\n# Types\n@docs V1, V2, V3, HasX, HasY, HasZ, HasXY, HasXYZ, Vector\n\n# Construction\n@docs vec\n\n# Arithmetic\n@docs add, subtract, negate, conjugate\n\n# Transform\n@docs map, map2, dotwise, scale\n\n# Focus\n@docs x, y, z\n\n# Polar coordinates\n@docs fromPolar, arg, abs\n\n# Polymorphic stuff\n@docs foldX, foldXY, foldXYZ, apX, apXY, apXYZ\n\n",
+    "aliases": [
+      {
+        "name": "HasX",
+        "comment": " A type that has an x field ",
+        "args": [
+          "v",
+          "n"
+        ],
+        "type": "{ v | x : n }"
+      },
+      {
+        "name": "HasXY",
+        "comment": " A type that has an x and a y field ",
+        "args": [
+          "v",
+          "n"
+        ],
+        "type": "{ v | x : n, y : n }"
+      },
+      {
+        "name": "HasXYZ",
+        "comment": " A type that has an x, a y and a z field ",
+        "args": [
+          "v",
+          "n"
+        ],
+        "type": "{ v | x : n, y : n, z : n }"
+      },
+      {
+        "name": "HasY",
+        "comment": " A type that has an y field ",
+        "args": [
+          "v",
+          "n"
+        ],
+        "type": "{ v | y : n }"
+      },
+      {
+        "name": "HasZ",
+        "comment": " A type that has an z field ",
+        "args": [
+          "v",
+          "n"
+        ],
+        "type": "{ v | z : n }"
+      },
+      {
+        "name": "V1",
+        "comment": " A 1D vector (for completeness' sake) ",
+        "args": [
+          "n"
+        ],
+        "type": "{ x : n }"
+      },
+      {
+        "name": "V2",
+        "comment": " A 2D vector ",
+        "args": [
+          "n"
+        ],
+        "type": "{ x : n, y : n }"
+      },
+      {
+        "name": "V3",
+        "comment": " A 3D vector ",
+        "args": [
+          "n"
+        ],
+        "type": "{ x : n, y : n, z : n }"
+      },
+      {
+        "name": "Vector",
+        "comment": " ... ",
+        "args": [
+          "v",
+          "w",
+          "x",
+          "n",
+          "b"
+        ],
+        "type": "{ v | methods : { fold : n -> b -> b, pure : n -> v, ap : v -> w -> x } }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "abs",
+        "comment": " Finds the absolute value (also known as the magnitude) of a vector ",
+        "type": "Euclid.Vector.V2 number -> number"
+      },
+      {
+        "name": "add",
+        "comment": " Add two vectors component-wise ",
+        "type": "Euclid.Vector.V2 number -> Euclid.Vector.V2 number -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "apX",
+        "comment": " Apply a 1D vector of functions to a 1d vector of arguments ",
+        "type": "Euclid.Vector.HasX v (a -> b) -> Euclid.Vector.HasX v a -> Euclid.Vector.HasX v b"
+      },
+      {
+        "name": "apXY",
+        "comment": " Apply a 2D vector of functions to a 2d vector of arguments ",
+        "type": "Euclid.Vector.HasXY v (a -> b) -> Euclid.Vector.HasXY v a -> Euclid.Vector.HasXY v b"
+      },
+      {
+        "name": "apXYZ",
+        "comment": " Apply a 3d vector of functions to a 3d vector of arguments ",
+        "type": "Euclid.Vector.HasXYZ v (a -> b) -> Euclid.Vector.HasXYZ v a -> Euclid.Vector.HasXYZ v b"
+      },
+      {
+        "name": "arg",
+        "comment": " Finds the 'argument' (in radians) of a vector (the angle between the vector and the positive X axis) ",
+        "type": "Euclid.Vector.V2 Float -> Float"
+      },
+      {
+        "name": "conjugate",
+        "comment": " The complex conjugate (Y component is negated) ",
+        "type": "Euclid.Vector.V2 number -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "dotwise",
+        "comment": " Apply some function to two vectors component-wise (like map for two vectors)  ",
+        "type": "(a -> b -> c) -> Euclid.Vector.V2 a -> Euclid.Vector.V2 b -> Euclid.Vector.V2 c"
+      },
+      {
+        "name": "foldX",
+        "comment": " Folds the components from the left ",
+        "type": "(a -> b -> b) -> b -> Euclid.Vector.HasX v a -> b"
+      },
+      {
+        "name": "foldXY",
+        "comment": " Folds the components from the left ",
+        "type": "(a -> b -> b) -> b -> Euclid.Vector.HasXY v a -> b"
+      },
+      {
+        "name": "foldXYZ",
+        "comment": " Folds the components from the left ",
+        "type": "(a -> b -> b) -> b -> Euclid.Vector.HasXYZ v a -> b"
+      },
+      {
+        "name": "fromPolar",
+        "comment": " Construct a V2 from an angle (in radians) and a magnitude ",
+        "type": "Float -> Float -> Euclid.Vector.V2 Float"
+      },
+      {
+        "name": "map",
+        "comment": " Apply some function to each component ",
+        "type": "(a -> b) -> Euclid.Vector.V2 a -> Euclid.Vector.V2 b"
+      },
+      {
+        "name": "map2",
+        "comment": " See 'dotwise' ",
+        "type": "(a -> b -> c) -> Euclid.Vector.V2 a -> Euclid.Vector.V2 b -> Euclid.Vector.V2 c"
+      },
+      {
+        "name": "negate",
+        "comment": " Negate both components ",
+        "type": "Euclid.Vector.V2 number -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "scale",
+        "comment": " Multiply the vector by a scalar ",
+        "type": "number -> Euclid.Vector.V2 number -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "subtract",
+        "comment": " Subtract two vectors component-wise ",
+        "type": "Euclid.Vector.V2 number -> Euclid.Vector.V2 number -> Euclid.Vector.V2 number"
+      },
+      {
+        "name": "vec",
+        "comment": " Construct a vector from an X and a Y value  ",
+        "type": "n -> n -> Euclid.Vector.V2 n"
+      },
+      {
+        "name": "x",
+        "comment": " Apply some function to the X component ",
+        "type": "(n -> m) -> Euclid.Vector.HasX v n -> Euclid.Vector.HasX v m"
+      },
+      {
+        "name": "y",
+        "comment": " Apply some function to the y component ",
+        "type": "(n -> m) -> Euclid.Vector.HasY v n -> Euclid.Vector.HasY v m"
+      },
+      {
+        "name": "z",
+        "comment": " Apply some function to the z component ",
+        "type": "(n -> m) -> Euclid.Vector.HasZ v n -> Euclid.Vector.HasZ v m"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

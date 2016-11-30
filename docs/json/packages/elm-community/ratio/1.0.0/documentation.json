@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Ratio",
+    "comment": " A simple module providing a ratio type for rational numbers \n\n# Types\n@docs Rational\n\n# Introduction\n@docs over, fromInt\n\n# Operations\n@docs add, multiply, divide, negate\n\n# Elimination\n@docs numerator, denominator, split, toFloat\n\n# Util\n@docs gcd \n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Rational",
+        "comment": " \"Arbitrary\" (up to `max_int` size) precision fractional numbers. Think of\n    it as the length of a rigid bar that you've constructed from a bunch of\n    initial bars of the same fixed length\n    by the operations of gluing bars together and shrinking a\n    given bar so that an integer number of copies of it glues together to\n    make another given bar.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Addition. It's like gluing together two bars of the given lengths. ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "denominator",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "divide",
+        "comment": " Division. It's sort of like multiplication! ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "fromInt",
+        "comment": " `fromInt x = over x 1` ",
+        "type": "Int -> Ratio.Rational"
+      },
+      {
+        "name": "gcd",
+        "comment": " The biggest number that divides both arguments (the greatest common divisor). ",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "multiply",
+        "comment": " Mulitplication. `mulitply x (c / d)` is the length of the bar that you'd get\n    if you glued `c` copies of a bar of length `x` end-to-end and then shrunk it\n    down enough so that `d` copies of the shrunken bar would fit in the big\n    glued bar. ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "negate",
+        "comment": " This doesn't really fit with the bar metaphor but this is multiplication by `-1`. ",
+        "type": "Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "numerator",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "over",
+        "comment": " `over x y` is like `x / y`. ",
+        "type": "Int -> Int -> Ratio.Rational"
+      },
+      {
+        "name": "split",
+        "comment": " `split x = (numerator x, denominator x)` ",
+        "type": "Ratio.Rational -> ( Int, Int )"
+      },
+      {
+        "name": "toFloat",
+        "comment": " ",
+        "type": "Ratio.Rational -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]
