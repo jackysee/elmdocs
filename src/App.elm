@@ -20,6 +20,7 @@ import Utils exposing (..)
 import Navigation
 import Mouse
 import Dom
+import Return exposing (Return)
 
 
 init : Maybe Json.Decode.Value -> Location -> ( Model, Cmd Msg )
@@ -147,116 +148,121 @@ buildSearchIndex list doc =
                )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> Return Msg Model
 update msg model =
     case msg of
         NoOp ->
-            ( model, Cmd.none )
+            Return.singleton model
 
         MsgBatch list ->
             List.foldl
-                (\msg ( model, cmd ) ->
-                    let
-                        ( model_, cmd_ ) =
-                            update msg model
-                    in
-                        model_ ! [ cmd, cmd_ ]
-                )
-                ( model, Cmd.none )
-                list
+                Return.andThen
+                (Return.singleton model)
+                (List.map update list)
 
         LoadAllPackages loadDefault location (Ok ( allPackages, newPackages )) ->
-            let
-                model_ =
-                    updateNavList
-                        { model
-                            | allPackages = allPackages
-                            , newPackages = newPackages
-                        }
-
-                cmd_ =
-                    if loadDefault then
-                        getDefaultDocs model_
-                    else
-                        Navigation.newUrl location.hash
-            in
-                model_ ! [ cmd_, focus "search-input" ]
+            { model
+                | allPackages = allPackages
+                , newPackages = newPackages
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
+                |> Return.effect_
+                    (\model_ ->
+                        if loadDefault then
+                            getDefaultDocs model_
+                        else
+                            Navigation.newUrl location.hash
+                    )
+                |> Return.command (focus "search-input")
 
         LoadAllPackages loadDefault location (Err _) ->
-            ( model, Cmd.none )
+            Return.singleton model
 
         AddDoc p ->
-            ( { model | addDocState = AddDocLoading p }, getDocs [ p ] )
+            { model | addDocState = AddDocLoading p }
+                |> Return.singleton
+                |> Return.command (getDocs [ p ])
 
         RemoveDoc doc ->
-            let
-                searchIndex =
+            { model
+                | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
+                , searchIndex =
                     List.filter (\( path, docId ) -> doc.id /= docId) model.searchIndex
-            in
-                updateNavList
-                    { model
-                        | pinnedDocs = List.filter ((/=) doc) model.pinnedDocs
-                        , searchIndex = searchIndex
-                        , showConfirmDeleteDoc = Nothing
-                        , page = Home
-                    }
-                    ! [ removeLocal { doc = doc, searchIndex = searchIndex } ]
+                , showConfirmDeleteDoc = Nothing
+                , page = Home
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
+                |> Return.effect_
+                    (\{ searchIndex } ->
+                        removeLocal { doc = doc, searchIndex = searchIndex }
+                    )
 
         PinDoc rest (Ok doc) ->
-            let
-                searchIndex =
-                    buildSearchIndex model.searchIndex doc
-            in
-                updateNavList
-                    { model
-                        | pinnedDocs = model.pinnedDocs ++ [ doc ]
-                        , searchIndex = searchIndex
-                        , addDocState = AddDocIdle
-                    }
-                    ! [ getDocs rest
-                      , saveLocal { doc = doc, searchIndex = searchIndex }
-                      ]
+            { model
+                | pinnedDocs = model.pinnedDocs ++ [ doc ]
+                , searchIndex =
+                    buildSearchIndex
+                        model.searchIndex
+                        doc
+                , addDocState = AddDocIdle
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
+                |> Return.command (getDocs rest)
+                |> Return.effect_
+                    (\{ searchIndex } ->
+                        saveLocal { doc = doc, searchIndex = searchIndex }
+                    )
 
         PinDoc rest (Err err) ->
-            ( { model | addDocState = AddDocIdle }, getDocs rest )
+            { model | addDocState = AddDocIdle }
+                |> Return.singleton
+                |> Return.command (getDocs rest)
 
         GetCurrentDocFromPackage name version modulePath ->
-            let
-                loadDoc =
-                    getDoc name version
-                        |> Task.attempt
-                            (Result.map
-                                (\doc ->
-                                    SetDisabledDoc doc modulePath
-                                )
-                                >> Result.withDefault NoOp
-                            )
-            in
-                case model.page of
-                    DisabledDoc doc _ ->
-                        if doc.id == name ++ "/" ++ version then
-                            ( { model | page = DisabledDoc doc modulePath }, Cmd.none )
-                        else
-                            ( { model | page = Loading }, loadDoc )
+            Return.singleton model
+                |> Return.map
+                    (\model ->
+                        case model.page of
+                            DisabledDoc doc _ ->
+                                if doc.id == name ++ "/" ++ version then
+                                    { model | page = DisabledDoc doc modulePath }
+                                else
+                                    { model | page = Loading }
 
-                    _ ->
-                        ( { model | page = Loading }, loadDoc )
+                            _ ->
+                                { model | page = Loading }
+                    )
+                |> Return.effect_
+                    (\{ page } ->
+                        if page == Loading then
+                            getDoc name version
+                                |> Task.attempt
+                                    (Result.map
+                                        (\doc ->
+                                            SetDisabledDoc doc modulePath
+                                        )
+                                        >> Result.withDefault NoOp
+                                    )
+                        else
+                            Cmd.none
+                    )
 
         SetDisabledDoc doc path ->
-            ( { model | page = DisabledDoc doc path }
-            , Cmd.none
-            )
+            Return.singleton { model | page = DisabledDoc doc path }
 
         SetDisabledDocModule modulePath ->
             case model.page of
                 DisabledDoc doc _ ->
-                    ( { model | page = DisabledDoc doc modulePath }, Cmd.none )
+                    Return.singleton { model | page = DisabledDoc doc modulePath }
 
                 _ ->
-                    ( model, Cmd.none )
+                    Return.singleton model
 
         SetCurrentDocFromId modulePath docId ->
-            ( { model
+            { model
                 | page =
                     if docId == "" then
                         Home
@@ -270,136 +276,137 @@ update msg model =
 
                             Nothing ->
                                 NotFound
-              }
-            , modulePath
-                |> Regex.replace Regex.All (Regex.regex "%20") (\_ -> "-")
-                |> scrollToElement
-            )
+            }
+                |> Return.singleton
+                |> Return.command
+                    (modulePath
+                        |> Regex.replace Regex.All (Regex.regex "%20") (\_ -> "-")
+                        |> scrollToElement
+                    )
 
         Search text ->
-            ( updateNavList
-                { model
-                    | searchText = text
-                    , selectedIndex = 0
-                    , page =
-                        if String.isEmpty text then
-                            Home
-                        else
-                            model.page
-                    , searchResult =
-                        if String.isEmpty text then
-                            []
-                        else
-                            model.searchIndex
-                                |> List.filter
-                                    (\( pathId, docId ) ->
-                                        if Regex.contains (Regex.regex "^\\.*$") text then
-                                            False
-                                        else
-                                            simpleMatch text pathId
-                                    )
-                                |> List.sortBy
-                                    (\( pathId, docId ) ->
-                                        sortPath "." text pathId
-                                    )
-                }
-            , Cmd.none
-            )
+            { model
+                | searchText = text
+                , selectedIndex = 0
+                , page =
+                    if String.isEmpty text then
+                        Home
+                    else
+                        model.page
+                , searchResult =
+                    if String.isEmpty text then
+                        []
+                    else
+                        model.searchIndex
+                            |> List.filter
+                                (\( pathId, docId ) ->
+                                    if Regex.contains (Regex.regex "^\\.*$") text then
+                                        False
+                                    else
+                                        simpleMatch text pathId
+                                )
+                            |> List.sortBy
+                                (\( pathId, docId ) ->
+                                    sortPath "." text pathId
+                                )
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
 
         SearchPackage text ->
-            ( updateNavList
-                { model | searchPackageText = text }
-            , Cmd.none
-            )
+            { model | searchPackageText = text }
+                |> Return.singleton
+                |> Return.map updateNavList
 
         SetShowDisabled show ->
-            let
-                index =
+            { model
+                | showDisabled = show
+                , selectedIndex =
                     if show then
                         model.selectedIndex
                     else
                         model.navList
                             |> findIndex (\n -> n == DisabledHandleNav)
                             |> Maybe.withDefault model.selectedIndex
-            in
-                ( updateNavList
-                    { model
-                        | showDisabled = show
-                        , selectedIndex = index
-                    }
-                , listScrollTo <| "item-" ++ toString index
-                )
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
+                |> Return.effect_
+                    (\{ selectedIndex } ->
+                        listScrollTo <| "item-" ++ toString selectedIndex
+                    )
 
         SetShowNewOnly show ->
-            ( updateNavList { model | showNewOnly = show }, Cmd.none )
+            Return.singleton <| updateNavList { model | showNewOnly = show }
 
         SetShowConfirmDeleteDoc docId ->
-            ( { model | showConfirmDeleteDoc = docId }, Cmd.none )
+            Return.singleton { model | showConfirmDeleteDoc = docId }
 
         SetSelectedIndex i ->
-            ( { model | selectedIndex = i }, Cmd.none )
+            Return.singleton { model | selectedIndex = i }
 
         DocNavExpand expand docId ->
-            ( updateNavList
-                { model
-                    | pinnedDocs =
-                        List.map
-                            (\d ->
-                                if d.id == docId then
-                                    { d | navExpanded = expand }
-                                else
-                                    d
-                            )
-                            model.pinnedDocs
-                    , selectedIndex =
-                        model.navList
-                            |> findIndex
-                                (\navItem ->
-                                    case navItem of
-                                        DocNav d ->
-                                            d.id == docId
+            { model
+                | pinnedDocs =
+                    List.map
+                        (\d ->
+                            if d.id == docId then
+                                { d | navExpanded = expand }
+                            else
+                                d
+                        )
+                        model.pinnedDocs
+                , selectedIndex =
+                    model.navList
+                        |> findIndex
+                            (\navItem ->
+                                case navItem of
+                                    DocNav d ->
+                                        d.id == docId
 
-                                        _ ->
-                                            False
-                                )
-                            |> Maybe.withDefault 0
-                }
-            , Cmd.none
-            )
+                                    _ ->
+                                        False
+                            )
+                        |> Maybe.withDefault 0
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
 
         LinkToPinnedDoc path docId ->
-            ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ path )
+            Return.singleton model
+                |> Return.command (Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ path)
 
         LinkToDisabledDoc name version path ->
-            ( model, Navigation.newUrl <| "#remote/" ++ name ++ "/" ++ version ++ "/" ++ path )
+            Return.singleton model
+                |> Return.command (Navigation.newUrl <| "#remote/" ++ name ++ "/" ++ version ++ "/" ++ path)
 
         DragStart xy ->
-            ( { model | drag = Just (Drag xy xy) }, Cmd.none )
+            Return.singleton { model | drag = Just (Drag xy xy) }
 
         DragAt xy ->
-            let
-                navWidth =
+            { model
+                | navWidth =
                     model.navWidth
                         + (model.drag
                             |> Maybe.map (\{ current } -> xy.x - current.x)
                             |> Maybe.withDefault 0
                           )
-            in
-                ( { model
-                    | navWidth = navWidth
-                    , drag = Maybe.map (\drag -> Drag drag.start xy) model.drag
-                  }
-                , saveNavWidth navWidth
-                )
+                , drag = Maybe.map (\drag -> Drag drag.start xy) model.drag
+            }
+                |> Return.singleton
+                |> Return.effect_
+                    (\{ navWidth } ->
+                        saveNavWidth navWidth
+                    )
 
         DragEnd xy ->
-            ( { model | drag = Nothing }, Cmd.none )
+            Return.singleton { model | drag = Nothing }
 
         DomFocus id ->
-            ( model, focus id )
+            Return.return model (focus id)
 
         DomBlur id ->
-            ( model, Task.attempt (\_ -> NoOp) (Dom.blur id) )
+            Return.return model <| Task.attempt (\_ -> NoOp) (Dom.blur id)
 
         ListScrollTo index ->
             ( model, listScrollTo <| "item-" ++ toString index )
@@ -408,44 +415,45 @@ update msg model =
             ( { model | searchFocused = focused }, Cmd.none )
 
         LinkToModule modulePath ->
-            case model.page of
-                DocOverview docId ->
-                    ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath )
+            Return.return model <|
+                case model.page of
+                    DocOverview docId ->
+                        Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath
 
-                DocModule docId path ->
-                    ( model, Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath )
+                    DocModule docId path ->
+                        Navigation.newUrl <| "#local/" ++ docId ++ "/" ++ modulePath
 
-                DisabledDoc doc path ->
-                    ( model, Navigation.newUrl <| "#remote/" ++ doc.packageName ++ "/" ++ doc.packageVersion ++ "/" ++ modulePath )
+                    DisabledDoc doc path ->
+                        Navigation.newUrl <| "#remote/" ++ doc.packageName ++ "/" ++ doc.packageVersion ++ "/" ++ modulePath
 
-                _ ->
-                    ( model, Cmd.none )
+                    _ ->
+                        Cmd.none
 
         DisabledDocNavExpand expand package ->
-            let
-                index =
+            { model
+                | allPackages =
+                    List.map
+                        (\p ->
+                            if p.name == package.name then
+                                { p | versionExpanded = expand }
+                            else
+                                p
+                        )
+                        model.allPackages
+                , selectedIndex =
                     model.navList
                         |> findIndex ((==) (DisabledDocNav package))
                         |> Maybe.withDefault model.selectedIndex
-            in
-                ( updateNavList
-                    { model
-                        | allPackages =
-                            List.map
-                                (\p ->
-                                    if p.name == package.name then
-                                        { p | versionExpanded = expand }
-                                    else
-                                        p
-                                )
-                                model.allPackages
-                        , selectedIndex = index
-                    }
-                , listScrollTo <| "item-" ++ toString (index + List.length package.versions)
-                )
+            }
+                |> Return.singleton
+                |> Return.map updateNavList
+                |> Return.effect_
+                    (\{ selectedIndex } ->
+                        listScrollTo <| "item-" ++ toString (selectedIndex + List.length package.versions)
+                    )
 
         OpenRemoteLink url ->
-            ( model, openLink url )
+            Return.return model (openLink url)
 
 
 focus : String -> Cmd Msg
@@ -494,9 +502,9 @@ view model =
                             [ span [] [ text "ElmDocs" ]
                             , Markdown.toHtml
                                 [ class "doc-info" ]
-                                """[elmdocs](http://github.com/jackysee/elmdocs)
-                                is written in [Elm](http://elm-lang.org)
-                                by [jackysee](http://twitter.com/jackysee).
+                                """[elmdocs](http://github.com/jackysee/elmdocs)\x0D
+                                is written in [Elm](http://elm-lang.org)\x0D
+                                by [jackysee](http://twitter.com/jackysee).\x0D
                                 """
                             ]
                         ]
@@ -1243,8 +1251,12 @@ findNameMatches indexes str =
                 matches =
                     Regex.find
                         Regex.All
-                        (Regex.regex <| Regex.escape path)
+                        (Regex.regex (Regex.escape path ++ "(:?\\s+|$)"))
                         str
+                        |> List.map
+                            (\match ->
+                                { match | match = String.trim match.match }
+                            )
             in
                 matches ++ findNameMatches xs str
 
