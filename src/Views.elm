@@ -635,7 +635,11 @@ viewPart moduleName entry indexes =
                 [ h3 [] <|
                     [ div [] <|
                         [ text "type alias "
-                        , span [ class "entry-name" ] [ text alias.name ]
+                        , span
+                            [ class "entry-name btn-link"
+                            , onClick (LinkToModule <| moduleName ++ "." ++ alias.name)
+                            ]
+                            [ text alias.name ]
                         ]
                             ++ (if List.length alias.args > 0 then
                                     (" " ++ String.join " " alias.args)
@@ -664,7 +668,11 @@ viewPart moduleName entry indexes =
                 )
                     ++ [ h3 [] <|
                             [ text "type "
-                            , span [ class "entry-name" ] [ text tipe.name ]
+                            , span
+                                [ class "btn-link entry-name"
+                                , onClick (LinkToModule <| moduleName ++ "." ++ tipe.name)
+                                ]
+                                [ text tipe.name ]
                             ]
                                 ++ ((" " ++ String.join " " tipe.args) |> linkToName indexes)
                                 ++ (if List.length tipe.cases > 0 then
@@ -681,8 +689,13 @@ viewPart moduleName entry indexes =
                 , id <| moduleName ++ "." ++ value.name
                 ]
                 [ h3 [] <|
-                    [ span [ class "entry-name" ] [ text <| viewValueEntryName value.name ]
-                    , span [ class "value-type " ] <| viewType indexes value.type_
+                    [ span
+                        [ class "entry-name btn-link"
+                        , onClick (LinkToModule <| moduleName ++ "." ++ value.name)
+                        ]
+                        [ text <| viewValueEntryName value.name ]
+                    , span [ class "value-type " ] <|
+                        viewType indexes value.type_
                     ]
                 , Markdown.toHtml [ class "entry-comment" ] value.comment
                 ]
