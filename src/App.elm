@@ -170,8 +170,12 @@ update msg model =
                     )
                 |> Return.command (focus "search-input")
 
-        LoadAllPackages loadDefault location (Err _) ->
-            Return.singleton model
+        LoadAllPackages loadDefault location (Err err) ->
+            let
+                a =
+                    Debug.log "error loading all packages" err
+            in
+                Return.singleton model
 
         AddDoc p ->
             { model | addDocState = AddDocLoading p }

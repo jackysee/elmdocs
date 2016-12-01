@@ -88,7 +88,6 @@ Promise.all(
             return sum.concat(current);
         }, []);
 
-
     getList(list).then(function(count){
         if(count == 0){
             console.log("Nothing to update");
@@ -105,7 +104,7 @@ Promise.all(
         });
 
         console.log("updating new-packages.json");
-        fs.writeFileSync(target + "new-packages.json", newPackages);
+        fs.writeFileSync(target + "new-packages.json", beautify(newPackages));
 
         console.log("updating all-packages.json");
         return fsP.writeFileSync(
