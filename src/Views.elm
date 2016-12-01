@@ -433,7 +433,7 @@ viewDocOverview doc disabled =
                                 , if disabled then
                                     onClick (LinkToDisabledDoc doc.packageName doc.packageVersion m.name)
                                   else
-                                    onClick (SetCurrentDocFromId m.name doc.id)
+                                    onClick (LinkToModule m.name)
                                 ]
                                 [ text m.name ]
                             ]
