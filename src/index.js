@@ -1,4 +1,5 @@
 require('./main.css');
+require('./assets/highlight/styles/default.css');
 
 var Elm = require('./Main.elm');
 
