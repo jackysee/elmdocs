@@ -57,10 +57,7 @@ view model =
                             [ span [] [ text "ElmDocs" ]
                             , Markdown.toHtml
                                 [ class "doc-info" ]
-                                """[elmdocs](http://github.com/jackysee/elmdocs)\x0D
-                                is written in [Elm](http://elm-lang.org)\x0D
-                                by [jackysee](http://twitter.com/jackysee).\x0D
-                                """
+                                """[elmdocs](http://github.com/jackysee/elmdocs) is written in [Elm](http://elm-lang.org) by [jackysee](http://twitter.com/jackysee)."""
                             ]
                         ]
 
@@ -448,7 +445,7 @@ viewDocOverview doc disabled =
                     ++ listModules
         else
             div [ class "doc-overview" ] <|
-                [ Markdown.toHtml
+                [ block
                     [ class "doc-overview-readme" ]
                     doc.readme
                 , div [ class "doc-overview-modules" ]
@@ -580,10 +577,10 @@ viewModuleComment comment module_ entryDict indexes =
     in
         case list of
             x :: y :: [] ->
-                (Markdown.toHtml [] x) :: viewDocs y module_ entryDict indexes
+                (block [] x) :: viewDocs y module_ entryDict indexes
 
             x :: [] ->
-                [ Markdown.toHtml [] x ]
+                [ block [] x ]
 
             _ ->
                 []
@@ -651,7 +648,7 @@ viewPart moduleName entry indexes =
                     , div [ class "indent" ] <|
                         linkToName indexes alias.type_
                     ]
-                , Markdown.toHtml [ class "entry-comment" ] alias.comment
+                , block [ class "entry-comment" ] alias.comment
                 ]
 
         ModuleTypeEntry tipe ->
@@ -680,7 +677,7 @@ viewPart moduleName entry indexes =
                                     else
                                         [ text "" ]
                                    )
-                       , Markdown.toHtml [ class "entry-comment" ] tipe.comment
+                       , block [ class "entry-comment" ] tipe.comment
                        ]
 
         ValueEntry value ->
@@ -697,7 +694,7 @@ viewPart moduleName entry indexes =
                     , span [ class "value-type " ] <|
                         viewType indexes value.type_
                     ]
-                , Markdown.toHtml [ class "entry-comment" ] value.comment
+                , block [ class "entry-comment" ] value.comment
                 ]
 
 
@@ -879,3 +876,15 @@ replaceFullPathVar str =
                 |> Maybe.withDefault ""
         )
         str
+
+
+block : List (Html.Attribute Msg) -> String -> Html Msg
+block list str =
+    let
+        options =
+            Markdown.defaultOptions
+    in
+        Markdown.toHtmlWith
+            { options | defaultHighlighting = Just "elm" }
+            list
+            str
