@@ -1,0 +1,45 @@
+[
+  {
+    "name": "TimeTravel.Html",
+    "comment": " Each functions in this module has the same interface as [Html.App](http://package.elm-lang.org/packages/elm-lang/html/latest/Html)\n\n# Start your Program\n@docs beginnerProgram, program, programWithFlags\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "beginnerProgram",
+        "comment": " See [Html.beginnerProgram](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#beginnerProgram)\n",
+        "type": "{ model : model , view : model -> Html.Html msg , update : msg -> model -> model } -> Platform.Program Basics.Never (TimeTravel.Internal.Model.Model model msg) (TimeTravel.Html.Msg msg)"
+      },
+      {
+        "name": "program",
+        "comment": " See [Html.program](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#program)\n",
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never (TimeTravel.Internal.Model.Model model msg) (TimeTravel.Html.Msg msg)"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " See [Html.programWithFlags](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#programWithFlags)\n",
+        "type": "{ init : flags -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags (TimeTravel.Internal.Model.Model model msg) (TimeTravel.Html.Msg msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "TimeTravel.Navigation",
+    "comment": " Each functions in this module has the same interface as [Navigation](http://package.elm-lang.org/packages/elm-lang/navigation/latest/Navigation)\n\n# Create a Program\n@docs program, programWithFlags\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " See [Navigation.program](http://package.elm-lang.org/packages/elm-lang/navigation/latest/Navigation#program)\n",
+        "type": "(Navigation.Location -> msg) -> { init : Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never (TimeTravel.Internal.Model.Model model msg) (TimeTravel.Navigation.Msg msg)"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " See [Navigation.programWithFlags](http://package.elm-lang.org/packages/elm-lang/navigation/latest/Navigation#programWithFlags)\n",
+        "type": "(Navigation.Location -> msg) -> { init : flags -> Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags (TimeTravel.Internal.Model.Model model msg) (TimeTravel.Navigation.Msg msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
