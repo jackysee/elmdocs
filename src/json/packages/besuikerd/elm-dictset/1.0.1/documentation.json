@@ -1,0 +1,354 @@
+[
+  {
+    "name": "IntIdSet",
+    "comment": " Specilization functions for IdSets containing integers as their id.\n\n@docs IntIdSet\n@docs intGenerator\n@docs empty\n",
+    "aliases": [
+      {
+        "name": "IntIdSet",
+        "comment": " IdGenerator for intgers.\n",
+        "args": [
+          "item"
+        ],
+        "type": "IdSet.IdSet Int Int item"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Creates an empty set with intGenerator as its IdGenerator and initial seed 0\n",
+        "type": "IntIdSet.IntIdSet item"
+      },
+      {
+        "name": "intGenerator",
+        "comment": " IdGenerator for integers that simply increments the seed by 1.\n",
+        "type": "IdSet.IdGenerator Int Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DictSet",
+    "comment": "  A Set that contains ordinal values, backed by a Dict. The ordinal value of\nitems in a DictSet are specified by the ord method that is given whenever a\nDictSet is constructed.\n\n# Dictionaries\n\n@docs DictSet\n@docs Ord\n\n# Build\n\n@docs empty\n@docs singleton\n@docs insert\n@docs update\n@docs remove\n\n# Query\n\n@docs isEmpty\n@docs member\n@docs get\n@docs size\n\n# Lists\n\n@docs keys\n@docs values\n@docs toList\n@docs fromList\n\n# Transform\n\n@docs map\n@docs foldl\n@docs foldr\n@docs filter\n@docs partition\n\n# Combine\n\n@docs union\n@docs intersect\n@docs diff\n@docs merge\n\n# Helpers\n\n@docs ord\n@docs dict\n\n",
+    "aliases": [
+      {
+        "name": "Ord",
+        "comment": " Ordinal function to define the order of DictSet entries.\n",
+        "args": [
+          "k",
+          "v"
+        ],
+        "type": "v -> k"
+      }
+    ],
+    "types": [
+      {
+        "name": "DictSet",
+        "comment": " A set of ordered values ordered by an ordinal function\n",
+        "args": [
+          "k",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "dict",
+        "comment": " Converts a `Dictset` to a `Dict`\n",
+        "type": "DictSet.DictSet k v -> Dict.Dict k v"
+      },
+      {
+        "name": "diff",
+        "comment": " Creates a set that contains all items that are contained in the first set,\nbut not in the second set.\n",
+        "type": "DictSet.DictSet comparable v -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "empty",
+        "comment": " Creates an empty DictSet using the specified ordinal function.\n",
+        "type": "DictSet.Ord k v -> DictSet.DictSet k v"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter elements from the set that do not satisfy the predicate.\n",
+        "type": "(v -> Bool) -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over all values in the set, in order from lowest key to highest key.\n",
+        "type": "(b -> v -> b) -> b -> DictSet.DictSet comparable v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over all values in the set, in order from highest key to lowest key.\n",
+        "type": "(v -> b -> b) -> b -> DictSet.DictSet comparable v -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list of items to a `DictSet` with the given ordering.\n",
+        "type": "DictSet.Ord comparable v -> List v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value from the set if it exists. Does not guarantee that the items\nare the same, it only retrieves an item with a matching ordinal value if it\nexists.\n",
+        "type": "comparable -> DictSet.DictSet comparable v -> Maybe.Maybe v"
+      },
+      {
+        "name": "insert",
+        "comment": " Inserts an item into the set.\n",
+        "type": "v -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Creates a set that contains items that are contained in both sets.\n",
+        "type": "DictSet.DictSet comparable v -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if the set is empty.\n",
+        "type": "DictSet.DictSet k v -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get a list of keys (the ordinal values) of items in the set, ordered from\nlowest to highest.\n",
+        "type": "DictSet.DictSet comparable v -> List comparable"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in the set.\n",
+        "type": "(v -> v) -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if an item is a member of the set.\n",
+        "type": "v -> DictSet.DictSet comparable v -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two sets. You provide three\naccumulators for when a given key appears:\n\n  1. Only in the left set.\n  2. In both sets.\n  3. Only in the right set.\n\nYou then traverse all the items from lowest ordinal value to highest ordinal\nvalue, building up whatever you want.\n",
+        "type": "(a -> result -> result) -> (a -> a -> result -> result) -> (a -> result -> result) -> DictSet.DictSet comparable a -> DictSet.DictSet comparable a -> result -> result"
+      },
+      {
+        "name": "ord",
+        "comment": " Obtains the function the set uses to calculate ordinal values for its items\n",
+        "type": "DictSet.DictSet k v -> DictSet.Ord k v"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a set according to a predicate. The first set contains all\nitems which satisfy the predicate and the second contains the rest.\n",
+        "type": "(v -> Bool) -> DictSet.DictSet comparable v -> ( DictSet.DictSet comparable v, DictSet.DictSet comparable v )"
+      },
+      {
+        "name": "remove",
+        "comment": " Removes an item from the set if it exists.\n",
+        "type": "v -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Creates a singleton set - using the specified ordinal function.\n",
+        "type": "DictSet.Ord comparable v -> v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "size",
+        "comment": " Determines the number of items in a set\n",
+        "type": "DictSet.DictSet k v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a set into an association list of key-value pairs, sorted by their\nordinal values.\n",
+        "type": "DictSet.DictSet comparable v -> List ( comparable, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two sets. If there is a collision, preference is given to the first\nset.\n",
+        "type": "DictSet.DictSet comparable v -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "update",
+        "comment": " Replaces an item identified with the same ordinal value to the given new value\n",
+        "type": "v -> (Maybe.Maybe v -> Maybe.Maybe v) -> DictSet.DictSet comparable v -> DictSet.DictSet comparable v"
+      },
+      {
+        "name": "values",
+        "comment": " Get a list of values of items in the set, ordered from lowest to highest.\n",
+        "type": "DictSet.DictSet comparable v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "IdSet",
+    "comment": "  A Set with a built in id generator. These ids are used as keys for the Dict\n\n# Dictionaries\n\n@docs IdSet\n@docs IdGenerator\n\n# Build\n\n@docs empty\n@docs singleton\n@docs insert\n@docs insertWithId\n@docs update\n@docs remove\n\n# Query\n\n@docs isEmpty\n@docs member\n@docs get\n@docs size\n\n# Lists\n\n@docs keys\n@docs values\n@docs toList\n@docs fromList\n\n# Transform\n\n@docs map\n@docs mapWithId\n@docs foldl\n@docs foldlWithId\n@docs foldr\n@docs foldrWithId\n@docs filter\n@docs filterWithId\n@docs partition\n@docs partitionWithId\n\n# Combine\n\n@docs union\n@docs intersect\n@docs diff\n@docs merge\n\n# Helpers\n\n@docs dict\n",
+    "aliases": [
+      {
+        "name": "IdGenerator",
+        "comment": " A method to generate new ids\n",
+        "args": [
+          "seed",
+          "id"
+        ],
+        "type": "seed -> ( id, seed )"
+      }
+    ],
+    "types": [
+      {
+        "name": "IdSet",
+        "comment": " A set of items with a built in id generator\n",
+        "args": [
+          "seed",
+          "id",
+          "item"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "dict",
+        "comment": " Converts a `Dictset` to a `Dict`\n",
+        "type": "IdSet.IdSet seed id item -> Dict.Dict id item"
+      },
+      {
+        "name": "diff",
+        "comment": " Creates a set that contains all items that are contained in the first set,\nbut not in the second set.\n",
+        "type": "IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item -> Dict.Dict comparable item"
+      },
+      {
+        "name": "empty",
+        "comment": " Creates an empty set initialized with the given IdGenerator and initial seed\n",
+        "type": "IdSet.IdGenerator seed id -> seed -> IdSet.IdSet seed id item"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter elements from the set that do not satisfy the predicate.\n",
+        "type": "(item -> Bool) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "filterWithId",
+        "comment": " Filter elements from the set that do not satisfy the predicate. The id of\neach item is added as extra input.\n",
+        "type": "(comparable -> item -> Bool) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over all values in the set, in order from lowest key to highest key.\n",
+        "type": "(item -> b -> b) -> b -> IdSet.IdSet seed comparable item -> b"
+      },
+      {
+        "name": "foldlWithId",
+        "comment": " Fold over all values in the set, with the id of each item as extra input,\nin order from lowest key to highest key.\n",
+        "type": "(comparable -> item -> b -> b) -> b -> IdSet.IdSet seed comparable item -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over all values in the set, in order from highest key to lowest key.\n",
+        "type": "(item -> b -> b) -> b -> IdSet.IdSet seed comparable item -> b"
+      },
+      {
+        "name": "foldrWithId",
+        "comment": " Fold over all values in the set, with the id of each item as extra input,\nin order from highest key to lowest key.\n",
+        "type": "(comparable -> item -> b -> b) -> b -> IdSet.IdSet seed comparable item -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list of items into a set using the given IdGenerator and initial\nseed\n",
+        "type": "IdSet.IdGenerator seed comparable -> seed -> List item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "get",
+        "comment": " Get the item associated with the id. If the item is not in the set, it\nreturns Nothing.\n",
+        "type": "comparable -> IdSet.IdSet seed comparable item -> Maybe.Maybe item"
+      },
+      {
+        "name": "insert",
+        "comment": " Inserts an item into the set\n",
+        "type": "item -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "insertWithId",
+        "comment": " Inserts an item into the set. The id that will be used as a key for the\nitem is added as extra input\n",
+        "type": "(comparable -> item) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "intersect",
+        "comment": " Creates a set that contains items that are contained in both sets. Note that\n this function does not return an IdSet, since the IdGenerator cannot be split\n in two.\n",
+        "type": "IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item -> Dict.Dict comparable item"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determines if the set is empty\n",
+        "type": "IdSet.IdSet seed id item -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get a list of keys (the ordinal values) of items in the set, ordered from\nlowest to highest.\n",
+        "type": "IdSet.IdSet seed comparable item -> List comparable"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in the set.\n",
+        "type": "(item -> item) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "mapWithId",
+        "comment": " Apply a function to all values in the set, with the id of each item as extra\ninput\n",
+        "type": "(comparable -> item -> item) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "member",
+        "comment": " Determines if an id is in the set\n",
+        "type": "comparable -> IdSet.IdSet seed comparable item -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two sets. You provide three accumulators\nfor when a given key appears:\n\n  1. Only in the left set.\n  2. In both set.\n  3. Only in the right set.\nYou then traverse all the keys from lowest to highest, building up whatever you\nwant.\n",
+        "type": "(a -> result -> result) -> (a -> b -> result -> result) -> (b -> result -> result) -> IdSet.IdSet seed comparable a -> IdSet.IdSet seed comparable b -> result -> result"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest. Note that this function does not return an IdSet, since the\nIdGenerator cannot be split in two.\n",
+        "type": "(item -> Bool) -> IdSet.IdSet seed comparable item -> ( Dict.Dict comparable item, Dict.Dict comparable item )"
+      },
+      {
+        "name": "partitionWithId",
+        "comment": " Partition a dictionary according to a predicate, with the id of each item as extra input.\nThe first dictionary contains all key-value pairs which satisfy the predicate,\nand the second contains the rest. Note that this function does not return\nIdSets, since the IdGenerator cannot be split in two.\n",
+        "type": "(comparable -> item -> Bool) -> IdSet.IdSet seed comparable item -> ( Dict.Dict comparable item, Dict.Dict comparable item )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a value from the set with the given id. If there is no entry with\nsuch an id, no changes are made\n",
+        "type": "comparable -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "singleton",
+        "comment": " Creates a singleton set using the given IdGenerator and initial seed\n",
+        "type": "IdSet.IdGenerator seed comparable -> seed -> item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "size",
+        "comment": " Determines the number of items in a set\n",
+        "type": "IdSet.IdSet seed comparable item -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a set into an association list of key-value pairs, sorted by their\nordinal values.\n",
+        "type": "IdSet.IdSet seed comparable item -> List ( comparable, item )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two sets. If there is a collision, preference is given to the first\nset. Note that this function does not return an IdSet, since the IdGenerator\ncannot be split in two.\n",
+        "type": "IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item -> Dict.Dict comparable item"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of an item with the given index ",
+        "type": "comparable -> (Maybe.Maybe item -> Maybe.Maybe item) -> IdSet.IdSet seed comparable item -> IdSet.IdSet seed comparable item"
+      },
+      {
+        "name": "values",
+        "comment": " Get a list of values of items in the set, ordered from lowest to highest.\n",
+        "type": "IdSet.IdSet seed comparable item -> List item"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
