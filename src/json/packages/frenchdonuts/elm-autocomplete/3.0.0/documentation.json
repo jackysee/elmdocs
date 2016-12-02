@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Autocomplete",
+    "comment": "\n This library helps you create an autocomplete menu.\n Your data is stored separately; keep it in whatever shape makes the most sense for your application.\n An autocomplete has a lot of uses: form input, mentions, search, etc.\n\n I have (hopefully!) given the users of this library a large amount of customizability.\n\n I recommend looking at the [examples](https://github.com/thebritican/elm-autocomplete/tree/master/examples) before diving into the API or source code.\n\n# View\n@docs view\n\n# Update\n@docs update, subscription\n\n# Configuration\n@docs viewConfig, updateConfig\n\n# State\n@docs State, empty, reset, resetToFirstItem, resetToLastItem, KeySelected, MouseSelected\n\n# Definitions\n@docs Msg, ViewConfig, UpdateConfig, HtmlDetails\n\n# Sections\nSections require a separate view and configuration since another type of data must be\nprovided: sections.\n\n**Note:** Section data can have any shape: your static configuration will\njust tell the autocomplete how to grab an ID for a section and its related data.\n\n# View\n@docs viewWithSections\n\n# Configuration\n@docs sectionConfig, viewWithSectionsConfig\n\n# Definitions\n@docs SectionNode, SectionConfig, ViewWithSectionsConfig\n\n",
+    "aliases": [
+      {
+        "name": "HtmlDetails",
+        "comment": "\nHTML lists require `li` tags as children, so we allow you to specify everything about `li` HTML node except the nodeType.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ attributes : List (Html.Attribute msg) , children : List (Html.Html msg) }"
+      },
+      {
+        "name": "KeySelected",
+        "comment": " True if the element has been selected via keyboard navigation.\n",
+        "args": [],
+        "type": "Bool"
+      },
+      {
+        "name": "MouseSelected",
+        "comment": " True if the element has been selected via mouse hover.\n",
+        "args": [],
+        "type": "Bool"
+      },
+      {
+        "name": "SectionNode",
+        "comment": " Describe everything about a Section HTML node.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ nodeType : String , attributes : List (Html.Attribute msg) , children : List (Html.Html msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A message type for the autocomplete to update.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "SectionConfig",
+        "comment": " The configuration for a section of the menu.\n\n**Note:** This should never live in your model.\n",
+        "args": [
+          "data",
+          "sectionData"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Tracks keyboard and mouse selection within the menu.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "UpdateConfig",
+        "comment": " Configuration for updates\n",
+        "args": [
+          "msg",
+          "data"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ViewConfig",
+        "comment": "\nConfiguration for your autocomplete, describing your menu and its items.\n\n**Note:** Your `ViewConfig` should never be held in your model. It should only appear in view code.\n",
+        "args": [
+          "data"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ViewWithSectionsConfig",
+        "comment": "\nConfiguration for your autocomplete, describing your menu, its sections, and its items.\n\n**Note:** This should never live in your model.\n",
+        "args": [
+          "data",
+          "sectionData"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " A State with nothing selected.\n",
+        "type": "Autocomplete.State"
+      },
+      {
+        "name": "reset",
+        "comment": " Reset the keyboard navigation but leave the mouse state alone.\nConvenient when the two selections are represented separately.\n",
+        "type": "Autocomplete.UpdateConfig msg data -> Autocomplete.State -> Autocomplete.State"
+      },
+      {
+        "name": "resetToFirstItem",
+        "comment": " Like `reset` but defaults to a keyboard selection of the first item.\n",
+        "type": "Autocomplete.UpdateConfig msg data -> List data -> Int -> Autocomplete.State -> Autocomplete.State"
+      },
+      {
+        "name": "resetToLastItem",
+        "comment": " Like `reset` but defaults to a keyboard selection of the last item.\n",
+        "type": "Autocomplete.UpdateConfig msg data -> List data -> Int -> Autocomplete.State -> Autocomplete.State"
+      },
+      {
+        "name": "sectionConfig",
+        "comment": " Create the `SectionConfig` for your `view` function.\nSay we have a `List Century` that we want to show as a series of sections.\nWe would create a `SectionConfig` like so:\n\n    type alias Century =\n      { title : String\n      , people : List Person\n      }\n\n    import Autocomplete\n    sectionConfig : Autocomplete.SectionConfig Person Century\n    sectionConfig =\n        Autocomplete.sectionConfig\n            { toId = .title\n            , getData = .people\n            , ul = [ class \"autocomplete-section-list\" ]\n            , li =\n                \\section ->\n                    { nodeType = \"div\"\n                    , attributes = [ class \"autocomplete-section-item\" ]\n                    , children =\n                        [ div [ class \"autocomplete-section-box\" ]\n                            [ strong [ class \"autocomplete-section-text\" ] [ text section.title ]\n                            ]\n                        ]\n                    }\n            }\n\n\n\nYou provide the following information in your autocomplete configuration:\n  - `toId` &mdash; turn a `Century` into a unique ID.\n  - `getData` &mdash; extract the data from `Century`, in this case: `List Person`.\n  - `ul` &mdash; specify any non-behavioral attributes you'd like for the section list.\n  - `li` &mdash; specify any non-behavioral attributes and children for a section.\n",
+        "type": "{ toId : sectionData -> String , getData : sectionData -> List data , ul : List (Html.Attribute Basics.Never) , li : sectionData -> Autocomplete.SectionNode Basics.Never } -> Autocomplete.SectionConfig data sectionData"
+      },
+      {
+        "name": "subscription",
+        "comment": " Add this to your `program`'s subscriptions so the the autocomplete menu will respond to keyboard input.\n",
+        "type": "Platform.Sub.Sub Autocomplete.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Use this function to update the autocomplete's `State`.\nProvide the same data as your view.\nThe `Int` argument is how many results you would like to show.\n",
+        "type": "Autocomplete.UpdateConfig msg data -> Autocomplete.Msg -> Int -> Autocomplete.State -> List data -> ( Autocomplete.State, Maybe.Maybe msg )"
+      },
+      {
+        "name": "updateConfig",
+        "comment": " Create the configuration for your `update` function (`UpdateConfig`).\nSay we have a `List Person` that we want to show as a series of options.\nWe would create an `UpdateConfig` like so:\n\n    import Autocomplete\n    updateConfig : Autocomplete.UpdateConfig Msg Person\n    updateConfig =\n        Autocomplete.updateConfig\n            { toId = .name\n            , onKeyDown =\n                \\code maybeId ->\n                    if code == 38 || code == 40 then\n                        Nothing\n                    else if code == 13 then\n                        Maybe.map SelectPerson maybeId\n                    else\n                        Just Reset\n            , onTooLow = Nothing\n            , onTooHigh = Nothing\n            , onMouseEnter = \\_ -> Nothing\n            , onMouseLeave = \\_ -> Nothing\n            , onMouseClick = \\id -> Just <| SelectPerson id\n            , separateSelections = False\n            }\n\nYou provide the following information in your autocomplete configuration:\n  - `toId` &mdash; turn a `Person` into a unique ID.\n  - `ul` &mdash; specify any non-behavioral attributes you'd like for the list menu.\n  - `li` &mdash; specify any non-behavioral attributes and children for a list item: both selection states are provided.\n",
+        "type": "{ toId : data -> String , onKeyDown : Char.KeyCode -> Maybe.Maybe String -> Maybe.Maybe msg , onTooLow : Maybe.Maybe msg , onTooHigh : Maybe.Maybe msg , onMouseEnter : String -> Maybe.Maybe msg , onMouseLeave : String -> Maybe.Maybe msg , onMouseClick : String -> Maybe.Maybe msg , separateSelections : Bool } -> Autocomplete.UpdateConfig msg data"
+      },
+      {
+        "name": "view",
+        "comment": "\nTake a list of `data` and turn it into an autocomplete menu.\nThe `ViewConfig` argument is the configuration for the autocomplete view.\n`ViewConfig` describes the HTML we want to show for each item and the list.\nThe `Int` argument is how many results you would like to show.\nThe `State` argument describes what is selected via mouse and keyboard.\n\n**Note:** The `State` and `List data` should live in your Model.\nThe `ViewConfig` for the autocomplete belongs in your view code.\n`ViewConfig` should never exist in your model.\nDescribe any potential autocomplete configurations statically.\nThis pattern has been inspired by [Elm Sortable Table](http://package.elm-lang.org/packages/evancz/elm-sortable-table/latest).\n",
+        "type": "Autocomplete.ViewConfig data -> Int -> Autocomplete.State -> List data -> Html.Html Autocomplete.Msg"
+      },
+      {
+        "name": "viewConfig",
+        "comment": " Create the configuration for your `view` function (`ViewConfig`).\nSay we have a `List Person` that we want to show as a series of options.\nWe would create a `ViewConfig` like so:\n\n    import Autocomplete\n    viewConfig : Autocomplete.Config Person\n    viewConfig =\n      let\n          customizedLi keySelected mouseSelected person =\n              { attributes =\n                  [ classList [ ( \"autocomplete-item\", True )\n                              , ( \"key-selected\", keySelected )\n                              , ( \"mouse-selected\", mouseSelected )\n                              ]\n                  ]\n              , children = [ Html.text person.name ]\n              }\n      in\n          Autocomplete.viewConfig\n              { toId = .name\n              , ul = [ class \"autocomplete-list\" ]\n              , li = customizedLi\n              }\nYou provide the following information in your autocomplete configuration:\n  - `toId` &mdash; turn a `Person` into a unique ID. This lets us use\n  [`Html.Keyed`][keyed] under the hood to make sorting faster.\n  - `ul` &mdash; specify any non-behavioral attributes you'd like for the list menu.\n  - `li` &mdash; specify any non-behavioral attributes and children for a list item: both selection states are provided.\nSee the [examples][] to get a better understanding!\n[keyed]: http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Keyed\n[examples]: https://github.com/thebritican/elm-autocomplete/tree/master/examples\n",
+        "type": "{ toId : data -> String , ul : List (Html.Attribute Basics.Never) , li : Autocomplete.KeySelected -> Autocomplete.MouseSelected -> Int -> data -> Autocomplete.HtmlDetails Basics.Never } -> Autocomplete.ViewConfig data"
+      },
+      {
+        "name": "viewWithSections",
+        "comment": " Presents an autocomplete menu with sections.\nYou can follow the same instructions as described for `view`, providing a more advanced configuration and different data shape.\n`ViewWithSectionsConfig` sets up your autocomplete to handle sectioned data.\nThe sectioned data becomes the new data argument for `viewWithSections`.\n",
+        "type": "Autocomplete.ViewWithSectionsConfig data sectionData -> Int -> Autocomplete.State -> List sectionData -> Html.Html Autocomplete.Msg"
+      },
+      {
+        "name": "viewWithSectionsConfig",
+        "comment": " The same configuration as viewConfig, but provide a section configuration as well.\n",
+        "type": "{ toId : data -> String , ul : List (Html.Attribute Basics.Never) , li : Autocomplete.KeySelected -> Autocomplete.MouseSelected -> data -> Autocomplete.HtmlDetails Basics.Never , section : Autocomplete.SectionConfig data sectionData } -> Autocomplete.ViewWithSectionsConfig data sectionData"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
