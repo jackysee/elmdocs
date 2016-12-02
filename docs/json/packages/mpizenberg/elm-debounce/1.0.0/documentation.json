@@ -1,0 +1,68 @@
+[
+  {
+    "name": "MsgControl",
+    "comment": " Control messages.\n\n@docs Strategy, debouncing, throttling\n@docs State, init\n@docs Msg, MsgWrapper, wrap, update\n",
+    "aliases": [
+      {
+        "name": "MsgWrapper",
+        "comment": " A wrapper for the internal controlled messages.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "MsgControl.Msg msg -> msg"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Internal messages.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Control state to be stored in the model.\n\n    type alias Model = { ... , state : MsgControl.State Msg }\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Strategy",
+        "comment": " The controlling strategy.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "debouncing",
+        "comment": " Create a debouncing strategy.\n\n    strategy = MsgControl.debouncing <| 1 * Time.second\n",
+        "type": "Time.Time -> MsgControl.Strategy"
+      },
+      {
+        "name": "init",
+        "comment": " Initial state.\n\n    initialModel = { ... , state = MsgControl.init }\n",
+        "type": "MsgControl.State msg"
+      },
+      {
+        "name": "throttling",
+        "comment": " Create a throttling strategy.\n\n    strategy = MsgControl.throttling <| 50 * Time.millisecond\n",
+        "type": "Time.Time -> MsgControl.Strategy"
+      },
+      {
+        "name": "update",
+        "comment": " Update the controlled state of a message.\n",
+        "type": "MsgControl.MsgWrapper msg -> MsgControl.Strategy -> MsgControl.Msg msg -> MsgControl.State msg -> ( MsgControl.State msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "wrap",
+        "comment": " Inverse wrapper, wrap an outside raw message into an internal message.\nKey helper to control raw messages.\n\n    view model = ... button [ HA.map debounce <| onClick Clicked ] ...\n\n    debounce : Msg -> Msg\n    debounce =\n        Debounce << MsgControl.wrap\n",
+        "type": "msg -> MsgControl.Msg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
