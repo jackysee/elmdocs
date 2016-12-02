@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Quiz",
+    "comment": " Create a Quiz based on Boolean (True | False) questions.\n\nExample:\n\n    import Quiz exposing (update, view, Model)\n    import Array exposing (fromList, empty)\n    import Html exposing (beginnerProgram)\n    import Markdown exposing (toHtml)\n\n\n    model : Quiz.Model\n    model =\n        { questionId =\n            -1\n            -- Show Instructions\n        , questions =\n            Array.fromList\n                [ ( True, \"Something truthy\" )\n                , ( False, \"Something falsy\" )\n                ]\n        , correctAnswers = Array.empty\n        , wrongAnswers = Array.empty\n        , buttonTrue = ( \"True\", \"green\" )\n        , buttonFalse = ( \"False\", \"red\" )\n        , instructionsComponent =\n          Markdown.toHtml [] \"\"\"\n    # True or False\n    ## How to Play\n      - A question will appear.\n      - Click *True* if you think the answer is true.\n      - Click *False* if you think the answer is false.\n    \"\"\"\n      }\n\n\n    main : Program Never\n    main =\n        Html.beginnerProgram { model = model, view = view, update = update }\n\n# Definition\n@docs update\n@docs view\n@docs Question\n@docs Model\n@docs Msg\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The entire Model\n\n    model =\n        { questionId -- Should start at -1 to show the instructions.\n        , questions -- An array of `Question`s.\n        , correctAnswers -- Should start as an empty Array.\n        , wrongAnswers -- Should start as an empty Array.\n        , buttonTrue -- A Tuple of (\"Text\", \"Colour\").\n        , buttonFalse -- A Tuple of (\"Text\", \"Colour\").\n        , instructionsComponent -- HTML to show as instructions.\n        }\n",
+        "args": [],
+        "type": "QuizTypes.Model"
+      },
+      {
+        "name": "Msg",
+        "comment": " The actions that can be performed\n",
+        "args": [],
+        "type": "QuizTypes.Msg"
+      },
+      {
+        "name": "Question",
+        "comment": " A Tuple of the answer and the question.\n\n    (True, \"Do I like chocolate?\")\n",
+        "args": [],
+        "type": "QuizTypes.Question"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "update",
+        "comment": " The update function, pass to Html.beginnerProgram\n",
+        "type": "QuizTypes.Msg -> QuizTypes.Model -> QuizTypes.Model"
+      },
+      {
+        "name": "view",
+        "comment": " The view function, pass to Html.beginnerProgram\n",
+        "type": "QuizTypes.Model -> Html.Html QuizTypes.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

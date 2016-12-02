@@ -1,0 +1,105 @@
+[
+  {
+    "name": "Forms",
+    "comment": " # Forms\nThis library performs form validation for HTML forms. A user can define\na list of form elements and define validations for each element. Each time the\nformis updated, validations are automatically run and validation results are updated\nfor each form element as well as the overall form.\n\nAPI calls can be used to retrieve validation information that can be used to\ndisplay validation errors on the form itself.\n\n# Definition\n\n# Types\n@docs FieldValidator, Form, ValidationError\n\n# Helper Functions\n@docs errorList, errorString, formValue, updateFormInput, validateStatus\n\n# Form Initializer\n@docs initForm\n\n\n# Primitive Validators\n@docs validateGreaterThan, validateIsOneOf, validateMinLength\n@docs validateMaxLength, validateLessThan, validateExistence\n@docs validateNumericality, validateNumericRange, validateRegex\n\n",
+    "aliases": [
+      {
+        "name": "FieldValidator",
+        "comment": " A field validator is a function that takes a string to be validated and\n    returns a ValidationError (Maybe String)\n",
+        "args": [],
+        "type": "String -> Forms.ValidationError"
+      },
+      {
+        "name": "Form",
+        "comment": " A form is a set of form elements and a boolean indicating the validate\n    status. Details of the FormElements type are not exposed to the user.\n    Instead an API is provided so those details can be fluid.\n",
+        "args": [],
+        "type": "{ elements : Forms.FormElements, validateStatus : Bool }"
+      },
+      {
+        "name": "ValidationError",
+        "comment": " A validation result is simply a Maybe String.\n    Nothing indicates no error. Otherwise it's Just \"error message\"\n",
+        "args": [],
+        "type": "Maybe.Maybe String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "errorList",
+        "comment": " Returns raw list of all current validation errors.\"\n\n    ErrorList form \"user\" == [ Just \"must be present\", Just \"must be 10 characters or fewer\" ]\n",
+        "type": "Forms.Form -> String -> List Forms.ValidationError"
+      },
+      {
+        "name": "errorString",
+        "comment": " Returns a formatted string representing all current validation errors.\n\n    ErrorSring form \"user\" == \"must be present, must be 10 characters or fewer\"\n",
+        "type": "Forms.Form -> String -> String"
+      },
+      {
+        "name": "formValue",
+        "comment": " Returns the current value of any form field.\n    Returns Nothing if an invalid form name is given.\n\n",
+        "type": "Forms.Form -> String -> String"
+      },
+      {
+        "name": "initForm",
+        "comment": " Initializes a form.Accepts a list of (name, validator) tuples\n    and returns a Form.\n",
+        "type": "List ( String, List Forms.FieldValidator ) -> Forms.Form"
+      },
+      {
+        "name": "updateFormInput",
+        "comment": " Given a Form, a field name and a feild value and returns\n    a new form containing the update. This is genrally called\n    from the application's update function.\n",
+        "type": "Forms.Form -> String -> String -> Forms.Form"
+      },
+      {
+        "name": "validateExistence",
+        "comment": " Validates existance of a form vale.\n\n    validateExistence \"\" == Just \"must be present\"\n    validateExistence \"valid\" == Nothing\n",
+        "type": "String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateGreaterThan",
+        "comment": " Validates that a string converts to an integer and is greater than the min\nsupplied\n\n    validateGreaterThan 100 \"105\" == Nothing\n    validateGreaterThan 100 \"95\" == Just \"must be > 100\"\n    validateGreaterThan 100 \"bad\" == Just \"must be > 100\"\n",
+        "type": "Int -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateIsOneOf",
+        "comment": " Validates that a string matches one of several potential matches\n\n    validateIsOneOf [ \"cat\", \"bat\", \"rat\" ] \"bat\" == Nothing\n    validateIsOneOf [ \"cat\", \"bat\", \"rat\" ] \"brat\" == Just \"must match one of (cat, bat, rat)\"\n",
+        "type": "List String -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateLessThan",
+        "comment": " Validates that a string converts to an integer and is less than the max\nsupplied\n\n    validateLessThan 100 \"95\" == Nothing\n    validateLessThan 100 \"105\" == Just \"must be < 100\"\n    validateLessThan 100 \"bad\" == Just \"must be < 100\"\n",
+        "type": "Int -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateMaxLength",
+        "comment": " Validates that a form element is less than a maximum length.\n\n    validateMaxLength 4 \"123\" == Nothing\n    validateMaxLength 2 \"123\" == Just \"must be at least 2 characters or fewer\"\n",
+        "type": "Int -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateMinLength",
+        "comment": " Validates that a form element is of a minimum length.\n\n    validateMinLength 2 \"123\" == Nothing\n    validateMinLength 4 \"123\" == Just \"must be at least 4 characters\"\n",
+        "type": "Int -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateNumericRange",
+        "comment": " iValidates that an integer field is within a specified numeric range.\n",
+        "type": "Int -> Int -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateNumericality",
+        "comment": " Validates that a form element is a valid integer.\n",
+        "type": "String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateRegex",
+        "comment": " Validates that a form element matches a regular expression.\n",
+        "type": "String -> String -> Maybe.Maybe String"
+      },
+      {
+        "name": "validateStatus",
+        "comment": " Returns a Bool representing the current validation status of a form.\n",
+        "type": "Forms.Form -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
