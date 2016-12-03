@@ -1,0 +1,306 @@
+[
+  {
+    "name": "Ratio.Infix",
+    "comment": " Infix operators for Rationals.\n\nExpressions may include both Rationals and Ints.  Where both operands are Rationals, we surround the operator with the '|' symbol.\nWhere one operand is a Rational and the other an Int, we place the '|' symbol at the side of the operator adjacent to the Rational.\nFor example (where r is a Rational and i an Int):\n\n\n    r |+| r\n\n    i +| r\n\n    r |+ i\n\n\n# Infix comparisons\n@docs (|==|), (|==), (|/=|), (|/=), (|>|), (|>=|), (|<|), (|<=|)\n\n# Infix arithmetic\n@docs  (+|), (|+), (|+|), (-|), (|-), (|-|),\n       (*|), (|*), (|*|), (/|), (|/), (|/|)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "*|",
+        "comment": " Multiply an Int by a Rational\n",
+        "type": "Int -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "+|",
+        "comment": " Add an Int to a Rational\n",
+        "type": "Int -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "-|",
+        "comment": " Subtract a Rational from an Iny\n",
+        "type": "Int -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "/|",
+        "comment": " Divide an Int by a Rational\n",
+        "type": "Int -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "|*",
+        "comment": " Multiply an Rational by an Int\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "|*|",
+        "comment": " Synonym for Ratio.multiply\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "|+",
+        "comment": " add a Rational to an Int\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "|+|",
+        "comment": " Synonym for Ratio.add\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "|-",
+        "comment": " Subtract an Int from a Rational\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "|-|",
+        "comment": " Synonym for Ratio.subtract\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 6
+      },
+      {
+        "name": "|/",
+        "comment": " Divide a Rational by an Int\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "|/=",
+        "comment": " Test a Rational and an Int for inequality\n",
+        "type": "Ratio.Rational -> Int -> Bool"
+      },
+      {
+        "name": "|/=|",
+        "comment": " Synonym for Ratio.ne\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "|/|",
+        "comment": " Synonym for Ratio.divide\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "|<=|",
+        "comment": " Synonym for Ratio.le\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "|<|",
+        "comment": " Synonym for Ratio.lt\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "|==",
+        "comment": " Test a Rational and an Int for equality\n",
+        "type": "Ratio.Rational -> Int -> Bool"
+      },
+      {
+        "name": "|==|",
+        "comment": " Synonym for Ratio.eq\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "|>=|",
+        "comment": " Synonym for Ratio.ge\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "|>|",
+        "comment": " Synonym for Ratio.gt\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Ratio",
+    "comment": " A simple module providing a ratio type for rational numbers\n\n# Types\n@docs Rational\n\n# Construction\n@docs over, fromInt\n\n# Comparison\n@docs eq, ne, gt, lt, ge, le, max, min, compare\n\n# Mathematics\n@docs add, subtract, multiply, multiplyByInt\n@docs divide, divideByInt, divideIntBy, negate\n@docs isZero, isInfinite, round, floor, ceiling, truncate\n\n# Elimination\n@docs numerator, denominator, split\n\n# Utils\n@docs gcd, invert, toFloat\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Rational",
+        "comment": " \"Arbitrary\" (up to `max_int` size) precision fractional numbers. Think of\n    it as the length of a rigid bar that you've constructed from a bunch of\n    initial bars of the same fixed length\n    by the operations of gluing bars together and shrinking a\n    given bar so that an integer number of copies of it glues together to\n    make another given bar.\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Addition. It's like gluing together two bars of the given lengths.\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "ceiling",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "compare",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Basics.Order"
+      },
+      {
+        "name": "denominator",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "divide",
+        "comment": " Divide two rationals\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "divideByInt",
+        "comment": " Divide a rational by an Int\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational"
+      },
+      {
+        "name": "divideIntBy",
+        "comment": " Divide an Int by a rational\n",
+        "type": "Int -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "eq",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "floor",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "fromInt",
+        "comment": " `fromInt x = over x 1`\n",
+        "type": "Int -> Ratio.Rational"
+      },
+      {
+        "name": "gcd",
+        "comment": " The biggest number that divides both arguments (the greatest common divisor).\n",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "ge",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "gt",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "invert",
+        "comment": " invert the rational. r becomes 1/r.\n",
+        "type": "Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "isInfinite",
+        "comment": " ",
+        "type": "Ratio.Rational -> Bool"
+      },
+      {
+        "name": "isZero",
+        "comment": " ",
+        "type": "Ratio.Rational -> Bool"
+      },
+      {
+        "name": "le",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "lt",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "max",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "min",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "multiply",
+        "comment": " Mulitplication. `mulitply x (c / d)` is the length of the bar that you'd get\n    if you glued `c` copies of a bar of length `x` end-to-end and then shrunk it\n    down enough so that `d` copies of the shrunken bar would fit in the big\n    glued bar.\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "multiplyByInt",
+        "comment": " Multiply a rational by an Int\n",
+        "type": "Ratio.Rational -> Int -> Ratio.Rational"
+      },
+      {
+        "name": "ne",
+        "comment": " ",
+        "type": "Ratio.Rational -> Ratio.Rational -> Bool"
+      },
+      {
+        "name": "negate",
+        "comment": " multiplication by `-1`.\n",
+        "type": "Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "numerator",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "over",
+        "comment": " `over x y` is like `x / y`.\n",
+        "type": "Int -> Int -> Ratio.Rational"
+      },
+      {
+        "name": "round",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      },
+      {
+        "name": "split",
+        "comment": " `split x = (numerator x, denominator x)`\n",
+        "type": "Ratio.Rational -> ( Int, Int )"
+      },
+      {
+        "name": "subtract",
+        "comment": " subtraction. Is it like ungluing two bars of the given lengths?\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Ratio.Rational"
+      },
+      {
+        "name": "toFloat",
+        "comment": " ",
+        "type": "Ratio.Rational -> Float"
+      },
+      {
+        "name": "truncate",
+        "comment": " ",
+        "type": "Ratio.Rational -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
