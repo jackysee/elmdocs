@@ -1,0 +1,70 @@
+[
+  {
+    "name": "MsgControl",
+    "comment": " Control messages.\n\n# Different strategies available\n\n@docs debouncing, throttling, Strategy\n\n# Modification of the model\n\n@docs State, init\n\n# Modification of the update\n\n@docs Msg, update, MsgWrapper\n\n# Modification of the view\n\n@docs wrap\n\n",
+    "aliases": [
+      {
+        "name": "MsgWrapper",
+        "comment": " A wrapper for the internal controlled messages.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "MsgControl.Msg msg -> msg"
+      },
+      {
+        "name": "Strategy",
+        "comment": " The controlling strategy.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "MsgControl.MsgWrapper msg -> msg -> MsgControl.State msg -> ( MsgControl.State msg, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Internal messages.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Control state to be stored in the model.\n\n    type alias Model = { ... , state : MsgControl.State Msg }\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "debouncing",
+        "comment": " Create a debouncing strategy.\n\n    strategy = MsgControl.debouncing <| 1 * Time.second\n",
+        "type": "Time.Time -> MsgControl.Strategy msg"
+      },
+      {
+        "name": "init",
+        "comment": " Initial state.\n\n    initialModel = { ... , state = MsgControl.init }\n",
+        "type": "MsgControl.State msg"
+      },
+      {
+        "name": "throttling",
+        "comment": " Create a throttling strategy.\n\n    strategy = MsgControl.throttling <| 50 * Time.millisecond\n",
+        "type": "Time.Time -> MsgControl.Strategy msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update the controlled state of a message.\n\n    update msg model = case msg of\n        ...\n        Throttle controlMsg ->\n            let\n                ( newState, cmd ) =\n                    MsgControl.update\n                        (Throttle) -- The message wrapper\n                        (MsgControl.throttling <| 1 * Time.second) -- The strategy\n                        (controlMsg) -- The internal message\n                        (model.state) -- The current state\n            in\n                ( { model | state = newState }, cmd )\n",
+        "type": "MsgControl.MsgWrapper msg -> MsgControl.Strategy msg -> MsgControl.Msg msg -> MsgControl.State msg -> ( MsgControl.State msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "wrap",
+        "comment": " Inverse wrapper, wrap an outside raw message into an internal message.\nKey helper to control raw messages.\n\n    view model = ... button [ HA.map debounce <| onClick Clicked ] ...\n\n    debounce : Msg -> Msg\n    debounce =\n        Debounce << MsgControl.wrap\n",
+        "type": "msg -> MsgControl.Msg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

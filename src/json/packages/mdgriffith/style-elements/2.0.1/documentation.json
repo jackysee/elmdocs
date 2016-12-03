@@ -1,0 +1,863 @@
+[
+  {
+    "name": "Style",
+    "comment": "\n\nThis module is focused around composing a style.\n\n@docs Model, Property\n\n# Rendering\n\nWe use `render` to create a style sheet and `embed` to embed it in our view.\n\n@docs render, renderWith, StyleSheet, embed\n\n## Rendering Options\n\n@docs Option, importCSS, importUrl, debug, base, foundation, autoImportGoogleFonts\n\n# Creating Styles\n\n@docs class, selector\n\n\n# Positioning\n\nThe coordinates for position always have the same coordinate system, right and down are the positive directions, same as the standard coordinate system for svg.\n\nThese coordinates are always rendered in pixels.\n\nThe name of the position property refers on which corner of the css box to start at.\n\n@docs topLeft, topRight, bottomLeft, bottomRight\n\n@docs positionBy, PositionParent, parent, currentPosition, screen\n\n\n\n# Width/Height\n\n@docs height, minHeight, maxHeight, width, minWidth, maxWidth\n\n# Units\n\nMost values in this library have one set of units to the library that are required to be used.\n\nThis is to encourage relative units to be expressed in terms of your elm code instead of relying on DOM hierarchy.\n\nHowever, `width` and `height` values can be pixels, percent, or auto.\n\n@docs percent, px, auto\n\n\n# A Note on Padding and Margins\n\nWith `padding` and `margin` you have two ways of specifying the spacing of the child element within the parent.  Either the `margin` on the child or the `padding` on the parent.\n\nIn the effort of having only one good way to accomplish something, we only allow the `padding` property to be set.\n\nWe introduce the `spacing` attribute, which sets the spacing between all _child_ elements (using the margin property).\n\n> __Some exceptions__\n>\n> `inline` elements are not affected by spacing.\n>\n> Floating elements will only respect certain spacing values.\n\n@docs padding, spacing, zIndex\n\n\n# Padding, Spacing, and Borders\n\nPadding, spacing, and border widths are all specified by a tuple of four floats that represent (top, right, bottom, left).  These are all rendered as `px` values.\n\nThe following are convenience functions for setting these values.\n\n@docs all, top, bottom, left, right, topBottom, leftRight, leftRightAndTopBottom, leftRightTopBottom, allButTop, allButLeft, allButRight, allButBottom\n\n\n## Borderstyles\n\n@docs Border, border, borderStyle, BorderStyle, borderWidth, solid, dotted, dashed, borderRadius\n\n# Layouts\n\nLayouts affect how child elements are arranged.\n\n@docs Layout, textLayout, tableLayout\n\n@docs Flow, flowUp, flowDown, flowRight, flowLeft\n\n\n@docs inline\n\n@docs Floating, floatLeft, floatRight, floatTopLeft, floatTopRight\n\n# Alignment\n\n@docs Alignment, alignLeft, alignRight, justify, justifyAll, alignCenter\n\n@docs VerticalAlignment, verticalCenter, verticalStretch, alignTop, alignBottom\n\n\n# Colors\n\n@docs textColor, backgroundColor, borderColor\n\n\n# Visibility\n\n@docs visibility, Visibility, hidden, opacity, transparency, visible\n\n\n# Text/Font\n\n@docs font, fontsize, lineHeight, textAlign, letterOffset, whitespace, Whitespace, normal, pre, preLine, preWrap, noWrap, italicize, bold, light, strike, underline, cursor\n\n\n# Background Images\n\n@docs backgroundImage, BackgroundImage, Repeat, repeat, repeatX, repeatY, noRepeat, round, space\n\n@docs property, mix\n\n\n# Shadows\n\n@docs shadows, Shadow, shadow, insetShadow, textShadow, dropShadow\n\n\n# Transforms\n\n@docs transforms, Transform, translate, rotate, scale\n\n# Filters\n\n@docs filters, Filter, filterUrl, blur, brightness, contrast, grayscale, hueRotate, invert, opacityFilter, saturate, sepia\n\n\n# Animations and Transitions\n\n@docs Animation, animate\n\n\n@docs Transition, transition\n\n## Pseudo elements and classes\n\n@docs selection, after, before, hover, focus, checked\n\n\n\n\n",
+    "aliases": [
+      {
+        "name": "Alignment",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Alignment"
+      },
+      {
+        "name": "Animation",
+        "comment": " ",
+        "args": [],
+        "type": "{ duration : Time.Time , easing : String , repeat : Float , steps : List ( Float, List Style.Property ) }"
+      },
+      {
+        "name": "BackgroundImage",
+        "comment": " ",
+        "args": [],
+        "type": "{ src : String, position : ( Float, Float ), repeat : Style.Repeat }"
+      },
+      {
+        "name": "Border",
+        "comment": " ",
+        "args": [],
+        "type": "{ width : ( Float, Float, Float, Float ) , style : Style.BorderStyle , color : Color.Color }"
+      },
+      {
+        "name": "BorderStyle",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.BorderStyle"
+      },
+      {
+        "name": "Filter",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Filter"
+      },
+      {
+        "name": "Floating",
+        "comment": " Only rendered if the parent is a textLayout.\n",
+        "args": [],
+        "type": "Style.Model.Floating"
+      },
+      {
+        "name": "Flow",
+        "comment": "\n\n",
+        "args": [],
+        "type": "{ wrap : Bool , horizontal : Style.Alignment , vertical : Style.VerticalAlignment }"
+      },
+      {
+        "name": "Layout",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Layout"
+      },
+      {
+        "name": "Model",
+        "comment": " A style model which keeps of a list of style properties and the class for a given style.\n\nThe `class` type variable is the type you use to write your css classes.\n\n",
+        "args": [
+          "class"
+        ],
+        "type": "Style.Model.Model class"
+      },
+      {
+        "name": "PositionParent",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.PositionParent"
+      },
+      {
+        "name": "Property",
+        "comment": " This type represents any style property.  The Model has a list of these.\n\n",
+        "args": [],
+        "type": "Style.Model.Property"
+      },
+      {
+        "name": "Repeat",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Repeat"
+      },
+      {
+        "name": "Shadow",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Shadow"
+      },
+      {
+        "name": "StyleSheet",
+        "comment": " The stylesheet contains the rendered css as a string, and two functions to lookup\n\n",
+        "args": [
+          "class",
+          "msg"
+        ],
+        "type": "{ class : class -> Html.Attribute msg , classList : List ( class, Bool ) -> Html.Attribute msg , css : String }"
+      },
+      {
+        "name": "Transform",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Transform"
+      },
+      {
+        "name": "Transition",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Transition"
+      },
+      {
+        "name": "VerticalAlignment",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.VerticalAlignment"
+      },
+      {
+        "name": "Visibility",
+        "comment": "\n",
+        "args": [],
+        "type": "Style.Model.Visibility"
+      },
+      {
+        "name": "Whitespace",
+        "comment": " ",
+        "args": [],
+        "type": "Style.Model.Whitespace"
+      }
+    ],
+    "types": [
+      {
+        "name": "Option",
+        "comment": " A style rendering option to be used with `renderWith`\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "after",
+        "comment": " Requires a string which will be rendered as the 'content' property\n",
+        "type": "String -> List Style.Property -> Style.Property"
+      },
+      {
+        "name": "alignBottom",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "alignCenter",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignLeft",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignRight",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "alignTop",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "all",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButBottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButLeft",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButRight",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "allButTop",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "animate",
+        "comment": " Create an animation\n",
+        "type": "Style.Animation -> Style.Property"
+      },
+      {
+        "name": "auto",
+        "comment": " ",
+        "type": "Style.Length"
+      },
+      {
+        "name": "autoImportGoogleFonts",
+        "comment": " An attempt will be made to import all non-standard webfonts that are in your styles.\n\nIf a font is not in the following list, then it will try to import it from google fonts.\n\n    [ \"arial\"\n    , \"sans-serif\"\n    , \"serif\"\n    , \"courier\"\n    , \"times\"\n    , \"times new roman\"\n    , \"verdana\"\n    , \"tahoma\"\n    , \"georgia\"\n    , \"helvetica\"\n    ]\n\n\n",
+        "type": "Style.Option"
+      },
+      {
+        "name": "backgroundColor",
+        "comment": " ",
+        "type": "Color.Color -> Style.Property"
+      },
+      {
+        "name": "backgroundImage",
+        "comment": " ",
+        "type": "Style.BackgroundImage -> Style.Property"
+      },
+      {
+        "name": "base",
+        "comment": " Set a base style.  All classes in this stylesheet will start with these properties.\n",
+        "type": "List Style.Property -> Style.Option"
+      },
+      {
+        "name": "before",
+        "comment": " Requires a string which will be rendered as the 'content' property\n",
+        "type": "String -> List Style.Property -> Style.Property"
+      },
+      {
+        "name": "blur",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "bold",
+        "comment": " ",
+        "type": "Style.Property"
+      },
+      {
+        "name": "border",
+        "comment": " ",
+        "type": "Style.Border -> Style.Property"
+      },
+      {
+        "name": "borderColor",
+        "comment": " ",
+        "type": "Color.Color -> Style.Property"
+      },
+      {
+        "name": "borderRadius",
+        "comment": " ",
+        "type": "( Float, Float, Float, Float ) -> Style.Property"
+      },
+      {
+        "name": "borderStyle",
+        "comment": " ",
+        "type": "Style.BorderStyle -> Style.Property"
+      },
+      {
+        "name": "borderWidth",
+        "comment": " ",
+        "type": "( Float, Float, Float, Float ) -> Style.Property"
+      },
+      {
+        "name": "bottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "bottomLeft",
+        "comment": " ",
+        "type": "Float -> Float -> Style.Property"
+      },
+      {
+        "name": "bottomRight",
+        "comment": " ",
+        "type": "Float -> Float -> Style.Property"
+      },
+      {
+        "name": "brightness",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "checked",
+        "comment": " ",
+        "type": "List Style.Property -> Style.Property"
+      },
+      {
+        "name": "class",
+        "comment": " Set the class for a given style.  You should use a union type!\n",
+        "type": "class -> List Style.Property -> Style.Model class"
+      },
+      {
+        "name": "contrast",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "currentPosition",
+        "comment": " ",
+        "type": "Style.PositionParent"
+      },
+      {
+        "name": "cursor",
+        "comment": " ",
+        "type": "String -> Style.Property"
+      },
+      {
+        "name": "dashed",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "debug",
+        "comment": " Log a warning if a style is missing from a style sheet.\n\nAlso shows a visual warning if a style uses float or inline in a table layout orflow/flex layout.\n\n",
+        "type": "Style.Option"
+      },
+      {
+        "name": "dotted",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "dropShadow",
+        "comment": "\n",
+        "type": "{ offset : ( Float, Float ), blur : Float, color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "embed",
+        "comment": " Embed a style sheet into your html.\n",
+        "type": "Style.StyleSheet class msg -> Html.Html msg"
+      },
+      {
+        "name": "filterUrl",
+        "comment": " ",
+        "type": "String -> Style.Filter"
+      },
+      {
+        "name": "filters",
+        "comment": " ",
+        "type": "List Style.Filter -> Style.Property"
+      },
+      {
+        "name": "floatLeft",
+        "comment": " Float something to the left.  Only valid in textLayouts.\n\nWill ignore any left spacing that it's parent has set for it.\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "floatRight",
+        "comment": "\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "floatTopLeft",
+        "comment": " Same as floatLeft, except it will ignore any top spacing that it's parent has set for it.\n\nThis is useful for floating things at the beginning of text.\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "floatTopRight",
+        "comment": "\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "flowDown",
+        "comment": "\n\n",
+        "type": "Style.Flow -> Style.Property"
+      },
+      {
+        "name": "flowLeft",
+        "comment": " ",
+        "type": "Style.Flow -> Style.Property"
+      },
+      {
+        "name": "flowRight",
+        "comment": " ",
+        "type": "Style.Flow -> Style.Property"
+      },
+      {
+        "name": "flowUp",
+        "comment": " This is a flexbox foundationd layout\n",
+        "type": "Style.Flow -> Style.Property"
+      },
+      {
+        "name": "focus",
+        "comment": " ",
+        "type": "List Style.Property -> Style.Property"
+      },
+      {
+        "name": "font",
+        "comment": " Set font-family\n",
+        "type": "String -> Style.Property"
+      },
+      {
+        "name": "fontsize",
+        "comment": " Set font-size.  Only px allowed.\n",
+        "type": "Float -> Style.Property"
+      },
+      {
+        "name": "foundation",
+        "comment": "\n\nSets the following defaults:\n\n    box-sizing: border-box\n    display: block\n    position: relative\n    top: 0\n    left: 0\n\n",
+        "type": "List Style.Property"
+      },
+      {
+        "name": "grayscale",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "height",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "hidden",
+        "comment": " Same as \"display:none\"\n",
+        "type": "Style.Visibility"
+      },
+      {
+        "name": "hover",
+        "comment": " ",
+        "type": "List Style.Property -> Style.Property"
+      },
+      {
+        "name": "hueRotate",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "importCSS",
+        "comment": "\n",
+        "type": "String -> Style.Option"
+      },
+      {
+        "name": "importUrl",
+        "comment": "\n",
+        "type": "String -> Style.Option"
+      },
+      {
+        "name": "inline",
+        "comment": " Render an element as 'inline-block'.\n\nThis element will no longer be affected by 'spacing'\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "insetShadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ) , size : Float , blur : Float , color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "invert",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "italicize",
+        "comment": " ",
+        "type": "Style.Property"
+      },
+      {
+        "name": "justify",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "justifyAll",
+        "comment": " ",
+        "type": "Style.Alignment"
+      },
+      {
+        "name": "left",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "leftRight",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "leftRightAndTopBottom",
+        "comment": " ",
+        "type": "Float -> Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "leftRightTopBottom",
+        "comment": " ",
+        "type": "Float -> Float -> Float -> Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "letterOffset",
+        "comment": " ",
+        "type": "Float -> Style.Property"
+      },
+      {
+        "name": "light",
+        "comment": " ",
+        "type": "Style.Property"
+      },
+      {
+        "name": "lineHeight",
+        "comment": " Given as unitless lineheight.\n",
+        "type": "Float -> Style.Property"
+      },
+      {
+        "name": "maxHeight",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "maxWidth",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "minHeight",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "minWidth",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "mix",
+        "comment": " ",
+        "type": "List Style.Property -> Style.Property"
+      },
+      {
+        "name": "noRepeat",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "noWrap",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "normal",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "opacity",
+        "comment": " A value between 0 and 1\n",
+        "type": "Float -> Style.Visibility"
+      },
+      {
+        "name": "opacityFilter",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "padding",
+        "comment": " ",
+        "type": "( Float, Float, Float, Float ) -> Style.Property"
+      },
+      {
+        "name": "parent",
+        "comment": " ",
+        "type": "Style.PositionParent"
+      },
+      {
+        "name": "percent",
+        "comment": " ",
+        "type": "Float -> Style.Length"
+      },
+      {
+        "name": "positionBy",
+        "comment": " ",
+        "type": "Style.PositionParent -> Style.Property"
+      },
+      {
+        "name": "pre",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "preLine",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "preWrap",
+        "comment": " ",
+        "type": "Style.Whitespace"
+      },
+      {
+        "name": "property",
+        "comment": " Add a property.  Not to be exported, `properties` is to be used instead.\n",
+        "type": "String -> String -> Style.Property"
+      },
+      {
+        "name": "px",
+        "comment": " ",
+        "type": "Float -> Style.Length"
+      },
+      {
+        "name": "render",
+        "comment": " Render styles into a stylesheet\n\n",
+        "type": "List (Style.Model class) -> Style.StyleSheet class msg"
+      },
+      {
+        "name": "renderWith",
+        "comment": " Render a stylesheet with options\n",
+        "type": "List Style.Option -> List (Style.Model class) -> Style.StyleSheet class msg"
+      },
+      {
+        "name": "repeat",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "repeatX",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "repeatY",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "right",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "rotate",
+        "comment": " Units always rendered as `radians`.\n\nUse `x * deg` or `x * turn` from the standard library if you want to use a different set of units.\n",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "round",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "saturate",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "scale",
+        "comment": " ",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "screen",
+        "comment": " ",
+        "type": "Style.PositionParent"
+      },
+      {
+        "name": "selection",
+        "comment": " ",
+        "type": "List Style.Property -> Style.Property"
+      },
+      {
+        "name": "selector",
+        "comment": " You can set a raw css selector instead of a class.\n\nIt's highly recommended not to do this unless absolutely necessary.\n\n",
+        "type": "String -> List Style.Property -> Style.Model class"
+      },
+      {
+        "name": "sepia",
+        "comment": " ",
+        "type": "Float -> Style.Filter"
+      },
+      {
+        "name": "shadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ) , size : Float , blur : Float , color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "shadows",
+        "comment": " ",
+        "type": "List Style.Shadow -> Style.Property"
+      },
+      {
+        "name": "solid",
+        "comment": " ",
+        "type": "Style.BorderStyle"
+      },
+      {
+        "name": "space",
+        "comment": " ",
+        "type": "Style.Repeat"
+      },
+      {
+        "name": "spacing",
+        "comment": " ",
+        "type": "( Float, Float, Float, Float ) -> Style.Property"
+      },
+      {
+        "name": "strike",
+        "comment": " ",
+        "type": "Style.Property"
+      },
+      {
+        "name": "tableLayout",
+        "comment": " This is the same as setting an element to `display:table`.\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "textAlign",
+        "comment": " ",
+        "type": "Style.Alignment -> Style.Property"
+      },
+      {
+        "name": "textColor",
+        "comment": " ",
+        "type": "Color.Color -> Style.Property"
+      },
+      {
+        "name": "textLayout",
+        "comment": " This is the only layout that allows for child elements to use `float` or `inline`.\n\nIf you try to assign a float or make an element inline that is not the child of a textLayout, the float or inline will be ignored.\n\nIf you use Style.debug instead of Style.render, the element will be highlighted in red with a large warning.\n\nBesides this, all immediate children are arranged as if they were `display: block`.\n\n",
+        "type": "Style.Property"
+      },
+      {
+        "name": "textShadow",
+        "comment": " ",
+        "type": "{ offset : ( Float, Float ), blur : Float, color : Color.Color } -> Style.Shadow"
+      },
+      {
+        "name": "top",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "topBottom",
+        "comment": " ",
+        "type": "Float -> ( Float, Float, Float, Float )"
+      },
+      {
+        "name": "topLeft",
+        "comment": " ",
+        "type": "Float -> Float -> Style.Property"
+      },
+      {
+        "name": "topRight",
+        "comment": " ",
+        "type": "Float -> Float -> Style.Property"
+      },
+      {
+        "name": "transforms",
+        "comment": " ",
+        "type": "List Style.Transform -> Style.Property"
+      },
+      {
+        "name": "transition",
+        "comment": " ",
+        "type": "Style.Transition -> Style.Property"
+      },
+      {
+        "name": "translate",
+        "comment": " Units are always as pixels\n",
+        "type": "Float -> Float -> Float -> Style.Transform"
+      },
+      {
+        "name": "transparency",
+        "comment": " A value between 0 and 1\n",
+        "type": "Float -> Style.Visibility"
+      },
+      {
+        "name": "underline",
+        "comment": " ",
+        "type": "Style.Property"
+      },
+      {
+        "name": "verticalCenter",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "verticalStretch",
+        "comment": " ",
+        "type": "Style.VerticalAlignment"
+      },
+      {
+        "name": "visibility",
+        "comment": " ",
+        "type": "Style.Visibility -> Style.Property"
+      },
+      {
+        "name": "visible",
+        "comment": "\n",
+        "type": "Style.Visibility"
+      },
+      {
+        "name": "whitespace",
+        "comment": " ",
+        "type": "Style.Whitespace -> Style.Property"
+      },
+      {
+        "name": "width",
+        "comment": " ",
+        "type": "Style.Length -> Style.Property"
+      },
+      {
+        "name": "zIndex",
+        "comment": " ",
+        "type": "Int -> Style.Property"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Style.Media",
+    "comment": " Standard media query ranges.\n\nTaken from the following article: https://medium.freecodecamp.com/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862#.lzjwmdyed\n\n@docs query, phoneOnly, tabletPortraitUp, tabletPortraitOnly, tabletLandscapeUp, tabletLandscapeOnly, desktopUp, desktopOnly, bigDesktopUp\n\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bigDesktopUp",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "desktopOnly",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "desktopUp",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "phoneOnly",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "query",
+        "comment": " ",
+        "type": "String -> List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "tabletLandscapeOnly",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "tabletLandscapeUp",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "tabletPortraitOnly",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      },
+      {
+        "name": "tabletPortraitUp",
+        "comment": " ",
+        "type": "List Style.Model.Property -> Style.Model.Property"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
