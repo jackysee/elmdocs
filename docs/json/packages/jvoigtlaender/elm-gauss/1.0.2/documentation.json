@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Gauss",
+    "comment": " The Gauss and Gauss-Jordan Elimination Algorithms, on type `Matrix`\nfrom the [`eeue56/elm-flat-matrix` package](http://package.elm-lang.org/packages/eeue56/elm-flat-matrix/latest),\nover `Rational`s from the [`imeckler/ratio` package](http://package.elm-lang.org/packages/imeckler/ratio/latest).\n\n@docs gauss, gaussJordan\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "gauss",
+        "comment": " `gauss 3` on matrix\n\n    [ [ 3, 4,  0, 2 ]\n    , [ 1, 0, -3, 1 ]\n    , [ 0, 2, -1, 5 ]\n    ]\n\ngives matrix\n\n    [ [ 1, 4/3,   0,  2/3 ]\n    , [ 0,   1, 9/4, -1/4 ]\n    , [ 0,   0,   1,   -1 ]\n    ]\n",
+        "type": "Int -> Matrix.Matrix Ratio.Rational -> Matrix.Matrix Ratio.Rational"
+      },
+      {
+        "name": "gaussJordan",
+        "comment": " `gaussJordan 3` on matrix\n\n    [ [ 3, 4,  0, 2 ]\n    , [ 1, 0, -3, 1 ]\n    , [ 0, 2, -1, 5 ]\n    ]\n\ngives matrix\n\n    [ [ 1, 0, 0, -2 ]\n    , [ 0, 1, 0,  2 ]\n    , [ 0, 0, 1, -1 ]\n    ]\n",
+        "type": "Int -> Matrix.Matrix Ratio.Rational -> Matrix.Matrix Ratio.Rational"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

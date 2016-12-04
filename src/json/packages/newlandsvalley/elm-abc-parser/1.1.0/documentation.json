@@ -1,0 +1,942 @@
+[
+  {
+    "name": "Music.Tempo",
+    "comment": " Get or set the tempo of a tune.\n\nYou can change the tempo of an ABC tune by altering its beats per minute (bpm).\nFor example, to set the tempo of a parsed tune to 80 bpm you can say:\n\n* setBpm 80 tune\n\n\n\n# Constants\n@docs defaultTempo\n\n\n# Functions\n@docs getBpm\n    , setBpm\n\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultTempo",
+        "comment": " The default Tempo - 1/4=120.\n",
+        "type": "Abc.ParseTree.TempoSignature"
+      },
+      {
+        "name": "getBpm",
+        "comment": " Get the tempo of the tune in beats per minute from the tunes header\n    (if it exists) or the default of 120 if it does not.\n",
+        "type": "Abc.ParseTree.AbcTune -> Int"
+      },
+      {
+        "name": "setBpm",
+        "comment": " Change the tempo of the tune by altering the beats per minute (bpm)\n   in the tune's tempo header (if it exists) or by altering a newly incorporated\n   default tempo if not.\n",
+        "type": "Int -> Abc.ParseTree.AbcTune -> Abc.ParseTree.AbcTune"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Music.Transposition",
+    "comment": " Tune transposition\n\nYou can transpose an ABC tune (in whatever key - perhaps in C) to (say) G# using:\n\n    transposedResult = mapError (\\_ -> \"parse error\") (parse source)\n        |> andThen (\\tune -> transposeTo ({pitchClass = G, accidental = Just Sharp, mode = Major},[]) tune)\n\n\nThe mode before and after transposition must be identical (that is: you cannot transpose minor to major and so on).\nChord symbols will be lost on transposition.\n\n# Constants\n@docs defaultKey\n\n\n# Functions\n@docs keyDistance\n    , transposeNote\n    , transposeTo\n\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultKey",
+        "comment": " The default Key - C Major.\n",
+        "type": "Abc.ParseTree.ModifiedKeySignature"
+      },
+      {
+        "name": "keyDistance",
+        "comment": " Calculate the distance between the keys (target - source) measured in semitones.\n   Keys must be in compatible modes.\n",
+        "type": "Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.ModifiedKeySignature -> Result.Result String Int"
+      },
+      {
+        "name": "transposeNote",
+        "comment": " Transpose a note from its source key to its target.\n",
+        "type": "Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.AbcNote -> Result.Result String Abc.ParseTree.AbcNote"
+      },
+      {
+        "name": "transposeTo",
+        "comment": " Transpose a tune to the target key.\n",
+        "type": "Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.AbcTune -> Result.Result String Abc.ParseTree.AbcTune"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Music.Notation",
+    "comment": " Helper functions for making more musical sense of the parse tree.\n\n\n# Data Types\n@docs MidiPitch, MidiTick, AbcTempo, NoteTime, DiatonicScale, HeaderMap\n\n# Constants\n@docs notesInChromaticScale\n    , standardMidiTick\n\n# Functions\n@docs  keySet\n    , modifiedKeySet\n    , getKeySet\n    , inKeySet\n    , getHeaderMap\n    , getKeySig\n    , getTempoSig\n    , getTitle\n    , diatonicScale\n    , inScale\n    , isCOrSharpKey\n    , accidentalImplicitInKey\n    , dotFactor\n    , noteTicks\n    , chordalNoteTicks\n    , toMidiPitch\n    , midiTempo\n    , noteDuration\n    , chordalNoteDuration\n    , transposeKeySignatureBy\n    , normaliseModalKey\n\n",
+    "aliases": [
+      {
+        "name": "AbcTempo",
+        "comment": " The tempo when the tune is being played. This is usually represented\nas (for example) 1/4 = 120 - i.e. 120 querter notes per minute.\n\n* tempoNoteLength - the note length of a tempo definition\n* bpm - the beats per minute of a tempo Definition\n* unitNoteLength - the length of a 'unit note' in the ABC definition\n",
+        "args": [],
+        "type": "{ tempoNoteLength : Ratio.Rational , bpm : Int , unitNoteLength : Ratio.Rational }"
+      },
+      {
+        "name": "DiatonicScale",
+        "comment": " A diatonic scale presented as a list of notes in the scale.\n",
+        "args": [],
+        "type": "List Abc.ParseTree.KeyAccidental"
+      },
+      {
+        "name": "HeaderMap",
+        "comment": " A representation of the ABC headers as a Dictionary, taking the first definition\nof any header if multiple definitions are present in the ABC\n",
+        "args": [],
+        "type": "Dict.Dict Char Abc.ParseTree.Header"
+      },
+      {
+        "name": "MidiPitch",
+        "comment": " The pitch of a note expressed as a MIDI interval.\n",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "MidiTick",
+        "comment": " A MIDI tick - used to give a note duration.\n",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "NoteTime",
+        "comment": " The time taken when a note is played before the next note.\n",
+        "args": [],
+        "type": "Float"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "accidentalImplicitInKey",
+        "comment": " Return an accidental if it is implicitly there in the (modified) key signature\n    attached to the pitch class of the note. In ABC, notes generally inherit\n    their (sharp, flat or natural) accidental nature from the key signature.\n",
+        "type": "Abc.ParseTree.PitchClass -> Abc.ParseTree.ModifiedKeySignature -> Maybe.Maybe Abc.ParseTree.Accidental"
+      },
+      {
+        "name": "chordalNoteDuration",
+        "comment": " Find a real world duration of a note in a chord by translating an ABC note duration together with\n  the chord duration using the tune's tempo and unit note length.\n",
+        "type": "Music.Notation.AbcTempo -> Ratio.Rational -> Ratio.Rational -> Music.Notation.NoteTime"
+      },
+      {
+        "name": "chordalNoteTicks",
+        "comment": " Find the MIDI duration of a note within a chord in standard ticks\n    (1/4 note == 480 ticks)\n",
+        "type": "Ratio.Rational -> Ratio.Rational -> Music.Notation.MidiTick"
+      },
+      {
+        "name": "diatonicScale",
+        "comment": " The set of keys (pitch classes and accidental) that comprise a diatonic scale\n    in the given key signature.\n",
+        "type": "Abc.ParseTree.KeySignature -> Music.Notation.DiatonicScale"
+      },
+      {
+        "name": "dotFactor",
+        "comment": " The amount by which you increase or decrease the duration of a (possibly multiply) dotted note.\n    For example A > B increases the duration of A and proportionally reduces that of B.\n    A << B decreases the duration of A and increases that of B by an even greater amount.  This function\n    calculates the increase or decrease.  The new duration will be given by:\n\n    duration * (1 +/- dotfactor i)\n\n*  i is the number of 'dot' indicators (< or >)\n\n",
+        "type": "Int -> Ratio.Rational"
+      },
+      {
+        "name": "getHeaderMap",
+        "comment": " A map (Header code => Header) for the first instance of each Header\n",
+        "type": "Abc.ParseTree.AbcTune -> Music.Notation.HeaderMap"
+      },
+      {
+        "name": "getKeySet",
+        "comment": " Get the set of key accidentals from the (possibly modified) key (if there is one in the tune).\n",
+        "type": "Abc.ParseTree.AbcTune -> Abc.ParseTree.KeySet"
+      },
+      {
+        "name": "getKeySig",
+        "comment": " Get the key signature (if any) from the tune.\n",
+        "type": "Abc.ParseTree.AbcTune -> Maybe.Maybe Abc.ParseTree.ModifiedKeySignature"
+      },
+      {
+        "name": "getTempoSig",
+        "comment": " Get the tempo signature (if any) from the tune.\n",
+        "type": "Abc.ParseTree.AbcTune -> Maybe.Maybe Abc.ParseTree.TempoSignature"
+      },
+      {
+        "name": "getTitle",
+        "comment": " Get the first Title (if any) from the tune.\n",
+        "type": "Abc.ParseTree.AbcTune -> Maybe.Maybe String"
+      },
+      {
+        "name": "inKeySet",
+        "comment": " Is the KeyAccidental is in the KeySet?\n",
+        "type": "Abc.ParseTree.KeyAccidental -> Abc.ParseTree.KeySet -> Bool"
+      },
+      {
+        "name": "inScale",
+        "comment": " Is the KeyAccidental in the diatonic scale?\n",
+        "type": "Abc.ParseTree.KeyAccidental -> Music.Notation.DiatonicScale -> Bool"
+      },
+      {
+        "name": "isCOrSharpKey",
+        "comment": " Is the key signature a sharp key or else a simple C Major key?\n",
+        "type": "Abc.ParseTree.KeySignature -> Bool"
+      },
+      {
+        "name": "keySet",
+        "comment": " The set of keys (pitch classes with accidental) that comprise the key signature.\n",
+        "type": "Abc.ParseTree.KeySignature -> Abc.ParseTree.KeySet"
+      },
+      {
+        "name": "midiTempo",
+        "comment": " The MIDI tempo measured in microseconds per beat.\n",
+        "type": "Music.Notation.AbcTempo -> Int"
+      },
+      {
+        "name": "modifiedKeySet",
+        "comment": " The set of keys (pitch classes with accidental) that comprise a modified key signature\n",
+        "type": "Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.KeySet"
+      },
+      {
+        "name": "normaliseModalKey",
+        "comment": " normalise a modal key signature to that of the equivalent major key\n\n  Maybe, once this is completed and tested, implement modalScale in terms of this\n\n",
+        "type": "Abc.ParseTree.KeySignature -> Abc.ParseTree.KeySignature"
+      },
+      {
+        "name": "noteDuration",
+        "comment": " Find a real world note duration by translating an ABC note duration using\n   the tune's tempo and unit note length.\n",
+        "type": "Music.Notation.AbcTempo -> Ratio.Rational -> Music.Notation.NoteTime"
+      },
+      {
+        "name": "noteTicks",
+        "comment": " Calculate a MIDI note duration from the note length.\n\n    Assume a standard unit note length of 1/4 and a standard number of ticks per unit (1/4) note of 480.\n",
+        "type": "Ratio.Rational -> Music.Notation.MidiTick"
+      },
+      {
+        "name": "notesInChromaticScale",
+        "comment": " Number of notes in a chromatic scale (i.e. 12)\n",
+        "type": "Int"
+      },
+      {
+        "name": "standardMidiTick",
+        "comment": " A standard MIDI tick - we use 1/4 note = 480 ticks.\n",
+        "type": "Music.Notation.MidiTick"
+      },
+      {
+        "name": "toMidiPitch",
+        "comment": " Convert an ABC note pitch to a MIDI pitch.\n\n*  AbcNote - the note in question\n*  ModifiedKeySignature - the key signature (possibly modified by extra accidentals)\n*  Accidentals - any notes in this bar which have previously been set explicitly to an accidental which are thus inherited by this note\n*  MidiPitch - the resulting pitch of the MIDI note\n\n",
+        "type": "Abc.ParseTree.AbcNote -> Abc.ParseTree.ModifiedKeySignature -> Music.Accidentals.Accidentals -> Music.Notation.MidiPitch"
+      },
+      {
+        "name": "transposeKeySignatureBy",
+        "comment": " Transpose a key signature by a given distance.\n",
+        "type": "Int -> Abc.ParseTree.ModifiedKeySignature -> Abc.ParseTree.ModifiedKeySignature"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Abc",
+    "comment": " Library for parsing tunes written in ABC notation -\n     see: http://abcnotation.com/wiki/abc:standard:v2.1\n\n# Functions\n@docs parse, parseKeySignature, parseError\n\n# Types\n@docs ParseError\n\n",
+    "aliases": [
+      {
+        "name": "ParseError",
+        "comment": " A parse error with context.\n",
+        "args": [],
+        "type": "{ msgs : List String, input : String, position : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Entry point - Parse an ABC tune image.\n",
+        "type": "String -> Result.Result Abc.ParseError Abc.ParseTree.AbcTune"
+      },
+      {
+        "name": "parseError",
+        "comment": " Format a parse error as a string.\n",
+        "type": "Abc.ParseError -> String"
+      },
+      {
+        "name": "parseKeySignature",
+        "comment": " Parse a key signature.\n    A utility function for applications needing to parse key signatures in isolation\n    and returning them as a ModifiedKeySignature (where the modification is empty).\n",
+        "type": "String -> Result.Result Abc.ParseError Abc.ParseTree.ModifiedKeySignature"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Music.Octave",
+    "comment": " Move a tune up or down an octave\n\n\n# Functions\n@docs up\n    , down\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "down",
+        "comment": " Move the tune down octave.\n",
+        "type": "Abc.ParseTree.AbcTune -> Abc.ParseTree.AbcTune"
+      },
+      {
+        "name": "up",
+        "comment": " Move the tune up an octave.\n",
+        "type": "Abc.ParseTree.AbcTune -> Abc.ParseTree.AbcTune"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Music.Accidentals",
+    "comment": " A type-safe interface into handling\n    sets of Key Accidentals - i.e. pitch classes associated\n    with an explicit sharp, flat or natural modifier.\n\n    (improves type-safety of Dicts with user-defined types)\n\n# Types\n@docs Accidentals\n\n\n# Functions\n@docs empty\n    , add\n    , fromKeySet\n    , lookup\n    , member\n\n",
+    "aliases": [
+      {
+        "name": "Accidentals",
+        "comment": " A set of accidentals,  String is a proxy for PitchClass\n",
+        "args": [],
+        "type": "Dict.Dict String Abc.ParseTree.Accidental"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " add an accidental to the set\n",
+        "type": "Abc.ParseTree.PitchClass -> Abc.ParseTree.Accidental -> Music.Accidentals.Accidentals -> Music.Accidentals.Accidentals"
+      },
+      {
+        "name": "empty",
+        "comment": " create an empty set of Key Accidentals\n",
+        "type": "Music.Accidentals.Accidentals"
+      },
+      {
+        "name": "fromKeySet",
+        "comment": " build Accidentals from a KeySet\n",
+        "type": "Abc.ParseTree.KeySet -> Music.Accidentals.Accidentals"
+      },
+      {
+        "name": "lookup",
+        "comment": " lookup a pitch class and see of it exists in the Accidentals set\n",
+        "type": "Abc.ParseTree.PitchClass -> Music.Accidentals.Accidentals -> Maybe.Maybe Abc.ParseTree.Accidental"
+      },
+      {
+        "name": "member",
+        "comment": " lookup a KeyAccidental and see if it's a member of the Accidentals set\n    (i.e. the value of the Accidental matches for the supplied pitch)\n",
+        "type": "Abc.ParseTree.KeyAccidental -> Music.Accidentals.Accidentals -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Abc.Canonical",
+    "comment": " Module for converting an ABC Tune parse tree to a canonical ABC string,\n\n\n\n# Functions\n@docs fromTune, fromResult, abcNote, abcChord, tuplet\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "abcChord",
+        "comment": " Pretty-print a chord.\n",
+        "type": "Abc.ParseTree.AbcChord -> String"
+      },
+      {
+        "name": "abcNote",
+        "comment": " Pretty-print a note.\n",
+        "type": "Abc.ParseTree.AbcNote -> String"
+      },
+      {
+        "name": "fromResult",
+        "comment": " Translate a parse Result containing an ABC Tune parse tree to a Result containing a canonical ABC String.\n",
+        "type": "Result.Result String Abc.ParseTree.AbcTune -> Result.Result String String"
+      },
+      {
+        "name": "fromTune",
+        "comment": " Translate an ABC Tune parse tree to a canonical ABC String.\n",
+        "type": "Abc.ParseTree.AbcTune -> String"
+      },
+      {
+        "name": "tuplet",
+        "comment": " Pretty-print a tuplet.\n",
+        "type": "Abc.ParseTree.TupletSignature -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Abc.ParseTree",
+    "comment": " The ABC parse tree.\n\n# Data Types\n@docs AbcTune\n    , TuneHeaders\n    , TuneBody\n    , BodyPart\n    , MusicLine\n    , Header\n    , Music\n    , AbcNote\n    , AbcChord\n    , Bar\n    , Thickness\n    , Repeat\n    , NoteDuration\n    , KeySignature\n    , ModifiedKeySignature\n    , KeyAccidental\n    , KeySet\n    , MeterSignature\n    , TempoSignature\n    , TupletSignature\n    , AnnotationPlacement\n    , Mode\n    , Accidental\n    , PitchClass\n    , Broken\n\n# Functions  (constants)\n@docs middlecOctave\n\n",
+    "aliases": [
+      {
+        "name": "AbcChord",
+        "comment": " A Chord.\n",
+        "args": [],
+        "type": "{ notes : List Abc.ParseTree.AbcNote , duration : Abc.ParseTree.NoteDuration }"
+      },
+      {
+        "name": "AbcNote",
+        "comment": " A Note.\n",
+        "args": [],
+        "type": "{ pitchClass : Abc.ParseTree.PitchClass , accidental : Maybe.Maybe Abc.ParseTree.Accidental , octave : Int , duration : Abc.ParseTree.NoteDuration , tied : Bool }"
+      },
+      {
+        "name": "AbcTune",
+        "comment": " A Tune.\n",
+        "args": [],
+        "type": "( Abc.ParseTree.TuneHeaders, Abc.ParseTree.TuneBody )"
+      },
+      {
+        "name": "Bar",
+        "comment": " A Bar line:\n\n*  thickness - the thickness of vertical lines in the bar\n*  repeat - the type (if any) of a repeat marker for the section\n*  iteration - the section end may be iteration 1 or 2.\n",
+        "args": [],
+        "type": "{ thickness : Abc.ParseTree.Thickness , repeat : Maybe.Maybe Abc.ParseTree.Repeat , iteration : Maybe.Maybe Int }"
+      },
+      {
+        "name": "KeyAccidental",
+        "comment": " A Key Accidental (A modification to a standard key for one pitch in the scale).\n",
+        "args": [],
+        "type": "( Abc.ParseTree.PitchClass, Abc.ParseTree.Accidental )"
+      },
+      {
+        "name": "KeySet",
+        "comment": " A set of accidentals within a key signature.\n",
+        "args": [],
+        "type": "List Abc.ParseTree.KeyAccidental"
+      },
+      {
+        "name": "KeySignature",
+        "comment": " A Key Signature.\n",
+        "args": [],
+        "type": "{ pitchClass : Abc.ParseTree.PitchClass , accidental : Maybe.Maybe Abc.ParseTree.Accidental , mode : Abc.ParseTree.Mode }"
+      },
+      {
+        "name": "MeterSignature",
+        "comment": " A Meter Signature - e.g. 3/4.\n",
+        "args": [],
+        "type": "( Int, Int )"
+      },
+      {
+        "name": "ModifiedKeySignature",
+        "comment": " A Key Signature with modifications (possibly empty)\n    This is used for non-diatonic modes where intervals may be greater than two semitones\n    (for example as found in Klezmer).\n",
+        "args": [],
+        "type": "( Abc.ParseTree.KeySignature, List Abc.ParseTree.KeyAccidental )"
+      },
+      {
+        "name": "MusicLine",
+        "comment": " A line of musical score up to eol.\n",
+        "args": [],
+        "type": "List Abc.ParseTree.Music"
+      },
+      {
+        "name": "NoteDuration",
+        "comment": " A Note Duration - e.g. 1/4.\n",
+        "args": [],
+        "type": "Ratio.Rational"
+      },
+      {
+        "name": "TempoSignature",
+        "comment": " A Tempo Signature - for example:\n\n*  1/4=120\n*  1/4 3/8 1/4 3/8=40   (up to 4 note lengths allowed)\n*  \"Allegro\" 1/4=120\n*  3/8=50 \"Slowly\".\n",
+        "args": [],
+        "type": "{ noteLengths : List Ratio.Rational , bpm : Int , marking : Maybe.Maybe String }"
+      },
+      {
+        "name": "TuneBody",
+        "comment": " A Tune Body.\n",
+        "args": [],
+        "type": "List Abc.ParseTree.BodyPart"
+      },
+      {
+        "name": "TuneHeaders",
+        "comment": " A List of Tune Headers.\n",
+        "args": [],
+        "type": "List Abc.ParseTree.Header"
+      },
+      {
+        "name": "TupletSignature",
+        "comment": " A tuplet signature:\n    put p notes into the time of q the next r notes.\n",
+        "args": [],
+        "type": "( Int, Int, Int )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Accidental",
+        "comment": " An Accidental.\n",
+        "args": [],
+        "cases": [
+          [
+            "Sharp",
+            []
+          ],
+          [
+            "Flat",
+            []
+          ],
+          [
+            "DoubleSharp",
+            []
+          ],
+          [
+            "DoubleFlat",
+            []
+          ],
+          [
+            "Natural",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "AnnotationPlacement",
+        "comment": " An Annotation placement.\n",
+        "args": [],
+        "cases": [
+          [
+            "AboveNextSymbol",
+            []
+          ],
+          [
+            "BelowNextSymbol",
+            []
+          ],
+          [
+            "LeftOfNextSymbol",
+            []
+          ],
+          [
+            "RightOfNextSymbol",
+            []
+          ],
+          [
+            "Discretional",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "BodyPart",
+        "comment": " A Tune Body part\n",
+        "args": [],
+        "cases": [
+          [
+            "Score",
+            [
+              "Abc.ParseTree.MusicLine"
+            ]
+          ],
+          [
+            "BodyInfo",
+            [
+              "Abc.ParseTree.Header"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Broken",
+        "comment": " A broken rhythm operator - one or more < or >.\n",
+        "args": [],
+        "cases": [
+          [
+            "LeftArrow",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "RightArrow",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Header",
+        "comment": " An ABC Tune Header.\n",
+        "args": [],
+        "cases": [
+          [
+            "Area",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Book",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Composer",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Discography",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FileUrl",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Group",
+            [
+              "String"
+            ]
+          ],
+          [
+            "History",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Instruction",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Key",
+            [
+              "Abc.ParseTree.ModifiedKeySignature"
+            ]
+          ],
+          [
+            "UnitNoteLength",
+            [
+              "Abc.ParseTree.NoteDuration"
+            ]
+          ],
+          [
+            "Meter",
+            [
+              "Maybe.Maybe Abc.ParseTree.MeterSignature"
+            ]
+          ],
+          [
+            "Macro",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Notes",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Origin",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Parts",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Tempo",
+            [
+              "Abc.ParseTree.TempoSignature"
+            ]
+          ],
+          [
+            "Rhythm",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Remark",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Source",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SymbolLine",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Title",
+            [
+              "String"
+            ]
+          ],
+          [
+            "UserDefined",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Voice",
+            [
+              "String"
+            ]
+          ],
+          [
+            "WordsAfter",
+            [
+              "String"
+            ]
+          ],
+          [
+            "WordsAligned",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ReferenceNumber",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Transcription",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FieldContinuation",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Comment",
+            [
+              "String"
+            ]
+          ],
+          [
+            "UnsupportedHeader",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Mode",
+        "comment": " A Mode.\n",
+        "args": [],
+        "cases": [
+          [
+            "Major",
+            []
+          ],
+          [
+            "Minor",
+            []
+          ],
+          [
+            "Ionian",
+            []
+          ],
+          [
+            "Dorian",
+            []
+          ],
+          [
+            "Phrygian",
+            []
+          ],
+          [
+            "Lydian",
+            []
+          ],
+          [
+            "Mixolydian",
+            []
+          ],
+          [
+            "Aeolian",
+            []
+          ],
+          [
+            "Locrian",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Music",
+        "comment": " The 'score' part of Music.\n",
+        "args": [],
+        "cases": [
+          [
+            "Barline",
+            [
+              "Abc.ParseTree.Bar"
+            ]
+          ],
+          [
+            "Note",
+            [
+              "Abc.ParseTree.AbcNote"
+            ]
+          ],
+          [
+            "BrokenRhythmPair",
+            [
+              "Abc.ParseTree.AbcNote",
+              "Abc.ParseTree.Broken",
+              "Abc.ParseTree.AbcNote"
+            ]
+          ],
+          [
+            "Rest",
+            [
+              "Abc.ParseTree.NoteDuration"
+            ]
+          ],
+          [
+            "Tuplet",
+            [
+              "Abc.ParseTree.TupletSignature",
+              "List Abc.ParseTree.AbcNote"
+            ]
+          ],
+          [
+            "Decoration",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Slur",
+            [
+              "Char"
+            ]
+          ],
+          [
+            "GraceNote",
+            [
+              "Bool",
+              "List Abc.ParseTree.AbcNote"
+            ]
+          ],
+          [
+            "Annotation",
+            [
+              "Abc.ParseTree.AnnotationPlacement",
+              "String"
+            ]
+          ],
+          [
+            "ChordSymbol",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Chord",
+            [
+              "Abc.ParseTree.AbcChord"
+            ]
+          ],
+          [
+            "Inline",
+            [
+              "Abc.ParseTree.Header"
+            ]
+          ],
+          [
+            "Spacer",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Ignore",
+            []
+          ],
+          [
+            "Continuation",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "PitchClass",
+        "comment": " A white note on the piano.\n",
+        "args": [],
+        "cases": [
+          [
+            "A",
+            []
+          ],
+          [
+            "B",
+            []
+          ],
+          [
+            "C",
+            []
+          ],
+          [
+            "D",
+            []
+          ],
+          [
+            "E",
+            []
+          ],
+          [
+            "F",
+            []
+          ],
+          [
+            "G",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Repeat",
+        "comment": " A Repeat in a Bar line.\n",
+        "args": [],
+        "cases": [
+          [
+            "Begin",
+            []
+          ],
+          [
+            "End",
+            []
+          ],
+          [
+            "BeginAndEnd",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Thickness",
+        "comment": " A bar line Thickness.\n",
+        "args": [],
+        "cases": [
+          [
+            "Thin",
+            []
+          ],
+          [
+            "ThinThin",
+            []
+          ],
+          [
+            "ThinThick",
+            []
+          ],
+          [
+            "ThickThin",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "middlecOctave",
+        "comment": " The octave number of middle C in MIDI parlance.\n",
+        "type": "Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

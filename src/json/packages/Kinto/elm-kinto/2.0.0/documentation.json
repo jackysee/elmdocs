@@ -1,0 +1,320 @@
+[
+  {
+    "name": "Kinto",
+    "comment": " [Kinto](http://www.kinto-storage.org/) client to ease communicating with\nthe REST API.\n\nKinto is the backend for your next application. It's a generic JSON document\nstore with sharing and synchronisation capabilities. It's open source. It's\neasy to deploy. You can host it yourself, own your data and keep it out of\nsilos.\n\n# Creating requests\nYou create requests on either an item or a plural (list) endpoint.\n[Kinto concepts](http://kinto.readthedocs.io/en/stable/concepts.html) explain\nthat in details.\n\nPlural (list) endpoints are:\n- buckets: `buckets/`\n- collections: `buckets/:bucketId/collections/`\n- records: `buckets/:bucketId/collections/:collectionId/records/`\n\nItem endpoints are:\n- bucket: `buckets/:bucketId`\n- collection: `buckets/:bucketId/collections/:collectionId`\n- record: `buckets/:bucketId/collections/:collectionId/records/:recordId`\n\n@docs get, getList, create, update, replace, delete\n\n# Sorting, limiting, filtering\n@docs sortBy, limit, withFilter, Filter\n\n# Configure a client and resources\n@docs Client, client, Auth, headersForAuth, Resource, bucketResource, collectionResource, recordResource, decodeData, encodeData, errorDecoder\n\n# Types and Errors\n@docs Endpoint, endpointUrl, ErrorDetail, Error, extractError, toResponse\n\n# Sending requests\n@docs send, toRequest\n\n",
+    "aliases": [
+      {
+        "name": "Client",
+        "comment": " A Kinto Client. Constructed using the `client` helper.\n",
+        "args": [],
+        "type": "{ baseUrl : String, headers : List ( String, String ) }"
+      },
+      {
+        "name": "ErrorDetail",
+        "comment": " A type for Kinto error details.\n",
+        "args": [],
+        "type": "{ errno : Int, message : String, code : Int, error : String }"
+      },
+      {
+        "name": "Resource",
+        "comment": " A type for resources. Constructed using one of `bucketResource`,\n`collectionResource` or `recordResource`.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ itemEndpoint : String -> Kinto.Endpoint , listEndpoint : Kinto.Endpoint , itemDecoder : Json.Decode.Decoder a , listDecoder : Json.Decode.Decoder (List a) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Auth",
+        "comment": " A type for authentication\n\n    Basic \"username\" \"password\"\n",
+        "args": [],
+        "cases": [
+          [
+            "NoAuth",
+            []
+          ],
+          [
+            "Basic",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Bearer",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Endpoint",
+        "comment": " A type for Kinto API endpoints.\n\n    RecordEndpoint \"bucket-name\" \"collection-name\" \"item-id\"\n",
+        "args": [],
+        "cases": [
+          [
+            "RootEndpoint",
+            []
+          ],
+          [
+            "BucketListEndpoint",
+            []
+          ],
+          [
+            "BucketEndpoint",
+            [
+              "Kinto.BucketName"
+            ]
+          ],
+          [
+            "CollectionListEndpoint",
+            [
+              "Kinto.BucketName"
+            ]
+          ],
+          [
+            "CollectionEndpoint",
+            [
+              "Kinto.BucketName",
+              "Kinto.CollectionName"
+            ]
+          ],
+          [
+            "RecordListEndpoint",
+            [
+              "Kinto.BucketName",
+              "Kinto.CollectionName"
+            ]
+          ],
+          [
+            "RecordEndpoint",
+            [
+              "Kinto.BucketName",
+              "Kinto.CollectionName",
+              "Kinto.RecordId"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Error",
+        "comment": " A type for all errors that the elm-client may return.\n",
+        "args": [],
+        "cases": [
+          [
+            "ServerError",
+            [
+              "Kinto.StatusCode",
+              "Kinto.StatusMsg",
+              "String"
+            ]
+          ],
+          [
+            "KintoError",
+            [
+              "Kinto.StatusCode",
+              "Kinto.StatusMsg",
+              "Kinto.ErrorDetail"
+            ]
+          ],
+          [
+            "NetworkError",
+            [
+              "Http.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Filter",
+        "comment": " A type for filtering, used with `withFilter`\n",
+        "args": [],
+        "cases": [
+          [
+            "Equal",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Min",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Max",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "LT",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "GT",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "IN",
+            [
+              "String",
+              "List String"
+            ]
+          ],
+          [
+            "NOT",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "LIKE",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "SINCE",
+            [
+              "String"
+            ]
+          ],
+          [
+            "BEFORE",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "bucketResource",
+        "comment": " A constructor for a bucket resource.\n\n    bucketResource bucketDecoder\n",
+        "type": "Json.Decode.Decoder a -> Kinto.Resource a"
+      },
+      {
+        "name": "client",
+        "comment": " A constructor for a `Client`.\n\n    client\n        \"https://kinto.dev.mozaws.net/v1/\"\n        (Basic \"username\" \"password\")\n",
+        "type": "Kinto.Url -> Kinto.Auth -> Kinto.Client"
+      },
+      {
+        "name": "collectionResource",
+        "comment": " A constructor for a collection resource.\n\n    collectionResource \"bucket-name\" collectionDecoder\n",
+        "type": "Kinto.BucketName -> Json.Decode.Decoder a -> Kinto.Resource a"
+      },
+      {
+        "name": "create",
+        "comment": " Create a POST request on a plural endpoint:\n\n    create resource data\n",
+        "type": "Kinto.Resource a -> Kinto.Body -> Kinto.Client -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "decodeData",
+        "comment": " A decoder for a basic Kinto response.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "delete",
+        "comment": " Create a DELETE request on an item endpoint:\n\n    delete resource itemId\n",
+        "type": "Kinto.Resource a -> String -> Kinto.Client -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "encodeData",
+        "comment": " An encoder for a basic Kinto query.\n",
+        "type": "Json.Encode.Value -> Json.Encode.Value"
+      },
+      {
+        "name": "endpointUrl",
+        "comment": " Get the full url to an endpoint.\n\n    endpointUrl \"https://kinto.dev.mozaws.net/v1/\" (RecordListEndpoint \"default\" \"test-items\")\n",
+        "type": "String -> Kinto.Endpoint -> Kinto.Url"
+      },
+      {
+        "name": "errorDecoder",
+        "comment": " A decoder for `ErrorDetail`. This is the kind of json message answered by Kinto when there's an error:\n\n    {\"errno\":104,\n     \"message\":\"Please authenticate yourself to use this endpoint.\",\n     \"code\":401,\n     \"error\":\"Unauthorized\"}\n",
+        "type": "Json.Decode.Decoder Kinto.ErrorDetail"
+      },
+      {
+        "name": "extractError",
+        "comment": " Extract an `Error` from an `Http.Error`.\n",
+        "type": "Http.Error -> Kinto.Error"
+      },
+      {
+        "name": "get",
+        "comment": " Create a GET request on an item endpoint\n\n    get resource itemId\n",
+        "type": "Kinto.Resource a -> String -> Kinto.Client -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "getList",
+        "comment": " Create a GET request on one of the plural endpoints\n\n    getList resource\n",
+        "type": "Kinto.Resource a -> Kinto.Client -> HttpBuilder.RequestBuilder (List a)"
+      },
+      {
+        "name": "headersForAuth",
+        "comment": " Return the header name and value for the given `Auth`.\n\n    headersForAuth (Basic \"username\" \"password\")\n",
+        "type": "Kinto.Auth -> ( String, String )"
+      },
+      {
+        "name": "limit",
+        "comment": " Add [limit query parameters](http://kinto.readthedocs.io/en/stable/api/1.x/pagination.html) to the request sent to the Kinto server.\n\n    client\n        |> getList recordResource\n        |> limit 10\n        |> send TodosFetched\n",
+        "type": "Int -> HttpBuilder.RequestBuilder a -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "recordResource",
+        "comment": " A constructor for a record resource.\n",
+        "type": "Kinto.BucketName -> Kinto.CollectionName -> Json.Decode.Decoder a -> Kinto.Resource a"
+      },
+      {
+        "name": "replace",
+        "comment": " Create a PUT request on an item endpoint:\n\n    put resource itemId\n",
+        "type": "Kinto.Resource a -> String -> Kinto.Body -> Kinto.Client -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "send",
+        "comment": " Send a request to the Kinto server.\n\n    client\n        |> create resource data\n        |> send TodosCreated\n\n",
+        "type": "(Result.Result Kinto.Error a -> msg) -> HttpBuilder.RequestBuilder a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Add [sorting query parameters](http://kinto.readthedocs.io/en/stable/api/1.x/sorting.html) to the request sent to the Kinto server.\n\n    client\n        |> getList recordResource\n        |> sortBy [\"title\", \"description\"]\n        |> send TodosFetched\n",
+        "type": "List String -> HttpBuilder.RequestBuilder a -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "toRequest",
+        "comment": " Extract the Http.Request component of the request, for introspection,\ntesting, or converting to a `Task` using `Http.toTask`.\n\n    client\n        |> create resource data\n        |> toRequest\n\n",
+        "type": "HttpBuilder.RequestBuilder a -> Http.Request a"
+      },
+      {
+        "name": "toResponse",
+        "comment": " Change the error from an `Http.Error` to an `Error`.\n",
+        "type": "Result.Result Http.Error a -> Result.Result Kinto.Error a"
+      },
+      {
+        "name": "update",
+        "comment": " Create a PATCH request on an item endpoint:\n\n    update resource itemId\n",
+        "type": "Kinto.Resource a -> String -> Kinto.Body -> Kinto.Client -> HttpBuilder.RequestBuilder a"
+      },
+      {
+        "name": "withFilter",
+        "comment": " Add [filtering query parameters](http://kinto.readthedocs.io/en/stable/api/1.x/filtering.html) to the request sent to the Kinto server.\n\n    client\n        |> getList recordResource\n        |> withFilter (NOT \"title\" \"test\")\n        |> send TodosFetched\n",
+        "type": "Kinto.Filter -> HttpBuilder.RequestBuilder a -> HttpBuilder.RequestBuilder a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
