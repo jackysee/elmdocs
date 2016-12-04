@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Grid",
+    "comment": " Build awesome Grid layouts in Elm.\n\nThis library provides general abstraction for solving grid layout problems.\nThe idea is to use **ordered list of items with dimmensions** and **number of columns**\nto solve whole layout of grid. It's designed to be easy to use and extremly deterministic\nabstraction with simple integration to any Html, SVG or Canvas based APP.\n\n# Definition\n@docs Position, Size\n\n# Api\n@docs solve\n",
+    "aliases": [
+      {
+        "name": "Position",
+        "comment": "\n    type alias GridPosition =\n        { x : Int\n        , y : Int\n        }\n",
+        "args": [],
+        "type": "Types.GridPosition"
+      },
+      {
+        "name": "Size",
+        "comment": "\n    type alias GridSize =\n        { width : Int\n        , height : Int\n        }\n",
+        "args": [],
+        "type": "Types.GridSize"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "solve",
+        "comment": " This function is heart and the only public function\nthis library provides. It calculates grid layout\nfor given number of columns and items with dimmensions.\nYou can then use result (List of tuples with `Position` and `Item`)\nin you're views to simply render layout as you wish.\nOrder of items is guaranteed to stay same.\n\n- `(a -> Size)` Function from item to Size\n- `Int` - number of Columns\n- `List` - Grid items\n\n## Four column example:\n\n    -- Expected result:\n    -- ================\n    --    0 1 2 3\n    -- 0 |A|A|A|A|\n    -- 1 |A|A|A|A|\n    -- 2 |B|B|C|C|\n    -- 3 | | |C|C|\n\n    solve identity 4\n        [ { width = 4, height = 2 }\n        , { width = 2, height = 1 }\n        , { width = 2, height = 2 }\n        ]\n    ==\n    [ ( { x = 0, y = 0 }, { width = 4, height = 2 } )\n    , ( { x = 0, y = 2 }, { width = 2, height = 1 } )\n    , ( { x = 2, y = 2 }, { width = 2, height = 2 } )\n    ]\n\n\n## Two column example:\n\n    -- Expected result:\n    -- ================\n    --    0 1\n    -- 0 |A|A|\n    -- 1 |B| |\n    -- 2 |B| |\n    -- 3 |C|C|\n\n    solve identity 2\n        [ { width = 2, height = 1 }\n        , { width = 1, height = 2 }\n        , { width = 2, height = 1 }\n        ]\n    ==\n    [ ( { x = 0, y = 0 }, { width = 2, height = 1 } )\n    , ( { x = 0, y = 1 }, { width = 1, height = 2 } )\n    , ( { x = 0, y = 3 }, { width = 2, height = 1 } )\n    ]\n\n## More complex layout:\n\n    -- Expected result:\n    -- ================\n    --    0 1 2 3\n    -- 0 |A|A|B|B|\n    -- 1 |C|C|B|B|\n    -- 2 | | |B|B|\n    -- 3 |D|D|D|D|\n\n    solve identity 4\n        [ { width = 2, height = 1 }\n        , { width = 2, height = 3 }\n        , { width = 2, height = 1 }\n        , { width = 4, height = 1 }\n        ]\n    ==\n    [ ( { x = 0, y = 0 }, { width = 2, height = 1 } )\n    , ( { x = 2, y = 0 }, { width = 2, height = 3 } )\n    , ( { x = 0, y = 1 }, { width = 2, height = 1 } )\n    , ( { x = 0, y = 3 }, { width = 4, height = 1 } )\n    ]\n",
+        "type": "(a -> Grid.Size) -> Int -> List a -> List ( Grid.Position, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
