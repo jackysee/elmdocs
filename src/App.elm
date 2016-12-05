@@ -279,6 +279,8 @@ update msg model =
                 |> Return.command
                     (modulePath
                         |> Regex.replace Regex.All (Regex.regex "%20") (\_ -> "-")
+                        |> Http.decodeUri
+                        |> Maybe.withDefault modulePath
                         |> scrollToElement
                     )
 
