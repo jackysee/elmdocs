@@ -1,0 +1,16 @@
+[
+  {
+    "name": "MD5",
+    "comment": " This library allows you to compute MD5 message digests in Elm. It exposes a\nsingle function that takes any string and outputs a \"fingerprint\" containing 32\nhexadecimal characters. More information about the MD5 algorithm can be found\n[here](https://en.wikipedia.org/wiki/MD5).\n\n# Digest Functions\n@docs hex\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "hex",
+        "comment": " Given a string of arbitrary length, returns a string of 32 hexadecimal characters (a-f, 0-9)\nrepresenting the 128-bit MD5 message digest.\n\n    hex \"\"          == \"d41d8cd98f00b204e9800998ecf8427e\"\n    hex \"foobarbaz\" == \"6df23dc03f9b54cc38a0fc1483df6e21\"\n\nUnlike the [Javascript program](https://css-tricks.com/snippets/javascript/javascript-md5/) upon which this\nimplementation is based, CRLF pairs in the input are not automatically replaced with LFs prior to computing\nthe digest. If you want that behaviour you should adjust the input yourself before evaluating the function.\nFor example:\n\n    myHex : String -> String\n    myHex input =\n        let\n            myInput =\n                Regex.replace Regex.All (Regex.regex \"\\x0D\\n\") (\\_ -> \"\\n\") input\n        in\n            hex myInput\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
