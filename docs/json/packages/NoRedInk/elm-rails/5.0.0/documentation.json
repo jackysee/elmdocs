@@ -1,0 +1,96 @@
+[
+  {
+    "name": "Rails.Decode",
+    "comment": "\n\nTypes\n@docs ErrorList\n\n# Decoding\n@docs errors\n\n",
+    "aliases": [
+      {
+        "name": "ErrorList",
+        "comment": " ErrorList is a type alias for a list of `( fields, String )` pairs,\nwhere `field` is a type we can use to reference which fields had errors.\n\n```\ntype Field = Name | Password\n\ndecode : ErrorList Field\n```\n",
+        "args": [
+          "field"
+        ],
+        "type": "List ( field, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "errors",
+        "comment": " Decodes errors passed from rails formatted like this:\n\n`{ errors: {errorName: [\"Error String\"] } }`.\n\nThis function takes a Dict that is a map of all the fields you need decoded.\nIt should look like this:\n\n```\nDict.fromList\n    [ ( \"school\", School )\n    , ( \"school.name\", SchoolName )\n    , ( \"school.address\", SchoolAddress )\n    , ( \"school.city\", City )\n    , ( \"school.state\", State )\n    , ( \"school.zip\", Zip )\n    , ( \"school.country\", Country )\n    ]\n```\n",
+        "type": "Dict.Dict String field -> Json.Decode.Decoder (Rails.Decode.ErrorList field)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Rails",
+    "comment": "\n\n## Requests\n@docs Error, get, post, send, request\n\n## Decoding\n@docs decoder, always\n\n## Customizing\n@docs csrfToken, expectRailsJson\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " The kinds of errors a Rails server may return.\n",
+        "args": [
+          "error"
+        ],
+        "cases": [
+          [
+            "HttpError",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "RailsError",
+            [
+              "error"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "always",
+        "comment": " Returns a `ResponseDecoder` which uses the same decoder for both success and\nfailures.\n",
+        "type": "Json.Decode.Decoder success -> Rails.ResponseDecoder success success"
+      },
+      {
+        "name": "csrfToken",
+        "comment": " If there was a `<meta name=\"csrf-token\">` tag in the page's `<head>` when\n    elm-rails loaded, returns the value its `content` attribute had at that time.\n\n    Rails expects this value in the `X-CSRF-Token` header for non-`GET` requests as\n    a [CSRF countermeasure](http://guides.rubyonrails.org/security.html#csrf-countermeasures).\n",
+        "type": "Result.Result String String"
+      },
+      {
+        "name": "decoder",
+        "comment": " Returns a `ResponseDecoder`.\n",
+        "type": "Json.Decode.Decoder success -> Json.Decode.Decoder error -> Rails.ResponseDecoder error success"
+      },
+      {
+        "name": "expectRailsJson",
+        "comment": " Think `Http.fromJson`, but with additional effort to parse a non-20x response as JSON.\n\n  * If the status code is in the 200 range, try to parse with the given `decoder.success`.\n  * If that succeeds, the result is `Ok` with the result.\n  * If the status code is outside the 200 range, try to parse with the given `decoder.failure`.\n  * If that succeeds, the result is `Err` with the result.\n  * If either parsing fails, the request as a whole fails.\n",
+        "type": "Rails.ResponseDecoder error success -> Http.Expect (Result.Result error success)"
+      },
+      {
+        "name": "get",
+        "comment": " Send a GET request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    getHats : Cmd msg\n    getHats =\n        Rails.decoder (list string) (succeed ())\n            |> Rails.get \"http://example.com/hat-categories.json\"\n            |> Rails.send HandleGetHatsResponse\n",
+        "type": "String -> Rails.ResponseDecoder error success -> Http.Request (Result.Result error success)"
+      },
+      {
+        "name": "post",
+        "comment": " Send a POST request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    hats : Cmd msg\n    hats =\n        Rails.decoder (list string) (succeed ())\n            |> Rails.post \"http://example.com/hat-categories/new\" Http.emptyBody\n            |> Rails.send HandleResponse\n\n",
+        "type": "String -> Http.Body -> Rails.ResponseDecoder error success -> Http.Request (Result.Result error success)"
+      },
+      {
+        "name": "request",
+        "comment": " Wraps `Http.request` while adding the following default headers:\n\n* `X-CSRF-Token` - set to `csrfToken` if it's an `Ok` and this request isn't a `GET`\n* `Content-Type` - `\"application/json\"`\n* `Accept` - `\"application/json, text/javascript, */*; q=0.01\"`\n* `X-Requested-With` - `\"XMLHttpRequest\"`\n\n    import Dict\n    import Json.Decode exposing (list, string)\n    import Json.Encode as Encode\n    import Http\n    import Rails.Decode\n    import Rails\n\n\n    hatRequest : HatStyle -> Request (Result (ErrorList Field) Hat)\n    hatRequest style =\n        let\n            body =\n                [ ( \"style\", encodeHatStyle style ) ]\n                    |> Encode.object\n                    |> Http.jsonBody\n\n            success =\n                list string\n\n            failure =\n                Dict.fromList [ ( \"style\", HatStyle ) ]\n                    |> Rails.Decode.errors\n        in\n            Rails.request\n                { method = \"POST\"\n                , headers = []\n                , url = url\n                , body = body\n                , expect = expectRailsJson (Rails.decoder success failure)\n                , timeout = Nothing\n                , withCredentials = False\n                }\n",
+        "type": "{ method : String , headers : List Http.Header , url : String , body : Http.Body , expect : Http.Expect a , timeout : Maybe.Maybe Time.Time , withCredentials : Bool } -> Http.Request a"
+      },
+      {
+        "name": "send",
+        "comment": " Send an HTTP request to Rails. This uses [`request`](#request) under the\nhood, which means that a CSRF token will automatically be passed, among\nother things. The Error handler uses a [`Rails.Error`](#Error), which includes\nmore information than the standard `Http.Error`.\n\n    import Dict\n    import Json.Decode exposing (list, string)\n    import Json.Encode as Encode\n    import Http\n    import Rails.Decode\n    import Rails\n\n\n    requestHats : HatStyle -> Cmd Msg\n    requestHats style =\n        let\n            body =\n                [ ( \"style\", encodeHatStyle style ) ]\n                    |> Encode.object\n                    |> Http.jsonBody\n\n            success =\n                list string\n\n            failure =\n                Dict.fromList [ ( \"style\", HatStyle ) ]\n                    |> Rails.Decode.errors\n        in\n            Rails.decoder success failure\n                |> Rails.post url body\n                |> Rails.send HandleResponse\n",
+        "type": "(Result.Result (Rails.Error error) success -> msg) -> Http.Request (Result.Result error success) -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
