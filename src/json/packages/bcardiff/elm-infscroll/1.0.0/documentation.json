@@ -1,0 +1,45 @@
+[
+  {
+    "name": "InfScroll",
+    "comment": "\nThis modules implements infinite scroll ui pattern.\n\n@docs Config\n@docs update\n@docs view\n@docs Msg\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": "\n  Configuration of the InfScroll component.\n",
+        "args": [
+          "model",
+          "item",
+          "msg"
+        ],
+        "cases": [
+          [
+            "Config",
+            [
+              "{ loadMore : model -> msg , msgWrapper : InfScroll.Msg -> msg , itemView : item -> Html.Html msg , loadingIndicator : Html.Html msg , hasMore : model -> Bool }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": "\n  Messages to be wrapped.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "update",
+        "comment": "\n  Handle update messages of the InfScroll component.\n",
+        "type": "InfScroll.Config model item msg -> model -> InfScroll.Msg -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "view",
+        "comment": "\n  Handle rendering of the InfScroll component.\n",
+        "type": "InfScroll.Config model item msg -> model -> List item -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]
