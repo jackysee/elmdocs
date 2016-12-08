@@ -1,0 +1,370 @@
+[
+  {
+    "name": "RouteUrl.Builder",
+    "comment": " This module provides a type which you can use to help construct a\n`UrlChange` or parse a `Location`.\n\nHowever, the `Builder` type is not really the focus of elm-route-url.\n\n* Ultimately, a `UrlChange` just requires a `String` -- you don't need to\n  use this module to construct one.\n\n* You also don't need to use this module to parse a `Location` -- there are a\n  fair number of relevant packages for that, including:\n\n    * [evancz/url-parser](http://package.elm-lang.org/packages/evancz/url-parser/latest)\n    * [Bogdanp/elm-combine](http://package.elm-lang.org/packages/Bogdanp/elm-combine/latest)\n    * [Bogdanp/elm-route](http://package.elm-lang.org/packages/Bogdanp/elm-route/latest)\n    * [etaque/elm-route-parser](http://package.elm-lang.org/packages/etaque/elm-route-parser/latest)\n    * [poyang/elm-router](http://package.elm-lang.org/packages/poying/elm-router/latest)\n    * [sporto/erl](http://package.elm-lang.org/packages/sporto/erl/latest)\n    * [sporto/hop](http://package.elm-lang.org/packages/sporto/hop/latest)\n\nSo, this module is potentially useful, but there are quite a few other\noptions you may wish to investigate.\n\nNote that you should not uri-encode anything provided to this module. That\nwill be done for you.\n\n# Initialization\n\n@docs Builder, builder\n\n# Creating or modifying history entries\n\n@docs entry, newEntry, modifyEntry\n\n# Manipulating the path\n\n@docs path, modifyPath, prependToPath, appendToPath, replacePath\n\n# Manipulating the query\n\n@docs query, modifyQuery, insertQuery, updateQuery, removeQuery, getQuery, replaceQuery\n\n# Manipulating the hash\n\n@docs hash, modifyHash, replaceHash\n\n# Conversion\n\n@docs toUrlChange, toHashChange, fromUrl, fromHash\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Builder",
+        "comment": " An opaque type which helps to build up a URL for a `URLChange`,\nor parse a `Location`.\n\nStart with [`builder`](#builder), and then use other functions to make changes.\nOr, if you have a URL, start with [`fromUrl`](#fromUrl) or [`fromHash`](#fromHash).\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "appendToPath",
+        "comment": " Add the provided list to the end of the builder's path.\n",
+        "type": "List String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "builder",
+        "comment": " Creates a default `Builder`. Start with this, then use other methods\nto build up the URL.\n\n    url : Builder\n    url =\n        builder\n        |> newEntry\n        |> appendToPath [\"home\"]\n",
+        "type": "RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "entry",
+        "comment": " Indicates whether the `Builder` will make a new entry in the browser's\nhistory, or merely modify the current entry.\n",
+        "type": "RouteUrl.Builder.Builder -> RouteUrl.HistoryEntry"
+      },
+      {
+        "name": "fromHash",
+        "comment": " Constructs a `Builder` from the hash portion of a URL.\n\n* Assumes that the hash starts with \"#!/\".\n\n* Assumes that any embedded hash is delimited with a '$' instead of a '#'.\n\n* Assumes that any embedded query parameters being with a '^' instead of\n  a '?'.\n\n",
+        "type": "String -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "fromUrl",
+        "comment": " Constructs a `Builder` from a URL.\n",
+        "type": "String -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "getQuery",
+        "comment": " Get the value for a query key.\n",
+        "type": "String -> RouteUrl.Builder.Builder -> Maybe.Maybe String"
+      },
+      {
+        "name": "hash",
+        "comment": " Gets the hash portion of the URL, without the \"#\".\n",
+        "type": "RouteUrl.Builder.Builder -> String"
+      },
+      {
+        "name": "insertQuery",
+        "comment": " Insert a key/value pair into the query. Replaces a key with the same name,\nin case of collision.\n",
+        "type": "String -> String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "modifyEntry",
+        "comment": " Modify the current entry in the browser's history.\n",
+        "type": "RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "modifyHash",
+        "comment": " Replace the hash with the result of a function applied to the current hash.\n",
+        "type": "(String -> String) -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "modifyPath",
+        "comment": " Replace the path with the result of a function which acts on\nthe current path.\n",
+        "type": "(List String -> List String) -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "modifyQuery",
+        "comment": " Replace the query with the result of a function that acts on the current query.\n",
+        "type": "(Dict.Dict String String -> Dict.Dict String String) -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "newEntry",
+        "comment": " Make a new entry in the browser's history.\n",
+        "type": "RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "path",
+        "comment": " The segments of the path. The path is represented by a list of strings.\nUltimately, they will be uri-encoded for you, and joined with a \"/\".\n",
+        "type": "RouteUrl.Builder.Builder -> List String"
+      },
+      {
+        "name": "prependToPath",
+        "comment": " Add the provided list to the beginning of the builder's path.\n",
+        "type": "List String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "query",
+        "comment": " The query portion of the URL. It is represented by a `Dict` of\nkey/value pairs.\n",
+        "type": "RouteUrl.Builder.Builder -> Dict.Dict String String"
+      },
+      {
+        "name": "removeQuery",
+        "comment": " Remove a query key.\n",
+        "type": "String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "replaceHash",
+        "comment": " Replace the hash with the provided value. Note that you should not include the \"#\".\n",
+        "type": "String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "replacePath",
+        "comment": " Sets the path to the provided list.\n",
+        "type": "List String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "replaceQuery",
+        "comment": " Replace the whole query with a different dictionary.\n",
+        "type": "Dict.Dict String String -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      },
+      {
+        "name": "toHashChange",
+        "comment": " Like [`toUrlChange`](#toUrlChange), but puts everything into the hash, prepended by \"#!\".\n\nIf your `Builder` has a hash component, we'll use '$' instead of '#' to\ndelimit the embedded hash. And, we will use '^' instead of '?' to begin\nthe query parameters.\n",
+        "type": "RouteUrl.Builder.Builder -> RouteUrl.UrlChange"
+      },
+      {
+        "name": "toUrlChange",
+        "comment": " Once you've built up your URL, use this to convert it to a `UrlChange` for use with\n`RouteUrl`.\n",
+        "type": "RouteUrl.Builder.Builder -> RouteUrl.UrlChange"
+      },
+      {
+        "name": "updateQuery",
+        "comment": " Update a particular query key using the given function.\n",
+        "type": "String -> (Maybe.Maybe String -> Maybe.Maybe String) -> RouteUrl.Builder.Builder -> RouteUrl.Builder.Builder"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "RouteHash",
+    "comment": " This module implements the old elm-route-hash API as closely as possible,\ngiven the changes required for elm-route-url.\n\nTo transition from elm-route-hash to elm-route-url, you should be able to\nuse your existing `delta2update` and `location2action` functions without\nchanges. The only required changes are in your `Main` module.\n\nEssentially, instead of using the old `start` method and sending the resulting\nsignal to a port, you would now use [`program`](#program) or\n[`programWithFlags`](#programWithFlags), and assign the resulting `Program`\nto your `main` function.\n\nAt your leisure, you should transition to the new `RouteUrl` API, which allows\nyou to use the whole URL (rather than just the hash), since this old API will\nbe removed in a future version of elm-route-url.\n\n# Configuration\n\n@docs Config, ConfigWithFlags, defaultPrefix\n\n# Helpers for `HashUpdate`\n\n@docs HashUpdate, set, replace, apply, map, extract\n\n# Simple Initialization\n\n@docs program, programWithFlags\n\n# Complicated Initialization (usually not needed)\n\n@docs app, appWithFlags\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Represents the configuration necessary to use this module.\n\n*  `prefix` is the initial characters that should be stripped from the hash (if\n    present) when reacting to location changes, and added to the hash when\n    generating location changes. Normally, you'll likely want to use\n    [`defaultPrefix`](#defaultPrefix), which is \"#!/\".\n\n*   `delta2update` is a function which takes two arguments and possibly\n    returns a [`HashUpdate`](#HashUpdate). The first argument is the previous\n    model. The second argument is the current model.\n\n    The reason you are provided with both the previous and current models is\n    that sometimes the nature of the location update depends on the difference\n    between the two, not just on the latest model. For instance, if the user is\n    typing in a form, you might want to use [`replace`](#replace) rather than\n    [`set`](#set). Of course, in cases where you only need to consult the\n    current model, you can ignore the first parameter.\n\n    This module will normalize the `List String` in the update in the following\n    way before setting the actual location. It will:\n\n    * uri-encode the strings\n    * join them with \"/\"\n    * add the `prefix` to the beginning\n\n    In a modular application, you may well want to use [`map`](#map) after dispatching\n    to a lower level -- see the example in the [`map` documentation](#map).\n\n    Note that this module will automatically detect cases where you return\n    a [`HashUpdate`](#HashUpdate) which would set the same location that is\n    already set, and do nothing. Thus, you don't need to try to detect that\n    yourself.\n\n    The content of the individual strings is up to you ... essentially it\n    should be something that your `location2action` function can deal with.\n\n*   `location2action` is a function which takes a `List String` and returns\n    a list of actions your app can perform.\n\n    The argument is a normalized version of the hash portion of the location.\n    First, the `prefix` is stripped from the hash, and then the result is\n    converted to a `List String` by using '/' as a delimiter. Then, each\n    `String` value is uri-deocded.\n\n    Essentially, your `location2action` should return actions that are the\n    reverse of what your `delta2update` function produced. That is, the\n    `List String` you get back in `location2action` is the `List String` that\n    your `delta2update` used to create a [`HashUpdate`](#HashUpdate). So,\n    however you encoded your state in `delta2update`, you now need to interpret\n    that in `location2action` in order to return actions which will produce the\n    desired state.\n\n    Note that the list of actions you return will often be a single action. It\n    is a `List action` so that you can return multiple actions, if your app is\n    modular in a way that requires multiple actions to produce the desired\n    state.\n\n*   The remaining functions (`init`, `update`, `subscriptions` and `view`)\n    have the same meaning as they do in\n    [`Html.program`](http://package.elm-lang.org/packages/elm-lang/html/2.0.0/Html#program)\n    ... that is, you should provide what you normally provide to that function.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ prefix : String , delta2update : model -> model -> Maybe.Maybe RouteHash.HashUpdate , location2action : List String -> List msg , init : ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg }"
+      },
+      {
+        "name": "ConfigWithFlags",
+        "comment": " Like [`Config`](#Config), but with flags.\n",
+        "args": [
+          "model",
+          "msg",
+          "flags"
+        ],
+        "type": "{ prefix : String , delta2update : model -> model -> Maybe.Maybe RouteHash.HashUpdate , location2action : List String -> List msg , init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HashUpdate",
+        "comment": " An opaque type which represents an update to the hash portion of the\nbrowser's location.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "app",
+        "comment": " Takes your configuration, and turns it into an `App`.\n\nUsually you won't need this -- you can just use [`program`](#program) to\ngo directly to a `Program` instead.\n",
+        "type": "RouteHash.Config model msg -> RouteUrl.App model msg"
+      },
+      {
+        "name": "appWithFlags",
+        "comment": " Takes your configuration, and turns into into an `AppWithFlags`.\n\nUsually you won't need this -- you can just use [`programWithFlags`](#programWithFlags) to\ngo directly to a `Program` instead.\n",
+        "type": "RouteHash.ConfigWithFlags model msg flags -> RouteUrl.AppWithFlags model msg flags"
+      },
+      {
+        "name": "apply",
+        "comment": " Applies the supplied function to the [`HashUpdate`](#HashUpdate).\n",
+        "type": "(List String -> List String) -> RouteHash.HashUpdate -> RouteHash.HashUpdate"
+      },
+      {
+        "name": "defaultPrefix",
+        "comment": " The value that you will most often want to supply as the\n`prefix` in your [`Config`](#Config). It is equal to \"#!/\".\n",
+        "type": "String"
+      },
+      {
+        "name": "extract",
+        "comment": " Extracts the `List String` from the [`HashUpdate`](#HashUpdate).\n",
+        "type": "RouteHash.HashUpdate -> List String"
+      },
+      {
+        "name": "map",
+        "comment": " Applies the supplied function to the [`HashUpdate`](#HashUpdate).\n\nYou might use this function when dispatching in a modular application.\nFor instance, your [`delta2update`](#Config) function might look something like this:\n\n    delta2update : Model -> Model -> Maybe HashUpdate\n    delta2update old new =\n        case new.virtualPage of\n            PageTag1 ->\n                RouteHash.map ((::) \"page-tag-1\") PageModule1.delta2update old new\n\n            PageTag2 ->\n                RouteHash.map ((::) \"page-tag-2\") PageModule2.delta2update old new\n\nOf course, your model and modules may be set up differently. However you do it,\nthe `map` function allows you to dispatch `delta2update` to a lower-level module,\nand then modify the `Maybe HashUpdate` which it returns.\n",
+        "type": "(List String -> List String) -> Maybe.Maybe RouteHash.HashUpdate -> Maybe.Maybe RouteHash.HashUpdate"
+      },
+      {
+        "name": "program",
+        "comment": " Takes your configuration, and turns it into a `Program` that can be\nused in your `main` function.\n",
+        "type": "RouteHash.Config model msg -> RouteUrl.RouteUrlProgram Basics.Never model msg"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Takes your configuration, and turns it into a `Program flags` that can be\nused in your `main` function.\n",
+        "type": "RouteHash.ConfigWithFlags model msg flags -> RouteUrl.RouteUrlProgram flags model msg"
+      },
+      {
+        "name": "replace",
+        "comment": " Returns a [`HashUpdate`](#HashUpdate) that will update the browser's\nlocation, replacing the current history entry.\n\nThe `List String` represents the hash portion of the location. Each element of\nthe list will be uri-encoded, and then the list will be joined using slashes\n(\"/\"). Finally, a prefix will be applied (by [default](#defaultPrefix), \"#!/\",\nbut it is configurable).\n",
+        "type": "List String -> RouteHash.HashUpdate"
+      },
+      {
+        "name": "set",
+        "comment": " Returns a [`HashUpdate`](#HashUpdate) that will update the browser's\nlocation, creating a new history entry.\n\nThe `List String` represents the hash portion of the location. Each element of\nthe list will be uri-encoded, and then the list will be joined using slashes\n(\"/\"). Finally, a prefix will be applied (by [default](#defaultPrefix), \"#!/\",\nbut it is configurable).\n",
+        "type": "List String -> RouteHash.HashUpdate"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "RouteUrl",
+    "comment": " This module provides routing for single-page apps based on changes to the\n the browser's location. The routing happens in both directions\n-- that is, changes to the browser's location are translated to messages\nyour app can respond to, and changes to your app's state are translated to\nchanges in the browser's location. The net effect is to make it possible for\nthe 'back' and 'forward' buttons in the browser to do useful things, and for\nthe state of your app to be partially bookmark-able.\n\nIt is, of course, possible to do something like this using\n[`elm-lang/navigation`](http://package.elm-lang.org/packages/elm-lang/navigation/latest)\nby itself. For a discussion of the\ndifferences between the official module and this one, see the [package documentation]\n(http://package.elm-lang.org/packages/rgrempel/elm-route-url/latest).\n\n# Configuration\n\nYou configure this module by providing the functions set out in [`App`](#App) or\n[`AppWithFlags`](#AppWithFlags), depending on what kind of `init` function you\nwant to use.\n\n@docs App, AppWithFlags\n\n# URL Changes\n\nYou use `UrlChange` and `HistoryEntry` to indicate changes to the URL to be\ndisplayed in the browser's location bar.\n\n@docs UrlChange, HistoryEntry\n\n# Initialization (the simple version)\n\nThe simplest way to use this module is to do something like this:\n\n* Define your [`App`](#App) or [`AppWithFlags`](#AppWithFlags) record.\n\n* Use [`program`](#program) or [`programWithFlags`](#programWithFlags) to\n  create your `main` function, instead of their homonymous equivalents in\n  [`Html`](http://package.elm-lang.org/packages/elm-lang/html/2.0.0/Html).\n\n@docs program, programWithFlags, RouteUrlProgram\n\n# More complex initialization\n\nIf your initialization needs are more complex, you may find some of the\nremaining types and function to be of interest. You won't usually\nneed them.\n\n@docs NavigationApp, navigationApp, runNavigationApp\n@docs NavigationAppWithFlags, navigationAppWithFlags, runNavigationAppWithFlags\n@docs WrappedModel, unwrapModel, mapModel\n@docs WrappedMsg, unwrapMsg, wrapUserMsg, wrapLocation\n",
+    "aliases": [
+      {
+        "name": "App",
+        "comment": " The configuration required to use this module to create a `Program`.\n\nThe `init`, `update`, `subscriptions` and `view` fields have the same meaning\nas they do in [`Html.program`](http://package.elm-lang.org/packages/elm-lang/html/2.0.0/Html#program)\n-- that is, you should provide what you normally provide to that function.\n\nSo, the \"special\" fields are the `delta2url` function and the\n`location2messages` function.\n\n* `delta2url` will be called when your model changes. The first parameter is\n  the model's previous value, and the second is the model's new value.\n\n  Your function should return a `Just UrlChange` if a new URL should be\n  displayed in the browser's location bar (or `Nothing` if no change to the URL\n  is needed). This library will check the current URL before setting a new one,\n  so you need not worry about setting duplicate URLs -- that will be\n  automatically avoided.\n\n  The reason we provide both the previous and current model for your\n  consideration is that sometimes you may want to do something differently\n  depending on the nature of the change in the model, not just the new value.\n  For instance, it might make the difference between using `NewEntry` or\n  `ModifyEntry` to make the change.\n\n  Note that this function will *not* be called when processing messages\n  returned from your `location2messages` function, since in that case the\n  URL has already been set.\n\n* `location2messages` will be called when a change in the browser's URL is\n  detected, either because the user followed a link, typed something in the\n  location bar, or used the back or forward buttons.\n\n  Note that this function will *not* be called when your `delta2url` method\n  initiates a `UrlChange` -- since in that case, the relevant change in the\n  model has already occurred.\n\n  Your function should return a list of messages that your `update` function\n  can respond to. Those messages will be fed into your app, to produce the\n  changes to the model that the new URL implies.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ delta2url : model -> model -> Maybe.Maybe RouteUrl.UrlChange , location2messages : Navigation.Location -> List msg , init : ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg }"
+      },
+      {
+        "name": "AppWithFlags",
+        "comment": " The configuration needed to use this module to make a `Program flags`.\n\nThe `init`, `update`, `subscriptions` and `view` fields have the same meaning\nas they do in\n[`Html.programWithFlags`](http://package.elm-lang.org/packages/elm-lang/html/2.0.0/Html#programWithFlags)\n-- that is, you should provide what you normally provide to that function.\n\nSo, the special functions are `delta2url` and `location2messages`,\nwhich are described above, under [`App`](#App).\n",
+        "args": [
+          "model",
+          "msg",
+          "flags"
+        ],
+        "type": "{ delta2url : model -> model -> Maybe.Maybe RouteUrl.UrlChange , location2messages : Navigation.Location -> List msg , init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg }"
+      },
+      {
+        "name": "NavigationApp",
+        "comment": " A type which represents the various inputs to\n[`Navigation.program`](http://package.elm-lang.org/packages/elm-lang/navigation/2.0.0/Navigation#program).\n\nYou can produce this via [`navigationApp`](#navigationApp). Then, you can supply\nthis to [`runNavigationApp`](#runNavigationApp) in order to create a `Program`.\n\nNormally you don't need this -- you can just use [`program`](#program).\nHowever, `NavigationApp` could be useful if you want to do any further wrapping\nof its functions.\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ locationToMessage : Navigation.Location -> msg , init : Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg }"
+      },
+      {
+        "name": "NavigationAppWithFlags",
+        "comment": " A type which represents the various inputs to\n[`Navigation.programWithFlags`](http://package.elm-lang.org/packages/elm-lang/navigation/2.0.0/Navigation#programWithFlags).\n\nYou can produce this via [`navigationAppWithFlags`](#navigationAppWithFlags). Then, you can supply\nthis to [`runNavigationAppWithFlags`](#runNavigationAppWithFlags) in order to create a `Program`.\n\nNormally you don't need this -- you can just use [`programWithFlags`](#programWithFlags).\nHowever, `NavigationAppWithFlags` could be useful if you want to do any further wrapping\nof its functions.\n",
+        "args": [
+          "model",
+          "msg",
+          "flags"
+        ],
+        "type": "{ locationToMessage : Navigation.Location -> msg , init : flags -> Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg }"
+      },
+      {
+        "name": "RouteUrlProgram",
+        "comment": " A convenient alias for the `Program` type that lets you specify your\ntype for the `model` and `msg` ... the alias takes care of the wrapping\nthat `RouteUrl` supplies.\n\nFor instance, suppose your `main` function would normally be typed like this:\n\n```\nmain : Program Never Model Msg\n```\n\nNow, once you use `RouteUrl.program` to set things up, `RouteUrl` wraps your\nmodel and msg types, so that the signature for your `main` function would\nnow be:\n\n```\nmain : Program Never (WrappedModel Model) (WrappedMsg Msg)\n```\n\nBut that's a little ugly. So, if you like, you can use the `RouteUrlProgram`\nalias like this:\n\n```\nmain : RouteUrlProgram Never Model Msg\n```\n\nIt's exactly the same type, but looks a little nicer.\n",
+        "args": [
+          "flags",
+          "model",
+          "msg"
+        ],
+        "type": "Platform.Program flags (RouteUrl.WrappedModel model) (RouteUrl.WrappedMsg msg)"
+      },
+      {
+        "name": "UrlChange",
+        "comment": " Indicates a change to be made in the URL, either creating\na new entry in the browser's history (`NewEntry`), or merely replacing the\ncurrent URL (`ModifyEntry`).\n\nThis is ultimately implemented via\n[`Navigation.newUrl`](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#newUrl) or\n[`Navigation.modifyUrl`](http://package.elm-lang.org/packages/elm-lang/navigation/1.0.0/Navigation#modifyUrl).\nThe reason we use this intermediate type is so that we can check whether the\nprovided string already corresponds to the current URL. In that case, we can\navoid creating a spurious duplicate entry in the browser's history.\n\nThe reason we take a `String` (rather than a more structured type) is that\nthere may be several ways you might want to build up the required URL. We\ndon't want to be prescriptive about that. However, the `String` you provide\nmust follow a couple of rules.\n\n* The `String` must already be uri-encoded.\n\n* The `String` must either start with a '/', a `?' or a '#'.\n\n    * If it starts with a '/', it will be interpreted as a full path, including\n      optional query parameters and hash.\n\n    * If it starts with a '?', then we'll assume that you want the current\n      path to stay the same -- only the query parameters and hash will change.\n\n    * If it starts with a '#', then we'll assume that you want the current\n      path and query parameters (if any) to stay the same -- only the\n      hash will change.\n\nSo, what you should *not* provide is the scheme, host, or authentication\nmethod -- that is, no \"http://elm-lang.org\". You should also not use relative\nURLs. (Let me know if you'd like relative URLs -- we might be able to do\nsomething sensible with them, but we don't yet in this version).\n\nOne way to construct a `UrlChange` in a modular way is to use the\n`RouteUrl.Builder` module. However, a variety of approaches are possible.\n",
+        "args": [],
+        "type": "{ entry : RouteUrl.HistoryEntry, url : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HistoryEntry",
+        "comment": " Indicates whether to create a new entry in the browser's history, or merely\nmodify the current entry.\n\nOne could have used a `Bool` for this instead, but I hate remembering what\n`True` actually means.\n",
+        "args": [],
+        "cases": [
+          [
+            "NewEntry",
+            []
+          ],
+          [
+            "ModifyEntry",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "WrappedModel",
+        "comment": " This is the model used by `RouteUrl`. In part, it is composed of the client's\nmodel, and in part it is composed of things which `RouteUrl` wants to keep track of.\n",
+        "args": [
+          "user"
+        ],
+        "cases": []
+      },
+      {
+        "name": "WrappedMsg",
+        "comment": " This is the wrapper for RouteUrl's messages. Some messages are handled\ninternally by RouteUrl, and others are passed on to the application.\n",
+        "args": [
+          "user"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "mapModel",
+        "comment": " Given the wrapped model that `RouteUrl` uses, and a function that modifies\nthe part which your program provided, produce a new wrapped model.\n",
+        "type": "(user -> user) -> RouteUrl.WrappedModel user -> RouteUrl.WrappedModel user"
+      },
+      {
+        "name": "navigationApp",
+        "comment": " Given your configuration, this function does some wrapping and produces\nthe functions which\n[`Navigation.program`](http://package.elm-lang.org/packages/elm-lang/navigation/2.0.0/Navigation#program)\nrequires.\n\nNormally, you don't need this -- you can just use [`program`](#program).\n",
+        "type": "RouteUrl.App model msg -> RouteUrl.NavigationApp (RouteUrl.WrappedModel model) (RouteUrl.WrappedMsg msg)"
+      },
+      {
+        "name": "navigationAppWithFlags",
+        "comment": " Given your configuration, this function does some wrapping and produces\nthe functions which\n[`Navigation.programWithFlags`](http://package.elm-lang.org/packages/elm-lang/navigation/2.0.0/Navigation#programWithFlags)\nrequires.\n\nNormally, you don't need this -- you can just use [`programWithFlags`](#programWithFlags).\n",
+        "type": "RouteUrl.AppWithFlags model msg flags -> RouteUrl.NavigationAppWithFlags (RouteUrl.WrappedModel model) (RouteUrl.WrappedMsg msg) flags"
+      },
+      {
+        "name": "program",
+        "comment": " Turns your configuration into a `Program` that you can assign to your\n`main` function.\n",
+        "type": "RouteUrl.App model msg -> RouteUrl.RouteUrlProgram Basics.Never model msg"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Turns your configuration into a `Program flags` that you can assign to your\n`main` function.\n",
+        "type": "RouteUrl.AppWithFlags model msg flags -> RouteUrl.RouteUrlProgram flags model msg"
+      },
+      {
+        "name": "runNavigationApp",
+        "comment": " Turns the output from [`navigationApp`](#navigationApp)\ninto a `Program` that you can assign to your `main` function.\n\nFor convenience, you will usually want to just use [`program`](#program),\nwhich goes directly from the required\nconfiguration to a `Program`. You would only want `runNavigationApp` for the\nsake of composability -- that is, in case there is something further you want\nto do with the `NavigationApp` structure before turning it into a `Program`.\n",
+        "type": "RouteUrl.NavigationApp model msg -> Platform.Program Basics.Never model msg"
+      },
+      {
+        "name": "runNavigationAppWithFlags",
+        "comment": " Turns the output from [`navigationApp`](#navigationApp)\ninto a `Program` that you can assign to your `main` function.\n\nFor convenience, you will usually want to just use [`program`](#program),\nwhich goes directly from the required\nconfiguration to a `Program`. You would only want `runNavigationApp` for the\nsake of composability -- that is, in case there is something further you want\nto do with the `NavigationApp` structure before turning it into a `Program`.\n",
+        "type": "RouteUrl.NavigationAppWithFlags model msg flags -> Platform.Program flags model msg"
+      },
+      {
+        "name": "unwrapModel",
+        "comment": " Given the wrapped model that `RouteUrl` uses, extract the part of the model\nthat your program provided.\n",
+        "type": "RouteUrl.WrappedModel user -> user"
+      },
+      {
+        "name": "unwrapMsg",
+        "comment": " Given the wrapped msg type that `RouteUrl` uses, either apply a function\nthat works on a `Location`, or apply a function that works on the msg type\nthat your program uses.\n",
+        "type": "(Navigation.Location -> a) -> (user -> a) -> RouteUrl.WrappedMsg user -> a"
+      },
+      {
+        "name": "wrapLocation",
+        "comment": " Given a location, make the kind of message that `RouteUrl` uses.\n\nI'm not sure you'll ever need this ... perhaps for testing?\n",
+        "type": "Navigation.Location -> RouteUrl.WrappedMsg user"
+      },
+      {
+        "name": "wrapUserMsg",
+        "comment": " Given the kind of message your program uses, wrap it in the kind of msg\n`RouteUrl` uses.\n",
+        "type": "user -> RouteUrl.WrappedMsg user"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

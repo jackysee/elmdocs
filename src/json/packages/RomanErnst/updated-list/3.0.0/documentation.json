@@ -1,0 +1,97 @@
+[
+  {
+    "name": "UpdatedList",
+    "comment": " This library helps with updating view that have list structure\n\n# Definitions\n@docs Id, ListItemAction, Model\n\n# Creation and recreation\n@docs init, updateItems, getItems\n\n# Update\n@docs updateList\n\n# View\n@docs createItemsView\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Id",
+        "comment": " Unique id for each node in list\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "ListItemAction",
+        "comment": " Actions that can be performed to list\n",
+        "args": [
+          "updateElementMsg"
+        ],
+        "cases": [
+          [
+            "AddListItem",
+            [
+              "UpdatedList.Id"
+            ]
+          ],
+          [
+            "RemoveListItem",
+            [
+              "UpdatedList.Id"
+            ]
+          ],
+          [
+            "SaveListItem",
+            [
+              "UpdatedList.Id"
+            ]
+          ],
+          [
+            "EditListItem",
+            [
+              "UpdatedList.Id"
+            ]
+          ],
+          [
+            "CancelEditListItem",
+            [
+              "UpdatedList.Id"
+            ]
+          ],
+          [
+            "UpdateListItem",
+            [
+              "UpdatedList.Id",
+              "updateElementMsg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Model",
+        "comment": " Model that contains elements with type **a**\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "createItemsView",
+        "comment": " Create list of views\n",
+        "type": "UpdatedList.Model a -> (UpdatedList.Id -> a -> Html.Html msg) -> (UpdatedList.Id -> a -> Html.Html msg) -> (UpdatedList.Id -> a -> Html.Html msg) -> List (Html.Html msg)"
+      },
+      {
+        "name": "getItems",
+        "comment": " Get items back from model\n",
+        "type": "UpdatedList.Model a -> List a"
+      },
+      {
+        "name": "init",
+        "comment": " Create initial model\n",
+        "type": "{ itemList : List a, emptyElement : a } -> UpdatedList.Model a"
+      },
+      {
+        "name": "updateItems",
+        "comment": " Update items in model\n",
+        "type": "UpdatedList.Model a -> List a -> UpdatedList.Model a"
+      },
+      {
+        "name": "updateList",
+        "comment": " Update internal model (add, remove, etc.)\n",
+        "type": "UpdatedList.ListItemAction updateElementMsg -> UpdatedList.Model a -> (updateElementMsg -> a -> a) -> UpdatedList.Model a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

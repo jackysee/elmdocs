@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Reflect",
+    "comment": " In your face, type system!  This module provides some very un-Elmy run-type introspection on type parameters by hacking around\nwith `toString`, regular expressions and Json decoders.\n\nIn general these functions are all very horrible and should never be used, but there are a few specialized cases (probably mostly\nbased around situations where you want to maintain type-safety for stuff that is loaded at runtime) that it can prove useful.\n\nFor a real-world example of this package being used, check out the `ccapndave/elm-translator` package.\n\n@docs typeToName, typeToParameters, typeParameterRecordToDict, typeParameterToInt\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "typeParameterRecordToDict",
+        "comment": " Turn a parameter which is a record into a Dict.\n\nFor example, if you have a type:\n\n    type Literal\n      = MyDetails { age : Int, height : Int }\n\nThen you could use this function to get the type parameter as a `Dict String Int` with:\n\n    typeParametersToDict Json.Decode.int <| MyDetails { age = 30, height = 158 }\n\nNote that this will only work when there is a single type parameter which is a record, and all the elements of the record have to\nbe of the same type.  You can choose the type using the decoder parameter, but probably only simple types will work (string, int,\nfloat, boolean).\n",
+        "type": "Json.Decode.Decoder b -> a -> Result.Result String (Dict.Dict String b)"
+      },
+      {
+        "name": "typeParameterToInt",
+        "comment": " Turn a parameter which is a record into a Int.\n\nFor example, if you have a type:\n\n    type Literal\n      = Age Int\n\nThen you could use this function to get the type parameter as a `Int` with:\n\n    typeParameterToInt <| Age 30\n",
+        "type": "a -> Result.Result String Int"
+      },
+      {
+        "name": "typeToName",
+        "comment": " Get the base name of a type as a string, discarding any type parameters.\n\n    type Literal\n      = MyDetails { age : Int, height : Int }\n\n    typeToName (MyDetails { age = 30, height = 158 }) --> \"MyDetails\"\n",
+        "type": "a -> String"
+      },
+      {
+        "name": "typeToParameters",
+        "comment": " Get the type parameters of a type as a string, discarding the identifier.\n\n    type Literal\n      = MyDetails { age : Int, height : Int }\n\n    typeToParameters (MyDetails { age = 30, height = 158 }) --> \"{ age = 30, height = 158 }\"\n",
+        "type": "a -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
