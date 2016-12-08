@@ -1,0 +1,39 @@
+[
+  {
+    "name": "CQRS",
+    "comment": " The CQRS library provides an alternate set of methods for union routing and model updating based upon the precepts of CQRS and EventSourcing\n\n# Types\n@docs Definition\n\n# Program Bootloaders\n@docs program\n@docs programWithNav\n@docs eventBinder\n",
+    "aliases": [
+      {
+        "name": "Definition",
+        "comment": "\n\nThe goal of the Definition is to simplify bootstrapping with some assumptions about execution mode\nthat encourage the application code to maintain purity by accepting a fully initialized Model without worrying about\ndata loading or location concerns.\nAdditionally, Command and Subscription (Cmd and Sub) messages are generalized into Effects which allows the program\nto follow an Event Sourced model (messages as data) and helps centralize the concern of applying side effects to the\nmain entry point level of the app.\n\n* Serialization *\n\ndecode: Provides a method for loading the state passed into the application as start\nencode: Provides a serialization entry for persisting / memoizing component state\n\n* Runtime *\n\ninit: Merges initial state from the client with the navigator data to produce the initial app context\nview: Produces html that can initiate effect requests\ncommandMap: evaluates the validity of a request for state mutation and produces an event describing the result\neventMap: applies a declared mutation to the component's state\n\n* Side Effects *\n\neventHandler: Outbound side-effects which turn Effects into actions to be handled by the Elm Runtime\nsubscriptions: Inbound side-effects map external events into the component with it's state for context\n\n",
+        "args": [
+          "context",
+          "model",
+          "command",
+          "event",
+          "effect"
+        ],
+        "type": "{ decode : context -> model , encode : model -> context , init : model -> ( model, effect ) , view : model -> Html.Html command , commandMap : model -> command -> event , eventMap : model -> event -> ( model, effect ) , eventHandler : ( model, effect ) -> Platform.Cmd.Cmd event , subscriptions : model -> Platform.Sub.Sub command }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "eventBinder",
+        "comment": "\nEventBinder provides a simplified mapping interface for translating events across component hierarchies\n",
+        "type": "(parentModel -> childModel) -> (( parentModel, childModel ) -> parentModel) -> (childModel -> childEvent -> ( childModel, childEffect )) -> (parentModel -> childEffect -> parentEffect) -> parentModel -> childEvent -> ( parentModel, parentEffect )"
+      },
+      {
+        "name": "program",
+        "comment": "\n\n",
+        "type": "CQRS.Definition context model command event effect -> Platform.Program context model event"
+      },
+      {
+        "name": "programWithNav",
+        "comment": "\n",
+        "type": "CQRS.NavDefinition state context event -> CQRS.Definition context model command event effect -> Platform.Program state model event"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
