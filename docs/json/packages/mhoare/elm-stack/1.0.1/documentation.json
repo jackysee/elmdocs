@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Stack",
+    "comment": " This library implements a stack data structure in Elm, allowing you to worry more about your business logic and less about implementing common adts.\n\n# Definition\n@docs Stack\n\n# Common Helpers\n@docs initialise, pop, push\n\n",
+    "aliases": [
+      {
+        "name": "Stack",
+        "comment": "\n        The Stack type uses an array to represent the stack.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ data : Array.Array a, top : Int, default : a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initialise",
+        "comment": "\n        Initialises a stack given an initialisation value and a stack size.\n\n",
+        "type": "a -> Int -> Stack.Stack a"
+      },
+      {
+        "name": "pop",
+        "comment": "\n        Removes the item at the top of the stack and returns it as the first item of a tuple.\n",
+        "type": "Stack.Stack (Maybe.Maybe a) -> ( Maybe.Maybe a, Stack.Stack (Maybe.Maybe a) )"
+      },
+      {
+        "name": "push",
+        "comment": "\n        Pushes an item onto the stack and returns the new stack. The item must be of the same type as the stack.\n",
+        "type": "a -> Stack.Stack (Maybe.Maybe a) -> Stack.Stack (Maybe.Maybe a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
