@@ -1,0 +1,145 @@
+[
+  {
+    "name": "Test.Html.Query",
+    "comment": "\n\n@docs Single, Multiple, fromHtml\n\n## Querying\n\n@docs find, findAll, children, first, index\n\n## Expecting\n\n@docs count, has, each\n",
+    "aliases": [
+      {
+        "name": "Multiple",
+        "comment": " A query that may find any number of elements, including zero.\n\nContrast with [`Single`](#Single).\n",
+        "args": [],
+        "type": "Test.Html.Query.Internal.Multiple"
+      },
+      {
+        "name": "Single",
+        "comment": " A query that expects to find exactly one element.\n\nContrast with [`Multiple`](#Multiple).\n",
+        "args": [],
+        "type": "Test.Html.Query.Internal.Single"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "children",
+        "comment": " Return the matched element's immediate child elements.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The <ul> only has <li> children\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.find [ tag \"ul\" ]\n                |> Query.children []\n                |> Query.each (Query.has [ tag \"li\" ])\n",
+        "type": "List Test.Html.Selector.Internal.Selector -> Test.Html.Query.Single -> Test.Html.Query.Multiple"
+      },
+      {
+        "name": "count",
+        "comment": " Expect the number of elements matching the query fits the given expectation.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag)\n\n\n    test \"The list has three items\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.findAll [ tag \"li\" ]\n                |> Query.count (Expect.equal 3)\n",
+        "type": "(Int -> Expect.Expectation) -> Test.Html.Query.Multiple -> Expect.Expectation"
+      },
+      {
+        "name": "each",
+        "comment": " Expect that a [`Single`](#Single) expectation will hold true for each of the\n[`Multiple`](#Multiple) matched elements.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The list has both the classes 'items' and 'active'\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.findAll [ tag \"ul\" ]\n                |> Query.each\n                    [ Query.has [ tag \"ul\" ]\n                    , Query.has [ classes [ \"items\", \"active\" ] ]\n                    ]\n",
+        "type": "(Test.Html.Query.Single -> Expect.Expectation) -> Test.Html.Query.Multiple -> Expect.Expectation"
+      },
+      {
+        "name": "find",
+        "comment": " Find exactly one descendant element which matches all the given selectors.\nIf no descendants match, or if more than one matches, the test will fail.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The list has both the classes 'items' and 'active'\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.find [ tag \"ul\" ]\n                |> Query.has [ classes [ \"items\", \"active\" ] ]\n",
+        "type": "List Test.Html.Selector.Internal.Selector -> Test.Html.Query.Single -> Test.Html.Query.Single"
+      },
+      {
+        "name": "findAll",
+        "comment": " Find the descendant elements which match all the given selectors.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag)\n    import Expect\n\n\n    test \"The list has three items\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.findAll [ tag \"li\" ]\n                |> Query.count (Expect.equal 3)\n",
+        "type": "List Test.Html.Selector.Internal.Selector -> Test.Html.Query.Single -> Test.Html.Query.Multiple"
+      },
+      {
+        "name": "first",
+        "comment": " Return the first element in a match. If there were no matches, the test\nwill fail.\n\n`Query.first` is a shorthand for `Query.index 0` - they do the same thing.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The first <li> is called 'first item'\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.findAll [ tag \"li\" ]\n                |> Query.first\n                |> Query.has [ text \"first item\" ]\n",
+        "type": "Test.Html.Query.Multiple -> Test.Html.Query.Single"
+      },
+      {
+        "name": "fromHtml",
+        "comment": " Translate a `Html` value into a `Single` query. This is how queries\ntypically begin.\n\n    import Html\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (text)\n\n\n    test \"Button has the expected text\" <|\n        \\() ->\n            Html.button [] [ Html.text \"I'm a button!\" ]\n                |> Query.fromHtml\n                |> Query.has [ text \"I'm a button!\" ]\n",
+        "type": "Html.Html msg -> Test.Html.Query.Single"
+      },
+      {
+        "name": "has",
+        "comment": " Expect the element to match all of the given selectors.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The list has both the classes 'items' and 'active'\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.find [ tag \"ul\" ]\n                |> Query.has [ tag \"ul\", classes [ \"items\", \"active\" ] ]\n",
+        "type": "List Test.Html.Selector.Internal.Selector -> Test.Html.Query.Single -> Expect.Expectation"
+      },
+      {
+        "name": "index",
+        "comment": " Return the element in a match at the given index. For example,\n`Query.index 0` would match the first element, and `Query.index 1` would match\nthe second element.\n\nYou can pass negative numbers to \"wrap around\" - for example, `Query.index -1`\nwill match the last element, and `Query.index -2` will match the second-to-last.\n\nIf the index falls outside the bounds of the match, the test will fail.\n\n    import Html exposing (div, ul, li)\n    import Html.Attributes exposing (class)\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, classes)\n\n\n    test \"The second <li> is called 'second item'\" <|\n        \\() ->\n            div []\n                [ ul [ class \"items active\" ]\n                    [ li [] [ text \"first item\" ]\n                    , li [] [ text \"second item\" ]\n                    , li [] [ text \"third item\" ]\n                    ]\n                ]\n                |> Query.fromHtml\n                |> Query.findAll [ tag \"li\" ]\n                |> Query.index 1\n                |> Query.has [ text \"second item\" ]\n",
+        "type": "Int -> Test.Html.Query.Multiple -> Test.Html.Query.Single"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Test.Html.Selector",
+    "comment": "\n@docs Selector\n\n## General Selectors\n\n@docs tag, text, attribute, boolAttribute, all\n\n## Attributes\n\n@docs id, class, classes, className, checked, selected, disabled\n",
+    "aliases": [
+      {
+        "name": "Selector",
+        "comment": " A selector used to filter sets of elements.\n",
+        "args": [],
+        "type": "Test.Html.Selector.Internal.Selector"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Combine the given selectors into one which requires all of them to match.\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (class, text, all, Selector)\n\n\n    replyBtnSelector : Selector\n    replyBtnSelector =\n        all [ class \"btn\", text \"Reply\" ]\n\n\n    test \"Button has the class 'btn' and the text 'Reply'\" <|\n        \\() ->\n            Html.button [ Attr.class \"btn btn-large\" ] [ Html.text \"Reply\" ]\n                |> Query.fromHtml\n                |> Query.has [ replyBtnSelector ]\n",
+        "type": "List Test.Html.Selector.Selector -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "attribute",
+        "comment": " Matches elements that have the given attribute with the given string value.\n\nFor attributes with boolean values, such as `checked`, use [`boolAttribute`](#boolAttribute).\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (attribute, text)\n\n\n    test \"the welcome <h1> says hello!\" <|\n        \\() ->\n            Html.div []\n                [ Html.h1 [ Attr.title \"greeting\" ] [ Html.text \"Hello!\" ] ]\n                |> Query.fromHtml\n                |> Query.find [ attribute \"title\" \"greeting\" ]\n                |> Query.has [ text \"Hello!\" ]\n",
+        "type": "String -> String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "boolAttribute",
+        "comment": " Matches elements that have the given attribute with the given boolean value.\n\nFor attributes with string values, such as `title`, use [`attribute`](#attribute).\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (boolAttribute, text)\n\n\n    test \"the disabled button says Reply\" <|\n        \\() ->\n            Html.div []\n                [ Html.button [ Attr.disabled True ] [ Html.text \"Reply\" ] ]\n                |> Query.fromHtml\n                |> Query.find [ boolAttribute \"disabled\" True ]\n                |> Query.has [ text \"Reply\" ]\n",
+        "type": "String -> Bool -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "checked",
+        "comment": " Matches elements that have a\n[`checked`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#checked)\nattribute with the given value.\n",
+        "type": "Bool -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "class",
+        "comment": " Matches elements that have the given class (and possibly others as well).\n\nTo match multiple classes at once, use [`classes`](#classes) instead.\n\nTo match the element's exact class attribute string, use [`className`](#className).\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (class)\n\n\n    test \"Button has the class btn-large\" <|\n        \\() ->\n            Html.button [ Attr.class \"btn btn-large\" ] [ Html.text \"Reply\" ]\n                |> Query.fromHtml\n                |> Query.has [ class \"btn-large\" ]\n",
+        "type": "String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "className",
+        "comment": " Matches the element's exact class attribute string.\n\nThis is used less often than [`class`](#class) or [`classes`](#classes), which\ncheck for the *presence* of a class as opposed to matching the entire class\nattribute exactly.\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (className)\n\n\n    test \"Button has the exact class 'btn btn-large'\" <|\n        \\() ->\n            Html.button [ Attr.class \"btn btn-large\" ] [ Html.text \"Reply\" ]\n                |> Query.fromHtml\n                |> Query.has [ className \"btn btn-large\" ]\n",
+        "type": "String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "classes",
+        "comment": " Matches elements that have all the given classes (and possibly others as well).\n\nWhen you only care about one class instead of several, you can use\n[`class`](#class) instead of passing this function a list with one value in it.\n\nTo match the element's exact class attribute string, use [`className`](#className).\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (classes)\n\n\n    test \"Button has the classes btn and btn-large\" <|\n        \\() ->\n            Html.button [ Attr.class \"btn btn-large\" ] [ Html.text \"Reply\" ]\n                |> Query.fromHtml\n                |> Query.has [ classes [ \"btn\", \"btn-large\" ] ]\n",
+        "type": "List String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "disabled",
+        "comment": " Matches elements that have a\n[`disabled`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#disabled)\nattribute with the given value.\n",
+        "type": "Bool -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "id",
+        "comment": " Matches elements that have the given `id` attribute.\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (id, text)\n\n\n    test \"the welcome <h1> says hello!\" <|\n        \\() ->\n            Html.div []\n                [ Html.h1 [ Attr.id \"welcome\" ] [ Html.text \"Hello!\" ] ]\n                |> Query.fromHtml\n                |> Query.find [ id \"welcome\" ]\n                |> Query.has [ text \"Hello!\" ]\n",
+        "type": "String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "selected",
+        "comment": " Matches elements that have a\n[`selected`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#selected)\nattribute with the given value.\n",
+        "type": "Bool -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "tag",
+        "comment": " Matches elements that have the given tag.\n\n    import Html\n    import Html.Attributes as Attr\n    import Test.Html.Query as Query\n    import Test exposing (test)\n    import Test.Html.Selector exposing (tag, text)\n\n\n    test \"the welcome <h1> says hello!\" <|\n        \\() ->\n            Html.div []\n                [ Html.h1 [ Attr.id \"welcome\" ] [ Html.text \"Hello!\" ] ]\n                |> Query.fromHtml\n                |> Query.find [ tag \"h1\" ]\n                |> Query.has [ text \"Hello!\" ]\n",
+        "type": "String -> Test.Html.Selector.Selector"
+      },
+      {
+        "name": "text",
+        "comment": " Matches elements that have a\n[`text`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html-Attributes#text)\nattribute with the given value.\n",
+        "type": "String -> Test.Html.Selector.Selector"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
