@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Dollar",
+    "comment": " This library provides a `Dollar` type that wraps an `Int`. This adds greater\ntype safety to your function than a simple type alias would by guaranteeing you\ncan't mistakenly pass a `Dollar` where you meant to use some other type of `Int`\nor mistakenly trying to add a `Dollar` value with another `Int`.\n\nThe `Dollar` module provides a bunch of helper functions to make it easy to\nperform operations on the wrapped value as well as some generic helpers to allow\nyou to write your own operations. For example:\n\n    -- given this type\n\n    type alias Person =\n      { age : Int\n      , savings : Int\n      }\n\n    -- this incorrect function will compile\n\n    totalCoupleSavings : Person -> Person -> Int\n    totalCoupleSavings person1 person2 =\n      person1.savings + person2.age\n\n    -- whereas using a Dollar instead of an Int will catch\n    -- the error at compile time since you can't add an Int\n    -- and a Dollar.\n\n    type alias Person =\n      { age : Int\n      , savings : Dollar\n      }\n\n    -- the correct implementation of totalCoupleSavings now\n    -- looks like:\n\n    totalCoupleSavings : Person -> Person -> Dollar\n    totalCoupleSavings person1 person2 =\n      Dollar.add person1.savings person2.savings\n\n\n# Definition\n@docs Dollar\n\n# Constructing and Destructing\n@docs zero, toInt, fromInt\n\n# Common math operations\n@docs add, subtract\n\n# Abstract helpers\n@docs map, map2, map3, map4, map5, map6\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Dollar",
+        "comment": " Represents a dollar value. These are their own type and cannot be combined\nwith other integers without explicitly doing so by using a helper function,\nadding to the type safety of your operations.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add two `Dollar` values together without needing to unwrap. This is a\nspecialized form of `map2` and is implemented as `map2 (+)`\n\n    Dollar.add (Dollar.fromInt 3) (Dollar.fromInt 2) == Dollar.fromInt 5\n",
+        "type": "Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Construct a `Dollar` value from an integer.\n\n    Dollar.fromInt 0 == Dollar.zero\n",
+        "type": "Int -> Dollar.Dollar"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to the value wrapped by a `Dollar` without having to\nunwrap and re-wrap.\n\n    Dollar.map ((*) 2) (Dollar.fromInt 3) == Dollar.fromInt 6\n\n",
+        "type": "(Int -> Int) -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "map2",
+        "comment": " Apply a function to the values wrapped by two `Dollar`s without having to\nunwrap and re-wrap.\n\n    Dollar.map2 (+) (Dollar.fromInt 3) (Dollar.fromInt 2) == Dollar.fromInt 5\n\n",
+        "type": "(Int -> Int -> Int) -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "map3",
+        "comment": " Apply a function to the values wrapped by three `Dollar`s without having to\nunwrap and re-wrap.\n",
+        "type": "(Int -> Int -> Int -> Int) -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "map4",
+        "comment": " Apply a function to the values wrapped by four `Dollar`s without having to\nunwrap and re-wrap.\n",
+        "type": "(Int -> Int -> Int -> Int -> Int) -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "map5",
+        "comment": " Apply a function to the values wrapped by five `Dollar`s without having to\nunwrap and re-wrap.\n",
+        "type": "(Int -> Int -> Int -> Int -> Int -> Int) -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "map6",
+        "comment": " Apply a function to the values wrapped by five `Dollar`s without having to\nunwrap and re-wrap.\n",
+        "type": "(Int -> Int -> Int -> Int -> Int -> Int -> Int) -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "subtract",
+        "comment": " Subtract a `Dollar` value from another without needing to unwrap. This is a\nspecialized form of `map2` and is implemented as `map2 (-)`\n\n    Dollar.subtract (Dollar.fromInt 5) (Dollar.fromInt 2) == Dollar.fromInt 3\n",
+        "type": "Dollar.Dollar -> Dollar.Dollar -> Dollar.Dollar"
+      },
+      {
+        "name": "toInt",
+        "comment": " Unwrap a `Dollar` value to get at the integer inside. You probably don't\nwant to do this most of the time. Use one of the mapping functions.\ninstead.\n\n    Dollar.zero |> Dollar.toInt == 0\n\n",
+        "type": "Dollar.Dollar -> Int"
+      },
+      {
+        "name": "zero",
+        "comment": " Zero dollars\n\n    Dollar.zero == Dollar.fromInt 0\n",
+        "type": "Dollar.Dollar"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
