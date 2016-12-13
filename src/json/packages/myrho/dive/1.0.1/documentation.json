@@ -1,0 +1,224 @@
+[
+  {
+    "name": "Dive.ElmLogo",
+    "comment": "\n  lba\n@docs logo\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "logo",
+        "comment": "\nThe Elm logo as an `Object` (essentially a `group` of `polygon`s). Gets a position and a size tuple as arguments.\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Dive.Object"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Dive",
+    "comment": "\nDive is a framework for programming visual presentations like [Prezi](https://prezi.com)'s. \n\n# Demo\n\nThis [presentation](https://myrho.github.io/dive/) dives you through the fundamentals of Dive written with Dive itself!\n\nThe source code can be found [here](https://github.com/myrho/dive/tree/master/intro).\n\n# Installation\n\nInstall Dive like any other Elm package:\n\n    elm package install myrho/dive\n\n# Example\n\nCreate a file named `Main.elm` and copy/paste the following piece of code into it:\n\n    import Html \n    import Dive exposing (..)\n    import Dive.ElmLogo exposing (logo)\n\n    world =\n      [ logo (0,0) (1,1)\n      , text (0,0) \"Hello Dive!\"\n        |> transformObject (0.001,0.001) (0,0) \n      ]\n\n    frames =\n      [ frame (1,1) (0,0)\n      , frame (0.01, 0.01) (0,0) \n        |> duration 2000\n      ]\n\n    init size =\n      ( Dive.init size\n        |> Dive.world world\n        |> Dive.frames frames\n      , Cmd.none\n      )\n\n    main =\n      Html.programWithFlags\n        { init = init\n        , update = Dive.update\n        , view = Dive.view\n        , subscriptions = \n            Dive.subscriptions\n        }\n\nBuild it:\n\n    elm make --output elm.js\n\nCreate a file named `index.html` and copy/paste the following piece of code into it:\n\n    <!DOCTYPE HTML>\n    <html>\n      <head>\n        <script type=\"text/javascript\" src=\"elm.js\"></script>\n      </head>\n      <body style=\"margin:0; padding:0; overflow:hidden;\">\n        <script type=\"text/javascript\">\n          var size =\n            { width : window.innerWidth\n            , height : window.innerHeight\n            };\n          Elm.Main.fullscreen(size);\n        </script>\n      </body>\n    </html>\n\nNavigate your browser (Firefox or Chrome) to the location of the `index.html` and dive!\n\n# Documentation\n\nDive follows [The Elm Architecture](https://guide.elm-lang.org/architecture/) (TEA).\n@docs Model, Msg, init, update, view, subscriptions\n\n## World \nThe \"world\" is the list of `Object`s the presentation consists of. \n\n@docs Position, Size, Object, world\n\n### Constructors\n@docs rectangle, polygon, text, path, image, group\n\n### General Decorators\n@docs border, lineStyle, fill, color\n\n### Text Decorators\n@docs fontFamily, centered, leftAligned, rightAligned, height, lineHeight\n\n### Image Decorators\n@docs fitted, tiled, offset\n\n### Transformation\n@docs transformObject\n\n### LineStyle\n@docs LineStyle, defaultLine\n\n## Frames\n\nFrames define into which part of the canvas you want to dive to. \n\n@docs Frame, frames, current\n\n### Constructor\n@docs frame\n\n### Decorators\n@docs duration\n\n### Transformation\n@docs transformFrame\n\n",
+    "aliases": [
+      {
+        "name": "LineStyle",
+        "comment": "\nReusing `Collage.LineStyle` here.\n",
+        "args": [],
+        "type": "Collage.LineStyle"
+      },
+      {
+        "name": "Msg",
+        "comment": "\n",
+        "args": [],
+        "type": "Dive.Update.Msg"
+      },
+      {
+        "name": "Position",
+        "comment": "\nX- and Y-coordinates.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "Size",
+        "comment": "\nWidth and height.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Frame",
+        "comment": "\nA `Frame` consists of a `position`, a `size` and a `duration`.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Model",
+        "comment": "\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Object",
+        "comment": "\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "border",
+        "comment": "\nDraw a border around an `Object`. Only affects rectangles.\n",
+        "type": "Dive.LineStyle -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "centered",
+        "comment": "\nCenter text.\n",
+        "type": "Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "color",
+        "comment": "\nSet the `Color` of an `Object`. Only affects texts, rectangles and polygons.\n",
+        "type": "Color.Color -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "current",
+        "comment": "\nSets the current frame of the presentation.\n",
+        "type": "Int -> Dive.Model -> Dive.Model"
+      },
+      {
+        "name": "defaultLine",
+        "comment": "\nThe default `LineStyle`.\n",
+        "type": "Dive.LineStyle"
+      },
+      {
+        "name": "duration",
+        "comment": "\nSet the duration in milliseconds it takes to dive to the `Frame`.\n",
+        "type": "Int -> Dive.Frame -> Dive.Frame"
+      },
+      {
+        "name": "fill",
+        "comment": "\nFill an `Object` with the given color. Only affects texts, rectangles and polygons.\n",
+        "type": "Color.Color -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "fitted",
+        "comment": "\nScale an image up to the width and height of the `Object`.\n\n    image \"myImage.jpg\" \n    |> size 100 1 \n    |> fitted\n",
+        "type": "Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "fontFamily",
+        "comment": "\nA list of preferred fonts.\n\n    [\"Inconsolata\",\"Courier New\",\"monospace\"]\n\nThe first font in the list that is found on the user's computer is used.\n",
+        "type": "List String -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "frame",
+        "comment": "\nCreate a `Frame`. Duration is 1000 ms by default.\n",
+        "type": "Dive.Size -> Dive.Position -> Dive.Frame"
+      },
+      {
+        "name": "frames",
+        "comment": "\nSets the frames of the presentation. A `Frame` defines into which part of the canvas you want to dive to.\n",
+        "type": "List Dive.Frame -> Dive.Model -> Dive.Model"
+      },
+      {
+        "name": "group",
+        "comment": "\nGroups a list of `Object`s. Handy if you want to `transform` a bunch of objects altogether.\n",
+        "type": "List Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "height",
+        "comment": "\nSet the height of some text.\n",
+        "type": "Float -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "image",
+        "comment": "\nAn image rendering the given source url.\n\n    image (100,100) (0,0) \"myImage.jpg\"\n",
+        "type": "Dive.Size -> Dive.Position -> String -> Dive.Object"
+      },
+      {
+        "name": "init",
+        "comment": "\nInitialize the Dive `Model` with the viewport size.\n",
+        "type": "Window.Size -> Dive.Model"
+      },
+      {
+        "name": "leftAligned",
+        "comment": "\nAlign text to the left.\n",
+        "type": "Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "lineHeight",
+        "comment": "\nSets the line height of some text.\n",
+        "type": "Float -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "lineStyle",
+        "comment": "\nSet the `LineStyle` of an `Object`. Only affects paths.\n",
+        "type": "Dive.LineStyle -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "offset",
+        "comment": "\nCrop an image by starting at the given offset coordinates.\n",
+        "type": "Float -> Float -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "path",
+        "comment": "\nA path with the given coordinates and traced with `defaultLine`.\n\n    path [(0,0), (1,1), (0,1), (1,2)]\n",
+        "type": "List Dive.Position -> Dive.Object"
+      },
+      {
+        "name": "polygon",
+        "comment": "\nA blue polygon with the given coordinates.\n\n    polygon [(0,0), (1,1), (0,1)]\n",
+        "type": "List Dive.Position -> Dive.Object"
+      },
+      {
+        "name": "rectangle",
+        "comment": "\nA black rectangle.\n\n    rectangle (100,100) (0,0)\n",
+        "type": "Dive.Size -> Dive.Position -> Dive.Object"
+      },
+      {
+        "name": "rightAligned",
+        "comment": "\nAlign text to the right.\n",
+        "type": "Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "subscriptions",
+        "comment": "\nDive subscribes to `Mouse.clicks`, `Keyboard.presses`, `Window.resize` and `AnimationFrame.diff`.\n",
+        "type": "Dive.Model -> Platform.Sub.Sub Dive.Msg"
+      },
+      {
+        "name": "text",
+        "comment": "\nA black, centered text with font type 'sans', height 1 and lineHeight 1.\n\n    text (0,0) \"hello world\"\n",
+        "type": "Dive.Position -> String -> Dive.Object"
+      },
+      {
+        "name": "tiled",
+        "comment": "\nRepeat an image up to the width and height of the `Object`.\n\n    image \"myImage.jpg\" \n    |> size 100 100\n    |> tiled\n",
+        "type": "Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "transformFrame",
+        "comment": "\nTransform a `Frame`. First the `Frame` is resized by the first input tuple of scaling factors (width, height), then it is moved by the vector given in the second input tuple (x,y).\n\n    frame (1,1) (0,0) -- create a 1x1 sized frame at position (0,0)\n    |> transform (3,5) (10,20) -- scale it to 10x20 and move it by (3,5)\n",
+        "type": "Dive.Size -> Dive.Position -> Dive.Frame -> Dive.Frame"
+      },
+      {
+        "name": "transformObject",
+        "comment": "\nTransform an `Object`. First the `Object` is resized by the first input tuple of scaling factors (width, height), then it is moved by the vector given in the second input tuple (x,y).\n\n    rectangle -- construct a 1x1 sized rectangle at position (0,0)\n    |> transform (3,5) (10,20) -- scales it to 10x20 and moves it by (3,5)\n",
+        "type": "Dive.Size -> Dive.Position -> Dive.Object -> Dive.Object"
+      },
+      {
+        "name": "update",
+        "comment": "\n",
+        "type": "Dive.Msg -> Dive.Model -> ( Dive.Model, Platform.Cmd.Cmd Dive.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": "\n",
+        "type": "Dive.Model -> Html.Html Dive.Msg"
+      },
+      {
+        "name": "world",
+        "comment": "\nSets a list of `Object`s\n",
+        "type": "List Dive.Object -> Dive.Model -> Dive.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
