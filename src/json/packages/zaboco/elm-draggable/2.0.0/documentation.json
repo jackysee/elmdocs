@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Draggable.Events",
+    "comment": " Listeners for the various events involved in dragging (`onDragBy`, `onDragStart`, etc.). Also handles `click` events when the mouse was not moved.\n@docs onDragStart, onDragEnd, onDragBy\n@docs onClick, onMouseDown\n@docs Key\n",
+    "aliases": [
+      {
+        "name": "Key",
+        "comment": " Type representing a key used for targeting draggable elements.\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onClick",
+        "comment": " Register a `Click` event listener. It will trigger if the mouse is pressed and immediately release, without any move. It receives the element key.\n",
+        "type": "(Draggable.Events.Key -> msg) -> Draggable.Event msg"
+      },
+      {
+        "name": "onDragBy",
+        "comment": " Register a `DragBy` event listener. It will trigger every time the mouse is moved. The sent message will contain a `Delta`, which is the distance between the current position and the previous one.\n\n    case Msg of\n        OnDragBy (dx, dy) ->\n            { model | position = { x = position.x + dx, y = position.y + dy } }\n",
+        "type": "(Internal.Delta -> msg) -> Draggable.Event msg"
+      },
+      {
+        "name": "onDragEnd",
+        "comment": " Register a `DragEnd` event listener. It will not trigger if the mouse has not moved while it was pressed.\n",
+        "type": "msg -> Draggable.Event msg"
+      },
+      {
+        "name": "onDragStart",
+        "comment": " Register a `DragStart` event listener. It will not trigger if the mouse has not moved while it was pressed. It receives the element key.\n",
+        "type": "(Draggable.Events.Key -> msg) -> Draggable.Event msg"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " Register a `MouseDown` event listener. It will trigger whenever the mouse is pressed and will indicate the target element by the given `String` key.\n",
+        "type": "(Draggable.Events.Key -> msg) -> Draggable.Event msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Draggable",
+    "comment": "\nThis library provides and easy way to make DOM elements (Html or Svg) draggable.\n\n## When is dragging considered?\nAn element is considered to be dragging when the mouse is pressed **and** moved before it is released. Otherwise, the action is considered a click. This is useful because in some cases you may want to support both actions.\n\n[See examples](https://github.com/zaboco/elm-draggable/tree/master/examples)\n\n\n# Initial State\n@docs init\n\n# Config\n@docs basicConfig, customConfig\n\n# Update\n@docs update, subscriptions\n\n# DOM trigger\n@docs mouseTrigger\n\n# Definitions\n@docs Delta, State, Msg, Config, Event\n",
+    "aliases": [
+      {
+        "name": "Delta",
+        "comment": " A type alias representing the distance between two drag points.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "Event",
+        "comment": " An event declaration for the draggable config\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Internal.Event msg"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration of a draggable model.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " A message type for updating the internal drag state.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Drag state to be included in model.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "basicConfig",
+        "comment": " Basic config\n\n    config = basicConfig OnDragBy\n",
+        "type": "(Draggable.Delta -> msg) -> Draggable.Config msg"
+      },
+      {
+        "name": "customConfig",
+        "comment": " Custom config, including arbitrary options. See [`Events`](#Draggable-Events).\n\n    config = customConfig\n        [ onDragBy OnDragBy\n        , onDragStart OnDragStart\n        , onDragEnd OnDragEnd\n        ]\n",
+        "type": "List (Draggable.Event msg) -> Draggable.Config msg"
+      },
+      {
+        "name": "init",
+        "comment": " Initial drag state\n",
+        "type": "Draggable.State"
+      },
+      {
+        "name": "mouseTrigger",
+        "comment": " DOM event handler to start dragging on mouse down. It requires a `String` key for the element, in order to provide support for multiple drag targets sharing the same drag state. Of course, if only one element is draggable, it can have any value, including `\"\"`.\n\n    div [ mouseTrigger \"element-id\" DragMsg ] [ text \"Drag me\" ]\n",
+        "type": "String -> (Draggable.Msg -> msg) -> VirtualDom.Property msg"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Handle mouse subscriptions used for dragging\n",
+        "type": "(Draggable.Msg -> msg) -> Draggable.State -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "update",
+        "comment": " Handle update messages for the draggable model. It assumes that the drag state will be stored under the key `drag`.\n",
+        "type": "Draggable.Config msg -> Draggable.Msg -> { m | drag : Draggable.State } -> ( { m | drag : Draggable.State }, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
