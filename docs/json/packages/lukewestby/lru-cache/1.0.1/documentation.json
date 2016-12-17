@@ -1,0 +1,51 @@
+[
+  {
+    "name": "LruCache",
+    "comment": " A [least recently used cache](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_Recently_Used_.28LRU.29)\nfor key/value pairs.\n\n@docs LruCache, empty, insert, get, size, member, toDict\n",
+    "aliases": [
+      {
+        "name": "LruCache",
+        "comment": " The LruCache data type. All internals are exposed in case you want to write\nyour own tooling or custom functionality.\n",
+        "args": [
+          "comparable",
+          "a"
+        ],
+        "type": "{ items : Dict.Dict comparable ( a, Int ) , maximum : Int , counter : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Create an empty LruCache with a given maximum size\n\n    LruCache.empty 5\n",
+        "type": "Int -> LruCache.LruCache comparable a"
+      },
+      {
+        "name": "get",
+        "comment": " Looks up a value from the cache and updates the cache to record that the\nlooked up value was recently used\n\n    initialCache =\n        LruCache.empty 2\n            |> LruCache.insert \"a\" 1\n            |> LruCache.insert \"b\" 2\n\n    (nextCache, value) =\n        LruCache.get \"a\" initialCache\n\n    -- Will contain (\"a\", 1) (\"c\", 3) because \"a\" was used last and \"b\" becomes\n    -- the least recently used item\n    finalCache =\n        nextCache\n            |> LruCache.insert \"c\" 3\n",
+        "type": "comparable -> LruCache.LruCache comparable a -> ( LruCache.LruCache comparable a, Maybe.Maybe a )"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a value into the cache, removing an old value if there isn't enough\nroom\n\n    -- Will only contain (\"b\", 2) and (\"c\", 3)\n    LruCache.empty 2\n        |> LruCache.insert \"a\" 1\n        |> LruCache.insert \"b\" 2\n        |> LruCache.insert \"c\" 3\n",
+        "type": "comparable -> a -> LruCache.LruCache comparable a -> LruCache.LruCache comparable a"
+      },
+      {
+        "name": "member",
+        "comment": " Figures out if a key is in the cache without changing its recency\n\n    -- True\n    LruCache.empty 2\n        |> LruCache.insert \"a\" 1\n        |> LruCache.insert \"b\" 2\n        |> LruCache.member \"b\"\n",
+        "type": "comparable -> LruCache.LruCache comparable a -> Bool"
+      },
+      {
+        "name": "size",
+        "comment": " Gets number of items in the cache\n\n    -- size is 2\n    LruCache.empty 2\n        |> LruCache.insert \"a\" 1\n        |> LruCache.insert \"b\" 2\n        |> LruCache.size\n",
+        "type": "LruCache.LruCache comparable a -> Int"
+      },
+      {
+        "name": "toDict",
+        "comment": " Converts the items in the cache to a Dict\n",
+        "type": "LruCache.LruCache comparable a -> Dict.Dict comparable a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

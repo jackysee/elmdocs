@@ -1,0 +1,21 @@
+[
+  {
+    "name": "FormatNumber",
+    "comment": " This simple package formats numbers as pretty strings. It is flexible\nenough to deal with different number of decimals, different thousand\nseparators and diffetent decimal separator.\n\n# Usage\n@docs formatFloat, formatInt\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "formatFloat",
+        "comment": " Format a float number as a pretty string. The four arguments are: number of\ndecimals, thousand separator, decimal separator and the float number itself.\n\n    >>> formatFloat 2 \",\" \".\" 1234.5567\n    \"1,234.56\"\n\n    >>> formatFloat 3 \".\" \",\" -7654.3210\n    \"-7.654,321\"\n\n    >>> formatFloat 1 \",\" \".\" -0.01\n    \"0.0\"\n",
+        "type": "Int -> String -> String -> Float -> String"
+      },
+      {
+        "name": "formatInt",
+        "comment": " Format a float number as a pretty string. The four arguments are: number of\ndecimals, thousand separator, decimal separator and the float number itself.\n    >>> formatInt 1 \",\" \".\" 0\n    \"0.0\"\n\n    >>> formatInt 1 \",\" \".\" 1234567890\n    \"1,234,567,890.0\"\n\n",
+        "type": "Int -> String -> String -> Int -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
