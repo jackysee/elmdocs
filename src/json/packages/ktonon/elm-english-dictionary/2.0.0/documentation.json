@@ -1,0 +1,93 @@
+[
+  {
+    "name": "EnglishDictionary",
+    "comment": " English language dictionary. Check word membership and lookup definitions.\n\n@docs checkIsWord, fetchDefinitions, Definition, Error, Config, WordDefinition, WordCheck\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Holds the endpoint of the companion serverless API. To reduce the size of\nthe Elm package, all of the word definitions are stored in an AWS Lambda\n(serverless) API.\n",
+        "args": [],
+        "type": "{ endpoint : String }"
+      },
+      {
+        "name": "Definition",
+        "comment": " A word defition consists of a part of speech (ex, noun) a meaning, and zero\nor more short examples.\n",
+        "args": [],
+        "type": "{ partOfSpeech : PartOfSpeech.PartOfSpeech , meaning : String , examples : List String }"
+      },
+      {
+        "name": "WordCheck",
+        "comment": " Whether or not a word is part of the english language.\n",
+        "args": [],
+        "type": "{ word : String, exists : Bool }"
+      },
+      {
+        "name": "WordDefinition",
+        "comment": " A word with a list of definitions.\n",
+        "args": [],
+        "type": "{ word : String, definitions : List EnglishDictionary.Definition }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " Errors can either be Http or misconfiguration (i.e. missing endpoint)\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "checkIsWord",
+        "comment": " Check membership of a word in the English language.\n\nWords up to and including length 5 can be checked without making an Http request\nto the backing serverless API.\n",
+        "type": "EnglishDictionary.Config -> String -> Task.Task EnglishDictionary.Error EnglishDictionary.WordCheck"
+      },
+      {
+        "name": "fetchDefinitions",
+        "comment": " Fetch a list of definitions associated with the given word.\n",
+        "type": "EnglishDictionary.Config -> String -> Task.Task EnglishDictionary.Error EnglishDictionary.WordDefinition"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Words1To5",
+    "comment": " List of english words of length 1 to 5\n\n@docs words\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "words",
+        "comment": " List of english words of length 1 to 5\n",
+        "type": "Set.Set String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "PartOfSpeech",
+    "comment": " Part of speech enumeration with decoder and toString\n\n@docs PartOfSpeech, decoder, toString\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "PartOfSpeech",
+        "comment": " Part of speech enumeration. Possible positions of a word in a sentence.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "decoder",
+        "comment": " Decodes a part of speech string representation\n",
+        "type": "Json.Decode.Decoder PartOfSpeech.PartOfSpeech"
+      },
+      {
+        "name": "toString",
+        "comment": " A readable string representation\n",
+        "type": "PartOfSpeech.PartOfSpeech -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
