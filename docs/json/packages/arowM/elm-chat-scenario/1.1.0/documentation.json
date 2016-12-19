@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Scenario.Simple",
+    "comment": " A simple Conversational User Interface component.\n\n# Common Types\n\n@docs Model\n@docs Msg\n@docs update\n@docs init\n@docs view\n\n# For configurations\n\n@docs Config\n@docs config\n\n# CSS\n\n@docs css\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configurations for the `view`.\n  * `title`: Main title of this chat\n  * `buttonLabel`: Label name of submit button\n  * `namespace`: A name space for css.\n",
+        "args": [
+          "id"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Model",
+        "comment": " A `Model` for this module. Combine this with parent `Model` in the manner of the elm architecture.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " A `Msg` for this module. Combine this with parent `Msg` in the manner of the elm architecture.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": " A constructor for `Config` type.\n  * `title`: Main title of this chat\n  * `buttonLabel`: Label name of submit button\n  * `namespace`: A name space for css.\n",
+        "type": "{ title : String , buttonLabel : String , namespace : Html.CssHelpers.Namespace String Scenario.Simple.Css.CssClasses id Scenario.Simple.Msg } -> Scenario.Simple.Config id"
+      },
+      {
+        "name": "css",
+        "comment": " A CSS component.\nPlease reffer to the `rtfeldman/elm-css` for detail.\nAlso, you can see an example in `sample/simple/`.\n",
+        "type": "Html.CssHelpers.Namespace String class id msg -> Css.Stylesheet"
+      },
+      {
+        "name": "init",
+        "comment": " Create a initial `(Model, Cmd Msg)` for this module. By providing a scenario,\nyou determine which schenario should be used by default. To construct a `Scenario`,\nplease reffer to the `print`, `read`, `andThen`, `andAlways` in `Scenario` module.\n",
+        "type": "Scenario.Simple.SimpleScenario () -> ( Scenario.Simple.Model, Platform.Cmd.Cmd Scenario.Simple.Msg )"
+      },
+      {
+        "name": "update",
+        "comment": " A `update` for this module. Combine this with parent `update` function in the manner of the elm architecture.\n",
+        "type": "Scenario.Simple.Msg -> Scenario.Simple.Model -> ( Scenario.Simple.Model, Platform.Cmd.Cmd Scenario.Simple.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " A `view` for this module. Combine this with parent `view` function in the manner of the elm architecture.\nThe first argument is supposed to be constructed by `config` function.\n",
+        "type": "Scenario.Simple.Config id -> Scenario.Simple.Model -> Html.Html Scenario.Simple.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Scenario",
+    "comment": " A type safe DSL for CLI or Conversational User Interface.\nThis only exposes core utilities, so check `Scenario.*` for practical usages.\n\n# Common Types\n\n@docs Scenario\n\n# Convenient functions to construct scenario\n\n@docs print\n@docs read\n@docs andThen\n@docs andAlways\n\n# Functions to run scenario model\n\n@docs update\n@docs pushAnswer\n\n# Configurations for running scenario\n\n@docs Config\n@docs config\n\n# Rarely used but important functions\n\n@docs succeed\n@docs map\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration for running scenario\n",
+        "args": [
+          "msg",
+          "c",
+          "t",
+          "v"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Scenario",
+        "comment": " Main type of this module to represent scenario.\n",
+        "args": [
+          "c",
+          "t",
+          "v",
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andAlways",
+        "comment": " Similar to `andThen`, but ignores previous state.\n",
+        "type": "Scenario.Scenario c t v b -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Combine two scenarios to make one scenario.\n",
+        "type": "(a -> Scenario.Scenario c t v b) -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "config",
+        "comment": " Constructor for `Config`\n",
+        "type": "(t -> Platform.Cmd.Cmd msg) -> Platform.Cmd.Cmd msg -> (c -> Platform.Cmd.Cmd msg) -> Scenario.Config msg c t v"
+      },
+      {
+        "name": "map",
+        "comment": " Convert scenario state by given function.\n",
+        "type": "(a -> b) -> Scenario.Scenario c t v a -> Scenario.Scenario c t v b"
+      },
+      {
+        "name": "print",
+        "comment": " Construct scenario contains only one print message event.\n",
+        "type": "t -> Scenario.Scenario c t v ()"
+      },
+      {
+        "name": "pushAnswer",
+        "comment": " Push answer to a scenario and get next scenario\n",
+        "type": "v -> Scenario.Scenario c t v a -> Scenario.Scenario c t v a"
+      },
+      {
+        "name": "read",
+        "comment": " Construct scenario contains only one read input event.\n",
+        "type": "c -> Scenario.Scenario c t v v"
+      },
+      {
+        "name": "succeed",
+        "comment": " Construct scenario with any state.\n",
+        "type": "a -> Scenario.Scenario c t v a"
+      },
+      {
+        "name": "update",
+        "comment": " Run scenario step by step.\n",
+        "type": "Scenario.Config msg c t v -> Scenario.Scenario c t v a -> ( Scenario.Scenario c t v a, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
