@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Ordering",
+    "comment": " Library for building comparison functions.\n\nThis library makes it easy to create comparison functions for arbitary types by composing\nsmaller comparison functions. For instance, suppose you are defining a data type to represent\na standard deck of cards. You might define it as:\n\n    type alias Card = { value : Value, suite : Suite }\n    type Suite = Clubs | Hearts | Diamonds | Spades\n    type Value = Two | Three | Four | Five | Six | Seven\n               | Eight | Nine | Ten | Jack | Queen | King | Ace\n\nWith this representation, you could define an ordering for `Card` values compositionally:\n\n    import Ordering exposing (Ordering)\n\n\n    cardOrdering : Ordering Card\n    cardOrdering =\n        Ordering.byFieldWith suiteOrdering .suite\n            |> Ordering.breakTiesWith\n                   (Ordering.byFieldWith valueOrdering .value)\n\n\n    suiteOrdering : Ordering Suite\n    suiteOrdering =\n        Ordering.explicit [Clubs, Hearts, Diamonds, Spades]\n\n\n    valueOrdering : Ordering Value\n    valueOrdering =\n        Ordering.explicit\n            [ Two , Three , Four , Five , Six , Seven\n            , Eight, Nine, Ten, Jack, Queen, King, Ace\n            ]\n\n\nYou can then use this ordering to sort cards, make comparisons, and so on. For instance,\nto sort a deck of cards you can use `cardOrdering` directly:\n\n    sortCards : List Card -> List Card\n    sortCards = List.sortWith cardOrdering\n\n# Definition\n@docs Ordering\n\n# Construction\n@docs natural, byToString, explicit, byField, byFieldWith, byRank, noConflicts, ifStillTiedThen\n\n# Composition\n@docs breakTiesWith, reverse\n\n# Utility\n@docs isOrdered, greaterThanBy, lessThanBy\n",
+    "aliases": [
+      {
+        "name": "Ordering",
+        "comment": " A function that compares two values and returns whether\nthe first is less than, equal to, or greater than the second.\n\nThough the type alias is provided by this library, its\ndefinition is chosen to be compatible with existing Elm functions\nthat accept ordering functions. So, for instance, you can\npass an ordering to `List.sortWith` directly:\n\n    type alias Point = { x : Int, y : Int }\n\n    myOrdering : Ordering Point\n    myOrdering =\n        Ordering.byField .x\n            |> Ordering.breakTiesWith (Ordering.byField .y)\n\n    List.sortWith myOrdering [Point 1 2, Point 2 3]\n",
+        "args": [
+          "a"
+        ],
+        "type": "a -> a -> Basics.Order"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "breakTiesWith",
+        "comment": " Produces an ordering that refines the second input ordering by using the first\nordering as a tie breaker. (Note that the second argument is the primary sort, and\nthe first argument is a tie breaker. This argument ordering is intended to support\nfunction chaining with `|>`.)\n\n    type alias Point = { x : Int, y : Int }\n\n    pointOrdering : Ordering Point\n    pointOrdering =\n        Ordering.byField .x\n            |> Ordering.breakTiesWith (Ordering.byField .y)\n",
+        "type": "Ordering.Ordering a -> Ordering.Ordering a -> Ordering.Ordering a"
+      },
+      {
+        "name": "byField",
+        "comment": " Produces an ordering that orders its elements using the natural ordering of the\nfield selected by the given function.\n\n    type alias Point = { x : Int, y : Int }\n\n    List.sort (Ordering.byField .x) [Point 3 5, Point 1 6]\n        == [Point 1 6, Point 3 5]\n    List.sort (Ordering.byField .y) [Point 3 5, Point 1 6]\n        == [Point 3 5, Point 1 6]\n",
+        "type": "(a -> comparable) -> Ordering.Ordering a"
+      },
+      {
+        "name": "byFieldWith",
+        "comment": " Produces an ordering that orders its elements using the given ordering on the\nfield selected by the given function.\n\n    cards =\n        [ { value = Two, suite = Spades }\n        , { value = King, suite = Hearts }\n        ]\n\n    List.sort\n        (Ordering.byFieldWith valueOrdering .value)\n        cards\n        == [ { value = Two, suite = Spades }\n           , { value = King, suite = Hearts }\n           ]\n    List.sort\n        (Ordering.byFieldWith suiteOrdering .suite)\n        cards\n        == [ { value = King, suite = Hearts }\n           , { value = Two, suite = Spades }\n           ]\n",
+        "type": "Ordering.Ordering b -> (a -> b) -> Ordering.Ordering a"
+      },
+      {
+        "name": "byRank",
+        "comment": " Produces an ordering defined by an explicit ranking function combined with a\nsecondary ordering function to compare elements within the same rank. The rule is\nthat all items are sorted first by rank, and then using the given within-rank\nordering for items of the same rank.\n\nThis function is intended for use with types that have multiple cases where\nconstructors for some or all of the cases take arguments. (Otherwise use `Ordering.explicit`\ninstead which has a simpler interface.) For instance, to make an ordering for\na type such as:\n\n    type JokerCard = NormalCard Value Suite | Joker\n\nyou could use `byRank` to sort all the normal cards before the jokers like so:\n\n    jokerCardOrdering : Ordering JokerCard\n    jokerCardOrdering =\n        Ordering.byRank\n            (card ->\n                 case card of\n                     NormalCard _ _ -> 1\n                     Joker -> 2)\n            (x y ->\n                 case (x, y) of\n                     (NormalCard v1 s1, NormalCard v2 s2) ->\n                         suiteOrdering s1 s2\n                             |> Ordering.ifStillTiedThen\n                                    (valueOrdering v1 v2)\n                     _ -> Ordering.noConflicts)\n\nMore generally, the expected pattern is that for each case in your type, you assign\nthat case to a unique rank with the ranking function. Then for your within-rank\nordering, you have a case statement that enumerates all the \"tie\" states and\nspecifies how to break ties, and then uses a catch-all case that returns\n`Ordering.noConflicts` to specify that all remaining cases cannot give rise to\nthe need to do any subcomparisons. (This can be either because the values being\ncompared have no internal structure and so are always equal, or because they are\nconstructors with different ranks and so will never be compared by this function.)\n",
+        "type": "(a -> Int) -> Ordering.Ordering a -> Ordering.Ordering a"
+      },
+      {
+        "name": "byToString",
+        "comment": " Ordering that orders values lexicographically by their string representation.\nThis ordering can be useful for prototyping but it's usually better to replace it\nwith a hand-made ordering for serious use since `byToString` gives no way of tuning\nthe resulting ordering.\n",
+        "type": "Ordering.Ordering a"
+      },
+      {
+        "name": "explicit",
+        "comment": " Creates an ordering that orders items in the order given in the input list.\nItems that are not part of the input list are all considered to be equal to each\nother and less than anything in the list.\n\n    type Day = Mon | Tue | Wed | Thu | Fri | Sat | Sun\n\n    dayOrdering : Ordering Day\n    dayOrdering =\n        Ordering.explicit\n            [Mon, Tue, Wed, Thu, Fri, Sat, Sun]\n",
+        "type": "List a -> Ordering.Ordering a"
+      },
+      {
+        "name": "greaterThanBy",
+        "comment": " Determines if one value is greater than another according to the given ordering.\n\n    greaterThanBy\n        xThenYOrdering\n        { x = 7, y = 8 }\n        { x = 10, y = 2 }\n        == False\n\n    greaterThanBy\n        yThenXOrdering\n        { x = 7, y = 8 }\n        { x = 10, y = 2 }\n        == True\n",
+        "type": "Ordering.Ordering a -> a -> a -> Bool"
+      },
+      {
+        "name": "ifStillTiedThen",
+        "comment": " Returns the main order unless it is `EQ`, in which case returns the tiebreaker.\n\nThis function does for `Order`s what `breakTiesWith` does for `Ordering`s. It is\nuseful in cases where you want to perform a cascading comparison of multiple pairs\nof values that are not wrapped in a container value, as happens when examining the\nindividual fields of a constructor.\n",
+        "type": "Basics.Order -> Basics.Order -> Basics.Order"
+      },
+      {
+        "name": "isOrdered",
+        "comment": " Determines if the given list is ordered according to the given ordering.\n\n    Ordering.isOrdered Ordering.natural [1, 2, 3]\n        == True\n    Ordering.isOrdered Ordering.natural [2, 1, 3]\n        == False\n    Ordering.isOrdered Ordering.natural []\n        == True\n    Ordering.isOrdered\n        (Ordering.reverse Ordering.natural)\n        [1, 2, 3]\n        == False\n",
+        "type": "Ordering.Ordering a -> List a -> Bool"
+      },
+      {
+        "name": "lessThanBy",
+        "comment": " Determines if one value is less than another according to the given ordering.\n\n    lessThanBy\n        xThenYOrdering\n        { x = 7, y = 8 }\n        { x = 10, y = 2 }\n        == True\n\n    lessThanBy\n        yThenXOrdering\n        { x = 7, y = 8 }\n        { x = 10, y = 2 }\n        == False\n",
+        "type": "Ordering.Ordering a -> a -> a -> Bool"
+      },
+      {
+        "name": "natural",
+        "comment": " Ordering that works with any built-in comparable type.\n\n    -- orders in numeric order: 1, 2, 3, ...\n    intOrdering : Ordering Int\n    intOrdering = natural\n\n\n    -- orders lexicographically: \"a\", \"ab\", \"b\", ...\n    stringOrdering : Ordering String\n    stringOrdering : natural\n",
+        "type": "Ordering.Ordering comparable"
+      },
+      {
+        "name": "noConflicts",
+        "comment": " Marker for functions provided to `byRank` to indicate that a given case\nhas no possible rank conflicts.\n",
+        "type": "Basics.Order"
+      },
+      {
+        "name": "reverse",
+        "comment": " Returns an ordering that reverses the input ordering.\n\n    List.sortWith\n        (Ordering.reverse Ordering.natural)\n        [1, 2, 3, 4, 5]\n        == [5, 4, 3, 2, 1]\n",
+        "type": "Ordering.Ordering a -> Ordering.Ordering a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
