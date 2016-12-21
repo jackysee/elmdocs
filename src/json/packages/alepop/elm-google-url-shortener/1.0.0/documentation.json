@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Shortener",
+    "comment": " This library is an interface to Google Shortener Api\n\n# Types\n@docs ApiKey, Url, RequestData, Response\n\n# Sending a request\n@docs send\n",
+    "aliases": [
+      {
+        "name": "ApiKey",
+        "comment": " Google API key\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "RequestData",
+        "comment": " Request data for Shortener Api\n",
+        "args": [],
+        "type": "{ key : Shortener.ApiKey, longUrl : Shortener.Url }"
+      },
+      {
+        "name": "Response",
+        "comment": " Shortener Api responce\n  - `id` is the short URL that expands to the long URL you provided. If your request includes an auth token, then this URL will be unique. If not, then it might be reused from a previous request to shorten the same URL.\n  - `longUrl` s the long URL to which it expands. In most cases, this will be the same as the URL you provided. In some cases, the server may canonicalize the URL\n",
+        "args": [],
+        "type": "{ kind : String, id : String, longUrl : Shortener.Url }"
+      },
+      {
+        "name": "Url",
+        "comment": " Alias for url string\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "send",
+        "comment": " Send request to Google Shortener Api\n",
+        "type": "(Result.Result Http.Error Shortener.Response -> msg) -> Shortener.RequestData -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
