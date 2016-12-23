@@ -1,0 +1,21 @@
+[
+  {
+    "name": "BasicAuth",
+    "comment": " A helper library for Elm that provides building basic authentication token and header.\n\n# Http header\n@docs buildAuthorizationHeader\n\n# Just the string token\n@docs buildAuthorizationToken\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "buildAuthorizationHeader",
+        "comment": " Builds an authorization header based on provided username and password.\nThis can be put directly into the Http.request headers array.\n\n    loadAuthenticated : Int -> Cmd Msg\n    loadAuthenticated id =\n        let\n            url =\n                \"https://reqres.in/api/users/\" ++ (toString id)\n\n            request =\n                Http.request\n                    { method = \"GET\"\n                    , headers =\n                        [ buildAuthorizationHeader \"username\" \"password\" ]\n                    , url = url\n                    , body = Http.emptyBody\n                    , expect = Http.expectJson userDecoder\n                    , timeout = Nothing\n                    , withCredentials = False\n                    }\n        in\n            Http.send UserResult request\n",
+        "type": "String -> String -> Http.Header"
+      },
+      {
+        "name": "buildAuthorizationToken",
+        "comment": " Builds just the authorization token based on provided username and password.\nUse this if you need just the token for some reason.\nUse buildAuthorizationHeader if you need the header anyway.\n",
+        "type": "String -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
