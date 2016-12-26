@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Math.Quaternion",
+    "comment": " A quaternion module based on `Math.Vector4`. Geared towards 3D graphics\nand use with `Graphics.WebGL`. All quaternions are immutable.\n\n# Create\n@docs Quat, quat, identity, fromAxisAngle\n\n# Get and Set\nThe set functions create a new copy of the quaternion, updating a single field.\n\n@docs getX, getY, getZ, getW, setX, setY, setZ, setW\n\n# Operations\n@docs add, sub, mul, conjugate, negate, scale, dot, normalize,\n      length, lengthSquared\n\n# Conversions\n@docs toTuple, fromTuple, toRecord, fromRecord, toMatrix\n",
+    "aliases": [
+      {
+        "name": "Quat",
+        "comment": " Quaternion type\n",
+        "args": [],
+        "type": "Math.Vector4.Vec4"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Quaternion addition: a + b\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "conjugate",
+        "comment": " Quaternion conjugate: a*\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "dot",
+        "comment": " The dot product of a and b\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "fromAxisAngle",
+        "comment": " Creates a new quaternion from an axis vector and an angle (in radians).\n",
+        "type": "Math.Vector3.Vec3 -> Float -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "fromRecord",
+        "comment": " Convert a record to a quaternion.\n",
+        "type": "{ x : Float, y : Float, z : Float, w : Float } -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "fromTuple",
+        "comment": " Convert a tuple to a quaternion.\n",
+        "type": "( Float, Float, Float, Float ) -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "getW",
+        "comment": " Extract the w component of a quaternion.\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "getX",
+        "comment": " Extract the x component of a quaternion.\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "getY",
+        "comment": " Extract the y component of a quaternion.\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "getZ",
+        "comment": " Extract the z component of a quaternion.\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "identity",
+        "comment": " The identity quaternion\n",
+        "type": "Math.Quaternion.Quat"
+      },
+      {
+        "name": "length",
+        "comment": " The length of the given quaternion: |a|\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "lengthSquared",
+        "comment": " The square of the length of the given quaternion: |a| * |a|\n",
+        "type": "Math.Quaternion.Quat -> Float"
+      },
+      {
+        "name": "mul",
+        "comment": " Quaternion multiplication: a * b\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "negate",
+        "comment": " Quaternion negation: -a\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "normalize",
+        "comment": " A unit quaternion with the same direction as the given quaternion: a / |a|\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "quat",
+        "comment": " Creates a new quaternion with the given x, y, z, and w values.\n",
+        "type": "Float -> Float -> Float -> Float -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "scale",
+        "comment": " Multiply the quaternion by a scalar: s * v\n",
+        "type": "Float -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "setW",
+        "comment": " Update the w component of a quaternion, returning a new quaternion.\n",
+        "type": "Float -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "setX",
+        "comment": " Update the x component of a quaternion, returning a new quaternion.\n",
+        "type": "Float -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "setY",
+        "comment": " Update the y component of a quaternion, returning a new quaternion.\n",
+        "type": "Float -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "setZ",
+        "comment": " Update the z component of a quaternion, returning a new quaternion.\n",
+        "type": "Float -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "sub",
+        "comment": " Quaternion subtraction: a - b\n",
+        "type": "Math.Quaternion.Quat -> Math.Quaternion.Quat -> Math.Quaternion.Quat"
+      },
+      {
+        "name": "toMatrix",
+        "comment": " Convert a quaternion to a rotation matrix.\n",
+        "type": "Math.Quaternion.Quat -> Math.Matrix4.Mat4"
+      },
+      {
+        "name": "toRecord",
+        "comment": " Convert a quaternion to a record.\n",
+        "type": "Math.Quaternion.Quat -> { x : Float, y : Float, z : Float, w : Float }"
+      },
+      {
+        "name": "toTuple",
+        "comment": " Convert a quaternion to a tuple.\n",
+        "type": "Math.Quaternion.Quat -> ( Float, Float, Float, Float )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,193 @@
+[
+  {
+    "name": "Stream",
+    "comment": " A `Stream` is kind of like a stream in Java 8 and kind of like a lazy list. It is a\npotentially infinite stream of items that can be transformed and collected back into\nother structures.\n\nThis library was made because Elm currently doesn't have great options for\nlazyiness. There are a few implementations that exist but they are vulnerable\nto stack overflows. This library uses tail call recursion for collecting\nstreams into lists. Also, instead of modeling the streams recursively it uses\nan approach closer to the Elm architecture. The `Lazy` core library is not\nused. The deepest stack you will have is equal to the amount of transformations\nyou apply on a stream.  For example, in the following snippet:\n\n    let\n        finalStream =\n            Stream.fibonocci\n                |> Stream.limit 100\n                |> Stream.filter isEven\n                |> Stream.map toString\n\nEvery time `next` is called on `finalStream` a stack of size three is generated\nbefore a value can be returned. It scales with the number of transforms, not\nthe size of the list. You would have to apply a high enough number of\ntransforms to a stream in order to get a stack overflow. That number is\nhigh enough that you won't have to worry about it. That said, in other\nlibraries when you attempt to turn an infinite stream into a list you get a\nstack overflow. In this library, it will just run forever, so, keep that in\nmind.\n\nOne useful difference from Java 8 streams that we get just for being functional is\nstream reuse. Things like the following are possible now.\n\n    let\n        baseStream =\n            Stream.naturalNumbers\n                |> Stream.limit 10\n\n        firstList =\n            Stream.toList baseStream\n\n        list =\n            baseStream\n                |> Stream.map toString\n                |> Stream.toList\n\nThis is obvious to anyone who feels comfortable with functional programming, but if\nyou're coming from Java 8 then you're aware that you can't reuse streams\nthat have been collected.\n\n# Types\n@docs Stream\n\n# Operations on streams\n@docs limit, reduce, filter, drop, takeWhile, dropWhile, isEmpty, map, map2, fibonocci, zip\n\n# Getting things out of streams\n@docs next, nextN, toList\n\n# Creating streams\n@docs fromList, value, singleton, range, iterate, cycle, concat\n\n# Special streams\n@docs naturalNumbers, empty\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Stream",
+        "comment": " Main type that represents a stream.\nA Stream is a source of values that start as type `a` and end as type `b`. For most intents and purposes,\nthey can be thought of as collections of type `b`. Some streams are infinite and others are based on\npre-existing collections of data.\n\n",
+        "args": [
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "concat",
+        "comment": " Concatonate two streams together.\n\n    -- [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]\n    combinedStream =\n        Stream.concat (Stream.range 0 4 1) (Stream.range 5 10 1)\n            |> Stream.toList\n",
+        "type": "Stream.Stream a -> Stream.Stream a -> Stream.Stream a"
+      },
+      {
+        "name": "cycle",
+        "comment": " Create an infinite stream that cycles through values of another stream.\n\n    -- [ \"\", \"\", \"Fizz\", \"\", \"\", \"Fizz\" ]\n    fizzes =\n        Stream.fromList [ \"\", \"\", \"Fizz\" ]\n            |> Stream.cycle\n            |> Stream.limit 6\n            |> Stream.toList\n",
+        "type": "Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "drop",
+        "comment": " Like filter, but items that match the predicate are dropped instead of kept.\n\n    -- [ 1, 2, 3, 4 ]\n    actual =\n        Stream.range 1 10 1\n            |> Stream.drop (\\n -> n >= 5)\n            |> Stream.toList\n",
+        "type": "(b -> Bool) -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "dropWhile",
+        "comment": " Drop items from a stream until a predicate is satisfied.\n\n    -- [ 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 ]\n    from100To109=\n        Stream.naturalNumbers\n            |> Stream.dropWhile (\\n -> n < 100)\n            |> Stream.limit 10\n            |> Stream.toList\n",
+        "type": "(b -> Bool) -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "empty",
+        "comment": " The empty stream. It has nothing in it. Calling next will\nreturn nothing and calling toList will return an empty list. This\nis useful for building upon.\n",
+        "type": "Stream.Stream b"
+      },
+      {
+        "name": "fibonocci",
+        "comment": " Infinite stream of fibonocci numbers.\n\n    -- [ 0, 1, 1, 2, 3, 5, 8, 13 ]\n    first8Fib =\n        Stream.naturalNumbers\n            |> Stream.limit 8\n            |> Stream.toList\n",
+        "type": "Stream.Stream Int"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter values from a stream.\nKeep only the values in a stream that match a predicate. Make sure to call\n`limit` on an infinite stream before using this one or you'll end up\nrunning forever when you finally try to turn it into a list.\n\n    -- [ 2, 4, 6, 8 ]\n    evenNumbers =\n        Stream.naturalNumbers\n            |> Stream.limit 10\n            |> Stream.filter (\\n -> n % 2 == 0)\n            |> Stream.toList\n",
+        "type": "(b -> Bool) -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create a stream from a list.\nStreams created this way are not infinite (obviously). You don't need to\ncall `limit` on them or anything like you would on an infinite stream.\n\n    -- [ 1, 2, 3 ]\n    list =\n        Stream.fromList [ 1, 2, 3 ]\n            |> Stream.toList\n",
+        "type": "List b -> Stream.Stream b"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Whether or not this stream is empty.\nThe check is determined by whether or not the next value out of the stream\nis `Nothing`\n",
+        "type": "Stream.Stream b -> Bool"
+      },
+      {
+        "name": "iterate",
+        "comment": " Create an infinite stream that iterates a function over a seed.\n\n    -- [ \"a\", \"aa\", \"aaa\", \"aaaa\", \"aaaaa\" ]\n    someAs =\n        Stream.iterate \"a\" ((++) \"a\")\n            |> Stream.limit 5\n            |> Stream.toList\n",
+        "type": "b -> (b -> b) -> Stream.Stream b"
+      },
+      {
+        "name": "limit",
+        "comment": " Limit the size of a stream.\nMake sure to call this at least once on a stream before calling `toList` on it; especially\nfor an infinite stream.\n\n    -- [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]\n    firstTenNumbers =\n        Stream.naturalNumbers\n            |> Stream.limit 10\n            |> Stream.toList\n",
+        "type": "Int -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "map",
+        "comment": " Map a stream from one that returns a type a to one that returns a type b\n\n    -- [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ]\n    firstTenNumbresTimesTwo =\n        Stream.naturalNumbers\n            |> Stream.limit 10\n            |> Stream.map (* 2)\n            |> Stream.toList\n",
+        "type": "(a -> b) -> Stream.Stream a -> Stream.Stream b"
+      },
+      {
+        "name": "map2",
+        "comment": " Like `map`, but for two streams instead of one.\n\n    -- [ \"1a\", \"2a\", \"3a\", \"4a\", \"5a\" ]\n    actual =\n        Stream.value \"a\"\n            |> Stream.map2 (\\a b -> toString a ++ b) (Stream.range 1 5 1)\n            |> Stream.toList\n",
+        "type": "(a -> b -> c) -> Stream.Stream a -> Stream.Stream b -> Stream.Stream c"
+      },
+      {
+        "name": "naturalNumbers",
+        "comment": " An infinite stream of natural numbers starting from 1.\n\n    -- [ 1, 2, 3 ]\n    fist3Numbers =\n        Stream.naturalNumbers\n            |> Stream.limit 3\n            |> Stream.toList\n",
+        "type": "Stream.Stream Int"
+      },
+      {
+        "name": "next",
+        "comment": " Get the next value out of a stream.\nReturns the next `Maybe` from a stream, as well as the updated Stream. If this value\nis `Nothing` then the stream is empty.\n\n    -- Just 1\n    nextNumber =\n        Stream.fromList [ 1, 2, 3 ]\n            |> Stream.next\n            |> Tuple.second\n",
+        "type": "Stream.Stream b -> ( Stream.Stream b, Maybe.Maybe b )"
+      },
+      {
+        "name": "nextN",
+        "comment": " Like `next`, but it retuns a `List` of values instead of a `Maybe` of a single value.\nIf you ask for more values than are in the list then you get whatever is in the list. In general,\nfunctions like this are more of upper limits on streams. You won't get more than you ask for, but\nyou might get less.\n\n    -- [ 1, 2, 3 ]\n    entireList =\n        Stream.fromList [ 1, 2, 3 ]\n            |> Stream.nextN 10\n            |> Tuple.second\n",
+        "type": "Int -> Stream.Stream b -> ( Stream.Stream b, List b )"
+      },
+      {
+        "name": "range",
+        "comment": " Create a stream from `start` to `stop` with a step of `step`. The\nstream will always include the start. If the stop value is less than the\nstart then the start value is used in its place.\n\n    -- [ 1, 3, 5, 7, 9, 11 ]\n    actual =\n        Stream.range 1 11 2\n            |> Stream.toList\n",
+        "type": "Int -> Int -> Int -> Stream.Stream Int"
+      },
+      {
+        "name": "reduce",
+        "comment": " Reduce a stream such that all values that come out of it are accumulations.\nThis stream will always have a size of one. It is the result of a reduction on its base stream.\n\n    -- [ 55 ]\n    reduced =\n        Stream.naturalNumbers\n            |> Stream.limit 10\n            |> Stream.reduce (+) 0\n            |> Stream.toList\n\n",
+        "type": "(b -> b -> b) -> b -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a stream of size 1 that contains a single value.\n\n    -- [ 'a' ]\n    justA =\n        Stream.singleton 'a'\n            |> Stream.toList\n",
+        "type": "b -> Stream.Stream b"
+      },
+      {
+        "name": "takeWhile",
+        "comment": " Take items from a stream while a predicate is true.\n\n    numbersUnder10 =\n        Stream.naturalNumbers\n            |> Stream.takeWhile (\\n -> n < 10)\n            |> Stream.toList\n",
+        "type": "(b -> Bool) -> Stream.Stream b -> Stream.Stream b"
+      },
+      {
+        "name": "toList",
+        "comment": " Empty a Stream into a `List`.\nMake sure you only call this on streams with limits on them or it will\nrun forever. Like, it will actually run forever, it won't overflow the stack or\nanything, it will just run forever.\n\n    -- [ 1, 2, 3 ]\n    list =\n        Stream.fromList [ 1, 2, 3 ]\n            |> Stream.toList\n",
+        "type": "Stream.Stream b -> List b"
+      },
+      {
+        "name": "value",
+        "comment": " Create an infinite stream that returns a single value forever.\n\n    -- [ 'a', 'a', ... ]\n    bunchOfA =\n        Stream.value 'a'\n",
+        "type": "b -> Stream.Stream b"
+      },
+      {
+        "name": "zip",
+        "comment": " Zip two streams together.\n\n    -- [ ( 1, \"a\" ), ( 2, \"a\" ), ( 3, \"a\" ), ( 4, \"a\" ), ( 5, \"a\" ) ]\n    zippedStream =\n        Stream.value \"a\"\n            |> Stream.zip (Stream.range 1 5 1)\n            |> Stream.toList\n",
+        "type": "Stream.Stream a -> Stream.Stream b -> Stream.Stream ( a, b )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Stream.Source",
+    "comment": "\nThis module exists mostly to support infinite streams in the `Stream` module.\n\n@docs Source\n\n# Getting things out\n@docs next, nextN, peek, current\n\n# Special sources\n@docs value, naturalNumbers, fibonocci\n\n# Creating sources\n@docs iterate\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Source",
+        "comment": " The main Source type.\nAs a rule, all `Source`s are infinite. They are really just a way to\nmodel the idea of a starting element and a function to generate the\nnext element.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "current",
+        "comment": " Get the current value from a source. Kind of like `head` for a `Source`.\n\n    -- 1\n    Source.naturalNumbers\n        |> Source.current\n",
+        "type": "Stream.Source.Source a -> a"
+      },
+      {
+        "name": "fibonocci",
+        "comment": " A source of tuples that represent the fibonocci numbers. This\nis used by the `Stream` module and presented as values instead of tuples, but\nthis `Source` is what enables that.\n",
+        "type": "Stream.Source.Source ( Int, Int )"
+      },
+      {
+        "name": "iterate",
+        "comment": " A `Source` that iterates a function over a seed value\n",
+        "type": "a -> (a -> a) -> Stream.Source.Source a"
+      },
+      {
+        "name": "naturalNumbers",
+        "comment": " A source of natural numbers from 1 to infinity.\n",
+        "type": "Stream.Source.Source Int"
+      },
+      {
+        "name": "next",
+        "comment": " Get the next value out of a `Source`, as well as a new\nsource that will return the next value after.\n\n    -- 1\n    Source.naturalNumbers\n        |> Source.next\n        |> Tuple.second\n",
+        "type": "Stream.Source.Source a -> ( Stream.Source.Source a, a )"
+      },
+      {
+        "name": "nextN",
+        "comment": " Like `next` but it returns a list of `n` items instead.\n\n    -- [ 1, 2, 3 ]\n    Source.naturalNumbers\n        |> Source.nextN 3\n        |> Tuple.second\n",
+        "type": "Int -> Stream.Source.Source a -> ( Stream.Source.Source a, List a )"
+      },
+      {
+        "name": "peek",
+        "comment": " Get the next value from a source without the next `Source` state.\nTODO do we need peek?  maybe curent is enough\n\n    -- 2\n    Source.naturalNumbers\n        |> Source.peek\n",
+        "type": "Stream.Source.Source a -> a"
+      },
+      {
+        "name": "value",
+        "comment": " A `Source` that returns the same thing forever.\n",
+        "type": "a -> Stream.Source.Source a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

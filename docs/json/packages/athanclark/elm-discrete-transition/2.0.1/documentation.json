@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Transition.Discrete",
+    "comment": "\n\n## A Discrete State\n\n@docs Node, mkNode, NodeId\n\n## Model\n\n@docs Model, init\n\n## Msg\n\n@docs Msg, MsgSettings, emptyMsgSettings\n\n## Update\n\n@docs update, subscriptions\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The state of the transition system ",
+        "args": [
+          "a",
+          "b"
+        ],
+        "type": "{ current : Transition.Discrete.NodeId , target : Maybe.Maybe Transition.Discrete.TargetState , nodes : IntDict.IntDict (Transition.Discrete.Node a b) , actions : Transition.Discrete.PendingMsg b }"
+      },
+      {
+        "name": "MsgSettings",
+        "comment": " Actions to issue when a state transition is finished, or between\n    a state change.\n",
+        "args": [
+          "b"
+        ],
+        "type": "{ onChange : Platform.Cmd.Cmd b -> Platform.Cmd.Cmd b , onBetweenChange : Platform.Cmd.Cmd b -> Platform.Cmd.Cmd b }"
+      },
+      {
+        "name": "NodeId",
+        "comment": " The identifier for a discrete state - note that you should\n    keep these unique; if not, the behaviour is unspecified\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Call `GoTo node settings` to initialize the transition. ",
+        "args": [
+          "b"
+        ],
+        "cases": [
+          [
+            "GoTo",
+            [
+              "Transition.Discrete.NodeId",
+              "Transition.Discrete.MsgSettings b"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Node",
+        "comment": " The discrete state's transition settings ",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "emptyMsgSettings",
+        "comment": " ",
+        "type": "Transition.Discrete.MsgSettings b"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "Transition.Discrete.NodeId -> List ( Transition.Discrete.NodeId, Transition.Discrete.Node a b ) -> Transition.Discrete.Model a b"
+      },
+      {
+        "name": "mkNode",
+        "comment": " Build a discrete state ",
+        "type": "Time.Time -> (Time.Time -> Platform.Cmd.Cmd a) -> Transition.Discrete.Node a b"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "Transition.Discrete.Model a b -> Platform.Sub.Sub (Transition.Discrete.Msg b)"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "(Transition.Discrete.Msg b -> Result.Result a b) -> Transition.Discrete.Msg b -> Transition.Discrete.Model a b -> ( Transition.Discrete.Model a b , Platform.Cmd.Cmd (Result.Result a b) )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
