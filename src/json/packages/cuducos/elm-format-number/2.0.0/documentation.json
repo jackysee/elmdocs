@@ -1,0 +1,28 @@
+[
+  {
+    "name": "FormatNumber",
+    "comment": " This simple package formats numbers as pretty strings. It is flexible\nenough to deal with different number of decimals, different thousand\nseparators and diffetent decimal separator.\n\n# Locale\n@docs Locale\n\n# Usage\n\n@docs formatFloat, formatInt\n\n\n",
+    "aliases": [
+      {
+        "name": "Locale",
+        "comment": " Locale to configure the format options.\n",
+        "args": [],
+        "type": "{ decimals : Int , thousandSeparator : String , decimalSeparator : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "formatFloat",
+        "comment": " Format a float number as a pretty string:\n\n    >>> formatFloat { decimals = 2, thousandSeparator = \",\", decimalSeparator = \".\" } 1234.5567\n    \"1,234.56\"\n\n    >>> formatFloat (Locale 3 \".\" \",\") -7654.3210\n    \"-7.654,321\"\n\n    >>> formatFloat (Locale 1 \",\" \".\") -0.01\n    \"0.0\"\n\n",
+        "type": "FormatNumber.Locale -> Float -> String"
+      },
+      {
+        "name": "formatInt",
+        "comment": " Format a integer number as a pretty string:\n\n    >>> formatInt { decimals = 1, thousandSeparator = \",\", decimalSeparator = \".\" } 0\n    \"0.0\"\n\n    >>> formatInt (Locale 1 \",\" \".\") 1234567890\n    \"1,234,567,890.0\"\n\n",
+        "type": "FormatNumber.Locale -> Int -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
