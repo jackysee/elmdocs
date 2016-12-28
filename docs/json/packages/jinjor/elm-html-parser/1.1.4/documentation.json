@@ -1,0 +1,145 @@
+[
+  {
+    "name": "HtmlParser.Util",
+    "comment": " Utility functions that may help you digging into the contents.\n\n```elm\ntable = \"\"\"\n  <table border=0 cellpadding=0 cellspacing=0 width=216 style='border-collapse:\n   collapse;width:162pt'>\n  <!--StartFragment-->\n   <col width=72 span=3 style='width:54pt'>\n   <tr height=18 style='height:13.5pt'>\n    <td height=18 align=right width=72 style='height:13.5pt;width:54pt'>1</td>\n    <td align=right width=72 style='width:54pt'>2</td>\n    <td align=right width=72 style='width:54pt'>3</td>\n   </tr>\n   <tr height=18 style='height:13.5pt'>\n    <td height=18 class=xl69 align=right style='height:13.5pt'>2</td>\n    <td class=xl66 align=right>3</td>\n    <td align=right>4</td>\n   </tr>\n  <!--EndFragment-->\n  </table>\n\"\"\"\n\n( parse table\n  |> getElementsByTagName \"tr\"\n  |> mapElements\n    (\\_ _ innerTr ->\n      innerTr\n        |> mapElements (\\_ _ innerTd -> textContent innerTd)\n        |> String.join \"\\t\"\n        |> String.trim\n    )\n  |> String.join \"\\n\"\n) == \"1\\t2\\t3\\n2\\t3\\t4\"\n```\n\n# Query\n@docs getElementById, getElementsByTagName, getElementsByClassName\n\n# Optimize\n@docs createIdDict, createTagDict, createClassDict\n\n# Custom Query\n@docs findElement, findElements\n\n# Mapping\n@docs mapElements, filterElements, filterMapElements\n\n# Attributes\n@docs getValue, getId, getClassList\n\n# Get Content\n@docs textContent\n\n# Virtual DOM\n@docs toVirtualDom, toVirtualDomSvg\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createClassDict",
+        "comment": " Creates a dictionaty for faster access by single class.\n",
+        "type": "List HtmlParser.Node -> Dict.Dict String (List HtmlParser.Node)"
+      },
+      {
+        "name": "createIdDict",
+        "comment": " Creates a dictionaty for faster access by ID.\n",
+        "type": "List HtmlParser.Node -> Dict.Dict String (List HtmlParser.Node)"
+      },
+      {
+        "name": "createTagDict",
+        "comment": " Creates a dictionaty for faster access by tag name.\n",
+        "type": "List HtmlParser.Node -> Dict.Dict String (List HtmlParser.Node)"
+      },
+      {
+        "name": "filterElements",
+        "comment": " Keep only elements that satisfy the predicate.\n",
+        "type": "(String -> HtmlParser.Attributes -> List HtmlParser.Node -> Bool) -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "filterMapElements",
+        "comment": " Apply a function that may succeed to all values in the nodes, but only keep the successes.\n",
+        "type": "(String -> HtmlParser.Attributes -> List HtmlParser.Node -> Maybe.Maybe b) -> List HtmlParser.Node -> List b"
+      },
+      {
+        "name": "findElement",
+        "comment": " Find one element that satisfies the given condition.\n",
+        "type": "(String -> HtmlParser.Attributes -> Bool) -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "findElements",
+        "comment": " Find elements that satisfies the given condition.\n",
+        "type": "(String -> HtmlParser.Attributes -> Bool) -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "getClassList",
+        "comment": " Returns the class value from attributes in form of list.\n",
+        "type": "HtmlParser.Attributes -> List String"
+      },
+      {
+        "name": "getElementById",
+        "comment": " Returns a element by its ID. This function returns a list but it contains at most one value.\n\nNote: This function internally traverses all nodes until the target node is found. For faster access, use createIdDict.\n",
+        "type": "String -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "getElementsByClassName",
+        "comment": " Returns all child elements which have all of the given class names.\n",
+        "type": "List String -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "getElementsByTagName",
+        "comment": " Returns elements with the given tag name.\n",
+        "type": "String -> List HtmlParser.Node -> List HtmlParser.Node"
+      },
+      {
+        "name": "getId",
+        "comment": " Returns the ID value from attributes.\n",
+        "type": "HtmlParser.Attributes -> Maybe.Maybe String"
+      },
+      {
+        "name": "getValue",
+        "comment": " Returns a value from attributes with the given name.\n",
+        "type": "String -> HtmlParser.Attributes -> Maybe.Maybe String"
+      },
+      {
+        "name": "mapElements",
+        "comment": " Apply a function to every element of a nodes.\n",
+        "type": "(String -> HtmlParser.Attributes -> List HtmlParser.Node -> b) -> List HtmlParser.Node -> List b"
+      },
+      {
+        "name": "textContent",
+        "comment": " Returns the text content of a node and its descendants.\n",
+        "type": "List HtmlParser.Node -> String"
+      },
+      {
+        "name": "toVirtualDom",
+        "comment": " Converts nodes to virtual dom nodes.\n",
+        "type": "List HtmlParser.Node -> List (Html.Html msg)"
+      },
+      {
+        "name": "toVirtualDomSvg",
+        "comment": " Converts nodes to virtual dom SVG nodes.\n\nNote: If node list contains `<svg>` tag, you can use `toVirtualDom` instead.\nOtherwise, use this function.\n\n```elm\nsvg : Svg msg\nsvg =\n  parse \"\"\"<circle cx=\"40\" cy=\"40\" r=\"24\" style=\"stroke:#006600; fill:#00cc00\"/>\"\"\"\n  |> toVirtualDomSvg\n  |> Svg.svg []\n```\n\n",
+        "type": "List HtmlParser.Node -> List (Svg.Svg msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlParser",
+    "comment": " The HTML Parser.\n\n# AST\n@docs Node, Attributes\n\n# Parse\n@docs parse\n",
+    "aliases": [
+      {
+        "name": "Attributes",
+        "comment": " Attributes of a node\n",
+        "args": [],
+        "type": "List ( String, String )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Node",
+        "comment": " The AST of node\n",
+        "args": [],
+        "cases": [
+          [
+            "Text",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Element",
+            [
+              "String",
+              "HtmlParser.Attributes",
+              "List HtmlParser.Node"
+            ]
+          ],
+          [
+            "Comment",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse HTML.\n\n```elm\nparse \"text\" == [ Text \"text\" ]\n\nparse \"<h1>Hello<br>World</h1>\"\n  == [ Element \"h1\" [] [ Text \"Hello\", Element \"br\" [] [], Text \"World\" ] ]\n\nparse \"\"\"<a href=\"http://example.com\">Example</a>\"\"\"\n  == [ Element \"a\" [(\"href\", \"http://example.com\")] [ Text \"Example\" ] ]\n```\n\n",
+        "type": "String -> List HtmlParser.Node"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

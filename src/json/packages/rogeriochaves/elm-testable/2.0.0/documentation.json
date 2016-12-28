@@ -1,0 +1,353 @@
+[
+  {
+    "name": "Testable.TestContext",
+    "comment": " A `TestContext` allows you to manage the lifecycle of an Elm component that\nuses `Testable.Effects`.  Using `TestContext`, you can write tests that exercise\nthe entire lifecycle of your component.\n\n@docs Component, TestContext, startForTest, update\n\n# Inspecting\n@docs currentModel, assertCurrentModel, assertHttpRequest, assertNoPendingHttpRequests, assertCalled\n\n# Simulating Effects\n@docs resolveHttpRequest, advanceTime\n",
+    "aliases": [
+      {
+        "name": "Component",
+        "comment": " A component that can be used to create a `TestContext`\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "{ init : ( model, Testable.Cmd.Cmd msg ) , update : msg -> model -> ( model, Testable.Cmd.Cmd msg ) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "TestContext",
+        "comment": " The representation of the current state of a testable component, including\na representaiton of any pending Effects.\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "advanceTime",
+        "comment": " Simulate the passing of time\n",
+        "type": "Time.Time -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "assertCalled",
+        "comment": " Assert that a cmd was called\n",
+        "type": "Platform.Cmd.Cmd msg -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertCurrentModel",
+        "comment": " A convenient way to assert about the current state of the component under test\n",
+        "type": "model -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertHttpRequest",
+        "comment": " Assert that a given Http.Request has been made by the component under test\n",
+        "type": "Testable.Http.Settings -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertNoPendingHttpRequests",
+        "comment": " Ensure that there are no pending HTTP requests\n",
+        "type": "Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "currentModel",
+        "comment": " Get the current state of the component under test\n",
+        "type": "Testable.TestContext.TestContext msg model -> Result.Result (List String) model"
+      },
+      {
+        "name": "resolveHttpRequest",
+        "comment": " Simulate an HTTP response to a request made with the given Http settings\n",
+        "type": "Testable.Http.Settings -> Result.Result Testable.Http.Error (Testable.Http.Response String) -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "startForTest",
+        "comment": " Create a `TestContext` for the given Component\n",
+        "type": "Testable.TestContext.Component msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "update",
+        "comment": " Apply an msg to the component in a given TestContext\n",
+        "type": "msg -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable",
+    "comment": "\n\nThis module converts Testable things into real things.\n\n# Basics\n@docs cmd, task\n\n# StartApp helpers\n@docs init, update\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "cmd",
+        "comment": " Converts a `Testable.Cmd` into a `Cmd`\n\n    Testable.Cmd.none |> Testable.cmd\n        == Cmd.none\n",
+        "type": "Testable.Cmd.Cmd msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "init",
+        "comment": " Converts a testable StartApp-style init value into a standard StartApp init value\n",
+        "type": "( model, Testable.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "task",
+        "comment": " Converts a `Testable.Task` into an `Task`\n\n    Testable.Task.succeed \"A\" |> Testable.task\n        == Task.succeed \"A\"\n",
+        "type": "Testable.Task.Task error success -> Task.Task error success"
+      },
+      {
+        "name": "update",
+        "comment": " Converts a testable StartApp-style update function into a standard StartApp update function\n",
+        "type": "(msg -> model -> ( model, Testable.Cmd.Cmd msg )) -> msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Http",
+    "comment": " Create and send HTTP requests.\n\n# Send Requests\n@docs Request, send, Error\n\n# GET\n@docs getString, get\n\n# POST\n@docs post\n\n# Custom Requests\n@docs request\n\n## Headers\n@docs Header, header\n\n## Request Bodies\n@docs Body, emptyBody, jsonBody, stringBody, multipartBody, Part, stringPart\n\n## Responses\n@docs Response\n\n# Low-Level\n@docs encodeUri, decodeUri, toTask\n\n# Helpers\n@docs Settings, defaultSettings, getRequest, ok, serverError\n\n",
+    "aliases": [
+      {
+        "name": "Body",
+        "comment": " Represents the body of a `Request`.\n",
+        "args": [],
+        "type": "Http.Body"
+      },
+      {
+        "name": "Error",
+        "comment": " A Request can fail in a couple ways:\n\n- BadUrl means you did not provide a valid URL.\n- Timeout means it took too long to get a response.\n- NetworkError means the user turned off their wifi, went in a cave, etc.\n- BadStatus means you got a response back, but the status code indicates failure.\n- BadPayload means you got a response back with a nice status code, but the body of the response was something unexpected. The String in this case is a debugging message that explains what went wrong with your JSON decoder or whatever.\n",
+        "args": [],
+        "type": "Http.Error"
+      },
+      {
+        "name": "Header",
+        "comment": " An HTTP header for configuring requests. See a bunch of common headers\n[here][].\n\n[here]: https://en.wikipedia.org/wiki/List_of_HTTP_header_fields\n",
+        "args": [],
+        "type": "Http.Header"
+      },
+      {
+        "name": "Part",
+        "comment": " Contents of a multi-part body. Right now it only supports strings, but we\nwill support blobs and files when we get an API for them in Elm.\n",
+        "args": [],
+        "type": "Http.Part"
+      },
+      {
+        "name": "Request",
+        "comment": " Describes an HTTP request.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Testable.Internal.Request a"
+      },
+      {
+        "name": "Response",
+        "comment": " The response from a `Request`.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Http.Response a"
+      },
+      {
+        "name": "Settings",
+        "comment": " Specific Settings that you can send to your request when you\n  want a more custom request, like with differente headers or a timeout.\n",
+        "args": [],
+        "type": "Testable.Internal.Settings"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeUri",
+        "comment": " Use this to unescape query parameters. It converts things like `%2F` to\n`/`. It can fail in some cases. For example, there is no way to unescape `%`\nbecause it could never appear alone in a properly escaped string.\n\nIt works just like `decodeURIComponent` in JavaScript.\n",
+        "type": "String -> Maybe.Maybe String"
+      },
+      {
+        "name": "defaultSettings",
+        "comment": " The default settings used by `get` and `post`. The url must be changed.\n    { method = \"GET\"\n    , headers = []\n    , body = Http.emptyBody\n    , timeout = Nothing\n    , url = \"\"\n    , withCredentials = False\n    }\n",
+        "type": "Testable.Http.Settings"
+      },
+      {
+        "name": "emptyBody",
+        "comment": " Create an empty body for your `Request`. This is useful for GET requests\nand POST requests where you are not sending any data.\n",
+        "type": "Testable.Http.Body"
+      },
+      {
+        "name": "encodeUri",
+        "comment": " Use this to escape query parameters. Converts characters like `/` to `%2F`\nso that it does not clash with normal URL\n\nIt work just like `encodeURIComponent` in JavaScript.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "get",
+        "comment": " Create a `GET` request and try to decode the response body from JSON to\nsome Elm value.\n\n    import Http\n    import Json.Decode exposing (list, string)\n\n    getBooks : Http.Request (List String)\n    getBooks =\n      Http.get \"https://example.com/books\" (list string)\n\nYou can learn more about how JSON decoders work [here][] in the guide.\n\n[here]: https://guide.elm-lang.org/interop/json.html\n",
+        "type": "String -> Json.Decode.Decoder value -> Testable.Http.Request value"
+      },
+      {
+        "name": "getRequest",
+        "comment": " A convenient way to make a `Request` corresponding to the request made by `get`\n",
+        "type": "String -> Testable.Internal.Settings"
+      },
+      {
+        "name": "getString",
+        "comment": " Create a `GET` request and interpret the response body as a `String`.\n\n    import Http\n\n    getWarAndPeace : Http.Request String\n    getWarAndPeace =\n      Http.getString \"https://example.com/books/war-and-peace\"\n",
+        "type": "String -> Testable.Http.Request String"
+      },
+      {
+        "name": "header",
+        "comment": " Create a `Header`.\n\n    header \"If-Modified-Since\" \"Sat 29 Oct 1994 19:43:31 GMT\"\n    header \"Max-Forwards\" \"10\"\n    header \"X-Requested-With\" \"XMLHttpRequest\"\n\n**Note:** In the future, we may split this out into an `Http.Headers` module\nand provide helpers for cases that are common on the client-side. If this\nsounds nice to you, open an issue [here][] describing the helper you want and\nwhy you need it.\n\n[here]: https://github.com/elm-lang/http/issues\n",
+        "type": "String -> String -> Http.Header"
+      },
+      {
+        "name": "jsonBody",
+        "comment": " Put some JSON value in the body of your `Request`. This will automatically\nadd the `Content-Type: application/json` header.\n",
+        "type": "Json.Encode.Value -> Testable.Http.Body"
+      },
+      {
+        "name": "multipartBody",
+        "comment": " Create multi-part bodies for your `Request`, automatically adding the\n`Content-Type: multipart/form-data` header.\n",
+        "type": "List Testable.Http.Part -> Testable.Http.Body"
+      },
+      {
+        "name": "ok",
+        "comment": " A convenient way to create a 200 OK repsonse\n",
+        "type": "String -> Result.Result Testable.Http.Error (Testable.Http.Response String)"
+      },
+      {
+        "name": "post",
+        "comment": " Create a `POST` request and try to decode the response body from JSON to\nan Elm value. For example, if we want to send a POST without any data in the\nrequest body, it would be like this:\n\n    import Http\n    import Json.Decode exposing (list, string)\n\n    postBooks : Http.Request (List String)\n    postBooks =\n      Http.post \"https://example.com/books\" Http.emptyBody (list string)\n\nSee [`jsonBody`](#jsonBody) to learn how to have a more interesting request\nbody. And check out [this section][here] of the guide to learn more about\nJSON decoders.\n\n[here]: https://guide.elm-lang.org/interop/json.html\n\n",
+        "type": "String -> Testable.Http.Body -> Json.Decode.Decoder a -> Testable.Http.Request a"
+      },
+      {
+        "name": "request",
+        "comment": " Create a custom request. For example, a custom PUT request would look like\nthis:\n\n    put : String -> Body -> Request ()\n    put url body =\n      request\n        { method = \"PUT\"\n        , headers = []\n        , url = url\n        , body = body\n        , expect = expectStringResponse (\\_ -> Ok ())\n        , timeout = Nothing\n        , withCredentials = False\n        }\n",
+        "type": "Testable.Http.Settings -> Json.Decode.Decoder a -> Testable.Http.Request a"
+      },
+      {
+        "name": "send",
+        "comment": " Send a `Request`. We could get the text of “War and Peace” like this:\n\n    import Http\n\n    type Msg = Click | NewBook (Result Http.Error String)\n\n    update : Msg -> Model -> Model\n    update msg model =\n      case msg of\n        Click ->\n          ( model, getWarAndPeace )\n\n        NewBook (Ok book) ->\n          ...\n\n        NewBook (Err _) ->\n          ...\n\n    getWarAndPeace : Cmd Msg\n    getWarAndPeace =\n      Http.send NewBook <|\n        Http.getString \"https://example.com/books/war-and-peace.md\"\n",
+        "type": "(Result.Result Testable.Http.Error a -> msg) -> Testable.Http.Request a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "serverError",
+        "comment": " A convenient way to create a response representing a 500 error\n",
+        "type": "Result.Result Testable.Http.Error (Testable.Http.Response String)"
+      },
+      {
+        "name": "stringBody",
+        "comment": " Put some string in the body of your `Request`. Defining `jsonBody` looks\nlike this:\n\n    import Json.Encode as Encode\n\n    jsonBody : Encode.Value -> Body\n    jsonBody value =\n      stringBody \"application/json\" (Encode.encode 0 value)\n\nNotice that the first argument is a [MIME type][mime] so we know to add\n`Content-Type: application/json` to our request headers. Make sure your\nMIME type matches your data. Some servers are strict about this!\n\n[mime]: https://en.wikipedia.org/wiki/Media_type\n",
+        "type": "String -> String -> Testable.Http.Body"
+      },
+      {
+        "name": "stringPart",
+        "comment": " A named chunk of string data.\n\n    body =\n      multipartBody\n        [ stringPart \"user\" \"tom\"\n        , stringPart \"payload\" \"42\"\n        ]\n",
+        "type": "String -> String -> Testable.Http.Part"
+      },
+      {
+        "name": "toTask",
+        "comment": " Convert a `Request` into a `Task`. This is only really useful if you want\nto chain together a bunch of requests (or any other tasks) in a single command.\n",
+        "type": "Testable.Http.Request a -> Testable.Internal.Task Testable.Http.Error a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Cmd",
+    "comment": "\n`Testable.Cmd` is a replacement for the core `Cmd` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Cmd` into a core `Cmd` with the `Testable` module.\n\n@docs Cmd, map, batch, none, wrap\n",
+    "aliases": [
+      {
+        "name": "Cmd",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "Testable.Internal.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "batch",
+        "comment": " ",
+        "type": "List (Testable.Cmd.Cmd msg) -> Testable.Cmd.Cmd msg"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Testable.Cmd.Cmd a -> Testable.Cmd.Cmd b"
+      },
+      {
+        "name": "none",
+        "comment": " ",
+        "type": "Testable.Cmd.Cmd never"
+      },
+      {
+        "name": "wrap",
+        "comment": " ",
+        "type": "Platform.Cmd.Cmd msg -> Testable.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Task",
+    "comment": "\n`Testable.Task` is a replacement for the core `Task` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Task` into a core `Task` with the `Testable` module.\n\n# Basics\n@docs Task, succeed, fail\n\n# Mapping\n@docs map\n\n# Chaining\n@docs andThen, sequence\n\n# Errors\n@docs onError, mapError\n\n# Commands\n@docs perform, attempt\n",
+    "aliases": [
+      {
+        "name": "Task",
+        "comment": " Represents asynchronous effects that may fail. It is useful for stuff like\nHTTP.\n\nFor example, maybe we have a task with the type (`Task String User`). This means\nthat when we perform the task, it will either fail with a `String` message or\nsucceed with a `User`. So this could represent a task that is asking a server\nfor a certain user.\n",
+        "args": [
+          "error",
+          "success"
+        ],
+        "type": "Testable.Internal.Task error success"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a task and a callback. The first task will run, and if it is\nsuccessful, you give the result to the callback resulting in another task. This\ntask then gets run.\n\n    succeed 2\n      |> andThen (\\n -> succeed (n + 2))\n      -- succeed 4\n\nThis is useful for chaining tasks together. Maybe you need to get a user from\nyour servers *and then* lookup their picture once you know their name.\n",
+        "type": "(a -> Testable.Task.Task x b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "attempt",
+        "comment": " Command the Elm runtime to attempt a task that might fail!\n",
+        "type": "(Result.Result x a -> msg) -> Testable.Task.Task x a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "fail",
+        "comment": " A task that fails immediately when run.\n\n    fail \"file not found\" : Task String a\n",
+        "type": "x -> Testable.Task.Task x a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a task.\n\n    map sqrt (succeed 9) == succeed 3\n",
+        "type": "(a -> b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "mapError",
+        "comment": " Transform the error value. This can be useful if you need a bunch of error\ntypes to match up.\n\n    type Error = Http Http.Error | WebGL WebGL.Error\n\n    getResources : Task Error Resource\n    getResources =\n      sequence [ mapError Http serverTask, mapError WebGL textureTask ]\n",
+        "type": "(x -> y) -> Testable.Task.Task x a -> Testable.Task.Task y a"
+      },
+      {
+        "name": "onError",
+        "comment": " Recover from a failure in a task. If the given task fails, we use the\ncallback to recover.\n\n    fail \"file not found\"\n      |> onError (\\msg -> succeed 42)\n      -- succeed 42\n\n    succeed 9\n      |> onError (\\msg -> succeed 42)\n      -- succeed 9\n",
+        "type": "(x -> Testable.Task.Task y a) -> Testable.Task.Task x a -> Testable.Task.Task y a"
+      },
+      {
+        "name": "perform",
+        "comment": " The only way to *do* things in Elm is to give commands to the Elm runtime.\nSo we describe some complex behavior with a `Task` and then command the runtime\nto `perform` that task. For example, getting the current time looks like this:\n\n    import Task\n    import Time exposing (Time)\n\n    type Msg = Click | NewTime Time\n\n    update : Msg -> Model -> Model\n    update msg model =\n      case msg of\n        Click ->\n          ( model, Task.perform NewTime Time.now )\n\n        NewTime time ->\n          ...\n",
+        "type": "(a -> msg) -> Testable.Task.Task Basics.Never a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "sequence",
+        "comment": " Start with a list of tasks, and turn them into a single task that returns a list. The tasks will be run in order one-by-one and if any task fails the whole sequence fails.\n\n    sequence [ succeed 1, succeed 2 ] -- succeed [ 1, 2 ]\n\nThis can be useful if you need to make a bunch of HTTP requests one-by-one.}\n",
+        "type": "List (Testable.Task.Task x a) -> Testable.Task.Task x (List a)"
+      },
+      {
+        "name": "succeed",
+        "comment": " A task that succeeds immediately when run.\n\n    succeed 42    -- results in 42\n",
+        "type": "a -> Testable.Task.Task x a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
