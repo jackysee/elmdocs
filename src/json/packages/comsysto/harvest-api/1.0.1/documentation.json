@@ -1,0 +1,732 @@
+[
+  {
+    "name": "Harvest.Auth",
+    "comment": " Support for Authentication\n\n# Utility methods\n@docs authUrl, checkAccessTokenAvailable\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "authUrl",
+        "comment": " create Harvest authorization API using account name (accountId), id of your client app (clientId) and redirectUrl\n\nUsage:\n`authUrl accountId clientId redirectUrl`\n",
+        "type": "String -> String -> String -> String"
+      },
+      {
+        "name": "checkAccessTokenAvailable",
+        "comment": " check if access_token is present in the url\n\nUsage:\n`checkAccessTokenAvailable urlHashToParse authenticationUrl`\n",
+        "type": "String -> String -> Result.Result String String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.UserAPI",
+    "comment": " Warpper around Harvest User API\n\n# User\n@docs User, SimpleUser\n\n# User API\n@docs allUsers, getUser, createUser, updateUser, deleteUser, toggleUser\n\n# User decoders\n@docs usersDecoder, userDecoder\n\n# Assignment\n@docs Assignment\n\n# Assignment API\n@docs getUsersAssignedToProject, getUserAssignment, assignUserToAProject, removeUserFromProject, updateAssignment\n\n# Assignment decoders\n@docs assignmentsDecoder, assignmentDecoder\n\n",
+    "aliases": [
+      {
+        "name": "Assignment",
+        "comment": " Representation of an assignment.\n",
+        "args": [],
+        "type": "{ id : Int , userId : Int , projectId : Int , isProjectManager : Bool , deactivated : Bool , hourlyRate : Float , budget : Maybe.Maybe Float , estimate : Maybe.Maybe Float , createdAt : Date.Date , updatedAt : Date.Date }"
+      },
+      {
+        "name": "SimpleUser",
+        "comment": " Representation of a simple user. Used with `createUser` method\n",
+        "args": [],
+        "type": "{ email : String , firstName : String , lastName : String , timezone : Maybe.Maybe String , telephone : Maybe.Maybe String , department : Maybe.Maybe String , isAdmin : Maybe.Maybe Bool , isActive : Maybe.Maybe Bool , isContractor : Maybe.Maybe Bool , hasAccessToAllFutureProjects : Maybe.Maybe Bool , defaultHourlyRate : Maybe.Maybe Float , costRate : Maybe.Maybe Float }"
+      },
+      {
+        "name": "User",
+        "comment": " Representation of a user.\n",
+        "args": [],
+        "type": "{ id : Int , email : String , firstName : String , lastName : String , timezone : String , telephone : Maybe.Maybe String , department : Maybe.Maybe String , isAdmin : Bool , isActive : Bool , isContractor : Bool , hasAccessToAllFutureProjects : Bool , wantsNewsletter : Bool , defaultHourlyRate : Float , costRate : Maybe.Maybe Float , identityAccountId : Int , identityUserId : Int , weeklyCapacity : Int , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "allUsers",
+        "comment": "\nShow All Users\n\nUsage: `allUsers accountId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/people?access_token={token}`\n\nYou may also use the user’s email address in place of a User ID\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> String -> Dict.Dict String String -> Http.Request (List Harvest.UserAPI.User)"
+      },
+      {
+        "name": "assignUserToAProject",
+        "comment": "\nAssign A User To A Project\n\nUsage: `assignUserToAProject accountId userId projectId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/projects/{projectId}/user_assignments?access_token={token}`\n\nResponse: `201 Created` and the header `Location: /projects/{PROJECT_ID}/user_assignments/{NEW_USER_ASSIGNMENT_ID}`\n\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "assignmentDecoder",
+        "comment": " Decode a JSON assignment into a `Assignment`.\n",
+        "type": "Json.Decode.Decoder Harvest.UserAPI.Assignment"
+      },
+      {
+        "name": "assignmentsDecoder",
+        "comment": " Decode a JSON list of assignments into a `List Assignment`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.UserAPI.Assignment)"
+      },
+      {
+        "name": "createUser",
+        "comment": "\nCreate A New User\n\nUsage:\n`createUser accountId token user`\n\nsends a POST request to `https://{accountId}.harvestapp.com/people?access_token={token}`\n\nResponse: `201 Created` if successful\n",
+        "type": "String -> String -> Harvest.UserAPI.SimpleUser -> Http.Request String"
+      },
+      {
+        "name": "deleteUser",
+        "comment": "\nDelete A User\n\nUsage: `deleteUser accountId userId token`\n\nsends a DELETE request to `https://YOURACCOUNT.harvestapp.com/people/{USERID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getUser",
+        "comment": "\nShow single user\n\nUsage:\n`getUser accountId userId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/people/{userId}?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.UserAPI.User"
+      },
+      {
+        "name": "getUserAssignment",
+        "comment": "\nGet A User Assignment\n\nUsage: `getUserAssignment accountId projectId assignmentId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{projectId}/user_assignments/{assignmentId}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> Int -> String -> Http.Request Harvest.UserAPI.Assignment"
+      },
+      {
+        "name": "getUsersAssignedToProject",
+        "comment": "\nGet Users Assigned To Projects\n\nUsage: `getUsersAssignedToProject accountId projectId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{projectId}/user_assignments?access_token={token}`\n\nAllowed parameters:\n\n`updated_since` e.g. `updated_since=2015-09-25+18%3A30`\n",
+        "type": "String -> Int -> String -> Dict.Dict String String -> Http.Request (List Harvest.UserAPI.Assignment)"
+      },
+      {
+        "name": "removeUserFromProject",
+        "comment": "\nRemove A User From A Project\n\nUsage: `removeUserFromProject accountId projectId assignmentId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/projects/{projectId}/user_assignments/{assignmentId}?access_token={token}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "toggleUser",
+        "comment": "\nToggle An Existing User\n\nUsage: `toggleUser accountId userId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/people/{userId}/toggle?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "updateAssignment",
+        "comment": "\nUpdating User Assignments\n\nUsage: `updateAssignment accountId assignment token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/projects/{PROJECT_ID}/user_assignments/{USER_ASSIGNMENT_ID}?access_token={token}`\n",
+        "type": "String -> Harvest.UserAPI.Assignment -> String -> Http.Request String"
+      },
+      {
+        "name": "updateUser",
+        "comment": "\nUpdate A User\n\nUsage:\n`updateUser accountId user token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/people/{USERID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Harvest.UserAPI.User -> String -> Http.Request String"
+      },
+      {
+        "name": "userDecoder",
+        "comment": " Decode a JSON user into a `User`.\n",
+        "type": "Json.Decode.Decoder Harvest.UserAPI.User"
+      },
+      {
+        "name": "usersDecoder",
+        "comment": " Decode a JSON list of users into a `List User`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.UserAPI.User)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.TimesheetAPI",
+    "comment": " Warpper around Harvest Timesheet API\n\n# DayEntry\n@docs DayEntry\n\n# Timesheet API\n@docs createEntry, getEntriesForCurrentDay, getEntriesForDayOfYear, getEntryById, deleteEntry, toggleEntry, updateEntry\n\n# DayEntry decoders\n@docs dayEntriesDecoder, dayEntryDecoder\n\n",
+    "aliases": [
+      {
+        "name": "DayEntry",
+        "comment": " Representation of a day entry.\n",
+        "args": [],
+        "type": "{ id : Int , userId : Int , projectId : Int , taskId : Int , notes : Maybe.Maybe String , spentAt : Date.Date , hours : Float , project : Maybe.Maybe String , client : Maybe.Maybe String , task : Maybe.Maybe String , adjustmentRecord : Maybe.Maybe Bool , isBilled : Maybe.Maybe Bool , isClosed : Maybe.Maybe Bool , timerStartedAt : Maybe.Maybe Date.Date , hoursWithTimer : Maybe.Maybe Float , hoursWithoutTimer : Maybe.Maybe Float , startedAt : Maybe.Maybe Date.Date , endedAt : Maybe.Maybe Date.Date , createdAt : Date.Date , updatedAt : Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createEntry",
+        "comment": "\nCreating An Entry\n\nUsage:\n`createEntry accountId token entry`\n\nsends a POST request to `https://{accountId}.harvestapp.com/daily/add?access_token={token}`\n\nResponse: `201 Created` if successful\n",
+        "type": "String -> String -> Harvest.TimesheetAPI.SimpleDayEntry -> Http.Request Harvest.TimesheetAPI.DayEntry"
+      },
+      {
+        "name": "dayEntriesDecoder",
+        "comment": " Decode a JSON list of day entries into a `List DayEntry`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.TimesheetAPI.DayEntry)"
+      },
+      {
+        "name": "dayEntryDecoder",
+        "comment": " Decode a JSON day entry into a `DayEntry`.\n",
+        "type": "Json.Decode.Decoder Harvest.TimesheetAPI.DayEntry"
+      },
+      {
+        "name": "deleteEntry",
+        "comment": "\nDeleting An Entry\n\nUsage:\n`deleteEntry accountId entryId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/daily/delete/{entryId}?access_token={token}`\n\nResponse: `200 OK`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getEntriesForCurrentDay",
+        "comment": "\nRetrieve Entries For The Current Day. Only tracked time, no assignments\n\nUsage:\n`getEntriesForCurrentDay accountId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/daily?slim=1&access_token={token}`\n",
+        "type": "String -> String -> Http.Request (List Harvest.TimesheetAPI.DayEntry)"
+      },
+      {
+        "name": "getEntriesForDayOfYear",
+        "comment": "\nRetrieve Entries For A Specific Date\n\nUsage:\n`getEntriesForDayOfYear accountId day year token userId`\n\nsends a GET request to `https://{accountId}.harvestapp.com/daily/{day}/{year}?access_token={token}`\n\nAllowed parameters:\n\n`of_user` e.g. `of_user=123456`\n\n",
+        "type": "String -> Int -> Int -> String -> Maybe.Maybe Int -> Http.Request (List Harvest.TimesheetAPI.DayEntry)"
+      },
+      {
+        "name": "getEntryById",
+        "comment": "\nRetrieving A Single Entry\n\nUsage:\n`getEntryById accountId entryId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/daily/show/{entryId}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.TimesheetAPI.DayEntry"
+      },
+      {
+        "name": "toggleEntry",
+        "comment": "\nToggling A Timer\n\nUsage:\n`toggleEntry accountId entryId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/daily/timer/{DAY_ENTRY_ID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "updateEntry",
+        "comment": "\nUpdating An Entry\n\nPOST https://YOURACCOUNT.harvestapp.com/daily/update/{DAY_ENTRY_ID}\n\nHTTP Response: 200 OK\n",
+        "type": "String -> Harvest.TimesheetAPI.DayEntry -> String -> Http.Request String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.TaskAPI",
+    "comment": " Warpper around Harvest Task API\n\n# Task\n@docs Task\n\n# Task API\n@docs getAllTasks, getTask, createTask, deleteTask, updateTask, reactivateTask\n\n# Task decoders\n@docs tasksDecoder, taskDecoder\n\n# TaskAssignment\n@docs TaskAssignment\n\n# TaskAssignment API\n@docs getTasksAssignedToProject, getTaskAssignment, assignTaskToAProject, createNewTaskAndAssignItToProject, removeTaskFromProject, updateTaskAssignment\n\n# TaskAssignment decoders\n@docs taskAssignmentsDecoder, taskAssignmentDecoder\n",
+    "aliases": [
+      {
+        "name": "Task",
+        "comment": " Representation of a task.\n",
+        "args": [],
+        "type": "{ id : Int , name : String , billableByDefault : Bool , isDefault : Bool , defaultHourlyRate : Float , deactivated : Bool , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "TaskAssignment",
+        "comment": " Representation of a taskassignment.\n",
+        "args": [],
+        "type": "{ id : Int , projectId : Int , taskId : Int , billable : Bool , deactivated : Bool , hourlyRate : Float , budget : Maybe.Maybe Float , estimate : Maybe.Maybe Float , createdAt : Date.Date , updatedAt : Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assignTaskToAProject",
+        "comment": "\nAssign Task To A Project\n\nUsage:\n`assignTaskToAProject accountId taskId projectId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/projects/{projectId}/task_assignments?access_token={token}`\n\nRetruns `Location: /projects/{PROJECT_ID}/task_assignments/{NEW_TASK_ASSIGNMENT_ID}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "createNewTaskAndAssignItToProject",
+        "comment": "\nCreate A New Task And Assign It To A Project\n\nUsage:\n`createNewTaskAndAssignItToProject accountId projectId taskName token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/projects/{PROJECT_ID}/task_assignments/add_with_create_new_task?access_token={token}`\n\nReturns `Location: /projects/{PROJECT_ID}/task_assignments/{NEW_TASK_ASSIGNMENT_ID}`\n",
+        "type": "String -> Int -> String -> String -> Http.Request String"
+      },
+      {
+        "name": "createTask",
+        "comment": "\nCreate New Task\n\nUsage:\n`createTask accountId token task`\n\nsends a POST request to `https://{accountId}.harvestapp.com/tasks?access_token={token}`\n\nA successful call will return: `201 Created` and the header `Location: /tasks/{new_task_id}`\n",
+        "type": "String -> String -> Harvest.TaskAPI.Task -> Http.Request String"
+      },
+      {
+        "name": "deleteTask",
+        "comment": "\nArchive/Delete A Task\n\nUsage:\n`deleteTask accountId taskId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/tasks/{task_id}?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getAllTasks",
+        "comment": "\nShow All Tasks\n\nUsage:\n`getAllTasks accountId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/tasks?access_token={token}`\n\nAllowed parameters:\n\n`updated_since` e.g. `updated_since=2015-09-25+18%3A30`\n",
+        "type": "String -> String -> Dict.Dict String String -> Http.Request (List Harvest.TaskAPI.Task)"
+      },
+      {
+        "name": "getTask",
+        "comment": "\nShow One Task\n\nUsage:\n`getTask accountId taskId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/tasks/{task_id}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.TaskAPI.Task"
+      },
+      {
+        "name": "getTaskAssignment",
+        "comment": "\nGet One Task Assignment\n\nUsage:\n`getTaskAssignment accountId projectId assignmentId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{PROJECT_ID}/task_assignments/{TASK_ASSIGNMENT_ID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> Int -> String -> Http.Request Harvest.TaskAPI.TaskAssignment"
+      },
+      {
+        "name": "getTasksAssignedToProject",
+        "comment": "\nAll Assigned Tasks To Project\n\nUsage:\n`getTasksAssignedToProject accountId projectId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{project_id}/task_assignments?access_token={token}`\n\nAllowed parameters:\n\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n",
+        "type": "String -> Int -> String -> Dict.Dict String String -> Http.Request (List Harvest.TaskAPI.TaskAssignment)"
+      },
+      {
+        "name": "reactivateTask",
+        "comment": "\nReactivate A Task\n\nUsage:\n`reactivateTask accountId taskId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/tasks/{taskId}/activate?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "removeTaskFromProject",
+        "comment": "\nRemoving A Task From A Project\n\nUsage:\n`removeTaskFromProject accountId projectId assignmentId token`\n\nsends a DELETE request to `https://{accountId}.harestapp.com/projects/{projectId}/task_assignments/{assignmentId}?access_token={token}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "taskAssignmentDecoder",
+        "comment": " Decode a JSON task assignment into a `TaskAssignment`.\n",
+        "type": "Json.Decode.Decoder Harvest.TaskAPI.TaskAssignment"
+      },
+      {
+        "name": "taskAssignmentsDecoder",
+        "comment": " Decode a JSON list of task assignments into a `List TaskAssignment`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.TaskAPI.TaskAssignment)"
+      },
+      {
+        "name": "taskDecoder",
+        "comment": " Decode a JSON task into a `Task`.\n",
+        "type": "Json.Decode.Decoder Harvest.TaskAPI.Task"
+      },
+      {
+        "name": "tasksDecoder",
+        "comment": " Decode a JSON list of tasks into a `List Task`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.TaskAPI.Task)"
+      },
+      {
+        "name": "updateTask",
+        "comment": "\nUpdate A Task\n\nUsage:\n`updateTask accountId task token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/tasks/{task_id}?access_token={token}`\n",
+        "type": "String -> Harvest.TaskAPI.Task -> String -> Http.Request String"
+      },
+      {
+        "name": "updateTaskAssignment",
+        "comment": "\nUpdating A Task Assignment For A Project\n\nUsage:\n`updateTaskAssignment accountId assignment token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/projects/{PROJECT_ID}/task_assignments/{TASK_ASSIGNMENT_ID}?access_token={token}`\n",
+        "type": "String -> Harvest.TaskAPI.TaskAssignment -> String -> Http.Request String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.WhoAmI",
+    "comment": " Warpper around Harvest Who Am I API\n\n# WhoAmI\n@docs ProjectManager, User, Modules, Company, WhoAmI\n\n# WhoAmI API\n@docs getUserInfo\n\n",
+    "aliases": [
+      {
+        "name": "Company",
+        "comment": " Representation of a company.\n",
+        "args": [],
+        "type": "{ baseUri : String , fullDomain : String , name : String , active : Bool , weekStartDay : String , timeFormat : String , clock : String , decimalSymbol : String , colorScheme : String , modules : Harvest.WhoAmI.Modules , thousandsSeparator : String , planType : String }"
+      },
+      {
+        "name": "Modules",
+        "comment": " Representation of modules.\n",
+        "args": [],
+        "type": "{ expenses : Bool , invoices : Bool , estimates : Bool , approval : Bool }"
+      },
+      {
+        "name": "ProjectManager",
+        "comment": " Representation of a project manager.\n",
+        "args": [],
+        "type": "{ isProjectManager : Bool , canSeeRates : Bool , canCreateProjects : Bool , canCreateInvoices : Bool }"
+      },
+      {
+        "name": "User",
+        "comment": " Representation of a user.\n",
+        "args": [],
+        "type": "{ timezone : String , timezoneIdentifier : String , timezoneUtcOffset : Int , id : Int , email : String , admin : Bool , firstName : String , lastName : String , avatarUrl : String , projectManager : Harvest.WhoAmI.ProjectManager , timestampTimers : Bool }"
+      },
+      {
+        "name": "WhoAmI",
+        "comment": " Representation of the user and company.\n",
+        "args": [],
+        "type": "{ user : Harvest.WhoAmI.User, company : Harvest.WhoAmI.Company }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "getUserInfo",
+        "comment": "\nThis call will return user and account information for the currently authenticated user.\n\nUsage: `getUserInfo accountId token`\n\nsends a GET request to `https://YOURACCOUNT.harvestapp.com/account/who_am_i?access_token={token}`\n",
+        "type": "String -> String -> Http.Request Harvest.WhoAmI.WhoAmI"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.ProjectAPI",
+    "comment": " Warpper around Harvest Project API\n# Project\n@docs Project, SimpleProject\n\n# Project API\n@docs getProject, getAllProjects, createProject, deleteProject, updateProject, toggleProject\n\n# Project decoders\n@docs projectsDecoder, projectDecoder\n",
+    "aliases": [
+      {
+        "name": "Project",
+        "comment": " Representation of a project.\n",
+        "args": [],
+        "type": "{ id : Int , clientId : Int , name : String , code : Maybe.Maybe String , active : Bool , billable : Bool , billBy : String , hourlyRate : Maybe.Maybe Float , budget : Maybe.Maybe Float , budgetBy : String , notifyWhenOverBudget : Bool , overBudgetNotificationPercentage : Float , overBudgetNotifiedAt : Maybe.Maybe Date.Date , showBudgetToAll : Bool , createdAt : Date.Date , updatedAt : Date.Date , startsOn : Maybe.Maybe Date.Date , endsOn : Maybe.Maybe Date.Date , estimate : Maybe.Maybe Float , estimateBy : String , hintEarliestRecordAt : Maybe.Maybe Date.Date , hintLatestRecordAt : Maybe.Maybe Date.Date , notes : Maybe.Maybe String , costBudget : Maybe.Maybe Float , costBudgetIncludeExpenses : Bool }"
+      },
+      {
+        "name": "SimpleProject",
+        "comment": " Simple representation of a project. Used with `createProject` method\n",
+        "args": [],
+        "type": "{ clientId : Int, name : String, active : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createProject",
+        "comment": "\nCreate A New Project\n\nUsage:\n`createProject accountId token project`\n\nsends a POST request `https://YOURACCOUNT.harvestapp.com/projects?access_token={token}`\n\nResponse: `201 Created` if successful\n",
+        "type": "String -> String -> Harvest.ProjectAPI.SimpleProject -> Http.Request String"
+      },
+      {
+        "name": "deleteProject",
+        "comment": "\nDelete A Project\n\nUsage:\n`deleteProject accountId projectId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/projects/{PROJECTID}?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getAllProjects",
+        "comment": "\nShow All Projects\n\nUsage:\n`getAllProjects accountId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects?access_token={token}`\n\nResponse: `200 OK` if successful\n\nAllowed parameters:\n\n`client_id` e.g. `client={CLIENTID}`\n`updated_since` e.g. `updated_since=2015-03-25+18%3A30`\n",
+        "type": "String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ProjectAPI.Project)"
+      },
+      {
+        "name": "getProject",
+        "comment": "\nShow A Project\n\nUsage:\n`getProject accountId projectId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{PROJECTID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> String -> String -> Http.Request Harvest.ProjectAPI.Project"
+      },
+      {
+        "name": "projectDecoder",
+        "comment": " Decode a JSON project into a `Prpject`.\n",
+        "type": "Json.Decode.Decoder Harvest.ProjectAPI.Project"
+      },
+      {
+        "name": "projectsDecoder",
+        "comment": " Decode a JSON list of projects into a `List Project`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.ProjectAPI.Project)"
+      },
+      {
+        "name": "toggleProject",
+        "comment": "\n(De)Activate An Existing Project\n\nUsage:\n`toggleProject accountId projectId token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/projects/{projectId}/toggle?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "updateProject",
+        "comment": "\nUpdate An Existing Project\n\nUsage:\n`updateProject accountId project token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/projects/{PROJECTID}?access_token={token}`\n",
+        "type": "String -> Harvest.ProjectAPI.Project -> String -> Http.Request String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.InvoiceAPI",
+    "comment": " Warpper around Harvest Invoice API\n\n# Invoice\n@docs Invoice\n\n# Invoice API\n@docs getAllInvoices, getInvoice, deleteInvoice, updateInvoice, createInvoice\n\n# Invoice decoders\n@docs invoicesDecoder, invoiceDecoder\n\n# Message\n@docs Message\n\n# Message API\n@docs getMessagesForInvoice, deleteMessage, sendInvoice, markInvoiceAsDraft, markInvoiceAsSent, markInvoiceAsClosed, markInvoiceAsOpen\n\n# Message decoders\n@docs messagesDecoder, messageDecoder\n\n# InvoiceCategory\n@docs InvoiceCategory\n\n# InvoiceCategory API\n@docs getInvoiceCategories, createInvoiceCategory, updateInvoiceCategory, deleteInvoiceCategory\n\n# InvoiceCategory decoders\n@docs invoiceCategoriesDecoder, invoiceCategoryDecoder\n\n# Payment\n@docs Payment\n\n# Payment API\n@docs getPaymentsForInvoice, getPaymentForInvoice, deletePayment, createPayment\n\n# Payment decoders\n@docs paymentsDecoder, paymentDecoder\n",
+    "aliases": [
+      {
+        "name": "Invoice",
+        "comment": " Representation of an invoice.\n",
+        "args": [],
+        "type": "{ id : Int , clientId : Int , clientName : String , number : Maybe.Maybe Int , periodStart : Date.Date , periodEnd : Date.Date , amount : Float , currency : String , notes : Maybe.Maybe String , kind : Maybe.Maybe String , projectsToInvoice : Maybe.Maybe String , issuedAt : Date.Date , dueAmount : Float , dueAt : Date.Date , dueAtHumanFormat : String , subject : Maybe.Maybe String , discount : Maybe.Maybe String , discountAmount : Maybe.Maybe Float , purchaseOrder : String , tax : Float , taxAmount : Float , tax2 : Maybe.Maybe Float , tax2Amount : Float , estimateId : Maybe.Maybe Int , recurringInvoiceId : Maybe.Maybe Int , clientKey : Maybe.Maybe String , retainerId : Maybe.Maybe Int , createdById : Maybe.Maybe Int , state : Maybe.Maybe String , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "InvoiceCategory",
+        "comment": " Representation of an invoice category.\n",
+        "args": [],
+        "type": "{ id : Int , name : String , useAsService : Bool , useAsExpense : Bool , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "Message",
+        "comment": " Representation of a message.\n",
+        "args": [],
+        "type": "{ id : Int , invoiceId : Int , sendMeACopy : Bool , body : Maybe.Maybe String , sentBy : String , sentByEmail : String , thankYou : Bool , subject : Maybe.Maybe String , includePayPalLink : Bool , sentFomEmail : String , sentFrom : String , sendReminderOn : Maybe.Maybe Date.Date , fullRecipientList : Maybe.Maybe String , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "Payment",
+        "comment": " Representation of a payment.\n",
+        "args": [],
+        "type": "{ id : Int , invoiceId : Int , amount : Float , paidAt : Date.Date , notes : Maybe.Maybe String , recordedBy : String , recordedByEmail : String , payPalTransactionId : Maybe.Maybe Int , authorization : Maybe.Maybe String , paymentGatewayId : Maybe.Maybe Int , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createInvoice",
+        "comment": "\nCreate An Invoice\n\nUsage:\n`createInvoice accountId token invoice`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices?access_token={token}`\n\nResponse: `201 Created` if successful\n",
+        "type": "String -> String -> Harvest.InvoiceAPI.Invoice -> Http.Request String"
+      },
+      {
+        "name": "createInvoiceCategory",
+        "comment": "\nCreate New Category\n\nUsage:\n`createInvoiceCategory accountId token invoiceCategory`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoice_item_categories?access_token={token}`\n",
+        "type": "String -> String -> Harvest.InvoiceAPI.InvoiceCategory -> Http.Request String"
+      },
+      {
+        "name": "createPayment",
+        "comment": "\nCreate A New Payment\n\nUsage:\n`createPayment accountId token payment`\n\nsends a POST request to `https://{accontIt}.harvestapp.com/invoices/{INVOICEID}/payments?acces_token={token}`\n\nThe fields `paid-at` and `amount` are required, and optionally `notes` can be included.\n",
+        "type": "String -> String -> Harvest.InvoiceAPI.Payment -> Http.Request String"
+      },
+      {
+        "name": "deleteInvoice",
+        "comment": "\nDelete Existing Invoice\n\nUsage:\n`deleteInvoice accountId invoiceId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "deleteInvoiceCategory",
+        "comment": "\nDelete A Category\n\nUsage:\n`deleteInvoiceCategory accountId invoiceCategoryId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/invoice_item_categories/{invoiceCategoryId}?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "deleteMessage",
+        "comment": "\nDelete Existing Message\n\nUsage:\n`deleteMessage accountId invoiceId messageId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages/{messageId}?access_token={token}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "deletePayment",
+        "comment": "\nDelete Existing Payment\n\nUsage:\n`deletePayment accountId invoiceId paymentId token`\n\nsends a DELETE request to `https://YOURACCOUNT.harvestapp.com/invoices/{INVOICEID}/payments{PAYMENTID}?access_token={token}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getAllInvoices",
+        "comment": "\nShow Recently Created Invoices\n\nUsage: `getAllInvoices accountId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoices?access_token={token}\n\nResponse: `200 OK` if successful\n\nAllowed parameters:\n`page` e.g. `page=2` (first page starts with 1)\n`from/to` e.g. `from=YYYYMMDD&to=YYYYMMDD`\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n`status` e.g. `status=partial` (possible invoice states are [open, partial, draft, paid, unpaid, pastdue])\n`client` e.g. `client=23445`\n",
+        "type": "String -> String -> Dict.Dict String String -> Http.Request (List Harvest.InvoiceAPI.Invoice)"
+      },
+      {
+        "name": "getInvoice",
+        "comment": "\nShow A Single Invoice\n\nUsage:\n`getInvoice accountId invoiceId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoices/{INVOICEID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.InvoiceAPI.Invoice"
+      },
+      {
+        "name": "getInvoiceCategories",
+        "comment": "\nShow All Categories\n\nUsage:\n`getInvoiceCategories accountId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoice_item_categories?access_token={token}`\n",
+        "type": "String -> String -> Http.Request (List Harvest.InvoiceAPI.InvoiceCategory)"
+      },
+      {
+        "name": "getMessagesForInvoice",
+        "comment": "\nShow Invoice Messages\n\nUsage:\n`getMessagesForInvoice accountId token invoiceId`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages?access_token={token}`\n",
+        "type": "String -> String -> Int -> Http.Request (List Harvest.InvoiceAPI.Message)"
+      },
+      {
+        "name": "getPaymentForInvoice",
+        "comment": "\nReturn a single, specific payment\n\nUsage:\n`getPaymentForInvoice accountId invoiceId paymentId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/payments/{paymentId}?access_token={token}`\n",
+        "type": "String -> Int -> Int -> String -> Http.Request Harvest.InvoiceAPI.Payment"
+      },
+      {
+        "name": "getPaymentsForInvoice",
+        "comment": "\nShow Payments For An Invoice\n\nUsage:\n`getPaymentsForInvoice accountId invoiceId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/payments?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request (List Harvest.InvoiceAPI.Payment)"
+      },
+      {
+        "name": "invoiceCategoriesDecoder",
+        "comment": " Decode a JSON list of invoice categories into a `List InvoiceCategory`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.InvoiceAPI.InvoiceCategory)"
+      },
+      {
+        "name": "invoiceCategoryDecoder",
+        "comment": " Decode a JSON invoice category into a `InvoiceCategory`.\n",
+        "type": "Json.Decode.Decoder Harvest.InvoiceAPI.InvoiceCategory"
+      },
+      {
+        "name": "invoiceDecoder",
+        "comment": " Decode a JSON invoice into an `Invoice`.\n",
+        "type": "Json.Decode.Decoder Harvest.InvoiceAPI.Invoice"
+      },
+      {
+        "name": "invoicesDecoder",
+        "comment": " Decode a JSON list of invoices into a `List Invoice`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.InvoiceAPI.Invoice)"
+      },
+      {
+        "name": "markInvoiceAsClosed",
+        "comment": "\nWrite An Invoice Off\n\nUsage:\n`markInvoiceAsClosed accountId invoiceId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages/mark_as_closed?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "markInvoiceAsDraft",
+        "comment": "\nChange A Sent Invoice To Draft\n\nUsage:\n`markInvoiceAsDraft accountId invoiceId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages/mark_as_draft?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "markInvoiceAsOpen",
+        "comment": "\nRe-open An Invoice\n\nUsage:\n`markInvoiceAsOpen accountId invoiceId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages/re_open?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "markInvoiceAsSent",
+        "comment": "\nMark An Invoice As Sent\n\nUsage:\n`markInvoiceAsSent accountId invoiceId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices/{invoiceId}/messages/mark_as_sent?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "messageDecoder",
+        "comment": " Decode a JSON message into a `Message`.\n",
+        "type": "Json.Decode.Decoder Harvest.InvoiceAPI.Message"
+      },
+      {
+        "name": "messagesDecoder",
+        "comment": " Decode a JSON list of messages into a `List Message`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.InvoiceAPI.Message)"
+      },
+      {
+        "name": "paymentDecoder",
+        "comment": " Decode a JSON payment into a `Payment`.\n",
+        "type": "Json.Decode.Decoder Harvest.InvoiceAPI.Payment"
+      },
+      {
+        "name": "paymentsDecoder",
+        "comment": " Decode a JSON list of payments into a `List Payment`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.InvoiceAPI.Payment)"
+      },
+      {
+        "name": "sendInvoice",
+        "comment": "\nSend An Invoice\n\nUsage:\n`sendInvoice accountId token message`\n\nsends a POST request to `https://{accountId}.harvestapp.com/invoices/{INVOICEID}/messages?access_token={token}`\n\nResponse: `201 Created` if successful\n",
+        "type": "String -> String -> Harvest.InvoiceAPI.SimpleMessage -> Http.Request String"
+      },
+      {
+        "name": "updateInvoice",
+        "comment": "\nUpdate Existing Invoice\n\nUsage:\n`updateInvoice accountId invoice token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/invoices/{INVOICEID}?access_token={token}`\n\nResponse: `200 OK`, in addition to header `LOCATION: /invoices/{INVOICEID}`\n",
+        "type": "String -> Harvest.InvoiceAPI.Invoice -> String -> Http.Request String"
+      },
+      {
+        "name": "updateInvoiceCategory",
+        "comment": "\nUpdate Existing Category\n\nUsage:\n`updateInvoiceCategory accountId token invoiceCategory`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/invoice_item_categories/{CATEGORYID}?access_token={token}`\n",
+        "type": "String -> String -> Harvest.InvoiceAPI.InvoiceCategory -> Http.Request String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.ClientAPI",
+    "comment": " Warpper around Harvest Client API\n\n# Client\n@docs Client\n\n# Client API\n@docs getAllClients, getClient, createClient, updateClient, toggleClient, deleteClient\n\n# Client decoders\n@docs clientsDecoder, clientDecoder\n\n# Contact\n@docs Contact\n\n# Contact API\n@docs getAllContacts, getAllContactsForClient, getClientContact, createContact, updateContact, deleteContact\n\n# Contact decoders\n@docs contactsDecoder, contactDecoder\n",
+    "aliases": [
+      {
+        "name": "Client",
+        "comment": " Representation of a client.\n",
+        "args": [],
+        "type": "{ id : Int , name : String , active : Bool , currency : String , currencySymbol : String , highriseId : Maybe.Maybe Int , cacheVersion : Int , details : Maybe.Maybe String , defaultInvoiceTimeframe : Maybe.Maybe String , lastInvoiceKind : Maybe.Maybe String , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "Contact",
+        "comment": " Representation of a conact.\n",
+        "args": [],
+        "type": "{ id : Int , clientId : Int , firstName : String , lastName : String , email : Maybe.Maybe String , phoneOffice : Maybe.Maybe String , phoneMobile : Maybe.Maybe String , fax : Maybe.Maybe String , title : Maybe.Maybe String , createdAt : Maybe.Maybe Date.Date , updatedAt : Maybe.Maybe Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "clientDecoder",
+        "comment": " Decode a JSON client into a `Client`.\n",
+        "type": "Json.Decode.Decoder Harvest.ClientAPI.Client"
+      },
+      {
+        "name": "clientsDecoder",
+        "comment": " Decode a JSON list of clients into a `List Client`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.ClientAPI.Client)"
+      },
+      {
+        "name": "contactDecoder",
+        "comment": " Decode a JSON contact into a `Contact`.\n",
+        "type": "Json.Decode.Decoder Harvest.ClientAPI.Contact"
+      },
+      {
+        "name": "contactsDecoder",
+        "comment": " Decode a JSON list of contacts into a `List Contact`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.ClientAPI.Contact)"
+      },
+      {
+        "name": "createClient",
+        "comment": "\nCreate A New Client\n\nUsage:\n`createClient accountId token client`\n\nsends a POST request to `https://{accountId}.harvestapp.com/clients?access_token={token}`\n\nResponse:\n`201 Created`, along with header `Location /clients/{NEWCLIENTID}`\n",
+        "type": "String -> String -> Harvest.ClientAPI.Client -> Http.Request String"
+      },
+      {
+        "name": "createContact",
+        "comment": "\nCreate A New Client Contact\n\nUsage:\n`createContact accountId token contact`\n\nsends a POST request to `https://YOURACCOUNT.harvestapp.com/contacts?access_token={token}`\n\nResponse: `201 Created`\n\nNote: Only Client-ID, First-Name, and Last-Name are required.\n",
+        "type": "String -> String -> Harvest.ClientAPI.Contact -> Http.Request String"
+      },
+      {
+        "name": "deleteClient",
+        "comment": "\nDelete A Client\n\nUsage:\n`deleteClient accountId clientId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/clients/{CLIENTID}?access_token={token}`\n\nResponse: `200 OK`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "deleteContact",
+        "comment": "\nDelete A Client Contact\n\nUsage:\n`deleteContact accountId contactId token`\n\nsends a DELETE request to `https://{accountId}.harvestapp.com/contacts/{CONTACTID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "getAllClients",
+        "comment": "\nGet All Clients\n\nUsage:\n`getAllClients accountId token`\n\nsends a GET request to\n`https://{accountId}.harvestapp.com/clients?access_token={token}`\n",
+        "type": "String -> String -> Http.Request (List Harvest.ClientAPI.Client)"
+      },
+      {
+        "name": "getAllContacts",
+        "comment": "\nGet All Contacts\n\nUsage: `getAllContacts accountId token params`\n\nsends a GET request to `https://YOURACCOUNT.harvestapp.com/contacts?access_token=token`\n\nResponse: `200 OK`\n\nAllowed parameters:\n\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n",
+        "type": "String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ClientAPI.Contact)"
+      },
+      {
+        "name": "getAllContactsForClient",
+        "comment": "\nGet All Contacts For A Client\n\nUsage:\n`getAllContactsForClient accountId clientId token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/clients/{CLIENTID}/contacts?access_token={token}`\n\nResponse: `200 OK`\n\nAllowed parameters:\n\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n",
+        "type": "String -> Int -> String -> Dict.Dict String String -> Http.Request (List Harvest.ClientAPI.Contact)"
+      },
+      {
+        "name": "getClient",
+        "comment": "\nGet A Single Client\n\nUsage:\n`getClient accountId clientId token`\n\nsends a GET request to\n`https://{accountId}.harvestapp.com/clients/{CLIENTID}?access_token={token}`\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.ClientAPI.Client"
+      },
+      {
+        "name": "getClientContact",
+        "comment": "\nGet A Client Contact\n\nUsage:\n`getClientContact accountId clientId token`\n\nsends a GET request to `https://{accountId}.harvestapp.com/contacts/{CONTACTID}?access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> Http.Request Harvest.ClientAPI.Contact"
+      },
+      {
+        "name": "toggleClient",
+        "comment": "\nActivate Or Deactivate An Existing Client\n\nUsage:\n`toggleClient accountId clientId token`\n\nsends a POST request to `https://{accountId}.harvestapp.com/clients/{CLIENTID}/toggle?access_token={token}`\n\nResponse:\n`200 OK`, along with Header `Location /clients/{CLIENTID}`\n",
+        "type": "String -> Int -> String -> Http.Request String"
+      },
+      {
+        "name": "updateClient",
+        "comment": "\nUpdate A Client\n\nUsage:\n`updateClient accountId client token`\n\nsends a PUT request to `https://{accountId}.harvestapp.com/clients/{CLIENTID}?accessToken={token}`\n\nResponse:\n`200 OK`, along with Header `Location /clients/{CLIENTID}`\n",
+        "type": "String -> Harvest.ClientAPI.Client -> String -> Http.Request String"
+      },
+      {
+        "name": "updateContact",
+        "comment": "\nUpdate A Client Contact\n\nUsage:\n`updateContact accountId contact token`\n\nsends a PUT request to `https://YOURACCOUNT.harvestapp.com/contacts/{CONTACTID}?access_token={token}`\n\nResponse: `200 OK`, along with header `Location /contacts/{CONTACTID}`\n",
+        "type": "String -> Harvest.ClientAPI.Contact -> String -> Http.Request String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Harvest.ReportingAPI",
+    "comment": " Warpper around Harvest Reporting API\n\n# DayEntry\n@docs DayEntry\n\n# DayEntry API\n@docs getEntriesByUserForDateRange, getEntriesForProjectTimeframe\n\n# DayEntry decoders\n@docs dayEntry, hours\n\n# Expense\n@docs Expense\n\n# Expense API\n@docs getExpensesByUserForDateRange, getExpensesForProjectTimeframe\n\n# Expense decoders\n@docs expenses, expense\n",
+    "aliases": [
+      {
+        "name": "DayEntry",
+        "comment": " Representation of a day entry.\n\nSame object used for both\n\nGET https://YOURACCOUNT.harvestapp.com/projects/{PROJECT_ID}/entries?from=YYYYMMDD&to=YYYYMMDD\n\nand\n\nGET https://YOURACCOUNT.harvestapp.com/people/{USER_ID}/entries?from=YYYYMMDD&to=YYYYMMDD\n\nLater one doesn't have hours_with_timer field so we set it to 0\n",
+        "args": [],
+        "type": "{ id : Int , userId : Int , projectId : Int , taskId : Int , notes : Maybe.Maybe String , spentAt : Date.Date , hours : Float , adjustmentRecord : Bool , timerStartedAt : Maybe.Maybe String , isClosed : Bool , isBilled : Bool , hoursWithTimer : Float , createdAt : Date.Date , updatedAt : Date.Date }"
+      },
+      {
+        "name": "Expense",
+        "comment": " Representation of an expense.\n",
+        "args": [],
+        "type": "{ id : Int , userId : Int , projectId : Int , invoiceId : Int , companyId : Int , totalCost : Float , units : Float , expenseCategoryId : Int , spentAt : Date.Date , isClosed : Bool , notes : Maybe.Maybe String , billable : Bool , hasReceipt : Bool , receiptUrl : Maybe.Maybe String , isLocked : Bool , locked_reason : Maybe.Maybe String , createdAt : Date.Date , updatedAt : Date.Date }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "dayEntry",
+        "comment": " Decode a JSON day entry into a `DayEntry`.\n",
+        "type": "Json.Decode.Decoder Harvest.ReportingAPI.DayEntry"
+      },
+      {
+        "name": "expense",
+        "comment": " Decode a JSON expense into a `Expense`.\n",
+        "type": "Json.Decode.Decoder Harvest.ReportingAPI.Expense"
+      },
+      {
+        "name": "expenses",
+        "comment": " Decode a JSON list of expenses into a `List Expense`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.ReportingAPI.Expense)"
+      },
+      {
+        "name": "getEntriesByUserForDateRange",
+        "comment": "\nAll Entries For Project Timeframe\n\nUsage:\n`getEntriesByUserForDateRange accountId userId from to token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/people/{userId}/entries?from=YYYYMMDD&to=YYYYMMDD&access_token={token}`\n\nResponse: `200 OK` if successful\n",
+        "type": "String -> Int -> String -> String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ReportingAPI.DayEntry)"
+      },
+      {
+        "name": "getEntriesForProjectTimeframe",
+        "comment": "\nAll Entries By User For Timeframe\n\nThis call requires parameters (from, to) to describe the timeframe to use for a report. This method can be used to view your own entries on a specific project.\n\nUsage:\n`getEntriesForProjectTimeframe accountId projectId from to token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{projectId}/entries?from=YYYYMMDD&to=YYYYMMDD&access_token={token}`\n\nResponse: `200 OK` if successful\n\nAllowed parameters:\n\n`billable` e.g. `billable=yes` (or `no`)\n`only_billed`  e.g. `only_billed=yes`\n`only_unbilled` e.g. `only_unbilled=yes`\n`is_closed` e.g. `is_closed=yes` (or `no`)\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n`user_id` e.g. `user_id=1334`\n",
+        "type": "String -> Int -> String -> String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ReportingAPI.DayEntry)"
+      },
+      {
+        "name": "getExpensesByUserForDateRange",
+        "comment": "\nShow expenses for a given user and a time frame\n\nUsage:\n`getExpensesByUserForDateRange accountId userId from to token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/people/{userId}/expenses?from=YYYYMMDD&to=YYYYMMDD&access_token={token}`\n\nAllowed parameters:\n\n`is_closed` e.g. `is_closed=yes` (or `no`)\n",
+        "type": "String -> Int -> String -> String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ReportingAPI.Expense)"
+      },
+      {
+        "name": "getExpensesForProjectTimeframe",
+        "comment": "\nShow expenses for a project and a time frame\n\nUsage:\n`getExpensesForProjectTimeframe accountId projectId from to token params`\n\nsends a GET request to `https://{accountId}.harvestapp.com/projects/{projectId}/expenses?from=YYYYMMDD&to=YYYYMMDD&access_token={token}`\n\nAllowed parameters:\n\n`is_closed` e.g. `is_closed=yes` (or `no`)\n`updated_since` e.g. `updated_since=2015-09-25+18%3A30`\n`only_billed` e.g. `only_billed=yes`\n`only_unbilled` e.g. `only_unbilled=yes`\n`updated_since` e.g. `updated_since=2010-09-25+18%3A30`\n",
+        "type": "String -> Int -> String -> String -> String -> Dict.Dict String String -> Http.Request (List Harvest.ReportingAPI.Expense)"
+      },
+      {
+        "name": "hours",
+        "comment": " Decode a JSON list of day entries into a `List DayEntry`.\n",
+        "type": "Json.Decode.Decoder (List Harvest.ReportingAPI.DayEntry)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

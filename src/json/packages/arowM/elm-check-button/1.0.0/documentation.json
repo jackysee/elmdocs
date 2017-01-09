@@ -1,0 +1,227 @@
+[
+  {
+    "name": "CheckButtons",
+    "comment": " A set of button component that can be checked or unchecked ([demo](https://arowm.github.io/elm-check-button/)).\n  `CheckButtons.Css` exposes a function to generate CSS\n  in a manner of [`elm-css`](https://github.com/rtfeldman/elm-css).\n\n# Model\n\n@docs Model\n\n## Constructors\n\n@docs emptyModel\n\n## Setters\n\n@docs addTopButton\n@docs addBottomButton\n@docs setChecked\n@docs setUnchecked\n@docs setActive\n@docs setDisabled\n\n## Getters\n\n@docs getValues\n@docs getCheckedValues\n\n## Modifiers\n\n@docs map\n@docs filter\n\n# Renderers\n\n@docs view\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " An opaque type representing state of check buttons.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addBottomButton",
+        "comment": " Add an element onto the back of the check buttons.\n",
+        "type": "CheckButton.Model -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "addTopButton",
+        "comment": " Prepend an element onto the front of the check buttons.\n",
+        "type": "CheckButton.Model -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "emptyModel",
+        "comment": " A constructor for `Model`. It contains no buttons.\n",
+        "type": "CheckButtons.Model"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep only elements that satisfy the predicate.\n",
+        "type": "(CheckButton.Model -> Bool) -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "getCheckedValues",
+        "comment": " Get values of checked buttons.\n",
+        "type": "CheckButtons.Model -> List CheckButton.Value"
+      },
+      {
+        "name": "getValues",
+        "comment": " Get values of all check buttons.\n",
+        "type": "CheckButtons.Model -> List CheckButton.Value"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to each check button.\n",
+        "type": "(CheckButton.Model -> CheckButton.Model) -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "setActive",
+        "comment": " Make only buttons with provided values are active.\n",
+        "type": "List CheckButton.Value -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "setChecked",
+        "comment": " Make only buttons with provided values are checked.\n",
+        "type": "List CheckButton.Value -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "setDisabled",
+        "comment": " Make only buttons with provided values are disabled.\n",
+        "type": "List CheckButton.Value -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "setUnchecked",
+        "comment": " Make only buttons with provided values are unchecked.\n",
+        "type": "List CheckButton.Value -> CheckButtons.Model -> CheckButtons.Model"
+      },
+      {
+        "name": "view",
+        "comment": " A renderer for check buttons.\n\n  The first argument is a name space for\n  [elm-css](https://github.com/rtfeldman/elm-css).\n  It is supposed to be a unique value.\n\n  The second argument is button values currently checked. It is called if a user checked/unchecked any check button.\n",
+        "type": "CheckButton.Namespace -> (List CheckButton.Value -> msg) -> CheckButtons.Model -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "CheckButton",
+    "comment": " A button component that can be checked or unchecked ([demo](https://arowm.github.io/elm-check-button/)).\n  `CheckButton.Css` exposes a function to generate CSS\n  in a manner of [`elm-css`](https://github.com/rtfeldman/elm-css).\n\n# Model\n\n@docs Model\n\n## Constructors\n\n@docs defaultModel\n\n## Setters\n\n@docs setChecked\n@docs setUnchecked\n@docs setIsChecked\n@docs setActive\n@docs setDisabled\n@docs setLabel\n\n## Getters\n\n@docs getIsChecked\n@docs getIsActive\n@docs getValue\n@docs getLabel\n\n# Renderers\n\n@docs view\n\n# Aliases\n@docs Namespace\n@docs Value\n\n",
+    "aliases": [
+      {
+        "name": "Namespace",
+        "comment": " An alias for readability\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Value",
+        "comment": " An alias for readability\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " An opaque type representing a check button state.\n  To construct an actual value of this type, use constructors and modifiers bellow.\n\n  Example usage.\n\n  button =\n    defaultModel \"red\" \"Red\"\n    |> setChecked\n    |> setDisabled\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultModel",
+        "comment": " A constructor for a check button.\n  By providing a value and a label name, you can construct an unchecked active button.\n",
+        "type": "CheckButton.Value -> String -> CheckButton.Model"
+      },
+      {
+        "name": "getIsActive",
+        "comment": " Get if a check button is active.\n",
+        "type": "CheckButton.Model -> Bool"
+      },
+      {
+        "name": "getIsChecked",
+        "comment": " Get if a check button is checked.\n",
+        "type": "CheckButton.Model -> Bool"
+      },
+      {
+        "name": "getLabel",
+        "comment": " Get label name of a button.\n",
+        "type": "CheckButton.Model -> String"
+      },
+      {
+        "name": "getValue",
+        "comment": " Get value of a button.\n",
+        "type": "CheckButton.Model -> CheckButton.Value"
+      },
+      {
+        "name": "setActive",
+        "comment": " Set the state of a check button to be active.\n",
+        "type": "CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "setChecked",
+        "comment": " Set the state of a check button to be checked.\n",
+        "type": "CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "setDisabled",
+        "comment": " Set the state of a check button to be disabled.\n",
+        "type": "CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "setIsChecked",
+        "comment": " Modify the state of a check button to be checked/unchecked.\n\n  setChecked = setIsChecked True\n  setUnchecked = setIsChecked False\n",
+        "type": "Bool -> CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "setLabel",
+        "comment": " Set a check button label name.\n",
+        "type": "String -> CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "setUnchecked",
+        "comment": " Set the state of a check button to be unchecked.\n",
+        "type": "CheckButton.Model -> CheckButton.Model"
+      },
+      {
+        "name": "view",
+        "comment": " A renderer for check button.\n\n  The first argument is a name space for\n  [elm-css](https://github.com/rtfeldman/elm-css).\n  It is supposed to be a unique value.\n\n  The second argument is called if a user checked/unchecked a check button.\n",
+        "type": "CheckButton.Namespace -> (Bool -> msg) -> CheckButton.Model -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "CheckButtons.Css",
+    "comment": " This module expose a function to generate CSS\n  for `CheckButtons` in a manner of [`elm-css`](https://github.com/rtfeldman/elm-css).\n\n# CSS\n\n@docs css\n@docs CssClasses\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CssClasses",
+        "comment": " A CSS classes.\n",
+        "args": [],
+        "cases": [
+          [
+            "ButtonSet",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "css",
+        "comment": " A CSS component.\nPlease reffer to the [elm-css](https://github.com/rtfeldman/elm-css) for detail.\n",
+        "type": "List Css.Snippet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "CheckButton.Css",
+    "comment": " This module expose a function to generate CSS\n  for `CheckButton` in a manner of [`elm-css`](https://github.com/rtfeldman/elm-css).\n\n# CSS\n\n@docs css\n@docs CssClasses\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CssClasses",
+        "comment": " A CSS classes.\n",
+        "args": [],
+        "cases": [
+          [
+            "CheckButtonWrapper",
+            []
+          ],
+          [
+            "CheckButtonCore",
+            []
+          ],
+          [
+            "CheckButtonLabel",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "css",
+        "comment": " A CSS component.\nPlease reffer to the [elm-css](https://github.com/rtfeldman/elm-css) for detail.\n",
+        "type": "List Css.Snippet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
