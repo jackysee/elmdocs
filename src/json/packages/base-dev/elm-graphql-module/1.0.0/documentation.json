@@ -1,0 +1,31 @@
+[
+  {
+    "name": "GraphQL",
+    "comment": " This library provides support functions used by\n    [elm-graphql](https://github.com/jahewson/elm-graphql), the GraphQL code generator for Elm.\n\n# Helper functions\n@docs query, mutation, apply, maybeEncode\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Combines two object decoders.\n",
+        "type": "Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "maybeEncode",
+        "comment": " Encodes a `Maybe` as JSON, using `null` for `Nothing`.\n",
+        "type": "(a -> Json.Encode.Value) -> Maybe.Maybe a -> Json.Encode.Value"
+      },
+      {
+        "name": "mutation",
+        "comment": " Executes a GraphQL mutation.\n",
+        "type": "String -> String -> String -> Json.Encode.Value -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "query",
+        "comment": " Executes a GraphQL query.\n",
+        "type": "String -> String -> String -> String -> Json.Encode.Value -> Json.Decode.Decoder a -> Http.Request a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

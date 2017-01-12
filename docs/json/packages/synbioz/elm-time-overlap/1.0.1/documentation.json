@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Time.Overlap",
+    "comment": " This library provides tools for dealing with overlaping events (ie something\nwith a start and end time)\n\n# Definition\n@docs Event\n\n# Usage\n@docs unOverlap, overlap\n\n",
+    "aliases": [
+      {
+        "name": "Event",
+        "comment": " Tuple that symbolizes an event like (start, end)\n",
+        "args": [],
+        "type": "( Time.Time, Time.Time )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "overlap",
+        "comment": " Check if two Events overlap or not\n\n    overlap (1.0, 10.0) (5.0, 6.0) == True\n\n    overlap (1.0, 2.0) (3.0, 4.0) == False\n",
+        "type": "Time.Overlap.Event -> Time.Overlap.Event -> Bool"
+      },
+      {
+        "name": "unOverlap",
+        "comment": " Return a list of list of Event with a start and an end that won't be\noverlapped\n\n**Note**: Anything can be represented as an event as long as you pass a function\nthat will transform your object (record, tuple...) into a 2-tuple with start\nand end time.\n\n    events = [ (\"2017-01-10\", \"2017-01-13\")\n             , (\"2017-01-14\", \"2017-01-15\")\n             , (\"2017-01-12\", \"2017-01-14\")\n             ]\n\n    convertDateToTime : (String, String) -> (Time, Time)\n\n    unOverlap convertDateToTime events == [ [ (\"2017-01-10\", \"2017-01-13\")\n                                            , (\"2017-01-14\", \"2017-01-15\")\n                                            ]\n                                          , [ (\"2017-01-12\", \"2017-01-14\") ]\n                                          ]\n",
+        "type": "(a -> Time.Overlap.Event) -> List a -> List (List a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

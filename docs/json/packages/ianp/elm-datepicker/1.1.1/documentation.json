@@ -1,0 +1,201 @@
+[
+  {
+    "name": "DatePicker",
+    "comment": " A date range picker.\n\n# View\n@docs view\n\n# Update\n@docs init, initWithConfig, getNow, update\n\n# State\n@docs Model\n\n# Definitions\n@docs Msg\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " A model to track the state of the date picker.\n\nAn instance of this should appear somewhere in your applications model.\n",
+        "args": [],
+        "type": "{ focused : Date.Date , choice : DatePicker.Choice , selected : Maybe.Maybe Date.Date , selectedEnd : Maybe.Maybe Date.Date , config : DatePicker.Config.Config }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A message type for the date picker.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getNow",
+        "comment": " Set the focus to the current date.\n\nThis can be used to initialize the date picker.\n\n    init : Config -> ( Model, Cmd Msg )\n    init config =\n        ( (DatePicker.initWithConfig config), DatePicker.getNow Msg )\n",
+        "type": "(DatePicker.Msg -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "init",
+        "comment": " An initial state with nothing selected and a default configuration.\n",
+        "type": "DatePicker.Model"
+      },
+      {
+        "name": "initWithConfig",
+        "comment": " Initialize the data picker with nothing selected and a custom configuration.\n\nCustom configurations can be used to override the styling, placeholder strings,\nand whether the picker selects a single date or a range.\n",
+        "type": "DatePicker.Config.Config -> DatePicker.Model"
+      },
+      {
+        "name": "update",
+        "comment": " Update the date picker.\n",
+        "type": "DatePicker.Msg -> DatePicker.Model -> DatePicker.Model"
+      },
+      {
+        "name": "view",
+        "comment": " Render a date picker.\n",
+        "type": "DatePicker.Model -> Html.Html DatePicker.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DatePicker.Config",
+    "comment": " Configuration for the date picker.\n\nThe configuration should **not** appear in your model.\n\n# Definitions\n@docs Config\n\n# Helpers\n@docs defaultConfig, setDefaultDate, setGetClasses, setUseDefaultStyles, setUseRange\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " The configuration for a date picker.\n",
+        "args": [],
+        "type": "{ getClasses : DatePicker.Style.View -> List ( String, Bool ) , useDefaultStyles : Bool , defaultDate : Date.Date , useRange : Bool , placeholderFrom : String , placeholderTo : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultConfig",
+        "comment": "\n",
+        "type": "DatePicker.Config.Config"
+      },
+      {
+        "name": "setDefaultDate",
+        "comment": " Update a configuration to use the specified default date.\n",
+        "type": "Date.Date -> DatePicker.Config.Config -> DatePicker.Config.Config"
+      },
+      {
+        "name": "setGetClasses",
+        "comment": " Update a configuration to use the specified function to control the styling.\n",
+        "type": "(DatePicker.Style.View -> List ( String, Bool )) -> DatePicker.Config.Config -> DatePicker.Config.Config"
+      },
+      {
+        "name": "setUseDefaultStyles",
+        "comment": " Update whether a configuration should use the default styles.\n",
+        "type": "Bool -> DatePicker.Config.Config -> DatePicker.Config.Config"
+      },
+      {
+        "name": "setUseRange",
+        "comment": " Update a configuration to select either a range or a single date.\n",
+        "type": "Bool -> DatePicker.Config.Config -> DatePicker.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DatePicker.Style",
+    "comment": " Inline styling for the date picker.\n\n# Definitions\n@docs View\n\n# Helpers\n@docs getDefaultStyle\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "View",
+        "comment": " All of the view fragments that can be styled.\n",
+        "args": [],
+        "cases": [
+          [
+            "Container",
+            []
+          ],
+          [
+            "InputsContainer",
+            []
+          ],
+          [
+            "InputContainer",
+            []
+          ],
+          [
+            "InputLabel",
+            []
+          ],
+          [
+            "Input",
+            []
+          ],
+          [
+            "InputDisplayTextContainer",
+            []
+          ],
+          [
+            "InputDisplayText",
+            []
+          ],
+          [
+            "DatepickerContainer",
+            []
+          ],
+          [
+            "MonthMenu",
+            []
+          ],
+          [
+            "MonthContainer",
+            []
+          ],
+          [
+            "Month",
+            []
+          ],
+          [
+            "Year",
+            []
+          ],
+          [
+            "ArrowLeft",
+            []
+          ],
+          [
+            "ArrowLeftInner",
+            []
+          ],
+          [
+            "ArrowRight",
+            []
+          ],
+          [
+            "ArrowRightInner",
+            []
+          ],
+          [
+            "WeekDays",
+            []
+          ],
+          [
+            "WeekDay",
+            []
+          ],
+          [
+            "Days",
+            []
+          ],
+          [
+            "Day",
+            []
+          ],
+          [
+            "DayHighlight",
+            []
+          ],
+          [
+            "DayNotCurrentMonth",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getDefaultStyle",
+        "comment": " A default style for the datepicker.\n",
+        "type": "DatePicker.Style.View -> List ( String, String )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

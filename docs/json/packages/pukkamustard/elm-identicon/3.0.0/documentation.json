@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Identicon",
+    "comment": " Generate an identicon from a string.\n\n# Creating\n@docs identicon, custom\n\n# Defaults\n@docs defaultHash, defaultColor\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "custom",
+        "comment": " Creates an identicon with your own hasher/colorer where the string is\npassed into both the hasher and colorer.  Here's how to create an identicon\nthat's always the color red:\n\n    import Color exposing (rgb)\n\n    main =\n        custom defaultHash (always <| rgb 255 0 0) \"200px\" \"Hello Identicon!\"\n",
+        "type": "(String -> Int) -> (String -> Color.Color) -> String -> String -> Html.Html msg"
+      },
+      {
+        "name": "defaultColor",
+        "comment": " Generate a color from a string\n\nThis generates the same color that would be used in the identicon.\n\n",
+        "type": "String -> Color.Color"
+      },
+      {
+        "name": "defaultHash",
+        "comment": " One-at-a-Time Hash\n\n  Taken from http://www.burtleburtle.net/bob/hash/doobs.html.\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "identicon",
+        "comment": " Generate a identicon from a string\n\n    main =\n      identicon \"200px\" \"Hello identicon!\"\n",
+        "type": "String -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

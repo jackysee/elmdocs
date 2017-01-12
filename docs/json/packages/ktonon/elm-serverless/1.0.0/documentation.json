@@ -1,0 +1,103 @@
+[
+  {
+    "name": "Serverless",
+    "comment": " Define an HTTP API in elm.\n\n@docs httpApi, HttpApi, EndpointPort, Stage\n",
+    "aliases": [
+      {
+        "name": "EndpointPort",
+        "comment": " A port through which the HTTP request begins.\n\nIt receives the serverless stage as an parameter.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "(Serverless.Stage -> msg) -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "HttpApi",
+        "comment": " Program for an HTTP API.\n\nDiffers from Platform.program as follows\n\n* endpointPort - port through which the HTTP request begins\n* responsePort - port through which the HTTP request ends\n* init - guaranteed to get a decoded Request\n",
+        "args": [
+          "model",
+          "msg"
+        ],
+        "type": "{ endpointPort : Serverless.EndpointPort msg , responsePort : Serverless.Response.Port msg , init : Serverless.Request.Request -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg }"
+      },
+      {
+        "name": "Stage",
+        "comment": " A serverless stage (ex, \"dev\")\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "httpApi",
+        "comment": " Create an HttpApi.\n\nThis program guarantees a decoded Request for your init function. If an error\nhappens during decoding, it will send 500 through the responsePort that\nyou provide and never call init.\n",
+        "type": "Serverless.HttpApi model msg -> Platform.Program Serverless.Request.Raw (Maybe.Maybe model) msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Serverless.Response",
+    "comment": " Types to help send an HTTP response.\n\n@docs StatusCode, ResponseBody, Port\n",
+    "aliases": [
+      {
+        "name": "Port",
+        "comment": " Defines the type that should be used for an elm port to send the response.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "( Serverless.Response.StatusCode, Serverless.Response.ResponseBody ) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "ResponseBody",
+        "comment": " Response body as a string\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "StatusCode",
+        "comment": " HTTP status code\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Serverless.Request",
+    "comment": " Defines an HTTP request.\n\n@docs decode, Method, Raw, Request\n",
+    "aliases": [
+      {
+        "name": "Raw",
+        "comment": " A raw HTTP request, before decoding\n",
+        "args": [],
+        "type": "Json.Encode.Value"
+      },
+      {
+        "name": "Request",
+        "comment": " HTTP Request (wip)\n",
+        "args": [],
+        "type": "{ method : Serverless.Request.Method, path : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Method",
+        "comment": " HTTP request message type\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decode a raw HTTP request\n",
+        "type": "Serverless.Request.Raw -> Result.Result String Serverless.Request.Request"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
