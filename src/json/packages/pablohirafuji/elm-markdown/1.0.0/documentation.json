@@ -1,0 +1,126 @@
+[
+  {
+    "name": "Markdown",
+    "comment": " A library for markdown parsing and rendering.\n\n# Parsing Markdown\n@docs toHtml\n\n# Parsing with Custom Options\n@docs withOptions, customHtml\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "customHtml",
+        "comment": " Customize how to render each element. The following examples\ndemonstrate how to use it.\n\n- Render `target=\"_blank\"` on links depending on the url.\n[Demo](https://pablohirafuji.github.io/elm-markdown/examples/CustomLinkTag.html)\n/ [Code](https://github.com/pablohirafuji/elm-markdown/blob/master/examples/CustomLinkTag.elm)\n- Render images using `figure` and `figcaption` elements.\n[Demo](https://pablohirafuji.github.io/elm-markdown/examples/CustomImageTag.html)\n/ [Code](https://github.com/pablohirafuji/elm-markdown/blob/master/examples/CustomImageTag.elm)\n",
+        "type": "Markdown.Config.Options -> Markdown.Config.Elements -> String -> List (Html.Html Basics.Never)"
+      },
+      {
+        "name": "toHtml",
+        "comment": " Turn a markdown string into a list of HTML elements,\nusing the `Config.defaultOptions` and `Config.defaultElements`.\n\n```\n\ntype Msg\n    = MsgOfmyApp1\n    | MsgOfmyApp2\n    | MsgOfmyApp3\n    | Markdown\n\n\nmarkdownView : Html Msg\nmarkdownView =\n    Html.map (always Markdown)\n        <| section []\n        <| Markdown.toHtml \"# Title with *emphasis*\"\n\n```\n",
+        "type": "String -> List (Html.Html Basics.Never)"
+      },
+      {
+        "name": "withOptions",
+        "comment": " Customize how soft line breaks (`\\n`) are rendered and raw html\ntags are parsed.\n\n```\ncustomOptions : Options\ncustomOptions =\n    { softAsHardLineBreak = True\n    , rawHtml = DontParse\n    }\n\n\nview : Html Never\nview =\n    div []\n        <| Markdown.withOptions customOptions model.textarea\n```\n\nThe [demo](https://pablohirafuji.github.io/elm-markdown/examples/Demo.html)\ndemonstrate how each option affects the output.\n",
+        "type": "Markdown.Config.Options -> String -> List (Html.Html Basics.Never)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Markdown.Config",
+    "comment": " Configure markdown to fit your needs.\n\n# Options\n@docs Options, HtmlOption, SanitizeOptions, defaultOptions, defaultSanitizeOptions\n\n# Elements\n@docs Elements, defaultElements, CodeBlock, ListElement, Image, Link\n\n",
+    "aliases": [
+      {
+        "name": "CodeBlock",
+        "comment": " Code block element model. If you want to use a highlight package,\nyou have access to the code here.\n",
+        "args": [],
+        "type": "{ language : Maybe.Maybe String, code : String }"
+      },
+      {
+        "name": "Elements",
+        "comment": " A record to be used with `customHtml` of how each element\nis rendered to html.\n",
+        "args": [],
+        "type": "{ heading : Int -> List (Html.Html Basics.Never) -> Html.Html Basics.Never , thematicBreak : Html.Html Basics.Never , paragraph : Bool -> List (Html.Html Basics.Never) -> List (Html.Html Basics.Never) , blockQuote : List (Html.Html Basics.Never) -> Html.Html Basics.Never , code : Markdown.Config.CodeBlock -> Html.Html Basics.Never , list : Markdown.Config.ListElement -> List (Html.Html Basics.Never) -> Html.Html Basics.Never , emphasis : List (Html.Html Basics.Never) -> Html.Html Basics.Never , strongEmphasis : List (Html.Html Basics.Never) -> Html.Html Basics.Never , codeSpan : String -> Html.Html Basics.Never , link : Markdown.Config.Link -> List (Html.Html Basics.Never) -> Html.Html Basics.Never , image : Markdown.Config.Image -> Html.Html Basics.Never , hardLineBreak : Html.Html Basics.Never }"
+      },
+      {
+        "name": "Image",
+        "comment": " Image element model.\n",
+        "args": [],
+        "type": "{ alt : String, src : String, title : Maybe.Maybe String }"
+      },
+      {
+        "name": "Link",
+        "comment": " Link element model.\n",
+        "args": [],
+        "type": "{ url : String, title : Maybe.Maybe String }"
+      },
+      {
+        "name": "Options",
+        "comment": " Some parser options so you can tweak things for your\nparticular case. \n\n- `softAsHardLineBreak`: If set to `True`, will render `\\n` as `<br>`.\n- `rawHtml`: This determine what to do with raw html elements.\n    \n",
+        "args": [],
+        "type": "{ softAsHardLineBreak : Bool, rawHtml : Markdown.Config.HtmlOption }"
+      },
+      {
+        "name": "SanitizeOptions",
+        "comment": " Choose what html elements and attributes are allowed to parse.\n\n- `allowedHtmlElements`: List of allowed html elements.\n- `allowedHtmlAttributes`: List of allowed attributes.\n",
+        "args": [],
+        "type": "{ allowedHtmlElements : List String , allowedHtmlAttributes : List String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HtmlOption",
+        "comment": " Choose what to do with raw html elements.\n\n- `ParseUnsafe`: Will parse any valid html tag and attribute. This includes malicious code like `<script>alert(\"XSS ALERT!!\");</script>`.\n- `Sanitize SanitizeOptions`: Will parse only specific html elements and attributes.\n- `DontParse`: Do not parse any html tag. It will include the raw text in the output.\n",
+        "args": [],
+        "cases": [
+          [
+            "ParseUnsafe",
+            []
+          ],
+          [
+            "Sanitize",
+            [
+              "Markdown.Config.SanitizeOptions"
+            ]
+          ],
+          [
+            "DontParse",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ListElement",
+        "comment": " List element model. The `Int` in `Ordered Int` is the\nfirst number used to start an ordered list.\n",
+        "args": [],
+        "cases": [
+          [
+            "Unordered",
+            []
+          ],
+          [
+            "Ordered",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultElements",
+        "comment": " The elements used in `toHtml` and `withOptions`.\n",
+        "type": "Markdown.Config.Elements"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " The `Options` used in `Markdown.toHtml`.\n\n```\n{ softAsHardLineBreak = False\n, rawHtml = Sanitize defaultSanitizeOptions\n}\n```\n",
+        "type": "Markdown.Config.Options"
+      },
+      {
+        "name": "defaultSanitizeOptions",
+        "comment": " The `SanitizeOptions` used by `defaultOptions`.\n\n```\n{ allowedHtmlElements =\n    [ \"address\", \"article\", \"aside\", \"b\", \"blockquote\"\n    , \"body\",\"br\", \"caption\", \"center\", \"cite\", \"code\", \"col\"\n    , \"colgroup\", \"dd\", \"details\", \"div\", \"dl\", \"dt\", \"figcaption\"\n    , \"figure\", \"footer\", \"h1\", \"h2\", \"h3\", \"h4\", \"h5\", \"h6\", \"hr\"\n    , \"i\", \"legend\", \"li\", \"link\", \"main\", \"menu\", \"menuitem\"\n    , \"nav\", \"ol\", \"optgroup\", \"option\", \"p\", \"pre\", \"section\"\n    , \"strike\", \"summary\", \"small\", \"table\", \"tbody\", \"td\"\n    , \"tfoot\", \"th\", \"thead\", \"title\", \"tr\", \"ul\" ]\n, allowedHtmlAttributes =\n    [ \"name\", \"class\" ]\n}\n```\n",
+        "type": "Markdown.Config.SanitizeOptions"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

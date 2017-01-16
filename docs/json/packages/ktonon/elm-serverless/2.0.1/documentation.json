@@ -1,0 +1,196 @@
+[
+  {
+    "name": "Serverless",
+    "comment": " Define an HTTP API in elm.\n\n__Experimental (WIP): Not for use in production__\n\n@docs httpApi, Flags, HttpApi, Program, RequestPort, ResponsePort\n",
+    "aliases": [
+      {
+        "name": "Flags",
+        "comment": " Type of flags for program\n",
+        "args": [],
+        "type": "Json.Encode.Value"
+      },
+      {
+        "name": "HttpApi",
+        "comment": " Program for an HTTP API.\n\nA Serverless.Program is parameterized by your 3 custom types\n\n* Config is a server load-time record of deployment specific values\n* Model is for whatever you need during the processing of a request\n* Msg is your app message type\n\nYou must provide the following:\n\n* `configDecoder` decodes a JSON value for your custom config type\n* `requestPort` and `responsePort` must be defined in your app since an elm library cannot expose ports. They should have types `Serverless.RequestPort` and `Serverless.ResponsePort`, respectively\n* `endpoint` is a message through which connections are first received\n* `initialModel` is a value to which new connections will set their model\n* `update` and `subscriptions` have the usual meaning, but operate on individual connections\n",
+        "args": [
+          "config",
+          "model",
+          "msg"
+        ],
+        "type": "{ configDecoder : Json.Decode.Decoder config , requestPort : Serverless.RequestPort (Serverless.Msg msg) , responsePort : Serverless.ResponsePort (Serverless.Msg msg) , endpoint : msg , initialModel : model , update : msg -> Serverless.Conn.Conn config model -> ( Serverless.Conn.Conn config model, Platform.Cmd.Cmd msg ) , subscriptions : Serverless.Conn.Conn config model -> Platform.Sub.Sub msg }"
+      },
+      {
+        "name": "Program",
+        "comment": " Serverless program type\n",
+        "args": [
+          "config",
+          "model",
+          "msg"
+        ],
+        "type": "Platform.Program Serverless.Flags (Serverless.Conn.Pool.Pool config model) (Serverless.Msg msg)"
+      },
+      {
+        "name": "RequestPort",
+        "comment": " Type of port through which the request is received.\nSet your request port to this type.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "(Json.Encode.Value -> msg) -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "ResponsePort",
+        "comment": " Type of port through which the request is sent.\nSet your response port to this type.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Json.Encode.Value -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "httpApi",
+        "comment": " Create an program for handling HTTP connections.\n",
+        "type": "Serverless.HttpApi config model msg -> Serverless.Program config model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Serverless.Conn",
+    "comment": " An HTTP connection with a request and response\n\n@docs Conn, statusCode, body, send\n",
+    "aliases": [
+      {
+        "name": "Conn",
+        "comment": " A connection with a request and response.\n\nConnections are parameterized with config and model record types which are\nspecific to the application. Config is loaded once on app startup, while model\nis set to a provided initial value for each incomming request.\n",
+        "args": [
+          "config",
+          "model"
+        ],
+        "type": "{ config : config , req : Serverless.Conn.Request.Request , resp : Serverless.Conn.Response.Response , model : model }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "body",
+        "comment": " Set the response body\n",
+        "type": "Serverless.Conn.Response.Body -> Serverless.Conn.Conn config model -> Serverless.Conn.Conn config model"
+      },
+      {
+        "name": "send",
+        "comment": " Sends a connection response through the given port\n",
+        "type": "(Json.Encode.Value -> Platform.Cmd.Cmd msg) -> Serverless.Conn.Conn config model -> ( Serverless.Conn.Conn config model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "statusCode",
+        "comment": " Set the response HTTP status code\n",
+        "type": "Serverless.Conn.Response.StatusCode -> Serverless.Conn.Conn config model -> Serverless.Conn.Conn config model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Serverless.Conn.Request",
+    "comment": " Defines an HTTP request.\n\n@docs Id, Method, Request\n",
+    "aliases": [
+      {
+        "name": "Id",
+        "comment": " Uniquely identifies a request\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Request",
+        "comment": " HTTP Request\n",
+        "args": [],
+        "type": "{ id : Serverless.Conn.Request.Id , method : Serverless.Conn.Request.Method , path : String , stage : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Method",
+        "comment": " HTTP request message type\n",
+        "args": [],
+        "cases": [
+          [
+            "GET",
+            []
+          ],
+          [
+            "POST",
+            []
+          ],
+          [
+            "PUT",
+            []
+          ],
+          [
+            "DELETE",
+            []
+          ],
+          [
+            "OPTIONS",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Serverless.Conn.Response",
+    "comment": " Types to help send an HTTP response.\n\n@docs Body, Response, StatusCode\n",
+    "aliases": [
+      {
+        "name": "Response",
+        "comment": " HTTP Response\n",
+        "args": [],
+        "type": "{ statusCode : Serverless.Conn.Response.StatusCode , body : Serverless.Conn.Response.Body }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Body",
+        "comment": " Response body\n",
+        "args": [],
+        "cases": [
+          [
+            "TextBody",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "StatusCode",
+        "comment": " HTTP status code\n",
+        "args": [],
+        "cases": [
+          [
+            "InvalidStatusCode",
+            []
+          ],
+          [
+            "NumericStatusCode",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Ok_200",
+            []
+          ],
+          [
+            "NotFound_404",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
