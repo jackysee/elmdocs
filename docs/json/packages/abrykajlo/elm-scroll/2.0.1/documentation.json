@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Scroll",
+    "comment": " This Library provides helper functions for handling events on scrolling.\n\n# Types\n@docs Update, Move, Direction\n\n# Creating Scroll Handler\n@docs handle\n\n# On Event Handlers\nMeant to be used with `Scroll.handle` to build up a list of possible events\nfor an application. All of the function signatures end in\n`Move -> Maybe (Update m msg)` so they can be partially applied and used with\n`Scroll.handle`.\n\n## Basic\n@docs onUp, onDown\n\n## Complex\n@docs onCrossUp, onCrossDown, onCrossOver, onInRange, onOverlap\n\n# Helpers for Creating On Event Handlers\nYou can create your own as well which can be used with handle as long\nthey end in `Move -> Maybe (Update m msg)`. These are some functions that\ncan aid in the creation of them.\n\n@docs direction, crossing\n",
+    "aliases": [
+      {
+        "name": "Move",
+        "comment": " Alias of (Float, Float) represents a move from a scroll position\nto another scroll position \n\n    Move == (from, to)\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "Update",
+        "comment": " \n    Update m msg == m -> (m, Cmd msg)\n",
+        "args": [
+          "m",
+          "msg"
+        ],
+        "type": "m -> ( m, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Direction",
+        "comment": " Helps building your own triggers if direction is important.\n\n    upAfterDown : Direction -> Event m msg -> Move ->  Maybe (Event m msg)\n    upAfterDown lastDirection event move =\n        if direction move != Up then\n            Nothing \n        else if lastDirection == Scroll.Down  then\n            Just event\n        else\n            Nothing \n",
+        "args": [],
+        "cases": [
+          [
+            "Up",
+            []
+          ],
+          [
+            "Down",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "crossing",
+        "comment": " Notifies if a `Move` crosses a line. Nothing on no \ncrossing and the direction on a crossing",
+        "type": "Float -> Scroll.Move -> Maybe.Maybe Scroll.Direction"
+      },
+      {
+        "name": "direction",
+        "comment": " A simple helper that returns the direction Up or Down of a Move",
+        "type": "Scroll.Move -> Scroll.Direction"
+      },
+      {
+        "name": "handle",
+        "comment": " Used in generating a function to trigger all possible events for a single\nmove. It returns in the standard pattern of `(Model, Effects Action)` the \nupdates stack as well, so if many events trigger they update the model in order\nthey are in the list and the effects get thrown into `Effects.batch`.\n\n    handleEvents : Move -> Model -> (Model, Effects a)\n    handleEvents =\n        Scroll.handle\n            [ update TopBarDrop\n              |> Scroll.onUp\n            , update ToggleFixBar\n              |> Scroll.onCrossOver 400\n            ]\n\n    update action model =\n        case action of\n            Transition move ->\n                handleEvents move model\n            TopBarDrop clockTime ->\n                ...\n            ToggleFixBar ->\n                ...\n",
+        "type": "List (Scroll.Move -> Maybe.Maybe (Scroll.Update m msg)) -> Scroll.Move -> m -> ( m, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "onCrossDown",
+        "comment": " Triggers an update if move crosses the line downwards.\n\n    update Action\n    |> onCrossDown line\n",
+        "type": "Float -> Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onCrossOver",
+        "comment": " Triggers an update if move crosses the line in either direction.\n\n    update Action\n    |> onCrossOver line\n",
+        "type": "Float -> Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onCrossUp",
+        "comment": " Triggers Update if move crosses the line upwards.\n\n    update Action\n    |> onCrossUp line\n",
+        "type": "Float -> Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onDown",
+        "comment": " Triggers an update on scrolling downwards\n\n    update Action\n    |> onDown\n",
+        "type": "Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onInRange",
+        "comment": " Triggers an update if the new scroll position is in\nthe min max range\n\n    update Action\n    |> onInRange min max\n",
+        "type": "Float -> Float -> Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onOverlap",
+        "comment": " Triggers an update if the range of `Move == (from,to)` \noverlaps with the range min max\n\n    update Action\n    |> onOverlap min max\n",
+        "type": "Float -> Float -> Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      },
+      {
+        "name": "onUp",
+        "comment": " Triggers an update on scrolling upwards \n\n    update Action\n    |> onUp\n",
+        "type": "Scroll.Update m a -> Scroll.Move -> Maybe.Maybe (Scroll.Update m a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

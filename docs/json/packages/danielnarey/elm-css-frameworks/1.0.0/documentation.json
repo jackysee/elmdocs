@@ -1,0 +1,88 @@
+[
+  {
+    "name": "CssFrameworks",
+    "comment": "\n\nThis library provides access to popular CSS frameworks and feature libraries as\n(long) strings of CSS code. The HTML `<style>` tag can be used to embed any of\nthese frameworks in an Elm program's view (see the\n[`toStyleNode`](http://package.elm-lang.org/packages/danielnarey/elm-css-frameworks/latest/CssFrameworks#toStyleNode)\nfunction included in this module).\n\n# Frameworks\n\n## Just Overriding Browser Defaults\n@docs minireset, normalize\n\n## Minimal CSS Frameworks\n@docs milligram, pure, skeleton\n\n## Bootstrap + Theme Options\n@docs bootstrap, bootstrapTheme, Theme\n\n## Other UI Development Frameworks\n@docs bulma, foundation, materialize\n\n# Feature Libraries\n\n## CSS Icons\n@docs fontAwesome\n\n## CSS Animations\n@docs animate\n\n# Render CSS Code to a Style Node\n@docs toStyleNode\n\n# Helper\n@docs condenseCss\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Theme",
+        "comment": " Theme options to pass to `bootstrapTheme`. See [here](http://bootswatch.com)\nfor mockups and demos.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "animate",
+        "comment": " [Animate.css](https://daneden.github.io/animate.css/): Just-add-water CSS animations\n",
+        "type": "String"
+      },
+      {
+        "name": "bootstrap",
+        "comment": " [Bootstrap](http://getbootstrap.com) is the most popular HTML, CSS, and JS*\nframework for developing responsive, mobile first projects on the web.\n\n*This is the CSS only; JavaScript functionality not included\n",
+        "type": "String"
+      },
+      {
+        "name": "bootstrapTheme",
+        "comment": " Bootstrap + a theme of your choice. Options include the default theme\ndistributed with Bootstrap and a selection of open source themes available from\n[Bootswatch](http://bootswatch.com). See below for theme names.\n",
+        "type": "CssFrameworks.Theme -> String"
+      },
+      {
+        "name": "bulma",
+        "comment": " [Bulma](http://bulma.io): A modern CSS framework based on Flexbox\n",
+        "type": "String"
+      },
+      {
+        "name": "condenseCss",
+        "comment": " Condense a CSS string by removing comments and unnecessary white space. No\nneed to call this function if you use `toStyleNode`.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "fontAwesome",
+        "comment": " [Font Awesome](http://fontawesome.io): The iconic font and CSS toolkit\n",
+        "type": "String"
+      },
+      {
+        "name": "foundation",
+        "comment": " [Foundation](http://foundation.zurb.com): The most advanced responsive\nfront-end framework in the world.\n",
+        "type": "String"
+      },
+      {
+        "name": "materialize",
+        "comment": " [Materialize](http://materializecss.com): A modern responsive front-end\nframework based on Material Design\n",
+        "type": "String"
+      },
+      {
+        "name": "milligram",
+        "comment": " [Milligram](https://milligram.github.io) provides a minimal setup of styles\nfor a fast and clean starting point.\n",
+        "type": "String"
+      },
+      {
+        "name": "minireset",
+        "comment": " [minireset.css](http://jgthms.com/minireset.css/):\nA tiny modern CSS reset\n",
+        "type": "String"
+      },
+      {
+        "name": "normalize",
+        "comment": " [Normalize.css](https://necolas.github.io/normalize.css/) makes browsers\nrender all elements more consistently and in line with modern standards. It\nprecisely targets only the styles that need normalizing.\n",
+        "type": "String"
+      },
+      {
+        "name": "pure",
+        "comment": " [Pure.css](https://purecss.io): A set of small, responsive CSS modules that\nyou can use in every web project.\n",
+        "type": "String"
+      },
+      {
+        "name": "skeleton",
+        "comment": " [Skeleton](http://getskeleton.com): A dead simple, responsive boilerplate.\n",
+        "type": "String"
+      },
+      {
+        "name": "toStyleNode",
+        "comment": " Convenience function to insert CSS code between HTML `<style>` tags so\nthat it can be embedded in an Elm program's view. CSS will be condensed before\nrendering.\n\nInsert the resulting style node as the first child of your view's root node.\n",
+        "type": "String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

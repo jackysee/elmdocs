@@ -1,0 +1,108 @@
+[
+  {
+    "name": "OAuth.Config",
+    "comment": " This library contains several ready-made server configs for various OAuth 2.0 providers\n\n@docs google, facebook, digitalOcean, gitHub, stackExchange\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "digitalOcean",
+        "comment": " Base configuration for DigitalOcean endpoints.\n\nBased on https://developers.digitalocean.com/documentation/oauth/#client-application-flow\n\nNote: Verification does not seem to be provided by this endpoint.\n",
+        "type": "OAuth.ServerConfig"
+      },
+      {
+        "name": "facebook",
+        "comment": " Base configuration for Facebook endpoints.\n\nBased on https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow .\n",
+        "type": "OAuth.ServerConfig"
+      },
+      {
+        "name": "gitHub",
+        "comment": " Base configuration for GitHub endpoints.\n\nBased on https://developer.github.com/v3/oauth/ .\n\nNote: Does not currently work. It seems that GitHub does not currently support web-only flow.\n",
+        "type": "OAuth.ServerConfig"
+      },
+      {
+        "name": "google",
+        "comment": " Base configuration for Google endpoints.\n\nBased on https://developers.google.com/identity/protocols/OAuth2UserAgent .\n",
+        "type": "OAuth.ServerConfig"
+      },
+      {
+        "name": "stackExchange",
+        "comment": " Base configuration for StackExchange endpoints.\n\nBased on https://api.stackexchange.com/docs/authentication .\n\nNote: Verification does not seem to be provided by this endpoint.\n",
+        "type": "OAuth.ServerConfig"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OAuth",
+    "comment": " This library allows handling OAuth 2.0 authentication.\n\n# Client\n\n@docs Client, newClient\n\n# Configuration\n\n@docs ServerConfig, ClientConfig, AuthFlow\n\n# Token\n\n@docs Token\n\n# App\n\n@docs buildAuthUrl, init\n\n",
+    "aliases": [
+      {
+        "name": "Client",
+        "comment": " An OAuth client.\n",
+        "args": [],
+        "type": "{ serverConfig : OAuth.ServerConfig , clientConfig : OAuth.ClientConfig }"
+      },
+      {
+        "name": "ClientConfig",
+        "comment": " Client-side configuration for a single OAuth client.\nIt includes the endpoints used to obtain and verify tokens, and also client-specific settings.\n",
+        "args": [],
+        "type": "{ clientId : String , scopes : List String , redirectUrl : String , authFlow : OAuth.AuthFlow }"
+      },
+      {
+        "name": "ServerConfig",
+        "comment": " Server-side configuration for a single OAuth client.\nIt includes the endpoints used to obtain and verify tokens, and also client-specific settings.\n",
+        "args": [],
+        "type": "{ authorizeUrl : String, tokenUrl : String, validateUrl : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AuthFlow",
+        "comment": " They type of authorization flow (or grant) to use.\n\n- AuthorizationCode: https://tools.ietf.org/html/rfc6749#section-4.1\n- Implicit: https://tools.ietf.org/html/rfc6749#section-4.2\n",
+        "args": [],
+        "cases": [
+          [
+            "AuthorizationCode",
+            []
+          ],
+          [
+            "Implicit",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Token",
+        "comment": " Represents a validated OAuth token.\n",
+        "args": [],
+        "cases": [
+          [
+            "Validated",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "buildAuthUrl",
+        "comment": " Builds an URL that when followed allows the user to authenticate with the specified provider.\n",
+        "type": "OAuth.Client -> String"
+      },
+      {
+        "name": "init",
+        "comment": " A function to create an initial Cmd to be used with a `Navigation.program` init function.\n\n    type Msg\n        = Token (Result Http.Error OAuth.Token)\n        ...\n\n    init : Navigation.Location -> ( Model, Cmd Msg )\n    init location =\n        { ... } ! [ OAuth.init client location |> Cmd.map Token ]\n",
+        "type": "OAuth.Client -> Navigation.Location -> Platform.Cmd.Cmd (Result.Result Http.Error OAuth.Token)"
+      },
+      {
+        "name": "newClient",
+        "comment": " Creates a new OAuth client based on a server configuration and a client configuration.\nNormally defined at top-level in the application.\n\n    authClient : OAuth.Client\n    authClient = OAuth.newClient serverConfig clientConfig\n\n",
+        "type": "OAuth.ServerConfig -> OAuth.ClientConfig -> OAuth.Client"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
