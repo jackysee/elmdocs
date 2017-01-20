@@ -1,0 +1,340 @@
+[
+  {
+    "name": "Date.Extra",
+    "comment": " A `Date` represents a moment in time, encoded by two essential pieces of\ninformation: the number of milliseconds since 1 January 1970 UTC, and the\noffset between UTC and the current machine's local time. Extractions of a\n`Date` (e.g. `Date.month`, `Date.hour`) return representations of the date in\nlocal time, while `Date.toTime` returns the UTC representation.\n\n# Common Constructors\n@docs fromParts, fromCalendarDate, fromIsoString\n\n# Formatted Strings\n@docs toFormattedString, toUtcFormattedString, toIsoString, toUtcIsoString\n\n# Operations\n## Dates as Atomic Values\n@docs equal, compare, isBetween, clamp\n\n## Dates as Composite Values\nThese functions work on dates within the context of a given interval of time.\n@docs Interval, equalBy, floor, ceiling, add, diff, range\n\n# Extractions\n@docs monthNumber, quarter, ordinalDay, fractionalDay, weekdayNumber, weekNumber, weekYear, offsetFromUtc\n\n# Detailed Specification\nIn some cases you may want to specify a date with a time zone offset or from\nweek-date or ordinal-date parts. The `fromSpec` function provides a way to\ndo this.\n@docs fromSpec\n\n## TimeZone\n@docs TimeZone, utc, offset, local\n\n## TimeSpec\n@docs TimeSpec, noTime, atTime\n\n## DateSpec\n@docs DateSpec, calendarDate, weekDate, ordinalDate\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DateSpec",
+        "comment": " Represents a day.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Interval",
+        "comment": " Represents an interval of time.\n",
+        "args": [],
+        "cases": [
+          [
+            "Millisecond",
+            []
+          ],
+          [
+            "Second",
+            []
+          ],
+          [
+            "Minute",
+            []
+          ],
+          [
+            "Hour",
+            []
+          ],
+          [
+            "Day",
+            []
+          ],
+          [
+            "Month",
+            []
+          ],
+          [
+            "Year",
+            []
+          ],
+          [
+            "Quarter",
+            []
+          ],
+          [
+            "Week",
+            []
+          ],
+          [
+            "Monday",
+            []
+          ],
+          [
+            "Tuesday",
+            []
+          ],
+          [
+            "Wednesday",
+            []
+          ],
+          [
+            "Thursday",
+            []
+          ],
+          [
+            "Friday",
+            []
+          ],
+          [
+            "Saturday",
+            []
+          ],
+          [
+            "Sunday",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TimeSpec",
+        "comment": " Represents a time of day.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "TimeZone",
+        "comment": " Represents a time zone.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add a number of whole intervals to a date.\n\n    Date.add Week 2 (Date.fromParts 2007 Mar 15 11 55 0 0)\n    -- <29 March 2007, 11:55>\n\nWhen adding Month, Quarter, or Year intervals, day values are clamped at the\nend of the month if necessary.\n\n    Date.add Month 1 (Date.fromParts 2000 Jan 31 0 0 0 0)\n    -- <29 February 2000>\n",
+        "type": "Date.Extra.Interval -> Int -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "atTime",
+        "comment": " Create a `TimeSpec` from time parts (hour, minute, second, millisecond).\n",
+        "type": "Int -> Int -> Int -> Int -> Date.Extra.TimeSpec"
+      },
+      {
+        "name": "calendarDate",
+        "comment": " Create a `DateSpec` from calendar-date parts (year, month, day).\n",
+        "type": "Int -> Date.Month -> Int -> Date.Extra.DateSpec"
+      },
+      {
+        "name": "ceiling",
+        "comment": " Round up a date to the beginning of the closest interval. The resulting\ndate will be greater than or equal to the one provided.\n\n    Date.ceiling Monday (Date.fromParts 1999 Dec 31 23 59 59 999)\n    -- <3 January 2000>\n",
+        "type": "Date.Extra.Interval -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "clamp",
+        "comment": " Clamp a date within a given range. The expression `Date.clamp min max x`\nreturns one of `min`, `max`, or `x`, ensuring the returned date is not before\n`min` and not after `max`.\n",
+        "type": "Date.Date -> Date.Date -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "compare",
+        "comment": " Compare two dates. This can be used as the compare function for\n`List.sortWith`.\n",
+        "type": "Date.Date -> Date.Date -> Basics.Order"
+      },
+      {
+        "name": "diff",
+        "comment": " Find the difference, as a number of whole intervals, between two dates.\n\n    Date.diff Month\n      (Date.fromParts 2007 Mar 15 11 55 0 0)\n      (Date.fromParts 2007 Sep 1 0 0 0 0)\n    -- 5\n",
+        "type": "Date.Extra.Interval -> Date.Date -> Date.Date -> Int"
+      },
+      {
+        "name": "equal",
+        "comment": " Test equality of two dates.\n",
+        "type": "Date.Date -> Date.Date -> Bool"
+      },
+      {
+        "name": "equalBy",
+        "comment": " Test if two dates fall within the same interval.\n\n    dec31 = Date.fromCalendarDate 1999 Dec 31\n    jan1 = Date.fromCalendarDate 2000 Jan 1\n\n    Date.equalBy Month dec31 jan1 -- False\n    Date.equalBy Week  dec31 jan1 -- True\n",
+        "type": "Date.Extra.Interval -> Date.Date -> Date.Date -> Bool"
+      },
+      {
+        "name": "floor",
+        "comment": " Round down a date to the beginning of the closest interval. The resulting\ndate will be less than or equal to the one provided.\n\n    Date.floor Hour (Date.fromParts 1999 Dec 31 23 59 59 999)\n    -- <31 December 1999, 23:00>\n",
+        "type": "Date.Extra.Interval -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "fractionalDay",
+        "comment": " Extract the fractional day of a date. Given the date 23 June 1990 at\n11:45 a.m. this returns the float 0.4895833333333333.\n",
+        "type": "Date.Date -> Float"
+      },
+      {
+        "name": "fromCalendarDate",
+        "comment": " Convenience function for creating a `Date` from only the year, month, and\nday parts.\n\n    Date.fromCalendarDate 2000 Jan 1\n",
+        "type": "Int -> Date.Month -> Int -> Date.Date"
+      },
+      {
+        "name": "fromIsoString",
+        "comment": " Attempt to create a `Date` from a string representing a date in\n[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.\n\n    Date.fromIsoString \"2000-01-01\"\n    -- Just <1 January 2000, local time>\n\n    Date.fromIsoString \"2009-W01-1T00Z\"\n    -- Just <29 December 2008, UTC>\n\n    Date.fromIsoString \"2016-218T20:00-03:00\"\n    -- Just <5 August 2016, 23:00, UTC>\n\n    Date.fromIsoString \"1/1/2000\"\n    -- Nothing\n\nWhen a `Date` is created with a specified time zone offset (e.g. `\"-03:00\"`),\nits extractions still reflect the current machine's local time, and\n`Date.toTime` still reflects its UTC time.\n",
+        "type": "String -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "fromParts",
+        "comment": " Create a `Date` from the following parts, given in local time:\n\n- year\n- month\n- day\n- hour\n- minute\n- second\n- millisecond\n\n\n    import Date exposing (Month(..))\n    import Date.Extra as Date\n\n    Date.fromParts 1999 Dec 31 23 59 0 0\n    -- <31 December 1999, 23:59, local time>\n\nThe values of the parts are not checked to ensure a valid date representation,\nnor are they clamped to a valid range; instead, providing values outside a\nvalid range results in underflow or overflow.\n\n    Date.fromParts 2007 Feb 29 0 0 0 0\n    -- <1 March 2007>\n",
+        "type": "Int -> Date.Month -> Int -> Int -> Int -> Int -> Int -> Date.Date"
+      },
+      {
+        "name": "fromSpec",
+        "comment": " Create a `Date` from a specified time zone, time of day, and day.\n\n    Date.fromSpec\n      local\n      noTime\n      (calendarDate 2000 Jan 1)\n    -- <1 January 2000, local time>\n\n    Date.fromSpec\n      utc\n      noTime\n      (weekDate 2009 1 1)\n    -- <29 December 2008, UTC>\n\n    Date.fromSpec\n      (offset -180)\n      (atTime 20 0 0 0)\n      (ordinalDate 2016 218)\n    -- <5 August 2016, 23:00, UTC>\n\nWhen a `Date` is created with a specified time zone offset (e.g. `offset -180`),\nits extractions still reflect the current machine's local time, and\n`Date.toTime` still reflects its UTC time.\n",
+        "type": "Date.Extra.TimeZone -> Date.Extra.TimeSpec -> Date.Extra.DateSpec -> Date.Date"
+      },
+      {
+        "name": "isBetween",
+        "comment": " Test if a date is within a given range, inclusive of the range values. The\nexpression `Date.isBetween a b x` tests if `x` is between `a` and `b`.\n",
+        "type": "Date.Date -> Date.Date -> Date.Date -> Bool"
+      },
+      {
+        "name": "local",
+        "comment": " Do not specify a time zone, but use the local offset instead.\n",
+        "type": "Date.Extra.TimeZone"
+      },
+      {
+        "name": "monthNumber",
+        "comment": " Extract the month number of a date. Given the date 23 June 1990 at\n11:45 a.m. this returns the integer 6.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "noTime",
+        "comment": " Do not specify a time of day (default to 00:00).\n",
+        "type": "Date.Extra.TimeSpec"
+      },
+      {
+        "name": "offset",
+        "comment": " Create a `TimeZone` with a specific offset from UTC time, given in minutes.\n",
+        "type": "Int -> Date.Extra.TimeZone"
+      },
+      {
+        "name": "offsetFromUtc",
+        "comment": " Extract the local offset from UTC time, in minutes, of a date. Given a date\nwith a local offset of UTC-05:00 this returns the integer -300.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "ordinalDate",
+        "comment": " Create a `DateSpec` from ordinal-date parts (year, ordinalDay).\n",
+        "type": "Int -> Int -> Date.Extra.DateSpec"
+      },
+      {
+        "name": "ordinalDay",
+        "comment": " Extract the ordinal day of a date. Given the date 23 June 1990 at\n11:45 a.m. this returns the integer 174.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "quarter",
+        "comment": " Extract the quarter of a date. Given the date 23 June 1990 at\n11:45 a.m. this returns the integer 2.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "range",
+        "comment": " Create a list of dates, at rounded intervals, increasing by a step value,\nbetween two dates. The list will start at or after the first date, and end\nbefore the second date.\n\n    Date.range Day 2\n      (Date.fromParts 2007 Mar 15 11 55 0 0)\n      (Date.fromParts 2007 Mar 22 0 0 0 0)\n    -- [<16 March 2007>, <18 March 2007>, <20 March 2007>]\n",
+        "type": "Date.Extra.Interval -> Int -> Date.Date -> Date.Date -> List Date.Date"
+      },
+      {
+        "name": "toFormattedString",
+        "comment": " Convert a date to a string using a pattern as a template.\n\n    Date.toFormattedString\n      \"EEEE, MMMM d, y 'at' h:mm a\"\n      (Date.fromParts 2007 Mar 15 13 45 56 67)\n    -- \"Thursday, March 15, 2007 at 1:45 PM\"\n\nEach alphabetic character in the pattern represents date or time information;\nthe number of times a character is repeated specifies the form of the name to\nuse (e.g. \"Tue\", \"Tuesday\") or the padding of numbers (e.g. \"1\", \"01\").\nFormatting characters are escaped within single-quotes, and a single-quote is\nescaped as a sequence of two single-quotes, whether appearing inside or outside\nan escaped sequence.\n\nPatterns are based on Date Format Patterns in [Unicode Technical\nStandard #35](http://www.unicode.org/reports/tr35/tr35-43/tr35-dates.html#Date_Format_Patterns).\nOnly the following subset of formatting characters are available:\n\n    \"y\" -- year\n    \"Y\" -- week-numbering year\n    \"Q\" -- quarter\n    \"M\" -- month\n    \"w\" -- week number\n    \"d\" -- day\n    \"D\" -- ordinal day\n    \"E\" -- day of week\n    \"e\" -- weekday number / day of week\n    \"a\" -- day period (AM, PM)\n    \"b\" -- day period (am, pm, noon, midnight)\n    \"h\" -- hour (12-hour clock)\n    \"H\" -- hour (24-hour clock)\n    \"m\" -- minute\n    \"s\" -- second\n    \"S\" -- fractional second\n    \"X\" -- time offset, using \"Z\" when offset is 0\n    \"x\" -- time offset\n\nThe non-standard pattern field \"ddd\" is available to indicate the day of the\nmonth with an ordinal suffix (e.g. \"1st\", \"15th\"), as the current standard does\nnot include such a field.\n\n    Date.toFormattedString\n      \"MMMM ddd, y\"\n      (Date.fromParts 2007 Mar 15 13 45 56 67)\n    -- \"March 15th, 2007\"\n",
+        "type": "String -> Date.Date -> String"
+      },
+      {
+        "name": "toIsoString",
+        "comment": " Convenience function for formatting a date to ISO 8601 (extended\ndate and time format with local time offset).\n\n    Date.toIsoString (Date.fromParts 2007 Mar 15 13 45 56 67)\n    -- \"2007-03-15T13:45:56.067-04:00\"\n    -- (example has a local offset of UTC-04:00)\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "toUtcFormattedString",
+        "comment": " Convert a date to a string just like `toFormattedString`, but using the UTC\nrepresentation instead of the local representation of the date.\n",
+        "type": "String -> Date.Date -> String"
+      },
+      {
+        "name": "toUtcIsoString",
+        "comment": " Convenience function for formatting a date, in UTC representation, to ISO\n8601 (extended date and time format with \"Z\" for time offset).\n\n    Date.toUtcIsoString (Date.fromParts 2007 Mar 15 13 45 56 67)\n    -- \"2007-03-15T17:45:56.067Z\"\n    -- (example has a local offset of UTC-04:00)\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "utc",
+        "comment": " UTC time zone.\n",
+        "type": "Date.Extra.TimeZone"
+      },
+      {
+        "name": "weekDate",
+        "comment": " Create a `DateSpec` from week-date parts (weekYear, weekNumber, weekdayNumber).\n",
+        "type": "Int -> Int -> Int -> Date.Extra.DateSpec"
+      },
+      {
+        "name": "weekNumber",
+        "comment": " Extract the week number of a date. Given the date 23 June 1990 at\n11:45 a.m. this returns the integer 25.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "weekYear",
+        "comment": " Extract the week-numbering year of a date. Given the date 23 June\n1990 at 11:45 a.m. this returns the integer 1990.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "weekdayNumber",
+        "comment": " Extract the weekday number (beginning at 1 for Monday) of a date. Given\nthe date 23 June 1990 at 11:45 a.m. this returns the integer 6.\n",
+        "type": "Date.Date -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Facts",
+    "comment": " This module contains reference information that may be useful when working with\ndates, but it doesn't contain functions for working with the `Date` type directly.\n\n# Basics\n@docs isLeapYear, daysInMonth, daysBeforeStartOfMonth, months\n\n# Conversions\n@docs monthNumberFromMonth, monthFromMonthNumber, weekdayNumberFromDayOfWeek, dayOfWeekFromWeekdayNumber\n\n# Constants\nValues for the number of milliseconds per date part. These are equivalent to\nthe constants available in the `Time` core library, but typed as integers\ninstead of floats.\n@docs msPerSecond, msPerMinute, msPerHour, msPerDay\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayOfWeekFromWeekdayNumber",
+        "comment": "\n    dayOfWeekFromWeekdayNumber 1 -- Mon\n",
+        "type": "Int -> Date.Day"
+      },
+      {
+        "name": "daysBeforeStartOfMonth",
+        "comment": "\n    daysBeforeStartOfMonth 2000 Mar -- 60\n    daysBeforeStartOfMonth 2001 Mar -- 59\n",
+        "type": "Int -> Date.Month -> Int"
+      },
+      {
+        "name": "daysInMonth",
+        "comment": "\n    daysInMonth 2000 Feb -- 29\n    daysInMonth 2001 Feb -- 28\n",
+        "type": "Int -> Date.Month -> Int"
+      },
+      {
+        "name": "isLeapYear",
+        "comment": "",
+        "type": "Int -> Bool"
+      },
+      {
+        "name": "monthFromMonthNumber",
+        "comment": "\n    monthFromMonthNumber 1 -- Jan\n",
+        "type": "Int -> Date.Month"
+      },
+      {
+        "name": "monthNumberFromMonth",
+        "comment": "\n    monthNumberFromMonth Jan -- 1\n",
+        "type": "Date.Month -> Int"
+      },
+      {
+        "name": "months",
+        "comment": " An ordered list of `Date.Month` values.\n",
+        "type": "List Date.Month"
+      },
+      {
+        "name": "msPerDay",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "msPerHour",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "msPerMinute",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "msPerSecond",
+        "comment": "",
+        "type": "Int"
+      },
+      {
+        "name": "weekdayNumberFromDayOfWeek",
+        "comment": "\n    weekdayNumberFromDayOfWeek Mon -- 1\n",
+        "type": "Date.Day -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

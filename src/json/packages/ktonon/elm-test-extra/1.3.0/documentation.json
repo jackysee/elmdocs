@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Test.Extra",
+    "comment": " Write concise test for JSON decoders\n\n@docs DecoderExpectation, describeDecoder, testDecoder\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DecoderExpectation",
+        "comment": " Expectation for a decoder result.\n\n* `FailsToDecode` - expect the decoder to fail, the failure message can be anything\n* `FailsToDecodeWith String` - expect the decoder to fail with a specific message\n* `DecodesTo a` - expect the decoder to succeed, decoding to the provided value\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "FailsToDecode",
+            []
+          ],
+          [
+            "FailsToDecodeWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "DecodesTo",
+            [
+              "a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "describeDecoder",
+        "comment": " Exercise a decoder over a list of input/expectation pairs.\n\nFor example\n\n```elm\ndescribeDecoder \"int\"\n  Json.Decode.int\n  [ ( \"\", FailsToDecode )\n  , ( \"foo\", FailsToDecode )\n  , ( \"1\", DecodesTo 1 )\n  , ( \"1.5\", FailsToDecode )\n  ]\n```\n",
+        "type": "String -> Json.Decode.Decoder a -> List ( String, Test.Extra.DecoderExpectation a ) -> Test.Test"
+      },
+      {
+        "name": "testDecoder",
+        "comment": " Exercise a decoder with a JSON encoded string.\n\nFor example\n\n```elm\ntestDecoder Json.Decode.string\n  \"\\\"foo\\\"\"\n  (DecodesTo \"foo\")\n```\n",
+        "type": "Json.Decode.Decoder a -> ( String, Test.Extra.DecoderExpectation a ) -> Test.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Fuzz.Extra",
+    "comment": " Extends [Fuzz](http://package.elm-lang.org/packages/elm-community/elm-test/latest/Fuzz) with more `Fuzzer`s\n\n@docs eitherOr, union\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "eitherOr",
+        "comment": " Combine two fuzzers.\n\n    fuzzMaybeInt : Fuzzer (Maybe Int)\n    fuzzMaybeInt =\n        Fuzz.Extra.eitherOr\n            (Fuzz.constant Nothing)\n            (Fuzz.int |> Fuzz.map Just)\n",
+        "type": "Fuzz.Fuzzer a -> Fuzz.Fuzzer a -> Fuzz.Fuzzer a"
+      },
+      {
+        "name": "union",
+        "comment": " Create a fuzzer for a union type.\n\n    type Age\n        = Baby\n        | Teen\n        | Adult\n\n\n    shrinkAge : Shrinker Age\n    shrinkAge a =\n        case a of\n            Baby ->\n                Teen ::: Adult ::: empty\n\n            Teen ->\n                Adult ::: empty\n\n            Adult ->\n                empty\n\n\n    fuzzAge : Fuzzer Age\n    fuzzAge =\n        Fuzz.Extra.union [ Baby, Teen, Adult ] Baby shrinkAge\n",
+        "type": "List a -> a -> Shrink.Shrinker a -> Fuzz.Fuzzer a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Expect.Extra",
+    "comment": " Extends Expect library with more `Expectation`s.\n\n@docs contain, member\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "contain",
+        "comment": " Alias of `member`.\n\nReads better with bdd style tests.\n\n    expect [0, 1, 2] to contain 1\n\n    -- Passes because [0, 1, 2] contains 1\n",
+        "type": "a -> List a -> Expect.Expectation"
+      },
+      {
+        "name": "member",
+        "comment": " Passes if value is a member of list.\n\n    member 1 [0, 1, 2]\n\n    -- Passes because 1 is a member of [0, 1, 2]\n",
+        "type": "a -> List a -> Expect.Expectation"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,216 @@
+[
+  {
+    "name": "String.Extra",
+    "comment": " Additional functions for working with Strings\n\n## Change words casing\n\n@docs toSentenceCase, toTitleCase, decapitalize\n\n## Inflector functions\n\nFunctions borrowed from the Rails Inflector class\n\n@docs camelize, classify, underscored, dasherize, humanize\n\n## Replace and Splice\n\n@docs replace, replaceSlice, insertAt, clean, nonEmpty\n\n## Splitting\n\n@docs break, softBreak\n\n## Wrapping\n\n@docs wrap, wrapWith, softWrap, softWrapWith, quote, surround\n\n## Checks\n\n@docs isBlank, countOccurrences\n\n## Formatting\n\n@docs clean, unquote, unsurround, unindent, ellipsis, softEllipsis, ellipsisWith, stripTags, pluralize\n\n## Converting Lists\n\n@docs toSentence, toSentenceOxford\n\n## Finding\n\n@docs rightOf, leftOf, rightOfBack, leftOfBack\n\n## Converting Numbers\n\n@docs fromInt, fromFloat\n\n## Converting UTF-32\n\n@docs toCodePoints, fromCodePoints\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "break",
+        "comment": " Breaks a string into a list of strings of maximum the provided size.\n\n    break 10 \"The quick brown fox\" == [\"The quick \", \"brown fox\"]\n    break 2 \"\" == [\"\"]\n\n",
+        "type": "Int -> String -> List String"
+      },
+      {
+        "name": "camelize",
+        "comment": " Converts underscored or dasherized string to a camelized one.\n\n   camelize \"-moz-transform\" == \"MozTransform\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "classify",
+        "comment": " Converts string to camelized string starting with an uppercase.\nAll non word characters will be stripped out of the original string.\n\n    classify \"some_class_name\" == \"SomeClassName\"\n    classify \"myLittleCamel.class.name\" == \"MyLittleCamelClassName\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "clean",
+        "comment": " Trims the whitespace of both sides of the string and compresses\nreapeated whitespace internally to a single whitespace char.\n\n    clean \" The   quick brown   fox    \" == \"The quick brown fox\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "countOccurrences",
+        "comment": " Returns the number of occurrences of a substring in another string\n\n    countOccurrences \"Hello\" \"Hello World\" == 1\n    countOccurrences \"o\" \"Hello World\" == 2\n",
+        "type": "String -> String -> Int"
+      },
+      {
+        "name": "dasherize",
+        "comment": " Returns a string joined by dashes after separating it by its uppercase characters.\nAny sequence of spaces or underscored will also be converted to a single dash.\nThe final string will be lowercased\n\n    dasherize \"SomeClassName\" == \"-some-class-name\"\n    dasherize \"some_class_name\" = \"some-class-name\"\n    dasherize \"someClass name\" = \"some-class-name\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "decapitalize",
+        "comment": " Make a string's first character lowercase.\n\n    decapitalize \"This is a phrase\" == \"this is a phrase\"\n    decapitalize \"Hello, World\" == \"hello, World\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "ellipsis",
+        "comment": " Truncates the string at the specified length and appends\nthree dots only if the tructated string + the 3 dots have exactly\nthe desired lenght.\n\nThe resulting string will have at most the specified lenght\n\n    ellipsis 5 \"Hello World\" == \"Hello...\"\n    ellipsis 10 \"Hello World\" == \"Hello W...\"\n    ellipsis 10 \"Hello\" == \"Hello\"\n    ellipsis 8 \"Hello World\" == \"Hello World\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "ellipsisWith",
+        "comment": " Truncates the string at the specified lenght and adds the append\nstring only if the combined lenght of the truncated string and the append\nstring have exactly the desired lenght.\n\nThe resulting string will have at most the specified lenght\n\n    ellipsisWith 5 \" ..\" \"Hello World\" == \"Hello ..\"\n    ellipsisWith 10 \" ..\"  \"Hello World\" == \"Hello W...\"\n    ellipsisWith 10 \" ..\" \"Hello\" == \"Hello\"\n    ellipsisWith 8 \" ..\" \"Hello World\" == \"Hello World\"\n\n",
+        "type": "Int -> String -> String -> String"
+      },
+      {
+        "name": "fromCodePoints",
+        "comment": " Converts a list of UTF-32 code points into a String. Inverse of\n`toCodePoints`.\n\n    fromCodePoints [ 97, 98, 99 ] == \"abc\"\n    fromCodePoints [ 169, 167, 960 ] == \"©§π\"\n\nIf every code point is a valid UTF-16 code unit, `fromCodePoints` is equivalent\nto\n\n    List.map Char.fromCode >> String.fromList\n\nHowever, `fromCodePoints` additionally splits code points that do not fit in a\nsingle UTF-16 code unit into surrogate pairs, so that even code points outside\nthe Basic Multilingual Plane (BMP) can be included in the resulting string:\n\n    -- Code point 128169 is 💩, U+1F4A9 PILE OF POO\n    fromCodePoints [ 128169, 33 ] == \"💩!\"\n",
+        "type": "List Int -> String"
+      },
+      {
+        "name": "fromFloat",
+        "comment": " Turns a Float into a String.\n\nThis works the same way as `Basics.toString` except its type is restricted,\nso if you accidentally pass it something other than a Float, you get an error.\n",
+        "type": "Float -> String"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Turn an Int into a String.\n\nThis works the same way as `Basics.toString` except its type is restricted,\nso if you accidentally pass it something other than an Int, you get an error.\n",
+        "type": "Int -> String"
+      },
+      {
+        "name": "humanize",
+        "comment": " Converts an underscored, camelized, or dasherized string into one that can be read by humans.\nAlso removes beginning and ending whitespace, and removes the postfix '_id'.\nThe first character will be capitalized\n\n    humanize \"this_is_great\" == \"This is great\"\n    humanize \"ThisIsGreat\" = \"This is great\"\n    humanize \"this-is-great\" = \"This is great\"\n    humanize \"author_id\" = \"Author\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "insertAt",
+        "comment": " Inserts a substring at the specified index.\n\n    insertAt \"world\" 6 \"Hello \" == \"Hello world\"\n",
+        "type": "String -> Int -> String -> String"
+      },
+      {
+        "name": "isBlank",
+        "comment": " Tests if a string is empty or only contains whitespace\n\n    isBlank \"\" == True\n    isBlank \"\\n\" == True\n    isBlank \"  \" == True\n    isBlank \" a\" == False\n\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "leftOf",
+        "comment": " Searches a string from left to right for a pattern and returns a substring\nconsisting of the characters in the string that are to the left of the pattern.\n\n    leftOf \"_\" \"This_is_a_test_string\" == \"This\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "leftOfBack",
+        "comment": " Searches a string from right to left for a pattern and returns a substring\nconsisting of the characters in the string that are to the right of the pattern.\n\n    leftOfBack \"_\" \"This_is_a_test_string\" == \"This_is_a_test\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "nonEmpty",
+        "comment": " Converts a string to a Nothing when empty.\n\n    nonEmpty \"\" == Nothing\n    nonEmpty \"Hello world\" == Just \"Hello world\"\n",
+        "type": "String -> Maybe.Maybe String"
+      },
+      {
+        "name": "pluralize",
+        "comment": " Given a number, a singular string, and a plural string, returns the number\nfollowed by a space, followed by either the singular string if the number was 1,\nor the plural string otherwise.\n    pluralize \"elf\" \"elves\" 2 == \"2 elves\"\n    pluralize \"elf\" \"elves\" 1 == \"1 elf\"\n    pluralize \"elf\" \"elves\" 0 == \"0 elves\"\n",
+        "type": "String -> String -> number -> String"
+      },
+      {
+        "name": "quote",
+        "comment": " Adds quotes to a string.\n\n    quote \"foo\" == \"\\\"foo\\\"\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "replace",
+        "comment": " Replace all occurrences of the search string with the substitution string.\n\n    replace \"Mary\" \"Sue\" \"Hello, Mary\" == \"Hello, Sue\"\n\n",
+        "type": "String -> String -> String -> String"
+      },
+      {
+        "name": "replaceSlice",
+        "comment": " Replace text within a portion of a string given a substitution\nstring, a start index and an end index. The substitution includes the character\nat the start index but not the one at the end index.\n\n    replaceSlice \"Sue\" 4 7 \"Hi, Bob\" == \"Hi, Sue\"\n    replaceSlice \"elephants\" 0  6 \"snakes on a plane!\" == \"elephants on a plane!\"\n    replaceSlice \"under\" 7  9 \"snakes on a plane!\" == \"snakes under a plane!\"\n\n",
+        "type": "String -> Int -> Int -> String -> String"
+      },
+      {
+        "name": "rightOf",
+        "comment": " Searches a string from left to right for a pattern and returns a substring\nconsisting of the characters in the string that are to the right of the pattern.\n\n    rightOf \"_\" \"This_is_a_test_string\" == \"is_a_test_string\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "rightOfBack",
+        "comment": " Searches a string from right to left for a pattern and returns a substring\nconsisting of the characters in the string that are to the right of the pattern.\n\n    rightOfBack \"_\" \"This_is_a_test_string\" == \"string\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "softBreak",
+        "comment": " Breaks a string into a list of strings of maximum the provided size,\nwithout cutting words at the edge.\n\n    softBreak 6 \"The quick brown fox\" == [\"The quick\", \" brown\", \" fox\"]\n\n",
+        "type": "Int -> String -> List String"
+      },
+      {
+        "name": "softEllipsis",
+        "comment": " Truncates the string at the specified length and appends\nthree dots only if the tructated string + the 3 dots have exactly\nthe desired lenght.\n\nIn constrast to `ellipsis`, this method will produced unfinished words,\ninstead, it will find the closest complete word and apply the ellipsis from\nthere.\n\nAdditionally, it will remove any trailing whitespace and punctuation characters\nat the end of the truncated string.\n\nThe resulting stirng can in some cases exceed the specifed lenght, by at most\nthree characters.\n\n    softEllipsis 5 \"Hello, World\" == \"Hello...\"\n    softEllipsis 8 \"Hello, World\" == \"Hello...\"\n    softEllipsis 15 \"Hello, cruel world\" == \"Hello, cruel...\"\n    softEllipsis 10 \"Hello\" == \"Hello\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "softWrap",
+        "comment": " Chops a given string into parts of a given width without breaking works apart,\nand then seperating them using a new line.\n\n    softWrap 7 \"My very long text\" === \"My very\\nlong text\"\n    softWrap 3 \"Hello World\" === \"Hello \\nWorld\"\n    softWrap 100 \"Too short\" === \"Too short\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "softWrapWith",
+        "comment": " Chops a given string into parts of a given width without breaking works apart,\nand then seperating them using the given separator.\n\n    softWrapWith 7 \"...\" \"My very long text\" === \"My very...long text\"\n    softWrapWith 3 \"\\n\" \"Hello World\" === \"Hello \\nWorld\"\n    softWrapWith 100 \"\\t\" \"Too short\" === \"Too short\"\n\n",
+        "type": "Int -> String -> String -> String"
+      },
+      {
+        "name": "stripTags",
+        "comment": " Removes all HTML tags from the string, preserving the text inside them.\n\n    stripTags \"a <a href=\\\"#\\\">link</a>\" == \"a link\"\n    stripTags \"<script>alert('hello world!')</script> == \"alert('hello world!')\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "surround",
+        "comment": " Surrounds a string with another string.\n\n    surround \"bar\" \"foo\" == \"barfoobar\"\n\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "toCodePoints",
+        "comment": " Converts a String into a list of UTF-32 code points.\n\n    toCodePoints \"abc\" == [ 97, 98, 99 ]\n    toCodePoints \"©§π\" == [ 169, 167, 960 ]\n\nIf every character in the string can be represented by a single UTF-16 code\nunit, `toCodePoints` is equivalent to\n\n    String.toList >> List.map Char.toCode\n\nHowever, for characters that do not fit into a single UTF-16 code unit and\nhave to be represented by a surrogate pair, the above will return each code\nunit in the surrogate pair separately:\n\n    -- 💩 is U+1F4A9 PILE OF POO\n    List.map Char.toCode (String.toList \"💩!\") == [ 55357, 56489, 33 ]\n\n`toCodePoints` detects and combines surrogate pairs of code units to return a\nlist of valid UTF-32 code points:\n\n    toCodePoints \"💩!\" == [ 128169, 33 ]\n\nNote that this still does not necessarily correspond to logical/visual\ncharacters, since it is possible for things like accented characters to be\nrepresented as two separate UTF-32 code points (a base character and a\ncombining accent).\n",
+        "type": "String -> List Int"
+      },
+      {
+        "name": "toSentence",
+        "comment": " Converts a list of strings into a human formatted readable list\n\n    toSentence [] == \"\"\n    toSentence [\"lions\"] == \"lions\"\n    toSentence [\"lions\", \"tigers\"] == \"lions and tigers\"\n    toSentence [\"lions\", \"tigers\", \"bears\"] == \"lions, tigers and bears\"\n\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "toSentenceCase",
+        "comment": " Make a string's first character uppercase\n\n    toSentenceCase \"this is a phrase\" == \"This is a phrase\"\n    toSentenceCase \"hello, world\" == \"Hello, world\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "toSentenceOxford",
+        "comment": " Converts a list of strings into a human formatted readable list using an oxford comma\n\n    toSentenceOxford [] == \"\"\n    toSentenceOxford [\"lions\"] == \"lions\"\n    toSentenceOxford [\"lions\", \"tigers\"] == \"lions and tigers\"\n    toSentenceOxford [\"lions\", \"tigers\", \"bears\"] == \"lions, tigers, and bears\"\n\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "toTitleCase",
+        "comment": " Uppercase the first character of each word in a string\n\n    toTitleCase \"this is a phrase\" == \"This Is A Phrase\"\n    toTitleCase \"hello, world\" == \"Hello, World\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "underscored",
+        "comment": " Returns a string joined by underscores after separating it by its uppercase characters.\nAny sequence of spaces or dashes will also be converted to a single underscore.\nThe final string will be lowercased\n\n    underscore \"SomeClassName\" == \"some_class_name\"\n    underscore \"some-class-name\" == \"some_class_name\"\n    underscore \"SomeClass name\" == \"some_class_name\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "unindent",
+        "comment": " Removes the least sequence of leading spaces or tabs on each line\nof the string, so that at least one of the lines will not have any\nleading spaces nor tabs and the rest of the lines will have the same\namount of indentation removed.\n\n    unindent \"  Hello\\n    World \" == \"Hello\\n  World\"\n    unindent \"\\t\\tHello\\n\\t\\t\\t\\tWorld\" == \"Hello\\n\\t\\tWorld\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "unquote",
+        "comment": " Removes quotes that surround a string.\n\n    unquote \"\\\"foo\\\"\" == \"foo\"\n    unquote \"\\\"foo\\\"bar\\\"\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "unsurround",
+        "comment": " Removes surrounding strings from another string.\n\n    unsurround \"foo\" \"foobarfoo\" == \"bar\"\n\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "wrap",
+        "comment": " Chops a given string into parts of a given width, seperating them using a\nnew line.\n\n    wrap 7 \"My very long text\" === \"My very\\nlong te\\nxt\"\n    wrap 100 \"Too short\" === \"Too short\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "wrapWith",
+        "comment": " Separates a string into parts of a given width, using a given seperator.\n\nLook at `wrap` if you just want to wrap using newlines.\n\n    wrapWith 7 \"\\n\" \"My very long text\" === \"My very\\nlong text\"\n    wrapWith 100 \"\\n\" \"Too short\" === \"Too short\"\n\n",
+        "type": "Int -> String -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
