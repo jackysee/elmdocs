@@ -1,0 +1,76 @@
+[
+  {
+    "name": "Logger",
+    "comment": " This module provides a generic logger with log levels. Logs will only be\nprinted if the log level matches or exceeds the minimum log level in the\nConfiguration.\n\nThe package's concept is that some other module in the implementation scope of\nthe app implements convenience functions wrapping a `Config` and `Level`s into\nsingle functions. See the following template for an example:\n\n    module MyUtils\n\n    import Logger\n\n    loggerConfig : Logger.Config\n    loggerConfig =\n        Logger.config Logger.Info\n\n    log : String -> a -> a\n    log =\n        Logger.log loggerConfig Logger.Debug\n\n    logVerbose : String -> a -> a\n    logVerbose =\n        Logger.log loggerConfig Logger.Verbose\n\n\nThe value `loggerConfig` should be created using `Logger.config` with the\nminimum log level. By changing the minimum log level in a central module\nyou can silence any logs in code that fall below that level. The above template\nimplementation allows you to replace calls to `Debug.log` with `MyUtils.log`.\n\n## Configuration\n@docs Level, Config, defaultConfig, levelString\n\n## Logging\n@docs log\n\n## Advanced logging\n\nYou can provide a custom `ExternalLoggingFunction` via `customConfig` allowing\nyou to replace the default configuration that uses `Debug.log` for printing the\nmessages.\n\nThe example implementation prints nicely colored code logs to the browser's\nconsole.\n\n@docs ExternalLoggingFunction, customConfig\n",
+    "aliases": [
+      {
+        "name": "ExternalLoggingFunction",
+        "comment": " A type of function that takes a log level, message, and a value\nto log and prints it to the console. The defaultConfig wrapps\n`Debug.log` to achieve this. If you would like to have colored log messages,\nhave a look at the example implementation.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Logger.Level -> String -> a -> a"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Public interface for the configuration to hide the implementation details\nof the internal configuration. Use `config` to create a configuration.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Level",
+        "comment": " Log levels can be used to differentiate between the importance of logs.\nCalls to `log` with a lower log level than the `minimumLevel` specified in the\n`Config` will be silent.\nsetting the minimum log level in the Config,\n",
+        "args": [],
+        "cases": [
+          [
+            "Error",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Info",
+            []
+          ],
+          [
+            "Debug",
+            []
+          ],
+          [
+            "Verbose",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "customConfig",
+        "comment": " A configuration that allows you to provide a custom logging function.\n",
+        "type": "Logger.Level -> Logger.ExternalLoggingFunction a -> Logger.Config a"
+      },
+      {
+        "name": "defaultConfig",
+        "comment": " Create a default config with a given minimum log level.\nAt a later stage we might allow to configure the color scheme and\nstring representation of the loglevel.\n",
+        "type": "Logger.Level -> Logger.Config a"
+      },
+      {
+        "name": "levelString",
+        "comment": " A string representation for a log level.\n",
+        "type": "Logger.Level -> String"
+      },
+      {
+        "name": "log",
+        "comment": " Logs the given string and value at the provided log level only if it exceeds\nthe minimumLevel of the Config. Returns the value provided.\n",
+        "type": "Logger.Config a -> Logger.Level -> String -> a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Rocket",
+    "comment": " This module contains the \"rocket operator\" `(=>)`, as well as functions\nto tweak `update` and `init` so that they work naturally with it.\n\n@docs (=>)\n\n@docs batchUpdate, batchInit\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "=>",
+        "comment": " Returns a tuple. Lets you write:\n\n    button [ style [ \"display\" => \"none\" ] ] [ text \"Yo\" ]\n\ninstead of\n\n    button [ style [ ( \"display\", \"none\" ) ] ] [ text \"Yo\" ]\n\nAlso works great for `update` functions, especially those that return\n`( model, List (Cmd msg) )` like so:\n\n    update : Msg -> Model -> ( Model, List (Cmd Msg) )\n    update msg model =\n        case msg of\n            Reset ->\n                { model | stuff = newStuff } => []\n\n            SendRequest ->\n                model => [ Http.send someRequest ]\n\n            SendOtherRequest ->\n                model\n                    |> doSomethingToModel\n                    |> doSomethingElseToModel\n                    => [ Http.send someOtherRequest ]\n\nSee [`batchUpdate`](#batchUpdate) for how to obtain an `update` function like this.\n",
+        "type": "a -> b -> ( a, b )",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "batchInit",
+        "comment": " Use this with `program` to make `init` return `( model, List (Cmd msg) )`\n\n    main : Program Never Model Msg\n    main =\n        Html.programWithFlags\n            { init = init >> Rocket.batchInit\n            , update = update >> Rocket.batchUpdate\n            , view = view\n            , subscriptions = subscriptions\n            }\n",
+        "type": "( model, List (Platform.Cmd.Cmd msg) ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "batchUpdate",
+        "comment": " Use this with `program` to make `update` return `( model, List (Cmd msg) )`\n\n    main : Program Never Model Msg\n    main =\n        Html.program\n            { init = init >> Rocket.batchInit\n            , update = update >> Rocket.batchUpdate\n            , view = view\n            , subscriptions = subscriptions\n            }\n",
+        "type": "(model -> ( model, List (Platform.Cmd.Cmd msg) )) -> model -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

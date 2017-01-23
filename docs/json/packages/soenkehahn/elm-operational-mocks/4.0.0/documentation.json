@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Operational.Mocks",
+    "comment": " `Operational.Mocks` allows you to test side-effects of elm applications\nas long as they're written with the help of `elm-operational`.\n\n@docs runMocked, Step\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Step",
+        "comment": " In a test you can declare the expected behaviour of your\napplication as a list of `Step`s. In a step you can:\n\n- expect your app to issue a command with `ExpectedCmd`,\n- send a message to your app with `SendMsg`,\n- inspect the current model of your app with `InspectModel`.\n",
+        "args": [
+          "cmd",
+          "msg",
+          "model"
+        ],
+        "cases": [
+          [
+            "ExpectedCmd",
+            [
+              "cmd"
+            ]
+          ],
+          [
+            "InspectCmd",
+            [
+              "cmd -> Expect.Expectation"
+            ]
+          ],
+          [
+            "SendMsg",
+            [
+              "msg"
+            ]
+          ],
+          [
+            "InspectModel",
+            [
+              "model -> Expect.Expectation"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "runMocked",
+        "comment": " `runMocked component expectedEffects finalState` tests the given elm\n`component`. It fails when one of the expected effects is not issues by the\napplication or if the final resulting state is not equal to `finalState`.\n",
+        "type": "{ program | init : ( model, List cmd ), update : msg -> model -> ( model, List cmd ) } -> List (Operational.Mocks.Step cmd msg model) -> Expect.Expectation"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
