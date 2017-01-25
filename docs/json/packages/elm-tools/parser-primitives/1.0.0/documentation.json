@@ -1,0 +1,26 @@
+[
+  {
+    "name": "ParserPrimitives",
+    "comment": " Low-level functions for creating parser combinator libraries.\n\n@docs isSubString, isSubChar, findSubString\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "findSubString",
+        "comment": " Find a substring after a given offset.\n\n    findSubString before \"42\" offset row col \"Is 42 the answer?\"\n        --==> (newOffset, newRow, newCol)\n\nIf `offset = 0` and `before = True` we would get `(3, 1, 4)`\nIf `offset = 0` and `before = False` we would get `(5, 1, 6)`\n\nIf `offset = 7` we would get `(-1, 1, 18)`\n",
+        "type": "Bool -> String -> Int -> Int -> Int -> String -> ( Int, Int, Int )"
+      },
+      {
+        "name": "isSubChar",
+        "comment": " Again, when parsing, you want to allocate as little as possible.\nSo this function lets you say:\n\n    isSubChar isSpace offset \"this is the source string\"\n        --==> newOffset\n\nThe `(Char -> Bool)` argument is called a predicate.\nThe `newOffset` value can be a few different things:\n\n  - `-1` means that the predicate failed\n  - `-2` means the predicate succeeded with a `\\n`\n  - otherwise you will get `offset + 1` or `offset + 2`\n    depending on whether the UTF16 character is one or two\n    words wide.\n\nIt is better to use union types in general, but it is worth the\ndanger *within* parsing libraries to get the benefit *outside*.\n\nSo you can write a `chomp` function like this:\n\n    chomp : (Char -> Bool) -> Int -> Int -> Int -> String -> (Int, Int, Int)\n    chomp isGood offset row col source =\n      let\n        newOffset =\n          Prim.isSubChar isGood offset source\n      in\n        -- no match\n        if newOffset == -1 then\n          (offset, row, col)\n\n        -- newline match\n        else if newOffset == -2 then\n          chomp isGood (offset + 1) (row + 1) 1 source\n\n        -- normal match\n        else\n          chomp isGood newOffset row (col + 1) source\n\nNotice that `chomp` can be tail-call optimized, so this turns into a\n`while` loop under the hood.\n",
+        "type": "(Char -> Bool) -> Int -> String -> Int"
+      },
+      {
+        "name": "isSubString",
+        "comment": " When making a fast parser, you want to avoid allocation as much as\npossible. That means you never want to mess with the source string, only\nkeep track of an offset into that string.\n\nYou use `isSubString` like this:\n\n    isSubString \"let\" offset row col \"let x = 4 in x\"\n        --==> ( newOffset, newRow, newCol )\n\nYou are looking for `\"let\"` at a given `offset`. On failure, the\n`newOffset` is `-1`. On success, the `newOffset` is the new offset. With\nour `\"let\"` example, it would be `offset + 3`.\n\nYou also provide the current `row` and `col` which do not align with\n`offset` in a clean way. For example, when you see a `\\n` you are at\n`row = row + 1` and `col = 1`. Furthermore, some UTF16 characters are\ntwo words wide, so even if there are no newlines, `offset` and `col`\nmay not be equal.\n",
+        "type": "String -> Int -> Int -> Int -> String -> ( Int, Int, Int )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

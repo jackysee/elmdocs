@@ -1,0 +1,130 @@
+[
+  {
+    "name": "SearchableMenu",
+    "comment": "\n This library helps you create a searchable menu.\n It is heavily inspired in [elm-autocomplete](https://github.com/thebritican/elm-autocomplete), so I recommend checking their implementation first to see if it suits your needs.\n\n While elm-autocomplete provides a menu that offers suggestions to the user based on some input, this menu is focused on providing a complete list of possible selections, while also being able to use an input field to search through the options.\n\n The project is still very raw and I wuldn't recommend using it without first reading the imlementation.\n\n# View\n@docs view\n\n# Update\n@docs update\n\n# Configuration\n@docs ViewConfig, UpdateConfig\n\n# Model\n@docs Model, initialModel\n\n# Definitions\n@docs Msg, HtmlDetails, MatchedString, SearchResult\n\n# Helper Functions\n@docs simpleSpanView, viewConfigWithClasses\n\n",
+    "aliases": [
+      {
+        "name": "HtmlDetails",
+        "comment": "\nHTML lists require `li` tags as children, so we allow you to specify everything about `li` HTML node except the nodeType.\nCopied from [elm-autocomplete](https://github.com/thebritican/elm-autocomplete).\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ attributes : List (Html.Attribute msg) , children : List (Html.Html msg) }"
+      },
+      {
+        "name": "MatchedString",
+        "comment": "\nGiven a search on a string, `MatchedString` is a list of substrings, accompanied by wether they are a match for the search query.\n",
+        "args": [],
+        "type": "Search.MatchedString"
+      },
+      {
+        "name": "Model",
+        "comment": " Tracks the input field and the state of the menu (is it open? is the mouse over it? is there something selected?)\n",
+        "args": [],
+        "type": "{ searchString : String , mouseIsOver : Bool , menuIsOpen : Bool , selected : Maybe.Maybe Int }"
+      },
+      {
+        "name": "SearchResult",
+        "comment": "\nGiven a search on some data, `SearchResult data` is a tuple containing the matched search query and the data itself.\n",
+        "args": [
+          "data"
+        ],
+        "type": "Search.SearchResult data"
+      },
+      {
+        "name": "UpdateConfig",
+        "comment": " Configuration for updates\nYou provide the following information in your menu configuration:\n  - `toId` &mdash; convert the data to a unique ID.\n  - `textboxId` &mdash; The id attribute of the input textbox. **MUST CORRESPOND TO AN ID PROVIDED IN THE VIEW CONFIG**\n  - `onSelectMsg` &mdash; The message to produce when an option is selected. It must accept and ID (String).\n",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ toId : a -> String , textboxId : String , onSelectMsg : String -> msg }"
+      },
+      {
+        "name": "ViewConfig",
+        "comment": "\nConfiguration for your menu view.\n**Note:** Your `ViewConfig` should never be held in your model. It should only appear in view code.\nYou provide the following information in your menu configuration:\n  - `toId` &mdash; convert the data to a unique ID.\n  - `div` &mdash; a function that provides a list of `Html.Attribute Never` based on whether the menu isOpen.\n  - `ul` &mdash; the attributes of the list itself.\n  - `li` &mdash; a function to provide HtmlDetails for a li node, which is provided with wether the item is selected, and the SearchResult data. We provide a helper function to deal with the SearchResult data, `simpleSpanView`.\n  - `input` &mdash; the attributes of the input field.\n  - `prepend` &mdash; HtmlDetails for the very first li in the ul.\n  - `append` &mdash; HtmlDetails for the very last li in the ul..\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ toId : a -> String , div : SearchableMenu.IsOpen -> List (Html.Attribute Basics.Never) , ul : List (Html.Attribute Basics.Never) , li : SearchableMenu.IsSelected -> SearchableMenu.SearchResult a -> SearchableMenu.HtmlDetails SearchableMenu.Msg , input : List (Html.Attribute Basics.Never) , prepend : Maybe.Maybe (SearchableMenu.HtmlDetails SearchableMenu.Msg) , append : Maybe.Maybe (SearchableMenu.HtmlDetails SearchableMenu.Msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " A message type for the menu to update.\n",
+        "args": [],
+        "cases": [
+          [
+            "Search",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Open",
+            []
+          ],
+          [
+            "Close",
+            []
+          ],
+          [
+            "SetMouseOver",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "LostFocus",
+            []
+          ],
+          [
+            "KeyDown",
+            [
+              "SearchableMenu.KeyCode"
+            ]
+          ],
+          [
+            "Select",
+            [
+              "String"
+            ]
+          ],
+          [
+            "NoOp",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "initialModel",
+        "comment": " A closed menu with no text in the input and nothing selected.\n",
+        "type": "SearchableMenu.Model"
+      },
+      {
+        "name": "simpleSpanView",
+        "comment": " Given a `SearchResult`, it takes the `MatchedString` and for each unmatched substring, it creates an `Html.text` node,\nand for the matched substrings, it creates a `Html.span` node with the given `Attribute`s.\n",
+        "type": "List (Html.Attribute Basics.Never) -> SearchableMenu.SearchResult a -> List (Html.Html SearchableMenu.Msg)"
+      },
+      {
+        "name": "update",
+        "comment": " Use this function to update the model.\nProvide the same data as your view.\n",
+        "type": "SearchableMenu.UpdateConfig msg a -> SearchableMenu.Msg -> SearchableMenu.Model -> List a -> ( SearchableMenu.Model , Platform.Cmd.Cmd SearchableMenu.Msg , Maybe.Maybe msg )"
+      },
+      {
+        "name": "view",
+        "comment": "\nTake a list of `data` and turn it into a searchable menu.\nThe `ViewConfig` argument is the configuration for the menu view.\n`ViewConfig` describes the HTML we want to show for each item, the list, the input, and a container div.\n**Note:** The `Model` and `List data` should live in your Model.\nThe `ViewConfig` for the menu belongs in your view code.\n`ViewConfig` should never exist in your model.\nDescribe any potential menu configurations statically.\nThis pattern has been inspired by [Elm Sortable Table](http://package.elm-lang.org/packages/evancz/elm-sortable-table/latest).\nThe above statements have been copied from [elm-autocomplete](https://github.com/thebritican/elm-autocomplete).\n",
+        "type": "SearchableMenu.ViewConfig a -> SearchableMenu.Model -> List a -> Html.Html SearchableMenu.Msg"
+      },
+      {
+        "name": "viewConfigWithClasses",
+        "comment": "\nSimple viewConfig providing only css classes for the different elements.\n",
+        "type": "{ toId : data -> String , openClass : String , closedClass : String , ulClass : String , liClass : String , selectedClass : String , matchedSpanClass : String , inputClass : String , inputId : String , inputPlaceholder : String } -> SearchableMenu.ViewConfig data"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

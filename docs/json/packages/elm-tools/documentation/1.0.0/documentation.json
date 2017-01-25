@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Elm.Documentation",
+    "comment": " When packages are published to [package.elm-lang.org][pkg], documentation\nis generated for all of the exposed modules (and all of the exposed values).\nThese docs are formatted as JSON for easy consumption by anyone.\n\n[pkg]: http://package.elm-lang.org/\n\nThis module helps you decode the JSON docs into nice Elm values! It is\ncurrently used by [package.elm-lang.org][pkg] to help turn JSON into nice\nweb pages!\n\n# Decode Docs\n@docs decoder\n\n# Work with Docs\n@docs Documentation, Alias, Union, Value, Name, Associativity\n\n",
+    "aliases": [
+      {
+        "name": "Alias",
+        "comment": " Documentation for a type alias. For example, if you had the source code:\n\n    {-| pair of values -}\n    type alias Pair a = ( a, a )\n\nWhen it became an `Alias` it would be like this:\n\n    { name = \"Pair\"\n    , comment = \" pair of values \"\n    , args = [\"a\"]\n    , tipe = Tuple [ Var \"a\", Var \"a\" ]\n    }\n",
+        "args": [],
+        "type": "{ name : String , comment : String , args : List String , tipe : Elm.Documentation.Type.Type }"
+      },
+      {
+        "name": "Documentation",
+        "comment": " All the documentation for a particular module.\n\n  * `name` is the module name\n  * `comment` is the module comment\n\nThe actual exposed stuff is broken into categories. So all of the type aliases\nare available in `aliases`, all of the union types are in `unions`, and\neverything else is in `values`.\n",
+        "args": [],
+        "type": "{ name : String , comment : String , aliases : List Elm.Documentation.Alias , unions : List Elm.Documentation.Union , values : List Elm.Documentation.Value }"
+      },
+      {
+        "name": "Union",
+        "comment": " Documentation for a union type. For example, if you had the source code:\n\n    {-| maybe -}\n    type Maybe a = Nothing | Just a\n\nWhen it became a `Union` it would be like this:\n\n    { name = \"Maybe\"\n    , comment = \" maybe \"\n    , args = [\"a\"]\n    , tipe =\n        [ (\"Nothing\", [])\n        , (\"Just\", [Var \"a\"])\n        ]\n    }\n",
+        "args": [],
+        "type": "{ name : String , comment : String , args : List String , tags : List ( String, List Elm.Documentation.Type.Type ) }"
+      },
+      {
+        "name": "Value",
+        "comment": " Documentation for values, functions, and operators. For example, if you\nhad the source code:\n\n    {-| do not do anything -}\n    identity : a -> a\n    identity value =\n      value\n\nThe `Value` would look like this:\n\n    { name = Name \"identity\"\n    , comment = \" do not do anything \"\n    , tipe = Lambda (Var \"a\") (Var \"a\")\n    }\n",
+        "args": [],
+        "type": "{ name : Elm.Documentation.Name , comment : String , tipe : Elm.Documentation.Type.Type }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Associativity",
+        "comment": " The [associativity][] of an infix operator. This determines how we add\nparentheses around everything. Here are some examples:\n\n    1 + 2 + 3 + 4\n\nWe have to do the operations in *some* order, so which of these interpretations\nshould we choose?\n\n    ((1 + 2) + 3) + 4   -- left-associative\n    1 + (2 + (3 + 4))   -- right-associative\n\nThis is really important for operators like `(|>)`!\n\nSome operators are non-associative though, meaning we do not try to add\nmissing parentheses. `(==)` is a nice example. `1 == 2 == 3` just is not\nallowed!\n\n[associativity]: https://en.wikipedia.org/wiki/Operator_associativity\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Left",
+            []
+          ],
+          [
+            "None",
+            []
+          ],
+          [
+            "Right",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Name",
+        "comment": " Helps differentiate normal functions like `add` from operators like `(+)`.\n\nSo when you get a [`Value`](#Value) of an operator, it would look like this:\n\n    { name = Op \"+\" Left 6\n    , comment = \"\"\n    , tipe = Lambda (Var \"number\") (Lambda (Var \"number\") (Var \"number\"))\n    }\n",
+        "args": [],
+        "cases": [
+          [
+            "Name",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Op",
+            [
+              "String",
+              "Elm.Documentation.Associativity",
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decoder",
+        "comment": " Decode the JSON documentation produced by `elm-make` for an individual\nmodule. The documentation for a whole package is an array of module docs,\nso you may need to say `(Decode.list Docs.decoder)` depending on what you\nwant to do.\n",
+        "type": "Json.Decode.Decoder Elm.Documentation.Documentation"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Documentation.Type",
+    "comment": " This is specifically for handling the types that appear in\ndocumentation generated by `elm-make`. If you are looking to parse\narbitrary type signatures with creative indentation (e.g. newlines\nand comments) this library will not do what you want. Instead,\ncheck out the source code and go from there. It's not too tough!\n\n@docs Type, decoder\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Type",
+        "comment": " Represent Elm types as values! Here are some examples:\n\n    Int            ==> Type \"Int\" []\n\n    a -> b         ==> Lambda (Var \"a\") (Var \"b\")\n\n    ( a, b )       ==> Tuple [ Var \"a\", Var \"b\" ]\n\n    Maybe a        ==> Type \"Maybe\" [ Var \"a\" ]\n\n    { x : Float }  ==> Record [(\"x\", Type \"Float\" [])] Nothing\n",
+        "args": [],
+        "cases": [
+          [
+            "Var",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Lambda",
+            [
+              "Elm.Documentation.Type.Type",
+              "Elm.Documentation.Type.Type"
+            ]
+          ],
+          [
+            "Tuple",
+            [
+              "List Elm.Documentation.Type.Type"
+            ]
+          ],
+          [
+            "Type",
+            [
+              "String",
+              "List Elm.Documentation.Type.Type"
+            ]
+          ],
+          [
+            "Record",
+            [
+              "List ( String, Elm.Documentation.Type.Type )",
+              "Maybe.Maybe String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decoder",
+        "comment": " Decode the JSON representation of `Type` values.\n",
+        "type": "Json.Decode.Decoder Elm.Documentation.Type.Type"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

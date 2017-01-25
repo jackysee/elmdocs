@@ -1,0 +1,386 @@
+[
+  {
+    "name": "List.Extra",
+    "comment": " Convenience functions for working with List\n\n# Basics\n@docs last, init, getAt, (!!), uncons, maximumBy, minimumBy, andMap, andThen, takeWhile, dropWhile, unique, uniqueBy, allDifferent, allDifferentBy, replaceIf, setAt, remove, updateIf, updateAt, updateIfIndex, removeAt, filterNot, swapAt, stableSortWith\n\n# List transformations\n@docs intercalate, transpose, subsequences, permutations, interweave\n\n# Folds\n@docs foldl1, foldr1, indexedFoldl, indexedFoldr\n\n# Building lists\n@docs scanl1, scanr, scanr1, unfoldr, iterate\n\n# Sublists\n@docs splitAt, takeWhileRight, dropWhileRight, span, break, stripPrefix, group, groupWhile, groupWhileTransitively, inits, tails, select, selectSplit\n\n# Predicates\n@docs isPrefixOf, isSuffixOf, isInfixOf, isSubsequenceOf, isPermutationOf\n\n# Searching\n@docs notMember, find, elemIndex, elemIndices, findIndex, findIndices\n\n# Zipping\n@docs zip, zip3, zip4, zip5\n\n# Lift functions onto multiple lists of arguments\n@docs lift2, lift3, lift4\n\n# Split to groups of given size\n@docs groupsOf, groupsOfWithStep, groupsOfVarying, greedyGroupsOf, greedyGroupsOfWithStep\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!!",
+        "comment": " Alias for getAt, but with the parameters flipped.\n",
+        "type": "List a -> Int -> Maybe.Maybe a"
+      },
+      {
+        "name": "allDifferent",
+        "comment": " Indicate if list has duplicate values.\n\n    allDifferent [0,1,1,0,1] == False\n",
+        "type": "List comparable -> Bool"
+      },
+      {
+        "name": "allDifferentBy",
+        "comment": " Indicate if list has duplicate values when supplied function are applyed on each values.\n",
+        "type": "(a -> comparable) -> List a -> Bool"
+      },
+      {
+        "name": "andMap",
+        "comment": " Map functions taking multiple arguments over multiple lists. Each list should be of the same length.\n\n    ((\\a b c -> a + b * c)\n        |> flip map [1,2,3]\n        |> andMap [4,5,6]\n        |> andMap [2,1,1]\n    ) == [9,7,9]\n",
+        "type": "List a -> List (a -> b) -> List b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Equivalent to `concatMap`. For example, suppose you want to have a cartesian product of [1,2] and [3,4]:\n\n    [1,2] |> andThen (\\x -> [3,4]\n          |> andThen (\\y -> [(x,y)]))\n\nwill give back the list:\n\n    [(1,3),(1,4),(2,3),(2,4)]\n\nNow suppose we want to have a cartesian product between the first list and the second list and its doubles:\n\n    [1,2] |> andThen (\\x -> [3,4]\n          |> andThen (\\y -> [y,y*2]\n          |> andThen (\\z -> [(x,z)])))\n\nwill give back the list:\n\n    [(1,3),(1,6),(1,4),(1,8),(2,3),(2,6),(2,4),(2,8)]\n\nAdvanced functional programmers will recognize this as the implementation of bind operator (>>=) for lists from the `Monad` typeclass.\n",
+        "type": "(a -> List b) -> List a -> List b"
+      },
+      {
+        "name": "break",
+        "comment": " Take a predicate and a list, return a tuple. The first part of the tuple is the longest prefix of that list, for each element of which the predicate *does not* hold. The second part of the tuple is the remainder of the list. `break p xs` is equivalent to `(takeWhile (not p) xs, dropWhile (not p) xs)`.\n\n    break ((<) 3) [1,2,3,4,1,2,3,4] == ([1,2,3],[4,1,2,3,4])\n    break ((>) 5) [1,2,3] == ([],[1,2,3])\n    break ((<) 5) [1,2,3] == ([1,2,3],[])\n",
+        "type": "(a -> Bool) -> List a -> ( List a, List a )"
+      },
+      {
+        "name": "dropWhile",
+        "comment": " Drop elements in order as long as the predicate evaluates to `True`\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "dropWhileRight",
+        "comment": " Drop elements from the right, while predicate still holds.\n\n    dropWhileRight ((<)5) (range 1 10) == [1,2,3,4,5]\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "elemIndex",
+        "comment": " Return the index of the first occurrence of the element. Otherwise, return `Nothing`. Indexing starts from 0.\n\n    elemIndex 1 [1,2,3] == Just 0\n    elemIndex 4 [1,2,3] == Nothing\n    elemIndex 1 [1,2,1] == Just 0\n",
+        "type": "a -> List a -> Maybe.Maybe Int"
+      },
+      {
+        "name": "elemIndices",
+        "comment": " Return all indices of occurrences of the element. If element is not found, return empty list. Indexing starts from 0.\n\n    elemIndices 1 [1,2,3] == [0]\n    elemIndices 4 [1,2,3] == []\n    elemIndices 1 [1,2,1] == [0,2]\n",
+        "type": "a -> List a -> List Int"
+      },
+      {
+        "name": "filterNot",
+        "comment": " Take a predicate and a list, and return a list that contains elements which fails to satisfy the predicate.\n    This is equivalent to `List.filter (not << predicate) list`.\n\n    filterNot isEven [1,2,3,4] == [1,3]\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "find",
+        "comment": " Find the first element that satisfies a predicate and return\nJust that element. If none match, return Nothing.\n\n    find (\\num -> num > 5) [2, 4, 6, 8] == Just 6\n",
+        "type": "(a -> Bool) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "findIndex",
+        "comment": " Take a predicate and a list, return the index of the first element that satisfies the predicate. Otherwise, return `Nothing`. Indexing starts from 0.\n\n    findIndex isEven [1,2,3] == Just 1\n    findIndex isEven [1,3,5] == Nothing\n    findIndex isEven [1,2,4] == Just 1\n",
+        "type": "(a -> Bool) -> List a -> Maybe.Maybe Int"
+      },
+      {
+        "name": "findIndices",
+        "comment": " Take a predicate and a list, return indices of all elements satisfying the predicate. Otherwise, return empty list. Indexing starts from 0.\n\n    findIndices isEven [1,2,3] == [1]\n    findIndices isEven [1,3,5] == []\n    findIndices isEven [1,2,4] == [1,2]\n",
+        "type": "(a -> Bool) -> List a -> List Int"
+      },
+      {
+        "name": "foldl1",
+        "comment": " Variant of `foldl` that has no starting value argument and treats the head of the list as its starting value. If the list is empty, return `Nothing`.\n\n    foldl1 max [1,2,3,2,1] == Just 3\n    foldl1 max [] == Nothing\n    foldl1 (-) [1,2,3] == Just -4\n",
+        "type": "(a -> a -> a) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "foldr1",
+        "comment": " Variant of `foldr` that has no starting value argument and treats the last element of the list as its starting value. If the list is empty, return `Nothing`.\n\n    foldr1 min [1,2,3,2,1] == Just 1\n    foldr1 min [] == Nothing\n    foldr1 (-) [1,2,3] == Just 2\n",
+        "type": "(a -> a -> a) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "getAt",
+        "comment": " Returns `Just` the element at the given index in the list,\nor `Nothing` if the index is out of range.\n",
+        "type": "Int -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "greedyGroupsOf",
+        "comment": " Split list into groups of size given by the first argument \"greedily\" (don't throw the group away if not long enough).\n\n    greedyGroupsOf 3 (range 1 10) == [[1,2,3],[4,5,6],[7,8,9],[10]]\n",
+        "type": "Int -> List a -> List (List a)"
+      },
+      {
+        "name": "greedyGroupsOfWithStep",
+        "comment": " Split list into groups of size given by the first argument \"greedily\" (don't throw the group away if not long enough). After each group, drop a number of elements given by the second argumet before starting the next group.\n\n    greedyGroupsOfWithStep 3 2 (range 1 6) == [[1,2,3],[3,4,5],[5,6]]\n",
+        "type": "Int -> Int -> List a -> List (List a)"
+      },
+      {
+        "name": "group",
+        "comment": " Group similar elements together. `group` is equivalent to `groupWhile (==)`.\n\n    group [1,2,2,3,3,3,2,2,1] == [[1],[2,2],[3,3,3],[2,2],[1]]\n",
+        "type": "List a -> List (List a)"
+      },
+      {
+        "name": "groupWhile",
+        "comment": " Group elements together, using a custom equality test.\n\n    groupWhile (\\x y -> first x == first y) [(0,'a'),(0,'b'),(1,'c'),(1,'d')] == [[(0,'a'),(0,'b')],[(1,'c'),(1,'d')]]\n\nThe equality test should be an equivalent relationship, i.e. it should have the properties of reflexivity, symmetry, and transitivity. For non-equivalent relations it gives non-intuitive behavior:\n\n    groupWhile (<) [1,2,3,2,4,1,3,2,1] == [[1,2,3,2,4],[1,3,2],[1]]\n\nFor grouping elements with a comparison test, which must only hold the property of transitivity, see `groupWhileTransitively`.\n",
+        "type": "(a -> a -> Bool) -> List a -> List (List a)"
+      },
+      {
+        "name": "groupWhileTransitively",
+        "comment": " Group elements together, using a custom comparison test. Start a new group each time the comparison test doesn't hold for two adjacent elements.\n\n    groupWhileTransitively (<) [1,2,3,2,4,1,3,2,1] == [[1,2,3],[2,4],[1,3],[2],[1]]\n",
+        "type": "(a -> a -> Bool) -> List a -> List (List a)"
+      },
+      {
+        "name": "groupsOf",
+        "comment": " Split list into groups of size given by the first argument.\n\n    groupsOf 3 (range 1 10) == [[1,2,3],[4,5,6],[7,8,9]]\n",
+        "type": "Int -> List a -> List (List a)"
+      },
+      {
+        "name": "groupsOfVarying",
+        "comment": " `groupsOfVarying ns` takes `n` elements from a list for each `n` in `ns`, splitting the list into variably sized segments\n\n    groupsOfVarying [2, 3, 1] [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"] == [[\"a\", \"b\"], [\"c\", \"d\", \"e\"], [\"f\"]]\n    groupsOfVarying [2] [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"] == [[\"a\", \"b\"]]\n    groupsOfVarying [2, 3, 1, 5, 6] [\"a\", \"b\", \"c\", \"d\", \"e\"] == [[\"a\", \"b\"], [\"c\", \"d\", \"e\"]]\n",
+        "type": "List Int -> List a -> List (List a)"
+      },
+      {
+        "name": "groupsOfWithStep",
+        "comment": " Split list into groups of size given by the first argument.  After each group, drop a number of elements given by the second argument before starting the next group.\n\n    groupsOfWithStep 2 1 (range 1 4) == [[1,2],[2,3],[3,4]]\n",
+        "type": "Int -> Int -> List a -> List (List a)"
+      },
+      {
+        "name": "indexedFoldl",
+        "comment": " Variant of `foldl` that passes the index of the current element to the step function. `indexedFoldl` is to `List.foldl` as `List.indexedMap` is to `List.map`.\n",
+        "type": "(Int -> a -> b -> b) -> b -> List a -> b"
+      },
+      {
+        "name": "indexedFoldr",
+        "comment": " Variant of `foldr` that passes the index of the current element to the step function. `indexedFoldr` is to `List.foldr` as `List.indexedMap` is to `List.map`.\n",
+        "type": "(Int -> a -> b -> b) -> b -> List a -> b"
+      },
+      {
+        "name": "init",
+        "comment": " Return all elements of the list except the last one.\n\n    init [1,2,3] == Just [1,2]\n    init [] == Nothing\n",
+        "type": "List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "inits",
+        "comment": " Return all initial segments of a list, from shortest to longest, empty list first, the list itself last.\n\n    inits [1,2,3] == [[],[1],[1,2],[1,2,3]]\n",
+        "type": "List a -> List (List a)"
+      },
+      {
+        "name": "intercalate",
+        "comment": " Take a list and a list of lists, insert that list between every list in the list of lists, concatenate the result. `intercalate xs xss` is equivalent to `concat (intersperse xs xss)`.\n\n    intercalate [0,0] [[1,2],[3,4],[5,6]] == [1,2,0,0,3,4,0,0,5,6]\n",
+        "type": "List a -> List (List a) -> List a"
+      },
+      {
+        "name": "interweave",
+        "comment": " Return a list that contains elements from the two provided, in alternate order.\n    If one list runs out of items, append the items from the remaining list.\n\n    interweave [1,3] [2,4] == [1,2,3,4]\n    interweave [1,3,5,7] [2,4] == [1,2,3,4,5,7]\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "isInfixOf",
+        "comment": " Take 2 lists and return True, if the first list is an infix of the second list.\n",
+        "type": "List a -> List a -> Bool"
+      },
+      {
+        "name": "isPermutationOf",
+        "comment": " Take 2 lists and return True, if the first list is a permutation of the second list.\n",
+        "type": "List a -> List a -> Bool"
+      },
+      {
+        "name": "isPrefixOf",
+        "comment": " Take 2 lists and return True, if the first list is the prefix of the second list.\n",
+        "type": "List a -> List a -> Bool"
+      },
+      {
+        "name": "isSubsequenceOf",
+        "comment": " Take 2 lists and return True, if the first list is a subsequence of the second list.\n",
+        "type": "List a -> List a -> Bool"
+      },
+      {
+        "name": "isSuffixOf",
+        "comment": " Take 2 lists and return True, if the first list is the suffix of the second list.\n",
+        "type": "List a -> List a -> Bool"
+      },
+      {
+        "name": "iterate",
+        "comment": " Returns a list of repeated applications of `f`.\n\nIf `f` returns `Nothing` the iteration will stop. If it returns `Just y` then `y` will be added to the list and the iteration will continue with `f y`.\n    nextYear : Int -> Maybe Int\n    nextYear year =\n      if year >= 2030 then\n        Nothing\n      else\n        Just (year + 1)\n    -- Will evaluate to [2010, 2011, ..., 2030]\n    iterate nextYear 2010\n",
+        "type": "(a -> Maybe.Maybe a) -> a -> List a"
+      },
+      {
+        "name": "last",
+        "comment": " Extract the last element of a list.\n\n    last [1,2,3] == Just 3\n    last [] == Nothing\n",
+        "type": "List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "lift2",
+        "comment": " Map functions taking multiple arguments over multiple lists, regardless of list length.\n  All possible combinations will be explored.\n\n  lift2 (+) [1,2,3] [4,5] == [5,6,6,7,7,8]\n",
+        "type": "(a -> b -> c) -> List a -> List b -> List c"
+      },
+      {
+        "name": "lift3",
+        "comment": "\n",
+        "type": "(a -> b -> c -> d) -> List a -> List b -> List c -> List d"
+      },
+      {
+        "name": "lift4",
+        "comment": "\n",
+        "type": "(a -> b -> c -> d -> e) -> List a -> List b -> List c -> List d -> List e"
+      },
+      {
+        "name": "maximumBy",
+        "comment": " Find the first maximum element in a list using a comparable transformation\n",
+        "type": "(a -> comparable) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "minimumBy",
+        "comment": " Find the first minimum element in a list using a comparable transformation\n",
+        "type": "(a -> comparable) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "notMember",
+        "comment": " Negation of `member`.\n\n    notMember 1 [1,2,3] == False\n    notMember 4 [1,2,3] == True\n",
+        "type": "a -> List a -> Bool"
+      },
+      {
+        "name": "permutations",
+        "comment": " Return the list of of all permutations of a list. The result is in lexicographic order.\n\n    permutations [1,2,3] == [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]\n",
+        "type": "List a -> List (List a)"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove the first occurrence of a value from a list.\n",
+        "type": "a -> List a -> List a"
+      },
+      {
+        "name": "removeAt",
+        "comment": " Remove the element at an index from a list. If the index is out of range, this returns the original list unchanged. Otherwise, it returns the updated list.\n",
+        "type": "Int -> List a -> List a"
+      },
+      {
+        "name": "replaceIf",
+        "comment": " Replace all values that satisfy a predicate with a replacement value.\n",
+        "type": "(a -> Bool) -> a -> List a -> List a"
+      },
+      {
+        "name": "scanl1",
+        "comment": " `scanl1` is a variant of `scanl` that has no starting value argument.\n\nCompare:\n\n    List.scanl (+) 0 [1,2,3] == [0,1,3,6]\n    scanl1 (+) [1,2,3] == [1,3,6]\n\n    List.scanl (-) 0 [1,2,3] == [0,1,1,2]\n    scanl1 (-) [1,2,3] == [1,1,2]\n\n    List.scanl (flip (-)) 0 [1,2,3] == [0,-1,-3,-6]\n    scanl1 (flip (-)) [1,2,3] == [1,-1,-4]\n",
+        "type": "(a -> a -> a) -> List a -> List a"
+      },
+      {
+        "name": "scanr",
+        "comment": " `scanr` is a right-to-left dual of `scanl`. Note that:\n\n    head (scanr f z xs) == foldr f z xs\n\nExamples:\n\n    scanr (+) 0 [1,2,3] == [6,5,3,0]\n    scanr (-) 0 [1,2,3] == [2,-1,3,0]\n",
+        "type": "(a -> b -> b) -> b -> List a -> List b"
+      },
+      {
+        "name": "scanr1",
+        "comment": " `scanr1` is a variant of `scanr` that has no starting value argument.\n\n    scanr1 (+) [1,2,3] == [6,5,3]\n    scanr1 (-) [1,2,3] == [2,-1,3]\n    scanr1 (flip (-)) [1,2,3] == [0,1,3]\n",
+        "type": "(a -> a -> a) -> List a -> List a"
+      },
+      {
+        "name": "select",
+        "comment": " Return all combinations in the form of (element, rest of the list). Read [Haskell Libraries proposal](https://mail.haskell.org/pipermail/libraries/2008-February/009270.html) for further ideas on how to use this function.\n\n    select [1,2,3,4] == [(1,[2,3,4]),(2,[1,3,4]),(3,[1,2,4]),(4,[1,2,3])]\n",
+        "type": "List a -> List ( a, List a )"
+      },
+      {
+        "name": "selectSplit",
+        "comment": " Return all combinations in the form of (elements before, element, elements after).\n\n    selectSplit [1,2,3] == [([],1,[2,3]),([1],2,[3]),([1,2],3,[])]\n",
+        "type": "List a -> List ( List a, a, List a )"
+      },
+      {
+        "name": "setAt",
+        "comment": " Set a value in a list by index. Returns the updated list if the index is in range, or Nothing if it is out of range.\n",
+        "type": "Int -> a -> List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "span",
+        "comment": " Take a predicate and a list, return a tuple. The first part of the tuple is the longest prefix of that list, for each element of which the predicate holds. The second part of the tuple is the remainder of the list. `span p xs` is equivalent to `(takeWhile p xs, dropWhile p xs)`.\n\n    span ((>) 3) [1,2,3,4,1,2,3,4] == ([1,2],[3,4,1,2,3,4])\n    span ((>) 5) [1,2,3] == ([1,2,3],[])\n    span ((>) 0) [1,2,3] == ([],[1,2,3])\n",
+        "type": "(a -> Bool) -> List a -> ( List a, List a )"
+      },
+      {
+        "name": "splitAt",
+        "comment": " Take a number and a list, return a tuple of lists, where first part is prefix of the list of length equal the number, and second part is the remainder of the list. `splitAt n xs` is equivalent to `(take n xs, drop n xs)`.\n\n    splitAt 3 [1,2,3,4,5] == ([1,2,3],[4,5])\n    splitAt 1 [1,2,3] == ([1],[2,3])\n    splitAt 3 [1,2,3] == ([1,2,3],[])\n    splitAt 4 [1,2,3] == ([1,2,3],[])\n    splitAt 0 [1,2,3] == ([],[1,2,3])\n    splitAt (-1) [1,2,3] == ([],[1,2,3])\n",
+        "type": "Int -> List a -> ( List a, List a )"
+      },
+      {
+        "name": "stableSortWith",
+        "comment": " Similar to List.sortWith, this sorts values with a custom comparison function.\n    Unlike List.sortWith, this sort is guaranteed to be a stable sort.\n    Note that List.sortWith is faster and is preferred if sort stability is not required.\n",
+        "type": "(a -> a -> Basics.Order) -> List a -> List a"
+      },
+      {
+        "name": "stripPrefix",
+        "comment": " Drop the given prefix from the list. If the list doesn't start with that prefix, return `Nothing`.\n\n    stripPrefix [1,2] [1,2,3,4] == Just [3,4]\n    stripPrefix [1,2,3] [1,2,3,4,5] == Just [4,5]\n    stripPrefix [1,2,3] [1,2,3] == Just []\n    stripPrefix [1,2,3] [1,2] == Nothing\n    stripPrefix [3,2,1] [1,2,3,4,5] == Nothing\n",
+        "type": "List a -> List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "subsequences",
+        "comment": " Return the list of all subsequences of a list.\n\n    subsequences [1,2,3] == [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]\n",
+        "type": "List a -> List (List a)"
+      },
+      {
+        "name": "swapAt",
+        "comment": " Swap two values in a list by index. Returns the updated list if both indices\nare in range, or Nothing if both are out of range. If the same index is\nsupplied twice the original list is returned.\n",
+        "type": "Int -> Int -> List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "tails",
+        "comment": " Return all final segments of a list, from longest to shortest, the list itself first, empty list last.\n\n    tails [1,2,3] == [[1,2,3],[2,3],[3],[]]\n",
+        "type": "List a -> List (List a)"
+      },
+      {
+        "name": "takeWhile",
+        "comment": " Take elements in order as long as the predicate evaluates to `True`\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "takeWhileRight",
+        "comment": " Take elements from the right, while predicate still holds.\n\n    takeWhileRight ((<)5) (range 1 10) == [6,7,8,9,10]\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "transpose",
+        "comment": " Transpose rows and columns of the list of lists.\n\n    transpose [[1,2,3],[4,5,6]] == [[1,4],[2,5],[3,6]]\n\nIf some rows are shorter than the following rows, their elements are skipped:\n\n    transpose [[10,11],[20],[],[30,31,32]] == [[10,20,30],[11,31],[32]]\n",
+        "type": "List (List a) -> List (List a)"
+      },
+      {
+        "name": "uncons",
+        "comment": " Decompose a list into its head and tail. If the list is empty, return `Nothing`. Otherwise, return `Just (x, xs)`, where `x` is head and `xs` is tail.\n\n    uncons [1,2,3] == Just (1, [2,3])\n    uncons [] = Nothing\n",
+        "type": "List a -> Maybe.Maybe ( a, List a )"
+      },
+      {
+        "name": "unfoldr",
+        "comment": " The `unfoldr` function is \"dual\" to `foldr`. `foldr` reduces a list to a summary value, `unfoldr` builds a list from a seed. The function takes a function and a starting element. It applies the function to the element. If the result is `Just (a, b)`, `a` is accumulated and the function is applied to `b`. If the result is `Nothing`, the list accumulated so far is returned.\n\n    unfoldr (\\b -> if b == 0 then Nothing else Just (b, b-1)) 5 == [5,4,3,2,1]\n",
+        "type": "(b -> Maybe.Maybe ( a, b )) -> b -> List a"
+      },
+      {
+        "name": "unique",
+        "comment": " Remove duplicate values, keeping the first instance of each element which appears more than once.\n\n    unique [0,1,1,0,1] == [0,1]\n",
+        "type": "List comparable -> List comparable"
+      },
+      {
+        "name": "uniqueBy",
+        "comment": " Drop duplicates where what is considered to be a duplicate is the result of first applying the supplied function to the elements of the list.\n",
+        "type": "(a -> comparable) -> List a -> List a"
+      },
+      {
+        "name": "updateAt",
+        "comment": " Replace a value at a specific index by calling an update function.\n",
+        "type": "Int -> (a -> a) -> List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "updateIf",
+        "comment": " Replace all values that satisfy a predicate by calling an update function.\n",
+        "type": "(a -> Bool) -> (a -> a) -> List a -> List a"
+      },
+      {
+        "name": "updateIfIndex",
+        "comment": " Replace a value at an index that satisfies a predicate.\n",
+        "type": "(Int -> Bool) -> (a -> a) -> List a -> List a"
+      },
+      {
+        "name": "zip",
+        "comment": " Take two lists and returns a list of corresponding pairs\n",
+        "type": "List a -> List b -> List ( a, b )"
+      },
+      {
+        "name": "zip3",
+        "comment": " Take three lists and returns a list of triples\n",
+        "type": "List a -> List b -> List c -> List ( a, b, c )"
+      },
+      {
+        "name": "zip4",
+        "comment": " Take four lists and returns a list of quadruples\n",
+        "type": "List a -> List b -> List c -> List d -> List ( a, b, c, d )"
+      },
+      {
+        "name": "zip5",
+        "comment": " Take five lists and returns a list of quintuples\n",
+        "type": "List a -> List b -> List c -> List d -> List e -> List ( a, b, c, d, e )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
