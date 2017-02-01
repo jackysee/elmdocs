@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Mustache",
+    "comment": " Rendering mustache templates\n\n@docs Node, render\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Node",
+        "comment": " Represent mustache variables\n",
+        "args": [],
+        "cases": [
+          [
+            "Variable",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Section",
+            [
+              "String",
+              "Bool"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "render",
+        "comment": " Render a template using a list of variables\n",
+        "type": "List Mustache.Node -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

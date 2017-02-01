@@ -1,0 +1,125 @@
+[
+  {
+    "name": "Deque",
+    "comment": " A Deque (double-ended queue) in Elm.\n\nA deque is a data type for which elements can be efficiently added or removed from either the front or the back.\n\nInternally, this is a head-tail linked list, modeled after this [deque in Haskell](https://hackage.haskell.org/package/dequeue-0.1.12/docs/Data-Dequeue.html) which\nin turn is based on Chris Okasaki's Purely Functional Data Structures. A head-tail linked list is based on two lists: one for the head and one for the tail.\nThis means that pop and push on either side are operations on the front portion of an elm list, which is very efficient (`O(n)`).\n\nThe deque rebalances (moves elements from the front to the rear or vice versa) when either one\nis 4 times as large as the other. This is a costly operation and therefore used as little as possible.\n\nIt is possible to set a maximum number of elements for the deque. The default is an unlimited\nsize. When an item is pushed onto a full deque, an item is popped (and discarded) at the other end.\n\n\n#Type and Constructors\n@docs Deque\n\n#Build\n@docs empty, singleton, pushFront, pushBack\n\n#Lists\n@docs fromList, toList\n\n#Bound\n@docs getMaxSize, setMaxSize\n\n#Query\n@docs isEmpty, member, first, last, popFront, popBack, takeFront, takeBack\n\n#Transform\n\nSimple transform functions. To use more complex functions, like `map2` or `concat`, just\nconvert the deque to a list, apply the operation and convert back.\n\n@docs map, filter, foldl, foldr, partition\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Deque",
+        "comment": " The deque datatype\n\nDeque equality with `(==)` is unreliable (equivalent deques can have a different distribution of elements between the back\nand the front) and should not be used.\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Create an empty deque.\n",
+        "type": "Deque.Deque a"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep an element when it satisfies a predicate.\n",
+        "type": "(a -> Bool) -> Deque.Deque a -> Deque.Deque a"
+      },
+      {
+        "name": "first",
+        "comment": " Extract the first element of a deque\n",
+        "type": "Deque.Deque a -> Maybe.Maybe a"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the deque from left to right (highest priority to lowest priority).\n",
+        "type": "(a -> b -> b) -> b -> Deque.Deque a -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the deque from right to left (lowest priority to highest priority).\n",
+        "type": "(a -> b -> b) -> b -> Deque.Deque a -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create a deque from a list.\n",
+        "type": "List a -> Deque.Deque a"
+      },
+      {
+        "name": "getMaxSize",
+        "comment": " Get the maximum number of elements this deque can hold. A value of Nothing\nmeans the deque can hold an unlimited number of items (which is the default).\n",
+        "type": "Deque.Deque a -> Maybe.Maybe Int"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a deque is empty.\n",
+        "type": "Deque.Deque a -> Bool"
+      },
+      {
+        "name": "last",
+        "comment": " Extract the last element of a deque.\n",
+        "type": "Deque.Deque a -> Maybe.Maybe a"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all elements in a deque.\n\n",
+        "type": "(a -> b) -> Deque.Deque a -> Deque.Deque b"
+      },
+      {
+        "name": "member",
+        "comment": " Figure out whether a deque contains a value.\n",
+        "type": "a -> Deque.Deque a -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a deque according to a predicate. The first deque contains\nall elements that satisfy the predicate, and the second contains the rest.\n",
+        "type": "(a -> Bool) -> Deque.Deque a -> ( Deque.Deque a, Deque.Deque a )"
+      },
+      {
+        "name": "popBack",
+        "comment": " Gives Maybe the last element, and the deque without the last element.\nIf there are no elements, the empty deque is returned.\n",
+        "type": "Deque.Deque a -> ( Maybe.Maybe a, Deque.Deque a )"
+      },
+      {
+        "name": "popFront",
+        "comment": " Gives Maybe the first element, and the deque without the first element.\nIf there are no elements, the empty deque is returned.\n",
+        "type": "Deque.Deque a -> ( Maybe.Maybe a, Deque.Deque a )"
+      },
+      {
+        "name": "pushBack",
+        "comment": " Add an element to the back of the deque.\n",
+        "type": "a -> Deque.Deque a -> Deque.Deque a"
+      },
+      {
+        "name": "pushFront",
+        "comment": " Add an element to the front of the deque.\n",
+        "type": "a -> Deque.Deque a -> Deque.Deque a"
+      },
+      {
+        "name": "setMaxSize",
+        "comment": " Sets a bound to the number of elements the deque can hold.\na maxSize of Nothing means the deque's size is unbound,\nJust a value bounds the deque's size at that value.\n\nIf the deque is larger than the bound, items are dropped from the back.\n\n    Deque.fromList [0..9]\n        |> setMaxSize (Just 5)\n        -- toList would give [ 0, 1, 2, 3, 4 ]\n        |> pushFront 42\n        -- toList would give [ 42, 0, 1, 2, 3 ]\n        |> pushBack -1\n        -- toList would give [ 0, 1, 2, 3, -1 ]\n        |> setMaxSize Nothing\n        |> pushFront 73\n        -- toList would give [ 73, 0, 1, 2, 3 -1 ]\n\n",
+        "type": "Maybe.Maybe Int -> Deque.Deque a -> Deque.Deque a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a deque with one element.\n",
+        "type": "a -> Deque.Deque a"
+      },
+      {
+        "name": "takeBack",
+        "comment": " Take the last `n` members of a deque.\n\n    Deque.fromList [2..10]\n        |> Deque.takeBack 3\n        -- == [ 10, 9, 8 ]\n",
+        "type": "Int -> Deque.Deque a -> List a"
+      },
+      {
+        "name": "takeFront",
+        "comment": " Take the first `n` members of a deque.\n\n    Deque.fromList [2..10]\n        |> Deque.takeBack 3\n        -- == [ 2, 3, 4 ]\n",
+        "type": "Int -> Deque.Deque a -> List a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a deque to a list.\n",
+        "type": "Deque.Deque a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

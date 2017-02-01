@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Hccb",
+    "comment": " A High Capacity Color Barcode (HCCB) generator\n\n# Usage\n@docs barcode\n\n# Specification\n@docs standardSpec\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "barcode",
+        "comment": " Generate an HCCB (High Capacity Color Barcode) SVG in HTML\n\n# Example use\n`barcode standardSpec 100 100 [1, 2, 3, 4]`\n",
+        "type": "Hccb.Specification.Specification -> Float -> Float -> Hccb.Data -> Html.Html msg"
+      },
+      {
+        "name": "standardSpec",
+        "comment": " The \"standard\" specification for an HCCB barcode. Note that you can quite\n    easily change the size--it should be readable. If you change the padding,\n    strip height, insets, or dimensions, however, it may not be readable.\n",
+        "type": "Hccb.Specification.Specification"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Hccb.Specification",
+    "comment": " Specification for High Capacity Color Barcode (HCCB)\n\n# Usage\nUsually, you just need the `standardSpec` Specification exposed by the main\nHccb module. However, if you need to customize the size or other factors of\nan HCCB barcode, you can do so.\n\n@docs Specification, Size\n",
+    "aliases": [
+      {
+        "name": "Size",
+        "comment": " Size of an HCCB. `cols` across and `rows` down.\n",
+        "args": [],
+        "type": "{ rows : Int, cols : Int }"
+      },
+      {
+        "name": "Specification",
+        "comment": " The parameters that define how to draw an HCCB\n",
+        "args": [],
+        "type": "{ bits : Hccb.Bits.Bits , size : Hccb.Specification.Size , whiteFramePad : Hccb.Pad.Pad , blackBackgroundPad : Hccb.Pad.Pad , whiteStripHeight : Float , rowInset : Float , triangleDim : Hccb.Dim.Dim }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

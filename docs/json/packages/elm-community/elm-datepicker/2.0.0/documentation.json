@@ -1,0 +1,51 @@
+[
+  {
+    "name": "DatePicker",
+    "comment": " A customizable date picker component.\n\n# Tea ☕\n@docs Msg, DatePicker\n@docs init, update, view\n\n# Settings\n@docs Settings, defaultSettings\n",
+    "aliases": [
+      {
+        "name": "Settings",
+        "comment": " The type of date picker settings.\n",
+        "args": [],
+        "type": "{ placeholder : String , classNamespace : String , inputClassList : List ( String, Bool ) , inputName : Maybe.Maybe String , isDisabled : Date.Date -> Bool , parser : String -> Result.Result String Date.Date , dateFormatter : Date.Date -> String , dayFormatter : Date.Day -> String , monthFormatter : Date.Month -> String , yearFormatter : Int -> String , firstDayOfWeek : Date.Day , pickedDate : Maybe.Maybe Date.Date }"
+      }
+    ],
+    "types": [
+      {
+        "name": "DatePicker",
+        "comment": " The DatePicker model.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " An opaque type representing messages that are passed inside the DatePicker.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultSettings",
+        "comment": " A record of default settings for the date picker.  Extend this if\nyou want to customize your date picker.\n\n\n    import DatePicker exposing (defaultSettings)\n\n    DatePicker.init { defaultSettings | placeholder = \"Pick a date\" }\n\n\nTo disable certain dates:\n\n\n    import Date exposing (Day(..), dayOfWeek)\n    import DatePicker exposing (defaultSettings)\n\n    DatePicker.init { defaultSettings | isDisabled = \\d -> dayOfWeek d `List.member` [ Sat, Sun ] }\n\n",
+        "type": "DatePicker.Settings"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize a DatePicker given a Settings record.  You must execute\nthe returned command for the date picker to behave correctly.\n\n\n    init =\n      let\n         (datePicker, datePickerFx) =\n           DatePicker.init defaultSettings\n      in\n         { picker = datePicker } ! [ Cmd.map ToDatePicker datePickerfx ]\n\n",
+        "type": "DatePicker.Settings -> ( DatePicker.DatePicker, Platform.Cmd.Cmd DatePicker.Msg )"
+      },
+      {
+        "name": "update",
+        "comment": " The date picker update function.  The third value in the returned\ntuple represents the picked date, it is `Nothing` if no date was\npicked or if the previously-picked date has not changed and `Just`\nsome date if it has.\n",
+        "type": "DatePicker.Msg -> DatePicker.DatePicker -> ( DatePicker.DatePicker , Platform.Cmd.Cmd DatePicker.Msg , Maybe.Maybe Date.Date )"
+      },
+      {
+        "name": "view",
+        "comment": " The date picker view.\n",
+        "type": "DatePicker.DatePicker -> Html.Html DatePicker.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

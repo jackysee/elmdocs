@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Toast",
+    "comment": " A view agnostic way to handle toasts and other temporary notifications.\n\nA typical application would be to display temporary notifications as Html views\nin your elm app. This module takes care of updating the notifications and let's\nyou decide what content should be included in your notifications and how these\nshould be represented in your view.\n\n* [Minimal implementation](#minimal-implementation)\n* [Reference](#reference)\n    * [Setup](#setup)\n    * [Create, add and list notifications](#create-add-and-list-notifications)\n    * [Update](#update)\n    * [Create views](#create-views-from-the-current-toast)\n    * [Types](#types)\n    * [Opaque types](#opaque-types)\n\n# Minimal implementation\n\nYour app should contain the current time and the Toast somewhere in its model.\n\n    type alias Model =\n        { time : Time\n        , toast : Toast String\n        }\n\nYou will then need to subscribe to time updates. The frequency of the updates\nwill determine the update frequency of the toast and how accurately start times,\nexpiration times and transition delays are respected:\n\n    type Msg\n        = Tick Time\n        | PostNotification String\n\n\n    subscriptions : Model -> Sub Msg\n    subscriptions model =\n        Time.every (Time.second * 1) Tick\n\nIn your update method you will need to update the time and update the toast in\nyour model on every `Tick` message. In addition you will probably want to add\nany posted notification to your model's `Toast`:\n\n    pureUpdate : Msg -> Model -> Model\n    pureUpdate msg model =\n        case msg of\n            Tick newTime ->\n                let\n                    newToast =\n                        Toast.updateTimestamp newTime model.toast\n                in\n                    updateTime newTime model\n                        |> updateToast newToast\n\n            PostNotification notification ->\n                let\n                    newToastNotification =\n                        Toast.createNotification notification (model.time + Time.second * 3)\n\n                    newToast =\n                        Toast.addNotification newToastNotification model.toast\n                in\n                    updateToast newToast model\n\n\n    updateTime : Time -> Model -> Model\n    updateTime time model =\n        { model | time = time }\n\n\n    updateToast : Toast String -> Model -> Model\n    updateToast toast model =\n        { model | toast = toast }\n\n\n# Reference\n\n## Setup\n\nYou are responsible to keep the `Toast` somewhere in your app model.\nYou will also need to wire up a `Time` subscription to regularly update it\n(see [Update](#update) and[Minimal implementation](#minimal-implementation)).\n\n@docs init, initWithTransitionDelay\n\n## Create, add and list notifications\n\n@docs addNotification, createNotification, createFutureNotification, listActiveNotifications\n\n## Update\n\n@docs updateTimestamp\n\n## Create views from the current Toast\n\n@docs ViewFunction, views, keyedViews\n\n## Types\n\n@docs NotificationState, Timestamp, Duration\n\n## Opaque types\n\n@docs Toast, Notification\n\n",
+    "aliases": [
+      {
+        "name": "Duration",
+        "comment": " Type alias to identify `Time` parameters used as duration.\n",
+        "args": [],
+        "type": "Time.Time"
+      },
+      {
+        "name": "Notification",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "Types.Notification a"
+      },
+      {
+        "name": "Timestamp",
+        "comment": " Type alias to identify `Time` parameters used as timestamps.\n",
+        "args": [],
+        "type": "Time.Time"
+      },
+      {
+        "name": "Toast",
+        "comment": " Opaque type encapsulating all active notifications. Use `init` or\n`initWithTransitionDelay` to create a Toast.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Types.Toast a"
+      },
+      {
+        "name": "ViewFunction",
+        "comment": " A function that creates some view representation (e.g. Html) from a\nnotification type `a` as used in your Toast.\n",
+        "args": [
+          "a",
+          "viewType"
+        ],
+        "type": "Toast.NotificationState -> a -> viewType"
+      }
+    ],
+    "types": [
+      {
+        "name": "NotificationState",
+        "comment": " When using a Toast without delay the state of a notification handed to you\nwill always be visible. Hidden notifications will never be made available to\nyou.\n\nIf you use a Toast with a transition delay, the state will be `Hiding` once the\nexpiration time has been reached until the transition delay has passed.\n\nYou can use this information in your views to set the view to hidden and apply\na transition.\n",
+        "args": [],
+        "cases": [
+          [
+            "Visible",
+            []
+          ],
+          [
+            "Hiding",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addNotification",
+        "comment": " Add a previously created notification to the Toast.\nDuplicate notifications will be discarded.\n",
+        "type": "Toast.Notification a -> Toast.Toast a -> Toast.Toast a"
+      },
+      {
+        "name": "createFutureNotification",
+        "comment": " Create a notification that will be shown at some point in the future.\n\nThe first parameter is the start time at which the notification should start to\nbe Visible. See [`createNotification`](#createNotification) for the remaining\nparameters.\n\nIf you create a notification with a start time after its expiration time it will\nbe discarded when adding it to the Toast.\n",
+        "type": "Toast.Timestamp -> a -> Toast.Timestamp -> Toast.Notification a"
+      },
+      {
+        "name": "createNotification",
+        "comment": " Create a new Notification with type a. The type of the notification will\nneed to match the type of the Toast in your app model when adding it via\n`addNotification`.\n\nThe time parameter is the expiration time after which the notification should\nno longer remain in the `Visible` state. The exact time at which the\nnotification changes its state will depend on the frequency with which\nyou call `update` (e.g. if you subscribe to update every second the expiration\ntime will be respected up to a one second precision).\n",
+        "type": "a -> Toast.Timestamp -> Toast.Notification a"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize a Toast without transition delay.\n\nAny notification will be removed from the list of active notifications as soon\nas the expiration time is reached.\n\nThe `notificationType` will determine what values are made available to your\nview function. The rest of the documentation will simply refer to this type as\n`a`.\n",
+        "type": "Toast.Toast notificationType"
+      },
+      {
+        "name": "initWithTransitionDelay",
+        "comment": " Initialize a Toast with a transition delay.\n\nThis initializer is useful if you want to remove notifications from your view\nwith a transition. For the sake of simplicity we assume that you use Html\nas the view type.\n\nThe transition delay is the duration for which notifications will remain\n\"active\" and in the DOM after their expiration. Their state will be\n`Hiding` (see `NotificationState`) and will give the css transition enough time to complete\nbefore removing the DOM element.\n\nMake sure to use `Time.second` (or other constructors)\nto provide a meaningful parameter.\n",
+        "type": "Toast.Duration -> Toast.Toast a"
+      },
+      {
+        "name": "keyedViews",
+        "comment": " Similar to the `views` function, but providing the string\nrepresentation of the notification along with the view in a Tuple,\nwhich makes it easy to use with Html.Keyed.\n",
+        "type": "Toast.Toast a -> Toast.Timestamp -> Toast.ViewFunction a viewType -> List ( String, viewType )"
+      },
+      {
+        "name": "listActiveNotifications",
+        "comment": " Get a list of all active notifications in the toast. This excludes any\nhidden notifications. You will need to pass in your model's current timestamp.\n",
+        "type": "Toast.Toast a -> Toast.Timestamp -> List (Toast.Notification a)"
+      },
+      {
+        "name": "updateTimestamp",
+        "comment": " With every time update message you will need to update the Toast by calling\nthis funtion with the current time and then update the Toast in your model\nwith the returned value:\n\n    pureUpdate : Msg -> Model -> Model\n    pureUpdate msg model =\n        case msg of\n            Tick newTime ->\n                let\n                    newToast =\n                        Toast.updateTimestamp newTime model.toast\n                in\n                    { model | toast = newToast, time = newTime }\n\n",
+        "type": "Toast.Timestamp -> Toast.Toast a -> Toast.Toast a"
+      },
+      {
+        "name": "views",
+        "comment": " Create a list of views from the current list of active notifications in the\ngiven Toast at the provided timestamp.\n\nThe view function you provided will be called for each active notification value\n(of type `a`) and its state to provide some view representation of type\n`viewType` (e.g. Html).\n",
+        "type": "Toast.Toast a -> Toast.Timestamp -> Toast.ViewFunction a viewType -> List viewType"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
