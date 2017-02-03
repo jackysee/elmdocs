@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Csv",
+    "comment": " A CSV parser.\n\n## Parser\n@docs Csv, parseWith, parse, split, splitWith\n",
+    "aliases": [
+      {
+        "name": "Csv",
+        "comment": " The `Csv` type structure.\n",
+        "args": [],
+        "type": "{ headers : List String, records : List (List String) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Convert a string of comma-separated values into a `Csv` structure.\n\n    >>> parse \"id,value\\n1,one\\n2,two\\n\"\n    {\n      headers = [\"id\", \"value\"],\n      records = [\n                    [\"1\", \"one\"],\n                    [\"2\", \"two\"]\n                ]\n    }\n",
+        "type": "String -> Csv.Csv"
+      },
+      {
+        "name": "parseWith",
+        "comment": " Convert a string of values separated by a *separator* into a `Csv` structure.\n\n    >>> parseWith \";\" \"id;value\\n1;one\\n2;two\\n\"\n    {\n      headers = [\"id\", \"value\"],\n      records = [\n                    [\"1\", \"one\"],\n                    [\"2\", \"two\"]\n                ]\n    }\n",
+        "type": "String -> String -> Csv.Csv"
+      },
+      {
+        "name": "split",
+        "comment": " Convert a string of comma-separated values into a list of lists.\n\n    >>> split \"id,value\\n1,one\\n2,two\\n\"\n    [[\"id\", \"value\"], [\"1\", \"one\"], [\"2\", \"two\"]]\n",
+        "type": "String -> List (List String)"
+      },
+      {
+        "name": "splitWith",
+        "comment": " Convert a string of values separated by a character into a list of lists.\n\n    >>> splitWith \",\" \"id,value\\n1,one\\n2,two\\n\"\n    [[\"id\", \"value\"], [\"1\", \"one\"], [\"2\", \"two\"]]\n",
+        "type": "String -> String -> List (List String)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

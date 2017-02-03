@@ -1,0 +1,186 @@
+[
+  {
+    "name": "BulmaClasses",
+    "comment": "\n\n## Bulma CSS classes organized into nested record sets\n\n- [Modifiers that can be applied to any element](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#element)\n- [Element classes and modifiers](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#content)\n  + [Text, images, and icons](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#content)\n  + [UI elements](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#control)\n    * [Control](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#control)\n    * [Buttons](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#button)\n    * [Form elements](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#input)\n    * [Indicators](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#notification)\n- [Component classes and modifiers](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#section)\n  + [Page layout](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#section)\n  + [Section layout](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#feature)\n  + [Navigation/controls UI](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#menu)\n  + [Content/media UI](http://package.elm-lang.org/packages/danielnarey/elm-bulma-classes/latest/BulmaClasses#card)\n\n\n# Modifiers that can be applied to any element\n@docs element\n\n# Element classes and modifiers\n\n## Text, images, and icons\n@docs content, image, heading, icon\n\n## UI elements\n\n### Control\n@docs control\n\n### Buttons\n@docs button, delete\n\n### Form elements\n@docs input, textarea, checkbox, radio, select, label, help\n\n### Indicators\n@docs notification, progress, tag\n\n# Component classes and modifiers\n\n## Page layout\n@docs section, footer, nav, hero, level\n\n## Section layout\n@docs feature, columns, tile, table\n\n## Navigation/controls UI\n@docs menu, tabs, panel, pagination\n\n## Content/media UI\n@docs card, media, message, modal\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "button",
+        "comment": " *The classic button, in different colors, sizes, and states.*\n\nDocs: http://bulma.io/documentation/elements/button/\n\n__Button UI element:__\n\n    button.ui --> \"button\"\n\n__Style modifiers:__\n\n    button.style.isLink --> \"is-link\"\n    button.style.isOutlined --> \"is-outlined\"\n    button.style.isInverted --> \"is-inverted\"\n\n__Size modifiers:__\n\n    button.size.isSmall --> \"is-small\"\n    button.size.isMedium --> \"is-medium\"\n    button.size.isLarge --> \"is-large\"\n\n__State modifiers:__\n\n    button.state.isHovered --> \"is-hovered\"\n    button.state.isFocused --> \"is-focused\"\n    button.state.isActive --> \"is-active\"\n    button.state.isLoading --> \"is-loading\"\n    button.state.isDisabled --> \"is-disabled\"\n\n__Color modifiers:__\n\n    button.color.isPrimary --> \"is-primary\"\n    button.color.isInfo --> \"is-info\"\n    button.color.isSuccess --> \"is-success\"\n    button.color.isWarning --> \"is-warning\"\n    button.color.isDanger --> \"is-danger\"\n    button.color.isWhite --> \"is-white\"\n    button.color.isLight --> \"is-light\"\n    button.color.isDark --> \"is-dark\"\n    button.color.isBlack --> \"is-black\"\n\n__Addon button modifier:__\n\n    button.addon.isExpanded --> \"is-expanded\"\n\n",
+        "type": "Internal.RecordTypes.Button"
+      },
+      {
+        "name": "card",
+        "comment": " *An all-around flexible and composable component.*\n\nDocs: http://bulma.io/documentation/components/card/\n\n__Card container:__\n\n    card.container --> \"card\"\n\n__Card subcomponents:__\n\n    card.image --> \"card-image\"\n    card.content --> \"card-content\"\n\n    --Header subcomponent\n    card.header.container --> \"card-header\"\n    card.header.title --> \"card-header-title\"\n    card.header.icon --> \"card-header-icon\"\n\n    --Footer subcomponent\n    card.footer.container --> \"card-footer\"\n    card.footer.item --> \"card-footer-item\"\n\n",
+        "type": "Internal.RecordTypes.Card"
+      },
+      {
+        "name": "checkbox",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__Checkbox UI element:__\n\n    checkbox.ui --> \"checkbox\"\n\n__State modifier:__\n\n    checkbox.state.isDisabled --> \"is-disabled\"\n\n",
+        "type": "Internal.RecordTypes.Checkbox"
+      },
+      {
+        "name": "columns",
+        "comment": " *A simple way to build responsive columns.*\n\nDocs: http://bulma.io/documentation/grid/columns/\n\n__Columns need to be inside a container:__\n\n    columns.container --> \"columns\"\n\n__Each column also needs its own container:__\n\n    columns.column.container\n\n    --Column width modifiers\n    columns.column.width.isOneQuarter --> \"is-one-quarter\"\n    columns.column.width.isOneThird --> \"is-one-third\"\n    columns.column.width.isHalf --> \"is-half\"\n    columns.column.width.isTwoThirds --> \"is-two-thirds\"\n    columns.column.width.isThreeQuarters --> \"is-three-quarters\"\n    columns.column.width.is1 --> \"is-1\"\n    columns.column.width.is2 --> \"is-2\"\n    columns.column.width.is3 --> \"is-3\"\n    columns.column.width.is4 --> \"is-4\"\n    columns.column.width.is5 --> \"is-5\"\n    columns.column.width.is6 --> \"is-6\"\n    columns.column.width.is7 --> \"is-7\"\n    columns.column.width.is8 --> \"is-8\"\n    columns.column.width.is9 --> \"is-9\"\n    columns.column.width.is10 --> \"is-10\"\n    columns.column.width.is11 --> \"is-11\"\n    columns.column.width.isNarrow --> \"is-narrow\"\n\n    --Column offset modifiers\n    columns.column.offset.isOneQuarter --> \"is-offset-one-quarter\"\n    columns.column.offset.isOneThird --> \"is-offset-one-third\"\n    columns.column.offset.isHalf --> \"is-offset-half\"\n    columns.column.offset.isTwoThirds --> \"is-offset-two-thirds\"\n    columns.column.offset.isThreeQuarters --> \"is-offset-three-quarters\"\n    columns.column.offset.is1 --> \"is-offset-1\"\n    columns.column.offset.is2 --> \"is-offset-2\"\n    columns.column.offset.is3 --> \"is-offset-3\"\n    columns.column.offset.is4 --> \"is-offset-4\"\n    columns.column.offset.is5 --> \"is-offset-5\"\n    columns.column.offset.is6 --> \"is-offset-6\"\n    columns.column.offset.is7 --> \"is-offset-7\"\n    columns.column.offset.is8 --> \"is-offset-8\"\n    columns.column.offset.is9 --> \"is-offset-9\"\n    columns.column.offset.is10 --> \"is-offset-10\"\n    columns.column.offset.is11 --> \"is-offset-11\"\n\n__Alignment modifiers (columns container):__\n\n    columns.alignment.isCentered --> \"is-centered\"\n    columns.alignment.isVCentered --> \"is-vcentered\"\n\n__Spacing modifiers (columns container):__\n\n    columns.spacing.isMultiline --> \"is-multiline\"\n    columns.spacing.isGapless --> \"is-gapless\"\n    columns.spacing.isGrid --> \"is-grid\"\n\n__Display modifiers (columns container):__\n\n    columns.display.onMobile = \"is-mobile\"\n    columns.display.onlyDesktop = \"is-desktop\"\n\n",
+        "type": "Internal.RecordTypes.Columns"
+      },
+      {
+        "name": "content",
+        "comment": " *A single class to handle WYSIWYG generated content, where only HTML tags are\navailable.*\n\nDocs: http://bulma.io/documentation/elements/content/\n\n__Content wrapper:__\n\n    content.container --> \"content\"\n\n__Size modifiers:__\n\n    content.size.isSmall --> \"is-small\"\n    content.size.isMedium --> \"is-medium\"\n    content.size.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Content"
+      },
+      {
+        "name": "control",
+        "comment": " *When combining several controls in a form, use the control class to keep\nthe spacing consistent.*\n\nDocs: http://bulma.io/documentation/elements/form/\n\n__Control wrapper:__\n\n    control.container --> \"control\"\n\n__Control label:__\n\n    control.label --> \"control-label\"\n\n__Grouping buttons or form elements:__\n\n    control.isGrouped.left --> \"is-grouped\"\n    control.isGrouped.centered --> \"is-grouped is-grouped-centered\"\n    control.isGrouped.right --> \"is-grouped is-grouped-right\"\n\n__Attaching buttons or form elements inline:__\n\n    control.hasAddons.left --> \"has-addons\"\n    control.hasAddons.centered --> \"has-addons has-addons-centered\"\n    control.hasAddons.right --> \"has-addons has-addons-right\"\n\n__Displaying an icon inside a form element:__\n\n    control.hasIcon.left --> \"has-icon\"\n    control.hasIcon.right --> \"has-icon has-icon-right\"\n\n__Layout modifier:__\n\n    control.layout.isHorizontal --> \"is-horizontal\"\n\n__State modifier:__\n\n    control.state.isLoading --> \"is-loading\"\n\n__Control addon modifier:__\n\n    control.addon.isExpanded --> \"is-expanded\"\n\n",
+        "type": "Internal.RecordTypes.Control"
+      },
+      {
+        "name": "delete",
+        "comment": " *A versatile delete cross.*\n\nDocs: http://bulma.io/documentation/elements/delete/\n\n__Delete UI element:__\n\n    delete.ui --> \"delete\"\n\n__Size modifiers:__\n\n    delete.size.isSmall --> \"is-small\"\n    delete.size.isMedium --> \"is-medium\"\n    delete.size.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Delete"
+      },
+      {
+        "name": "element",
+        "comment": " *Bulma is simply a collection of CSS classes.* The following are modifier\nclasses that can be applied to any element.\n\nDocs: http://bulma.io/documentation/overview/classes/\n\n__Box style class ([docs](http://bulma.io/documentation/elements/box/)):__\n\n    element.style.box --> \"box\"\n\n__Float modifiers ([docs](http://bulma.io/documentation/modifiers/helpers/)):__\n\n    element.float.isClearfix --> \"is-clearfix\"\n    element.float.isPulledLeft --> \"is-pulled-left\"\n    element.float.isPulledRight --> \"is-pulled-right\"\n\n__Text alignment modifiers ([docs](http://bulma.io/documentation/modifiers/helpers/)):__\n\n    element.alignment.hasTextCentered --> \"has-text-centered\"\n    element.alignment.hasTextLeft --> \"has-text-left\"\n    element.alignment.hasTextRight --> \"has-text-right\"\n\n__Element sizing modifiers ([docs](http://bulma.io/documentation/modifiers/helpers/)):__\n\n    element.sizing.isOverlay --> \"is-overlay\"\n    element.sizing.isFullwidth --> \"is-fullwidth\"\n    element.sizing.isMarginless --> \"is-marginless\"\n    element.sizing.isPaddingless --> \"is-paddingless\"\n\n__Display modifiers with responsive classes ([docs](http://bulma.io/documentation/modifiers/responsive-helpers/)):__\n\n    element.display.isBlock.always --> \"is-block-touch is-block-desktop\"\n    element.display.isBlock.mobile --> \"is-block-mobile\"\n    element.display.isBlock.tablet --> \"is-block-tablet\"\n    element.display.isBlock.tabletOnly --> \"is-block-tablet-only\"\n    element.display.isBlock.touch --> \"is-block-touch\"\n    element.display.isBlock.desktop --> \"is-block-desktop\"\n    element.display.isBlock.desktopOnly --> \"is-block-desktop-only\"\n    element.display.isBlock.widescreen -->\"is-block-widescreen\"\n\n    element.display.isFlex.always --> \"is-flex-touch is-flex-desktop\"\n    element.display.isFlex.mobile --> \"is-flex-mobile\"\n    element.display.isFlex.tablet --> \"is-flex-tablet\"\n    element.display.isFlex.tabletOnly --> \"is-flex-tablet-only\"\n    element.display.isFlex.touch --> \"is-flex-touch\"\n    element.display.isFlex.desktop --> \"is-flex-desktop\"\n    element.display.isFlex.desktopOnly --> \"is-flex-desktop-only\"\n    element.display.isFlex.widescreen -->\"is-flex-widescreen\"\n\n    element.display.isInline.always --> \"is-inline-touch is-inline-desktop\"\n    element.display.isInline.mobile --> \"is-inline-mobile\"\n    element.display.isInline.tablet --> \"is-inline-tablet\"\n    element.display.isInline.tabletOnly --> \"is-inline-tablet-only\"\n    element.display.isInline.touch --> \"is-inline-touch\"\n    element.display.isInline.desktop --> \"is-inline-desktop\"\n    element.display.isInline.desktopOnly --> \"is-inline-desktop-only\"\n    element.display.isInline.widescreen -->\"is-inline-widescreen\"\n\n    element.display.isInlineBlock.always --> \"\"is-inline-block-touch is-inline-block-desktop\"\n    element.display.isInlineBlock.mobile --> \"is-inline-block-mobile\"\n    element.display.isInlineBlock.tablet --> \"is-inline-block-tablet\"\n    element.display.isInlineBlock.tabletOnly --> \"is-inline-block-tablet-only\"\n    element.display.isInlineBlock.touch --> \"is-inline-block-touch\"\n    element.display.isInlineBlock.desktop --> \"is-inline-block-desktop\"\n    element.display.isInlineBlock.desktopOnly --> \"is-inline-block-desktop-only\"\n    element.display.isInlineBlock.widescreen -->\"is-inline-block-widescreen\"\n\n    element.display.isInlineFlex.always --> \"is-inline-flex-touch is-inline-flex-desktop\"\n    element.display.isInlineFlex.mobile --> \"is-inline-flex-mobile\"\n    element.display.isInlineFlex.tablet --> \"is-inline-flex-tablet\"\n    element.display.isInlineFlex.tabletOnly --> \"is-inline-flex-tablet-only\"\n    element.display.isInlineFlex.touch --> \"is-inline-flex-touch\"\n    element.display.isInlineFlex.desktop --> \"is-inline-flex-desktop\"\n    element.display.isInlineFlex.desktopOnly --> \"is-inline-flex-desktop-only\"\n    element.display.isInlineFlex.widescreen --> \"is-inline-flex-widescreen\"\n\n__Visibility modifier with responsive classes ([docs](http://bulma.io/documentation/modifiers/responsive-helpers/)):__\n\n    element.visability.isHidden.always --> \"is-hidden\"\n    element.visability.isHidden.mobile --> \"is-hidden-mobile\"\n    element.visability.isHidden.tablet --> \"is-hidden-tablet\"\n    element.visability.isHidden.tabletOnly -->\"is-hidden-tablet-only\"\n    element.visability.isHidden.touch --> \"is-hidden-touch\"\n    element.visability.isHidden.desktop --> \"is-hidden-desktop\"\n    element.visability.isHidden.desktopOnly --> \"is-hidden-desktop-only\"\n    element.visability.isHidden.widescreen --> \"is-hidden-widescreen\"\n\n__Interaction modifier ([docs](http://bulma.io/documentation/modifiers/helpers/)):__\n\n    element.interaction.isUnselectable --> \"is-unselectable\"\n\n",
+        "type": "Internal.RecordTypes.Element"
+      },
+      {
+        "name": "feature",
+        "comment": " A horizontally centered container for featured content.\n\nDocs: http://bulma.io/documentation/layout/container/\n\n__Featured content container:__\n\n    feature.container --> \"container\"\n\n__Sizing modifier (removes `max-width`):__\n\n    feature.sizing.isFluid --> \"is-fluid\"\n",
+        "type": "Internal.RecordTypes.Feature"
+      },
+      {
+        "name": "footer",
+        "comment": " *A simple responsive footer which can include anything: lists, headings,\ncolumns, icons, buttons...*\n\nDocs: http://bulma.io/documentation/layout/footer/\n\n__Page footer:__\n\n    footer.container --> \"footer\"\n\n",
+        "type": "Internal.RecordTypes.Footer"
+      },
+      {
+        "name": "heading",
+        "comment": " *Simple headings to add depth to your page.*\n\nDocs: http://bulma.io/documentation/elements/title/\n\n__Text styling classes:__\n\n    heading.title --> \"title\"\n    heading.subtitle --> \"subtitle\"\n\n__Size modifiers:__\n\n    heading.size.isSmall --> \"is-small\"\n    heading.size.isMedium --> \"is-medium\"\n    heading.size.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Heading"
+      },
+      {
+        "name": "help",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__UI element help text:__\n\n    help.ui --> \"help\"\n\n__Color modifiers:__\n\n    help.color.isPrimary --> \"is-primary\"\n    help.color.isInfo --> \"is-info\"\n    help.color.isSuccess --> \"is-success\"\n    help.color.isWarning --> \"is-warning\"\n    help.color.isDanger --> \"is-danger\"\n    help.color.isWhite --> \"is-white\"\n    help.color.isLight --> \"is-light\"\n    help.color.isDark --> \"is-dark\"\n    help.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Help"
+      },
+      {
+        "name": "hero",
+        "comment": " *An imposing hero banner to showcase something.*\n\nDocs: http://bulma.io/documentation/layout/hero/\n\n__Hero banner:__\n\n    hero.container --> \"hero\"\n\n__Hero partitions:__\n\n    hero.head --> \"hero-head\"\n    hero.body --> \"hero-body\"\n    hero.foot --> \"hero-foot\"\n\n__Hero UI components:__\n\n    hero.video --> \"hero-video\"\n    hero.buttons --> \"hero-buttons\"\n\n__Style modifier (container):__\n\n    hero.style.isBold --> \"is-bold\"\n\n__Size modifiers (container):__\n\n    hero.size.isMedium --> \"is-medium\"\n    hero.size.isLarge --> \"is-large\"\n    hero.size.isFullheight --> \"is-fullheight\"\n\n__Color modifiers (container):__\n\n    hero.color.isPrimary --> \"is-primary\"\n    hero.color.isInfo --> \"is-info\"\n    hero.color.isSuccess --> \"is-success\"\n    hero.color.isWarning --> \"is-warning\"\n    hero.color.isDanger --> \"is-danger\"\n    hero.color.isWhite --> \"is-white\"\n    hero.color.isLight --> \"is-light\"\n    hero.color.isDark --> \"is-dark\"\n    hero.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Hero"
+      },
+      {
+        "name": "icon",
+        "comment": " Wrapper for Font Awesome icons.\n\nDocs: http://bulma.io/documentation/elements/icon/\n\n__Icon wrapper:__\n\n    icon.container --> \"icon\"\n\n__Size modifiers:__\n\n    icon.size.isSmall --> \"is-small\"\n    icon.size.isMedium --> \"is-medium\"\n    icon.size.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Icon"
+      },
+      {
+        "name": "image",
+        "comment": " *A container for responsive images.*\n\nDocs: http://bulma.io/documentation/elements/image/\n\n__Image wrapper:__\n\n    image.container --> \"image\"\n\n__Size modifiers:__\n\n    image.size.is16X16 --> \"is-16x16\"\n    image.size.is24x24 --> \"is-24x24\"\n    image.size.is32x32 --> \"is-32x32\"\n    image.size.is48x48 --> \"is-48x48\"\n    image.size.is64x64 --> \"is-64x64\"\n    image.size.is96x96 --> \"is-96x96\"\n    image.size.is128x128 --> \"is-128x128\"\n    image.size.isSquare --> \"is-square\"\n    image.size.is1by1 --> \"is-1by1\"\n    image.size.is4by3 --> \"is-4by3\"\n    image.size.is3by2 --> \"is-3by2\"\n    image.size.is16by9 --> \"is-16by9\"\n    image.size.is2by1 --> \"is-2by1\"\n\n",
+        "type": "Internal.RecordTypes.Image"
+      },
+      {
+        "name": "input",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__Input UI element:__\n\n    input.ui --> \"input\"\n\n__Display modifier:__\n\n    input.display.isInline --> \"is-inline\"\n\n__Size modifiers:__\n\n    input.size.isSmall --> \"is-small\"\n    input.size.isMedium --> \"is-medium\"\n    input.size.isLarge --> \"is-large\"\n\n__State modifiers:__\n\n    input.state.isHovered --> \"is-hovered\"\n    input.state.isFocused --> \"is-focused\"\n    input.state.isActive --> \"is-active\"\n    input.state.isLoading --> \"is-loading\"\n    input.state.isDisabled --> \"is-disabled\"\n\n__Color modifiers:__\n\n    input.color.isPrimary --> \"is-primary\"\n    input.color.isInfo --> \"is-info\"\n    input.color.isSuccess --> \"is-success\"\n    input.color.isWarning --> \"is-warning\"\n    input.color.isDanger --> \"is-danger\"\n    input.color.isWhite --> \"is-white\"\n    input.color.isLight --> \"is-light\"\n    input.color.isDark --> \"is-dark\"\n    input.color.isBlack --> \"is-black\"\n\n__Addon input modifier:__\n\n    input.addon.isExpanded --> \"is-expanded\"\n",
+        "type": "Internal.RecordTypes.Input"
+      },
+      {
+        "name": "label",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__UI element label:__\n\n    label.ui --> \"label\"\n\n",
+        "type": "Internal.RecordTypes.Label"
+      },
+      {
+        "name": "level",
+        "comment": " *A multi-purpose horizontal level, which can contain almost any other element.*\n\nDocs: http://bulma.io/documentation/components/level/\n\n__Level container:__\n\n    level.container --> \"level\"\n\n__Level partitions:__\n\n    level.left --> \"level-left\"\n    level.right --> \"level-right\"\n\n__Level items:__\n\n    level.item --> \"level-item\"\n\n__Responsive modifier (level container):__\n\n    level.mobile.isHorizontal --> \"is-mobile\"\n\n",
+        "type": "Internal.RecordTypes.Level"
+      },
+      {
+        "name": "media",
+        "comment": " *The famous media object prevalent in social media interfaces, but useful in\nany context.*\n\nDocs: http://bulma.io/documentation/components/media-object/\n\n__Media object container:__\n\n    media.container --> \"media\"\n\n__Media object partitions:__\n\n    media.left --> \"media-left\"\n    media.right --> \"media-right\"\n    media.content --> \"media-content\"\n\n__Size modifier (media container):__\n\n    media.size.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Media"
+      },
+      {
+        "name": "menu",
+        "comment": " *A simple menu, for any type of vertical navigation.*\n\nDocs: http://bulma.io/documentation/components/menu/\n\n__Menu container:__\n\n    menu.container --> \"menu\"\n\n__Element class for menu labels:__\n\n    menu.label --> \"menu-label\"\n\n__Element class for list of menu options (apply to `ul` element):__\n\n    menu.list --> \"menu-list\"\n\n",
+        "type": "Internal.RecordTypes.Menu"
+      },
+      {
+        "name": "message",
+        "comment": " *Colored message blocks, to emphasize part of your page.*\n\nDocs: http://bulma.io/documentation/components/message/\n\n__Message container:__\n\n    message.container --> \"message\"\n\n__Message subcomponents:__\n\n    message.header --> \"message-header\"\n    message.body --> \"message-body\"\n\n__Color modifiers (message container):__\n\n    message.color.isPrimary --> \"is-primary\"\n    message.color.isInfo --> \"is-info\"\n    message.color.isSuccess --> \"is-success\"\n    message.color.isWarning --> \"is-warning\"\n    message.color.isDanger --> \"is-danger\"\n    message.color.isWhite --> \"is-white\"\n    message.color.isLight --> \"is-light\"\n    message.color.isDark --> \"is-dark\"\n    message.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Message"
+      },
+      {
+        "name": "modal",
+        "comment": " *A classic modal overlay, in which you can include any content you want.*\n\nDocs: http://bulma.io/documentation/components/modal/\n\n__Modal container:__\n\n    modal.container --> \"modal\"\n\n__Modal subcomponents:__\n\n    modal.background --> \"modal-background\"\n    modal.content --> \"modal-content\"\n\n    --Close UI element\n    modal.close.ui --> \"modal.close\"\n    modal.close.size.isSmall --> \"is-small\"\n    modal.close.size.isMedium --> \"is-medium\"\n    modal.close.size.isLarge --> \"is-large\"\n\n    --Card subcomponent\n    modal.card.container --> \"modal-card\"\n    modal.card.head --> \"modal-card-head\"\n    modal.card.title --> \"modal-card-title\"\n    modal.card.body --> \"modal-card-body\"\n    modal.card.foot --> \"modal-card-foot\"\n\n__State modifier (message container):__\n\n    modal.state.isActive --> \"is-active\"\n\n",
+        "type": "Internal.RecordTypes.Modal"
+      },
+      {
+        "name": "nav",
+        "comment": " *A responsive horizontal nav bar that can contain links, tabs, buttons,\nicons, and a logo.*\n\nDocs: http://bulma.io/documentation/components/nav/\n\n__Nav container:__\n\n    nav.container --> \"nav\"\n\n__Nav partitions:__\n\n    nav.left --> \"nav-left\"\n    nav.center --> \"nav-center\"\n    nav.right --> \"nav-right\"\n\n__Nav responsive components:__\n\n    nav.toggle --> \"nav-toggle\"\n    nav.menu.container --> \"nav-menu\"\n\n    -- State modifier (menu)\n      nav.menu.state.isActive --> \"is-active\"\n\n__Nav items:__\n\n    nav.item.container --> \"nav-item\"\n\n    -- Style modifier\n      nav.item.style.isTab --> \"is-tab\"\n\n    -- State modifier\n      nav.item.state.isActive --> \"is-active\"\n\n__Style modifier (container):__\n\n    nav.style.hasShadow --> \"hasShadow\"\n\n",
+        "type": "Internal.RecordTypes.Nav"
+      },
+      {
+        "name": "notification",
+        "comment": " *Bold notification blocks, to alert your users of something.*\n\nDocs: http://bulma.io/documentation/elements/notification/\n\n__Notification UI element:__\n\n    notification.ui --> \"notification\"\n\n__Color modifiers:__\n\n    notification.color.isPrimary --> \"is-primary\"\n    notification.color.isInfo --> \"is-info\"\n    notification.color.isSuccess --> \"is-success\"\n    notification.color.isWarning --> \"is-warning\"\n    notification.color.isDanger --> \"is-danger\"\n    notification.color.isWhite --> \"is-white\"\n    notification.color.isLight --> \"is-light\"\n    notification.color.isDark --> \"is-dark\"\n    notification.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Notification"
+      },
+      {
+        "name": "pagination",
+        "comment": " *A responsive, usable, and flexible pagination.*\n\nDocs: http://bulma.io/documentation/components/pagination/\n\n__Pagination container:__\n\n    pagination.container --> \"pagination\"\n\n__Element classes for navigation buttons:__\n\n    pagination.previous --> \"pagination-previous\"\n    pagination.next --> \"pagination-next\"\n\n__Element classes for pagination list:__\n\n    pagination.list.container --> \"pagination-list\"\n    pagination.list.link --> \"pagination-link\"\n    pagination.list.ellipsis --> \"pagination-ellipsis\"\n\n__Position modifiers for pagination list (pagination container):__\n\n    pagination.position.isCentered --> \"is-centered\"\n    pagination.position.isRight --> \"is-right\"\n\n",
+        "type": "Internal.RecordTypes.Pagination"
+      },
+      {
+        "name": "panel",
+        "comment": " *A composable panel, for compact controls.*\n\nDocs: http://bulma.io/documentation/components/panel/\n\n__Panel container:__\n\n    panel.container --> \"panel\"\n\n__Panel subcomponents:__\n\n    panel.heading --> \"panel-heading\"\n    panel.tabs --> \"panel-tabs\"\n\n    --Block subcomponent\n    panel.block.container --> \"panel-block\"\n    panel.block.icon --> \"panel-icon\"\n    panel.block.state.isActive --> \"is-active\"\n\n",
+        "type": "Internal.RecordTypes.Panel"
+      },
+      {
+        "name": "progress",
+        "comment": " *Native HTML progress bars.*\n\nDocs: http://bulma.io/documentation/elements/progress/\n\n__Progress UI element:__\n\n    progress.ui --> \"progress\"\n\n__Size modifiers:__\n\n    progress.size.isSmall --> \"is-small\"\n    progress.size.isMedium --> \"is-medium\"\n    progress.size.isLarge --> \"is-large\"\n\n__Color modifiers:__\n\n    progress.color.isPrimary --> \"is-primary\"\n    progress.color.isInfo --> \"is-info\"\n    progress.color.isSuccess --> \"is-success\"\n    progress.color.isWarning --> \"is-warning\"\n    progress.color.isDanger --> \"is-danger\"\n    progress.color.isWhite --> \"is-white\"\n    progress.color.isLight --> \"is-light\"\n    progress.color.isDark --> \"is-dark\"\n    progress.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Progress"
+      },
+      {
+        "name": "radio",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__Radio UI element:__\n\n    radio.ui --> \"radio\"\n\n__State modifier:__\n\n    radio.state.isDisabled --> \"is-disabled\"\n\n",
+        "type": "Internal.RecordTypes.Radio"
+      },
+      {
+        "name": "section",
+        "comment": " *A simple container to divide your page into sections.*\n\nDocs: http://bulma.io/documentation/layout/section/\n\n__Page section:__\n\n    section.container --> \"section\"\n\n__Spacing modifiers:__\n\n    section.spacing.isMedium --> \"is-medium\"\n    section.spacing.isLarge --> \"is-large\"\n\n",
+        "type": "Internal.RecordTypes.Section"
+      },
+      {
+        "name": "select",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__Select UI element:__\n\n    select.ui --> \"select\"\n\n__Size modifiers:__\n\n    select.size.isSmall --> \"is-small\"\n    select.size.isMedium --> \"is-medium\"\n    select.size.isLarge --> \"is-large\"\n\n__State modifiers:__\n\n    select.state.isHovered --> \"is-hovered\"\n    select.state.isFocused --> \"is-focused\"\n    select.state.isActive --> \"is-active\"\n    select.state.isLoading --> \"is-loading\"\n    select.state.isDisabled --> \"is-disabled\"\n\n__Addon select modifier:__\n\n    select.addon.isExpanded --> \"is-expanded\"\n\n",
+        "type": "Internal.RecordTypes.Select"
+      },
+      {
+        "name": "table",
+        "comment": " *The inevitable HTML table, with special case cells.*\n\nDocs: http://bulma.io/documentation/elements/table/\n\n__Table element class:__\n\n    table.container --> \"table\"\n\n__Style modifiers:__\n\n    table.style.isBordered --> \"is-bordered\"\n    table.style.isStriped --> \"is-striped\"\n\n__Spacing modifier:__\n\n    table.spacing.isNarrow --> \"is-narrow\"\n\n",
+        "type": "Internal.RecordTypes.Table"
+      },
+      {
+        "name": "tabs",
+        "comment": " *Simple responsive horizontal navigation tabs, with different styles.*\n\nDocs: http://bulma.io/documentation/components/tabs/\n\n__Tabs container:__\n\n    tabs.container --> \"tabs\"\n\n__Style modifiers:__\n\n    tabs.style.isBoxed --> \"is-boxed\"\n    tabs.style.isToggle --> \"is-toggle\"\n\n__Alignment modifier:__\n\n    tabs.alignment.isCentered --> \"is-centered\"\n    tabs.alignment.isRight --> \"is-right\"\n\n__Size modifiers:__\n\n    tabs.size.isSmall --> \"is-small\"\n    tabs.size.isMedium --> \"is-medium\"\n    tabs.size.isLarge --> \"is-large\"\n    tabs.size.isFullWidth --> \"is-full-width\"\n\n",
+        "type": "Internal.RecordTypes.Tabs"
+      },
+      {
+        "name": "tag",
+        "comment": " *Small tag labels to insert anywhere.*\n\nDocs: http://bulma.io/documentation/elements/tag/\n\n__Tag UI element:__\n\n    tag.ui --> \"tag\"\n\n__Size modifiers:__\n\n    tag.size.isMedium --> \"is-medium\"\n    tag.size.isLarge --> \"is-large\"\n\n__Color modifiers:__\n\n    tag.color.isPrimary --> \"is-primary\"\n    tag.color.isInfo --> \"is-info\"\n    tag.color.isSuccess --> \"is-success\"\n    tag.color.isWarning --> \"is-warning\"\n    tag.color.isDanger --> \"is-danger\"\n    tag.color.isWhite --> \"is-white\"\n    tag.color.isLight --> \"is-light\"\n    tag.color.isDark --> \"is-dark\"\n    tag.color.isBlack --> \"is-black\"\n\n",
+        "type": "Internal.RecordTypes.Tag"
+      },
+      {
+        "name": "textarea",
+        "comment": " Docs: http://bulma.io/documentation/elements/form/\n\n__Textarea UI element:__\n\n    textarea.ui --> \"textarea\"\n\n__Display modifier:__\n\n    textarea.display.isInline --> \"is-inline\"\n\n__Size modifiers:__\n\n    textarea.size.isSmall --> \"is-small\"\n    textarea.size.isMedium --> \"is-medium\"\n    textarea.size.isLarge --> \"is-large\"\n\n__State modifiers:__\n\n    textarea.state.isHovered --> \"is-hovered\"\n    textarea.state.isFocused --> \"is-focused\"\n    textarea.state.isActive --> \"is-active\"\n    textarea.state.isLoading --> \"is-loading\"\n    textarea.state.isDisabled --> \"is-disabled\"\n\n__Color modifiers:__\n\n    textarea.color.isPrimary --> \"is-primary\"\n    textarea.color.isInfo --> \"is-info\"\n    textarea.color.isSuccess --> \"is-success\"\n    textarea.color.isWarning --> \"is-warning\"\n    textarea.color.isDanger --> \"is-danger\"\n    textarea.color.isWhite --> \"is-white\"\n    textarea.color.isLight --> \"is-light\"\n    textarea.color.isDark --> \"is-dark\"\n    textarea.color.isBlack --> \"is-black\"\n",
+        "type": "Internal.RecordTypes.Textarea"
+      },
+      {
+        "name": "tile",
+        "comment": " *A single tile element to build 2-dimensional Metro-like, Pinterest-like, or\nwhatever-you-like grids.*\n\nDocs: http://bulma.io/documentation/grid/tiles/\n\n__Nestable container for tile grids:__\n\n    tile.container --> \"tile\"\n\n__Tile level designators:__\n\n    tile.level.isAncestor --> \"is-ancestor\"\n    tile.level.isParent --> \"is-parent\"\n    tile.level.isChild --> \"is-child\"\n\n__Tile orientation designator:__\n\n    tile.orientation.isVertical --> \"is-vertical\"\n\n__Tile width modifiers:__\n\n    tile.width.is1 --> \"is-1\"\n    tile.width.is2 --> \"is-2\"\n    tile.width.is3 --> \"is-3\"\n    tile.width.is4 --> \"is-4\"\n    tile.width.is5 --> \"is-5\"\n    tile.width.is6 --> \"is-6\"\n    tile.width.is7 --> \"is-7\"\n    tile.width.is8 --> \"is-8\"\n    tile.width.is9 --> \"is-9\"\n    tile.width.is10 --> \"is-10\"\n    tile.width.is11 --> \"is-11\"\n\n",
+        "type": "Internal.RecordTypes.Tile"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

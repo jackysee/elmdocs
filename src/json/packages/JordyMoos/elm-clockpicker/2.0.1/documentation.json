@@ -1,0 +1,79 @@
+[
+  {
+    "name": "ClockPicker",
+    "comment": " A customizable clock picker component.\n- 24 hour and 12 hour AM PM support.\n- Configure the hour and minute step sizes.\n- Set the initial time or configure it as now.\n\nSee the examples and demo on github.\n\n# ClockPicker\n@docs Msg, ClockPicker, Time, StartTime\n@docs init, update, view\n\n# Settings\n@docs Settings, defaultSettings\n\n",
+    "aliases": [
+      {
+        "name": "Settings",
+        "comment": " The type of clock picker settings.\n\n`hourStep` will let you specify the incremental step size op hours.\nFor example setting hourStep to 2 will only allow even hours to be clicked.\n\n`minuteStep` same as for the `hourStep` but then for the minute.\n\n`startTime` lets you specify the startTime of the ClockPicker.\nSee `ClockPicker.StartTime` for the options.\n\n`autoClose` Determines if the ClockPicker should close after selecting a minute.\n\n`twelveHour` Configure the ClockPicker to use a 24 view or 12 hour with AM and PM.\n\n`doneText` The text of the done button.\n\n",
+        "args": [],
+        "type": "{ hourStep : Int , minuteStep : Int , startTime : ClockPicker.StartTime , autoClose : Bool , twelveHour : Bool , doneText : String }"
+      },
+      {
+        "name": "Time",
+        "comment": " The time response record\n",
+        "args": [],
+        "type": "{ hour : ClockPicker.Hour, minute : ClockPicker.Minute }"
+      }
+    ],
+    "types": [
+      {
+        "name": "ClockPicker",
+        "comment": " The ClockPicker model.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " An opaque type representing messages that are passed inside the ClockPicker.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "StartTime",
+        "comment": " The possible start time options\n\n\n        import ClockPicker exposing (defaultSettings, StartTime(..))\n\n\n        ClockPicker.init { defaultSettings | startTime = EmptyStartTime }\n        ClockPicker.init { defaultSettings | startTime = SetStartTime 22 30 }\n        ClockPicker.init { defaultSettings | startTime = NowStartTime }\n\n\n`EmptyStartTime` will set the the start time to 00:00\n`SetStartTime Hour Minute` let you specify the hour and Minute\n`NowStartTime` will set the hour and minute to the current time\n\n",
+        "args": [],
+        "cases": [
+          [
+            "EmptyStartTime",
+            []
+          ],
+          [
+            "SetStartTime",
+            [
+              "ClockPicker.Hour",
+              "ClockPicker.Minute"
+            ]
+          ],
+          [
+            "NowStartTime",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultSettings",
+        "comment": " A record of default settings for the clock picker.\nExtend this if you want to customize your clock pciker.\n\n\n    import ClockPicker exposing (defaultSettings)\n\n    ClockPicker.init { defaultSettings | minuteStep = 5 }\n\n",
+        "type": "ClockPicker.Settings"
+      },
+      {
+        "name": "init",
+        "comment": " Initialize a ClockPicker given a Settings record.\nYou must execute the returned command.\n\n\n    init\n        let\n            (clockPicker, clockPickerCmd) = ClockPicker.init defaultSettings\n        in\n            { picker = clockPicker } ! [ Cmd.map ToClockPicker clockPickerCmd ]\n\n",
+        "type": "ClockPicker.Settings -> ( ClockPicker.ClockPicker, Platform.Cmd.Cmd ClockPicker.Msg )"
+      },
+      {
+        "name": "update",
+        "comment": " The clock picker update function. The third value in the returned\ntuple represents the picked time, it is `Nothing` if nothing happend\nand `Just Time` if the time is updated.\n",
+        "type": "ClockPicker.Msg -> ClockPicker.ClockPicker -> ( ClockPicker.ClockPicker , Platform.Cmd.Cmd ClockPicker.Msg , Maybe.Maybe ClockPicker.Time )"
+      },
+      {
+        "name": "view",
+        "comment": " view\n",
+        "type": "ClockPicker.ClockPicker -> Html.Html ClockPicker.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Diyalog",
+    "comment": " A Dialog for Elm\n\n# The model\n@docs Model\n\n# The view\n@docs view\n\n# The update\n@docs update\n\n# The subscriptions\n@docs subscriptions\n\n# The initial state\n@docs initial\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Set up the model with style as the animation for the modal to show up, uses a pretty basic animation.\n    The body property is the modal body, headerTitle just the title, fullHeader is the complete header with css\n    fullBody is the whole body with css and the body, fullFooter should include the buttons with the actions.\n    You don't need to modify visibility ",
+        "args": [
+          "msg"
+        ],
+        "type": "{ style : Animation.State , mainModalCss : Html.Attribute msg , modalContentCss : Html.Attribute msg , body : Html.Html msg , headerTitle : String , fullHeader : String -> Html.Html msg , fullBody : Html.Html msg -> Html.Html msg , fullFooter : Html.Html msg , visibility : Utils.ModalVisibility }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initial",
+        "comment": " ",
+        "type": "(Diyalog.Message.Msg -> msg) -> Diyalog.Model msg"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "Diyalog.Model msg -> Platform.Sub.Sub Diyalog.Message.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "Diyalog.Message.Msg -> Diyalog.Model msg -> ( Diyalog.Model msg, Platform.Cmd.Cmd Diyalog.Message.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " This is the modal itself ",
+        "type": "(Diyalog.Message.Msg -> msg) -> Diyalog.Model msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Diyalog.Message",
+    "comment": " The Message module\n\n# The message\n@docs Msg \n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "ShowingModal",
+            []
+          ],
+          [
+            "OkModal",
+            []
+          ],
+          [
+            "CloseModal",
+            []
+          ],
+          [
+            "Animate",
+            [
+              "Animation.Msg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

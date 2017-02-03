@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Autoinput",
+    "comment": "\n\nThis library encapsulates an _autocomplete menu_:\nan input element that, as you type, narrows a list of choices visible in a menu.\n\nConfiguration and the list of choices are passed in to `update` and `view`,\nbut do not form part of the state managed by this library. This ensures that\nyour data does not go out of sync with the menu list -- and in fact you can\nchange the list as the user input changes, enabling common cases such as\nremote querying.\n\nYour list of choices are passed in as a `List (id, item)` &mdash; that is, a \ntuple of a unique identifier for the item, and the item itself.\n\nThere is a basic usage [example][] to look at, and more are planned.\n\n## Prior art\n\nThis library started as a fork of the [elm-autocomplete][] \"accessible\" example,\nand some of the view and configuration remains similar, although the underlying\nimplementation is different.\n\nThe configuration API is a work in progress, but owes a lot to\n[elm-sortable-table][] conventions.\n\n[example]: https://github.com/ericgj/elm-autoinput/tree/master/examples/Demo.elm\n\n[elm-autocomplete]: https://github.com/thebritican/elm-autocomplete/tree/master/examples/src/AccessibleExample.elm\n\n[elm-sortable-table]: https://github.com/evancz/elm-sortable-table\n\n# View\n\n@docs view\n\n# Update\n\n@docs Msg, update\n\n# Configuration\n\n@docs config, defaultConfig, inputAttributes, inputStyle, menu, menuItem, customConfig, Config\n\n# State\n\n@docs Model, State, state, empty, preselect, query, init\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": "  Configuration passed to both `view` and `update`.\n",
+        "args": [
+          "item"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Model",
+        "comment": " \n\nThe Autoinput model consists of the input state and the menu state.\n(The menu state is simply whether the menu is visible or not; otherwise, its\nappearance and behavior is controlled through the Autoinput module).\n\n",
+        "args": [
+          "id"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " \n\nNote that the Msg type specifies the type of the item `id`. So for instance\nif the list you pass in to `view` and `update` is `List (Int, String)`, then\nyour wrapped Msg will be `UpdateAutoinput (Autoinput.Msg Int)`.  See `update`\nexample.\n\n",
+        "args": [
+          "id"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " \n\nSelection state. Note to get the current state from an Autoinput model, use \n`state model`.\n\n",
+        "args": [
+          "id"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Create the `config` to pass into `update` and `view`. Everything we need in\norder to filter and display the menu in response to user input.\n\nFor example, say we want to build a menu of `Person`s, searching either their\nname or their email address for any match of the entered text, but only display\ntheir names in the menu. We might have a `Config` like this:\n\n    import Autoinput\n\n    config : Autoinput.Config Person\n    config =\n        Autoinput.config\n            { howMany = 5\n            , search = searchNameAndEmail\n            , toString = .name\n            , menuId = \"person-menu\"\n            , menuItemStyle = menuItem\n            }\n\n    searchNameAndEmail : String -> Person -> Bool\n    searchNameAndEmail query person =\n        [person.name, person.email]\n            |> List.map String.toLower\n            |> List.any (String.contains (String.toLower query))\n\n    menuItem : Bool -> List (String, String)\n    menuItem selected =\n        if selected then\n            [ (\"background-color\", \"light-yellow\") ]\n        else\n            [ ]\n\nYou provide the following information:\n\n  - `howMany` &mdash; maximum number of matched items to display in menu\n  - `search` &mdash; search function `String -> item -> Bool`\n  - `toString` &mdash; how your items should be displayed\n  - `menuId` &mdash; the DOM id of the \"menu\" element\n  - `menuItemStyle` &mdash; how a menu item should be styled depending on if it\n     is selected or not.\n\nMore fine-grained configuration is possible through `defaultConfig` and\n`customConfig`.\n\n",
+        "type": "{ howMany : Int , search : String -> item -> Bool , toString : item -> String , menuId : String , menuItemStyle : Bool -> List ( String, String ) } -> Autoinput.Config item"
+      },
+      {
+        "name": "customConfig",
+        "comment": " TODO\n",
+        "type": "{ howMany : Int , search : String -> item -> Bool , toString : item -> String , input : Helpers.HtmlAttributeDetails , menuId : String , menuConfig : Menu.Config item } -> Autoinput.Config item"
+      },
+      {
+        "name": "defaultConfig",
+        "comment": " TODO\n",
+        "type": "{ howMany : Int , search : String -> item -> Bool , toString : item -> String , menuId : String } -> Autoinput.Config item"
+      },
+      {
+        "name": "empty",
+        "comment": " Construct an empty model (no input, hidden menu).\n",
+        "type": "Autoinput.Model id"
+      },
+      {
+        "name": "init",
+        "comment": " Construct a model from given State.\n",
+        "type": "Autoinput.State id -> Autoinput.Model id"
+      },
+      {
+        "name": "inputAttributes",
+        "comment": " TODO\n",
+        "type": "List (Html.Attribute Basics.Never) -> Autoinput.Config item -> Autoinput.Config item"
+      },
+      {
+        "name": "inputStyle",
+        "comment": " TODO\n",
+        "type": "List ( String, String ) -> Autoinput.Config item -> Autoinput.Config item"
+      },
+      {
+        "name": "menu",
+        "comment": " TODO\n",
+        "type": "Menu.Config item -> Autoinput.Config item -> Autoinput.Config item"
+      },
+      {
+        "name": "menuItem",
+        "comment": " TODO\n",
+        "type": "(Bool -> item -> Helpers.HtmlDetails) -> Autoinput.Config item -> Autoinput.Config item"
+      },
+      {
+        "name": "preselect",
+        "comment": " Construct a model with an initial selected value.\n",
+        "type": "id -> Autoinput.Model id"
+      },
+      {
+        "name": "query",
+        "comment": " Construct a model with an initial query value.\n",
+        "type": "String -> Autoinput.Model id"
+      },
+      {
+        "name": "state",
+        "comment": " Extract internal state of model to State.\n",
+        "type": "Autoinput.Model id -> Autoinput.State id"
+      },
+      {
+        "name": "update",
+        "comment": "\n\nHandle input. Your application should nest Autoinput messages in the typical\nway using `Html.map`. Note that Autoinput Msg type takes an `id` parameter: the\nID type of items in your list.\n\nHere is an example:\n\n    -- view\n\n    div []\n        [ label [] [text \"Select a thing\"]\n        , Autoinput.view config things model |> Html.map UpdateAutoInput\n        ]\n\n    -- update\n\n    type Msg\n        -- ...\n        | UpdateAutoInput (Autoinput.Msg ThingId)\n        -- ...\n\n    update msg model =\n        case msg of\n            UpdateAutoInput automsg ->\n                Autoinput.update config things automsg model\n\n\nNote that you pass two pieces of context in to `update`:\n\n  - The `Config`,  and\n  - The full list of items, as tuples of `(id, item)`.\n\n",
+        "type": "Autoinput.Config item -> List ( id, item ) -> Autoinput.Msg id -> Autoinput.Model id -> Autoinput.Model id"
+      },
+      {
+        "name": "view",
+        "comment": "\n\nRender the input element and associated menu div.\n\nNote that the same as for `update`, you pass in two pieces of context:\n\n  - The `Config`,  and\n  - The full list of items, as tuples of `(id, item)`.\n\n",
+        "type": "Autoinput.Config item -> List ( id, item ) -> Autoinput.Model id -> Html.Html (Autoinput.Msg id)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

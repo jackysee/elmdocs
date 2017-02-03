@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Drag",
+    "comment": " This module listens for mouse events and creates drag events that\ncontain the delta x and y of the mouse's movement when the button is\npressed down.\n\n# TEA Data Structures\n@docs Model, Msg\n\n# TEA Functions\n@docs initialModel, subscriptions, update\n\n    import Html.App as App\n    import Html exposing (Html, text)\n\n    import Drag\n\n    type alias Model = {\n        dragModel : Drag.Model,\n        dragDistance : Int\n      }\n\n    type Msg =\n      DragMsg Drag.Msg |\n      Drag (Int, Int)\n\n    init : (Model, Cmd Msg)\n    init =\n      let initialModel = {\n        dragModel = Drag.initialModel,\n        dragDistance = 0\n      } in (initialModel, Cmd.none)\n\n    subscriptions : Model -> Sub Msg\n    subscriptions model = Sub.map DragMsg <| Drag.subscriptions model.dragModel\n\n    update : Msg -> Model -> (Model, Cmd Msg)\n    update msg model =\n      case msg of\n        DragMsg msg ->\n          let (newDragModel, dragCmd) = Drag.update Drag msg model.dragModel\n          in ({model | dragModel = newDragModel}, dragCmd)\n        Drag (dx, dy) -> ({ model | dragDistance = model.dragDistance + (abs dx) + (abs dy) }, Cmd.none)\n\n    view : Model -> Html Msg\n    view model = text <| toString model\n\n    main : Program Never\n    main = App.program {\n        init = init,\n        update = update,\n        subscriptions = subscriptions,\n        view = view\n      }\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The internal state of the drag module.  You don't need to poke into this\nat all; you just need to make sure it's present in your application's model\nand that you update it when Drag events occur.\n",
+        "args": [],
+        "type": "{ isDown : Bool, currPosition : ( Int, Int ) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Internal messages for the drag module.  You need to make sure a\nconstructor for your application's Msg type exists that wraps this,\nand that you handle it by calling Drag.update to update the drag\nmodel in your application's update function.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "initialModel",
+        "comment": " The initial state for the drag module.  Use in your application's\ninit function to initialize the drag model part of your model.\n",
+        "type": "Drag.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Returns a subscription for the events that elm-drag needs to function. Usually you'd use `Sub.map` to wrap this subscription into your main subscription. \n",
+        "type": "Drag.Model -> Platform.Sub.Sub Drag.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the drag model.  The first argument is a function that\nconverts an `(Int, Int)` to your application's message type; if you\nhave a `type Msg = Drag (Int, Int)`, this would just be `Drag`.\nThe second and third arguments are the drag message and model that\nyou're currently processing.\n",
+        "type": "(( Int, Int ) -> msg) -> Drag.Msg -> Drag.Model -> ( Drag.Model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

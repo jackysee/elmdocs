@@ -1,0 +1,60 @@
+[
+  {
+    "name": "ComponentList",
+    "comment": " This library implements a generic list component, that, given a component type, creates a list of it\nIt can be used everywhere in your interface where there are list of elements with\nwhich the user can interact.\n\nThe generated html will have this form:\n\n    <div class=\"ComponentList\">\n      <ul>\n        <li class=\"Component\">\n          {{YOUR COMPONENT}}\n          <div class=\"ComponentListActions\">\n            <button>{{Your deleteModelTxt}}</button>\n            <button>{{Your newModelTxt}}</button>\n          </div>\n        </li>\n      </ul>\n      <button class=\"newComponent\">{{Your newModelTxt}}</button>\n    </div>\n\n\n# Model\n\n## Model creation\nHow to create a `ComponentList.Model` from your own component model.\n\n@docs init, setModels, Model\n\n## Get the information back from the `ComponentList`\n@docs getModels\n\n# Update\n@docs Msg, update\n\n# View\nCreate a list view from your own component's view\n@docs ViewParams, view\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Represents a model.\n",
+        "args": [
+          "componentModel"
+        ],
+        "type": "{ models : List ( ComponentList.ID, componentModel ) , nextID : ComponentList.ID , defaultModel : componentModel }"
+      },
+      {
+        "name": "ViewParams",
+        "comment": " Represents the text to display in the GUI view\n\n  * *newModelTxt* : text to display in the \"+\" button\n  * *deleteModelTxt* : text to display in the \"-\" button\n",
+        "args": [],
+        "type": "{ newModelTxt : String, deleteModelTxt : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Represents a model update message.\n`componentMsg` is the type of the component messages.\n",
+        "args": [
+          "componentMsg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getModels",
+        "comment": " Get the the models of the elements of a `ComponentList`\n",
+        "type": "ComponentList.Model a -> List a"
+      },
+      {
+        "name": "init",
+        "comment": " Create a new model representing a list of elements of the given model.\nWhen a new element will be added to the list, its initial model will be the model\ngiven as the first parameter of this function.\n\n    -- EXAMPLE\n    -- simple component, representing a string, and printing it to a text field\n    cModel = \"Hello\"\n    cUpdate v _ = v\n    cView cmodel = input [onInput identity, value cmodel] []\n    main =\n      App.beginnerProgram {\n        model = init cModel,\n        view = view (ViewParams \"New hello\" \"Delete this hello\") cView,\n        update = update cUpdate\n      }\n",
+        "type": "a -> ComponentList.Model a"
+      },
+      {
+        "name": "setModels",
+        "comment": " Set the the models of the elements of a `ComponentList`\n",
+        "type": "List a -> ComponentList.Model a -> ComponentList.Model a"
+      },
+      {
+        "name": "update",
+        "comment": " Given the component update function, returns a `ComponentList` update function\n\n    updateComponentList = ComponentList.update updateComponent\n",
+        "type": "(compMsg -> compModel -> compModel) -> ComponentList.Msg compMsg -> ComponentList.Model compModel -> ComponentList.Model compModel"
+      },
+      {
+        "name": "view",
+        "comment": " Given a component view function, return a ComponentList view function\n\n    params = ViewParams \"New component\" \"Delete this component\"\n    listView = ComponentList.view params componentView\n",
+        "type": "ComponentList.ViewParams -> (compModel -> Html.Html compMsg) -> ComponentList.Model compModel -> Html.Html (ComponentList.Msg compMsg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

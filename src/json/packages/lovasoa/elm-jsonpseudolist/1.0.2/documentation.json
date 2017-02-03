@@ -1,0 +1,16 @@
+[
+  {
+    "name": "JsonPseudoList",
+    "comment": "\nElm Json.Decoder for javascript Array-like objects, of the form:\n\n    {length:2, 0:value0, 1:value1}\n\nThis is usefull for decoding things like\n[DOM `NodeList`s](https://developer.mozilla.org/en/docs/Web/API/NodeList)\ncoming from javascript ports.\n\n@docs jsonPseudoList\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "jsonPseudoList",
+        "comment": " Create a decoder for objects of the form:\n`{\"length\": Number, \"0\": Value, \"1\": Value, ...}`\n\n    Takes just one argument: the decoder for `Value`\n\n    You need to use Json.Decode with this module\n    >>> import Json.Decode\n\n### Decode an Array-like object with two values\n\n    >>> Json.Decode.decodeString\n    ...     (jsonPseudoList Json.Decode.string)\n    ...     \"\"\"{\n    ...           \"length\": 2,\n    ...           \"0\": \"hello\",\n    ...           \"1\": \"world\"\n    ...         }\"\"\"\n    Ok [\"hello\", \"world\"]\n\n### Try to decode an invalid Array-like object\nThe object to decode may contain supplumentary fields, but\nif a value is missing, the decoder will fail\n\n    >>> Json.Decode.decodeString\n    ...     (jsonPseudoList Json.Decode.string)\n    ...     \"\"\"{\n    ...           \"length\": 2,\n    ...           \"0\": \"hello\"\n    ...         }\"\"\"\n    Err \"Expecting an object with a field named `1` but instead got: {\\\"0\\\":\\\"hello\\\",\\\"length\\\":2}\"\n\n### Fails on negative lengths\nOf course, if the length is less then 0, decoding fails\n\n    >>> Json.Decode.decodeString\n    ...     (jsonPseudoList Json.Decode.string)\n    ...     \"\"\"{\n    ...           \"length\": -1\n    ...         }\"\"\"\n    Err \"I ran into a `fail` decoder: Expecting a positive value for the `length` field\"\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (List a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

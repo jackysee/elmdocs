@@ -1,0 +1,159 @@
+[
+  {
+    "name": "ExEmElm.Decoder",
+    "comment": " Access and decode fields from XML elements\n\n@docs Node, field\n\n@docs maybe, list, string, int, float, bool\n",
+    "aliases": [
+      {
+        "name": "Node",
+        "comment": " Represents an XML node\n",
+        "args": [],
+        "type": "ExEmElm.Types.Node"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "bool",
+        "comment": " Decode a boolean\n",
+        "type": "List String -> Result.Result String Bool"
+      },
+      {
+        "name": "field",
+        "comment": " Access the data contained in the children with a given tag, then decode it\n\nNote that most of the decoders discard all but the first matching value\n",
+        "type": "ExEmElm.Decoder.Node -> String -> (List String -> Result.Result e a) -> Result.Result e (a -> b) -> Result.Result e b"
+      },
+      {
+        "name": "float",
+        "comment": " Decode a float\n",
+        "type": "List String -> Result.Result String Float"
+      },
+      {
+        "name": "int",
+        "comment": " Decode an integer\n",
+        "type": "List String -> Result.Result String Int"
+      },
+      {
+        "name": "list",
+        "comment": " Decode a list of the same structures\n",
+        "type": "(a -> Result.Result e b) -> List a -> Result.Result e (List b)"
+      },
+      {
+        "name": "maybe",
+        "comment": " Make another decoder optional\n",
+        "type": "(List a -> Result.Result String b) -> List a -> Result.Result String (Maybe.Maybe b)"
+      },
+      {
+        "name": "string",
+        "comment": " Decode a string\n",
+        "type": "List a -> Result.Result String a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ExEmElm.Parser",
+    "comment": " This library allows the parsing of XML\n\n@docs parse, root\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parses an XML document from a string\n",
+        "type": "String -> Result.Result String ExEmElm.Types.Document"
+      },
+      {
+        "name": "root",
+        "comment": " Retrives the root node of a document\n",
+        "type": "ExEmElm.Types.Document -> ExEmElm.Types.Node"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ExEmElm.Traverse",
+    "comment": " This library allows the traversal/querying of parsed XML\n\n@docs innerText, at, textAt\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "at",
+        "comment": " Traverse down a path of tags\n",
+        "type": "List String -> ExEmElm.Types.Node -> List ExEmElm.Types.Node"
+      },
+      {
+        "name": "innerText",
+        "comment": " Retrives the text inside the node and all subnodes\n",
+        "type": "ExEmElm.Types.Node -> String"
+      },
+      {
+        "name": "textAt",
+        "comment": " Get the text inside all tags at the end of the given path\n",
+        "type": "List String -> ExEmElm.Types.Node -> List String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ExEmElm.Builder",
+    "comment": " Build an XML tree or document\n\n@docs document, xmlDecl, text, node, text, comment, cdata, attribute\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attribute",
+        "comment": " Create an attribute\n",
+        "type": "String -> String -> ExEmElm.Types.Attribute"
+      },
+      {
+        "name": "cdata",
+        "comment": " Create a CDATA section\n",
+        "type": "String -> ExEmElm.Types.Node"
+      },
+      {
+        "name": "comment",
+        "comment": " Create a comment\n",
+        "type": "String -> ExEmElm.Types.Node"
+      },
+      {
+        "name": "document",
+        "comment": " Create an XML document (with optional declaration)\n",
+        "type": "Maybe.Maybe ExEmElm.Types.XmlDecl -> ExEmElm.Types.Node -> ExEmElm.Types.Document"
+      },
+      {
+        "name": "node",
+        "comment": " Create a new XML node\n",
+        "type": "String -> List ExEmElm.Types.Attribute -> List ExEmElm.Types.Node -> ExEmElm.Types.Node"
+      },
+      {
+        "name": "text",
+        "comment": " Create text\n",
+        "type": "String -> ExEmElm.Types.Node"
+      },
+      {
+        "name": "xmlDecl",
+        "comment": " Create an XML declaration\n",
+        "type": "String -> String -> Bool -> ExEmElm.Types.XmlDecl"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ExEmElm.Encoder",
+    "comment": " This library stringifies XML data structures\n\n@docs document, node\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "document",
+        "comment": " Stringify an entire XML document\n",
+        "type": "ExEmElm.Types.Document -> String"
+      },
+      {
+        "name": "node",
+        "comment": " Stringify an individual XML node\n",
+        "type": "ExEmElm.Types.Node -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
