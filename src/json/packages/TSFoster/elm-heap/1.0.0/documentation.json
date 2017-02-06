@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Heap",
+    "comment": " Data structure for heaps.\n\nThis package  exposes a data  structure to implement  heaps/priority queues/fast\nin-place sorting.\n\nThe heap  is implemented as a  pairing heap, as it  is simple but fast,  and has\nbeen shown to work well in real-world situations.\n\n\n# Definition\n\n@docs Heap\n\n\n# Creating heaps\n\n@docs empty, singleton, isEmpty\n\n\n# Inserting values\n\n@docs push, merge\n\n\n# Inspecting heaps\n\n@docs isEmpty, size, peek, pop, popBlind, compareHeaps\n\n\n# Bulk operations\n\n@docs fromList, toList, toListReverse\n\n\n# Non-comparable elements\n\n@docs emptySortedBy, singletonSortedBy, emptySortedWith\n@docs singletonSortedWith, fromListSortedBy, fromListSortedWith\n\n\n# Running times\n\n* peek: **Θ(1)**\n* pop: **O(log n) (amortized)**\n* push: **Θ(1)**\n* size: **Θ(1)**\n* merge: **Θ(1)**\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Heap",
+        "comment": " Heaps are exposed as an opaque union type.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "compareHeaps",
+        "comment": " Compare two heaps (using compare method of first heap):\n\n* An empty heap is less than a non-empty heap.\n* If one heap's min-value is less than another, the heap is less than the other\n* If two heaps share the same min-value, remove the min-values are compare the resulting heaps\n\n\n    >>> Heap.compareHeaps Heap.empty Heap.empty\n    EQ\n\n    >>> Heap.compareHeaps Heap.empty (Heap.singleton 3)\n    LT\n\n    >>> Heap.compareHeaps (Heap.fromList [ 1, 2, 3, 4 ]) (Heap.fromList [ 1, 2, 3 ])\n    GT\n\n",
+        "type": "Heap.Heap a -> Heap.Heap a -> Basics.Order"
+      },
+      {
+        "name": "empty",
+        "comment": " An empty heap for any  comparable type (ints, floats, chars, strings, lists,\nor tuples).\n",
+        "type": "Heap.Heap comparable"
+      },
+      {
+        "name": "emptySortedBy",
+        "comment": " An empty heap for any type, given a function to make a comprable value.\n\n    Heap.emptySortedBy .surname\n",
+        "type": "(a -> comparable) -> Heap.Heap a"
+      },
+      {
+        "name": "emptySortedWith",
+        "comment": " An empty heap for any type, given a function to compare values.\n\n    Heap.emptySortedWith (\\a b -> compare (List.maximum a) (List.maximum b))\n",
+        "type": "(a -> a -> Basics.Order) -> Heap.Heap a"
+      },
+      {
+        "name": "fromList",
+        "comment": " A heap containing all values in the list of comparable types.\n\n    Heap.fromList []\n\n    Heap.fromList [ 8, 3, 8, 3, 6, 67, 23 ]\n",
+        "type": "List comparable -> Heap.Heap comparable"
+      },
+      {
+        "name": "fromListSortedBy",
+        "comment": " A heap  containing all  values in  the  list, given  a function  to make  a\ncomparable value.\n\n    Heap.fromListSortedBy .surname\n        [ { firstname = \"Buzz\", surname = \"Aldrin\" }\n        , { firstname = \"Norman\", surname = \"Bates\" }\n        , { firstname = \"Bruce\", surname = \"Campbell\" }\n        ]\n",
+        "type": "(a -> comparable) -> List a -> Heap.Heap a"
+      },
+      {
+        "name": "fromListSortedWith",
+        "comment": " A heap  containing all  values in  the list,  given a  function to  compare\nvalues.\n\n    Heap.fromListSortedWith (\\a b -> compare (List.maximum a) (List.maximum b))\n        [ [ 1, 999 ]\n        , [ 6, 4, 3, 8, 9, 347, 34, 132, 546 ]\n        ]\n",
+        "type": "(a -> a -> Basics.Order) -> List a -> Heap.Heap a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " `True` if the Heap is empty, otherwise `False`.\n\n    >>> Heap.isEmpty Heap.empty\n    True\n\n    >>> Heap.isEmpty (Heap.singleton 3)\n    False\n",
+        "type": "Heap.Heap a -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " Merge the second heap into the first heap.\n\n**Note** This function assumes that both heaps are sorted using the same method.\nStrictly speaking,  the merged  heap has  the same sorting  method as  the first\nargument.\n\n    >>> Heap.isEmpty (Heap.merge Heap.empty Heap.empty)\n    True\n\n    >>> Heap.merge (Heap.fromList [ 2, 4, 6, 7 ]) (Heap.fromList [ 5, 7, 9, 3 ])\n    ...     |> Heap.size\n    8\n",
+        "type": "Heap.Heap a -> Heap.Heap a -> Heap.Heap a"
+      },
+      {
+        "name": "peek",
+        "comment": " Look at smallest value in heap without applying any transformations.\n\n    >>> Heap.peek Heap.empty\n    Nothing\n\n    >>> Heap.peek (Heap.fromList [ 3, 56, 8, 367, 0, 4 ])\n    Just 0\n",
+        "type": "Heap.Heap a -> Maybe.Maybe a"
+      },
+      {
+        "name": "pop",
+        "comment": " Try to remove the smallest value  from the heap, returning the value and the\nnew heap. If the heap is empty, return Nothing.\n\n    >>> Heap.pop Heap.empty\n    Nothing\n\n    >>> Heap.fromList [ 3, 5, 7, 7, 2, 9 ]\n    ...     |> Heap.pop\n    ...     |> Maybe.map (Tuple.mapSecond Heap.size)\n    Just (2, 5)\n",
+        "type": "Heap.Heap a -> Maybe.Maybe ( a, Heap.Heap a )"
+      },
+      {
+        "name": "popBlind",
+        "comment": " Try to remove the smallest value from the heap, returning just the new heap.\nIf the heap is empty, return Nothing.\n\n    >>> Heap.popBlind Heap.empty\n    Nothing\n\n    >>> Heap.singleton 3\n    ...     |> Heap.popBlind\n    ...     |> Maybe.map Heap.size\n    Just 0\n",
+        "type": "Heap.Heap a -> Maybe.Maybe (Heap.Heap a)"
+      },
+      {
+        "name": "push",
+        "comment": " Add a value to a heap.\n\n    >>> Heap.fromList [ 1, 6, 7 ]\n    ...     |> Heap.push 4\n    ...     |> Heap.peek\n    Just 1\n\n    >>> Heap.fromList [ 5, 6, 7 ]\n    ...     |> Heap.push 4\n    ...     |> Heap.peek\n    Just 4\n",
+        "type": "a -> Heap.Heap a -> Heap.Heap a"
+      },
+      {
+        "name": "singleton",
+        "comment": " A heap containing one comparable value (ints, floats, chars, strings, lists,\nor tuples).\n\n    Heap.singleton (3, 4)\n",
+        "type": "comparable -> Heap.Heap comparable"
+      },
+      {
+        "name": "singletonSortedBy",
+        "comment": " A heap containing one value, given a function to make a comparable value.\n\n    Heap.singletonSortedBy .surname { firstname = \"Buzz\", surname = \"Aldrin\" }\n",
+        "type": "(a -> comparable) -> a -> Heap.Heap a"
+      },
+      {
+        "name": "singletonSortedWith",
+        "comment": " A heap containing one value, given a function to compare values.\n\n    Heap.SingletonSortedWith [ 1, 2, 3, 56 ]\n",
+        "type": "(a -> a -> Basics.Order) -> a -> Heap.Heap a"
+      },
+      {
+        "name": "size",
+        "comment": " Number of elements in heap.\n\n    >>> Heap.size Heap.empty\n    0\n\n    >>> Heap.size (Heap.fromList [ 1, 2, 3, 4, 5, 6, 7, 8 ])\n    8\n",
+        "type": "Heap.Heap a -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Get all values from the heap, in order.\n\n    >>> Heap.toList (Heap.fromList [ 9, 3, 6, 4, 1, 2, 8, 5, 7 ])\n    [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]\n",
+        "type": "Heap.Heap a -> List a"
+      },
+      {
+        "name": "toListReverse",
+        "comment": " Get all values from the heap, in reverse order.\n\n    >>> Heap.toListReverse (Heap.fromList [ 9, 3, 6, 4, 1, 2, 8, 5, 7 ])\n    [ 9, 8, 7, 6, 5, 4, 3, 2, 1 ]\n",
+        "type": "Heap.Heap a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
