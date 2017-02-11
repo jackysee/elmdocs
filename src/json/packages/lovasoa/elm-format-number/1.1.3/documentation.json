@@ -1,0 +1,43 @@
+[
+  {
+    "name": "FormatNumber",
+    "comment": " This simple package formats numbers as pretty strings. It is flexible\nenough to deal with different number of decimals, different thousand\nseparators and diffetent decimal separator.\n\n# Basic usage\n\n    >>> formatFloat {frenchLocale | decimals = 4} pi\n    \"3,1416\"\n\n    >>> formatInt usLocale 42042\n    \"42,042\"\n\n    >>> formatFloat spanishLocale e\n    \"2,718\"\n\n    >>> formatFloat {decimals=3, thousandSeparator=\"\", decimalSeparator=\",\"} 123456.789\n    \"123456,789\"\n\n# Full documentation\n## Locale\n@docs Locale, usLocale , frenchLocale, spanishLocale\n\n## Number formatting\n\n@docs formatFloat, formatInt\n\n# Known bugs\n\nThere are known bugs in how Elm handles large numbers:\n\n * https://github.com/elm-lang/elm-compiler/issues/264\n * https://github.com/elm-lang/elm-compiler/issues/1246\n\nThis library won't work with large numbers (over 2^31) until Elm itself is fixed:\n\n    >>> formatFloat usLocale 1e10\n    \"1,410,065,408.00\"\n",
+    "aliases": [
+      {
+        "name": "Locale",
+        "comment": " Locale to configure the format options.\n",
+        "args": [],
+        "type": "{ decimals : Int , thousandSeparator : String , decimalSeparator : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "formatFloat",
+        "comment": " Format a float number as a pretty string:\n\n    >>> formatFloat { decimals = 2, thousandSeparator = \",\", decimalSeparator = \".\" } 1234.5567\n    \"1,234.56\"\n\n    >>> formatFloat (Locale 3 \".\" \",\") -7654.3210\n    \"−7.654,321\"\n\n    >>> formatFloat (Locale 1 \",\" \".\") -0.01\n    \"0.0\"\n\n    >>> formatFloat (Locale 2 \",\" \".\") 0.01\n    \"0.01\"\n\n    >>> formatFloat (Locale 0 \",\" \".\") 123.456\n    \"123\"\n\n    >>> formatFloat (Locale 0 \",\" \".\") 1e9\n    \"1,000,000,000\"\n\n    >>> formatFloat (Locale 5 \",\" \".\") 1.0\n    \"1.00000\"\n",
+        "type": "FormatNumber.Locale -> Float -> String"
+      },
+      {
+        "name": "formatInt",
+        "comment": " Format a integer number as a pretty string:\n\n    >>> formatInt { decimals = 1, thousandSeparator = \",\", decimalSeparator = \".\" } 0\n    \"0\"\n\n    >>> formatInt (Locale 1 \" \" \".\") 1234567890\n    \"1 234 567 890\"\n\n    >>> formatInt (Locale 10 \",\" \".\") -123456\n    \"−123,456\"\n\n",
+        "type": "FormatNumber.Locale -> Int -> String"
+      },
+      {
+        "name": "frenchLocale",
+        "comment": " Locale used in France, Canada, Finland, Sweden\n  It uses a non-breakable thin space (U+202F) as thousandSeparator.\n\n    >>> formatFloat frenchLocale 67295\n    \"67 295,000\"\n",
+        "type": "FormatNumber.Locale"
+      },
+      {
+        "name": "spanishLocale",
+        "comment": " locale used in Spain, Italy and Norway\n    >>> formatFloat spanishLocale 67295\n    \"67.295,000\"\n",
+        "type": "FormatNumber.Locale"
+      },
+      {
+        "name": "usLocale",
+        "comment": " locale used in the United States, Great Britain, and Thailand\n    >>> formatFloat usLocale 67295\n    \"67,295.00\"\n",
+        "type": "FormatNumber.Locale"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

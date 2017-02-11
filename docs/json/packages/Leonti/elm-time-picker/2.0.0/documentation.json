@@ -1,0 +1,57 @@
+[
+  {
+    "name": "TimePicker",
+    "comment": "\nTimePicker will display Material Design time picker with a round clock face\n\nTimePicker does not come with a dialog, so it can be embedded inside of a form or can be used\nwith something like [elm-mdl](https://debois.github.io/elm-mdl/)\n\n@docs Settings, init, selectedTime, SelectedTime, Model, Msg, update, view\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " ",
+        "args": [],
+        "type": "{ settings : TimePicker.Settings , mode : TimeTypes.Mode , date : Date.Date , isSelecting : Bool }"
+      },
+      {
+        "name": "SelectedTime",
+        "comment": " ",
+        "args": [],
+        "type": "{ hours : Int, minutes : Int }"
+      },
+      {
+        "name": "Settings",
+        "comment": " Time Picker settings, when `is24Hours` is set to `False` AM/PM mode will be used\n",
+        "args": [],
+        "type": "{ is24Hours : Bool, mainColor : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Pass time picker settings and get initial time picker model\n",
+        "type": "TimePicker.Settings -> Date.Date -> TimePicker.Model"
+      },
+      {
+        "name": "selectedTime",
+        "comment": " ",
+        "type": "TimePicker.Model -> Date.Date"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "TimePicker.Msg -> TimePicker.Model -> TimePicker.Model"
+      },
+      {
+        "name": "view",
+        "comment": " ",
+        "type": "TimePicker.Model -> Html.Html TimePicker.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Result.Extra",
+    "comment": " Convenience functions for working with `Result`.\n\n# Common Helpers\n@docs isOk, isErr, extract, unwrap, unpack, mapBoth, combine, merge\n\n# Applying\n@docs singleton, andMap\n\n# Alternatives\n@docs or, orLazy, orElseLazy, orElse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Apply the function that is inside `Result` to a value that is inside\n`Result`. Return the result inside `Result`. If one of the `Result`\narguments is `Err e`, return `Err e`. Also known as `apply`.\n\n    Err \"Oh\" |> andMap (Err \"No!\")   == Err \"Oh\"\n    Err \"Oh\" |> andMap (Ok 2)        == Err \"Oh\"\n    Ok ((+) 1) |> andMap (Err \"No!\") == Err \"No!\"\n    Ok ((+) 1) |> andMap (Ok 2)      == Ok 3\n",
+        "type": "Result.Result e a -> Result.Result e (a -> b) -> Result.Result e b"
+      },
+      {
+        "name": "combine",
+        "comment": " Combine a list of results into a single result (holding a list).\n",
+        "type": "List (Result.Result x a) -> Result.Result x (List a)"
+      },
+      {
+        "name": "extract",
+        "comment": " Turn a `Result e a` to an `a`, by applying the conversion\nfunction specified to the `e`.\n",
+        "type": "(e -> a) -> Result.Result e a -> a"
+      },
+      {
+        "name": "isErr",
+        "comment": " Check whether the result is `Err` without unwrapping it.\n",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "isOk",
+        "comment": " Check whether the result is `Ok` without unwrapping it.\n",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " Apply the first argument function to an `Err` and the second\nargument function to an `Ok` of a `Result`.\n",
+        "type": "(e -> f) -> (a -> b) -> Result.Result e a -> Result.Result f b"
+      },
+      {
+        "name": "merge",
+        "comment": " Eliminate Result when error and success have been mapped to the same\ntype, such as a message type.\n\n    merge (Ok 4)   == 4\n    merge (Err -1) == -1\n\nMore pragmatically:\n\n    type Msg\n        = UserTypedInt Int\n        | UserInputError String\n\n    msgFromInput : String -> Msg\n    msgFromInput =\n        String.toInt\n        >> Result.mapError UserInputError\n        >> Result.map UserTypedInt\n        >> Result.Extra.merge\n",
+        "type": "Result.Result a a -> a"
+      },
+      {
+        "name": "or",
+        "comment": " Like the Boolean `||` this will return the first value that is\npositive (`Ok`). However, unlike with `||`, both values will be\ncomputed anyway (there is no short-circuiting).\n\n    or (Ok 4)      (Ok 5)      == Ok 4\n    or (Err \"Oh!\") (Ok 5)      == Ok 5\n    or (Ok 4)      (Err \"No!\") == Ok 4\n    or (Err \"Oh!\") (Err \"No!\") == Err \"No!\"\n\nAs the last example line shows, the second error is returned if both\nresults are erroneous.\n",
+        "type": "Result.Result e a -> Result.Result e a -> Result.Result e a"
+      },
+      {
+        "name": "orElse",
+        "comment": " Strict version of `orElseLazy` (and at the same time,\npiping-friendly version of `or`).\n\n    orElse (Ok 4)      (Ok 5)      == Ok 5  -- crucial difference from `or`\n    orElse (Err \"Oh!\") (Ok 5)      == Ok 5\n    orElse (Ok 4)      (Err \"No!\") == Ok 4\n    orElse (Err \"Oh!\") (Err \"No!\") == Err \"Oh!\"  -- also different from `or`\n\nAlso:\n\n    String.toInt \"Hello\"\n    |> orElse (String.toInt \"42\")\n",
+        "type": "Result.Result e a -> Result.Result e a -> Result.Result e a"
+      },
+      {
+        "name": "orElseLazy",
+        "comment": " Piping-friendly version of `orLazy`. The first argument will only\nbe evaluated if the second argument is an `Err`. Example use:\n\n    String.toInt \"Hello\"\n    |> orElseLazy (\\() -> String.toInt \"42\")\n",
+        "type": "(() -> Result.Result e a) -> Result.Result e a -> Result.Result e a"
+      },
+      {
+        "name": "orLazy",
+        "comment": " Non-strict version of `or`. The second argument will only be\nevaluated if the first argument is an `Err`.\n",
+        "type": "Result.Result e a -> (() -> Result.Result e a) -> Result.Result e a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a `singleton` from a value to an `Result` with a `Ok`\nof the same type.  Also known as `pure`. You can use the `Err`\nconstructor for a singleton of the `Err` variety.\n\n    singleton 2 == Ok 2\n",
+        "type": "a -> Result.Result e a"
+      },
+      {
+        "name": "unpack",
+        "comment": " Convert a `Result e a` to a `b` by applying either the first\nfunction if the `Result` is an `Err` or the second function if the\n`Result` is `Ok`. Both of these functions must return the same type.\n",
+        "type": "(e -> b) -> (a -> b) -> Result.Result e a -> b"
+      },
+      {
+        "name": "unwrap",
+        "comment": " Convert a `Result e a` to a `b` by applying a function if\nthe `Result` is `Ok` or using the provided default value if it\nis an `Err`.\n",
+        "type": "b -> (a -> b) -> Result.Result e a -> b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

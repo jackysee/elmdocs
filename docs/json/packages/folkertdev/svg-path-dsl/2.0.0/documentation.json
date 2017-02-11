@@ -1,0 +1,246 @@
+[
+  {
+    "name": "Svg.Path",
+    "comment": " A domain-specific language for SVG paths.\n\nThe svg coordinate system has its origin in the upper-left corner with the positive x-axis pointing to the right and\nthe positive y-axis pointing down. A much more in-depth explanation of the svg coordinate system and how to manipulate it\ncan be found [here](https://sarasoueidan.com/blog/svg-coordinate-systems/).\n\nThe path syntax has absolute and relative instructions.\n* **Absolute instructions have a `*To` suffix** and move to absolute coordinates, so\n`lineTo (20, 20)` draws a line from the current position to the location `(20, 20)`.\n* **Relative instructions have a `*By` suffix** and move the current position, so `lineBy (20, 20)` draws a line from the current position `(cy, cy)` to\nthe location `(cx + 20, cy + 20)`.\n\n\nFor the curious, here are some resources to learn more about\n [`<path>` elements](https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths)\n and the [`d` attribute syntax](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d).\n\n\n#Path\n@docs Path, Subpath, subpath, emptySubpath, Instruction, Point\n\n#Converting\n@docs pathToString, pathToStringWithPrecision, pathToAttribute\n\n#Starting a subpath\n@docs StartingPoint, startAt, moveBy\n\n#Closing a subpath\n@docs CloseOption, closed, open\n\n#Line\n@docs lineTo, lineBy, lineToMany, lineByMany\n@docs verticalTo, verticalBy, horizontalTo, horizontalBy\n\n#Arc\nArcs are segments of ellipses. The arc command describes an ellipse and what segment of that ellipse to draw.\n\nThe ellipse is described by the first, second and final argument.\nThe first argument is an (rx, ry) pair - the horizontal and vertical radii of the ellipse. The second argument `xAxisRotate` rotates\nthe ellipse around its center by a number of degrees. The final argument is the center of the ellips.\n\nThe remaining argument is a pair of flags that select the part of the ellipse to draw.\nFor an interactive visual demo, see [http://codepen.io/lingtalfi/pen/yaLWJG](http://codepen.io/lingtalfi/pen/yaLWJG).\n\n\n@docs arcTo, arcBy\n##arc size\n@docs ArcFlag, largestArc, smallestArc\n##direction\n@docs Direction, clockwise, antiClockwise\n\n#Close\n@docs toStart\n\n#Quadratic Curve\nQuadratic curves are defined by a control point and a goal point.\nAn interactive demo is available [here](http://blogs.sitepointstatic.com/examples/tech/svg-curves/quadratic-curve.html).\n@docs quadraticTo, quadraticBy, quadraticToMany, quadraticByMany\n\n#Cubic Curve\nCubic curves are defined by two control points and a goal point.\n@docs cubicTo, cubicBy, cubicToMany, cubicByMany\n\n#Curve Continuations\nSpecial syntax for writing longer curves. These functions take one fewer control point than the\ncomplete constructors for quadratic and cubic. The missing control point is\ninferred from the current control point.\n\n**note: ** adding continuations after non-curve instructions is not illegal in svg, but this library makes it impossible.\nA continuation after a non-curve instruction should be replaced by `lineTo/lineBy`.\n@docs CurveContinuation\n@docs quadraticContinueTo, quadraticContinueBy, cubicContinueTo, cubicContinueBy\n",
+    "aliases": [
+      {
+        "name": "ArcFlag",
+        "comment": " What arc to pick.\n",
+        "args": [],
+        "type": "Svg.Path.Instruction.ArcFlag"
+      },
+      {
+        "name": "CloseOption",
+        "comment": " Close the subpath or not.\n",
+        "args": [],
+        "type": "Svg.Path.Subpath.CloseOption"
+      },
+      {
+        "name": "CurveContinuation",
+        "comment": " Extension of a curve by one point\n",
+        "args": [],
+        "type": "Svg.Path.Instruction.CurveContinuation Svg.Path.Point"
+      },
+      {
+        "name": "Direction",
+        "comment": " What direction to pick. Also called \"sweep flag\".\n",
+        "args": [],
+        "type": "Svg.Path.Instruction.Direction"
+      },
+      {
+        "name": "Instruction",
+        "comment": " A single SVG instruction\n",
+        "args": [],
+        "type": "Svg.Path.Instruction.Instruction"
+      },
+      {
+        "name": "Path",
+        "comment": " A path is a list of subpaths.\n",
+        "args": [],
+        "type": "List Svg.Path.Subpath"
+      },
+      {
+        "name": "Point",
+        "comment": " A 2-tuple of Floats. Used to store a `(x, y)` absolute or `(dx, dy)` relative coordinate.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "StartingPoint",
+        "comment": " Starting point of a subpath.\n",
+        "args": [],
+        "type": "Svg.Path.Subpath.StartingPoint"
+      },
+      {
+        "name": "Subpath",
+        "comment": " A subpath is a list of svg instructions with a starting point and a closing option.\n",
+        "args": [],
+        "type": "Svg.Path.Subpath.Subpath"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "antiClockwise",
+        "comment": " Move from A to B in the anti-clockwise direction.\n\n<svg width=\"100%\" height=\"200px\" id=\"svgcontext\">\n\n    <path id=\"arc2\" d=\"M100 100 A 47 66 49 1 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc3\" d=\"M100 100 A 47 66 49 1 0 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc4\" d=\"M100 100 A 47 66 49 0 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n\n    <path id=\"arc\" d=\"M100 100 A 47 66 49 0 0 200 100\" fill=\"none\" stroke=\"red\" stroke-width=\"4\"></path>\n\n    <line id=\"line0\" x1=\"0\" y1=\"100\" x2=\"100\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line\" x1=\"100\" y1=\"100\" x2=\"200\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line2\" x1=\"200\" y1=\"100\" x2=\"1027\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n\n    <circle id=\"circle1\" cx=\"100\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n    <circle id=\"circle2\" cx=\"200\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n\n</svg>\n",
+        "type": "Svg.Path.Direction"
+      },
+      {
+        "name": "arcBy",
+        "comment": " Relative version of `arcTo`.\n",
+        "type": "Svg.Path.Point -> Float -> ( Svg.Path.ArcFlag, Svg.Path.Direction ) -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "arcTo",
+        "comment": "\n    [arcTo (50, 70) 0 (largestArc, clockwise) (200, 100)]\n        |> subpath (startAt ( 100, 100 )) open\n\nProduces `M100,100 A50,70 0 1,1 200,100` which displays as\n<svg width=\"100%\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M100,100 A50,70 0 1,1 200,100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></path>\n    </g>\n</svg>\n\n",
+        "type": "Svg.Path.Point -> Float -> ( Svg.Path.ArcFlag, Svg.Path.Direction ) -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "clockwise",
+        "comment": " Move from A to B in the clockwise direction\n<svg width=\"100%\" height=\"200px\" id=\"svgcontext\">\n\n    <path id=\"arc2\" d=\"M100 100 A 47 66 49 1 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc3\" d=\"M100 100 A 47 66 49 1 0 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc4\" d=\"M100 100 A 47 66 49 0 0 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n\n    <path id=\"arc\" d=\"M100 100 A 47 66 49 0 1 200 100\" fill=\"none\" stroke=\"red\" stroke-width=\"4\"></path>\n\n    <line id=\"line0\" x1=\"0\" y1=\"100\" x2=\"100\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line\" x1=\"100\" y1=\"100\" x2=\"200\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line2\" x1=\"200\" y1=\"100\" x2=\"1027\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n\n    <circle id=\"circle1\" cx=\"100\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n    <circle id=\"circle2\" cx=\"200\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n\n</svg>\n",
+        "type": "Svg.Path.Direction"
+      },
+      {
+        "name": "closed",
+        "comment": " Create a closed subpath. After the final\ninstruction, a line will be drawn from the current\npoint to the starting point of the subpath.\n\n    subpath (startAt ( 0, 0 )) closed <|\n        [ lineTo ( 100, 0 )\n        , lineTo ( 150, 100 )\n        , lineTo ( 50, 100 )\n        ]\n\nyields\n\n<svg width=\"100%\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M0,0 L100,0 L150,100 L50,100 Z\" fill=\"red\" stroke=\"black\" stroke-width=\"5\"></path>\n    </g>\n</svg>\n",
+        "type": "Svg.Path.CloseOption"
+      },
+      {
+        "name": "cubicBy",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "cubicByMany",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Point -> List Svg.Path.CurveContinuation -> Svg.Path.Instruction"
+      },
+      {
+        "name": "cubicContinueBy",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.CurveContinuation"
+      },
+      {
+        "name": "cubicContinueTo",
+        "comment": " Extend a curve by a cubic point\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.CurveContinuation"
+      },
+      {
+        "name": "cubicTo",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "cubicToMany",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Point -> List Svg.Path.CurveContinuation -> Svg.Path.Instruction"
+      },
+      {
+        "name": "emptySubpath",
+        "comment": " An empty subpath\n",
+        "type": "Svg.Path.Subpath"
+      },
+      {
+        "name": "horizontalBy",
+        "comment": " Draw a straight horizontal line from the current cursor position of the given length.\n",
+        "type": "Float -> Svg.Path.Instruction"
+      },
+      {
+        "name": "horizontalTo",
+        "comment": " Draw a straight line from the current cursor position to the given x coordinate.\n",
+        "type": "Float -> Svg.Path.Instruction"
+      },
+      {
+        "name": "largestArc",
+        "comment": " Pick the arc with the greatest length.\n<svg width=\"100%\" height=\"200px\" id=\"svgcontext\">\n\n    <path id=\"arc2\" d=\"M100 100 A 47 66 49 1 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc3\" d=\"M100 100 A 47 66 49 0 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc4\" d=\"M100 100 A 47 66 49 0 0 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n\n    <path id=\"arc\" d=\"M100 100 A 47 66 49 1 0 200 100\" fill=\"none\" stroke=\"red\" stroke-width=\"4\"></path>\n\n    <line id=\"line0\" x1=\"0\" y1=\"100\" x2=\"100\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line\" x1=\"100\" y1=\"100\" x2=\"200\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line2\" x1=\"200\" y1=\"100\" x2=\"1920\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n\n    <circle id=\"circle1\" cx=\"100\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n    <circle id=\"circle2\" cx=\"200\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n\n</svg>\n",
+        "type": "Svg.Path.ArcFlag"
+      },
+      {
+        "name": "lineBy",
+        "comment": " Draw a line from the current cursor position to a position relative\nto the current position.\n\nThe code below draws a cube using relative coordinates\n\n    cubeRelative =\n        subpath (startAt (0, 0)) open <|\n            [ lineBy ( 20, 0 )\n            , lineBy ( 0, 20 )\n            , lineBy ( -20, 0 )\n            , lineBy ( 0, -20 )\n            ]\n",
+        "type": "Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "lineByMany",
+        "comment": " Relative version of `lineToMany`.\n",
+        "type": "List Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "lineTo",
+        "comment": " Draw a line from the current cursor position to a point in 2D space.\n\nThe code below draws a cube using absolute coordinates\n\n    cubeAbsolute =\n        subpath (startAt (0, 0)) open <|\n            [ lineTo ( 40, 20 )\n            , lineTo ( 40, 40 )\n            , lineTo ( 20, 40 )\n            , lineTo ( 20, 20 )\n            ]\n",
+        "type": "Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "lineToMany",
+        "comment": " Join many `lineTo`s into one instruction.\n\n    [ lineTo (20, 20), lineTo (40, 40)  ]\n    [ lineToMany [ (20, 20), (40, 40) ] ]\n    -- will respectively produce\n    \"L20,20 L40,40\"\n    \"L20,20  40,40\"\n\nUsing `lineToMany` is convenient, more efficient, and produces\nshorter SVG.\n",
+        "type": "List Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "moveBy",
+        "comment": " Start a subpath at the location given by\nmoving the current location by `(dx, dy)`.\n\nwhen the current cursor position is `(10, 10)`, the subpath\n\n    subpath (moveBy (5, 10)) open [ ... ]\n\nwill start at the position `(15, 20)`.\n",
+        "type": "Svg.Path.Point -> Svg.Path.StartingPoint"
+      },
+      {
+        "name": "open",
+        "comment": " Create an open path.\n\n    subpath (startAt ( 0, 0 )) open <|\n        [ lineTo ( 100, 0 )\n        , lineTo ( 150, 100 )\n        , lineTo ( 50, 100 )\n        ]\n\nyields\n\n<svg width=\"100%\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M0,0 L100,0 L150,100 L50,100\" fill=\"red\" stroke=\"black\" stroke-width=\"5\"></path>\n    </g>\n</svg>\n",
+        "type": "Svg.Path.CloseOption"
+      },
+      {
+        "name": "pathToAttribute",
+        "comment": " Convert a path into an svg attribute. Use it like\n\n    Svg.path\n        [ pathToAttribute myPath\n        , stroke \"black\"\n        , fill \"none\"\n        ]\n        []\n",
+        "type": "Svg.Path.Path -> Svg.Attribute msg"
+      },
+      {
+        "name": "pathToString",
+        "comment": " Convert a path into a string. Ready to use as argument to `Svg.Attributes.d`.\n\n    Svg.path\n        [ d (pathToString myPath)\n        , stroke \"black\"\n        , fill \"none\"\n        ]\n        []\n",
+        "type": "Svg.Path.Path -> String"
+      },
+      {
+        "name": "pathToStringWithPrecision",
+        "comment": " Convert a path into a string. Ready to use as argument to `Svg.Attributes.d`.\nThe first argument gives the maximum number of decimal places any number in the output will have.\n",
+        "type": "Int -> Svg.Path.Path -> String"
+      },
+      {
+        "name": "quadraticBy",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "quadraticByMany",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> List Svg.Path.CurveContinuation -> Svg.Path.Instruction"
+      },
+      {
+        "name": "quadraticContinueBy",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.CurveContinuation"
+      },
+      {
+        "name": "quadraticContinueTo",
+        "comment": " Extend a curve by a quadratic point\n\n\n    [ ( 180, 40 ) , ( 265, 40 ) ]\n        |> List.map quadraticContinueTo\n        |> quadraticToMany ( 52.5, 100 ) ( 95, 40 )\n        |> (\\x -> [ x ]) -- make list of instructions\n        |> subpath (startAt (10, 40)) open\n\n\nProduces `\"M10,40  Q52.5,100  95,40 T180,40 T265,40\"` and displays as\n\n<svg style=\"margin-left: 90px;\" width=\"275\" height=\"100px\"><path fill=\"red\" stroke=\"#000\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"\n    d=\"M10,40  Q52.5,100  95,40 T180,40 T265,40 \"></path></svg>\n",
+        "type": "Svg.Path.Point -> Svg.Path.CurveContinuation"
+      },
+      {
+        "name": "quadraticTo",
+        "comment": " Draws a curve between the current and the goal point. The position\nof the control point determines the path of the curve.\n\n    subpath (startAt (100, 0)) open\n        <| [ quadraticTo (0, 0) (0, 100) ]\nYields\n<svg width=\"120px\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M100,0 Q0,0 0,100\" fill=\"none\" stroke=\"black\" stroke-width=\"5\"></path>\n    </g>\n</svg>\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> Svg.Path.Instruction"
+      },
+      {
+        "name": "quadraticToMany",
+        "comment": "\n",
+        "type": "Svg.Path.Point -> Svg.Path.Point -> List Svg.Path.CurveContinuation -> Svg.Path.Instruction"
+      },
+      {
+        "name": "smallestArc",
+        "comment": " Pick the arc with the smallest length.\n\n<svg width=\"100%\" height=\"200px\" id=\"svgcontext\">\n\n    <path id=\"arc2\" d=\"M100 100 A 47 66 49 1 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc3\" d=\"M100 100 A 47 66 49 1 0 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n    <path id=\"arc4\" d=\"M100 100 A 47 66 49 0 1 200 100\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"></path>\n\n    <path id=\"arc\" d=\"M100 100 A 47 66 49 0 0 200 100\" fill=\"none\" stroke=\"red\" stroke-width=\"4\"></path>\n\n    <line id=\"line0\" x1=\"0\" y1=\"100\" x2=\"100\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line\" x1=\"100\" y1=\"100\" x2=\"200\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n    <line id=\"line2\" x1=\"200\" y1=\"100\" x2=\"1027\" y2=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"></line>\n\n    <circle id=\"circle1\" cx=\"100\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n    <circle id=\"circle2\" cx=\"200\" cy=\"100\" r=\"5\" fill=\"red\" stroke=\"red\" stroke-width=\"2\"></circle>\n\n\n</svg>\n",
+        "type": "Svg.Path.ArcFlag"
+      },
+      {
+        "name": "startAt",
+        "comment": " Start a subpath at the absolute coordinates `(x, y)`.\n",
+        "type": "Svg.Path.Point -> Svg.Path.StartingPoint"
+      },
+      {
+        "name": "subpath",
+        "comment": " Construct a subpath from a starting point (`startAt (x, y)` or `moveBy (dx, dy)`), a closing option (`closed` or `open`)\nand a list of instructions.\n",
+        "type": "Svg.Path.StartingPoint -> Svg.Path.CloseOption -> List Svg.Path.Instruction -> Svg.Path.Subpath"
+      },
+      {
+        "name": "toStart",
+        "comment": " Draws a line from the current position to the starting point of the subpath.\n\n    subpath (startAt (0, 0)) open <|\n        [ lineTo (100, 0)\n        , lineTo (150, 100)\n        , lineTo (50, 100)\n        ]\n\nYields\n\n<svg width=\"100%\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M0,0 L100,0 L150,100 L50,100\" fill=\"red\" stroke=\"black\" stroke-width=\"5\"></path>\n    </g>\n</svg>\n\n    subpath (startAt (0, 0)) open <|\n        [ lineTo (100, 0)\n        , lineTo (150, 100)\n        , toStart\n        , lineTo (50, 100)\n        ]\n\nYields\n\n<svg width=\"100%\" height=\"120px\" id=\"svgcontext\">\n    <g transform=\"translate(10, 10)\">\n        <path d=\"M0,0 L100,0 L150,100 Z L50,100\" fill=\"red\" stroke=\"black\" stroke-width=\"5\"></path>\n    </g>\n</svg>\n\nAfter drawing a line to the second point, toStart draws a line to the initial point of the subpath and\nthen continues drawing.\n",
+        "type": "Svg.Path.Instruction"
+      },
+      {
+        "name": "verticalBy",
+        "comment": " Draw a straight vertical line from the current cursor position of the given length.\n",
+        "type": "Float -> Svg.Path.Instruction"
+      },
+      {
+        "name": "verticalTo",
+        "comment": " Draw a straight line from the current cursor position to the given y coordinate.\n",
+        "type": "Float -> Svg.Path.Instruction"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

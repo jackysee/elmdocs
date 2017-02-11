@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Date.Format",
+    "comment": " Format strings for dates.\n\n@docs format, localFormat, formatISO8601\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "format",
+        "comment": " Use a format string to format a date. See the\n[README](https://github.com/mgold/elm-date-format/blob/master/README.md) for a\nlist of accepted formatters.\n",
+        "type": "String -> Date.Date -> String"
+      },
+      {
+        "name": "formatISO8601",
+        "comment": " Formats a UTC date acording to\n[ISO-8601](https://en.wikipedia.org/wiki/ISO_8601). This is commonly used to\nsend dates to a server. For example: `2016-01-06T09:22:00Z`.\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "localFormat",
+        "comment": " Use a localization record and a format string to format a date. See the\n[README](https://github.com/mgold/elm-date-format/blob/master/README.md) for a\nlist of accepted formatters.\n",
+        "type": "Date.Local.Local -> String -> Date.Date -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Local",
+    "comment": " A record type to store localized time formatting information.\n\n@docs international\n\n@docs Local, Months, WeekDays, TimeZones\n\n",
+    "aliases": [
+      {
+        "name": "Local",
+        "comment": " A collection of strings and formats for localizing formats.\n\nTime zones and default formats are not implemented,\nbut included to avoid possible version conflicts in the future.\n",
+        "args": [],
+        "type": "{ date : { months : Date.Local.Months , monthsAbbrev : Date.Local.Months , wdays : Date.Local.WeekDays , wdaysAbbrev : Date.Local.WeekDays , defaultFormat : Maybe.Maybe String } , time : { am : String , pm : String , defaultFormat : Maybe.Maybe String } , timeZones : Maybe.Maybe Date.Local.TimeZones , defaultFormat : Maybe.Maybe String }"
+      },
+      {
+        "name": "Months",
+        "comment": " A record of names for the months of the year.\n",
+        "args": [],
+        "type": "{ jan : String , feb : String , mar : String , apr : String , may : String , jun : String , jul : String , aug : String , sep : String , oct : String , nov : String , dec : String }"
+      },
+      {
+        "name": "TimeZones",
+        "comment": " Maps from %z type string (+hhmm or -hhmm) to timezone name or abbreviation.\n\nNot currently implemented.\n",
+        "args": [],
+        "type": "Dict.Dict String String"
+      },
+      {
+        "name": "WeekDays",
+        "comment": " A record of names for the days of the week.\n",
+        "args": [],
+        "type": "{ mon : String , tue : String , wed : String , thu : String , fri : String , sat : String , sun : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "international",
+        "comment": " A default set of localizations.\n",
+        "type": "Date.Local.Local"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

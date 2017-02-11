@@ -1,0 +1,168 @@
+[
+  {
+    "name": "DigitalOcean",
+    "comment": " This module is a client to part of the [HTTP API](https://developers.digitalocean.com/documentation/v2/) for [Digital Ocean](https://www.digitalocean.com/).\n\nIt includes just enough to move and copy domains between accounts,\na feature that's missing from Digital Ocean's web interface.\n\nThe functions all take a `token` as their first argument.\nYou can create tokens [here](https://cloud.digitalocean.com/settings/api/tokens) for the logged-in account.\n\nThe getters will work with a read-only token.\nAnything that makes a change requires a read/write token.\n\nMore to come, in my copious spare time, and from your generous pull requests.\n\n# Classes\n@docs AccountInfo, AccountInfoResult\n@docs Domain, DomainsResult, DomainResult, DeleteResult\n@docs NewDomain\n@docs DomainRecord, DomainRecordUpdate\n@docs DomainRecordsResult, DomainRecordResult\n@docs Droplet, Networks, Network, DropletsResult\n@docs AccountWriteableResult\n\n# Functions\n@docs getAccount\n@docs getDomains, getDomain, deleteDomain, createDomain\n@docs getDomainRecords, getDomainRecord, createDomainRecord\n@docs updateDomainRecord, deleteDomainRecord\n@docs getDroplets\n@docs testAccountWriteable\n\n",
+    "aliases": [
+      {
+        "name": "AccountInfo",
+        "comment": " Information returned by the [\"account\" query](https://developers.digitalocean.com/documentation/v2/#get-user-information).\n",
+        "args": [],
+        "type": "{ dropletLimit : Int , floatingIpLimit : Int , email : String , uuid : String , emailVerified : Bool , status : String , statusMessage : String }"
+      },
+      {
+        "name": "AccountInfoResult",
+        "comment": " `Result` of the `getAccount` function\n",
+        "args": [],
+        "type": "Result.Result Http.Error DigitalOcean.AccountInfo"
+      },
+      {
+        "name": "AccountWriteableResult",
+        "comment": " The `Result` of the `testAccountWriteable` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error Bool"
+      },
+      {
+        "name": "DeleteResult",
+        "comment": " `Result` of the `deleteDomain` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error String"
+      },
+      {
+        "name": "Domain",
+        "comment": " Information about a domain.\n\nReturned by `getDomains`, `getDomain`, and `createDomain`.\n",
+        "args": [],
+        "type": "{ name : String , ttl : Maybe.Maybe Int , zoneFile : Maybe.Maybe String }"
+      },
+      {
+        "name": "DomainRecord",
+        "comment": " Information about a single domain record.\n\nRetured by the `getDomainRecords`, `getDomainRecord`, and `createDomainRecord` functions.\n\nInput to the `createDomainRecord` function.\n",
+        "args": [],
+        "type": "{ id : Int , recordType : String , name : String , data : String , priority : Maybe.Maybe Int , srvPort : Maybe.Maybe Int , srvWeight : Maybe.Maybe Int }"
+      },
+      {
+        "name": "DomainRecordResult",
+        "comment": " `Result` of the `getDomainRecord` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error DigitalOcean.DomainRecord"
+      },
+      {
+        "name": "DomainRecordUpdate",
+        "comment": " Properties of a domain record to update.\n\nInput to the `updateDomainRecord` function.\n",
+        "args": [],
+        "type": "{ recordType : String , name : Maybe.Maybe String , data : Maybe.Maybe String , priority : Maybe.Maybe Int , srvPort : Maybe.Maybe Int , srvWeight : Maybe.Maybe Int }"
+      },
+      {
+        "name": "DomainRecordsResult",
+        "comment": " `Result` of the `getDomainRecords` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error (List DigitalOcean.DomainRecord)"
+      },
+      {
+        "name": "DomainResult",
+        "comment": " `Result` of the `getDomain` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error DigitalOcean.Domain"
+      },
+      {
+        "name": "DomainsResult",
+        "comment": " `Result` of the `getDomains` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error (List DigitalOcean.Domain)"
+      },
+      {
+        "name": "Droplet",
+        "comment": " The network-related information about a Droplet.\n\nReturned by the `getDroplets` function.\n",
+        "args": [],
+        "type": "{ id : Int, name : String, networks : DigitalOcean.Networks }"
+      },
+      {
+        "name": "DropletsResult",
+        "comment": " The `Result` of the `getDroplets` function.\n",
+        "args": [],
+        "type": "Result.Result Http.Error (List DigitalOcean.Droplet)"
+      },
+      {
+        "name": "Network",
+        "comment": " Information about a single network interface for a droplet.\n\nPart of the `Networks` record.\n",
+        "args": [],
+        "type": "{ ip : String, networkType : String }"
+      },
+      {
+        "name": "Networks",
+        "comment": " The lists of v4 (\"A\" record) and v6 (\"AAAA\" record) networks for a droplet.\n\nPart of the `Droplet` record.\n",
+        "args": [],
+        "type": "{ v4 : List DigitalOcean.Network, v6 : List DigitalOcean.Network }"
+      },
+      {
+        "name": "NewDomain",
+        "comment": " Input to the `newDomain` function.\n",
+        "args": [],
+        "type": "{ name : String, ip : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createDomain",
+        "comment": " Create a new DNS domain for a Digital Ocean account.\n\n    createDomain token domain resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainResult` record.\n\nThe new domain will have the standard Digital Ocean NS records and an \"A\" record for the `ip` in the passed-in `domain` record.\n\nInvokes the [Retreive an existing Domain API](https://developers.digitalocean.com/documentation/v2/#retrieve-an-existing-domain).\n",
+        "type": "String -> DigitalOcean.NewDomain -> (DigitalOcean.DomainResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "createDomainRecord",
+        "comment": " Create a new domain record for a Digital Ocean domain.\n\n    createDomainRecord token domain record resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainRecordResult` record.\n\nThe `id` field in the passed-in `domain` record is ignored.\n\nWill add a dot (\".\") to the end of the `data` field for \"CNAME\" and \"MX\" records, if their value is not \"@\", and the dot isn't there already.\n\nInvokes the [Create a new Domain Record API](https://developers.digitalocean.com/documentation/v2/#create-a-new-domain-record).\n",
+        "type": "String -> String -> DigitalOcean.DomainRecord -> (DigitalOcean.DomainRecordResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "deleteDomain",
+        "comment": " Removes a domain from a Digital Ocean account.\n\n    removeDomain token domain resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DeleteResult` record.\n\nInvokes the [Delete a Domain API](https://developers.digitalocean.com/documentation/v2/#delete-a-domain).\n",
+        "type": "String -> String -> (DigitalOcean.DeleteResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "deleteDomainRecord",
+        "comment": " Delete an existing domain record from a Digital Ocean domain.\n\n    deleteDomainRecord token domain id resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DeleteResult` record.\n\nInvokes the [Delete a Domain Record API](https://developers.digitalocean.com/documentation/v2/#delete-a-domain-record).\n",
+        "type": "String -> String -> Int -> (DigitalOcean.DeleteResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getAccount",
+        "comment": " Get information about a Digital Ocean account.\n\n    getAccount token resultToMsg\n    \nThe resulting command will call your resultToMsg function with an `AccountInfoResult` record.\n\nInvokes the [Get User Information API](https://developers.digitalocean.com/documentation/v2/#get-user-information).\n",
+        "type": "String -> (DigitalOcean.AccountInfoResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDomain",
+        "comment": " Get information for a single DNS domain in a Digital Ocean account.\n\n    getDomain token domain resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainResult` record.\n\nInvokes the [Retreive an existing Domain API](https://developers.digitalocean.com/documentation/v2/#retrieve-an-existing-domain).\n",
+        "type": "String -> String -> (DigitalOcean.DomainResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDomainRecord",
+        "comment": " Get a single domain record for a Digital Ocean domain.\n\n    getDomainRecord token domain id resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainRecordResult` record.\n\nYou have to know the record's `id`, which is returned by `getDomainRecords`.\n\nInvokes the [Retrieve an existing Domain Record API](https://developers.digitalocean.com/documentation/v2/#retrieve-an-existing-domain-record).\n",
+        "type": "String -> String -> Int -> (DigitalOcean.DomainRecordResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDomainRecords",
+        "comment": " Get a list of domain records for a Digital Ocean domain.\n\n    getDomainRecords token domain resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainRecordsResult` record.\n\nInvokes the [List all Domain Records API](https://developers.digitalocean.com/documentation/v2/#list-all-domain-records).\n",
+        "type": "String -> String -> (DigitalOcean.DomainRecordsResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDomains",
+        "comment": " Get a list of DNS domains for a Digital Ocean account.\n\n    getDomains token resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainsResult` record.\n\nInvokes the [List All Domains API](https://developers.digitalocean.com/documentation/v2/#list-all-domains).\n",
+        "type": "String -> (DigitalOcean.DomainsResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getDroplets",
+        "comment": " Returns information about all the droplets in a Digital Ocean account.\n\n    getDroplets token resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DropletsResult` record.\n\nInvokes the [List all Droplets API](https://developers.digitalocean.com/documentation/v2/#list-all-droplets).\n",
+        "type": "String -> (DigitalOcean.DropletsResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "testAccountWriteable",
+        "comment": " Tests whether the `token` for a Digital Ocean account gives write access.\n\n    testAccountWriteable token resultToMsg\n    \nThe resulting command will call your resultToMsg function with an `AccountWriteableResult` record.\n\nIt works by attempting to delete a sure-to-not-exist resource tag, and inspecting the result. If it gets a 403 (\"forbidden\"), then the account is not writeable. If it gets a 404 (\"not found\"), then it IS writeable.\n\nInvokes the [Delete a Tag API](https://developers.digitalocean.com/documentation/v2/#delete-a-tag).\n",
+        "type": "String -> (DigitalOcean.AccountWriteableResult -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "updateDomainRecord",
+        "comment": " Update an existing domain record for a Digital Ocean domain.\n\n    updateDomainRecord token domain id record resultToMsg\n    \nThe resulting command will call your resultToMsg function with a `DomainRecordResult` record.\n\nUpdates only the fields in the passed-in `record` whose values are not `Nothing`.\n\nWill add a dot (\".\") to the end of the `data` field for \"CNAME\" and \"MX\" records, if their value is not \"@\", and the dot isn't there already.\n\nInvokes the [Update an existing Domain Record API](https://developers.digitalocean.com/documentation/v2/#update-a-domain-record).\n",
+        "type": "String -> String -> Int -> DigitalOcean.DomainRecordUpdate -> (DigitalOcean.DomainRecordResult -> msg) -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

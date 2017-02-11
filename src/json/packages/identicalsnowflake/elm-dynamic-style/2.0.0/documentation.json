@@ -1,0 +1,65 @@
+[
+  {
+    "name": "DynamicStyle",
+    "comment": "\n# Library for simple, dynamic style effects\n@docs hover, hover_, pressure, pressure_, focus, focus_, cssStateEffect, CSSKey, CSSValue, JSEventAttribute\nThe goal of this library is make locally stateful, declarative CSS effects\n(e.g., :hover, :focus, etc.) as easy in Elm as they are with stylesheets.\nFor example, the following achieves the same effect as setting the\n:hover attribute in your stylesheet:\n    div\n      ( hover\n          [ (\"color\",\"blue\",\"lightblue\") ]\n      )\n      [ text \"so cool!\" ]\nYou may user the primed versions as shorthand to provide a base list of\nstyles, like this:\n    div\n      ( hover_\n          [ (\"font-size\",\"20px\")\n          , (\"font-face\",\"Droid Sans Mono\")\n          ]\n          [ (\"color\",\"blue\",\"lightblue\") ]\n      )\n      [ text \"wow\" ]\nCompletely painless!\n* Note: the effects in this library consume whatever JS hooks are needed\nto achieve the effect on that element (e.g., hover consumes onmouseover and\nonmouseout, but you are still free to use onclick). If for some reason you\ndo want to do both a CSS transition and have your application respond to\nan event, you can simply make a wrapper element and hook its events.\n",
+    "aliases": [
+      {
+        "name": "CSSKey",
+        "comment": "\nThe key for a CSS property.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "CSSValue",
+        "comment": "\nThe value of a CSS property.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "JSEventAttribute",
+        "comment": "\nThe name of a JavaScript event attribute.\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "cssStateEffect",
+        "comment": "\nConstruct your own stateful effects.\nProvide:\n- A list of events that deactivate your effect\n- One event that activates your effect\n- A list of styles (key, value) to apply constantly (the inactive event styles are added to these)\n- A list of styles (key, valueIfInactive, valueIfActive) that depend on the stateful effect\nA list of attributes will be generated to implement the effect, using inline js and css\n",
+        "type": "List DynamicStyle.JSEventAttribute -> DynamicStyle.JSEventAttribute -> List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue ) -> List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "focus",
+        "comment": "\nChange styles when the user focuses on element. For example,\n    pressure [(\"border-color\",\"black\",\"blue\")]\nwill render a black border\nnormally, but a blue border when the user focuses on the element.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "focus_",
+        "comment": "\nShorthand to add a list of static base styles.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue ) -> List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "hover",
+        "comment": "\nChange styles when the user hovers over an element. For example,\n    hover [(\"color\",\"black\",\"blue\")]\nwill render black text normally, but\nblue text when the user hovers over the element.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "hover_",
+        "comment": "\nShorthand to add a list of static base styles.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue ) -> List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "pressure",
+        "comment": "\nChange styles when the user pushes on element. For example,\n    pressure [(\"color\",\"black\",\"blue\")]\nwill render black text normally, but\nblue text when the user pushes the mouse down on the element.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "pressure_",
+        "comment": "\nShorthand to add a list of static base styles.\n",
+        "type": "List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue ) -> List ( DynamicStyle.CSSKey, DynamicStyle.CSSValue, DynamicStyle.CSSValue ) -> List (Html.Attribute msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

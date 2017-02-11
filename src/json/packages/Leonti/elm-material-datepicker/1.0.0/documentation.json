@@ -1,0 +1,45 @@
+[
+  {
+    "name": "DatePicker",
+    "comment": "\n\n@docs init, Model, Msg, update, view, selectedDate\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " ",
+        "args": [],
+        "type": "{ date : Date.Date, selectingYear : Bool, mainColor : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Get initial time picker model by passing date and a main color (in hex format)\n",
+        "type": "Date.Date -> String -> DatePicker.Model"
+      },
+      {
+        "name": "selectedDate",
+        "comment": " Returns currently selected date\n",
+        "type": "DatePicker.Model -> Date.Date"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "DatePicker.Msg -> DatePicker.Model -> DatePicker.Model"
+      },
+      {
+        "name": "view",
+        "comment": " ",
+        "type": "DatePicker.Model -> Html.Html DatePicker.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

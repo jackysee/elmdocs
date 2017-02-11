@@ -1,0 +1,464 @@
+[
+  {
+    "name": "ECharts",
+    "comment": " This is a [ECharts](http://echarts.baidu.com/) chart option types\ncollection and a helper to use\n[ECharts WebComponent](https://github.com/kkpoon/echarts-webcomponent).\n\n## Why Web Component?\n\nPlease watch [this](https://www.youtube.com/watch?v=ar3TakwE8o0&t=1s)\nvideo about Elm and Web Components by Richard Feldman\n\n# Definitions\n\n@docs ChartType\n\n# Helpers\n\n@docs toJsonString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ChartType",
+        "comment": " the chart type\n",
+        "args": [],
+        "cases": [
+          [
+            "PieChart",
+            [
+              "ECharts.PieChart.PieChartOption"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "toJsonString",
+        "comment": " convert the chart option to a string of json, which could apply to the\n[echarts-webcomponent](https://github.com/kkpoon/echarts-webcomponent) `option`\nattribute\n",
+        "type": "ECharts.ChartType -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ECharts.PieChart",
+    "comment": " Pie Chart Options\n\nThis module helps to create Pie Chart Option.\n\nECharts official [examples](https://ecomfe.github.io/echarts-examples/public/index.html#chart-type-pie)\n\n# Definitions\n\n@docs PieChartOption\n\n@docs defaultPieChartOption\n\n@docs PieSeriesOption\n\n@docs defaultPieSeriesOption\n\n# Encoders\n\n@docs encodePieChartOption\n\n",
+    "aliases": [
+      {
+        "name": "PieChartOption",
+        "comment": " describe the chart option of pie chart\n",
+        "args": [],
+        "type": "{ title : Maybe.Maybe ECharts.Style.TitleOption , tooltip : Maybe.Maybe ECharts.Style.TooltipOption , legend : Maybe.Maybe ECharts.Style.LegendOption , series : Maybe.Maybe (List ECharts.PieChart.PieSeriesOption) }"
+      },
+      {
+        "name": "PieSeriesOption",
+        "comment": " describe the [data series](https://ecomfe.github.io/echarts-doc/public/en/option.html#series-pie) of pie chart\n",
+        "args": [],
+        "type": "{ name : Maybe.Maybe String , legendHoverLink : Maybe.Maybe Bool , hoverAnimation : Maybe.Maybe Bool , selectedMode : Maybe.Maybe ECharts.Style.SelectedMode , selectedOffset : Maybe.Maybe Int , clockwise : Maybe.Maybe Bool , startAngle : Maybe.Maybe Float , minAngle : Maybe.Maybe Float , roseType : Maybe.Maybe Bool , avoidLabelOverlap : Maybe.Maybe Bool , stillShowZeroSum : Maybe.Maybe Bool , radius : Maybe.Maybe ( String, String ) , center : Maybe.Maybe ( String, String ) , itemStyle : Maybe.Maybe { emphasis : Maybe.Maybe { shadowBlur : Maybe.Maybe Int , shadowOffsetX : Maybe.Maybe Int , shadowColor : Maybe.Maybe String } } , data : Maybe.Maybe (List { value : Float, name : String }) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultPieChartOption",
+        "comment": " create a pie chart option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.PieChart.PieChartOption"
+      },
+      {
+        "name": "defaultPieSeriesOption",
+        "comment": " create a pie chart series option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.PieChart.PieSeriesOption"
+      },
+      {
+        "name": "encodePieChartOption",
+        "comment": " encode the pie chart option to Json.Encode.Value\n",
+        "type": "ECharts.PieChart.PieChartOption -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ECharts.Style",
+    "comment": " Chart layout and style related options\n\n# Chart Title Options\n\n@docs TitleOption\n\n@docs defaultTitleOption\n\n@docs encodeTitleOption\n\n# Tooltip Options\n\n@docs TooltipOption\n\n@docs defaultTooltipOption\n\n@docs encodeTooltipOption\n\n@docs TooltipAxisPointerOption\n\n@docs defaultTooltipAxisPointerOption\n\n## Tooltip Attribute Values\n\n@docs TooltipTrigger\n\n@docs TooltipTriggerOn\n\n@docs TooltipPosition\n\n@docs TooltipAxisPointerType\n\n# Legend Options\n\n@docs LegendOption\n\n@docs defaultLegendOption\n\n@docs encodeLegendOption\n\n## Legend Attribute Values\n\n@docs LegendAlignment\n\n# Style Options\n\n@docs LineStyleOption\n\n@docs defaultLineStyleOption\n\n@docs encodeLineStyleOption\n\n@docs CrossStyleOption\n\n@docs defaultCrossStyleOption\n\n@docs encodeCrossStyleOption\n\n@docs ShadowStyleOption\n\n@docs defaultShadowStyleOption\n\n@docs encodeShadowStyleOption\n\n@docs TextStyleOption\n\n@docs defaultTextStyleOption\n\n@docs encodeTextStyleOption\n\n## Style Attribute Values\n\n@docs Orientation\n\n@docs encodeOrientationValue\n\n@docs HorizontalAlignment\n\n@docs encodeHorizontalAlignmentValue\n\n@docs VerticalAlignment\n\n@docs encodeVerticalAlignmentValue\n\n@docs Spacing\n\n@docs encodeSpacingValue\n\n@docs SelectedMode\n\n@docs encodeSelectedModeValue\n\n@docs AnimationEasing\n\n@docs encodeAnimationEasingValue\n\n@docs LineStyleType\n\n@docs encodeLineStyleTypeValue\n\n",
+    "aliases": [
+      {
+        "name": "CrossStyleOption",
+        "comment": " describe the cross style option\n",
+        "args": [],
+        "type": "{ color : Maybe.Maybe String , width : Maybe.Maybe Int , type_ : Maybe.Maybe ECharts.Style.LineStyleType , shadowBlur : Maybe.Maybe Int , shadowColor : Maybe.Maybe String , shadowOffsetX : Maybe.Maybe Int , shadowOffsetY : Maybe.Maybe Int , opacity : Maybe.Maybe Float , textStyle : Maybe.Maybe ECharts.Style.TextStyleOption }"
+      },
+      {
+        "name": "LegendOption",
+        "comment": " describe the legend\n[option](https://ecomfe.github.io/echarts-doc/public/en/option.html#legend)\n",
+        "args": [],
+        "type": "{ show : Maybe.Maybe Bool , zlevel : Maybe.Maybe Int , z : Maybe.Maybe Int , left : Maybe.Maybe String , top : Maybe.Maybe String , right : Maybe.Maybe String , bottom : Maybe.Maybe String , width : Maybe.Maybe String , height : Maybe.Maybe String , orient : Maybe.Maybe ECharts.Style.Orientation , align : Maybe.Maybe ECharts.Style.LegendAlignment , padding : Maybe.Maybe ECharts.Style.Spacing , itemGap : Maybe.Maybe Int , itemWidth : Maybe.Maybe Int , itemHeight : Maybe.Maybe Int , formatter : Maybe.Maybe String , selectedMode : Maybe.Maybe ECharts.Style.SelectedMode , inactiveColor : Maybe.Maybe String , selected : Maybe.Maybe (List ( String, Bool )) , textStyle : Maybe.Maybe ECharts.Style.TextStyleOption , tooltip : Maybe.Maybe ECharts.Style.TooltipOption , data : Maybe.Maybe (List { name : String , icon : String , textStyle : ECharts.Style.TextStyleOption }) , backgroundColor : Maybe.Maybe String , borderColor : Maybe.Maybe String , borderWidth : Maybe.Maybe Int , shadowBlur : Maybe.Maybe Int , shadowColor : Maybe.Maybe String , shadowOffsetX : Maybe.Maybe Int , shadowOffsetY : Maybe.Maybe Int }"
+      },
+      {
+        "name": "LineStyleOption",
+        "comment": " describe the line style option\n",
+        "args": [],
+        "type": "{ color : Maybe.Maybe String , width : Maybe.Maybe Int , type_ : Maybe.Maybe ECharts.Style.LineStyleType , shadowBlur : Maybe.Maybe Int , shadowColor : Maybe.Maybe String , shadowOffsetX : Maybe.Maybe Int , shadowOffsetY : Maybe.Maybe Int , opacity : Maybe.Maybe Float }"
+      },
+      {
+        "name": "ShadowStyleOption",
+        "comment": " describe the shadow style option\n",
+        "args": [],
+        "type": "{ color : Maybe.Maybe String , shadowBlur : Maybe.Maybe Int , shadowColor : Maybe.Maybe String , shadowOffsetX : Maybe.Maybe Int , shadowOffsetY : Maybe.Maybe Int , opacity : Maybe.Maybe Float }"
+      },
+      {
+        "name": "TextStyleOption",
+        "comment": " describe the text style option\n",
+        "args": [],
+        "type": "{ color : Maybe.Maybe String , fontStyle : Maybe.Maybe String , fontWeight : Maybe.Maybe String , fontFamily : Maybe.Maybe String , fontSize : Maybe.Maybe Float }"
+      },
+      {
+        "name": "TitleOption",
+        "comment": " describe the chart title\n[option](https://ecomfe.github.io/echarts-doc/public/en/option.html#title)\n",
+        "args": [],
+        "type": "{ show : Maybe.Maybe Bool , text : Maybe.Maybe String , link : Maybe.Maybe String , target : Maybe.Maybe String , textStyle : Maybe.Maybe ECharts.Style.TextStyleOption , textAlign : Maybe.Maybe ECharts.Style.HorizontalAlignment , textBaseline : Maybe.Maybe ECharts.Style.VerticalAlignment , subtext : Maybe.Maybe String , sublink : Maybe.Maybe String , subtarget : Maybe.Maybe String , subTextStyle : Maybe.Maybe ECharts.Style.TextStyleOption , padding : Maybe.Maybe ECharts.Style.Spacing , itemGap : Maybe.Maybe Float , zlevel : Maybe.Maybe Int , z : Maybe.Maybe Int , left : Maybe.Maybe String , top : Maybe.Maybe String , right : Maybe.Maybe String , bottom : Maybe.Maybe String , backgroundColor : Maybe.Maybe String , borderColor : Maybe.Maybe String , borderWidth : Maybe.Maybe String , shadowBlur : Maybe.Maybe Int , shadowColor : Maybe.Maybe String , shadowOffsetX : Maybe.Maybe Int , shadowOffsetY : Maybe.Maybe Int }"
+      },
+      {
+        "name": "TooltipAxisPointerOption",
+        "comment": " describe the tooltip axis pointer\n[option](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip.axisPointer)\n",
+        "args": [],
+        "type": "{ type_ : Maybe.Maybe ECharts.Style.TooltipAxisPointerType , axis : Maybe.Maybe String , animation : Maybe.Maybe Bool , animationThreshold : Maybe.Maybe Int , animationDuration : Maybe.Maybe Int , animationEasing : Maybe.Maybe ECharts.Style.AnimationEasing , animationDelay : Maybe.Maybe Int , animationDurationUpdate : Maybe.Maybe Int , animationEasingUpdate : Maybe.Maybe ECharts.Style.AnimationEasing , animationDelayUpdate : Maybe.Maybe Int , lineStyle : Maybe.Maybe ECharts.Style.LineStyleOption , crossStyle : Maybe.Maybe ECharts.Style.CrossStyleOption , shadowStyle : Maybe.Maybe ECharts.Style.ShadowStyleOption }"
+      },
+      {
+        "name": "TooltipOption",
+        "comment": " describe the tooltip\n[option](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip)\n",
+        "args": [],
+        "type": "{ show : Maybe.Maybe Bool , showContent : Maybe.Maybe Bool , trigger : Maybe.Maybe ECharts.Style.TooltipTrigger , triggerOn : Maybe.Maybe ECharts.Style.TooltipTriggerOn , alwaysShowContent : Maybe.Maybe Bool , showDelay : Maybe.Maybe Int , hideDelay : Maybe.Maybe Int , enterable : Maybe.Maybe Bool , position : Maybe.Maybe ECharts.Style.TooltipPosition , confine : Maybe.Maybe Bool , transitionDuration : Maybe.Maybe Float , formatter : Maybe.Maybe String , backgroundColor : Maybe.Maybe String , borderColor : Maybe.Maybe String , borderWidth : Maybe.Maybe String , padding : Maybe.Maybe ECharts.Style.Spacing , textStyle : Maybe.Maybe ECharts.Style.TextStyleOption , extraCssText : Maybe.Maybe String , axisPointer : Maybe.Maybe ECharts.Style.TooltipAxisPointerOption , data : Maybe.Maybe (List { date : String, value : Float, name : String }) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AnimationEasing",
+        "comment": " describe the animation easing\n",
+        "args": [],
+        "cases": [
+          [
+            "CubicOutAnimationEasing",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "HorizontalAlignment",
+        "comment": " describe horizontal alignment: left, center, right\n",
+        "args": [],
+        "cases": [
+          [
+            "Left",
+            []
+          ],
+          [
+            "Center",
+            []
+          ],
+          [
+            "Right",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "LegendAlignment",
+        "comment": " legend alignment\n[value](https://ecomfe.github.io/echarts-doc/public/en/option.html#legend.align)\n",
+        "args": [],
+        "cases": [
+          [
+            "AutoLegendAlignment",
+            []
+          ],
+          [
+            "LeftLegendAlignment",
+            []
+          ],
+          [
+            "RightLegendAlignment",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "LineStyleType",
+        "comment": " describe the line style type\n",
+        "args": [],
+        "cases": [
+          [
+            "SolidLine",
+            []
+          ],
+          [
+            "DashedLine",
+            []
+          ],
+          [
+            "DottedLine",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Orientation",
+        "comment": " describe the orientation attribute\n",
+        "args": [],
+        "cases": [
+          [
+            "Horizontal",
+            []
+          ],
+          [
+            "Vertical",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "SelectedMode",
+        "comment": " describe the item selected mode\n",
+        "args": [],
+        "cases": [
+          [
+            "TrueSelectedMode",
+            []
+          ],
+          [
+            "FalseSelectedMode",
+            []
+          ],
+          [
+            "SingleSelectedMode",
+            []
+          ],
+          [
+            "MultipleSelectedMode",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Spacing",
+        "comment": " describe spacing setting\n",
+        "args": [],
+        "cases": [
+          [
+            "Spacing",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "VHSpacing",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "FineSpacing",
+            [
+              "Float",
+              "Float",
+              "Float",
+              "Float"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "TooltipAxisPointerType",
+        "comment": " tooltip axis pointer type\n[value](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip.axisPointer.type)\n",
+        "args": [],
+        "cases": [
+          [
+            "LineTooltipAxisPointer",
+            []
+          ],
+          [
+            "CrossTooltipAxisPointer",
+            []
+          ],
+          [
+            "ShadowTooltipAxisPointer",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TooltipPosition",
+        "comment": " tooltip position\n[value](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip.position)\n",
+        "args": [],
+        "cases": [
+          [
+            "AbsoluteTooltipPosiotion",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "RelativeTooltipPosition",
+            [
+              "String",
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "TooltipTrigger",
+        "comment": " tooltip trigger\n[value](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip.trigger)\n",
+        "args": [],
+        "cases": [
+          [
+            "TriggerByItem",
+            []
+          ],
+          [
+            "TriggerByAxis",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "TooltipTriggerOn",
+        "comment": " tooltip triggerOn\n[value](https://ecomfe.github.io/echarts-doc/public/en/option.html#tooltip.triggerOn)\n",
+        "args": [],
+        "cases": [
+          [
+            "MouseMoveTriggerTooltip",
+            []
+          ],
+          [
+            "ClickTriggerTooltip",
+            []
+          ],
+          [
+            "NoneTriggerTooltip",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "VerticalAlignment",
+        "comment": " describe vertical alignment: top, middle, bottom\n",
+        "args": [],
+        "cases": [
+          [
+            "Top",
+            []
+          ],
+          [
+            "Middle",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultCrossStyleOption",
+        "comment": " create a cross style option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.CrossStyleOption"
+      },
+      {
+        "name": "defaultLegendOption",
+        "comment": " create a legend option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.LegendOption"
+      },
+      {
+        "name": "defaultLineStyleOption",
+        "comment": " create a line style option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.LineStyleOption"
+      },
+      {
+        "name": "defaultShadowStyleOption",
+        "comment": " create a shadow style option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.ShadowStyleOption"
+      },
+      {
+        "name": "defaultTextStyleOption",
+        "comment": " create a text style option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.TextStyleOption"
+      },
+      {
+        "name": "defaultTitleOption",
+        "comment": " create a title option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.TitleOption"
+      },
+      {
+        "name": "defaultTooltipAxisPointerOption",
+        "comment": " create a tooltip axis pointer option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.TooltipAxisPointerOption"
+      },
+      {
+        "name": "defaultTooltipOption",
+        "comment": " create a tooltip option of for default value\n\nThis function creates an All-Nothing TitleOption.\n[ECharts](https://ecomfe.github.io/echarts-doc/public/en/option.html)\napplies the default value when the option attribute is not specified.\n",
+        "type": "ECharts.Style.TooltipOption"
+      },
+      {
+        "name": "encodeAnimationEasingValue",
+        "comment": " encode the animation easing value to Json.Encode.Value\n",
+        "type": "ECharts.Style.AnimationEasing -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeCrossStyleOption",
+        "comment": " encode the cross style option to Json.Encode.Value\n",
+        "type": "ECharts.Style.CrossStyleOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeHorizontalAlignmentValue",
+        "comment": " encode the horizontal alignment value to Json.Encode.Value\n",
+        "type": "ECharts.Style.HorizontalAlignment -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeLegendOption",
+        "comment": " encode the legend option to Json.Encode.Value\n",
+        "type": "ECharts.Style.LegendOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeLineStyleOption",
+        "comment": " encode the line style option to Json.Encode.Value\n",
+        "type": "ECharts.Style.LineStyleOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeLineStyleTypeValue",
+        "comment": " encode the line style type value to Json.Encode.Value\n",
+        "type": "ECharts.Style.LineStyleType -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeOrientationValue",
+        "comment": " encode the orientation value to Json.Encode.Value\n",
+        "type": "ECharts.Style.Orientation -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeSelectedModeValue",
+        "comment": " encode the selected mode value to Json.Encode.Value\n",
+        "type": "ECharts.Style.SelectedMode -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeShadowStyleOption",
+        "comment": " encode the shadow option to Json.Encode.Value\n",
+        "type": "ECharts.Style.ShadowStyleOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeSpacingValue",
+        "comment": " encode the spacing value to Json.Encode.Value\n",
+        "type": "ECharts.Style.Spacing -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeTextStyleOption",
+        "comment": " encode the text style option to Json.Encode.Value\n",
+        "type": "ECharts.Style.TextStyleOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeTitleOption",
+        "comment": " encode the title option to Json.Encode.Value\n",
+        "type": "ECharts.Style.TitleOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeTooltipOption",
+        "comment": " encode the tooltip option to Json.Encode.Value\n",
+        "type": "ECharts.Style.TooltipOption -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeVerticalAlignmentValue",
+        "comment": " encode the vertical alignment value to Json.Encode.Value\n",
+        "type": "ECharts.Style.VerticalAlignment -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,596 @@
+[
+  {
+    "name": "TypedStyles",
+    "comment": "\n\n# Typed Styles for Elm\n\n@docs backgroundColor, backgroundColor_, border, borderBottomColor, borderBottomColor_, borderBottomLeftRadius, borderBottomLeftRadius_, borderBottomRightRadius, borderBottomRightRadius_, borderBottomWidth, borderBottomWidth_, borderColor, borderColor_, borderLeftColor, borderLeftColor_, borderLeftWidth, borderLeftWidth_, borderRadius, borderRadius_, borderRightColor, borderRightColor_, borderRightWidth, borderRightWidth_, borderStyle, borderStyleSerializer, borderTopColor, borderTopColor_, borderTopLeftRadius, borderTopLeftRadius_, borderTopRightRadius, borderTopRightRadius_, borderTopWidth, borderTopWidth_, borderWidth, borderWidth_, bottom, bottom_, ch, cm, color, color_, cssColor, dashed, dotted, double, em, ex, fontSize, fontSize_, groove, height, height_, inches, inset, left, left_, letterSpacing, letterSpacing_, lineHeight, lineHeight_, margin, marginBottom, marginBottom_, marginLeft, marginLeft_, marginRight, marginRight_, marginTop, marginTop_, margin_, maxHeight, maxHeight_, minHeight, minHeight_, mm, none, opacity, opacity_, outlineColor, outlineColor_, outset, padding, paddingBottom, paddingBottom_, paddingLeft, paddingLeft_, paddingRight, paddingRight_, paddingTop, paddingTop_, padding_, pica, prc, pt, px, rem, ridge, right, right_, serializeCssOptionalValue, serializeLength, solid, textCenter, textIndent, textIndent_, textJustify, textLeft, textRight, top, top_, vh, vmax, vw, width, width_, wordSpacing, wordSpacing_\n\nAdds typed styles on top of elm-html. Example usage:\n\n```haskell\nimport Html(..)\nimport Html.Attributes(..)\nimport TypedStyles(..)\n\nmain : Html\nmain = div [\n    style [\n        fontSize 30 px\n      , backgroundColor blue\n      , textCenter\n      , padding 20 px\n      , color white]\n      ]\n    [text \"this is an example\" ]\n\n```\n\nPrimed variants of most functions are provided for use with my style effects\nlibrary.\n\n* I will add more stuff as I have time; in particular I want to try to get\nanimation, transition, and transformation bindings.\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "backgroundColor",
+        "comment": " backgroundColor - shorthand for providing colors to background-color.\n Example: backgroundColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "backgroundColor_",
+        "comment": " backgroundColor_ - shorthand for providing colors to background-color for use with animation.\n Example: backgroundColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "border",
+        "comment": " border - shorthand syntax. Example: border 10 px solid white\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> TypedStyles.CssOptionalValue TypedStyles.BorderStyle -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomColor",
+        "comment": " borderBottomColor - shorthand for providing colors to border-bottom-color.\n Example: borderBottomColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomColor_",
+        "comment": " borderBottomColor_ - shorthand for providing colors to border-bottom-color for use with animation.\n Example: borderBottomColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomLeftRadius",
+        "comment": " borderBottomLeftRadius - shorthand for providing lengths to border-bottom-left-radius.\n Example: borderBottomLeftRadius 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomLeftRadius_",
+        "comment": " borderBottomLeftRadius_ - shorthand for providing lengths to border-bottom-left-radius for use with animation.\n Example: borderBottomLeftRadius_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomRightRadius",
+        "comment": " borderBottomRightRadius - shorthand for providing lengths to border-bottom-right-radius.\n Example: borderBottomRightRadius 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomRightRadius_",
+        "comment": " borderBottomRightRadius_ - shorthand for providing lengths to border-bottom-right-radius for use with animation.\n Example: borderBottomRightRadius_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomWidth",
+        "comment": " borderBottomWidth - shorthand for providing lengths to border-bottom-width.\n Example: borderBottomWidth 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderBottomWidth_",
+        "comment": " borderBottomWidth_ - shorthand for providing lengths to border-bottom-width for use with animation.\n Example: borderBottomWidth_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderColor",
+        "comment": " borderColor - shorthand for providing colors to border-color.\n Example: borderColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderColor_",
+        "comment": " borderColor_ - shorthand for providing colors to border-color for use with animation.\n Example: borderColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderLeftColor",
+        "comment": " borderLeftColor - shorthand for providing colors to border-left-color.\n Example: borderLeftColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderLeftColor_",
+        "comment": " borderLeftColor_ - shorthand for providing colors to border-left-color for use with animation.\n Example: borderLeftColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderLeftWidth",
+        "comment": " borderLeftWidth - shorthand for providing lengths to border-left-width.\n Example: borderLeftWidth 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderLeftWidth_",
+        "comment": " borderLeftWidth_ - shorthand for providing lengths to border-left-width for use with animation.\n Example: borderLeftWidth_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRadius",
+        "comment": " borderRadius - shorthand for providing lengths to border-radius.\n Example: borderRadius 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRadius_",
+        "comment": " borderRadius_ - shorthand for providing lengths to border-radius for use with animation.\n Example: borderRadius_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRightColor",
+        "comment": " borderRightColor - shorthand for providing colors to border-right-color.\n Example: borderRightColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRightColor_",
+        "comment": " borderRightColor_ - shorthand for providing colors to border-right-color for use with animation.\n Example: borderRightColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRightWidth",
+        "comment": " borderRightWidth - shorthand for providing lengths to border-right-width.\n Example: borderRightWidth 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderRightWidth_",
+        "comment": " borderRightWidth_ - shorthand for providing lengths to border-right-width for use with animation.\n Example: borderRightWidth_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderStyle",
+        "comment": " borderStyle - optional border style. Example: borderStyle solid\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderStyleSerializer",
+        "comment": " BorderStyleSerializer - serializer for BorderStyle\n",
+        "type": "TypedStyles.BorderStyle -> String"
+      },
+      {
+        "name": "borderTopColor",
+        "comment": " borderTopColor - shorthand for providing colors to border-top-color.\n Example: borderTopColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopColor_",
+        "comment": " borderTopColor_ - shorthand for providing colors to border-top-color for use with animation.\n Example: borderTopColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopLeftRadius",
+        "comment": " borderTopLeftRadius - shorthand for providing lengths to border-top-left-radius.\n Example: borderTopLeftRadius 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopLeftRadius_",
+        "comment": " borderTopLeftRadius_ - shorthand for providing lengths to border-top-left-radius for use with animation.\n Example: borderTopLeftRadius_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopRightRadius",
+        "comment": " borderTopRightRadius - shorthand for providing lengths to border-top-right-radius.\n Example: borderTopRightRadius 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopRightRadius_",
+        "comment": " borderTopRightRadius_ - shorthand for providing lengths to border-top-right-radius for use with animation.\n Example: borderTopRightRadius_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopWidth",
+        "comment": " borderTopWidth - shorthand for providing lengths to border-top-width.\n Example: borderTopWidth 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderTopWidth_",
+        "comment": " borderTopWidth_ - shorthand for providing lengths to border-top-width for use with animation.\n Example: borderTopWidth_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderWidth",
+        "comment": " borderWidth - shorthand for providing lengths to border-width.\n Example: borderWidth 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "borderWidth_",
+        "comment": " borderWidth_ - shorthand for providing lengths to border-width for use with animation.\n Example: borderWidth_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "bottom",
+        "comment": " bottom - shorthand for providing lengths to bottom.\n Example: bottom 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "bottom_",
+        "comment": " bottom_ - shorthand for providing lengths to bottom for use with animation.\n Example: bottom_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "ch",
+        "comment": " ch - shorthand constructor for type Ch.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "cm",
+        "comment": " cm - shorthand constructor for type Centimeter.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "color",
+        "comment": " color - shorthand for providing colors to color.\n Example: color blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "color_",
+        "comment": " color_ - shorthand for providing colors to color for use with animation.\n Example: color_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "cssColor",
+        "comment": " cssColor - convert from a standard Elm color into a CSS color\n Example: cssColor blue\n",
+        "type": "Color.Color -> TypedStyles.CSSValue"
+      },
+      {
+        "name": "dashed",
+        "comment": " dashed - shorthand constructor for CSSOptional Dashed\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "dotted",
+        "comment": " dotted - shorthand constructor for CSSOptional Dotted\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "double",
+        "comment": " double - shorthand constructor for CSSOptional Double\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "em",
+        "comment": " em - shorthand constructor for type Em.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "ex",
+        "comment": " ex - shorthand constructor for type Ex.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "fontSize",
+        "comment": " fontSize - shorthand for providing lengths to font-size.\n Example: fontSize 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "fontSize_",
+        "comment": " fontSize_ - shorthand for providing lengths to font-size for use with animation.\n Example: fontSize_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "groove",
+        "comment": " groove - shorthand constructor for CSSOptional Groove\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "height",
+        "comment": " height - shorthand for providing lengths to height.\n Example: height 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "height_",
+        "comment": " height_ - shorthand for providing lengths to height for use with animation.\n Example: height_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "inches",
+        "comment": " inches - shorthand constructor for type Inch.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "inset",
+        "comment": " inset - shorthand constructor for CSSOptional Inset\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "left",
+        "comment": " left - shorthand for providing lengths to left.\n Example: left 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "left_",
+        "comment": " left_ - shorthand for providing lengths to left for use with animation.\n Example: left_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "letterSpacing",
+        "comment": " letterSpacing - shorthand for providing lengths to letter-spacing.\n Example: letterSpacing 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "letterSpacing_",
+        "comment": " letterSpacing_ - shorthand for providing lengths to letter-spacing for use with animation.\n Example: letterSpacing_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "lineHeight",
+        "comment": " lineHeight - shorthand for providing lengths to line-height.\n Example: lineHeight 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "lineHeight_",
+        "comment": " lineHeight_ - shorthand for providing lengths to line-height for use with animation.\n Example: lineHeight_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "margin",
+        "comment": " margin - shorthand for providing lengths to margin.\n Example: margin 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginBottom",
+        "comment": " marginBottom - shorthand for providing lengths to margin-bottom.\n Example: marginBottom 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginBottom_",
+        "comment": " marginBottom_ - shorthand for providing lengths to margin-bottom for use with animation.\n Example: marginBottom_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginLeft",
+        "comment": " marginLeft - shorthand for providing lengths to margin-left.\n Example: marginLeft 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginLeft_",
+        "comment": " marginLeft_ - shorthand for providing lengths to margin-left for use with animation.\n Example: marginLeft_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginRight",
+        "comment": " marginRight - shorthand for providing lengths to margin-right.\n Example: marginRight 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginRight_",
+        "comment": " marginRight_ - shorthand for providing lengths to margin-right for use with animation.\n Example: marginRight_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginTop",
+        "comment": " marginTop - shorthand for providing lengths to margin-top.\n Example: marginTop 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "marginTop_",
+        "comment": " marginTop_ - shorthand for providing lengths to margin-top for use with animation.\n Example: marginTop_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "margin_",
+        "comment": " margin_ - shorthand for providing lengths to margin for use with animation.\n Example: margin_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "maxHeight",
+        "comment": " maxHeight - shorthand for providing lengths to max-height.\n Example: maxHeight 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "maxHeight_",
+        "comment": " maxHeight_ - shorthand for providing lengths to max-height for use with animation.\n Example: maxHeight_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "minHeight",
+        "comment": " minHeight - shorthand for providing lengths to min-height.\n Example: minHeight 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "minHeight_",
+        "comment": " minHeight_ - shorthand for providing lengths to min-height for use with animation.\n Example: minHeight_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "mm",
+        "comment": " mm - shorthand constructor for type Millimeter.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "none",
+        "comment": " none - used with optional css values (e.g., display none)\n",
+        "type": "TypedStyles.CssOptionalValue a"
+      },
+      {
+        "name": "opacity",
+        "comment": " opacity - alpha from 0.0 to 1.0. Example: opacity 0.5\n",
+        "type": "Float -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "opacity_",
+        "comment": " opacity_ - two-state opacity for animation. Example: opacity_ 0.5 1.0\n",
+        "type": "Float -> Float -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "outlineColor",
+        "comment": " outlineColor - shorthand for providing colors to outline-color.\n Example: outlineColor blue\n",
+        "type": "Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "outlineColor_",
+        "comment": " outlineColor_ - shorthand for providing colors to outline-color for use with animation.\n Example: outlineColor_ black blue\n",
+        "type": "Color.Color -> Color.Color -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "outset",
+        "comment": " outset - shorthand constructor for CSSOptional Outset\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "padding",
+        "comment": " padding - shorthand for providing lengths to padding.\n Example: padding 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingBottom",
+        "comment": " paddingBottom - shorthand for providing lengths to padding-bottom.\n Example: paddingBottom 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingBottom_",
+        "comment": " paddingBottom_ - shorthand for providing lengths to padding-bottom for use with animation.\n Example: paddingBottom_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingLeft",
+        "comment": " paddingLeft - shorthand for providing lengths to padding-left.\n Example: paddingLeft 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingLeft_",
+        "comment": " paddingLeft_ - shorthand for providing lengths to padding-left for use with animation.\n Example: paddingLeft_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingRight",
+        "comment": " paddingRight - shorthand for providing lengths to padding-right.\n Example: paddingRight 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingRight_",
+        "comment": " paddingRight_ - shorthand for providing lengths to padding-right for use with animation.\n Example: paddingRight_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingTop",
+        "comment": " paddingTop - shorthand for providing lengths to padding-top.\n Example: paddingTop 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "paddingTop_",
+        "comment": " paddingTop_ - shorthand for providing lengths to padding-top for use with animation.\n Example: paddingTop_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "padding_",
+        "comment": " padding_ - shorthand for providing lengths to padding for use with animation.\n Example: padding_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "pica",
+        "comment": " pica - shorthand constructor for type Pica.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "prc",
+        "comment": " prc - shorthand constructor for type Percent.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "pt",
+        "comment": " pt - shorthand constructor for type Point.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "px",
+        "comment": " px - shorthand constructor for type Pixel.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "rem",
+        "comment": " rem - shorthand constructor for type Rem.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "ridge",
+        "comment": " ridge - shorthand constructor for CSSOptional Ridge\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "right",
+        "comment": " right - shorthand for providing lengths to right.\n Example: right 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "right_",
+        "comment": " right_ - shorthand for providing lengths to right for use with animation.\n Example: right_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "serializeCssOptionalValue",
+        "comment": " serializeCssOptionalValue - serializer for CssOptionalValue\n",
+        "type": "TypedStyles.CssOptionalValue a -> (a -> TypedStyles.CSSValue) -> TypedStyles.CSSValue"
+      },
+      {
+        "name": "serializeLength",
+        "comment": " serializeLength - transform to CSSValue\n",
+        "type": "TypedStyles.Length -> TypedStyles.CSSValue"
+      },
+      {
+        "name": "solid",
+        "comment": " solid - shorthand constructor for CSSOptional Solid\n",
+        "type": "TypedStyles.CssOptionalValue TypedStyles.BorderStyle"
+      },
+      {
+        "name": "textCenter",
+        "comment": " textCenter - center text\n",
+        "type": "( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "textIndent",
+        "comment": " textIndent - shorthand for providing lengths to text-indent.\n Example: textIndent 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "textIndent_",
+        "comment": " textIndent_ - shorthand for providing lengths to text-indent for use with animation.\n Example: textIndent_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "textJustify",
+        "comment": " textJustify - justify text\n",
+        "type": "( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "textLeft",
+        "comment": " textLeft - align text to the left\n",
+        "type": "( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "textRight",
+        "comment": " textRight - align text to the right\n",
+        "type": "( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "top",
+        "comment": " top - shorthand for providing lengths to top.\n Example: top 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "top_",
+        "comment": " top_ - shorthand for providing lengths to top for use with animation.\n Example: top_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "vh",
+        "comment": " vh - shorthand constructor for type Vh.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "vmax",
+        "comment": " vmax - shorthand constructor for type Vmin.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "vw",
+        "comment": " vw - shorthand constructor for type Vw.\n",
+        "type": "Int -> TypedStyles.Length"
+      },
+      {
+        "name": "width",
+        "comment": " width - shorthand for providing lengths to width.\n Example: width 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "width_",
+        "comment": " width_ - shorthand for providing lengths to width for use with animation.\n Example: width_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "wordSpacing",
+        "comment": " wordSpacing - shorthand for providing lengths to word-spacing.\n Example: wordSpacing 10 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue )"
+      },
+      {
+        "name": "wordSpacing_",
+        "comment": " wordSpacing_ - shorthand for providing lengths to word-spacing for use with animation.\n Example: wordSpacing_ 10 px 20 px\n",
+        "type": "Int -> (Int -> TypedStyles.Length) -> Int -> (Int -> TypedStyles.Length) -> ( TypedStyles.CSSKey, TypedStyles.CSSValue, TypedStyles.CSSValue )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
