@@ -1,0 +1,72 @@
+[
+  {
+    "name": "ConvertUnits",
+    "comment": " Convert Float values from one unit to another. Currently supports\n\n  Area: [ \"mm2\", \"cm2\", \"m2\", \"ha\", \"km2\", \"in2\", \"ft2\", \"ac\", \"mi2\" ]\n\n  Length: [ \"m\", \"cm\", \"m\", \"km\", \"in\", \"yd\", \"ft\", \"mi\" ]\n\n  Mass: [ \"mcg\", \"mg\", \"g\", \"kg\", \"oz\", \"lb\" ]\n\n# Converting\n@docs convert\n\n# Helpers\n@docs describe, possibilities, isPossible\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "convert",
+        "comment": " Takes a Float value and two String values referring to unit abbreviations\n    and attempts to convert the given value from one unit into another.\n\n    convert 1000 \"m\" \"km\" == Ok 1\n\n    convert 5 \"kg\" \"oz\" == Ok 176.3699536147022\n\n    convert 100 \"ft\" \"m2\" == Err \"Cannot convert incompatible measures\"\n\n    convert 100 \"ft\" \"wut\" == Err \"Unsupported unit 'wut'\n",
+        "type": "Float -> String -> String -> Result.Result String Float"
+      },
+      {
+        "name": "describe",
+        "comment": " Returns a record with descriptive information about a unit\n\n    describe \"m2\" == Just { abbr: \"m2\", singluar: \"Square Meter\", plural: \"Square Meters\", toAnchor: 1 }\n\n    describe \"ft\" == Just { abbr: \"ft\", singluar: \"Foot\", plural: \"Feet\", toAnchor: 1 }\n\n    describe \"wut\" = Nothing\n\n    describe \"yo mama\" = Nothing\n",
+        "type": "String -> Maybe.Maybe ConvertUnits.Definitions.Descriptor"
+      },
+      {
+        "name": "isPossible",
+        "comment": " Returns True if the given unit abbreviation is included in this package\n\n    isPossible \"m\" == True\n\n    isPossible \"pixel\" == False\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "possibilities",
+        "comment": " Returns a list of unit abbreviations possible for conversion\n\n    possibilities Nothing = [\"m\", \"cm\", \"kg\", \"ft\", ..., \"ac\"] -- All supported units\n\n    possibilities Area = [\"m2\", \"in2\", ..., \"km2\", \"ha\"] -- Area units\n\n    possibilities Length = [\"in\", \"ft\", ..., \"km\"] -- Length units\n",
+        "type": "Maybe.Maybe ConvertUnits.Definitions.Category -> List String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ConvertUnits.Definitions",
+    "comment": "\n# Definition\n@docs Category, Anchor, Descriptor\n",
+    "aliases": [
+      {
+        "name": "Anchor",
+        "comment": " Holds the ratio to convert between Imperial and Metric systems\n",
+        "args": [],
+        "type": "{ unit : String , ratio : Float , category : ConvertUnits.Definitions.Category }"
+      },
+      {
+        "name": "Descriptor",
+        "comment": " Record describing a unit. A Descriptor is returned by the \"describe\" function.\n",
+        "args": [],
+        "type": "{ abbr : String , singular : String , plural : String , toAnchor : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Category",
+        "comment": " Represents a category of units. You can pass a Category to\nthe possibilities functions if you wish to receive a list of\navailable units for that category\n",
+        "args": [],
+        "cases": [
+          [
+            "Area",
+            []
+          ],
+          [
+            "Mass",
+            []
+          ],
+          [
+            "Length",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
