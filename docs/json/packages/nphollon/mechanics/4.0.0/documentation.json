@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Mechanics",
+    "comment": "\n# Building states\n@docs State, state, state1, state2, state3\n\n# Inspecting states\n@docs aboutEqual, dimension, time, coordinate, velocity\n\n# Changing states\n@docs Acceleration, acceleration, evolve\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Acceleration",
+        "comment": " An acceleration describes how the velocities of a state change with time.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " A state describes a physical system at a moment in time. It contains three types of numbers:\n\n* Time.\n* Coordinates describing the position of the system. If you took a snapshot of the system, what would it look like?\n* Velocities describing the rates of change for each coordinate. If you took another snapshot a split-second later, how much would it have changed?\n\nCoordinates and velocities do not need to be rectangular (in X-Y-Z space). For example, a satellite orbiting the Earth could be described by spherical coordinates (altitude, latitude, and longitude).\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "aboutEqual",
+        "comment": "\n    aboutEqual tolerance a b\n\nCompares all numbers in state A and state B. Returns `True` if they differ by\nless than the given tolerance. States with different dimensions are never equal.\n\n    aboutEqual 1e-3 (state1 (0, 0)) (state1 (0, 1e-4)) -- returns True\n\n    aboutEqual 1e-6 (state1 (0, 0)) (state1 (0, 1e-4)) -- returns False\n\n    aboutEqual 1e-6 (state1 (0, 0)) (state2 (0, 0) (0, 0)) -- returns False\n",
+        "type": "Float -> Mechanics.State -> Mechanics.State -> Bool"
+      },
+      {
+        "name": "acceleration",
+        "comment": " Create an acceleration from a function. The function takes a state and\nreturns a list of changes to the velocities.\n\nExample 1: An object in freefall. The state has 2 dimensions, X and Y.\n\n    gravity = -10\n    fallingAccel = acceleration (always [0, gravity])\n\nExample 2: A weight attached to a spring. The weight is pushed/pulled towards\nthe resting position of the spring. The state has 1 dimension, X.\n\n    springStrength = 2.0\n    restPosition = 5.0\n    mass = 1.0\n\n    hookesLaw position =\n      mass * springStrength * (restPosition - position)\n\n    springAccel = acceleration (\\s -> [ hookesLaw (coordinate 0 s) ])\n",
+        "type": "(Mechanics.State -> List Float) -> Mechanics.Acceleration"
+      },
+      {
+        "name": "coordinate",
+        "comment": " For a given index `n`, returns the `n`th coordinate of a state. This works\nsimilarly to `Array.get`. The index is zero-based. An out-of-bounds index returns\nzero.\n\n    theState = state3 (1, 2) (3, 4) (5, 6)\n\n    coordinate 0 theState -- returns 1\n    coordinate 2 theState -- returns 5\n    coordinate 3 theState -- returns 0\n    coordinate -1 theState -- returns 0\n",
+        "type": "Int -> Mechanics.State -> Float"
+      },
+      {
+        "name": "dimension",
+        "comment": " Returns the number of coordinates in a state.\n\n    dimension (state1 (0, 0)) -- returns 1\n    dimension (state3 (0, 0) (0, 0) (0, 0)) -- returns 3\n",
+        "type": "Mechanics.State -> Int"
+      },
+      {
+        "name": "evolve",
+        "comment": " Given an acceleration, a change in time, and a state, evolve the state\nforward in time. (Under the hood, `evolve` uses the\n[Runge-Kutta method](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods).)\n\n    start = state2 (0, 1) (10, 0)\n\n    oneSecondLater = evolve fallingAccel 1.0 start\n    -- returns state 0.5 [ (1, 1) (5, -10) ]\n\nToss this sucker into a `foldp`, and watch the Universe come to life before\nyour eyes!\n\n    model = Signal.foldp (evolve fallingAccel) start (Time.fps 30)\n",
+        "type": "Mechanics.Acceleration -> Float -> Mechanics.State -> Mechanics.State"
+      },
+      {
+        "name": "state",
+        "comment": " Create a state with the given time, coordinates, and velocities. Because coordinates and velocities correspond, they are given as a list of pairs.\n\n    t = 10.0 -- seconds\n    x = 0.0 -- meters\n    y = 10.0 -- meters\n    xSpeed = 0.0 -- meters per second\n    ySpeed = -1.0 -- meters per second\n\n    state = t [ (x, xSpeed), (y, ySpeed) ]\n",
+        "type": "Float -> List ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state1",
+        "comment": " Create a 1-dimensional state. The time is set to zero.\n\n    state1 (x, v) -- equals state 0 [ (x, v) ]\n",
+        "type": "( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state2",
+        "comment": " Create a 2-dimensional state. The time is set to zero.\n\n    state2 (x, vx) (y, vy)\n    -- equals state 0 [ (x, vx), (y, vy) ]\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "state3",
+        "comment": " Create a 3-dimensional state. The time is set to zero.\n\n    state2 (x, vx) (y, vy) (z, vz)\n    -- equals state 0 [ (x, vx), (y, vy), (z, vz) ]\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> ( Float, Float ) -> Mechanics.State"
+      },
+      {
+        "name": "time",
+        "comment": " Returns the time of a state.\n\n    time (state1 (1, 5)) -- returns 0\n    time (state 3.5 [ (0, 0) ]) -- returns 3.5\n",
+        "type": "Mechanics.State -> Float"
+      },
+      {
+        "name": "velocity",
+        "comment": " Returns the `n`th velocity of a state.\n\n    theState = state3 (1, 2) (3, 4) (5, 6)\n\n    velocity 0 theState -- returns 2\n    velocity 2 theState -- returns 6\n    velocity 3 theState -- returns 0\n\n",
+        "type": "Int -> Mechanics.State -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

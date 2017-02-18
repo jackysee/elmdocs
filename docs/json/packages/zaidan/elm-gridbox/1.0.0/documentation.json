@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Form.Grid",
+    "comment": " Grid Form Conversion\n\n# Converting Grid to Form\n@docs fromGrid\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromGrid",
+        "comment": " Converts a given grid with given LineStyle to a list of Forms.\n",
+        "type": "Collage.LineStyle -> Grid.Grid -> List Collage.Form"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Form.Row",
+    "comment": " Row Form Conversion\n\n# Converting Row to Form\n@docs fromRow\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromRow",
+        "comment": " Converts a given row with given LineStyle to a list of Forms.\n",
+        "type": "Collage.LineStyle -> Row.Row -> List Collage.Form"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Form.GridPoints",
+    "comment": " Grid of points\n\n# Building a Grid of Points\n@docs points, rowPoints\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "points",
+        "comment": " Creates a grid of points.\n",
+        "type": "Grid.Grid -> Float -> List Collage.Form"
+      },
+      {
+        "name": "rowPoints",
+        "comment": " Creates a row of points.\n",
+        "type": "Row.Row -> Float -> List Collage.Form"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Form.Box",
+    "comment": " Box Form Conversion\n\n# Converting Box to Form\n@docs fromBox, fromBoxList, fromCompressedBoxList\n\n# Converting Box to Path\n@docs makePath\n\n# Converting Path to Form\n@docs fromPath\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromBox",
+        "comment": " Convert the Box with given LineStyle to Form.\n",
+        "type": "Collage.LineStyle -> Box.Box -> Collage.Form"
+      },
+      {
+        "name": "fromBoxList",
+        "comment": " Converts a given grid with given LineStyle to a list of Forms.\n",
+        "type": "Collage.LineStyle -> List Box.Box -> List Collage.Form"
+      },
+      {
+        "name": "fromCompressedBoxList",
+        "comment": " Converts a given grid with given LineStyle to a list of Forms.\n",
+        "type": "Collage.LineStyle -> ( Float, Float ) -> List ( Int, List ( Int, Int ) ) -> List Collage.Form"
+      },
+      {
+        "name": "fromPath",
+        "comment": " Convert the Path with given LineStyle to Form.\n",
+        "type": "Collage.LineStyle -> Collage.Path -> Collage.Form"
+      },
+      {
+        "name": "makePath",
+        "comment": " Creates a path with given size.\n",
+        "type": "Box.Box -> Collage.Path"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Grid",
+    "comment": " Grid of bounding boxes\n\n# Building a Grid\n@docs Grid, createGrid, makeGrid\n",
+    "aliases": [
+      {
+        "name": "Grid",
+        "comment": " A grid of bounding boxes.\n",
+        "args": [],
+        "type": "List Row.Row"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createGrid",
+        "comment": " Creates a grid with given size width, height, x- and y-offset.\n",
+        "type": "( Float, Float ) -> Int -> Int -> Float -> Float -> Grid.Grid"
+      },
+      {
+        "name": "makeGrid",
+        "comment": " Creates a grid with given List of row- and col-indexes, size, x- and y-offset.\n",
+        "type": "List Int -> List Int -> ( Float, Float ) -> Float -> Float -> Grid.Grid"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Extract",
+    "comment": " Extracting compressed boxes\n\n# Extraction\n@docs extractBoxes, extractRow, extractCols, extractCol\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "extractBoxes",
+        "comment": " Extract boxes\n",
+        "type": "( Float, Float ) -> List ( Int, List ( Int, Int ) ) -> List Box.Box"
+      },
+      {
+        "name": "extractCol",
+        "comment": " Extract col\n",
+        "type": "( Float, Float ) -> Int -> Int -> Box.Box"
+      },
+      {
+        "name": "extractCols",
+        "comment": " Extract cols\n",
+        "type": "( Float, Float ) -> Int -> ( Int, Int ) -> List Box.Box"
+      },
+      {
+        "name": "extractRow",
+        "comment": " Extract row\n",
+        "type": "( Float, Float ) -> ( Int, List ( Int, Int ) ) -> List Box.Box"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Row",
+    "comment": " Row of bounding boxes\n\n# Building a Row\n@docs Row, makeRow\n\n# Building a Box\n@docs createBox\n",
+    "aliases": [
+      {
+        "name": "Row",
+        "comment": " A row of bounding boxes.\n",
+        "args": [],
+        "type": "List Box.Box"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "createBox",
+        "comment": " Creates a box with given row, col, size, x- and y-offset.\n",
+        "type": "( Float, Float ) -> Float -> Float -> Int -> Int -> Box.Box"
+      },
+      {
+        "name": "makeRow",
+        "comment": " Creates a row with given row, List of col-indexes, size, x- and y-offset.\n",
+        "type": "( Float, Float ) -> Float -> Float -> List Int -> Int -> Row.Row"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Position",
+    "comment": " Position\n\n# Types\n@docs BoxPosition, BoxPositions\n\n# Conversion\n@docs fromBox, fromBoxes\n",
+    "aliases": [
+      {
+        "name": "BoxPosition",
+        "comment": " Box position\n",
+        "args": [],
+        "type": "( Box.BoxRow, Box.BoxCol )"
+      },
+      {
+        "name": "BoxPositions",
+        "comment": " Box positions\n",
+        "args": [],
+        "type": "List Position.BoxPosition"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "fromBox",
+        "comment": " Convert from Box to (row, col)\n",
+        "type": "Box.Box -> Position.BoxPosition"
+      },
+      {
+        "name": "fromBoxes",
+        "comment": " Convert all boxes in list from Box to (row, col)\n",
+        "type": "List Box.Box -> Position.BoxPositions"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Coordinate",
+    "comment": " Coordinate\n\n# Type Conversion\n@docs fromBox, fromBoxes\n\n# Transformation\n@docs getX, getY, topX, topY, transform, transformOffset\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromBox",
+        "comment": " Create a List of (x,y) coordinates with given size.\n",
+        "type": "Box.Box -> List ( Float, Float )"
+      },
+      {
+        "name": "fromBoxes",
+        "comment": " Convert all boxes in list from Box to (x, y) coordinates\n",
+        "type": "List Box.Box -> List (List ( Float, Float ))"
+      },
+      {
+        "name": "getX",
+        "comment": " Get the x-position for given row, size and x-offset.\n",
+        "type": "Int -> Float -> Float -> Float"
+      },
+      {
+        "name": "getY",
+        "comment": " Get the y-position for given col, size and y-offset.\n",
+        "type": "Int -> Float -> Float -> Float"
+      },
+      {
+        "name": "topX",
+        "comment": " Get the given position with x-offset.\n",
+        "type": "Float -> Float -> Float"
+      },
+      {
+        "name": "topY",
+        "comment": " Get the given position with y-offset.\n",
+        "type": "Float -> Float -> Float"
+      },
+      {
+        "name": "transform",
+        "comment": " Transform given coordinates with position (x, y) and scale.\n",
+        "type": "( Float, Float ) -> Float -> ( Float, Float ) -> ( Float, Float )"
+      },
+      {
+        "name": "transformOffset",
+        "comment": " Transform given coordinates with position (x, y) scale, x- and y-offset.\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> Float -> ( Float, Float ) -> ( Float, Float )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Box",
+    "comment": " A bounding box\n\n# Create a box\n@docs Box, BoxRow, BoxCol, makeBox\n",
+    "aliases": [
+      {
+        "name": "Box",
+        "comment": " A grid box with position (x,y) at row and col with size.\n",
+        "args": [],
+        "type": "{ x : Float , y : Float , row : Box.BoxRow , col : Box.BoxCol , width : Float , height : Float }"
+      },
+      {
+        "name": "BoxCol",
+        "comment": " Col of a box\n",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "BoxRow",
+        "comment": " Row of a box\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "makeBox",
+        "comment": " Creates a box with position (x,y) at row and col with given size.\n",
+        "type": "Float -> Float -> Int -> Int -> ( Float, Float ) -> Box.Box"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

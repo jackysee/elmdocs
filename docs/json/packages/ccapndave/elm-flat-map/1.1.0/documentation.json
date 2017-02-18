@@ -1,0 +1,70 @@
+[
+  {
+    "name": "List.FlatMap",
+    "comment": " This module implements the `flatMap` combinator for `List`.  This allows you to call functions\nthat return a `List` with arguments that are also `List`s without having to worry about ending up\nwith a `List (List a)` return type.\n\n# FlatMaps\n@docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "flatMap",
+        "comment": "",
+        "type": "(a -> List b) -> List a -> List b"
+      },
+      {
+        "name": "flatMap2",
+        "comment": "",
+        "type": "(a -> b -> List c) -> List a -> List b -> List c"
+      },
+      {
+        "name": "flatMap3",
+        "comment": "",
+        "type": "(a -> b -> c -> List d) -> List a -> List b -> List c -> List d"
+      },
+      {
+        "name": "flatMap4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> List e) -> List a -> List b -> List c -> List d -> List e"
+      },
+      {
+        "name": "flatMap5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> List f) -> List a -> List b -> List c -> List d -> List e -> List f"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maybe.FlatMap",
+    "comment": " This module implements the `flatMap` combinator for `Maybe`.  This allows you to call functions\nthat return a `Maybe` with arguments that are also `Maybe`s without having to worry about ending up\nwith a `Maybe (Maybe a)` return type.\n\nFor example:\n\n    getHeadFromMaybeList : Maybe List -> Maybe a\n    getHeadFromMaybeList =\n      flatMap List.head\n\n# FlatMaps\n@docs flatMap, flatMap2, flatMap3, flatMap4, flatMap5\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "flatMap",
+        "comment": "",
+        "type": "(a -> Maybe.Maybe b) -> Maybe.Maybe a -> Maybe.Maybe b"
+      },
+      {
+        "name": "flatMap2",
+        "comment": "",
+        "type": "(a -> b -> Maybe.Maybe c) -> Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe c"
+      },
+      {
+        "name": "flatMap3",
+        "comment": "",
+        "type": "(a -> b -> c -> Maybe.Maybe d) -> Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe c -> Maybe.Maybe d"
+      },
+      {
+        "name": "flatMap4",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> Maybe.Maybe e) -> Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe c -> Maybe.Maybe d -> Maybe.Maybe e"
+      },
+      {
+        "name": "flatMap5",
+        "comment": "",
+        "type": "(a -> b -> c -> d -> e -> Maybe.Maybe f) -> Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe c -> Maybe.Maybe d -> Maybe.Maybe e -> Maybe.Maybe f"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

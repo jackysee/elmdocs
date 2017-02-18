@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Median",
+    "comment": " Compute the median of a list of comparable elements.\n\n# Definition\n\nA median element `m` of a list `l`\nis **an element of the list** such that\nthe difference between the number of elements smaller than `m`\nand the number of elements larger than `m` in `l` is minimal.\n\n# Find a median\n\n@docs median\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "median",
+        "comment": " Returns a median element.\n\nThis implementation uses the [quickselect](https://en.wikipedia.org/wiki/Quickselect)\nalgorithm, and thus has an average time complexity of O(N),\nand a worst-case complexity of O(N^2) (when the list is sorted).\n\nIf there is a single median element, then it is guarenteed to be returned\n\n    >>> median [1,2,3]\n    Just 2\n\nIt works with any sortable type.\nThat is with ints, floats, chars, strings, lists, and tuples.\n\n    >>> median [\"Boris\", \"Arthur\", \"Adolf\", \"Jack\", \"Sarah\"]\n    Just \"Boris\"\n\n    >>> median [(0,1), (0,2), (1,0)]\n    Just (0,2)\n\nIf there is no single median element, it will return an element that most\nequally splits the list.\n\n    >>> median [1,1,8,1,1]\n    Just 1\n\n    >>> median [1,2,3,4]\n    Just 3\n\nIf the given list is empty, it will return `Nothing`.\n\n    >>> median []\n    Nothing\n",
+        "type": "List comparable -> Maybe.Maybe comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

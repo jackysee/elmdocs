@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Image.Collection",
+    "comment": " This module helps you deal with collections of images.\n\n@docs Key, Collection\n@docs resize\n@docs ItemViewer, defaultItemViewer, view\n",
+    "aliases": [
+      {
+        "name": "Collection",
+        "comment": " A collection of images.\n",
+        "args": [],
+        "type": "Dict.Dict Image.Collection.Key Image.Image"
+      },
+      {
+        "name": "ItemViewer",
+        "comment": " A type alias describing a view function for an item (key,image) of the collection.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Image.Collection.Key -> Image.Image -> Html.Html msg"
+      },
+      {
+        "name": "Key",
+        "comment": " The key type to access images in the collection.\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultItemViewer",
+        "comment": " The default itemViewer, just a simple Image viewer, not taking care of the key.\n",
+        "type": "Image.Collection.ItemViewer msg"
+      },
+      {
+        "name": "resize",
+        "comment": " Resize all images of a collection.\n",
+        "type": "( Int, Int ) -> Image.Collection.Collection -> Image.Collection.Collection"
+      },
+      {
+        "name": "view",
+        "comment": " View a collection of images with a specific item viewer.\n\nFor example, with the following code:\n\n    collection =\n        Dict.fromList\n            [ (\"1\", Image \"1.jpg\" 320 240)\n            , (\"2\", Image \"2.jpg\" 640 480)\n            ]\n\n    itemViewer key =\n        Image.viewImg [ HA.class \"image\" ]\n\n    html =\n        collection\n            |> view [ HA.class \"collection\" ] itemViewer\n\nThe html will look like:\n\n    <div class=\"collection\">\n        <img class=\"image\"\n            src=\"1.jpg\"\n            style=\"width: auto; height: auto; max-width: 320px; max-height: 240px;\">\n        <img class=\"image\"\n            src=\"2.jpg\"\n            style=\"width: auto; height: auto; max-width: 640px; max-height: 480px;\">\n    </div>\n",
+        "type": "List (Html.Attribute msg) -> Image.Collection.ItemViewer msg -> Image.Collection.Collection -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Image",
+    "comment": " This module helps you deal with images.\n\n@docs Image\n@docs resize\n@docs viewImg, viewSvg\n",
+    "aliases": [
+      {
+        "name": "Image",
+        "comment": " An Image.\n",
+        "args": [],
+        "type": "{ url : String, width : Int, height : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "resize",
+        "comment": " Change the width and height parameters.\n",
+        "type": "( Int, Int ) -> Image.Image -> Image.Image"
+      },
+      {
+        "name": "viewImg",
+        "comment": " View of an Image in an <img> tag.\n\nYou can pass to it a list of html attributes that will be added in the <img> tag.\nIt will keep the image aspect ratio.\n",
+        "type": "List (Html.Attribute msg) -> Image.Image -> Html.Html msg"
+      },
+      {
+        "name": "viewSvg",
+        "comment": " View of an Image inside a <svg> tag using the\n[<image>](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image) tag.\n",
+        "type": "List (Svg.Attribute msg) -> Image.Image -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Merkle",
+    "comment": " This is an implementation of the [Merkle\ntree](https://en.wikipedia.org/wiki/Merkle_tree) data structure in Elm. It's\nimplemented as an immutable balanced binary hash tree, which guarantees for\nlogarithmic inserts. Default hash function is\n[**SHA-2**56](https://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions)\nbut others can be used. Hash functions are specified on initiation and can't be\nchanged afterwards which ensures data consistency.\n\n# Trees\n\n@docs Tree\n\n# Creating Trees\n\n@docs initialize, singleton, fromList\n\n# Basics\n\n@docs insert, insertFromList, get, depth, flatten, contains\n\n# Check for Consistency\n\n@docs isValid\n\n# Persistence\n\n@docs fromJson,toJson\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Tree",
+        "comment": " Representation of the immutable balanced binary hash tree. You can create\nMerkle trees of integers (`Merkle.Tree Int`) or strings (`Merkle.Tree String`)\nor any other type of values supported by Elm (Ints, Floats, Bools, Strings,\nMaybes, Lists, Arrays, Tuples, Json.Values or concrete records).\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "contains",
+        "comment": " Checks if the element is in the (`Merkle.Tree a`). As an element can appear\nseveral times in a tree, therefore if we find early that the element is in the\ntree we stop the recursion down this path.\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> contains 42) == True\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> contains 43) == False\n",
+        "type": "a -> Merkle.Tree a -> Bool"
+      },
+      {
+        "name": "depth",
+        "comment": " Return the `depth` of the `Merkle.Tree`. We can calculate the max amount of\nelements in the tree by power-of-two to the depth of the tree (`depth = 3` and\n`2^3`) as we know that tree is logarithmic in `depth`.\n\n    ([0 .. 7]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> depth) == 3\n\n    ([0 .. 8]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> depth) == 4\n",
+        "type": "Merkle.Tree a -> Int"
+      },
+      {
+        "name": "flatten",
+        "comment": " Returns all the elements together with their `hash`(es) if any. Otherwise it's\nreturning an empty list. As an element can appear several times in a tree and\norder of the elements is significant, therefore as the first element inserted in\nthe `Merkle.Tree` will be the first element of the list.\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> flatten) == [ (0, \"Some hash\"), ..., (42, \"Some hash\") ]\n",
+        "type": "Merkle.Tree a -> List ( a, String )"
+      },
+      {
+        "name": "fromJson",
+        "comment": " Re-creates a `Merkle Tree a` from a prettified `JSON` string. It's important\nto use the same initial parameters as the elements are bounded to the type\nassigned in the hash functions (`hashfs`) and JSON encoder (`encode`). If any of\nthese parameters defer from the initial, the tree will neither be consistent nor\ncorrect (`isValid`).\n\n    (case ([40 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> toJson 0 0\n        |> fromJson Nothing Json.Encode.int Json.Decode.int) of\n            Ok t ->\n                t |> isValid Nothing\n            Err msg ->\n                Debug.crash msg) == True\n\n    (case ([40 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> toJson 0 7\n        |> fromJson Nothing Json.Encode.int Json.Decode.int) of\n            Ok t ->\n                t |> isValid Nothing\n            Err msg ->\n                Debug.crash msg) == False\n\n    (case ([40 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> toJson 0 0\n        |> fromJson (Just [ identity ]) Json.Encode.int Json.Decode.int) of\n            Ok t ->\n                t |> isValid Nothing\n            Err msg ->\n                Debug.crash msg) == False\n",
+        "type": "Maybe.Maybe (List (String -> String)) -> (a -> Json.Encode.Value) -> Json.Decode.Decoder a -> String -> Result.Result String (Merkle.Tree a)"
+      },
+      {
+        "name": "fromList",
+        "comment": " Creates a (`Merkle.Tree a`) from the elements in a list which are bounded to\nthe type assigned in the hash functions (`hashfs`) and JSON encoder\n(`encode`). If no hash functions are assigned or an empty list is given, then it\nwill default to `sha256sum`. The order of the elements is significant, therefore\nthe first element in the list will be the first to be inserted in the\n`Merkle.Tree`. This is an important property in order to maintain consistency\nand to be able to recreate a tree.\n\n    [42] |> fromList Nothing Json.Encode.int\n    [42] |> fromList (Just ([ sha256sum ])) Json.Encode.int\n    [42] |> fromList (Just ([ identity ])) Json.Encode.int\n",
+        "type": "Maybe.Maybe (List (String -> String)) -> (a -> Json.Encode.Value) -> List a -> Merkle.Tree a"
+      },
+      {
+        "name": "get",
+        "comment": " Returns the element(s) together with its/their `hash`(es) if any. Otherwise\nit's returning an empty list. As an element can appear several times in a tree\nand order of the elements is significant, therefore as the first element\ninserted in the `Merkle.Tree` will be the first element of the list.\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> get 42) == [ (42, \"Some hash\") ]\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> get 43) == []\n\n    ([42, 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> get 42) == [ (42, \"Some hash\"), (42, \"Same hash\")  ]\n",
+        "type": "a -> Merkle.Tree a -> List ( a, String )"
+      },
+      {
+        "name": "initialize",
+        "comment": " Initialize an empty (`Merkle.Tree a`) that is bounded to the type assigned\nin the hash functions (`hashfs`) and JSON encoder (`encode`). If no hash\nfunctions are assigned or an empty list is given, then it will default to\n`sha256sum`.\n\n    initialize Nothing Json.Encode.int\n    initialize (Just ([ sha256sum ])) Json.Encode.int\n    initialize (Just ([ identity ])) Json.Encode.int\n",
+        "type": "Maybe.Maybe (List (String -> String)) -> (a -> Json.Encode.Value) -> Merkle.Tree a"
+      },
+      {
+        "name": "insert",
+        "comment": " Adds an element to the (`Merkle.Tree a`) in logarithmic time. It's important\nto understand that this implementation of `Merkle.Tree` will ensure that all\nelements have the same `depth` in the tree (in the same way as the\n**Blockchain** for **BTC** does it). For more information, please see the\nexamples on GitHub.\n\n    initialize Nothing Json.Encode.int\n        |> insert 42\n",
+        "type": "a -> Merkle.Tree a -> Merkle.Tree a"
+      },
+      {
+        "name": "insertFromList",
+        "comment": " Adds elements from the list to the (`Merkle.Tree a`). The order of the\nelements is significant, therefore the first element in the list will be the\nfirst to be inserted in the `Merkle.Tree`. This is an important property in\norder to maintain consistency and to be able to recreate a tree.\n\n    [0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n\n",
+        "type": "Merkle.Tree a -> List a -> Merkle.Tree a"
+      },
+      {
+        "name": "isValid",
+        "comment": " To ensure data consistency and correctness, we can at any given point check\nif the root `hash` is actually based on all the underlying elements. This\nfunction is important to use whenever trees are imported `fromJson` as `hash`es\ncan be modified in the text format.\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> isValid Nothing) == True\n\n    ([0 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> isValid (Just [ identity ])) == False\n\n**Note**: If trees imported `fromJson` have both modified `data` and `hash`es\n  consistently, it will not be possible for this function to ensure historic\n  consistency but only correctness.\n",
+        "type": "Maybe.Maybe (List (String -> String)) -> Merkle.Tree a -> Bool"
+      },
+      {
+        "name": "singleton",
+        "comment": " Creates a (`Merkle.Tree a`) with the single element that is given which is\nbounded to the type assigned in the hash functions (`hashfs`) and JSON encoder\n(`encode`). If no hash functions are assigned or an empty list is given, then it\nwill default to `sha256sum`.\n\n    singleton 42 Nothing Json.Encode.int\n    singleton 42 (Just ([ sha256sum ])) Json.Encode.int\n    singleton 42 (Just ([ identity ])) Json.Encode.int\n",
+        "type": "a -> Maybe.Maybe (List (String -> String)) -> (a -> Json.Encode.Value) -> Merkle.Tree a"
+      },
+      {
+        "name": "toJson",
+        "comment": " Converts a `Merkle Tree a` into a prettified `JSON` string. The first\nargument specifies the amount of indentation in the resulting string while the\nsecond specifies a hash mask to ensure better readability. For compact, use `0`\nas indentation (no line break) and for readability use `4` (with line\nbreaks). For `Git` alike `hash` mask use `7` and 0 for full `hash`.\n\n    ([40 .. 42]\n        |> insertFromList\n            (initialize Nothing Json.Encode.int)\n        |> toJson 0 7)\n\nBecomes:\n\n    {\n        \"count\": 3,\n        \"hash\": \"37536cf\",\n        \"left\": {\n            \"count\": 2,\n            \"hash\": \"ae41226\",\n            \"left\": {\n                \"hash\": \"d59eced\",\n                \"data\": 40\n            },\n            \"right\": {\n                \"hash\": \"3d914f9\",\n                \"data\": 41\n            }\n        },\n        \"right\": {\n            \"count\": 1,\n            \"hash\": \"c6e4fe6\",\n            \"left\": {\n                \"hash\": \"73475cb\",\n                \"data\": 42\n            },\n            \"right\": null\n        }\n    }\n\n**Note**: If data is needed to persist, don't add any mask and ensure that full\n  length is saved. It's important in order to check for data consistency\n  (`isValid`).\n",
+        "type": "Int -> Int -> Merkle.Tree a -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
