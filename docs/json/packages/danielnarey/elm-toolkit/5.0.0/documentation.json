@@ -1,0 +1,352 @@
+[
+  {
+    "name": "Toolkit.Operators",
+    "comment": "\n\n## A set of custom infix operators for maintaining a consistent, unidirectional coding style when working with lists, `Maybe` and `Result` values, and functions that take multiple arguments\n\nAt some point after I started working in Elm, it became clear to me that\ndebugging, refactoring, and extending existing code would be a lot easier if\nI conventionalized some stylistic choices so that code blocks would always be\nformatted in a consistent way. The built-in functional operators in Elm allow\nfor a lot of flexibility in how code is written, but some of that flexibility\nhas to be reined in if we want to emphasize readability as a virtue in\nfunctional programming.\n\nIn constructing some stylistic rules for my own code, the principle I decided to\nprioritize is what I call __unidirectionality__: *the idea that a programmer\nshould be able to readily discern the sequence of function calls in a code block\nby visually scanning the code from top to bottom, and then from left to right*.\n\nAccording to this principle, the \"data\" — that is, the value or set of values\nthat the function is called *on* — should always appear at the top of the code\nblock, with functions called on the data appearing on subsequent lines. A\nnested series of function calls can appear on one line, but more complex code\nchunks should be broken up into self-contained functions using `let..in`\nstatements. Nested list brackets and complex code chunks within list brackets\nshould generally be avoided.\n\nWith the above principle, the `|>` operator is used very liberally, the `>>`\noperator is used only in rare cases, and there is no use case for \"reverse\"\n(right-to-left) functional operators. In addition to liberal use of the `|>`\noperator, I have found use cases for a small set of custom operators that help\nto maintain consistent visual formatting and enhance readability of code blocks\nby reducing clutter. I have included them here in one module so that I can\neasily import them into other projects.\n\n\n# Appending Things\n@docs (|++), (|::), (:|++), (:|::)\n\n# Function Application\n@docs (#), (||>)\n\n## with Lists\n@docs (.|>), (:|>)\n\n## with Tuples\n@docs (..|>), (@@|>)\n\n# Error Handling with `Maybe` and `Result` Values\n@docs (?=), (!=), (?|>), (!|>), (?+>), (!+>)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!+>",
+        "comment": " Forward operator for Result.andThen\n\n    String.toInt \"1\" !+> always (Err \"ERROR\")    --> Err \"ERROR\"\n",
+        "type": "Result.Result x a -> (a -> Result.Result x b) -> Result.Result x b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "!=",
+        "comment": " Forward operator for Result.withDefault\n\n    String.toInt \"123\" != 0    --> 123\n    String.toInt \"abc\" != 0    --> 0\n",
+        "type": "Result.Result x a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "!|>",
+        "comment": " Forward operator for Result.map\n\n    Ok 4.0 !|> sqrt             --> Ok 2.0\n    Err \"bad input\" !|> sqrt    --> Err \"bad input\"\n\n",
+        "type": "Result.Result x a -> (a -> value) -> Result.Result x value",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "#",
+        "comment": " An operator for\n[`flip`](http://package.elm-lang.org/packages/elm-lang/core/5.0.0/Basics#flip).\nThink of the `#` symbol as appearing where the missing argument would go.\n\n    4 |> (/) 2        --> 0.5\n    4 |> flip (/) 2   --> 2\n    4 |> (/) # 2      --> 2\n\n\n",
+        "type": "(a -> b -> c) -> b -> a -> c",
+        "associativity": "left",
+        "precedence": 9
+      },
+      {
+        "name": "..|>",
+        "comment": " Forward operator for\n[map2Tuple](http://package.elm-lang.org/packages/danielnarey/elm-toolkit/latest/Toolkit-Helpers#map2Tuple)\n\n    (1,2) ..|> (+) 1    --> (2,3)\n",
+        "type": "( a, a ) -> (a -> b) -> ( b, b )",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ".|>",
+        "comment": " Forward operator for List.map\n\n    [1,4,9] .|> sqrt    --> [1,2,3]\n",
+        "type": "List a -> (a -> b) -> List b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ":|++",
+        "comment": " Wrap LHS in a list, then append RHS list to it; equivalent to `::`, but\nleft-associative with precedence set to `0` (same as `|>`)\n\n    (\"a\" ++ \"b\") :: [\"cd\",\"ef\"]   --> [\"ab\",\"cd\",\"ef\"]\n    \"a\" ++ \"b\" :: [\"cd\",\"ef\"]     --> ERROR\n    \"a\" ++ \"b\" :|++ [\"cd\",\"ef\"]   --> [\"ab\",\"cd\",\"ef\"]\n\n",
+        "type": "a -> List a -> List a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ":|::",
+        "comment": " Wrap LHS in a list, then append the item on RHS to the list\n\n    1 :|:: 2    --> [1,2]\n\n",
+        "type": "a -> a -> List a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": ":|>",
+        "comment": " Wrap LHS in a list, then apply RHS function\n\n    1 :|> List.head   --> Just 1\n",
+        "type": "a -> (List a -> b) -> b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?+>",
+        "comment": " Forward operator for Maybe.andThen\n\n    List.head [1] ?+> always Nothing    --> Nothing\n",
+        "type": "Maybe.Maybe a -> (a -> Maybe.Maybe b) -> Maybe.Maybe b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?=",
+        "comment": " Forward operator for Maybe.withDefault\n\n    Just 42 ?= 100    --> 42\n    Nothing ?= 100    --> 100\n",
+        "type": "Maybe.Maybe a -> a -> a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "?|>",
+        "comment": " Forward operator for Maybe.map\n\n    Just 9 ?|> sqrt     --> Just 3\n    Nothing ?|> sqrt    --> Nothing\n\n",
+        "type": "Maybe.Maybe a -> (a -> b) -> Maybe.Maybe b",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "@@|>",
+        "comment": " Forward operator for\n[`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 2 parameters\n\n    (1,2) @@|> (+)    --> 3\n",
+        "type": "( a, b ) -> (a -> b -> c) -> c",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|++",
+        "comment": " Append the RHS to the end of the LHS; equivalent to `++`, but\nleft-associative with precedence set to `0` (same as `|>`)\n\n    (\"ba\" |> String.reverse) ++ \"c\"       --> \"abc\"\n    \"ba\" |> String.reverse ++ \"c\"         --> ERROR\n    \"ba\" |> String.reverse |++ \"c\"        --> \"abc\"\n\n",
+        "type": "appendable -> appendable -> appendable",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "|::",
+        "comment": " Append the item on the RHS to the end of the list on the LHS\n\n    [1] |:: 2         --> [1,2]\n    [1] |:: 2 |:: 3   --> [1,2,3]\n",
+        "type": "List a -> a -> List a",
+        "associativity": "left",
+        "precedence": 0
+      },
+      {
+        "name": "||>",
+        "comment": " Forward function application with precedence set to 9. Allows you to avoid\nparentheses when you want the argument to appear before the function name in an\ninline expression.\n\n    1 ||> toString ++ 2 ||> toString    --> \"12\"\n",
+        "type": "a -> (a -> b) -> b",
+        "associativity": "left",
+        "precedence": 9
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Toolkit.Helpers",
+    "comment": "\n\n## Some generic helper functions for type conversion, error handling, and working with lists, tuples, and functions\n\nThis is my personal library of helper functions for writing clean,\nunidirectional, semantically pleasing Elm code. I've included all of these\nfunctions in one module so that I can easily import them into other projects.\n\n# Rounding Numbers\n@docs roundTo\n\n# String-to-Bool Conversion\n@docs toBool\n\n# Test Functions\n@docs isOneOf, isInRange, isBetween\n\n# Error Handling with Multiple `Maybe` Values\n@docs maybe2Tuple, maybe3Tuple, maybe4Tuple, maybeList\n\n# Error Handling with Multiple `Result` Values\n@docs result2Tuple, result3Tuple, result4Tuple, resultList\n\n# Getting a Value from a List\n@docs getNth\n\n# Removing Duplicate Values from a List\n@docs unique\n\n# List-Tuple Conversions\n@docs take2Tuple, take3Tuple, take4Tuple, list2Tuple, list3Tuple, list4Tuple\n@docs unzip3, unzip4, zip, zip3, zip4\n\n# Getting Values from Tuples\n@docs first3, second3, third3, first4, second4, third4, fourth4\n\n# Mapping Functions to Tuples\n@docs map2Tuple, map3Tuple, map4Tuple\n\n# Currying and Uncurrying\n@docs curry3, curry4, uncurry3, uncurry4\n\n# Applying Multiple Functions to Data\n@docs apply2, apply3, apply4, applyList\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "apply2",
+        "comment": " Given a tuple containing two functions and a value accepted by both\nfunctions, return a tuple containing the two results\n",
+        "type": "( a -> b, a -> c ) -> a -> ( b, c )"
+      },
+      {
+        "name": "apply3",
+        "comment": " Given a tuple containing three functions and a value accepted by all three\nfunctions, return a tuple containing the three results\n",
+        "type": "( a -> b, a -> c, a -> d ) -> a -> ( b, c, d )"
+      },
+      {
+        "name": "apply4",
+        "comment": " Given a tuple containing four functions and a value accepted by all four\nfunctions, return a tuple containing the four results\n",
+        "type": "( a -> b, a -> c, a -> d, a -> e ) -> a -> ( b, c, d, e )"
+      },
+      {
+        "name": "applyList",
+        "comment": " Given a list containing any number of functions and a value accepted by\nevery function in the list, return a list containing all of the results. Note\nthat to use `applyList`, all of the results must be of the same type, which is\nnot the case for the apply functions that return tuples.\n",
+        "type": "List (a -> b) -> a -> List b"
+      },
+      {
+        "name": "curry3",
+        "comment": " [`curry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#curry)\nwith 3 parameters\n",
+        "type": "(( a, b, c ) -> d) -> a -> b -> c -> d"
+      },
+      {
+        "name": "curry4",
+        "comment": " [`curry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#curry)\nwith 4 parameters\n",
+        "type": "(( a, b, c, d ) -> e) -> a -> b -> c -> d -> e"
+      },
+      {
+        "name": "first3",
+        "comment": " Return the first value of a 3-tuple\n",
+        "type": "( a, b, c ) -> a"
+      },
+      {
+        "name": "first4",
+        "comment": " Return the first value of a 4-tuple\n",
+        "type": "( a, b, c, d ) -> a"
+      },
+      {
+        "name": "fourth4",
+        "comment": " Return the fourth value of a 4-tuple\n",
+        "type": "( a, b, c, d ) -> d"
+      },
+      {
+        "name": "getNth",
+        "comment": " Get the value at the nth place of a list without converting the list to an\narray; returns `Nothing` if the list contains fewer than `n + 1` items, or if\n`n` is negative\n\n    getNth 0 [1, 3, 9, 27]    --> Just 1\n    getNth 3 [1, 3, 9, 27]    --> Just 27\n    getNth 4 [1, 3, 9, 27]    --> Nothing\n    getNth -1 [1, 3, 9, 27]   --> Nothing\n\n",
+        "type": "Int -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "isBetween",
+        "comment": " Given a pair of values defining an interval and a test value, returns `True`\nif the test value falls strictly *between* the endpoints of the interval, such\nthat a test value equal to one of the endpoints will return `False`\n",
+        "type": "( comparable, comparable ) -> comparable -> Bool"
+      },
+      {
+        "name": "isInRange",
+        "comment": " Given a pair of values defining an interval and a test value, returns `True`\nif the test value falls within the interval, *including* its endpoints\n",
+        "type": "( comparable, comparable ) -> comparable -> Bool"
+      },
+      {
+        "name": "isOneOf",
+        "comment": " Given a list and a test value, returns `True` if the list contains a value\nequal to the test value.\n\nEquivalent to\n[List.member](http://package.elm-lang.org/packages/elm-lang/core/latest/List#member)\nwith the arguments flipped\n",
+        "type": "List a -> a -> Bool"
+      },
+      {
+        "name": "list2Tuple",
+        "comment": " Given a 2-tuple where both values are of the same type, return a list\ncontaining those values\n",
+        "type": "( a, a ) -> List a"
+      },
+      {
+        "name": "list3Tuple",
+        "comment": " Given a 3-tuple where all three values are of the same type, return a list\ncontaining those values\n",
+        "type": "( a, a, a ) -> List a"
+      },
+      {
+        "name": "list4Tuple",
+        "comment": " Given a 4-tuple where all four values are of the same type, return a list\ncontaining those values\n",
+        "type": "( a, a, a, a ) -> List a"
+      },
+      {
+        "name": "map2Tuple",
+        "comment": " Apply a function to both values in a 2-tuple and return the results as a\n2-tuple\n",
+        "type": "(a -> b) -> ( a, a ) -> ( b, b )"
+      },
+      {
+        "name": "map3Tuple",
+        "comment": " Apply a function to all 3 values in a 3-tuple and return the results as a\n3-tuple\n",
+        "type": "(a -> b) -> ( a, a, a ) -> ( b, b, b )"
+      },
+      {
+        "name": "map4Tuple",
+        "comment": " Apply a function to all 4 values in a 4-tuple and return the results as a\n4-tuple\n",
+        "type": "(a -> b) -> ( a, a, a, a ) -> ( b, b, b, b )"
+      },
+      {
+        "name": "maybe2Tuple",
+        "comment": " Given a 2-tuple of `Maybe` values, if both values are defined, return `Just`\nthe 2-tuple of values; otherwise, return `Nothing`\n\n    maybe2Tuple (Just 1, Just 2)    --> Just (1,2)\n    maybe2Tuple (Just 1, Nothing)    --> Nothing\n",
+        "type": "( Maybe.Maybe a, Maybe.Maybe b ) -> Maybe.Maybe ( a, b )"
+      },
+      {
+        "name": "maybe3Tuple",
+        "comment": " Given a 3-tuple of `Maybe` values, if all three values are defined, return\n`Just` the 3-tuple of values; otherwise, return `Nothing`\n",
+        "type": "( Maybe.Maybe a, Maybe.Maybe b, Maybe.Maybe c ) -> Maybe.Maybe ( a, b, c )"
+      },
+      {
+        "name": "maybe4Tuple",
+        "comment": " Given a 4-tuple of `Maybe` values, if all four values are defined, return\n`Just` the 4-tuple of values; otherwise, return `Nothing`\n",
+        "type": "( Maybe.Maybe a, Maybe.Maybe b, Maybe.Maybe c, Maybe.Maybe d ) -> Maybe.Maybe ( a, b, c, d )"
+      },
+      {
+        "name": "maybeList",
+        "comment": " Given a list of `Maybe` values, if all values are defined, return\n`Just` the list of values; otherwise, return `Nothing`. When passed an empty\nlist, returns `Just` an empty list.\n\n    maybeList [Just 1, Just 2]    --> Just [1,2]\n    maybeList [Just 1, Nothing]   --> Nothing\n    maybeList []                  --> Just []\n\n",
+        "type": "List (Maybe.Maybe a) -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "result2Tuple",
+        "comment": " Given a 2-tuple of `Result` values, if both values are `Ok`, return an `Ok`\nresult containing the 2-tuple of values; otherwise, return an `Err` value.\n\n    result2Tuple \"ERROR\" (Ok 1, Ok 2)       --> Ok (1,2)\n    result2Tuple \"ERROR\" (Ok 1, Err \"..\")   --> Err \"ERROR\"\n",
+        "type": "x -> ( Result.Result x a, Result.Result x b ) -> Result.Result x ( a, b )"
+      },
+      {
+        "name": "result3Tuple",
+        "comment": " Given a 3-tuple of `Result` values, if all three values are `Ok`, return an\n`Ok` result containing the 3-tuple of values; otherwise, return an `Err`\nvalue.\n",
+        "type": "x -> ( Result.Result x a, Result.Result x b, Result.Result x c ) -> Result.Result x ( a, b, c )"
+      },
+      {
+        "name": "result4Tuple",
+        "comment": " Given a 4-tuple of `Result` values, if all three values are `Ok`, return an\n`Ok` result containing the 4-tuple of values; otherwise, return an `Err`\nvalue.\n",
+        "type": "x -> ( Result.Result x a , Result.Result x b , Result.Result x c , Result.Result x d ) -> Result.Result x ( a, b, c, d )"
+      },
+      {
+        "name": "resultList",
+        "comment": " Given a list of `Result` values, if all values are `Ok`, return an `Ok`\nresult containing the list of values; otherwise, return an error message. When\npassed an empty list, returns `Ok []`.\n\n    resultList \"ERROR\" [Ok 1, Ok 2]       --> Ok [1,2]\n    resultList \"ERROR\" [Ok 1, Err \"..\"]   --> Err \"ERROR\"\n    resultList []                         --> Ok []\n\n",
+        "type": "x -> List (Result.Result x a) -> Result.Result x (List a)"
+      },
+      {
+        "name": "roundTo",
+        "comment": " Round a `Float` to a given number of decimal places\n\n    pi |> roundTo 2      --> 3.14\n    pi |> roundTo 0      --> 3\n    1234 |> roundTo -2   --> 1200\n",
+        "type": "Int -> Float -> Float"
+      },
+      {
+        "name": "second3",
+        "comment": " Return the second value of a 3-tuple\n",
+        "type": "( a, b, c ) -> b"
+      },
+      {
+        "name": "second4",
+        "comment": " Return the second value of a 4-tuple\n",
+        "type": "( a, b, c, d ) -> b"
+      },
+      {
+        "name": "take2Tuple",
+        "comment": " Returns the first two items in a list as a 2-tuple, or `Nothing` if the list\ncontains fewer than two items\n\n    take2Tuple [1,2]    --> Just (1,2)\n    take2Tuple [1,2,3]  --> Just (1,2)\n    take2Tuple [1]      --> Nothing\n",
+        "type": "List a -> Maybe.Maybe ( a, a )"
+      },
+      {
+        "name": "take3Tuple",
+        "comment": " Returns the first three items in a list as a 3-tuple, or `Nothing` if the\nlist contains fewer than three items\n",
+        "type": "List a -> Maybe.Maybe ( a, a, a )"
+      },
+      {
+        "name": "take4Tuple",
+        "comment": " Returns the first four items in a list as a 4-tuple, or `Nothing` if the\nlist contains fewer than four items\n",
+        "type": "List a -> Maybe.Maybe ( a, a, a, a )"
+      },
+      {
+        "name": "third3",
+        "comment": " Return the third value of a 3-tuple\n",
+        "type": "( a, b, c ) -> c"
+      },
+      {
+        "name": "third4",
+        "comment": " Return the third value of a 4-tuple\n",
+        "type": "( a, b, c, d ) -> c"
+      },
+      {
+        "name": "toBool",
+        "comment": " Convert a boolean string to a `Bool`, ignoring case\n\n    toBool \"true\"     --> Ok True\n    toBool \"True\"     --> Ok True\n    toBool \"false\"    --> Ok False\n    toBool \"FALSE\"    --> Ok False\n    toBool \"blah\"     --> Err \"String argument must be 'true' or 'false' (case ignored)\"\n",
+        "type": "String -> Result.Result String Bool"
+      },
+      {
+        "name": "uncurry3",
+        "comment": " [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 3 parameters\n",
+        "type": "(a -> b -> c -> d) -> ( a, b, c ) -> d"
+      },
+      {
+        "name": "uncurry4",
+        "comment": " [`uncurry`](http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#uncurry)\nwith 4 parameters\n",
+        "type": "(a -> b -> c -> d -> e) -> ( a, b, c, d ) -> e"
+      },
+      {
+        "name": "unique",
+        "comment": " Given a list of values, returns the unique values as a list sorted from\nhighest to lowest\n",
+        "type": "List comparable -> List comparable"
+      },
+      {
+        "name": "unzip3",
+        "comment": " Convert a 3-tuple of lists to a list of 3-tuples (see\n[List.unzip](package.elm-lang.org/packages/elm-lang/core/latest/List#unzip))\n",
+        "type": "( List a, List b, List c ) -> List ( a, b, c )"
+      },
+      {
+        "name": "unzip4",
+        "comment": " Convert a 4-tuple of lists to a list of 4-tuples\n",
+        "type": "( List a, List b, List c, List d ) -> List ( a, b, c, d )"
+      },
+      {
+        "name": "zip",
+        "comment": " Convert a 2-tuple of lists to a list of 2-tuples\n\n    zip ([0,17,1337], [True,False,True])\n\n    --> [(0, True), (17, False), (1337, True)]\n\n",
+        "type": "( List a, List b ) -> List ( a, b )"
+      },
+      {
+        "name": "zip3",
+        "comment": " Convert a 3-tuple of lists to a list of 3-tuples\n",
+        "type": "( List a, List b, List c ) -> List ( a, b, c )"
+      },
+      {
+        "name": "zip4",
+        "comment": " Convert a 4-tuple of lists to a list of 4-tuples\n",
+        "type": "( List a, List b, List c, List d ) -> List ( a, b, c, d )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

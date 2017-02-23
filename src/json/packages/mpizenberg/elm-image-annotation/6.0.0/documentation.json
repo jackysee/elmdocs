@@ -1,0 +1,350 @@
+[
+  {
+    "name": "DrawingArea.Viewer",
+    "comment": " This module provides functions to manage the viewing of the drawing area.\n\n# Model\n@docs Viewer, default\n\n# Update\n@docs setSize, center, centerAt\n@docs setZoom, setZoomCentered, zoomIn, zoomOut\n@docs fitImage\n@docs move, positionIn, sizeIn\n\n# View\n@docs viewSet\n",
+    "aliases": [
+      {
+        "name": "Viewer",
+        "comment": " Parameters of the viewer.\n",
+        "args": [],
+        "type": "{ frame : OpenSolid.Geometry.Types.Frame2d , size : OpenSolid.Geometry.Types.Vector2d , zoom : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "center",
+        "comment": " Compute the center point of the viewing area.\n",
+        "type": "DrawingArea.Viewer.Viewer -> OpenSolid.Geometry.Types.Point2d"
+      },
+      {
+        "name": "centerAt",
+        "comment": " Recenter the viewing area at a given point.\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "default",
+        "comment": " Default viewer.\n",
+        "type": "DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "fitImage",
+        "comment": " Fit the view so that the image takes a certain percentage of its max viewable size.\n",
+        "type": "Float -> Image.Image -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "move",
+        "comment": " Move the viewer.\n",
+        "type": "OpenSolid.Geometry.Types.Vector2d -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "positionIn",
+        "comment": " Transform coordinates of a point in the frame to their actual coordinates.\n",
+        "type": "DrawingArea.Viewer.Viewer -> ( Float, Float ) -> ( Float, Float )"
+      },
+      {
+        "name": "setSize",
+        "comment": " Resize the viewer.\n",
+        "type": "( Float, Float ) -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "setZoom",
+        "comment": " Set the zoom value.\n",
+        "type": "Float -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "setZoomCentered",
+        "comment": " Set zoom value while keeping the current center.\n",
+        "type": "Float -> DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "sizeIn",
+        "comment": " Scale a size in the frame to its actual size.\n",
+        "type": "DrawingArea.Viewer.Viewer -> ( Float, Float ) -> ( Float, Float )"
+      },
+      {
+        "name": "viewSet",
+        "comment": " View the svg tag representing the DrawingArea model.\n",
+        "type": "List (Html.Attribute msg) -> DrawingArea.Viewer.Viewer -> Maybe.Maybe Image.Image -> Annotation.Set.Set -> Html.Html msg"
+      },
+      {
+        "name": "zoomIn",
+        "comment": " Zoom in (x2).\n",
+        "type": "DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      },
+      {
+        "name": "zoomOut",
+        "comment": " Zoom out (x0.5).\n",
+        "type": "DrawingArea.Viewer.Viewer -> DrawingArea.Viewer.Viewer"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Annotation.Set",
+    "comment": " Annotation.Set aims at managing a set of annotations.\nBasically, it is an array of Annotation.\nSo anything that can be done on arrays can be done on an Annotation.Set.\n\n# Model\n@docs Set\n\n# Update\n@docs remove\n\n# View\n@docs view, selectTag\n",
+    "aliases": [
+      {
+        "name": "Set",
+        "comment": " An annotation set is basically an array of annotations.\n",
+        "args": [],
+        "type": "Array.Array Annotation.Annotation"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "remove",
+        "comment": " Remove the annotation at the given index from the set.\n",
+        "type": "Int -> Annotation.Set.Set -> Annotation.Set.Set"
+      },
+      {
+        "name": "selectTag",
+        "comment": " Create a <select> tag with an <option> tag for each annotation.\n",
+        "type": "(Annotation.Option -> msg) -> Annotation.Option -> Annotation.Set.Set -> Html.Html msg"
+      },
+      {
+        "name": "view",
+        "comment": " View of the SVG representation of all the annotations in the set.\n",
+        "type": "Annotation.Set.Set -> List (Svg.Svg msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Annotation",
+    "comment": " An annotation can be a selection or a scribble.\n\n# Model\n@docs Annotation, Input, empty\n\n# Update\n@docs setLabel, setRectangle, initOutline, initScribble, addPoint, update\n\n# View\n@docs view, Option, optionDescriber\n\n# Exports\n@docs encodePath\n\n# Other\n@docs isValid\n",
+    "aliases": [
+      {
+        "name": "Annotation",
+        "comment": " An annotation is a labelled visual input.\n",
+        "args": [],
+        "type": "{ label : String, input : Annotation.Input }"
+      },
+      {
+        "name": "Option",
+        "comment": " Option type used for <select> tags\n",
+        "args": [],
+        "type": "Maybe.Maybe ( Int, Annotation.Annotation )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Input",
+        "comment": " A visual input related to an image.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addPoint",
+        "comment": " Add a point to the input\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> Annotation.Annotation -> Annotation.Annotation"
+      },
+      {
+        "name": "empty",
+        "comment": " An empty annotation, only useful as startup.\n",
+        "type": "String -> Annotation.Annotation"
+      },
+      {
+        "name": "encodePath",
+        "comment": " Encode the path of an annotation\n",
+        "type": "Annotation.Annotation -> Json.Encode.Value"
+      },
+      {
+        "name": "initOutline",
+        "comment": " Initialize the input with origin point of the outline.\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> Annotation.Annotation -> Annotation.Annotation"
+      },
+      {
+        "name": "initScribble",
+        "comment": " Initialize the input with origin point of the scribble.\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> Annotation.Annotation -> Annotation.Annotation"
+      },
+      {
+        "name": "isValid",
+        "comment": " Indicates if the input of an annotation is valid.\n",
+        "type": "Annotation.Annotation -> Bool"
+      },
+      {
+        "name": "optionDescriber",
+        "comment": " Text of an <option> tag describing an annotation.\n",
+        "type": "Annotation.Option -> String"
+      },
+      {
+        "name": "setLabel",
+        "comment": " Set the label of an annotation.\n",
+        "type": "String -> Annotation.Annotation -> Annotation.Annotation"
+      },
+      {
+        "name": "setRectangle",
+        "comment": " Set the input to be a rectangle selection.\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> OpenSolid.Geometry.Types.Point2d -> Annotation.Annotation -> Annotation.Annotation"
+      },
+      {
+        "name": "update",
+        "comment": " Update an annotation depending on pointer events\n",
+        "type": "Pointer.Pointer -> Pointer.Track -> Tool.Tool -> Int -> Annotation.Option -> Annotation.Option"
+      },
+      {
+        "name": "view",
+        "comment": " View an annotation input.\n",
+        "type": "Annotation.Annotation -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Pointer",
+    "comment": " This module aims at giving helper functions to deal with pointer events.\n\n@docs Event, Pointer, Track, updateTrack, offset, movement\n@docs offsetOn, touchOffsetOn, movementOn, attributes, noToolAttributes, toolAttributes\n@docs askTime\n",
+    "aliases": [
+      {
+        "name": "Pointer",
+        "comment": " A Pointer.\n",
+        "args": [],
+        "type": "{ event : Pointer.Event , offsetX : Float , offsetY : Float , movementX : Float , movementY : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Event",
+        "comment": " Events generated by a pointer device.\n",
+        "args": [],
+        "cases": [
+          [
+            "Down",
+            []
+          ],
+          [
+            "Move",
+            []
+          ],
+          [
+            "Up",
+            []
+          ],
+          [
+            "Cancel",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Track",
+        "comment": " Track the first and last pointer events.\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Started",
+            [
+              "Pointer.Pointer"
+            ]
+          ],
+          [
+            "Moved",
+            [
+              "Pointer.Pointer",
+              "Pointer.Pointer"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "askTime",
+        "comment": " Use a message maker (tagger) to create a command message giving Time.now.\n",
+        "type": "(Time.Time -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "attributes",
+        "comment": " Returns a list of attribute messages with useful mouse events listeners.\n",
+        "type": "(Pointer.Pointer -> msg) -> Tool.Tool -> Maybe.Maybe Pointer.Pointer -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "movement",
+        "comment": " Returns (movementX, movementY).\n",
+        "type": "Pointer.Pointer -> ( Float, Float )"
+      },
+      {
+        "name": "movementOn",
+        "comment": " Returns movementOn attribute.\n",
+        "type": "String -> Pointer.Event -> (Pointer.Pointer -> msg) -> (( Float, Float ) -> ( Float, Float )) -> Html.Attribute msg"
+      },
+      {
+        "name": "noToolAttributes",
+        "comment": " Returns a list of attribute messages to detect movement when no tool is used.\n",
+        "type": "(Pointer.Pointer -> msg) -> Maybe.Maybe Pointer.Pointer -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "offset",
+        "comment": " Returns (offsetX, offsetY).\n",
+        "type": "Pointer.Pointer -> ( Float, Float )"
+      },
+      {
+        "name": "offsetOn",
+        "comment": " Returns offsetOn attribute.\n",
+        "type": "String -> Pointer.Event -> (Pointer.Pointer -> msg) -> (( Float, Float ) -> ( Float, Float )) -> Html.Attribute msg"
+      },
+      {
+        "name": "toolAttributes",
+        "comment": " Returns a list of attribute messages to detect movement when a tool is used.\n",
+        "type": "(Pointer.Pointer -> msg) -> Maybe.Maybe Pointer.Pointer -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "touchOffsetOn",
+        "comment": " Returns touchOffsetOn attribute.\n",
+        "type": "String -> Pointer.Event -> (Pointer.Pointer -> msg) -> (( Float, Float ) -> ( Float, Float )) -> Html.Attribute msg"
+      },
+      {
+        "name": "updateTrack",
+        "comment": " Update a record track with a new pointer event.\n",
+        "type": "Pointer.Pointer -> Pointer.Track -> Pointer.Track"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Tool",
+    "comment": " Tools aims at providing helper functions related to the drawing area tools.\n\n@docs Tool, selectTag\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Tool",
+        "comment": " The type of tool that can be used to draw inputs.\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Rectangle",
+            []
+          ],
+          [
+            "Outline",
+            []
+          ],
+          [
+            "Scribble",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "selectTag",
+        "comment": " An html <select> tag enabling the choice of a tool.\n",
+        "type": "(Tool.Tool -> msg) -> Tool.Tool -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
