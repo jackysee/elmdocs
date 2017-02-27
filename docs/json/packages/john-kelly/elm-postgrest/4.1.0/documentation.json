@@ -1,0 +1,252 @@
+[
+  {
+    "name": "PostgRest",
+    "comment": " A query builder library for PostgREST.\n\nI recommend looking at the [examples](https://github.com/john-kelly/elm-postgrest/blob/master/examples/Main.elm) before diving into the API or source code.\n\n# Define a Resource\n@docs Resource, resource\n\n### Fields\n@docs Field, string, int, float, bool, field, nullable\n\n### Relations\n@docs Relation, HasOne, hasOne, hasMany, HasMany\n\n# Build a Query\n@docs Query, query\n\n### Selecting and Nesting\n@docs select, hardcoded, include, includeMany\n\n### Filtering\n@docs Filter, filter, like, ilike, eq, gte, gt, lte, lt, inList, is, not\n\n### Ordering\n@docs OrderBy, order, asc, desc\n\n### Limiting\n@docs Limit, limitTo, noLimit\n\n# Send a Query\n@docs list, first\n\n### Pagination\n@docs Page, paginate\n\n",
+    "aliases": [
+      {
+        "name": "Page",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ data : List a, count : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Field",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Filter",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "HasMany",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "HasOne",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Limit",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "OrderBy",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Query",
+        "comment": " ",
+        "args": [
+          "uniq",
+          "schema",
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Relation",
+        "comment": " ",
+        "args": [
+          "a",
+          "uniq"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Resource",
+        "comment": " ",
+        "args": [
+          "uniq",
+          "schema"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "asc",
+        "comment": " Ascending\n",
+        "type": "(schema -> PostgRest.Field a) -> schema -> PostgRest.OrderBy"
+      },
+      {
+        "name": "bool",
+        "comment": " ",
+        "type": "String -> PostgRest.Field Bool"
+      },
+      {
+        "name": "desc",
+        "comment": " Descending\n",
+        "type": "(schema -> PostgRest.Field a) -> schema -> PostgRest.OrderBy"
+      },
+      {
+        "name": "eq",
+        "comment": " Equals\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "field",
+        "comment": " ",
+        "type": "Json.Decode.Decoder a -> (a -> String) -> String -> PostgRest.Field a"
+      },
+      {
+        "name": "filter",
+        "comment": " Apply filters to a query\n",
+        "type": "List (schema -> PostgRest.Filter) -> PostgRest.Query uniq schema a -> PostgRest.Query uniq schema a"
+      },
+      {
+        "name": "first",
+        "comment": " Takes `url` and a `query`, returns an Http.Request\n",
+        "type": "String -> PostgRest.Query uniq schema a -> Http.Request (Maybe.Maybe a)"
+      },
+      {
+        "name": "float",
+        "comment": " ",
+        "type": "String -> PostgRest.Field Float"
+      },
+      {
+        "name": "gt",
+        "comment": " Greater than\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "gte",
+        "comment": " Greater than or equal to\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "hardcoded",
+        "comment": " ",
+        "type": "a -> PostgRest.Query uniq schema (a -> b) -> PostgRest.Query uniq schema b"
+      },
+      {
+        "name": "hasMany",
+        "comment": " ",
+        "type": "uniq -> PostgRest.Relation PostgRest.HasMany uniq"
+      },
+      {
+        "name": "hasOne",
+        "comment": " ",
+        "type": "uniq -> PostgRest.Relation PostgRest.HasOne uniq"
+      },
+      {
+        "name": "ilike",
+        "comment": " Case-insensitive `like`\n",
+        "type": "String -> (schema -> PostgRest.Field String) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "inList",
+        "comment": " In List\n",
+        "type": "List a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "include",
+        "comment": " ",
+        "type": "(schema1 -> PostgRest.Relation PostgRest.HasOne uniq2) -> PostgRest.Query uniq2 schema2 a -> PostgRest.Query uniq1 schema1 (Maybe.Maybe a -> b) -> PostgRest.Query uniq1 schema1 b"
+      },
+      {
+        "name": "includeMany",
+        "comment": " ",
+        "type": "(schema1 -> PostgRest.Relation PostgRest.HasMany uniq2) -> PostgRest.Limit -> PostgRest.Query uniq2 schema2 a -> PostgRest.Query uniq1 schema1 (List a -> b) -> PostgRest.Query uniq1 schema1 b"
+      },
+      {
+        "name": "int",
+        "comment": " ",
+        "type": "String -> PostgRest.Field Int"
+      },
+      {
+        "name": "is",
+        "comment": " Is comparison\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "like",
+        "comment": "\nSimple [pattern matching](https://www.postgresql.org/docs/9.5/static/functions-matching.html#FUNCTIONS-LIKE)\n",
+        "type": "String -> (schema -> PostgRest.Field String) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "limitTo",
+        "comment": " ",
+        "type": "Int -> PostgRest.Limit"
+      },
+      {
+        "name": "list",
+        "comment": " Takes `limit`, `url` and a `query`, returns an Http.Request\n",
+        "type": "PostgRest.Limit -> String -> PostgRest.Query uniq schema a -> Http.Request (List a)"
+      },
+      {
+        "name": "lt",
+        "comment": " Less than\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "lte",
+        "comment": " Less than or equal to\n",
+        "type": "a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "noLimit",
+        "comment": " ",
+        "type": "PostgRest.Limit"
+      },
+      {
+        "name": "not",
+        "comment": " Negate a Filter\n",
+        "type": "(a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter) -> a -> (schema -> PostgRest.Field a) -> schema -> PostgRest.Filter"
+      },
+      {
+        "name": "nullable",
+        "comment": " ",
+        "type": "PostgRest.Field a -> PostgRest.Field (Maybe.Maybe a)"
+      },
+      {
+        "name": "order",
+        "comment": " ",
+        "type": "List (schema -> PostgRest.OrderBy) -> PostgRest.Query uniq schema a -> PostgRest.Query uniq schema a"
+      },
+      {
+        "name": "paginate",
+        "comment": " ",
+        "type": "{ pageNumber : Int, pageSize : Int } -> String -> PostgRest.Query uniq schema a -> Http.Request (PostgRest.Page a)"
+      },
+      {
+        "name": "query",
+        "comment": " ",
+        "type": "PostgRest.Resource uniq schema -> (a -> b) -> PostgRest.Query uniq schema (a -> b)"
+      },
+      {
+        "name": "resource",
+        "comment": " ",
+        "type": "uniq -> String -> schema -> PostgRest.Resource uniq schema"
+      },
+      {
+        "name": "select",
+        "comment": " ",
+        "type": "(schema -> PostgRest.Field a) -> PostgRest.Query uniq schema (a -> b) -> PostgRest.Query uniq schema b"
+      },
+      {
+        "name": "string",
+        "comment": " ",
+        "type": "String -> PostgRest.Field String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

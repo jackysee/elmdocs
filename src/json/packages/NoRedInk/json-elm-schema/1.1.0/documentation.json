@@ -1,0 +1,187 @@
+[
+  {
+    "name": "JsonSchema.Fuzz",
+    "comment": " Fuzzers for json structures corresponding to a certain schema.\n\n@docs schemaString, schemaValue\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "schemaString",
+        "comment": " Fuzzer that generates json strings.\n",
+        "type": "JsonSchema.Model.Schema -> Fuzz.Fuzzer String"
+      },
+      {
+        "name": "schemaValue",
+        "comment": " Fuzzer that generates json values.\n",
+        "type": "JsonSchema.Model.Schema -> Fuzz.Fuzzer Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "JsonSchema",
+    "comment": " This library allows you to write your json schema files in elm, preventing inadvertent errors.\n\n# General\n@docs Schema\n\n# Schema types\n@docs object, array, string, integer, number, boolean, null, oneOf, allOf, anyOf\n\n# Keywords\n@docs title, description, enum, minimum, maximum, properties, items, minLength, maxLength, pattern, format\n\n# Property constructors\n@docs required, optional\n\n# String formats\n@docs dateTime, email, hostname, ipv4, ipv6, uri, customFormat\n",
+    "aliases": [
+      {
+        "name": "Schema",
+        "comment": " A type representing a json schema.\n",
+        "args": [],
+        "type": "JsonSchema.Model.Schema"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "allOf",
+        "comment": " Create an allOf type schema.\n",
+        "type": "List JsonSchema.BaseCombinatorSchemaProperty -> List JsonSchema.Schema -> JsonSchema.Schema"
+      },
+      {
+        "name": "anyOf",
+        "comment": " Create an anyOf type schema.\n",
+        "type": "List JsonSchema.BaseCombinatorSchemaProperty -> List JsonSchema.Schema -> JsonSchema.Schema"
+      },
+      {
+        "name": "array",
+        "comment": " Create an array type schema.\n",
+        "type": "List JsonSchema.ArraySchemaProperty -> JsonSchema.Schema"
+      },
+      {
+        "name": "boolean",
+        "comment": " Create a boolean type schema.\n",
+        "type": "List (JsonSchema.BaseSchemaProperty {}) -> JsonSchema.Schema"
+      },
+      {
+        "name": "customFormat",
+        "comment": " Create a custom value to pass to `format`.\nThis allows you to use any format supported by your json schema validator.\n",
+        "type": "String -> JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "dateTime",
+        "comment": " `date-time` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "description",
+        "comment": " `description` keyword\n",
+        "type": "String -> JsonSchema.BaseSchemaProperty extras"
+      },
+      {
+        "name": "email",
+        "comment": " `email` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "enum",
+        "comment": " `enum` keyword\n",
+        "type": "List primitive -> JsonSchema.WithEnumSchemaProperty primitive extras"
+      },
+      {
+        "name": "format",
+        "comment": " `format` keyword\n",
+        "type": "JsonSchema.Model.StringFormat -> JsonSchema.StringSchemaProperty"
+      },
+      {
+        "name": "hostname",
+        "comment": " `hostname` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "integer",
+        "comment": " Create an integer type schema.\n",
+        "type": "List JsonSchema.IntegerSchemaProperty -> JsonSchema.Schema"
+      },
+      {
+        "name": "ipv4",
+        "comment": " `ipv4` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "ipv6",
+        "comment": " `ipv6` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      },
+      {
+        "name": "items",
+        "comment": " `items` keyword\n",
+        "type": "JsonSchema.Schema -> JsonSchema.ArraySchemaProperty"
+      },
+      {
+        "name": "maxLength",
+        "comment": " `maxLength` keyword\n",
+        "type": "Int -> JsonSchema.StringSchemaProperty"
+      },
+      {
+        "name": "maximum",
+        "comment": " `maximum` keyword\n",
+        "type": "num -> JsonSchema.BaseNumberSchemaProperty num"
+      },
+      {
+        "name": "minLength",
+        "comment": " `minLength` keyword\n",
+        "type": "Int -> JsonSchema.StringSchemaProperty"
+      },
+      {
+        "name": "minimum",
+        "comment": " `minimum` keyword\n",
+        "type": "num -> JsonSchema.BaseNumberSchemaProperty num"
+      },
+      {
+        "name": "null",
+        "comment": " Create a null type schema.\n",
+        "type": "List (JsonSchema.BaseSchemaProperty {}) -> JsonSchema.Schema"
+      },
+      {
+        "name": "number",
+        "comment": " Create a number type schema.\n",
+        "type": "List JsonSchema.NumberSchemaProperty -> JsonSchema.Schema"
+      },
+      {
+        "name": "object",
+        "comment": " Create an oject type schema.\n",
+        "type": "List JsonSchema.ObjectSchemaProperty -> JsonSchema.Schema"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Create a oneOf type schema.\n",
+        "type": "List JsonSchema.BaseCombinatorSchemaProperty -> List JsonSchema.Schema -> JsonSchema.Schema"
+      },
+      {
+        "name": "optional",
+        "comment": " Create an optional property.\n",
+        "type": "String -> JsonSchema.Schema -> JsonSchema.Model.ObjectProperty"
+      },
+      {
+        "name": "pattern",
+        "comment": " `pattern` keyword\n",
+        "type": "String -> JsonSchema.StringSchemaProperty"
+      },
+      {
+        "name": "properties",
+        "comment": " `properties` keyword\n",
+        "type": "List JsonSchema.Model.ObjectProperty -> JsonSchema.ObjectSchemaProperty"
+      },
+      {
+        "name": "required",
+        "comment": " Create a required property.\n",
+        "type": "String -> JsonSchema.Schema -> JsonSchema.Model.ObjectProperty"
+      },
+      {
+        "name": "string",
+        "comment": " Create a string type schema.\n",
+        "type": "List JsonSchema.StringSchemaProperty -> JsonSchema.Schema"
+      },
+      {
+        "name": "title",
+        "comment": " `title` keyword.\n",
+        "type": "String -> JsonSchema.BaseSchemaProperty extras"
+      },
+      {
+        "name": "uri",
+        "comment": " `uri` format\n",
+        "type": "JsonSchema.Model.StringFormat"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

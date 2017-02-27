@@ -1,0 +1,107 @@
+[
+  {
+    "name": "FormCapture.Readers",
+    "comment": " ## Read values captured from form input with type validation\n\n# Reading Input Values\n@docs readStringAt, readIntAt, readFloatAt, readBoolAt, readCustomAt\n\n# Converting `FormInput` to JSON\n@docs toJson\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "readBoolAt",
+        "comment": " Given an `id` string and a `FormInput` dictionary, attempt to look up the\nvalue captured from the element with that `id` and decode it as a `Bool`.\n\nReturns an error message if no value was captured at that `id`, if the decoder\nfails, or if the value is a type other than BoolInput.\n\n",
+        "type": "String -> FormCapture.FormInput a -> Result.Result String Bool"
+      },
+      {
+        "name": "readCustomAt",
+        "comment": " Given an `id` string and a `FormInput` dictionary, attempt to look up the\nvalue captured from the element with that `id` and decode it with a custom\ndecoder.\n\nReturns an error message if no value was captured at that `id`, if the decoder\nfails, or if the value is a type other than CustomInput.\n\n",
+        "type": "String -> FormCapture.FormInput a -> Result.Result String a"
+      },
+      {
+        "name": "readFloatAt",
+        "comment": " Given an `id` string and a `FormInput` dictionary, attempt to look up the\nvalue captured from the element with that `id` and decode it as a `Float`.\n\nReturns an error message if no value was captured at that `id`, if the decoder\nfails, or if the value is a type other than FloatInput.\n\n",
+        "type": "String -> FormCapture.FormInput a -> Result.Result String Float"
+      },
+      {
+        "name": "readIntAt",
+        "comment": " Given an `id` string and a `FormInput` dictionary, attempt to look up the\nvalue captured from the element with that `id` and decode it as an `Int`.\n\nReturns an error message if no value was captured at that `id`, if the decoder\nfails, or if the value is a type other than IntInput.\n\n",
+        "type": "String -> FormCapture.FormInput a -> Result.Result String Int"
+      },
+      {
+        "name": "readStringAt",
+        "comment": " Given an `id` string and a `FormInput` dictionary, attempt to look up the\nvalue captured from the element with that `id` and decode it as a string.\n\nReturns an error message if no value was captured at that `id`, if the decoder\nfails, or if the value is a type other than StringInput.\n\n",
+        "type": "String -> FormCapture.FormInput a -> Result.Result String String"
+      },
+      {
+        "name": "toJson",
+        "comment": " Given a `FormInput` dictionary, return a JSON object containing every\nkey-value pair in the dictionary, with values converted to corresponding\nJavaScript types.\n\n    --simulated input\n    input1 = ( \"userName\", StringInput (Json.Encode.string \"Bob\") )\n    input2 = (\"userAge\", IntInput (Json.Encode.string \"33\") )\n    formInput = Dict.fromList [ input1, input2 ]\n\n    formInput\n      |> toJson\n\n    --> { userAge = 33, userName = \"Bob\" } : Json.Decode.Value\n",
+        "type": "FormCapture.FormInput a -> Json.Decode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "FormCapture",
+    "comment": "\n\n## Capture form input as a dictionary keyed by component id\n\nThe Elm `Html` package lacks a set of built-in functions for capturing input\nfrom a form with multiple fields, and implementing form capture from scratch\ncan be tricky. The `FormCapture` library makes it easy to capture form input by\nabstracting out a lot of the implementation details. You only need to specify an\n`id` string and input type key for each form element, and the rendering function\nuses that data to generate a decoder that will be applied on a `submit` event.\nThe HTML specification for each form element is entirely customizable using\nstandard `Html` or the alternative\n[`HtmlTree`](http://package.elm-lang.org/packages/danielnarey/elm-html-tree/)\nsyntax.\n\n# Input Representation\n@docs FormInput\n\n# Form Representation\n@docs Form, FormElement\n\n# Constructing Form Elements\n@docs elementFromHtml, elementFromHtmlTree\n\n# Constructing a Form\n@docs newForm, addFormElement\n\n# Rendering a Form\n@docs formToHtml, formToHtmlTree\n\nSee\n[examples/FormInput.elm](https://github.com/danielnarey/elm-form-capture/blob/master/examples/)\nfor a full working example.\n",
+    "aliases": [
+      {
+        "name": "Form",
+        "comment": " Represents an HTML form\n",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ captureKey : FormCapture.FormInput a -> msg , elements : List (FormCapture.FormElement msg a) }"
+      },
+      {
+        "name": "FormElement",
+        "comment": " Represents an HTML form element\n",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ id : String , inputKey : Json.Decode.Value -> InputValidation.TypedInput a , component : FormCapture.FormComponent msg }"
+      },
+      {
+        "name": "FormInput",
+        "comment": " Represents input captured from a form with multiple fields. Implemented as a\ndictionary, where the *key* is the `id` of the input element and the *value* is\nits captured value as\n[`TypedInput`](http://package.elm-lang.org/packages/danielnarey/elm-input-validation/latest/InputValidation#TypedInput).\n",
+        "args": [
+          "a"
+        ],
+        "type": "Dict.Dict String (InputValidation.TypedInput a)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addFormElement",
+        "comment": " Add a new element to a form, *retaining* any existing elements\n\n    let\n      myForm =\n        [\n          ...\n        ]\n          |> newForm Submit\n\n      newElement =\n        [\n          ...\n        ]\n          |> elementFromHtml (\"myId\", StringInput)\n\n    in\n      myForm\n        |> addElement newElement\n\n",
+        "type": "FormCapture.FormElement msg a -> FormCapture.Form msg a -> FormCapture.Form msg a"
+      },
+      {
+        "name": "elementFromHtml",
+        "comment": " Create a form element by supplying a tuple containing an id string and a\n[`TypedInput`](http://package.elm-lang.org/packages/danielnarey/elm-input-validation/latest/InputValidation#TypedInput)\nkey as the first arugment and an `Html` node containing the input field or\nselector from which input will be captured as the second argument. For form\ncapture to succeed, the input or select element contained within the node\nmust be assigned an `id` attribute matching the one passed to this function.\n\nUse this function if you are generating your view components with the standard\n`Html` package.\n\n    import Html\n    import Html.Attributes as Attr\n    ...\n\n    [ Html.label [] [ \"What is your name?\" ]\n    , Html.input [ Attr.type' \"text\", Attr.id \"name\" ] []\n    ]\n      |> Html.div []\n      |> elementFromHtml (\"name\", StringInput)\n\n",
+        "type": "( String, Json.Decode.Value -> InputValidation.TypedInput a ) -> Html.Html msg -> FormCapture.FormElement msg a"
+      },
+      {
+        "name": "elementFromHtmlTree",
+        "comment": " Create a form element by supplying a tuple containing an id string and a\n[`TypedInput`](http://package.elm-lang.org/packages/danielnarey/elm-input-validation/latest/InputValidation#TypedInput)\nkey as the first arugment and an\n[`HtmlTree`](http://package.elm-lang.org/packages/danielnarey/elm-html-tree/latest/HtmlTree)\ncontaining the input field or selector from which input will be captured as the\nsecond argument. For form capture to succeed, the input or select element\ncontained within the node must be assigned an `id` attribute matching the one\npassed to this function.\n\nUse this function if you you are generating your view components with the\nnon-standard\n[`HtmlTree`](http://package.elm-lang.org/packages/danielnarey/elm-html-tree/)\npackage.\n\n    import HtmlTree as Tree\n    ...\n\n    [ \"What is your name?\"\n      |> Tree.textWrapper \"label\"\n    , Tree.leaf \"input\"\n      |> Tree.withId \"name\"\n      |> Tree.addAttribute (\"type\", \"text\")\n    ]\n      |> Tree.container \"div\"\n      |> elementFromHtmlTree (\"name\", StringInput)\n\n",
+        "type": "( String, Json.Decode.Value -> InputValidation.TypedInput a ) -> HtmlTree.HtmlTree msg -> FormCapture.FormElement msg a"
+      },
+      {
+        "name": "formToHtml",
+        "comment": " Render a form to standard `Html`. Use this function if you are generating\nyour view components with the standard `Html` package.\n\n    div [] [ myForm |> toHtml ]\n\nA submit button for the form will be added as the last form element when it is\nrendered to `Html`. The button is assigned class \"submit-button\" to make it\neasier to style with CSS.\n",
+        "type": "FormCapture.Form msg a -> Html.Html msg"
+      },
+      {
+        "name": "formToHtmlTree",
+        "comment": " Convert a form to an\n[`HtmlTree`](http://package.elm-lang.org/packages/danielnarey/elm-html-tree/latest/HtmlTree).\nUse this function if you you are generating your view components with the\nnon-standard\n[`HtmlTree`](http://package.elm-lang.org/packages/danielnarey/elm-html-tree/)\npackage.\n\n    myForm\n      |> toHtmlTree\n      |> List.singleton\n      |> container \"div\"\n\nA submit button for the form will be added as the last form element when it is\nconverted to an `HtmlTree`. The button is assigned class \"submit-button\" to\nmake it easier to style with CSS.\n",
+        "type": "FormCapture.Form msg a -> HtmlTree.HtmlTree msg"
+      },
+      {
+        "name": "newForm",
+        "comment": " Create a `Form` object by supplying the type key of a message that accepts\n`FormInput` and a list of `FormElement` records.\n\n    type Msg a\n      = Submit (FormInput a)\n    ...\n\n    let\n      formElements =\n        [\n          ...\n        ]\n\n    in\n      formElements\n        |> newForm Submit\n\n",
+        "type": "(FormCapture.FormInput a -> msg) -> List (FormCapture.FormElement msg a) -> FormCapture.Form msg a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

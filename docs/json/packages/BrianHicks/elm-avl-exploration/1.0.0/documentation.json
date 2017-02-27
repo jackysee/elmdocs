@@ -1,0 +1,131 @@
+[
+  {
+    "name": "Dict.Avl",
+    "comment": " A dictionary mapping unique keys to values. The keys can be any comparable\ntype. This includes `Int`, `Float`, `Time`, `Char`, `String`, and tuples or\nlists of comparable types.\n\nInsert, remove, and query operations all take *O(log n)* time.\n\n# Dictionaries\n@docs Dict\n\n# Build\n@docs empty, singleton, insert, update, remove\n\n# Query\n@docs isEmpty, member, get, size\n\n# Lists\n@docs keys, values, toList, fromList\n\n# Transform\n@docs map, foldl, foldr, filter, partition\n\n# Combine\n@docs union, intersect, diff, merge\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Dict",
+        "comment": " A dictionary of keys and values. So a `(Dict String User)` is a dictionary\nthat lets you look up a `String` (such as user names) and find the associated\n`User`.\n",
+        "args": [
+          "k",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary.\n",
+        "type": "Dict.Avl.Dict k v"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate.\n",
+        "type": "(comparable -> v -> Bool) -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from lowest\nkey to highest key.\n",
+        "type": "(comparable -> v -> b -> b) -> b -> Dict.Avl.Dict comparable v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from highest\nkey to lowest key.\n",
+        "type": "(comparable -> v -> b -> b) -> b -> Dict.Avl.Dict comparable v -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary.\n",
+        "type": "List ( comparable, v ) -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`. This is useful when you are not sure if a key will be in the\ndictionary.\n\n    animals = fromList [ (\"Tom\", Cat), (\"Jerry\", Mouse) ]\n\n    get \"Tom\"   animals == Just Cat\n    get \"Jerry\" animals == Just Mouse\n    get \"Spike\" animals == Nothing\n",
+        "type": "comparable -> Dict.Avl.Dict comparable v -> Maybe.Maybe v"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces value when there is\na collision.\n",
+        "type": "comparable -> v -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary.\n",
+        "type": "Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a dictionary is empty.\n    isEmpty empty == True\n",
+        "type": "Dict.Avl.Dict k v -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary, sorted from lowest to highest.\n    keys (fromList [(0,\"Alice\"),(1,\"Bob\")]) == [0,1]\n",
+        "type": "Dict.Avl.Dict comparable v -> List comparable"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\n",
+        "type": "(comparable -> a -> b) -> Dict.Avl.Dict comparable a -> Dict.Avl.Dict comparable b"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a key is in a dictionary.\n",
+        "type": "comparable -> Dict.Avl.Dict comparable v -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two dictionaries. You provide three\naccumulators for when a given key appears:\n\n  1. Only in the left dictionary.\n  2. In both dictionaries.\n  3. Only in the right dictionary.\n\nYou then traverse all the keys from lowest to highest, building up whatever\nyou want.\n",
+        "type": "(comparable -> a -> result -> result) -> (comparable -> a -> b -> result -> result) -> (comparable -> b -> result -> result) -> Dict.Avl.Dict comparable a -> Dict.Avl.Dict comparable b -> result -> result"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(comparable -> v -> Bool) -> Dict.Avl.Dict comparable v -> ( Dict.Avl.Dict comparable v, Dict.Avl.Dict comparable v )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made.\n",
+        "type": "comparable -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair.\n",
+        "type": "comparable -> v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "size",
+        "comment": " Determine the number of key-value pairs in the dictionary.\n",
+        "type": "Dict.Avl.Dict comparable v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs, sorted by\nkeys.\n",
+        "type": "Dict.Avl.Dict comparable v -> List ( comparable, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If there is a collision, preference is given\nto the first dictionary.\n",
+        "type": "Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value of a dictionary for a specific key with a given function.\n",
+        "type": "comparable -> (Maybe.Maybe v -> Maybe.Maybe v) -> Dict.Avl.Dict comparable v -> Dict.Avl.Dict comparable v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary, in the order of their keys.\n    values (fromList [(0,\"Alice\"),(1,\"Bob\")]) == [\"Alice\", \"Bob\"]\n",
+        "type": "Dict.Avl.Dict comparable v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

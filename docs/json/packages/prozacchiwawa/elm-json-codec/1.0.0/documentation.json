@@ -1,0 +1,160 @@
+[
+  {
+    "name": "JsonCodec",
+    "comment": " Build json decoders and encoders simultaneously, conserving the need for\nfunctions that do each in simple cases.  This allows a single datum to embody\nboth the encoder and the decoder for a type, reducing some duplication and\nredundancy.  In simple cases, a codec can be built exclusively by composing\nother codecs.\n\nIn more complex cases, ```fold``` could be used, which allows fields to be\nencoded and extracted separately.\n\nTo just specify a decoder and encoder separately, use ```init```.\n\n    module Session exposing (..)\n\n    import JsonCodec exposing (Codec)\n    import Dict exposing (Dict)\n    import Json.Decode as JD\n    import Json.Encode as JE\n\n    type alias Session =\n        { queue : List String\n        , playing : Maybe (String, Float)\n        , likeCategories : Dict String Int\n        }\n\n    type Alternative = A | Unknown String\n\n    -- An example showing the use of ```map``` to augment a\n    -- bijective encoding.\n    altcoder : Codec Alternative\n    altcoder =\n        JsonCodec.string\n        |> JsonCodec.map\n            (\\a -> if a == \"A\" then A else Unknown a)\n            (\\v ->\n                case v of\n                    A -> \"A\"\n                    Unknown x -> x\n            )\n\n    type Picky = OptA | OptB\n    pickyOpts : Dict String Picky\n    pickyOpts = Dict.fromList [(\"A\", OptA), (\"B\", OptB)]\n\n    -- An example showing the use of ```andThen``` to exclude\n    -- bad values.\n    pickycoder : Codec Picky\n    pickycoder =\n        JsonCodec.string |> JsonCodec.andThen\n            (((flip Dict.get) pickyOpts)\n            >> Maybe.map JD.succeed\n            >> Maybe.withDefault (JD.fail \"Option must be A or B\")\n            )\n            (\\p -> pickyOpts\n            |> Dict.toList\n            |> List.filterMap (\\(k,v) -> if v == p then Just k else Nothing)\n            |> List.head\n            |> Maybe.withDefault \"A\"\n            )\n\n    -- A codec that can stand on its own and also be reused.\n    playingSerializer : Codec (Maybe (String,Float))\n    playingSerializer =\n        JsonCodec.nullable\n            (JsonCodec.object2\n                (,)\n                identity\n                (\"u\", JsonCodec.string)\n                (\"p\", JsonCodec.float)\n            )\n\n    -- Simple codec built with composition.\n    serializer : Codec Session\n    serializer =\n        JsonCodec.object3\n            Session\n            (\\s -> (s.queue,s.playing,s.likeCategories))\n            (\"queue\", JsonCodec.list JsonCodec.string)\n            (\"playing\", playingSerializer)\n            (\"like\", JsonCodec.dict JsonCodec.int)\n\n    -- An example of using fold to create the same codec.\n    foldcoder : Codec Session\n    foldcoder =\n        let setQueue q s = { s | queue = q } in\n        let setPlaying p s = { s | playing = p } in\n        let setLikeCats l s = { s | likeCategories = l } in\n        JsonCodec.fold\n            [ JsonCodec.foldField \"queue\"\n                (setQueue, JD.list JD.string)\n                (.queue >> List.map JE.string >> JE.list)\n            , JsonCodec.foldField \"playing\"\n                (setPlaying, JsonCodec.decoder playingSerializer)\n                (.playing >> JsonCodec.encoder playingSerializer)\n            , JsonCodec.foldField \"like\"\n                (setLikeCats, JD.dict JD.int)\n                (.likeCategories\n                >> Dict.map (always JE.int) >> Dict.toList >> JE.object\n                )\n            ]\n            { queue = [], playing = Nothing, likeCategories = Dict.empty }\n\n# Type\n@docs Codec\n\n# Simple codecs\n@docs string, bool, int, float, nullable, list, array, dict, keyValuePairs, singleton, object2, object3, object4, object5, object6, object7, object8, null, succeed, fail\n\n# Transform in both directions\n@docs map, andThen\n\n# Decoding alternatives\n@docs oneOf\n\n# Construction\n@docs decoder, encoder, init\n\n# Folding Construction\n@docs fold, foldField\n\n",
+    "aliases": [
+      {
+        "name": "Codec",
+        "comment": " The type of codecs constructed by the library.\n\nYou can extract a Json.Decode.Decoder with ```decoder``` and a function that\nconstructs ```Json.Encoder.Value``` with ```encoder```.\n",
+        "args": [
+          "a"
+        ],
+        "type": "( Json.Decode.Decoder a, a -> Json.Encode.Value )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Like map, but the decode function returns a decoder that will be evaluated\nnext, rather than just mapping the value.\n\n    -- An example showing the use of ```andThen``` to exclude\n    -- bad values.\n    pickycoder : Codec Picky\n    pickycoder =\n        JsonCodec.string |> JsonCodec.andThen\n            (((flip Dict.get) pickyOpts)\n            >> Maybe.map JD.succeed\n            >> Maybe.withDefault (JD.fail \"Option must be A or B\")\n            )\n            (\\p -> pickyOpts\n            |> Dict.toList\n            |> List.filterMap (\\(k,v) -> if v == p then Just k else Nothing)\n            |> List.head\n            |> Maybe.withDefault \"A\"\n            )\n",
+        "type": "(a -> Json.Decode.Decoder b) -> (b -> a) -> JsonCodec.Codec a -> JsonCodec.Codec b"
+      },
+      {
+        "name": "array",
+        "comment": " Codec that produces and consumes arrays. ",
+        "type": "JsonCodec.Codec a -> JsonCodec.Codec (Array.Array a)"
+      },
+      {
+        "name": "bool",
+        "comment": " Codec matching and producing bools. ",
+        "type": "JsonCodec.Codec Bool"
+      },
+      {
+        "name": "decoder",
+        "comment": " Get a Json.Decode.Decoder from a codec. ",
+        "type": "JsonCodec.Codec a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "dict",
+        "comment": " Codec that produces and consumes dictionaries of other values. ",
+        "type": "JsonCodec.Codec a -> JsonCodec.Codec (Dict.Dict String a)"
+      },
+      {
+        "name": "encoder",
+        "comment": " Get a function that encodes Json.Encode.Value from a codec. ",
+        "type": "JsonCodec.Codec a -> a -> Json.Encode.Value"
+      },
+      {
+        "name": "fail",
+        "comment": " Codec that produces a constant encoded value but always fails decoding.\nOne might use this while prefiltering inputs based on their structure but ensure\nthat encoded json has the right structure.\n",
+        "type": "String -> Json.Encode.Value -> JsonCodec.Codec a"
+      },
+      {
+        "name": "float",
+        "comment": " Codec matching and producing floats. ",
+        "type": "JsonCodec.Codec Float"
+      },
+      {
+        "name": "fold",
+        "comment": " Produce a codec that uses a list of fields and codecs to fold new values\ninto an object, producing a new object with the json loaded on to it.\n\nThis can be used to consume delta updates from a channel, create codecs that\noperate on objects with many fields, and create codecs with complex field\nencodings.\n\n    foldcoder : Codec Session\n    foldcoder =\n        let setQueue q s = { s | queue = q } in\n        let setPlaying p s = { s | playing = p } in\n        let setLikeCats l s = { s | likeCategories = l } in\n        JsonCodec.fold\n            [ JsonCodec.foldField \"queue\"\n                (setQueue, JD.list JD.string)\n                (.queue >> List.map JE.string >> JE.list)\n            , JsonCodec.foldField \"playing\"\n                (setPlaying, JsonCodec.decoder playingSerializer)\n                (.playing >> JsonCodec.encoder playingSerializer)\n            , JsonCodec.foldField \"like\"\n                (setLikeCats, JD.dict JD.int)\n                (.likeCategories\n                >> Dict.map (always JE.int) >> Dict.toList >> JE.object\n                )\n            ]\n            { queue = [], playing = Nothing, likeCategories = Dict.empty }\n\n",
+        "type": "List ( String , Json.Decode.Value -> a -> Result.Result String a , a -> Json.Encode.Value ) -> a -> JsonCodec.Codec a"
+      },
+      {
+        "name": "foldField",
+        "comment": " Construct a field value for use with ```fold```.\n\n* ```name``` specifies the name of a field that will be matched and produced.\n\n* ```(update, decoder)``` specifies an update function and a decoder.\nThe update function is given the new value and the current state of the object\nand returns a mutated object.\n\n* ```extract``` specifies a function that encodes this field's json value.\n\n",
+        "type": "String -> ( v -> a -> a, Json.Decode.Decoder v ) -> (a -> Json.Encode.Value) -> ( String , Json.Decode.Value -> a -> Result.Result String a , a -> Json.Encode.Value )"
+      },
+      {
+        "name": "init",
+        "comment": " Construct an arbitrary codec from a decoder and an encoder function. ",
+        "type": "Json.Decode.Decoder a -> (a -> Json.Encode.Value) -> JsonCodec.Codec a"
+      },
+      {
+        "name": "int",
+        "comment": " Codec matching and producing ints. ",
+        "type": "JsonCodec.Codec Int"
+      },
+      {
+        "name": "keyValuePairs",
+        "comment": " Codec that produces and consumes key value pair lists of other values. ",
+        "type": "JsonCodec.Codec a -> JsonCodec.Codec (List ( String, a ))"
+      },
+      {
+        "name": "list",
+        "comment": " Codec that produces and consumes lists. ",
+        "type": "JsonCodec.Codec a -> JsonCodec.Codec (List a)"
+      },
+      {
+        "name": "map",
+        "comment": " Wrap the codec in a transformer that produces and consumes another type.\n\n    type Alternative = A | Unknown String\n\n    altcoder : Codec Alternative\n    altcoder =\n        Codec.string\n        |> Codec.map\n            (\\a -> if a == \"A\" then A else Unknown a)\n            (\\v ->\n                case v of\n                    A -> \"A\"\n                    Unknown x -> x\n            )\n\n",
+        "type": "(a -> b) -> (b -> a) -> JsonCodec.Codec a -> JsonCodec.Codec b"
+      },
+      {
+        "name": "null",
+        "comment": " Codec that matches null, produces null. ",
+        "type": "a -> JsonCodec.Codec a"
+      },
+      {
+        "name": "nullable",
+        "comment": " Codec that maps null to Nothing and vice versa. ",
+        "type": "JsonCodec.Codec a -> JsonCodec.Codec (Maybe.Maybe a)"
+      },
+      {
+        "name": "object2",
+        "comment": " Codec that matches and produces objects with 2 given named fields. ",
+        "type": "(a -> b -> x) -> (x -> ( a, b )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object3",
+        "comment": " Codec that matches and produces objects with 3 given named fields. ",
+        "type": "(a -> b -> c -> x) -> (x -> ( a, b, c )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object4",
+        "comment": " Codec that matches and produces objects with 4 given named fields. ",
+        "type": "(a -> b -> c -> d -> x) -> (x -> ( a, b, c, d )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> ( String, JsonCodec.Codec d ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object5",
+        "comment": " Codec that matches and produces objects with 5 given named fields. ",
+        "type": "(a -> b -> c -> d -> e -> x) -> (x -> ( a, b, c, d, e )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> ( String, JsonCodec.Codec d ) -> ( String, JsonCodec.Codec e ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object6",
+        "comment": " Codec that matches and produces objects with 6 given named fields. ",
+        "type": "(a -> b -> c -> d -> e -> f -> x) -> (x -> ( a, b, c, d, e, f )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> ( String, JsonCodec.Codec d ) -> ( String, JsonCodec.Codec e ) -> ( String, JsonCodec.Codec f ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object7",
+        "comment": " Codec that matches and produces objects with 7 given named fields. ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> x) -> (x -> ( a, b, c, d, e, f, g )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> ( String, JsonCodec.Codec d ) -> ( String, JsonCodec.Codec e ) -> ( String, JsonCodec.Codec f ) -> ( String, JsonCodec.Codec g ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "object8",
+        "comment": " Codec that matches and produces objects with 8 given named fields. ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> x) -> (x -> ( a, b, c, d, e, f, g, h )) -> ( String, JsonCodec.Codec a ) -> ( String, JsonCodec.Codec b ) -> ( String, JsonCodec.Codec c ) -> ( String, JsonCodec.Codec d ) -> ( String, JsonCodec.Codec e ) -> ( String, JsonCodec.Codec f ) -> ( String, JsonCodec.Codec g ) -> ( String, JsonCodec.Codec h ) -> JsonCodec.Codec x"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Match one of many decoders, encode using the given function. ",
+        "type": "List (Json.Decode.Decoder a) -> (a -> Json.Encode.Value) -> JsonCodec.Codec a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Codec that matches a single field similar to Json.Decode and produces a\nsingleton object with 1 field. ",
+        "type": "String -> JsonCodec.Codec a -> JsonCodec.Codec a"
+      },
+      {
+        "name": "string",
+        "comment": " Codec matching and producing strings. ",
+        "type": "JsonCodec.Codec String"
+      },
+      {
+        "name": "succeed",
+        "comment": " Codec that produces a constant decoded value and encodes to a constant value.\nOne might use this to check a field with a constant value, such as a version\nnumber.\n",
+        "type": "a -> Json.Encode.Value -> JsonCodec.Codec a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

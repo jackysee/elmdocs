@@ -1,0 +1,200 @@
+[
+  {
+    "name": "ElmHtml.ToString",
+    "comment": " Convert ElmHtml to string.\n\n@docs nodeRecordToString, nodeToString, nodeToStringWithOptions\n\n@docs FormatOptions, defaultFormatOptions\n",
+    "aliases": [
+      {
+        "name": "FormatOptions",
+        "comment": " Formatting options to be used for converting to string\n",
+        "args": [],
+        "type": "{ indent : Int, newLines : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultFormatOptions",
+        "comment": " default formatting options\n",
+        "type": "ElmHtml.ToString.FormatOptions"
+      },
+      {
+        "name": "nodeRecordToString",
+        "comment": " Convert a node record to a string. This basically takes the tag name, then\n    pulls all the facts into tag declaration, then goes through the children and\n    nests them under this one\n",
+        "type": "ElmHtml.ToString.FormatOptions -> ElmHtml.InternalTypes.NodeRecord -> List String"
+      },
+      {
+        "name": "nodeToString",
+        "comment": " Convert a given html node to a string based on the type\n",
+        "type": "ElmHtml.InternalTypes.ElmHtml -> String"
+      },
+      {
+        "name": "nodeToStringWithOptions",
+        "comment": " same as nodeToString, but with options\n",
+        "type": "ElmHtml.ToString.FormatOptions -> ElmHtml.InternalTypes.ElmHtml -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ElmHtml.InternalTypes",
+    "comment": " Internal types used to represent Elm Html in pure Elm\n\n@docs ElmHtml, TextTagRecord, NodeRecord, CustomNodeRecord, MarkdownNodeRecord, Facts\n\n@docs decodeElmHtml, emptyFacts\n",
+    "aliases": [
+      {
+        "name": "CustomNodeRecord",
+        "comment": " Custom nodes contain facts (e.g attributes) and a json value for the model\n",
+        "args": [],
+        "type": "{ facts : ElmHtml.InternalTypes.Facts, model : Json.Decode.Value }"
+      },
+      {
+        "name": "Facts",
+        "comment": " Facts contain various dictionaries and values for a node\n- styles are a mapping of rules\n- events may be a json object containing event handlers\n- attributes are pulled out into stringAttributes and boolAttributes - things with string values go into\n  stringAttributes, things with bool values go into boolAttributes\n",
+        "args": [],
+        "type": "{ styles : Dict.Dict String String , events : Maybe.Maybe Json.Decode.Value , attributeNamespace : Maybe.Maybe Json.Decode.Value , stringAttributes : Dict.Dict String String , boolAttributes : Dict.Dict String Bool }"
+      },
+      {
+        "name": "MarkdownNodeRecord",
+        "comment": " A markdown node contains facts (e.g attributes) and the model used by markdown\n",
+        "args": [],
+        "type": "{ facts : ElmHtml.InternalTypes.Facts , model : ElmHtml.Markdown.MarkdownModel }"
+      },
+      {
+        "name": "NodeRecord",
+        "comment": " A node contains the `tag` as a string, the children, the facts (e.g attributes) and descendantsCount\n",
+        "args": [],
+        "type": "{ tag : String , children : List ElmHtml.InternalTypes.ElmHtml , facts : ElmHtml.InternalTypes.Facts , descendantsCount : Int }"
+      },
+      {
+        "name": "TextTagRecord",
+        "comment": " Text tags just contain text\n",
+        "args": [],
+        "type": "{ text : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "ElmHtml",
+        "comment": " Type tree for representing Elm's Html\n- TextTag is just a plain old bit of text.\n- NodeEntry is an actual HTML node, e.g a div\n- CustomNode are nodes defined to work with the renderer in some way, e.g webgl/markdown\n- MarkdownNode is just a wrapper for CustomNode designed just for markdown\n",
+        "args": [],
+        "cases": [
+          [
+            "TextTag",
+            [
+              "ElmHtml.InternalTypes.TextTagRecord"
+            ]
+          ],
+          [
+            "NodeEntry",
+            [
+              "ElmHtml.InternalTypes.NodeRecord"
+            ]
+          ],
+          [
+            "CustomNode",
+            [
+              "ElmHtml.InternalTypes.CustomNodeRecord"
+            ]
+          ],
+          [
+            "MarkdownNode",
+            [
+              "ElmHtml.InternalTypes.MarkdownNodeRecord"
+            ]
+          ],
+          [
+            "NoOp",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decodeElmHtml",
+        "comment": " decode a json object into ElmHtml\n",
+        "type": "Json.Decode.Decoder ElmHtml.InternalTypes.ElmHtml"
+      },
+      {
+        "name": "emptyFacts",
+        "comment": " Just empty facts\n",
+        "type": "ElmHtml.InternalTypes.Facts"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ElmHtml.Markdown",
+    "comment": " Markdown helpers\n\n@docs MarkdownOptions, MarkdownModel, baseMarkdownModel\n\n@docs encodeOptions, encodeMarkdownModel, decodeMarkdownModel\n\n",
+    "aliases": [
+      {
+        "name": "MarkdownModel",
+        "comment": " An internal markdown model. Options are the things you give markdown, markdown is the string\n",
+        "args": [],
+        "type": "{ options : ElmHtml.Markdown.MarkdownOptions, markdown : String }"
+      },
+      {
+        "name": "MarkdownOptions",
+        "comment": " options markdown expects\n",
+        "args": [],
+        "type": "{ githubFlavored : Maybe.Maybe { tables : Bool, breaks : Bool } , defaultHighlighting : Maybe.Maybe String , sanitize : Bool , smartypants : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "baseMarkdownModel",
+        "comment": " Just a default markdown model\n",
+        "type": "ElmHtml.Markdown.MarkdownModel"
+      },
+      {
+        "name": "decodeMarkdownModel",
+        "comment": " decode a markdown model\n",
+        "type": "Json.Decode.Decoder ElmHtml.Markdown.MarkdownModel"
+      },
+      {
+        "name": "encodeMarkdownModel",
+        "comment": " encode markdown model\n",
+        "type": "ElmHtml.Markdown.MarkdownModel -> Json.Decode.Value"
+      },
+      {
+        "name": "encodeOptions",
+        "comment": " We don't really care about encoding options right now\nTODO: we will if we want to represent things as we do for elm-html\n",
+        "type": "ElmHtml.Markdown.MarkdownOptions -> Json.Decode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ElmHtml.Constants",
+    "comment": "\nConstants for representing internal keys for Elm's vdom implementation\n\n@docs styleKey, eventKey, attributeKey, attributeNamespaceKey, knownKeys\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attributeKey",
+        "comment": " Internal key for style\n",
+        "type": "String"
+      },
+      {
+        "name": "attributeNamespaceKey",
+        "comment": " Internal key for style\n",
+        "type": "String"
+      },
+      {
+        "name": "eventKey",
+        "comment": " Internal key for style\n",
+        "type": "String"
+      },
+      {
+        "name": "knownKeys",
+        "comment": " Keys that we are aware of and should pay attention to\n",
+        "type": "List String"
+      },
+      {
+        "name": "styleKey",
+        "comment": " Internal key for style\n",
+        "type": "String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
