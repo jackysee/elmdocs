@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Cloudinary",
+    "comment": " This library provides a user friendly interface to upload your photos to Cloudinary.\n\n# Definition\n@docs CloudinarySettings\n\n# Upload\n@docs uploadPhoto\n\n",
+    "aliases": [
+      {
+        "name": "CloudinarySettings",
+        "comment": " Handle all Cloudinary settings used in upload request to Cloudinary API.\nThe signature must be produced by the backend, using public API key, and timestamp. It is a SHA1 algorithm, consisting of the string \"timestamp=XXXXXXX{APIKEY}\", where XXXXXXX is the timestamp, and {APIKEY} is your private API key (which should not be released on your website). Such a signature remains valid one hour after the timestamp.\n",
+        "args": [],
+        "type": "{ username : String , apiKey : String , timestamp : Int , signature : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "uploadPhoto",
+        "comment": " Upload the photo provided into parameter, and returns it's public ID. At the moment, only the public ID is returned, but it can be improved in a near future.\nuploadPhoto accepts any file, encoded in base64. You can get it easily via ports for your uploads.\n",
+        "type": "Cloudinary.CloudinarySettings -> (Result.Result Http.Error String -> msg) -> String -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

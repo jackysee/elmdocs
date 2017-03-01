@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Maybe.Extra",
+    "comment": " Convenience functions for Maybe.\n\n# Common helpers\n@docs (?), join, isNothing, isJust, unwrap, unpack, filter\n\n# Applicative functions\n@docs andMap, next, prev\n\n# Alternatives\n@docs or, orLazy, orElseLazy, orElse\n\n# List and array functions\n@docs toList, toArray, traverse, combine, traverseArray, combineArray, values\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "?",
+        "comment": " Flipped, infix version of `withDefault`.\n\n    head [] ? 0 == 0\n",
+        "type": "Maybe.Maybe a -> a -> a"
+      },
+      {
+        "name": "andMap",
+        "comment": " Apply the function that is inside `Maybe` to a value that is inside `Maybe`. Return the result inside `Maybe`. If one of the `Maybe` arguments is `Nothing`, return `Nothing`.\n\n    Just ((+) 2) |> andMap (Just 3) == Just 5\n    Nothing |> andMap (Just 3) == Nothing\n    Just ((+) 2) |> andMap Nothing == Nothing\n\nAdvanced functional programmers will recognize this as the implementation of `<*>` for `Maybe`s from the `Applicative` typeclass.\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe (a -> b) -> Maybe.Maybe b"
+      },
+      {
+        "name": "combine",
+        "comment": " Take a list of `Maybe`s and return a `Maybe` with a list of values. `combine == traverse identity`.\n\n    combine [] == Just []\n    combine [Just 1, Just 2, Just 3] == Just [1,2,3]\n    combine [Just 1, Nothing, Just 3] == Nothing\n",
+        "type": "List (Maybe.Maybe a) -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "combineArray",
+        "comment": " ",
+        "type": "Array.Array (Maybe.Maybe a) -> Maybe.Maybe (Array.Array a)"
+      },
+      {
+        "name": "filter",
+        "comment": " Take a `Maybe` and a predicate function and return a `Maybe` with the original value when a predicate matches.\n\n    filter (\\v -> v == 1) (Just 1) == Just 1\n    filter (\\v -> v == 2) (Just 1) == Nothing\n",
+        "type": "(a -> Bool) -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "isJust",
+        "comment": " Conveniently check if a `Maybe` matches `Just _`.\n\n    isJust (Just 42) == True\n    isJust (Just []) == True\n    isJust Nothing   == False\n",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "isNothing",
+        "comment": " Conveniently check if a `Maybe` matches `Nothing`.\n\n    isNothing (Just 42) == False\n    isNothing (Just []) == False\n    isNothing Nothing   == True\n",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "join",
+        "comment": " Flattens nested `Maybe`s\n\n    join (Just (Just 1)) == Just 1\n    join (Just Nothing)  == Nothing\n    join Nothing         == Nothing\n",
+        "type": "Maybe.Maybe (Maybe.Maybe a) -> Maybe.Maybe a"
+      },
+      {
+        "name": "next",
+        "comment": " Take two `Maybe` values. If the first one equals `Nothing`, return `Nothing`. Otherwise return the second value.\n\n    next (Just 1) (Just 2) == Just 2\n    next Nothing (Just 2) == Nothing\n    next (Just 1) Nothing == Nothing\n\nAdvanced functional programmers will recognize this as the implementation of `*>` for `Maybe`s from the `Applicative` typeclass.\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe b"
+      },
+      {
+        "name": "or",
+        "comment": " Like the boolean `||` this will return the first value that is\npositive (`Just`). However, unlike with `||`, both values will be\ncomputed anyway (there is no short-circuiting).\n\n    or (Just 4) (Just 5) == Just 4\n    or (Just 4) Nothing  == Just 4\n    or Nothing (Just 5)  == Just 5\n    or Nothing Nothing   == Nothing\n\nAdvanced functional programmers will recognize this as the\nimplementation of `mplus` for `Maybe`s from the `MonadPlus` type\nclass.\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "orElse",
+        "comment": " Strict version of `orElseLazy` (and at the same time,\npiping-friendly version of `or`).\n\n    orElse (Just 4) (Just 5)  == Just 5  -- crucial difference from `or`\n    orElse (Just 4) Nothing   == Just 4\n    orElse Nothing  (Just 5)  == Just 5\n    orElse Nothing  Nothing   == Nothing\n\nAlso:\n\n    List.head []\n    |> orElse (List.head [4])\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "orElseLazy",
+        "comment": " Piping-friendly version of `orLazy`. The first argument will only\nbe evaluated if the second argument is `Nothing`. Example use:\n\n    List.head []\n    |> orElseLazy (\\() -> List.head [4])\n",
+        "type": "(() -> Maybe.Maybe a) -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "orLazy",
+        "comment": " Non-strict version of `or`. The second argument will only be\nevaluated if the first argument is `Nothing`.\n",
+        "type": "Maybe.Maybe a -> (() -> Maybe.Maybe a) -> Maybe.Maybe a"
+      },
+      {
+        "name": "prev",
+        "comment": " Take two `Maybe` values. If the second one equals `Nothing`, return `Nothing`. Otherwise return the first value.\n\n    prev (Just 1) (Just 2) == Just 1\n    prev Nothing (Just 2) == Nothing\n    prev (Just 1) Nothing == Nothing\n\nAdvanced functional programmers will recognize this as the implementation of `<*` for `Maybe`s from the `Applicative` typeclass.\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe a"
+      },
+      {
+        "name": "toArray",
+        "comment": " Return an empty array on `Nothing` or a list with one element, where the element is the value of `Just`.\n\n    toArray Nothing == Array.fromList []\n    toArray (Just 1) == Array.fromList [1]\n\n",
+        "type": "Maybe.Maybe a -> Array.Array a"
+      },
+      {
+        "name": "toList",
+        "comment": " Return an empty list on `Nothing` or a list with one element, where the element is the value of `Just`.\n\n    toList Nothing == []\n    toList (Just 1) == [1]\n",
+        "type": "Maybe.Maybe a -> List a"
+      },
+      {
+        "name": "traverse",
+        "comment": " Take a function that returns `Maybe` value and a list. Map a function over each element of the list. Collect the result in the list within `Maybe`.\n\n    traverse (\\x -> Just (x*10)) [1,2,3,4,5] == Just [10,20,30,40,50]\n",
+        "type": "(a -> Maybe.Maybe b) -> List a -> Maybe.Maybe (List b)"
+      },
+      {
+        "name": "traverseArray",
+        "comment": " ",
+        "type": "(a -> Maybe.Maybe b) -> Array.Array a -> Maybe.Maybe (Array.Array b)"
+      },
+      {
+        "name": "unpack",
+        "comment": " A version of `unwrap` that is non-strict in the default value (by\nhaving it passed in a thunk).\n",
+        "type": "(() -> b) -> (a -> b) -> Maybe.Maybe a -> b"
+      },
+      {
+        "name": "unwrap",
+        "comment": " Take a default value, a function and a `Maybe`.\nReturn the default value if the `Maybe` is `Nothing`.\nIf the `Maybe` is `Just a`, apply the function on `a` and return the `b`.\nThat is, `unwrap d f` is equivalent to `Maybe.map f >> Maybe.withDefault d`.\n",
+        "type": "b -> (a -> b) -> Maybe.Maybe a -> b"
+      },
+      {
+        "name": "values",
+        "comment": " Convet a list of `Maybe a` to a list of `a` only for the values different\nfrom `Nothing`.\n\n    values [ Just 1, Nothing, Just 2 ] == [1, 2]\n",
+        "type": "List (Maybe.Maybe a) -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

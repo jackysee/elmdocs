@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Animation.Pack",
+    "comment": "\nManage your animation states!\n\n@docs Pack, init, animate, queue, subscription, update, render, animated\n\n\n# Dynamically adding or removing `Animation.State`s.\n\n@docs add, remove\n\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Pack",
+        "comment": " A collection of `Animation.State`s\n",
+        "args": [
+          "id",
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add a new Animation.State to the pack.\n\nYou need one animation state per entity you want to animate.\n",
+        "type": "id -> List Animation.Property -> Animation.Pack.Pack id msg -> Animation.Pack.Pack id msg"
+      },
+      {
+        "name": "animate",
+        "comment": " Start an animation using `Animation.interrupt`\n\nIn your update function, it will look something like this:\n\n```\n    StartAnimation ->\n        let\n            newStyles =\n                model.styles\n                    |> Animation.Pack.animate MyStyle\n                        [ Animation.to\n                            [ Animation.left (px 0.0)\n                            , Animation.opacity 1.0\n                            ]\n                        ]\n\n        in\n            ( { model | styles = newStyles }\n            , Cmd.none\n            )\n```\n\n",
+        "type": "id -> List (Animation.Messenger.Step msg) -> Animation.Pack.Pack id msg -> Animation.Pack.Pack id msg"
+      },
+      {
+        "name": "animated",
+        "comment": " An alternate way to render an animation.\n\nHere's what it looks like\n\n```\n    (div |> Animation.Pack.animated model.style MyStyle)\n        [ style\n            [ ( \"position\", \"absolute\" )\n            , ( \"border-style\", \"dotted\" )\n            ]\n        ]\n        [ text \"My Animated Div\" ]\n\n```\n\n",
+        "type": "Animation.Pack.Pack id msg -> id -> (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "List ( id, List Animation.Property ) -> Animation.Pack.Pack id msg"
+      },
+      {
+        "name": "queue",
+        "comment": " Same as `animate` except use `Animation.queue` instead of `Animation.interrupt`.\n\n",
+        "type": "id -> List (Animation.Messenger.Step msg) -> Animation.Pack.Pack id msg -> Animation.Pack.Pack id msg"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove an animation state if it's no longer needed for rendering.\n",
+        "type": "id -> Animation.Pack.Pack id msg -> Animation.Pack.Pack id msg"
+      },
+      {
+        "name": "render",
+        "comment": " Render an animation on an element.\n\n```\n    div (List.concat\n            [ Animation.Pack.render model.style MyStyle\n            , [ style\n                    [ ( \"position\", \"absolute\" )\n                    , ( \"border-style\", \"dotted\" )\n                    ]\n               ]\n            ]\n        )\n        [ text \"My Animated Div\" ]\n\n```\n\n",
+        "type": "Animation.Pack.Pack id msg -> id -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "subscription",
+        "comment": " You need to add a subscription to your `Animation.Pack` in order for animations to work.\n\nIt generally looks something like this:\n\n```\n    , subscriptions = (\\model -> Animation.Pack.subscription Animate model.styles)\n```\n\n\n",
+        "type": "(Animation.Msg -> msg) -> Animation.Pack.Pack id msg -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "update",
+        "comment": "\n\n",
+        "type": "Animation.Msg -> Animation.Pack.Pack id msg -> ( Animation.Pack.Pack id msg, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
