@@ -199,7 +199,7 @@ update msg model =
 
         PinDoc rest (Ok doc) ->
             { model
-                | pinnedDocs = model.pinnedDocs ++ [ doc ]
+                | pinnedDocs = List.sortBy .packageName <| doc :: model.pinnedDocs
                 , searchIndex =
                     buildSearchIndex
                         model.searchIndex
