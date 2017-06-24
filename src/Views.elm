@@ -28,7 +28,6 @@ view model =
                 [ input
                     [ class "search-input"
                     , onInput Search
-                    , value model.searchText
                     , placeholder "Search..."
                     , id "search-input"
                     , onFocus (SetSearchFocused True)
@@ -297,7 +296,6 @@ viewNavItem model i navItem =
                 ]
                 [ input
                     [ class "search-package-input"
-                    , value model.searchPackageText
                     , onInput SearchPackage
                     , placeholder "Search Package..."
                     , id "package-search-input"
