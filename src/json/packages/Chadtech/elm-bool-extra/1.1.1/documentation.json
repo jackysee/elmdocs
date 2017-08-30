@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Bool.Extra",
+    "comment": " Convenience functions for working with Bools\n\n\n# Basics\n\n@docs all, none, any, notAll\n\n# Predicate\n\n@docs allPass, anyPass\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " All the bools are true.\n\n    all [ True, True ] == True\n    all [ True, False ] == False\n    all [ False, False ] == False\n\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "allPass",
+        "comment": " Determine if all predicates are satisfied by the value.\n\n    allPass [(>) 20, (<) 10] 11 == True\n    allPass [(>) 20, (<) 10] 21 == False\n    allPass [(>) 20, (<) 10] 4 == False\n    allPass [] 21 == True\n\n",
+        "type": "List (a -> Bool) -> a -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " At least one of the bools is true.\n\n    any [ True, True ] == True\n    any [ True, False ] == True\n    any [ False, False ] == False\n\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "anyPass",
+        "comment": " Determine if any predicate is satisfied by the value.\n\n    anyPass [(>) 20, (<) 10] 100 == True\n    anyPass [(>) 20, (==) 10] 21 == False\n    anyPass [] 21 == False\n\n",
+        "type": "List (a -> Bool) -> a -> Bool"
+      },
+      {
+        "name": "none",
+        "comment": " None of the bools are true.\n\n    none [ True, True ] == False\n    none [ True, False ] == False\n    none [ False, False ] == True\n\n",
+        "type": "List Bool -> Bool"
+      },
+      {
+        "name": "notAll",
+        "comment": " Not all of them are true\n\n    notAll [ True, True ] == False\n    notAll [ True, False ] == True\n    notAll [ False, False ] == True\n\n",
+        "type": "List Bool -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

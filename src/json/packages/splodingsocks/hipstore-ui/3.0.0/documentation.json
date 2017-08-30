@@ -1,0 +1,36 @@
+[
+  {
+    "name": "HipstoreUI",
+    "comment": " A tiny collection of UI functions made bespoke for Splodingsocks's Elm workshop.\n\n# Types\n@docs Product, Config\n\n# Views\n@docs products, cart\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " The config contains functions and messages that the UI can use to send messages to the update function,\nas well as some other necessary information for rendering the rest of the UI.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ onAddToCart : String -> msg , onRemoveFromCart : String -> msg , onClickViewCart : msg , onClickViewProducts : msg , products : RemoteData.WebData (List HipstoreUI.Product) , cart : RemoteData.WebData (List HipstoreUI.Product) , loadingIndicator : Bool }"
+      },
+      {
+        "name": "Product",
+        "comment": " A Product isn't too complex. It's got an id, a name, an image, and it costs a few tacos. Yum, 🌮s.\n",
+        "args": [],
+        "type": "{ id : String, displayName : String, tacos : Float, image : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "cart",
+        "comment": " This function will render a nice, full-page cart view of the products that are passed into it.\nThe second argument, the bool, represents whether or not something is currently loading (for rendering a nice loading indicator.) The third argument is a WebData of the products currently in the cart.\n",
+        "type": "HipstoreUI.Config msg -> Html.Html msg"
+      },
+      {
+        "name": "products",
+        "comment": " This function will render a nice, full-page view of the products that are passed into it.\nThe second argument, the bool, represents whether or not something is currently loading (for rendering a nice loading indicator.) The third argument is a WebData of the Products, and the fourth is a WebData of the products currently in the cart.\n",
+        "type": "HipstoreUI.Config msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,75 @@
+[
+  {
+    "name": "RateQueue",
+    "comment": "\n\nA queue of items that are released at regular intervals. Primarily used to rate limit batches of\noutgoing HTTP requests, but it will work for any arbitrary types.\n\n## RateQueue\n\n@docs RateQueue\n\n## Build\n\n@docs new, enqueue, release\n\n## Query\n\n@docs isEmpty, length, rateLimit, nextRelease, canRelease, items\n\n## Dict\n\nHelpers for enqueing and releasing items from a dictionary of queues.\n\n@docs enqueueDict, releaseDict\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "RateQueue",
+        "comment": " A list of items that should be released at regular intervals.\n",
+        "args": [
+          "item"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "canRelease",
+        "comment": " Determine if enough time has passed to release an item from the queue.\n```elm\nQueue.canRelease now <| Queue.new 1000 -- True\n```\n",
+        "type": "Time.Time -> RateQueue.RateQueue item -> Bool"
+      },
+      {
+        "name": "enqueue",
+        "comment": " Add items to the end of the queue.\n\n```elm\nRateQueue.enqueue [ \"a\", \"b\", \"c\" ] rateQueue\n```\n",
+        "type": "List item -> RateQueue.RateQueue item -> RateQueue.RateQueue item"
+      },
+      {
+        "name": "enqueueDict",
+        "comment": " Adds items to the end of a queue in a dictionary. If a queue doesn't exist\nfor the key, then a new one is created with the rate limit.\n\n```elm\nRateQueue.enqueueDict Time.second \"a-unique-id\" [\"a\", \"b\", \"c\"] Dict.empty\n```\n",
+        "type": "Time.Time -> comparable -> List item -> Dict.Dict comparable (RateQueue.RateQueue item) -> Dict.Dict comparable (RateQueue.RateQueue item)"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if the queue is empty.\n\n```elm\nRateQueue.isEmpty rateQueue == True\n```\n\n",
+        "type": "RateQueue.RateQueue item -> Bool"
+      },
+      {
+        "name": "items",
+        "comment": " Determine the items in the queue.\n\n```elm\n(Queue.new 1000)\n    |> Queue.enqueue [\"a\", \"b\", \"c\"]\n    |> Queue.items\n    -- [\"a\", \"b\", \"c\"]\n```\n",
+        "type": "RateQueue.RateQueue item -> List item"
+      },
+      {
+        "name": "length",
+        "comment": " Determine the number of items in the queue.\n\n```elm\nRateQueue.length rateQueue == 2\n```\n",
+        "type": "RateQueue.RateQueue item -> Int"
+      },
+      {
+        "name": "new",
+        "comment": " Create a new queue with a rate limit.\n\n```elm\nrateQueue =\n    RateQueue.new Time.second  -- Items can be released every second\n```\n\n",
+        "type": "Time.Time -> RateQueue.RateQueue item"
+      },
+      {
+        "name": "nextRelease",
+        "comment": " Determine the next release time of the queue.\n```elm\n(Queue.new 1000)\n    |> Queue.release 1500\n    |> Tuple.first\n    |> Queue.nextRelease\n    --  2500\n```\n",
+        "type": "RateQueue.RateQueue item -> Time.Time"
+      },
+      {
+        "name": "rateLimit",
+        "comment": " Determine the rate of the queue.\n\n```elm\nRateQueue.rateLimit (Queue.new 1000) -- 1000\n```\n\n",
+        "type": "RateQueue.RateQueue item -> Time.Time"
+      },
+      {
+        "name": "release",
+        "comment": " Get the first item from the queue if enough time has passed,.\n\n```elm\nRateQueue.release now rateQueue\n```\n\n",
+        "type": "Time.Time -> RateQueue.RateQueue item -> ( RateQueue.RateQueue item, Maybe.Maybe item )"
+      },
+      {
+        "name": "releaseDict",
+        "comment": " Releases items from all the queues in a dictionary.\n\n\n```elm\nDict.empty\n    |> RateQueue.enqueueDict Time.second \"a-unique-id\" [\"a\", \"b\", \"c\"]\n    |> RateQueue.enqueueDict Time.second \"another-id\" [\"d\", \"e\", \"f\"]\n    |> RateQueue.releaseDict now\n    -- [\"a\", \"d\"]\n```\n",
+        "type": "Time.Time -> Dict.Dict comparable (RateQueue.RateQueue item) -> ( Dict.Dict comparable (RateQueue.RateQueue item), List item )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

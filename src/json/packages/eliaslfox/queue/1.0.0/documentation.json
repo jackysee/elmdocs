@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Queue",
+    "comment": " An implementation of a queue data structure in elm\n\n# Creation\n@docs Queue, new\n\n# Usage\n@docs enq, deq, toList\n\n",
+    "aliases": [
+      {
+        "name": "Queue",
+        "comment": " The type alias for a queue\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ enq : List a, deq : List a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "deq",
+        "comment": " Pulls data out of a queue\n\n    Queue.deq q\n",
+        "type": "Queue.Queue a -> ( Maybe.Maybe a, Queue.Queue a )"
+      },
+      {
+        "name": "enq",
+        "comment": " Adds a data to the queue\n\n    Queue.enq 5 q\n",
+        "type": "a -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "new",
+        "comment": " Creates an new empty queue\n\n    q = Queue.new\n",
+        "type": "Queue.Queue a"
+      },
+      {
+        "name": "toList",
+        "comment": " Converts a queue to a list, (not very fast)\n\n    Queue.toList q\n",
+        "type": "Queue.Queue a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

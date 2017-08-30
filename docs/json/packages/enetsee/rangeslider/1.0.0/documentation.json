@@ -1,0 +1,78 @@
+[
+  {
+    "name": "RangeSlider",
+    "comment": " Range-slider input\n\n# State\n@docs State, initialState, Endpoint\n\n# View\n@docs view\n\n# Update\n@docs update, Msg\n\n# Configuration\n@docs Config , config, simpleConfig\n\n# Subscriptions\n@docs subscriptions\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration of the range slider\n",
+        "args": [
+          "msg",
+          "domain"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Endpoint",
+        "comment": " Upper and lower endpoints of the range\n",
+        "args": [],
+        "cases": [
+          [
+            "Upper",
+            []
+          ],
+          [
+            "Lower",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Tracks the drag state, if any, of an endpoint and\n    the screenspace x-offset of the rangeslider handle control\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": " A configuration of the range slider allowing you to specify the\ntype of your domain and the type of scale you wish to use. Note the\ntype of the range is fixed as `Float` as the scale must be invertable.\n\nThe two use cases for this configuration are\n- When you want to have a rangeslider over some type other than `Float`, e.g.\n`Date`.\n- When your data is skewed and you require some non-linear scale for your input\ne.g. a log scale.\n\nYou provide the following information in your table configuration:\n\n- `domain` &mdash; the domain you wish to map from.\n- `range` &mdash; the range you wish to map on to.\n- `scale` &mdash; a mapping from domain to position\n- `unscale` &mdash; a mapping from position to domain\n- `ticks` &mdash; a list of values in domain-space to render on your rangeslider axis.\n- `format` &mdash; a function to render values from your domain.\n- `toMsg` &mdash; a way to send the new value of an endpoint to your app as messages.\n\n",
+        "type": "{ a | domain : ( domain, domain ), range : ( Float, Float ), scale : domain -> Float, unscale : Float -> domain, ticks : List domain, format : domain -> String, toMsg : RangeSlider.Endpoint -> domain -> Maybe.Maybe msg } -> RangeSlider.Config msg domain"
+      },
+      {
+        "name": "initialState",
+        "comment": " Initial, non-dragging, state.\n",
+        "type": "RangeSlider.State"
+      },
+      {
+        "name": "simpleConfig",
+        "comment": " A simple configuration for the most common use case of a linear scale over\na floating point domain, with a range starting at 0. This configuration will\nautomatically calculate some visually `nice` ticks for you given an approximate\nnumber of ticks you want.\n\nYou provide the following information in your table configuration:\n\n- `domain` &mdash; the lower and upper endpoint of your range.\n- `width` &mdash; the width of the rangeslider in px.\n- `maybeRoundTo` &mdash; an optional value to which each endpoint's value should be rounded.\n- `maybeTickCount` &mdash; an optional approximate tick count. Providing a value of `Nothing` will result in an axis with no tick marks.\n- `format` &mdash; a function to render values from your domain.\n- `toMsg` &mdash; a way to send the new value of an endpoint to your app as messages.\n\n",
+        "type": "{ a | domain : ( Float, Float ), width : Float, maybeRoundTo : Maybe.Maybe Float, maybeTickCount : Maybe.Maybe Int, format : Float -> String, toMsg : RangeSlider.Endpoint -> Float -> Maybe.Maybe msg } -> RangeSlider.Config msg Float"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscriptions that should be added to your app's own subscriptions.\n",
+        "type": "RangeSlider.State -> Platform.Sub.Sub RangeSlider.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "RangeSlider.Config msg comparableDomain -> RangeSlider.Msg -> RangeSlider.State -> ( comparableDomain, comparableDomain ) -> ( RangeSlider.State, Maybe.Maybe msg )"
+      },
+      {
+        "name": "view",
+        "comment": " ",
+        "type": "RangeSlider.Config msg comparableDomain -> RangeSlider.State -> ( comparableDomain, comparableDomain ) -> Html.Html RangeSlider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

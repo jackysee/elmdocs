@@ -1,0 +1,154 @@
+[
+  {
+    "name": "RangeSlider",
+    "comment": " A slider built natively in Elm\n\n# Model\n@docs RangeSlider, getValues, getSelectedValues\n\n# Update\n@docs Msg, update, subscriptions\n\n# Configuring the slider\n@docs init, AxisTick, setDimensions, setExtents, setFormatter, setStepSize, setAxisTicks, setValues\n\n# View\n@docs view\n\n",
+    "aliases": [
+      {
+        "name": "AxisTick",
+        "comment": " Represents a tick that goes along the X axis.\nThe value determines where it should go,\nisLabeled determines if the it should have a label below.\nThe label is formatted by the formatter.\n",
+        "args": [],
+        "type": "{ value : Float, isLabeled : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The basic type accepted by the update\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "RangeSlider",
+        "comment": " The base model for the slider\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getSelectedValues",
+        "comment": " Gets the last selected from and to values (from, to)\n",
+        "type": "RangeSlider.RangeSlider -> ( Float, Float )"
+      },
+      {
+        "name": "getValues",
+        "comment": " Gets the current from and to values (from, to)\n",
+        "type": "RangeSlider.RangeSlider -> ( Float, Float )"
+      },
+      {
+        "name": "init",
+        "comment": " Returns a default range slider\n",
+        "type": "RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setAxisTicks",
+        "comment": " Sets the ticks that will appear in the x-axis.\n",
+        "type": "List RangeSlider.AxisTick -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setDimensions",
+        "comment": " Sets the width and height of the range slider when rendered\n",
+        "type": "Float -> Float -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setExtents",
+        "comment": " Sets the minimum and maximum values possible to select\n",
+        "type": "Float -> Float -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setFormatter",
+        "comment": " Formats the value displayed above the handles and for axis ticks\n",
+        "type": "(Float -> String) -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setStepSize",
+        "comment": " Sets the step size which determines the interval for possible values\n",
+        "type": "Maybe.Maybe Float -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "setValues",
+        "comment": " Sets the position of the 'from' handle and the 'to' handle.\nNot intended to be used after the initial setup - it may not act as expected if the sliders are currently being moved.\n",
+        "type": "Float -> Float -> RangeSlider.RangeSlider -> RangeSlider.RangeSlider"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Returns the subscriptions necessary to run\n",
+        "type": "RangeSlider.RangeSlider -> Platform.Sub.Sub RangeSlider.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " takes a model and a message and applies it to create an updated model\n",
+        "type": "RangeSlider.RangeSlider -> RangeSlider.Msg -> ( RangeSlider.RangeSlider, Platform.Cmd.Cmd RangeSlider.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Displays the range slider\n",
+        "type": "RangeSlider.RangeSlider -> Html.Html RangeSlider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "CssHooks",
+    "comment": " Contains types for the view and the styles to share\n\n@docs CssClasses the classes that can be used\n\n@docs CssIds the ids that can be used\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CssClasses",
+        "comment": " The classes that will be used on the range slider elements\n",
+        "args": [],
+        "cases": [
+          [
+            "Handle",
+            []
+          ],
+          [
+            "BackgroundBar",
+            []
+          ],
+          [
+            "BarHighlight",
+            []
+          ],
+          [
+            "Value",
+            []
+          ],
+          [
+            "Axis",
+            []
+          ],
+          [
+            "AxisLabel",
+            []
+          ],
+          [
+            "Tick",
+            []
+          ],
+          [
+            "MajorTick",
+            []
+          ],
+          [
+            "MinorTick",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CssIds",
+        "comment": " The id for the range slider container\n",
+        "args": [],
+        "cases": [
+          [
+            "Container",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

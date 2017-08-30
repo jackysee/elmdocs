@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Byte",
+    "comment": " A collection of utilities for working with a `Byte`.\n\n\n\n# Definition\n@docs Byte, fromInt, toInt\n\n# Basic Operations\n@docs add, inc, sub, dec, isZero\n\n# Bitwise Operations\n@docs and, or, xor, shiftLeft, shiftRight, shiftRightZf, rotateLeft, rotateRight, complement, getBit, lsbSet, msbSet, set, reset, setIf, highNibble, lowNibble, swap\n\n# Operations with a `Carry`.\nThese functions return a `Carry` instead of a `Byte` to check whether or not\nthe operation overflowed the `Byte`. You can get the resulting byte using\n[`Carry.unwrap`](Carry#unwrap).\n@docs Carry, addc, incc, subc, decc, shiftLeft, shiftRight, shiftRightZf\n\n",
+    "aliases": [
+      {
+        "name": "Carry",
+        "comment": " A type alias for `Carry` result of a `Byte` operation.\n",
+        "args": [],
+        "type": "Internal.Carry.Carry Byte.Byte"
+      }
+    ],
+    "types": [
+      {
+        "name": "Byte",
+        "comment": " An opaque type respresenting an 8-bit unsigned integer.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Adds two `Byte`s.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "addc",
+        "comment": " Adds two `Byte`s, returning a `Carry`.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "and",
+        "comment": " Bitwise and (`&`) two `Byte`s.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "complement",
+        "comment": " Bitwise complement (flips each bit).\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "dec",
+        "comment": " Decrement a `Byte`.\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "decc",
+        "comment": " Decrement a `Byte`, returning a `Carry`.\n",
+        "type": "Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Converts an `Int` to a `Byte`.\n\n    fromInt 3 : Byte\n",
+        "type": "Int -> Byte.Byte"
+      },
+      {
+        "name": "getBit",
+        "comment": " Returns a  `Bool` indicating whether or not the bit is set.\n",
+        "type": "Int -> Byte.Byte -> Bool"
+      },
+      {
+        "name": "highNibble",
+        "comment": " Returns an `Int` respresenting the higher 4 bits.\n",
+        "type": "Byte.Byte -> Int"
+      },
+      {
+        "name": "inc",
+        "comment": " Increment a `Byte`.\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "incc",
+        "comment": " Increment a `Byte`, returning a `Carry`.\n",
+        "type": "Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "isZero",
+        "comment": " Returns `True` if the `Byte` is zero.\n",
+        "type": "Byte.Byte -> Bool"
+      },
+      {
+        "name": "lowNibble",
+        "comment": " Returns an `Int` respresenting the lower 4 bits.\n",
+        "type": "Byte.Byte -> Int"
+      },
+      {
+        "name": "lsbSet",
+        "comment": " Returns a `Bool` indicating whether or not the least significant\nbit is set.\n",
+        "type": "Byte.Byte -> Bool"
+      },
+      {
+        "name": "msbSet",
+        "comment": " Returns a `Bool` indicating whether or not the most significant\nbit is set.\n",
+        "type": "Byte.Byte -> Bool"
+      },
+      {
+        "name": "or",
+        "comment": " Bitwise or (`|`) two `Byte`s.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "reset",
+        "comment": " Resets the nth bit of the `Byte`.\n",
+        "type": "Int -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "rotateLeft",
+        "comment": " Rotate a `Byte` left.\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "rotateRight",
+        "comment": " Rotate a `Byte` right.\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "set",
+        "comment": " Sets the nth bit of the `Byte`.\n",
+        "type": "Int -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "setIf",
+        "comment": " Sets or resets the nth bit of the `Byte`.\n",
+        "type": "Int -> Bool -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "shiftLeft",
+        "comment": " Shifts a `Byte` left.\n",
+        "type": "Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "shiftRight",
+        "comment": " Shifts `Byte` right, preserving sign.\n",
+        "type": "Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "shiftRightZf",
+        "comment": " Shifts `Byte` right, filling with zeroes.\n",
+        "type": "Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "sub",
+        "comment": " Subtracts the second `Byte` from the first.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "subc",
+        "comment": " Subtracts the second `Byte` from the first, returning a carry.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Carry"
+      },
+      {
+        "name": "swap",
+        "comment": " Swaps the high and low nibbles of the `Byte`.\n",
+        "type": "Byte.Byte -> Byte.Byte"
+      },
+      {
+        "name": "toInt",
+        "comment": " Converts a `Byte` to an `Int`.\n\n    (fromInt 3 |> toInt) == 3\n\nGuaranteed to be in the range: `0 <= n < 2^8`.\n",
+        "type": "Byte.Byte -> Int"
+      },
+      {
+        "name": "xor",
+        "comment": " Bitwise xor two `Byte`s.\n",
+        "type": "Byte.Byte -> Byte.Byte -> Byte.Byte"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Carry",
+    "comment": " Opaque type representing the result of an operation and whether or not\nthere were any carries.\n\n# Unwrapping\n@docs unwrap, check, checkHalf\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "check",
+        "comment": " Returns `True` if there was a carry from the resulting operation.\n",
+        "type": "Internal.Carry.Carry a -> Bool"
+      },
+      {
+        "name": "checkHalf",
+        "comment": " Returns `True` if there was a half-carry from the resulting\noperation.\n",
+        "type": "Internal.Carry.Carry a -> Bool"
+      },
+      {
+        "name": "unwrap",
+        "comment": " Converts a `Carry` to it's value.\n",
+        "type": "Internal.Carry.Carry a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

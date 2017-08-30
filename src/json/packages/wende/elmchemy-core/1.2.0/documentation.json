@@ -1,0 +1,868 @@
+[
+  {
+    "name": "Elmchemy.XString",
+    "comment": " A built-in representation for efficient string manipulation. String literals\nare enclosed in `\"double quotes\"`. Strings are *not* lists of characters.\n\n\n# Basics\n\n@docs isEmpty, length, reverse, repeat\n\n\n# Building and Splitting\n\n@docs cons, uncons, fromChar, append, concat, split, join, words, lines\n\n\n# Get Substrings\n\n@docs slice, left, right, dropLeft, dropRight\n\n\n# Check for Substrings\n\n@docs contains, startsWith, endsWith, indexes, indices\n\n\n# Conversions\n\n@docs toInt, toFloat, toList, fromList\n\n\n# Formatting\n\nCosmetic operations such as padding with extra characters or trimming whitespace.\n\n@docs toUpper, toLower, pad, padLeft, padRight, trim, trimLeft, trimRight\n\n\n# Higher-Order Functions\n\n@docs map, filter, foldl, foldr, any, all\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Determine whether *all* characters satisfy a predicate.\n\n    all XChar.isDigit \"90210\" == True\n    all XChar.isDigit \"R2-D2\" == False\n    all XChar.isDigit \"heart\" == False\n\n",
+        "type": "(Char -> Bool) -> String -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine whether *any* characters satisfy a predicate.\n\n    any XChar.isDigit \"90210\" == True\n    any XChar.isDigit \"R2-D2\" == True\n    any XChar.isDigit \"heart\" == False\n\n",
+        "type": "(Char -> Bool) -> String -> Bool"
+      },
+      {
+        "name": "append",
+        "comment": " Append two strings. You can also use [the `(++)` operator](Basics#++)\nto do this.\n\n    append \"butter\" \"fly\" == \"butterfly\"\n\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate many strings into one.\n\n    concat [\"never\",\"the\",\"less\"] == \"nevertheless\"\n\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "cons",
+        "comment": " Add a character to the beginning of a string.\n\n    XString.cons 'T' \"he truth is out there\" == \"The truth is out there\"\n\n",
+        "type": "Char -> String -> String"
+      },
+      {
+        "name": "contains",
+        "comment": " See if the second string contains the first one.\n\n    contains \"the\" \"theory\" == True\n    contains \"hat\" \"theory\" == False\n    contains \"THE\" \"theory\" == False\n\nUse [`Regex.contains`](Regex#contains) if you need something more flexible.\n\n",
+        "type": "String -> String -> Bool"
+      },
+      {
+        "name": "dropLeft",
+        "comment": " Drop *n* characters from the left side of a string.\n\n    dropLeft 2 \"The Lone Gunmen\" == \"e Lone Gunmen\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "dropRight",
+        "comment": " Drop *n* characters from the right side of a string.\n\n    dropRight 2 \"Cigarette Smoking Man\" == \"Cigarette Smoking M\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "endsWith",
+        "comment": " See if the second string ends with the first one.\n\n    endsWith \"the\" \"theory\" == False\n    endsWith \"ory\" \"theory\" == True\n\n",
+        "type": "String -> String -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep only the characters that satisfy the predicate.\n\n    filter ((==) '2') \"R2-D2\" == \"22\"\n\n",
+        "type": "(Char -> Bool) -> String -> String"
+      },
+      {
+        "name": "foldl",
+        "comment": " Reduce a string from the left.\n\n    foldl XString.cons \"\" \"time\" == \"emit\"\n\n",
+        "type": "(Char -> b -> b) -> b -> String -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Reduce a string from the right.\n\n    foldr XString.cons \"\" \"time\" == \"time\"\n\n",
+        "type": "(Char -> b -> b) -> b -> String -> b"
+      },
+      {
+        "name": "fromChar",
+        "comment": " Create a string from a given character.\n\n    fromChar 'a' == \"a\"\n\n",
+        "type": "Char -> String"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list of characters into a String. Can be useful if you\nwant to create a string primarily by consing, perhaps for decoding\nsomething.\n\n    fromList ['a','b','c'] == \"abc\"\n\n",
+        "type": "List Char -> String"
+      },
+      {
+        "name": "indexes",
+        "comment": " Get all of the indexes for a substring in another string.\n\n    indexes \"i\" \"Mississippi\"   == [1,4,7,10]\n    indexes \"ss\" \"Mississippi\"  == [2,5]\n    indexes \"needle\" \"haystack\" == []\n\n",
+        "type": "String -> String -> List Int"
+      },
+      {
+        "name": "indices",
+        "comment": " Alias for `indexes`.\n",
+        "type": "String -> String -> List Int"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a string is empty.\n\n    isEmpty \"\" == True\n    isEmpty \"the world\" == False\n\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "join",
+        "comment": " Put many strings together with a given separator.\n\n    join \"a\" [\"H\",\"w\",\"ii\",\"n\"]        == \"Hawaiian\"\n    join \" \" [\"cat\",\"dog\",\"cow\"]       == \"cat dog cow\"\n    join \"/\" [\"home\",\"evan\",\"Desktop\"] == \"home/evan/Desktop\"\n\n",
+        "type": "String -> List String -> String"
+      },
+      {
+        "name": "left",
+        "comment": " Take *n* characters from the left side of a string.\n\n    left 2 \"Mulder\" == \"Mu\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "length",
+        "comment": " Get the length of a string.\n\n    length \"innumerable\" == 11\n    length \"\" == 0\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "lines",
+        "comment": " Break a string into lines, splitting on newlines.\n\n    lines \"How are you?\\nGood?\" == [\"How are you?\", \"Good?\"]\n\n",
+        "type": "String -> List String"
+      },
+      {
+        "name": "map",
+        "comment": " Transform every character in a string\n\n    map (\\c -> if c == '/' then '.' else c) \"a/b/c\" == \"a.b.c\"\n\n",
+        "type": "(Char -> Char) -> String -> String"
+      },
+      {
+        "name": "pad",
+        "comment": " Pad a string on both sides until it has a given length.\n\n    pad 5 ' ' \"1\"   == \"  1  \"\n    pad 5 ' ' \"11\"  == \"  11 \"\n    pad 5 ' ' \"121\" == \" 121 \"\n\n",
+        "type": "Int -> Char -> String -> String"
+      },
+      {
+        "name": "padLeft",
+        "comment": " Pad a string on the left until it has a given length.\n\n    padLeft 5 '.' \"1\"   == \"....1\"\n    padLeft 5 '.' \"11\"  == \"...11\"\n    padLeft 5 '.' \"121\" == \"..121\"\n\n",
+        "type": "Int -> Char -> String -> String"
+      },
+      {
+        "name": "padRight",
+        "comment": " Pad a string on the right until it has a given length.\n\n    padRight 5 '.' \"1\"   == \"1....\"\n    padRight 5 '.' \"11\"  == \"11...\"\n    padRight 5 '.' \"121\" == \"121..\"\n\n",
+        "type": "Int -> Char -> String -> String"
+      },
+      {
+        "name": "repeat",
+        "comment": " Repeat a string *n* times.\n\n    repeat 3 \"ha\" == \"hahaha\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse a string.\n\n    reverse \"stressed\" == \"desserts\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "right",
+        "comment": " Take *n* characters from the right side of a string.\n\n    right 2 \"Scully\" == \"ly\"\n\n",
+        "type": "Int -> String -> String"
+      },
+      {
+        "name": "slice",
+        "comment": " Take a substring given a start and end index. Negative indexes\nare taken starting from the *end* of the list.\n\n    slice  7  9 \"snakes on a plane!\" == \"on\"\n    slice  0  6 \"snakes on a plane!\" == \"snakes\"\n    slice  0 -7 \"snakes on a plane!\" == \"snakes on a\"\n    slice -6 -1 \"snakes on a plane!\" == \"plane\"\n\n",
+        "type": "Int -> Int -> String -> String"
+      },
+      {
+        "name": "split",
+        "comment": " Split a string using a given separator.\n\n    split \",\" \"cat,dog,cow\"        == [\"cat\",\"dog\",\"cow\"]\n    split \"/\" \"home/evan/Desktop/\" == [\"home\",\"evan\",\"Desktop\", \"\"]\n\nUse [`Regex.split`](Regex#split) if you need something more flexible.\n\n",
+        "type": "String -> String -> List String"
+      },
+      {
+        "name": "startsWith",
+        "comment": " See if the second string starts with the first one.\n\n    startsWith \"the\" \"theory\" == True\n    startsWith \"ory\" \"theory\" == False\n\n",
+        "type": "String -> String -> Bool"
+      },
+      {
+        "name": "toFloat",
+        "comment": " Try to convert a string into a float, failing on improperly formatted strings.\n\n    XString.toFloat \"123\" == Ok 123.0\n    XString.toFloat \"-42\" == Ok -42.0\n    XString.toFloat \"3.1\" == Ok 3.1\n    XString.toFloat \"31a\" == Err \"could not convert string '31a' to a Float\"\n\nIf you are extracting a number from some raw user input, you will typically\nwant to use [`Result.withDefault`](Result#withDefault) to handle bad data:\n\n    XResult.withDefault 0 (XString.toFloat \"42.5\") == 42.5\n    XResult.withDefault 0 (XString.toFloat \"cats\") == 0\n\n",
+        "type": "String -> Result.Result String Float"
+      },
+      {
+        "name": "toInt",
+        "comment": " Try to convert a string into an int, failing on improperly formatted strings.\n\n    XString.toInt \"123\" == Ok 123\n    XString.toInt \"-42\" == Ok -42\n    XString.toInt \"3.1\" == Err \"could not convert string '3.1' to an Int\"\n    XString.toInt \"31a\" == Err \"could not convert string '31a' to an Int\"\n\nIf you are extracting a number from some raw user input, you will typically\nwant to use [`Result.withDefault`](Result#withDefault) to handle bad data:\n\n    XResult.withDefault 0 (XString.toInt \"42\") == 42\n    XResult.withDefault 0 (XString.toInt \"ab\") == 0\n\n",
+        "type": "String -> Result.Result String Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a string to a list of characters.\n\n    toList \"abc\" == ['a','b','c']\n\n",
+        "type": "String -> List Char"
+      },
+      {
+        "name": "toLower",
+        "comment": " Convert a string to all lower case. Useful for case-insensitive comparisons.\n\n    toLower \"X-FILES\" == \"x-files\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "toUpper",
+        "comment": " Convert a string to all upper case. Useful for case-insensitive comparisons\nand VIRTUAL YELLING.\n\n    toUpper \"skinner\" == \"SKINNER\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "trim",
+        "comment": " Get rid of whitespace on both sides of a string.\n\n    trim \"  hats  \\n\" == \"hats\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "trimLeft",
+        "comment": " Get rid of whitespace on the left of a string.\n\n    trimLeft \"  hats  \\n\" == \"hats  \\n\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "trimRight",
+        "comment": " Get rid of whitespace on the right of a string.\n\n    trimRight \"  hats  \\n\" == \"  hats\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "uncons",
+        "comment": " Split a non-empty string into its head and tail. This lets you\npattern match on strings exactly as you would with lists.\n\n    uncons \"abc\" == Just ('a',\"bc\")\n    uncons \"\"    == Nothing\n\n",
+        "type": "String -> Maybe.Maybe ( Char, String )"
+      },
+      {
+        "name": "words",
+        "comment": " Break a string into words, splitting on chunks of whitespace.\n\n    words \"How are \\t you? \\n Good?\" == [\"How\",\"are\",\"you?\",\"Good?\"]\n\n",
+        "type": "String -> List String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XResult",
+    "comment": " A `Result` is the result of a computation that may fail. This is a great\nway to manage errors in Elm.\n\n\n# Type and Constructors\n\n@docs Result\n\n\n# Mapping\n\n@docs map, map2, map3, map4, map5\n\n\n# Chaining\n\n@docs andThen\n\n\n# Handling Errors\n\n@docs withDefault, toMaybe, fromMaybe, mapError\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Result",
+        "comment": " A `Result` is either `Ok` meaning the computation succeeded, or it is an\n`Err` meaning that there was some failure.\n",
+        "args": [
+          "error",
+          "value"
+        ],
+        "cases": [
+          [
+            "Ok",
+            [
+              "value"
+            ]
+          ],
+          [
+            "Err",
+            [
+              "error"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a sequence of computations that may fail. It is helpful\nto see its definition:\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`toInt : String -> Result String Int`) to parse\na month and make sure it is between 1 and 12:\n\nThis allows us to come out of a chain of operations with quite a specific error\nmessage. It is often best to create a custom type that explicitly represents\nthe exact ways your computation may fail. This way it is easy to handle in your\ncode.\n\n",
+        "type": "(a -> Elmchemy.XResult.Result x b) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x b"
+      },
+      {
+        "name": "fromMaybe",
+        "comment": " Convert from a simple `Maybe` to interact with some code that primarily\nuses `Results`.\n",
+        "type": "x -> Maybe.Maybe a -> Elmchemy.XResult.Result x a"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to a result. If the result is `Ok`, it will be converted.\nIf the result is an `Err`, the same error value will propagate through.\n\n    map sqrt (Ok 4.0)          == Ok 2.0\n    map sqrt (Err \"bad input\") == Err \"bad input\"\n\n",
+        "type": "(a -> value) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x value"
+      },
+      {
+        "name": "map2",
+        "comment": " Apply a function to two results, if both results are `Ok`. If not,\nthe first argument which is an `Err` will propagate through.\n\n    map2 (+) (XString.toInt \"1\") (XString.toInt \"2\") == Ok 3\n    map2 (+) (XString.toInt \"1\") (XString.toInt \"y\") == Err \"could not convert string 'y' to an Int\"\n    map2 (+) (XString.toInt \"x\") (XString.toInt \"y\") == Err \"could not convert string 'x' to an Int\"\n\n",
+        "type": "(a -> b -> value) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x b -> Elmchemy.XResult.Result x value"
+      },
+      {
+        "name": "map3",
+        "comment": " ",
+        "type": "(a -> b -> c -> value) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x b -> Elmchemy.XResult.Result x c -> Elmchemy.XResult.Result x value"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> value) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x b -> Elmchemy.XResult.Result x c -> Elmchemy.XResult.Result x d -> Elmchemy.XResult.Result x value"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> value) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result x b -> Elmchemy.XResult.Result x c -> Elmchemy.XResult.Result x d -> Elmchemy.XResult.Result x e -> Elmchemy.XResult.Result x value"
+      },
+      {
+        "name": "mapError",
+        "comment": " Transform an `Err` value. For example, say the errors we get have too much\ninformation:\n\n    mapError XTuple.first (Ok (123, 1)) == Ok (123, 1)\n    mapError XTuple.second (Err (\"nothing\", \"important\")) == Err \"important\"\n\n",
+        "type": "(x -> y) -> Elmchemy.XResult.Result x a -> Elmchemy.XResult.Result y a"
+      },
+      {
+        "name": "toMaybe",
+        "comment": " Convert to a simpler `Maybe` if the actual error message is not needed or\nyou need to interact with some code that primarily uses maybes.\n",
+        "type": "Elmchemy.XResult.Result x a -> Maybe.Maybe a"
+      },
+      {
+        "name": "withDefault",
+        "comment": " If the result is `Ok` return the value, but if the result is an `Err` then\nreturn a given default value. The following examples try to parse integers.\n\n    XResult.withDefault 0 (XString.toInt \"123\") == 123\n    XResult.withDefault 0 (XString.toInt \"abc\") == 0\n\n",
+        "type": "a -> Elmchemy.XResult.Result x a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XChar",
+    "comment": " Functions for working with characters. Character literals are enclosed in\n`'a'` pair of single quotes.\n\n\n# Classification\n\n@docs isUpper, isLower, isDigit, isOctDigit, isHexDigit\n\n\n# Conversion\n\n@docs toUpper, toLower\n\n\n# Key Codes\n\n@docs KeyCode, toCode, fromCode\n\n",
+    "aliases": [
+      {
+        "name": "KeyCode",
+        "comment": " Keyboard keys can be represented as integers. These are called *key codes*.\nYou can use [`toCode`](#toCode) and [`fromCode`](#fromCode) to convert between\nkey codes and characters.\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "fromCode",
+        "comment": " Convert from key code.\n\n    fromCode 97 == 'a'\n\n",
+        "type": "Elmchemy.XChar.KeyCode -> Char"
+      },
+      {
+        "name": "isDigit",
+        "comment": " True for ASCII digits `[0-9]`.\n\n    isDigit '1' == True\n    isDigit '9' == True\n    isDigit 'a' == False\n\n",
+        "type": "Char -> Bool"
+      },
+      {
+        "name": "isHexDigit",
+        "comment": " True for ASCII hexadecimal digits `[0-9a-fA-F]`.\n\n    isHexDigit 'd' == True\n    isHexDigit 'D' == True\n    isHexDigit 'x' == False\n\n",
+        "type": "Char -> Bool"
+      },
+      {
+        "name": "isLower",
+        "comment": " True for lower case ASCII letters.\n\n    isLower 'd' == True\n    isLower 'a' == True\n    isLower 'X' == False\n\n",
+        "type": "Char -> Bool"
+      },
+      {
+        "name": "isOctDigit",
+        "comment": " True for ASCII octal digits `[0-7]`.\n\n    isOctDigit '7' == True\n    isOctDigit '5' == True\n    isOctDigit '9' == False\n\n",
+        "type": "Char -> Bool"
+      },
+      {
+        "name": "isUpper",
+        "comment": " True for upper case ASCII letters.\n\n    isUpper 'D' == True\n    isUpper 'A' == True\n    isUpper 'x' == False\n\n",
+        "type": "Char -> Bool"
+      },
+      {
+        "name": "toCode",
+        "comment": " Convert to key code.\n\n    toCode 'a' == 97\n\n",
+        "type": "Char -> Elmchemy.XChar.KeyCode"
+      },
+      {
+        "name": "toLower",
+        "comment": " Convert to lower case.\n\n    toLower 'A' == 'a'\n\n",
+        "type": "Char -> Char"
+      },
+      {
+        "name": "toUpper",
+        "comment": " Convert to upper case.\n\n    toUpper 'a' == 'A'\n\n",
+        "type": "Char -> Char"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XDebug",
+    "comment": " Module with helper functions for debugging\n\n\n# Debug\n\n@docs log, crash\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "crash",
+        "comment": " Raise an exception to crash the runtime. Should be avoided at all\ncosts. Helpful for crashing at not yet implelented functionality\n",
+        "type": "String -> a"
+      },
+      {
+        "name": "log",
+        "comment": " Log to console in `title: object` format\n",
+        "type": "String -> a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XBasics",
+    "comment": " Tons of useful functions that get imported by default.\n@docs compare, xor, sqrt, clamp, compare , xor , negate , sqrt , logBase , e , pi , cos , sin , tan , acos , asin , atan , atan2 , round , floor , ceiling , truncate , toFloat , toString , (++) , identity , always, flip, tuple2, tuple3, tuple4, tuple5\n\n@docs Order\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Order",
+        "comment": " Represents the relative ordering of two things.\nThe relations are less than, equal to, and greater than.\n",
+        "args": [],
+        "cases": [
+          [
+            "LT",
+            []
+          ],
+          [
+            "EQ",
+            []
+          ],
+          [
+            "GT",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "++",
+        "comment": " Put two appendable things together. This includes strings, lists, and text.\n\n    \"hello\" ++ \"world\" == \"helloworld\"\n    [1,1,2] ++ [3,5,8] == [1,1,2,3,5,8]\n\n",
+        "type": "appendable -> appendable -> appendable"
+      },
+      {
+        "name": "acos",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "always",
+        "comment": " Create a function that *always* returns the same value. Useful with\nfunctions like `map`:\n\n    List.map (always 0) [1,2,3,4,5] == [0,0,0,0,0]\n    List.map (\\_ -> 0) [1,2,3,4,5] == [0,0,0,0,0]\n\n",
+        "type": "a -> a -> a"
+      },
+      {
+        "name": "asin",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "atan",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "atan2",
+        "comment": " ",
+        "type": "Float -> Float -> Float"
+      },
+      {
+        "name": "ceiling",
+        "comment": " ",
+        "type": "Float -> Int"
+      },
+      {
+        "name": "clamp",
+        "comment": " Clamps a number within a given range. With the expression\n`clamp 100 200 x` the results are as follows:\n100 if x < 100\nx if 100 <= x < 200\n200 if 200 <= x\n",
+        "type": "comparable -> comparable -> comparable -> comparable"
+      },
+      {
+        "name": "compare",
+        "comment": " Basic compare function\n\n\n### Example\n\n    compare 1 2 == LT\n\n",
+        "type": "comparable -> comparable -> Elmchemy.XBasics.Order"
+      },
+      {
+        "name": "cos",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "e",
+        "comment": " ",
+        "type": "Float"
+      },
+      {
+        "name": "flip",
+        "comment": " Flip the order of the first two arguments to a function.\n",
+        "type": "(a -> b -> c) -> b -> a -> c"
+      },
+      {
+        "name": "floor",
+        "comment": " ",
+        "type": "Float -> Int"
+      },
+      {
+        "name": "identity",
+        "comment": " Given a value, returns exactly the same value. This is called\n[the identity function](http://en.wikipedia.org/wiki/Identity_function).\n",
+        "type": "a -> a"
+      },
+      {
+        "name": "logBase",
+        "comment": " ",
+        "type": "Float -> Float -> Float"
+      },
+      {
+        "name": "negate",
+        "comment": " Negate a number.\n\n    negate 42 == -42\n    negate -42 == 42\n    negate 0 == 0\n\n",
+        "type": "number -> number"
+      },
+      {
+        "name": "pi",
+        "comment": " ",
+        "type": "Float"
+      },
+      {
+        "name": "round",
+        "comment": " ",
+        "type": "Float -> Int"
+      },
+      {
+        "name": "sin",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "sqrt",
+        "comment": " Take the square root of a number.\n",
+        "type": "number -> Float"
+      },
+      {
+        "name": "tan",
+        "comment": " ",
+        "type": "Float -> Float"
+      },
+      {
+        "name": "toFloat",
+        "comment": " Convert an integer into a float.\n",
+        "type": "Int -> Float"
+      },
+      {
+        "name": "toString",
+        "comment": " Turn any kind of value into a string. When you view the resulting string\nwith `Text.fromString` it should look just like the value it came from.\n\n    toString 42 == \"42\"\n    toString [1,2] == \"[1, 2]\"\n\n",
+        "type": "a -> String"
+      },
+      {
+        "name": "truncate",
+        "comment": " Truncate a number, rounding towards zero.\n",
+        "type": "Float -> Int"
+      },
+      {
+        "name": "tuple2",
+        "comment": " ",
+        "type": "a -> b -> ( a, b )"
+      },
+      {
+        "name": "tuple3",
+        "comment": " ",
+        "type": "a -> b -> c -> ( a, b, c )"
+      },
+      {
+        "name": "tuple4",
+        "comment": " ",
+        "type": "a -> b -> c -> d -> ( a, b, c, d )"
+      },
+      {
+        "name": "tuple5",
+        "comment": " ",
+        "type": "a -> b -> c -> d -> e -> ( a, b, c, d, e )"
+      },
+      {
+        "name": "xor",
+        "comment": " The exclusive-or operator. `True` if exactly one input is `True`.\n",
+        "type": "Bool -> Bool -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XList",
+    "comment": " A library for manipulating lists of values. Every value in a\nlist must have the same type.\n\n\n# Basics\n\n@docs isEmpty, length, reverse, member\n\n\n# Sub-lists\n\n@docs head, tail, filter, take, drop\n\n\n# Putting Lists Together\n\n@docs singleton, repeat, range, cons, (::), append, concat, intersperse\n\n\n# Taking Lists Apart\n\n@docs partition, unzip\n\n\n# Mapping\n\n@docs map, map2\n\nIf you can think of a legitimate use of `mapN` where `N` is 6 or more, please\nlet us know on [the list](https://groups.google.com/forum/#!forum/elm-discuss).\nThe current sentiment is that it is already quite error prone once you get to\n4 and possibly should be approached another way.\n\n\n# Special Maps\n\n@docs filterMap, concatMap, indexedMap\n\n\n# Folding\n\n@docs foldr, foldl\n\n\n# Special Folds\n\n@docs sum, product, maximum, minimum, all, any, scanl\n\n\n# Sorting\n\n@docs sort, sortBy, sortWith\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "::",
+        "comment": " Add an element to the front of a list. Pronounced *cons*.\n\n    1 :: [2,3] == [1,2,3]\n    1 :: [] == [1]\n\n",
+        "type": "a -> List a -> List a"
+      },
+      {
+        "name": "all",
+        "comment": " Determine if all elements satisfy the predicate.\n\n    all (\\a -> a % 2 == 0) [2,4] == True\n    all (\\a -> a % 2 == 0) [2,3] == False\n    all (\\a -> a % 2 == 0) [] == True\n\n",
+        "type": "(a -> Bool) -> List a -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine if any elements satisfy the predicate.\n\n    any (\\a -> a % 2 == 0) [2,3] == True\n    any (\\a -> a % 2 == 0) [1,3] == False\n    any (\\a -> a % 2 == 0) [] == False\n\n",
+        "type": "(a -> Bool) -> List a -> Bool"
+      },
+      {
+        "name": "append",
+        "comment": " Put two lists together.\n\n    append [1,1,2] [3,5,8] == [1,1,2,3,5,8]\n    append ['a','b'] ['c'] == ['a','b','c']\n\nYou can also use [the `(++)` operator](Basics#++) to append lists.\n\n",
+        "type": "List a -> List a -> List a"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate a bunch of lists into a single list:\n\n    concat [[1,2],[3],[4,5]] == [1,2,3,4,5]\n\n",
+        "type": "List (List a) -> List a"
+      },
+      {
+        "name": "concatMap",
+        "comment": " Map a given function onto a list and flatten the resulting lists.\n\n    concatMap (range 2) [1] == concat (map (range 2) [1]) == true\n\n",
+        "type": "(a -> List b) -> List a -> List b"
+      },
+      {
+        "name": "cons",
+        "comment": " Add an element to the front of a list. Pronounced *cons*.\n\n    cons 1 [2,3] == [1,2,3]\n    cons 1 [] == [1]\n\n",
+        "type": "a -> List a -> List a"
+      },
+      {
+        "name": "drop",
+        "comment": " Drop the first *n* members of a list.\n\n    drop 2 [1,2,3,4] == [3,4]\n\n",
+        "type": "Int -> List a -> List a"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep only elements that satisfy the predicate.\n\n    filter (flip (%) 2 >> (==) 0) [1,2,3,4,5,6] == [2,4,6]\n\n",
+        "type": "(a -> Bool) -> List a -> List a"
+      },
+      {
+        "name": "filterMap",
+        "comment": " Apply a function that may succeed to all values in the list, but only keep\nthe successes.\n\n    filterMap (\\a -> if a >= 18 then Just a else Nothing) [3, 15, 12, 18, 24] == [18, 24]\n\n",
+        "type": "(a -> Maybe.Maybe b) -> List a -> List b"
+      },
+      {
+        "name": "foldl",
+        "comment": " Reduce a list from the left.\n\n    foldl (::) [] [1,2,3] == [3,2,1]\n\n",
+        "type": "(a -> b -> b) -> b -> List a -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Reduce a list from the right.\n\n    foldr (+) 0 [1,2,3] == 6\n\n",
+        "type": "(a -> b -> b) -> b -> List a -> b"
+      },
+      {
+        "name": "head",
+        "comment": " Extract the first element of a list.\n\n    head [1,2,3] == Just 1\n    head [] == Nothing\n\n",
+        "type": "List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Same as `map` but the function is also applied to the index of each\nelement (starting at zero).\n\n    indexedMap (,) [\"Tom\",\"Sue\",\"Bob\"] == [ (0,\"Tom\"), (1,\"Sue\"), (2,\"Bob\") ]\n\n",
+        "type": "(Int -> a -> b) -> List a -> List b"
+      },
+      {
+        "name": "intersperse",
+        "comment": " Places the given value between all members of the given list.\n\n    intersperse \"on\" [\"turtles\",\"turtles\",\"turtles\"] == [\"turtles\",\"on\",\"turtles\",\"on\",\"turtles\"]\n\n",
+        "type": "a -> List a -> List a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a list is empty.\n\n    isEmpty [] == True\n\n",
+        "type": "List a -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": " Determine the length of a list.\n\n    length [1,2,3] == 3\n\n",
+        "type": "List a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to every element of a list.\n\n    map sqrt [1,4,9] == [1.0,2.0,3.0]\n\n    map not [True,False,True] == [False,True,False]\n\n",
+        "type": "(a -> b) -> List a -> List b"
+      },
+      {
+        "name": "map2",
+        "comment": " Combine two lists, combining them with the given function.\nIf one list is longer, the extra elements are dropped.\n\n    map2 (+) [1,2,3] [1,2,3,4] == [2,4,6]\n\n    map2 (,) [1,2,3] ['a','b'] == [ (1,'a'), (2,'b') ]\n\n",
+        "type": "(a -> b -> result) -> List a -> List b -> List result"
+      },
+      {
+        "name": "maximum",
+        "comment": " Find the maximum element in a non-empty list.\n\n    maximum [1,4,2] == Just 4\n    maximum []      == Nothing\n\n",
+        "type": "List comparable -> Maybe.Maybe comparable"
+      },
+      {
+        "name": "member",
+        "comment": " Figure out whether a list contains a value.\n\n    member 9 [1,2,3,4] == False\n    member 4 [1,2,3,4] == True\n\n",
+        "type": "a -> List a -> Bool"
+      },
+      {
+        "name": "minimum",
+        "comment": " Find the minimum element in a non-empty list.\n\n    minimum [3,2,1] == Just 1\n    minimum []      == Nothing\n\n",
+        "type": "List comparable -> Maybe.Maybe comparable"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a list based on a predicate. The first list contains all values\nthat satisfy the predicate, and the second list contains all the value that do\nnot.\n\n    partition (\\x -> x < 3)      [0,1,2,3,4,5] == ([0,1,2], [3,4,5])\n    partition (\\a -> a % 2 == 0) [0,1,2,3,4,5] == ([0,2,4], [1,3,5])\n\n",
+        "type": "(a -> Bool) -> List a -> ( List a, List a )"
+      },
+      {
+        "name": "product",
+        "comment": " Get the product of the list elements.\n\n    product [1,2,3,4] == 24\n\n",
+        "type": "List number -> number"
+      },
+      {
+        "name": "range",
+        "comment": " Create a list of numbers, every element increasing by one.\nYou give the lowest and highest number that should be in the list.\n\n    range 3 6 == [3, 4, 5, 6]\n    range 3 3 == [3]\n    range 6 3 == []\n\n",
+        "type": "Int -> Int -> List Int"
+      },
+      {
+        "name": "repeat",
+        "comment": " Create a list with *n* copies of a value:\n\n    repeat 3 0 == [0, 0, 0]\n\n",
+        "type": "Int -> a -> List a"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse a list.\n\n    reverse [1,2,3,4] == [4,3,2,1]\n\n",
+        "type": "List a -> List a"
+      },
+      {
+        "name": "scanl",
+        "comment": " Reduce a list from the left, building up all of the intermediate results into a list.\n\n    scanl (+) 0 [1,2,3,4] == [0,1,3,6,10]\n\n",
+        "type": "(a -> b -> b) -> b -> List a -> List b"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a list with only one element:\n\n    singleton 1234 == [1234]\n    singleton \"hi\" == [\"hi\"]\n\n",
+        "type": "a -> List a"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort values from lowest to highest\n\n    sort [3,1,5] == [1,3,5]\n\n",
+        "type": "List comparable -> List comparable"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Sort values by a derived property. To be replaced\n\n    sortBy (\\(i, a) -> i)  [(1, \"mouse\"),(0, \"cat\")] == [(0, \"cat\"), (1, \"mouse\")]\n\n",
+        "type": "(a -> comparable) -> List a -> List a"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Sort values with a custom comparison function.\n\n    sortWith (flip compare) [1,2,3,4,5] == [5,4,3,2,1]\n\nThis is also the most general sort function, allowing you\nto define any other: `sort == sortWith compare`\nf\n\n",
+        "type": "(a -> a -> Basics.Order) -> List a -> List a"
+      },
+      {
+        "name": "sum",
+        "comment": " Get the sum of the list elements.\n\n    sum [1,2,3,4] == 10\n\n",
+        "type": "List number -> number"
+      },
+      {
+        "name": "tail",
+        "comment": " Extract the rest of the list.\n\n    tail [1,2,3] == Just [2,3]\n    tail [] == Nothing\n\n",
+        "type": "List a -> Maybe.Maybe (List a)"
+      },
+      {
+        "name": "take",
+        "comment": " Take the first *n* members of a list.\n\n    take 2 [1,2,3,4] == [1,2]\n\n",
+        "type": "Int -> List a -> List a"
+      },
+      {
+        "name": "unzip",
+        "comment": " Decompose a list of tuples into a tuple of lists.\n\n    unzip (repeat 3 (0, True)) == ([0,0,0], [True,True,True])\n\n",
+        "type": "List ( a, b ) -> ( List a, List b )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XTuple",
+    "comment": "\nModule for tuple manipulation\n\n@docs first, second, mapFirst, mapSecond\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " Extract the first value from a tuple.\n\n    first (3, 4) == 3\n    first (\"john\", \"doe\") == \"john\"\n ",
+        "type": "( a, b ) -> a"
+      },
+      {
+        "name": "mapFirst",
+        "comment": " Transform the first value in a tuple.\n\n    mapFirst String.reverse (\"stressed\", 16) == (\"desserts\", 16)\n    mapFirst String.length  (\"stressed\", 16) == (8, 16)\n ",
+        "type": "(a -> a1) -> ( a, b ) -> ( a1, b )"
+      },
+      {
+        "name": "mapSecond",
+        "comment": " Transform the second value in a tuple.\n\n    mapSecond sqrt          (\"stressed\", 16) == (\"stressed\", 4.0)\n    mapSecond (\\x -> x + 1) (\"stressed\", 16) == (\"stressed\", 17)\n ",
+        "type": "(b -> b1) -> ( a, b ) -> ( a, b1 )"
+      },
+      {
+        "name": "second",
+        "comment": " Extract the second value from a tuple.\n\n    second (3, 4) == 4\n    second (\"john\", \"doe\") == \"doe\"\n ",
+        "type": "( a, b ) -> b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy.XMaybe",
+    "comment": " This library fills a bunch of important niches in Elm. A `Maybe` can help\nyou with optional arguments, error handling, and records with optional fields.\n\n\n# Definition\n\n@docs Maybe\n\n\n# Common Helpers\n\n@docs withDefault, map, map2, map3, map4, map5\n\n\n# Chaining Maybes\n\n@docs andThen\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Maybe",
+        "comment": " Represent values that may or may not exist. It can be useful if you have a\nrecord field that is only filled in sometimes. Or if a function takes a value\nsometimes, but does not absolutely need it.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Just",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Nothing",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together many computations that may fail. It is helpful to see its\ndefinition:\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`head : List Int -> Maybe Int`) to get the\nfirst month from a `List` and then make sure it is between 1 and 12:\n\nIf `head` fails and results in `Nothing` (because the `List` was `empty`),\nthis entire chain of operations will short-circuit and result in `Nothing`.\nIf `toValidMonth` results in `Nothing`, again the chain of computations\nwill result in `Nothing`.\n\n",
+        "type": "(a -> Elmchemy.XMaybe.Maybe b) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a `Maybe` value with a given function:\n\n    map ((+) 2) (Just 9) == Just 11\n    map ((+) 2) Nothing == Nothing\n\n",
+        "type": "(a -> b) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b"
+      },
+      {
+        "name": "map2",
+        "comment": " Apply a function if all the arguments are `Just` a value.\n\n    map2 (+) (Just 3) (Just 4) == Just 7\n    map2 (+) (Just 3) Nothing == Nothing\n    map2 (+) Nothing (Just 4) == Nothing\n\n",
+        "type": "(a -> b -> value) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b -> Elmchemy.XMaybe.Maybe value"
+      },
+      {
+        "name": "map3",
+        "comment": " ",
+        "type": "(a -> b -> c -> value) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b -> Elmchemy.XMaybe.Maybe c -> Elmchemy.XMaybe.Maybe value"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> value) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b -> Elmchemy.XMaybe.Maybe c -> Elmchemy.XMaybe.Maybe d -> Elmchemy.XMaybe.Maybe value"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> value) -> Elmchemy.XMaybe.Maybe a -> Elmchemy.XMaybe.Maybe b -> Elmchemy.XMaybe.Maybe c -> Elmchemy.XMaybe.Maybe d -> Elmchemy.XMaybe.Maybe e -> Elmchemy.XMaybe.Maybe value"
+      },
+      {
+        "name": "withDefault",
+        "comment": " Provide a default value, turning an optional value into a normal\nvalue. This comes in handy when paired with functions like\n[`Dict.get`](Dict#get) which gives back a `Maybe`.\n\n    withDefault 100 (Just 42)   == 42\n    withDefault 100 Nothing     == 100\n\n",
+        "type": "a -> Elmchemy.XMaybe.Maybe a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elmchemy",
+    "comment": " Module to help express some Elixir related types and calls that wouldn't otherwise be possible\n\n@docs lffi, ffi, tryFfi , flambda, tryCatch\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "ffi",
+        "comment": " Function to make a direct Elixir remote call. Takes a module name and a function name\nFfi functions must be the only call in the entire function and the type declaration\nis mandatory. For example\n\n    mySum : List number -> number\n    mySum =\n        ffi \"Enum\" \"sum\"\n\nThat function will call `Enum.sum(list)` on our parameter, and also it will generate\na type verification macro, that makes sure, that `Enum.sum/1` actually returns\nour type (List number -> number).\nTo actiate the typecheck put\n\n    typetest MyModule\n\ninside of your test suite\n\n",
+        "type": "String -> String -> a"
+      },
+      {
+        "name": "flambda",
+        "comment": " *Deprecated since Elmchemy 0.3.0*\n\nProduce multiple argument anonymous function out of regular elm function.\n\n    flambda 2 fun --> fn x1, x2 -> fun.(x1).(x2) end\n\n",
+        "type": "Int -> a -> b"
+      },
+      {
+        "name": "lffi",
+        "comment": " *Deprecated since Elmchemy 0.3.0*\nFunction to make a direct Elixir local call. Takes a local function name\nand a tuple or single value of arguments\n\n    lffi \"to_string\"\n\n",
+        "type": "String -> a"
+      },
+      {
+        "name": "tryCatch",
+        "comment": " *Deprecated since Elmchemy 0.3.0*\n\nWrap a function call in try catch returning Result based on wether the function throwed an error\n\n",
+        "type": "(() -> a) -> Result.Result String a"
+      },
+      {
+        "name": "tryFfi",
+        "comment": " Function to make a direct Elixir remote call. Takes a module name, a function name\nand a tuple or single value of arguments. tryFfi verifies no types at compile time\nbut it makes sure the value you're requesting is what you're expecting wrappend\nin Result.Ok Type, or otherwise you get a Result.Error String\n\n    myToFloat : String -> Result Float\n    myToFloat =\n        ffi \"Kernel\" \"to_float\"\n\n",
+        "type": "String -> String -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

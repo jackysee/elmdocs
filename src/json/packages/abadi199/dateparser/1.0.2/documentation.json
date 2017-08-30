@@ -1,0 +1,50 @@
+[
+  {
+    "name": "DateParser",
+    "comment": "\nCustom String to Date parser.\n\nThis library required http://package.elm-lang.org/packages/rluiten/elm-date-extra/ package.\n\n# Parsing\n@docs parse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parses `String` to a `Date`, and since this parsing can fail, it returns a `Result` with some error information.\n\nIn order to to use this function, you will need to pass `Date.Extra.Config` from this package: http://package.elm-lang.org/packages/rluiten/elm-date-extra/latest\n\nExample:\n\n    parse Date.Extra.Config.Config_en_us \"%d/%m/%Y\" \"31/12/2017\" == Date.fromString \"2017-12-31\"\n\n",
+        "type": "Date.Extra.Config.Config -> String -> String -> Result.Result Error.Error Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Error",
+    "comment": "\nDateParser Error\n\n@docs Error\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " DateParser Error type\n\nAn error can comes from different phases in the parsing process:\n\n- PatternError: an error that comes from when trying to parse the date pattern\n- ParsingError: an error that comes from parsing the date string.\n- DateError: an error when trying to construct a Date from the parsed information.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "PatternError",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ParsingError",
+            [
+              "Parser.Error"
+            ]
+          ],
+          [
+            "DateError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

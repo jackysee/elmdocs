@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Basics.Extra",
+    "comment": " Additional basic functions.\n\n# Tuples\n@docs (=>), swap\n\n# Numbers\n@docs maxSafeInteger, minSafeInteger, isSafeInteger\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "=>",
+        "comment": " A shorthand for writing 2-tuples. Very commonly used when expressing key/value pairs\nin CSS or Json encoders.\n",
+        "type": "a -> b -> ( a, b )"
+      },
+      {
+        "name": "isSafeInteger",
+        "comment": " Checks if a given integer is within the safe range, meaning it is between\n`-(2^53 - 1)` and `2^53 - 1`.\n\n    isSafeInteger 5 == True\n    isSafeInteger maxSafeInteger == True\n    isSafeInteger (maxSafeInteger + 1) == False\n",
+        "type": "Int -> Bool"
+      },
+      {
+        "name": "maxSafeInteger",
+        "comment": " The maximum _safe_ value for an integer, defined as `2^53 - 1`. Anything\nlarger than that and behaviour becomes mathematically unsound.\n\n    (maxSafeInteger + 1) == (maxSafeInteger + 2)\n        == True\n",
+        "type": "number"
+      },
+      {
+        "name": "minSafeInteger",
+        "comment": " The minimum _safe_ value for an integer, defined as `-(2^53 - 1)`. Anything\nsmaller than that, and behaviour becomes mathematically unsound.\n\n    (minSafeInteger - 1) == (minSafeInteger - 2)\n        == True\n",
+        "type": "number"
+      },
+      {
+        "name": "swap",
+        "comment": " Swaps the elements in a pair.\n\n    swap ( 1, 2 ) == ( 2, 1 )\n\n",
+        "type": "( a, b ) -> ( b, a )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

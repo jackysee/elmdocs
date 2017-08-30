@@ -1,0 +1,138 @@
+[
+  {
+    "name": "Brainfuck",
+    "comment": " A brainfuck interpreter in Elm\n@docs run\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "run",
+        "comment": " Run Brainfuck source code with specified input.\nReturns an output string.\n\n    -- Double input '1' == 49, 'b' == 98\n    run \",[>++<-]>.\" \"1\" == \"b\"\n\nInput is taken one by one. If end is reached, 0 would be assumed.\n",
+        "type": "String -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Brainfuck.Parser",
+    "comment": " Converts Brainfuck source code to Elm structures.\n\n# Definition\n@docs Command, Prog\n\n# Use\n@docs parse\n\n",
+    "aliases": [
+      {
+        "name": "Prog",
+        "comment": " Parsed Brainfuck program consists of a list of `Command`s to execute\nand a symetric `Dict` of jumps of matching square brackets.\n",
+        "args": [],
+        "type": "{ commands : List Brainfuck.Parser.Command , loops : Dict.Dict Int Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Command",
+        "comment": " Represent one of the eight commands of the language.\n",
+        "args": [],
+        "cases": [
+          [
+            "Next",
+            []
+          ],
+          [
+            "Prev",
+            []
+          ],
+          [
+            "Inc",
+            []
+          ],
+          [
+            "Dec",
+            []
+          ],
+          [
+            "Read",
+            []
+          ],
+          [
+            "Write",
+            []
+          ],
+          [
+            "LoopStart",
+            []
+          ],
+          [
+            "LoopEnd",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse string to `Prog`.\n\nAll unknown characters are ignored. Parser assumes correct brackets\npairing and will crash otherwise.\n\n    parse \",[>+<-]>.\" ==\n      { commands = [ Read, LoopStart, Next, … ]\n      , loops = Dict.fromList [ ( 1, 6 ), ( 6, 1 ) ]\n      }\n",
+        "type": "String -> Brainfuck.Parser.Prog"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Brainfuck.Tape",
+    "comment": " Simple unbounded array with a movable data pointer.\nTape is indexed by `Int` and its values are also `Int`\n\n# Tapes\n@docs Tape\n\n# Build\n@docs empty, fromList\n\n# Pointer\n@docs move, next, prev\n\n# Value\n@docs get, set, increment, decrement\n\n",
+    "aliases": [
+      {
+        "name": "Tape",
+        "comment": " An unbounded `Int`-indexed tape of numbers from 0 to 255.\n",
+        "args": [],
+        "type": "( Dict.Dict Int Int, Int )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decrement",
+        "comment": " Decrement value at current position by one. Value is floored at 0.\n\n    get (decrement empty) == 255\n",
+        "type": "Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty tape.\n",
+        "type": "Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list into a tape.\n",
+        "type": "List Int -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value at the current position. If the key is not found, return\n0.\n",
+        "type": "Brainfuck.Tape.Tape -> Int"
+      },
+      {
+        "name": "increment",
+        "comment": " Increment value at current position by one. Value is truncated overflow.\n\n    tape = fromList [ 255 ]\n\n    get (increment tape) == 0\n",
+        "type": "Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "move",
+        "comment": " Set position.\n",
+        "type": "Int -> Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "next",
+        "comment": " Move position right by one.\n",
+        "type": "Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "prev",
+        "comment": " Move position left by one.\n",
+        "type": "Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      },
+      {
+        "name": "set",
+        "comment": " Set value at current position. Value is clamped within 0 and 255.\n",
+        "type": "Int -> Brainfuck.Tape.Tape -> Brainfuck.Tape.Tape"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

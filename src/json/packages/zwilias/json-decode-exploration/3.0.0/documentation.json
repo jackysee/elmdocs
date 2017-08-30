@@ -1,0 +1,317 @@
+[
+  {
+    "name": "Json.Decode.Exploration",
+    "comment": " An experiment with adding stronger error-types to JSON decoders.\n\n\n# Primitives\n\n@docs Decoder, string, bool, int, float\n\n\n# Data Structures\n\n@docs nullable, list, array, dict, keyValuePairs\n\n\n# Object Primitives\n\n@docs field, at, index\n\n\n# Inconsistent Structure\n\n@docs maybe, oneOf\n\n\n# Run Decoders\n\n@docs decodeString, decodeValue, Value, Path, Node\n\n\n# Errors\n\n@docs Error, ErrorType, MisMatch, StructuralIssue\n\n\n# Interop\n\n@docs custom, toClassic\n\n\n# Mapping\n\n@docs andMap, map, map2, map3, map4, map5\n\n\n# Fancy Decoding\n\n@docs lazy, value, null, succeed, fail, andThen\n\n",
+    "aliases": [
+      {
+        "name": "Decoder",
+        "comment": " A Decoder is simply a function that turns a `Value` into a `Result Error a`\n",
+        "args": [
+          "a"
+        ],
+        "type": "Json.Decode.Exploration.Value -> Result.Result Json.Decode.Exploration.Error a"
+      },
+      {
+        "name": "Path",
+        "comment": " A path through your JSON that leads to the problematic value.\n",
+        "args": [],
+        "type": "List Json.Decode.Exploration.Node"
+      },
+      {
+        "name": "Value",
+        "comment": " A JSON value.\n",
+        "args": [],
+        "type": "Json.Decode.Value"
+      }
+    ],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " A decode error.\n",
+        "args": [],
+        "cases": [
+          [
+            "InvalidJSON",
+            []
+          ],
+          [
+            "Error",
+            [
+              "Json.Decode.Exploration.ErrorType"
+            ]
+          ],
+          [
+            "InContext",
+            [
+              "{ path : Json.Decode.Exploration.Path , error : Json.Decode.Exploration.ErrorType }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ErrorType",
+        "comment": " A specific type of error.\n",
+        "args": [],
+        "cases": [
+          [
+            "Structural",
+            [
+              "Json.Decode.Exploration.StructuralIssue"
+            ]
+          ],
+          [
+            "TypeMisMatch",
+            [
+              "Json.Decode.Exploration.MisMatch"
+            ]
+          ],
+          [
+            "Multiple",
+            [
+              "List Json.Decode.Exploration.Error"
+            ]
+          ],
+          [
+            "BadMap",
+            [
+              "Json.Decode.Exploration.Error",
+              "Json.Decode.Exploration.Error"
+            ]
+          ],
+          [
+            "Custom",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "MisMatch",
+        "comment": " A type mistmatch.\n",
+        "args": [],
+        "cases": [
+          [
+            "ExpectedInt",
+            []
+          ],
+          [
+            "ExpectedFloat",
+            []
+          ],
+          [
+            "ExpectedString",
+            []
+          ],
+          [
+            "ExpectedNull",
+            []
+          ],
+          [
+            "ExpectedBool",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Node",
+        "comment": " A piece of the path, either a field or an index in an array.\n",
+        "args": [],
+        "cases": [
+          [
+            "Field",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Index",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "StructuralIssue",
+        "comment": " A structural issue with your JSON.\n",
+        "args": [],
+        "cases": [
+          [
+            "ExpectedField",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ExpectedArrayIndex",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ExpectedArray",
+            []
+          ],
+          [
+            "ExpectedObject",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Allows pipelining decoders rather than having large `mapN` calls.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (a -> b) -> Json.Decode.Exploration.Decoder b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Executes a second decoder with the result of another decoder as its first\nargument.\n",
+        "type": "(a -> Json.Decode.Exploration.Decoder b) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b"
+      },
+      {
+        "name": "array",
+        "comment": " Decode a JSON array into an Elm `Array`.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (Array.Array a)"
+      },
+      {
+        "name": "at",
+        "comment": " Decodes the contents of the field named by following the path constructed by\nthe fieldnames passed as the first arg with the given decoder.\n",
+        "type": "List String -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "bool",
+        "comment": " Decode a JSON boolean into an Elm `Bool`.\n",
+        "type": "Json.Decode.Exploration.Decoder Bool"
+      },
+      {
+        "name": "custom",
+        "comment": " Allow using a classical `Json.Decode.Decoder` decoder.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "decodeString",
+        "comment": " Parse the given string into a JSON value and then run the `Decoder` on it.\nThis will fail if the string is not well-formed JSON or if the `Decoder` fails\nfor some reason.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> String -> Result.Result Json.Decode.Exploration.Error a"
+      },
+      {
+        "name": "decodeValue",
+        "comment": " Run a `Decoder` on some JSON `Value`. You can send these JSON values through\nports, so that is probably the main time you would use this function.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Value -> Result.Result Json.Decode.Exploration.Error a"
+      },
+      {
+        "name": "dict",
+        "comment": " Decode a JSON object into an Elm `Dict`.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (Dict.Dict String a)"
+      },
+      {
+        "name": "fail",
+        "comment": " A decoder that always fails.\n",
+        "type": "String -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "field",
+        "comment": " Decodes the contents of the field named in the first argument with the\npassed decoder.\n",
+        "type": "String -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "float",
+        "comment": " Decode a JSON number into an Elm `Float`.\n",
+        "type": "Json.Decode.Exploration.Decoder Float"
+      },
+      {
+        "name": "index",
+        "comment": " Decode the value at a given index in a JSON array.\n",
+        "type": "Int -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "int",
+        "comment": " Decode a JSON number into an Elm `Int`.\n",
+        "type": "Json.Decode.Exploration.Decoder Int"
+      },
+      {
+        "name": "keyValuePairs",
+        "comment": " Decodes a JSON object into a list of key-value pairs.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (List ( String, a ))"
+      },
+      {
+        "name": "lazy",
+        "comment": " Creates a lazy decoder, useful for recursive structures.\n",
+        "type": "(() -> Json.Decode.Exploration.Decoder a) -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "list",
+        "comment": " Decodes a JSON array into an Elm `List`.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (List a)"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a decoder by mapping the result.\n",
+        "type": "(a -> b) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b"
+      },
+      {
+        "name": "map2",
+        "comment": " Execute a function on the result of 2 decoders.\n",
+        "type": "(a -> b -> c) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b -> Json.Decode.Exploration.Decoder c"
+      },
+      {
+        "name": "map3",
+        "comment": " Execute a function on the result of 3 decoders.\n",
+        "type": "(a -> b -> c -> d) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b -> Json.Decode.Exploration.Decoder c -> Json.Decode.Exploration.Decoder d"
+      },
+      {
+        "name": "map4",
+        "comment": " Execute a function on the result of 4 decoders.\n",
+        "type": "(a -> b -> c -> d -> e) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b -> Json.Decode.Exploration.Decoder c -> Json.Decode.Exploration.Decoder d -> Json.Decode.Exploration.Decoder e"
+      },
+      {
+        "name": "map5",
+        "comment": " Execute a function on the result of 5 decoders.\n",
+        "type": "(a -> b -> c -> d -> e -> f) -> Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder b -> Json.Decode.Exploration.Decoder c -> Json.Decode.Exploration.Decoder d -> Json.Decode.Exploration.Decoder e -> Json.Decode.Exploration.Decoder f"
+      },
+      {
+        "name": "maybe",
+        "comment": " Decode a value that may or may not exist, or might be malformed.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (Maybe.Maybe a)"
+      },
+      {
+        "name": "null",
+        "comment": " Decode a JSON null into an Elm value.\n",
+        "type": "a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "nullable",
+        "comment": " Decode a value that must exist but _could_ be `null`.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Exploration.Decoder (Maybe.Maybe a)"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Tries these decoders one by one. The first one to succeed will have its\nvalue returned. If no decoders were passed or all decoders fail, you'll get an\nerror.\n",
+        "type": "List (Json.Decode.Exploration.Decoder a) -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "string",
+        "comment": " Decode a JSON string into an Elm `String`.\n",
+        "type": "Json.Decode.Exploration.Decoder String"
+      },
+      {
+        "name": "succeed",
+        "comment": " A decoder that always succeeds.\n",
+        "type": "a -> Json.Decode.Exploration.Decoder a"
+      },
+      {
+        "name": "toClassic",
+        "comment": " Allow using an exploration decoder in a regular `Json.Decode` context.\n",
+        "type": "Json.Decode.Exploration.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "value",
+        "comment": " Doesn't modify the JS value, just returns it.\n",
+        "type": "Json.Decode.Exploration.Decoder Json.Decode.Exploration.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

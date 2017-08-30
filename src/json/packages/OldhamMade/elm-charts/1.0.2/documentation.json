@@ -1,0 +1,113 @@
+[
+  {
+    "name": "ScatterPlot",
+    "comment": "\n\n# Scatter Plot\n@docs scatterPlot\n\n# Attributes\n@docs size, color\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "color",
+        "comment": " Set dot color.\n",
+        "type": "String -> Svg.Attribute msg"
+      },
+      {
+        "name": "scatterPlot",
+        "comment": " Create a scatter plot.\n\n    import Svg exposing (svg)\n    import Svg.Attributes exposing (width, height)\n    import Chart exposing (Scale, Data)\n    import ScatterPlot exposing (scatterPlot, color, size)\n\n\n    data : Data msg\n    data =\n      [\n        (1, 22.2, []),\n        (2, 34, []),\n        (3, 56, []),\n        (4, 62, []),\n        (5, 77, [])\n      ]\n\n\n    xScale : Scale\n    xScale x =\n      20 + x * 20\n\n\n    yScale : Scale\n    yScale y =\n      400 - y * 3\n\n\n    main =\n      svg\n        [\n          Svg.Attributes.width \"600\",\n          Svg.Attributes.height \"400\"\n        ]\n        [\n          scatterPlot\n            [\n              ScatterPlot.color \"#9F7088\",\n              ScatterPlot.size \"4\"\n            ]\n            { data = data\n            , xScale = xScale\n            , yScale = yScale\n            }\n        ]\n\n",
+        "type": "List (Svg.Attribute msg) -> Chart.ChartProps msg -> Svg.Svg msg"
+      },
+      {
+        "name": "size",
+        "comment": " Set dot size.\n",
+        "type": "String -> Svg.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "BarChart",
+    "comment": "\n\n# Bar Chart\n@docs barChart\n\n# Attributes\n@docs width, color\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "barChart",
+        "comment": " Create a bar chart.\n\n    import Svg exposing (svg)\n    import Svg.Attributes exposing (width, height)\n    import Chart exposing (Scale, Data)\n    import BarChart exposing (barChart, color, width)\n\n\n    data : Data msg\n    data =\n      [\n        (1, 22.2, []),\n        (2, 34, []),\n        (3, 56, []),\n        (4, 62, []),\n        (5, 77, [])\n      ]\n\n\n    xScale : Scale\n    xScale x =\n      20 + x * 20\n\n\n    yScale : Scale\n    yScale y =\n      400 - y * 3\n\n\n    main =\n      svg\n        [\n          Svg.Attributes.width \"600\",\n          Svg.Attributes.height \"400\"\n        ]\n        [\n          barChart\n            [\n              BarChart.color \"#9F7088\",\n              BarChart.width \"10\"\n            ]\n            { data = data\n            , xScale = xScale\n            , yScale = yScale\n            }\n        ]\n\n",
+        "type": "List (Svg.Attribute msg) -> Chart.ChartProps msg -> Svg.Svg msg"
+      },
+      {
+        "name": "color",
+        "comment": " Set bar color.\n",
+        "type": "String -> Svg.Attribute msg"
+      },
+      {
+        "name": "width",
+        "comment": " Set bar width.\n",
+        "type": "String -> Svg.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "LineChart",
+    "comment": "\n\n# Line Chart\n@docs lineChart\n\n# Attributes\n@docs width, color\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "color",
+        "comment": " Set line color.\n",
+        "type": "String -> Svg.Attribute msg"
+      },
+      {
+        "name": "lineChart",
+        "comment": " Create a line chart.\n\n    import Svg exposing (svg)\n    import Svg.Attributes exposing (width, height)\n    import Chart exposing (Scale, Data)\n    import LineChart exposing (lineChart, color, width)\n\n\n    data : Data msg\n    data =\n      [\n        (1, 22.2, []),\n        (2, 34, []),\n        (3, 56, []),\n        (4, 62, []),\n        (5, 77, [])\n      ]\n\n\n    xScale : Scale\n    xScale x =\n      20 + x * 20\n\n\n    yScale : Scale\n    yScale y =\n      400 - y * 3\n\n\n    main =\n      svg\n        [\n          Svg.Attributes.width \"600\",\n          Svg.Attributes.height \"400\"\n        ]\n        [\n          lineChart\n            [\n              LineChart.color \"#9F7088\",\n              LineChart.width \"10\"\n            ]\n            { data = data\n            , xScale = xScale\n            , yScale = yScale\n            }\n        ]\n\n",
+        "type": "List (Svg.Attribute msg) -> Chart.ChartProps msg -> Svg.Svg msg"
+      },
+      {
+        "name": "width",
+        "comment": " Set line width.\n",
+        "type": "String -> Svg.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Chart",
+    "comment": "\n\n# Type\n@docs Datum, Data, Scale, ChartProps\n\n",
+    "aliases": [
+      {
+        "name": "ChartProps",
+        "comment": " Props of charts.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ data : Chart.Data msg, xScale : Chart.Scale, yScale : Chart.Scale }"
+      },
+      {
+        "name": "Data",
+        "comment": " List of Datum.\n\n    import Svg.Attributes exposing (opacity)\n    import Chart exposing (Data)\n    import BarChart exposing (color)\n\n\n    data : Data msg\n    data =\n      [\n        (1, 22.2, []),\n        (2, 34, []),\n        (3, 56, [opacity \"0.3\"]),\n        (4, 62, [color \"#7F91B8\"]),\n        (5, 77, [])\n      ]\n\n",
+        "args": [
+          "msg"
+        ],
+        "type": "List (Chart.Datum msg)"
+      },
+      {
+        "name": "Datum",
+        "comment": " The first value is x-coordinate and the second value is y-coordinate.\nThe third value is a list of customized svg attributes.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "( Float, Float, List (Svg.Attribute msg) )"
+      },
+      {
+        "name": "Scale",
+        "comment": " A function which maps a coordinate to a actual position in `<svg />`.\n",
+        "args": [],
+        "type": "Float -> Float"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

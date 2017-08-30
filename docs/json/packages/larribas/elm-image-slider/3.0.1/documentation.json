@@ -1,0 +1,48 @@
+[
+  {
+    "name": "ImageSlider",
+    "comment": " A component to display and navigate through an image carousel. See the [demo here](https://larribas.github.io/elm-image-slider/) to get a clear idea.\n\nIt supports moving via arrow keys, visual arrows and clicking on the image thumbnails. The default styles come with easy support for the traditional close button on the upper right corner.\n\nYou can supply any type to the carousel, as long as you can supply functions that extract each item's originalUrl, thumbnailUrl and caption.\n\n\n# Main workflow\n\n@docs Msg, State, Config, init, update, view\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Holds all necessary transformations to display the image slider\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ originalUrl : a -> String , thumbnailUrl : a -> String , alt : a -> String , caption : a -> Html.Html ImageSlider.Msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Internal messages to manage the component's state.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Minimal state for the component. It remembers the currently focused image on the slider\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initialize the component's state.\n",
+        "type": "Int -> ( ImageSlider.State, Platform.Cmd.Cmd ImageSlider.Msg )"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the component's state\n",
+        "type": "ImageSlider.Msg -> ImageSlider.State -> ImageSlider.State"
+      },
+      {
+        "name": "view",
+        "comment": " Renders the component visually. Should the slide array be empty, it displays nothing\n",
+        "type": "ImageSlider.Config a -> Array.Array a -> ImageSlider.State -> Html.Html ImageSlider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,105 @@
+[
+  {
+    "name": "List.InfiniteZipper",
+    "comment": "\nA circular zipper list\n\nThis module provides a form of a focused list that allows moving around and does not terminate.\n\nWhen the cursor is at the end of the list, right will return focus to the front of the list.\nWhen the cursor is at the beginning of the list, previous will return focus to the end of the list.\n\nAs an example:\n\n    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]\n      |> InfiniteZipper.next\n      |> InfiniteZipper.next\n      |> InfiniteZipper.next\n      |> InfiniteZipper.current\n      -- 1\n\n    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]\n      |> InfiniteZipper.push 5\n      |> InfiniteZipper.first\n      |> InfiniteZipper.current\n      -- 5\n\n    InfiniteZipper.fromListWithDefault 4 [1, 2, 3]\n      |> InfiniteZipper.next\n      |> InfiniteZipper.mapCurrent ((+) 1)\n      |> InfiniteZIpper.current\n      -- 3\n\n# Types\n@docs InfiniteZipper\n\n# Constructing an InfiniteZipper\n@docs singleton, fromList, fromListWithDefault\n\n# Moving focus\n@docs first, last, previous, next, findNext, findFirst\n\n# Getting and changing values\n@docs current, map, mapCurrent\n\n# Adding values\n@docs append, push\n\n# Checking where the cursor is\n@docs beginning, end\n\n# Returning the underlying list\n@docs toList\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "InfiniteZipper",
+        "comment": " The InfiniteZipper type\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "append",
+        "comment": " Inserts an element to the end of the InfiniteZipper, maintaining focus on the current element\n",
+        "type": "a -> List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "beginning",
+        "comment": " Returns True if the InfiniteZipper is currently focused on the first element of the List\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> Bool"
+      },
+      {
+        "name": "current",
+        "comment": " Gets the element that the InfiniteZipper is currently focused on\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> a"
+      },
+      {
+        "name": "end",
+        "comment": " Returns True if the InfiniteZipper is currently focused on the last element of the List\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> Bool"
+      },
+      {
+        "name": "findFirst",
+        "comment": " Returns an InfiniteZipper focused on an element that matches a given predicate if such element can be found. Starts at the beginning of the InfiniteZipper and searches forwards until the end\n",
+        "type": "(a -> Bool) -> List.InfiniteZipper.InfiniteZipper a -> Maybe.Maybe (List.InfiniteZipper.InfiniteZipper a)"
+      },
+      {
+        "name": "findNext",
+        "comment": " Returns an InfiniteZipper focused on an element that matches a given predicate if such element can be found. Starts at the next element from the current element and loop around (excluding the current element)\n",
+        "type": "(a -> Bool) -> List.InfiniteZipper.InfiniteZipper a -> Maybe.Maybe (List.InfiniteZipper.InfiniteZipper a)"
+      },
+      {
+        "name": "first",
+        "comment": " Moves the focus to the first element of the List\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Tries to construct an InfiniteZipper from a List which may be empty\n",
+        "type": "List a -> Maybe.Maybe (List.InfiniteZipper.InfiniteZipper a)"
+      },
+      {
+        "name": "fromListWithDefault",
+        "comment": " Constructs an InfiniteZipper from a List. If the List is empty creates an InfiniteZipper with the default value as the only value\n",
+        "type": "a -> List a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "last",
+        "comment": " Moves the focus to the last element of the List\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "map",
+        "comment": " Applies a transformation function to every element in the InfiniteZipper\n",
+        "type": "(a -> b) -> List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper b"
+      },
+      {
+        "name": "mapCurrent",
+        "comment": " Applies a function to the element the InfiniteZipper is currently focused on\n",
+        "type": "(a -> a) -> List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "next",
+        "comment": " Moves the focus to the element after the current element, or returns focus to the first element of the List if focus is at the end\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "previous",
+        "comment": " Moves the focus to the element previous of the current element, or returns focus to the last element of the List if focus is at the begining\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "push",
+        "comment": " Inserts an element to the beginning of the InfiniteZipper, maintaining focus on the current element\n",
+        "type": "a -> List.InfiniteZipper.InfiniteZipper a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Creates an InfiniteZipper with a single element\n",
+        "type": "a -> List.InfiniteZipper.InfiniteZipper a"
+      },
+      {
+        "name": "toList",
+        "comment": " Returns the underlying List of elements\n",
+        "type": "List.InfiniteZipper.InfiniteZipper a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

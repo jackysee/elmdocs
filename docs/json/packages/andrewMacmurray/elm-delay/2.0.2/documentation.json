@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Delay",
+    "comment": " Utilities to delay updates after a set period of time\n\n# Delay one message\n@docs after\n\n# Delay a sequence of messages\n@docs sequence, sequenceIf, withUnit\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "after",
+        "comment": " Delays an update (with a message) by a given amount of time\n\n    after 500 millisecond DelayedMsg\n",
+        "type": "Float -> Time.Time -> msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "sequence",
+        "comment": " Starts a sequence of delayed messages\n\n    sequence\n        [ ( 1000, millisecond, FirstMessage )\n        , ( 2000, millisecond, SecondMessage )\n        , ( 1000, millisecond, ThirdMessage )\n        ]\n",
+        "type": "List ( Float, Time.Time, msg ) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "sequenceIf",
+        "comment": " Starts a sequence of delayed messages if predicate is met\n\n    sequenceIf (not model.updating)\n        [ ( 1000, millisecond, FirstMessage )\n        , ( 2000, millisecond, SecondMessage )\n        , ( 1000, millisecond, ThirdMessage )\n        ]\n",
+        "type": "Bool -> List ( Float, Time.Time, msg ) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "withUnit",
+        "comment": " Helper for making all steps have the same unit\n\n    sequence <|\n        withUnit millisecond\n            [ ( 1000, FirstMessage )\n            , ( 2000, SecondMessage )\n            , ( 1000, ThirdMessage )\n            ]\n",
+        "type": "Time.Time -> List ( Float, msg ) -> List ( Float, Time.Time, msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

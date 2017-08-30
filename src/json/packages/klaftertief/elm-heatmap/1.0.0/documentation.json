@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Heatmap",
+    "comment": " This library helps you to turn a list of weighted positions into a Svg based heatmap.\n\nThe general idea is based on [simpleheat](https://github.com/mourner/simpleheat), which uses a `canvas` implementation.\n\n**Warning:** This is really not the fastest heatmap implementation, mainly because it's rendered in Svg. So it should probably not be used when the heatmap data or config changes a lot on user interaction and when render performance is critical.\n\n# View\n@docs view\n\n# Configuration\n@docs config, Config, Point, withMaxWeight, withRadius, withBlur, withIdSuffix\n",
+    "aliases": [
+      {
+        "name": "Point",
+        "comment": " A `Point` describes the importance at a given position in the heatmap.\n\nThe origin of the coordiante system is the top left corner.\nThe positive x-axis points towards the right, the positive y-axis points down.\nPoints are positioned without a unit identifier (that is *in user space* using *user units* in Svg speech).\n",
+        "args": [],
+        "type": "{ x : Float, y : Float, weight : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration for the heatmap.\n\nIt describes the appearance of a heatmap and how to turn your data into heatmappable `Point`s.\n\n**Note:** The `Config` does not belong in your `Model` as it contains a function to turn your data into a `Point`.\n",
+        "args": [
+          "data"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Create the `Config` for a heatmap.\n\nYou need to define at least the colors of the heatmap as a `Gradient` and how to turn your `data` into a `Point`.\n\nThe `toPoint` function should return a normalized `weight` between `0` and `1` for a default configuration.\nYou can also use `maxWeight` to let the heatmap do the normalization.\n\nHave a look at `Heatmap.Gradient` for some default gradients or how to create your own gradient.\n\n    type alias Fire =\n        { location : LatLng\n        , risk : Int -- in %\n        }\n\n    toPoint : Fire -> Heatmap.Point\n    toPoint fire =\n        let\n            {x, y} = project fire.location\n        in\n            { x = x\n            , y = y\n            , weight = toFloat fire.risk / 100\n            }\n\n    config : Config\n    config =\n        Heatmap.config\n            { gradient =\n                Heatmap.Gradient.heatedMetal\n            , toPoint =\n                (\\p ->\n                    let\n                )\n            }\n",
+        "type": "{ toPoint : data -> Heatmap.Point , gradient : Heatmap.Gradient.Gradient } -> Heatmap.Config data"
+      },
+      {
+        "name": "view",
+        "comment": " Take a `Config` and a `List` of `data` and turn it into a Svg based heatmap.\n\n    view : Model -> Svg msg\n    view model =\n        Heatmap.view myConfig model.myData\n\n**Note:** The `view` function generates a `Svg.g` element as its root. So you are responsible to embed in a `Svg.svg` element to actually render a heatmap. This makes it easy to define e.g. styling and events for the containing Svg.\n\nThe generated Svg looks like this.\n\n    g []\n        [ defs []\n            [ {- helper elements and filter definition -} ]\n        , g [ filter \"url(#heatmapFilter)\" ]\n            [ {- list of clustered points -} ]\n        ]\n",
+        "type": "Heatmap.Config data -> List data -> Svg.Svg msg"
+      },
+      {
+        "name": "withBlur",
+        "comment": " Set the blur factor of the heatmap (15 by default).\n\n    myConfig\n        |> withBlur 50\n",
+        "type": "Float -> Heatmap.Config data -> Heatmap.Config data"
+      },
+      {
+        "name": "withIdSuffix",
+        "comment": " Add a suffix for `id` attributes in the generated Svg.\n\n    myConfig\n        |> withIdSuffix \"clickTargets42\"\n\nThe generated Svg depends on references between elements via their `id`.\nAn individual suffix makes sure that multiple heatmaps don't interfere.\n",
+        "type": "String -> Heatmap.Config data -> Heatmap.Config data"
+      },
+      {
+        "name": "withMaxWeight",
+        "comment": " Set the maximum data weight (1 by default).\n\n    myConfig\n        |> withMaxWeight 256\n\nThe relative weight of a point in the data list to the maximum weight defines the intensity in the heatmap.\nIn other words, `point.weight / config.weight` sets the render opacity for a given point.\n",
+        "type": "Float -> Heatmap.Config data -> Heatmap.Config data"
+      },
+      {
+        "name": "withRadius",
+        "comment": " Set the render radius of each point in the heatmap (25 by default).\n\n    myConfig\n        |> withRadius 50\n\nThe points in the data get clustered relative to this value to improve render performance.\n",
+        "type": "Float -> Heatmap.Config data -> Heatmap.Config data"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Heatmap.Gradient",
+    "comment": " Gradient definitions for heatmaps.\n\n## Definition\n\n@docs Gradient\n\n## Useful gradients\n\nAs seen in <https://msdn.microsoft.com/en-us/library/mt712854.aspx>\n\n@docs blackAquaWhite, blueRed, colorSpectrum, deepSea, heatedMetal, incandescent, steppedColors, sunrise, visibleSpectrum\n",
+    "aliases": [
+      {
+        "name": "Gradient",
+        "comment": " Re-exposed [`Gradient`](http://package.elm-lang.org/packages/eskimoblood/elm-color-extra/5.0.0/Color-Gradient#Gradient) definition from the [elm-color-extra](http://package.elm-lang.org/packages/eskimoblood/elm-color-extra/5.0.0/) package.\n\nA `Gradient` is a list of [Color](http://package.elm-lang.org/packages/elm-lang/core/5.1.1/Color#Color) and stop values. The stop value must be between `0` and `1`.\n\n    sunrise =\n        [ ( 0, Color.rgb 255 0 0 )\n        , ( 0.66, Color.rgb 255 255 0 )\n        , ( 1, Color.rgb 255 255 255 )\n        ]\n\nThe gradient is used to colorize the intensity of the values in the heatmap, from lowest to highest.\n",
+        "args": [],
+        "type": "Color.Gradient.Gradient"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "blackAquaWhite",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,0), rgb(0,255,255) 60%, rgb(255,255,255))\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "blueRed",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,255), rgb(255,0,0))\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "colorSpectrum",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,128), rgb(0,0,255) 25%, rgb(0,128,0) 50%, rgb(255,255,0) 75%, rgb(255,0,0)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "deepSea",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,0), rgb(24,53,103) 60%, rgb(46,100,158) 75%, rgb(23,173,201) 90%, rgb(0,250,250)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "heatedMetal",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,0), rgb(128,0,128) 40%, rgb(255,0,0) 60%, rgb(255,255,0) 80%, rgb(255,255,255)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "incandescent",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,0), rgb(0,0,255) 33%, rgb(139,0,0) 66%, rgb(255,255,255)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "steppedColors",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(0,0,128), rgb(0,0,128) 25%, rgb(0,128,0) 26%, rgb(0,128,0) 50%, rgb(255,255,0) 51%, rgb(255,255,0) 75%, rgb(255,0,0) 76%, rgb(255,0,0)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "sunrise",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(255,0,0), rgb(255,255,0) 66%, rgb(255,255,255)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      },
+      {
+        "name": "visibleSpectrum",
+        "comment": " <div style=\"background: linear-gradient(to right, rgb(255,0,255), rgb(0,0,255) 25%, rgb(0,255,0) 50%, rgb(255,255,0) 75%, rgb(255,0,0)\">&nbsp;</div>\n",
+        "type": "Heatmap.Gradient.Gradient"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

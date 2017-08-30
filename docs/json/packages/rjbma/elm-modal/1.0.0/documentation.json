@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Modal",
+    "comment": " This library exposes functions for conditionally viewing HTML elements\ninside a modal dialog.\n\nPlease note that this library only makes sure that all modals have similar\nmarkup with consistent CSS classes; it's still up to you to provide the CSS\nto actually make the modal appear and disappear. However, you can use\n[this](https://github.com/rjbma/elm-modal/blob/master/src/modal.css) as a starting point!\n\n# View\n@docs view\n@docs maybeView\n\n# Config\n@docs Config\n@docs PullDirection\n@docs maintainableCssConfig\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Particular configuration for the modal dialog, including the CSS classes,\ndirection and the message triggrered when closing the modal.\nThe CSS classes are applied as follows:\n\n    <div class=\"mainClass openClass mainClass+direction\">\n        <div class=\"containerClass\">\n            <!-- stuff goes here -->\n        </div>\n        <div class=\"backdropClass\"></div>\n    </div>\n\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ mainClass : String , openClass : String , containerClass : String , backdropClass : String , direction : Modal.PullDirection , closeMsg : msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "PullDirection",
+        "comment": " The direction from where the modal dialog will be transitioned. Notice\nthat this just puts a particular CSS class in the main HTML element so\nthat it can be easily targeted.\n",
+        "args": [],
+        "cases": [
+          [
+            "Top",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ],
+          [
+            "Left",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "maintainableCssConfig",
+        "comment": " Generates a configuration function whose CSS classes are named according\nto [Maintainable CSS](https://maintainablecss.com/).\n",
+        "type": "String -> Modal.PullDirection -> msg -> Modal.Config msg"
+      },
+      {
+        "name": "maybeView",
+        "comment": " Represents a modal that is visible when the given `Maybe` is a `Just`, and\nhidden if it's a `Nothing`. the `childrenFn` function is invoked with the\n`Just`'s value, and will determine the modal's content.\n\nFor example, a confirmation dialog for viewing detailed information on a user:\n\n    view : Model -> Html Msg\n    view model =\n        let\n            cfg =\n                Modal.maintainableCssConfig \"viewUserThingy\" Bottom CloseUserDetail\n\n            userDetailDialog =\n                Modal.maybeView cfg model.selectedUser\n\n            viewUser user =\n                [ dl []\n                    [ dt [] [ text \"Name\" ]\n                    , dd [] [ text user.name ]\n                    , dt [] [ text \"Last login\" ]\n                    , dd [] [ text user.lastLoginDate ]\n                    ]\n                ]\n        in\n            div []\n                [ userDetailDialog\n                    []\n                    viewUser\n                ]\n",
+        "type": "Modal.Config msg -> Maybe.Maybe a -> List (Html.Attribute msg) -> (a -> List (Html.Html msg)) -> Html.Html msg"
+      },
+      {
+        "name": "view",
+        "comment": " Represents a modal dialog with the given configuration and content. The\n   modal's visibility is determined by the `isOpen` flag. The Html attributes\n   are applied to the modal's top level element.\n\nFor example, a confirmation dialog that depends on a field in the model:\n\n    view : Model -> Html Msg\n    view model =\n        let\n            cfg =\n                Modal.maintainableCssConfig \"confirmationDialog\" Top CancelConfirmation\n\n            confirmationDialog =\n                Modal.view cfg model.showConfirmation\n        in\n            div []\n                [ confirmationDialog\n                    []\n                    [ p [] [ text \"Destroy the world?\" ]\n                    , button [ onClick CallTheNutHaus ] [ text \"Sure, we're on borrowed time anyways\" ]\n                    , button [ onClick CancelConfirmation ] [ text \"Not until GoT is over!\" ]\n                    ]\n                ]\n",
+        "type": "Modal.Config msg -> Bool -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

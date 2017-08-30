@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Json.Bidirectional",
+    "comment": " The functions in this module let you build up two-way `Coder` structures that concisely specify how values of some Elm type can be both encoded to and decoded from JSON.\n\n# Types\n\n@docs Value, CoderBuilder, Coder\n\n# Primitives\n\n@docs string, bool, int, float\n\n# Data Structures\n\n@docs nullable, list, object, withField, at, dict, keyValuePairs, tuple, tuple3, tuple4, tuple5, value\n\n# Fancy Stuff\n\n@docs bimap, lazy, custom\n\n# Encoding and Decoding\n\n@docs encodeValue, encodeString, decodeValue, decodeString, decoder\n",
+    "aliases": [
+      {
+        "name": "Coder",
+        "comment": " An alias for `CoderBuilder a a`, this represents a symmetric pair of encoder and decoder.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Json.Bidirectional.CoderBuilder a a"
+      },
+      {
+        "name": "Value",
+        "comment": " An alias for `Json.Encode.Value`. Can be used anywhere `Json.Encode.Value` or `Json.Decode.Value` is expected.\n",
+        "args": [],
+        "type": "Json.Encode.Value"
+      }
+    ],
+    "types": [
+      {
+        "name": "CoderBuilder",
+        "comment": " This type is used to represent Coders that are still being built, which means that the type they encode from may be different than the type they decode to.\n",
+        "args": [
+          "a",
+          "b"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "at",
+        "comment": " Transform a Coder such that its JSON representation is nested under the given list of object field names, from outermost to innermost. For example,\n\n    fooBarIntCoder : Coder Int\n    fooBarIntCoder =\n        at [ \"foo\", \"bar\" ] int\n\nEncoding the Elm Int `33` with `fooBarIntCoder` produces the following JSON value:\n\n    {\"foo\": {\"bar\": 33}}\n\nWhen decoding using the same Coder, the enclosed value is extracted from the specified nested fields.\n",
+        "type": "List String -> Json.Bidirectional.Coder a -> Json.Bidirectional.Coder a"
+      },
+      {
+        "name": "bimap",
+        "comment": " Map both the encoding and decoding processes of a Coder, producing a new Coder of a new type. The first argument is a function that maps over the encoding process, taking Elm values of type `b` and producing `a` values that the given `Coder a` knows how to encode. The second argument is a function that maps over the decoding process, taking results from the given `Coder a` and transforming them into the ones that are produced by the resulting `Coder b`. For example:\n\n    setCoder : Coder Set\n    setCoder =\n        list\n            |> bimap Set.toList Set.fromList\n",
+        "type": "(b -> a) -> (a -> b) -> Json.Bidirectional.Coder a -> Json.Bidirectional.Coder b"
+      },
+      {
+        "name": "bool",
+        "comment": " A Coder for Bool values in Elm, encoded as JSON true or false.\n",
+        "type": "Json.Bidirectional.Coder Bool"
+      },
+      {
+        "name": "custom",
+        "comment": " Construct a custom Coder out of an encoding function and a Decoder for the same Elm type. This is useful for defining Coders of union types:\n\n\n    resultCoder : Coder err -> Coder ok -> Coder (Result err ok)\n    resultCoder errCoder okCoder =\n        let\n            wrappedErr =\n                at [ \"err\" ] errCoder\n\n            wrappedOk =\n                at [ \"ok\" ] okCoder\n        in\n            custom\n                (\\result ->\n                    case result of\n                        Err x ->\n                            encodeValue wrappedErr x\n\n                        Ok x ->\n                            encodeValue wrappedOk x\n                )\n                (Decode.oneOf\n                    [ Decode.map Err (decoder wrappedErr)\n                    , Decode.map Ok (decoder wrappedOk)\n                    ]\n                )\n",
+        "type": "(a -> Json.Bidirectional.Value) -> Json.Decode.Decoder a -> Json.Bidirectional.Coder a"
+      },
+      {
+        "name": "decodeString",
+        "comment": " Use a Coder to decode a JSON String into the Coder's type. Returns a Result with String error messages because the structure of the JSON may not match what is expected by the Coder.\n",
+        "type": "Json.Bidirectional.Coder a -> String -> Result.Result String a"
+      },
+      {
+        "name": "decodeValue",
+        "comment": " Use a Coder to decode a JSON Value into the Coder's type. Returns a Result with String error messages because the structure of the JSON may not match what is expected by the Coder.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Bidirectional.Value -> Result.Result String a"
+      },
+      {
+        "name": "decoder",
+        "comment": " Get a `Json.Decode.Decoder` from a `Coder`.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "dict",
+        "comment": " Construct a Coder for a Dict whose keys are Strings and whose values have the type of the given Coder argument. The Dict is encoded as a JSON object with an arbitrary list of fields, and each value encoded in the same way:\n\n    dictJson : Value\n    dictJson =\n        [ (\"foo\", 1)\n        , (\"bar\", 2)\n        , (\"baz\", 3)\n        ]\n            |> Dict.fromList\n            |> encodeValue (dict int)\n\nWith the above code, `dictJson` has the following structure:\n\n    {\"foo\": 1, \"bar\": 2, \"baz\": 3}\n\nDecoding is the same as with `Json.Decode.dict`.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Bidirectional.Coder (Dict.Dict String a)"
+      },
+      {
+        "name": "encodeString",
+        "comment": " Use a Coder to encode something to JSON as a String. The second argument is the amount of indentation to use for serialization, with `0` resulting in a one-line JSON String.\n",
+        "type": "Json.Bidirectional.Coder a -> Int -> a -> String"
+      },
+      {
+        "name": "encodeValue",
+        "comment": " Use a Coder to encode something to JSON as a Value, which can be used anywhere that `Json.Encode.Value` or `Json.Decode.Value` is expected.\n",
+        "type": "Json.Bidirectional.Coder a -> a -> Json.Bidirectional.Value"
+      },
+      {
+        "name": "float",
+        "comment": " A Coder for Float values in Elm, encoded as JSON numbers.\n",
+        "type": "Json.Bidirectional.Coder Float"
+      },
+      {
+        "name": "int",
+        "comment": " A Coder for Int values in Elm, encoded as JSON numbers.\n",
+        "type": "Json.Bidirectional.Coder Int"
+      },
+      {
+        "name": "keyValuePairs",
+        "comment": " Construct a Coder for a List of 2-tuples whose keys are Strings and whose values have the type of the given Coder argument. The List is encoded as a JSON object with an arbitrary list of fields, just like `dict`.\n\nDecoding is the same as with `Json.Decode.keyValuePairs`, while the encoding process uses `Json.Encode.Object`. This means that repeated use of the same key in the source list will result in a JSON object where the _last_ value from the repeated key ends up being used as that property's value. For example:\n\n    twoFoos : Value\n    twoFoos =\n        [ ( \"foo\", 1 ), ( \"foo\", 2 ) ]\n            |> encodeValue (keyValuePairs int)\n\nWith the above code, `twoFoos` has the following structure:\n\n    {\"foo\": 2}\n\nThis behaviour means that if you aren't careful to keep your keys free of duplicates, then an encoding/decoding round-trip of the same Elm value could leave you with a value that isn't equal to the one you started with.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Bidirectional.Coder (List ( String, a ))"
+      },
+      {
+        "name": "lazy",
+        "comment": " This function makes it possible to define Coders for recursive JSON structures. Use it like you use `Json.Decode.lazy`:\n\n    type alias Comment =\n        { message : String\n        , responses : Responses\n        }\n\n    type Responses = Responses (List Comment)\n\n    responses : Coder Responses\n    responses =\n        bimap\n            (\\(Responses comments) -> comments)\n            Responses\n            (list (lazy (\\_ -> comment)))\n\n    comment : Coder Comment\n    comment =\n        object Comment\n            |> withField \"message\" .message string\n            |> withField \"responses\" .responses responses\n",
+        "type": "(() -> Json.Bidirectional.Coder a) -> Json.Bidirectional.Coder a"
+      },
+      {
+        "name": "list",
+        "comment": " Construct a Coder for List values in Elm, encoded as JSON arrays whose items are encoded as per the given Coder.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Bidirectional.Coder (List a)"
+      },
+      {
+        "name": "nullable",
+        "comment": " Construct a Coder for Maybe values in Elm, where Nothing is encoded as null and Just values are encoded using the given Coder.\n",
+        "type": "Json.Bidirectional.Coder a -> Json.Bidirectional.Coder (Maybe.Maybe a)"
+      },
+      {
+        "name": "object",
+        "comment": " Begin construction of a Coder for values of an arbitrary Elm type, encoded as JSON objects with specific fields, each encoded in their own way:\n\n    type alias User =\n        { name : String\n        , isAdmin : Bool\n        }\n\n    userCoder : Coder User\n    userCoder =\n        object User\n            |> withField \"name\" .name string\n            |> withField \"isAdmin\" .isAdmin bool\n\nThe first argument is a constructor function that must take the values of the specified fields in order. Once all fields have been correctly specified by chaining `withField` calls in a pipeline, the types of the `CoderBuilder` converge and the result is a symmetric `Coder`.\n",
+        "type": "(a -> b) -> Json.Bidirectional.CoderBuilder c (a -> b)"
+      },
+      {
+        "name": "string",
+        "comment": " A Coder for String values in Elm, encoded as JSON strings.\n",
+        "type": "Json.Bidirectional.Coder String"
+      },
+      {
+        "name": "tuple",
+        "comment": " Take a 2-tuple of Coders and produce a Coder of 2-tuples, encoding them as 2-element JSON arrays:\n\n    intBoolTupleCoder : Coder ( Int, Bool )\n    intBoolTupleCoder =\n        tuple (int, bool)\n\n    tupleJson : Value\n    tupleJson =\n        ( 109, True )\n            |> encodeValue intBoolTupleCoder\n\nWith the above code, `tupleJson` is the JSON array `[109, true]`. Decoding uses the specified value Coder for each index of the JSON array.\n",
+        "type": "( Json.Bidirectional.Coder a, Json.Bidirectional.Coder b ) -> Json.Bidirectional.Coder ( a, b )"
+      },
+      {
+        "name": "tuple3",
+        "comment": " Take a 3-tuple of Coders and produce a Coder of 3-tuples, encoding them as 3-element JSON arrays. See `tuple` for more details.\n",
+        "type": "( Json.Bidirectional.Coder a , Json.Bidirectional.Coder b , Json.Bidirectional.Coder c ) -> Json.Bidirectional.Coder ( a, b, c )"
+      },
+      {
+        "name": "tuple4",
+        "comment": " Take a 4-tuple of Coders and produce a Coder of 4-tuples, encoding them as 4-element JSON arrays. See `tuple` for more details.\n",
+        "type": "( Json.Bidirectional.Coder a , Json.Bidirectional.Coder b , Json.Bidirectional.Coder c , Json.Bidirectional.Coder d ) -> Json.Bidirectional.Coder ( a, b, c, d )"
+      },
+      {
+        "name": "tuple5",
+        "comment": " Take a 5-tuple of Coders and produce a Coder of 5-tuples, encoding them as 5-element JSON arrays. See `tuple` for more details.\n",
+        "type": "( Json.Bidirectional.Coder a , Json.Bidirectional.Coder b , Json.Bidirectional.Coder c , Json.Bidirectional.Coder d , Json.Bidirectional.Coder e ) -> Json.Bidirectional.Coder ( a, b, c, d, e )"
+      },
+      {
+        "name": "value",
+        "comment": " A Coder for arbitrary JSON values that are left untouched in both the encoding and decoding processes.\n",
+        "type": "Json.Bidirectional.Coder Json.Bidirectional.Value"
+      },
+      {
+        "name": "withField",
+        "comment": " Adds a field to an object CoderBuilder pipeline. See `object` for an example.\n\nThe first argument is the name of the field as it appears in the JSON. The second argument is a getter function that is used in the encoding process that takes a value of the source type and returns a value for the field. The third argument is a Coder for the field value. The fourth argument is the object CoderBuilder (usually applied via the `|>` operator) whose constructor function expects the field value as its next argument. Once all of the constructor function's arguments have been correctly applied, the types will converge and the result is a symmetric Coder.\n",
+        "type": "String -> (a -> b) -> Json.Bidirectional.Coder b -> Json.Bidirectional.CoderBuilder a (b -> c) -> Json.Bidirectional.CoderBuilder a c"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

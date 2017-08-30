@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Multiselect",
+    "comment": " An implementation of multiselect control built with and for Elm.\n\nPlease, check example/src/MinimalExample.elm for the minimal example on how to use this library.\n\n\n# Helpers\n\n@docs initModel, getSelectedValues\n\n\n# Model\n\n@docs Model\n\n\n# Msg\n\n@docs Msg\n\n\n# View\n\n@docs view\n\n\n# Update\n\n@docs update\n\n\n# Subscriptions\n\n@docs subscriptions\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Opaque type that holds the model\n\n    type alias Model =\n        { multiselect : Multiselect.Model\n        }\n\n",
+        "args": [],
+        "type": "{ status : Multiselect.Status , values : List ( String, String ) , filtered : List ( String, String ) , selected : List ( String, String ) , protected : Bool , error : Maybe.Maybe String , input : String , inputWidth : Float , hovered : Maybe.Maybe ( String, String ) , tag : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Opaque type for internal library messages\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getSelectedValues",
+        "comment": " Get selected values : List (String, String)\n",
+        "type": "Multiselect.Model -> List ( String, String )"
+      },
+      {
+        "name": "initModel",
+        "comment": " Init model based on the values : List (String, String) and id : String provided by the user.\n\n    model =\n        { multiselect = Multiselect.initModel [ ( \"one\", \"The 1st option\" ), ( \"two\", \"The 2nd option\" ), ( \"three\", \"The 3rd option\" ) ] \"id_1\"\n        }\n\n",
+        "type": "List ( String, String ) -> String -> Multiselect.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscribe for messages\n\n    Sub.map MultiselectMsg <| Multiselect.subscriptions model.multiselect\n\n",
+        "type": "Multiselect.Model -> Platform.Sub.Sub Multiselect.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update the control state\n\n    MultiselectMsg subMsg ->\n        let\n            ( subModel, subCmd ) =\n                Multiselect.update subMsg model.multiselect\n        in\n            { model | multiselect = subModel } ! [ Cmd.map MultiselectMsg subCmd ]\n\n",
+        "type": "Multiselect.Msg -> Multiselect.Model -> ( Multiselect.Model, Platform.Cmd.Cmd Multiselect.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Render the view\n\n    Html.map MultiselectMsg <| Multiselect.view model.multiselect\n\n",
+        "type": "Multiselect.Model -> Html.Html Multiselect.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

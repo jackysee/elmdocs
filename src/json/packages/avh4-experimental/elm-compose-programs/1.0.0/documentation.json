@@ -1,0 +1,109 @@
+[
+  {
+    "name": "ProgramRecord",
+    "comment": "\n\n\n## Basics\n\n@docs ProgramRecord, toProgram, toProgramWithFlags\n\n\n## Typical programs\n\n\n### elm-lang/html\n\n@docs htmlProgram, htmlProgramWithFlags\n\n\n### elm-lang/navigation\n\n@docs navigationProgram, navigationProgramWithFlags\n\n\n## Special programs\n\n@docs completableProgram\n\n\n## Transforming programs\n\n@docs applyFlags, cache, CacheModel, CacheMsg\n\n\n## Combining programs\n\n@docs andThen, AndThenModel, AndThenMsg\n\n",
+    "aliases": [
+      {
+        "name": "ProgramRecord",
+        "comment": " `update` and `init` return a `Result` where:\n\n  - `Ok` means auth is finished; the provided value will be used to initialize the main program\n  - `Err` means auth did not finish; the provided value is the new model and Cmd for the auth program\n\n",
+        "args": [
+          "flags",
+          "done",
+          "model",
+          "msg"
+        ],
+        "type": "{ init : ProgramRecord.ProgramType flags (Result.Result ( model, Platform.Cmd.Cmd msg ) done) msg , update : msg -> model -> Result.Result ( model, Platform.Cmd.Cmd msg ) done , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AndThenModel",
+        "comment": " ",
+        "args": [
+          "model1",
+          "model2"
+        ],
+        "cases": []
+      },
+      {
+        "name": "AndThenMsg",
+        "comment": " ",
+        "args": [
+          "msg1",
+          "msg2"
+        ],
+        "cases": []
+      },
+      {
+        "name": "CacheModel",
+        "comment": " ",
+        "args": [
+          "model"
+        ],
+        "cases": []
+      },
+      {
+        "name": "CacheMsg",
+        "comment": " ",
+        "args": [
+          "done",
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": "\n\n  - TODO: allow `second` to have `done /= Never`\n  - TODO: allow `first` to have `flags /= Never`\n\n",
+        "type": "ProgramRecord.ProgramRecord a Basics.Never model2 msg2 -> ProgramRecord.ProgramRecord Basics.Never a model1 msg1 -> ProgramRecord.ProgramRecord Basics.Never Basics.Never (ProgramRecord.AndThenModel model1 model2) (ProgramRecord.AndThenMsg msg1 msg2)"
+      },
+      {
+        "name": "applyFlags",
+        "comment": " Provide flags to a ProgramRecord, producing a ProgramRecord that doesn't need flags\n",
+        "type": "flags -> ProgramRecord.ProgramRecord flags done model msg -> ProgramRecord.ProgramRecord Basics.Never done model msg"
+      },
+      {
+        "name": "cache",
+        "comment": " Caches the completion value of the given `ProgramRecord` using the `read` and `write` Tasks that you provide.\n\nWhen the resulting program record starts, it will use the `read` task.\nIf the read succeeds, the program will immediately complete with the read value.\nIf the read fails, the provided program will run to completion, after which the result will be saved with the provided `write` task.\n\nIf your `read` tasks takes a long time, you should provide a `loadingView` to be displayed while waiting for the task to finish.\n\n  - TODO: make this work with `flags /= Never`\n\n",
+        "type": "{ read : Task.Task () done , write : done -> Task.Task Basics.Never () , loadingView : Maybe.Maybe (Html.Html Basics.Never) } -> ProgramRecord.ProgramRecord Basics.Never done model msg -> ProgramRecord.ProgramRecord Basics.Never done (ProgramRecord.CacheModel model) (ProgramRecord.CacheMsg done msg)"
+      },
+      {
+        "name": "completableProgram",
+        "comment": " ",
+        "type": "{ init : Result.Result ( model, Platform.Cmd.Cmd msg ) done , update : msg -> model -> Result.Result ( model, Platform.Cmd.Cmd msg ) done , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> ProgramRecord.ProgramRecord Basics.Never done model msg"
+      },
+      {
+        "name": "htmlProgram",
+        "comment": " Creates a `ProgramRecord` with the configuration you would normally use with `elm-lang/html: Html.program`\n",
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> ProgramRecord.ProgramRecord Basics.Never Basics.Never model msg"
+      },
+      {
+        "name": "htmlProgramWithFlags",
+        "comment": " Creates a `ProgramRecord` with the configuration you would normally use with `elm-lang/html: Html.programWithFlags`\n",
+        "type": "{ init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> ProgramRecord.ProgramRecord flags Basics.Never model msg"
+      },
+      {
+        "name": "navigationProgram",
+        "comment": " Creates a `ProgramRecord` with the configuration you would normally use with `elm-lang/navigation: Navigation.program`\n",
+        "type": "(Navigation.Location -> msg) -> { init : Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> ProgramRecord.ProgramRecord Basics.Never Basics.Never model msg"
+      },
+      {
+        "name": "navigationProgramWithFlags",
+        "comment": " Creates a `ProgramRecord` with the configuration you would normally use with `elm-lang/navigation: Navigation.programWithFlags`\n",
+        "type": "(Navigation.Location -> msg) -> { init : flags -> Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> ProgramRecord.ProgramRecord flags Basics.Never model msg"
+      },
+      {
+        "name": "toProgram",
+        "comment": " Turns a `ProgramRecord` into a real `elm-lang/core: Platform.Program`.\n\nIf your program has flags, you will need to use [`toProgramWithFlags`](#toProgramWithFlags) instead.\n\n",
+        "type": "ProgramRecord.ProgramRecord Basics.Never Basics.Never model msg -> Platform.Program Basics.Never model msg"
+      },
+      {
+        "name": "toProgramWithFlags",
+        "comment": " Turns a `ProgramRecord` into a real `elm-lang/core: Platform.Program`.\n\nIf your `flags` type is `Never`, you must use [`toProgram`](#toProgram) instead (if you don't you will get a runtime exception).\n\n",
+        "type": "ProgramRecord.ProgramRecord flags Basics.Never model msg -> Platform.Program flags model msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

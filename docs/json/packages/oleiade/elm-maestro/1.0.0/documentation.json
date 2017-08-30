@@ -1,0 +1,410 @@
+[
+  {
+    "name": "Maestro.Scale",
+    "comment": " This module provides types and functions to create and\nmanipulate scales.\n\n# Types\n@docs Scale, Mode\n\n# Scales manipulation\n@docs scale\n\n",
+    "aliases": [
+      {
+        "name": "Scale",
+        "comment": " Scale represents a list of tones composing it\n",
+        "args": [],
+        "type": "List Maestro.Tone.Tone"
+      }
+    ],
+    "types": [
+      {
+        "name": "Mode",
+        "comment": " Mode represents the mode of a scale.\n",
+        "args": [],
+        "cases": [
+          [
+            "Major",
+            []
+          ],
+          [
+            "Minor",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "scale",
+        "comment": " Given a Tone and a Mode, generates the tones\ncomposing a scale.\n\n    (==)\n      scale (newTone C Major) Major\n      [ { key = C, adjustment = Natural }\n      , { key = D, adjustment = Natural }\n      , { key = E, adjustment = Natural }\n      , { key = F, adjustment = Natural }\n      , { key = G, adjustment = Natural }\n      , { key = A, adjustment = Natural }\n      , { key = B, adjustment = Natural }\n      ]\n",
+        "type": "Maestro.Tone.Tone -> Maestro.Scale.Mode -> List Maestro.Tone.Tone"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maestro.Interval",
+    "comment": " This module provides types and functions to compute, represent and\nmanipulate intervals.\n\n# Types\n@docs Degree, Interval\n\n# Common Helpers\n@docs addInterval, majorIntervals, minorIntervals, distance, diatonicDegreeOf\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Degree",
+        "comment": "\n",
+        "args": [],
+        "cases": [
+          [
+            "First",
+            []
+          ],
+          [
+            "Second",
+            []
+          ],
+          [
+            "Third",
+            []
+          ],
+          [
+            "Fourth",
+            []
+          ],
+          [
+            "Fifth",
+            []
+          ],
+          [
+            "Sixth",
+            []
+          ],
+          [
+            "Seventh",
+            []
+          ],
+          [
+            "Octave",
+            []
+          ],
+          [
+            "Ninth",
+            []
+          ],
+          [
+            "Tenth",
+            []
+          ],
+          [
+            "Eleventh",
+            []
+          ],
+          [
+            "Twelfth",
+            []
+          ],
+          [
+            "Thirteenth",
+            []
+          ],
+          [
+            "Fourteenth",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Interval",
+        "comment": " Interval represents the difference between two pitches\n",
+        "args": [],
+        "cases": [
+          [
+            "Unison",
+            []
+          ],
+          [
+            "MinorSecond",
+            []
+          ],
+          [
+            "MajorSecond",
+            []
+          ],
+          [
+            "MinorThird",
+            []
+          ],
+          [
+            "MajorThird",
+            []
+          ],
+          [
+            "PerfectFourth",
+            []
+          ],
+          [
+            "PerfectFifth",
+            []
+          ],
+          [
+            "MinorSixth",
+            []
+          ],
+          [
+            "MajorSixth",
+            []
+          ],
+          [
+            "MinorSeventh",
+            []
+          ],
+          [
+            "MajorSeventh",
+            []
+          ],
+          [
+            "PerfectOctave",
+            []
+          ],
+          [
+            "MinorNinth",
+            []
+          ],
+          [
+            "MajorNinth",
+            []
+          ],
+          [
+            "MinorTenth",
+            []
+          ],
+          [
+            "MajorTenth",
+            []
+          ],
+          [
+            "PerfectEleventh",
+            []
+          ],
+          [
+            "AugmentedEleventh",
+            []
+          ],
+          [
+            "PerfectTwelfth",
+            []
+          ],
+          [
+            "MinorThirteen",
+            []
+          ],
+          [
+            "MajorThirteen",
+            []
+          ],
+          [
+            "MinorFourteenth",
+            []
+          ],
+          [
+            "MajorFourteenth",
+            []
+          ],
+          [
+            "DoubleOctave",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addInterval",
+        "comment": " addInterval applies an interval to a given note, and returns\nthe resulting note\n",
+        "type": "Maestro.Note.Note -> Maestro.Interval.Interval -> Maestro.Note.Note"
+      },
+      {
+        "name": "diatonicDegreeOf",
+        "comment": " diatonicDegreeOf will compute the note being the given\ndegree of a starting note on the diatonic scale\n",
+        "type": "Maestro.Interval.Degree -> Maestro.Note.Note -> Maestro.Note.Note"
+      },
+      {
+        "name": "distance",
+        "comment": " distance computes the distance in semitones between two notes\n",
+        "type": "Maestro.Note.Note -> Maestro.Note.Note -> Int"
+      },
+      {
+        "name": "majorIntervals",
+        "comment": " majorIntervals represents the sequence of intervals composing\nthe Major scale\n",
+        "type": "List Maestro.Interval.Interval"
+      },
+      {
+        "name": "minorIntervals",
+        "comment": " minorIntervals represents the sequence of intervals composing\nthe minor scale\n",
+        "type": "List Maestro.Interval.Interval"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maestro.Note",
+    "comment": " This module provides types and functions to manipulate musical notes.\nNotes being represented as a tone and an octave convertible to an index (MIDI value)\n\n# Types\n@docs Octave, Note\n\n# Common Helpers\n@docs newNote, noteToIndex\n\n",
+    "aliases": [
+      {
+        "name": "Note",
+        "comment": " Note represents a tone on a given octave\n",
+        "args": [],
+        "type": "{ tone : Maestro.Tone.Tone, octave : Maestro.Note.Octave }"
+      },
+      {
+        "name": "Octave",
+        "comment": " Octave represents an octave number, as represented in piano or MIDI notation\n",
+        "args": [],
+        "type": "Int"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "newNote",
+        "comment": " newNote is a helper function to create a note\n",
+        "type": "Maestro.Tone.Key -> Maestro.Tone.Adjustment -> Maestro.Note.Octave -> Maestro.Note.Note"
+      },
+      {
+        "name": "noteToIndex",
+        "comment": " noteToIndex returns the MIDI value of a given note\n",
+        "type": "Maestro.Note.Note -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maestro",
+    "comment": " This library provides music theory abstractions and functionalities.\n\n# Definition\n@docs octaveOf, noteOf, keyAtOctave\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "keyAtOctave",
+        "comment": "\n",
+        "type": "Maestro.Tone.Key -> Int -> Int"
+      },
+      {
+        "name": "noteOf",
+        "comment": "\n",
+        "type": "Int -> Int"
+      },
+      {
+        "name": "octaveOf",
+        "comment": "\n",
+        "type": "Int -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maestro.Tone",
+    "comment": " This module provides types and functions to manipulate musical tones.\nIt allows you to represent tones (pitches) like `C`, `C Sharp` and so on, as\nwell as helpers to represent these as numerical values.\n\n# Types\n@docs Tone, Key, Adjustment\n\n# Common Helpers\n@docs newTone, keyToValue, keyFromValue, diatonicKeyValue, diatonicKeyFromValue,\n      adjustmentFromValue, adjustmentToValue\n\n",
+    "aliases": [
+      {
+        "name": "Tone",
+        "comment": " Tone represents a pitch and is defined by a key and an adjustment\n",
+        "args": [],
+        "type": "{ key : Maestro.Tone.Key, adjustment : Maestro.Tone.Adjustment }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Adjustment",
+        "comment": " Adjustment represents an adjustment applied to a key\n",
+        "args": [],
+        "cases": [
+          [
+            "Natural",
+            []
+          ],
+          [
+            "Sharp",
+            []
+          ],
+          [
+            "Flat",
+            []
+          ],
+          [
+            "SharpSharp",
+            []
+          ],
+          [
+            "FlatFlat",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Key",
+        "comment": " Key represents a Pitch class without adjustment\n",
+        "args": [],
+        "cases": [
+          [
+            "C",
+            []
+          ],
+          [
+            "D",
+            []
+          ],
+          [
+            "E",
+            []
+          ],
+          [
+            "F",
+            []
+          ],
+          [
+            "G",
+            []
+          ],
+          [
+            "A",
+            []
+          ],
+          [
+            "B",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "adjustmentFromValue",
+        "comment": " adjustmentFromValue returns the adjustment corresponding to a given\nnumber of semitones\n",
+        "type": "Int -> Maestro.Tone.Adjustment"
+      },
+      {
+        "name": "adjustmentToValue",
+        "comment": " adjustmentToValue returns the numbers of semitones to apply to a\nKey when calculating its position.\n",
+        "type": "Maestro.Tone.Adjustment -> Int"
+      },
+      {
+        "name": "diatonicKeyFromValue",
+        "comment": " diatonicKeyFromValue given a position relative to an octave\n(composed of only natural notes (white notes of your piano)) returns the\ncorresponding key.\n",
+        "type": "Int -> Maybe.Maybe Maestro.Tone.Key"
+      },
+      {
+        "name": "diatonicKeyValue",
+        "comment": " diatonicKeyValue returns the diatonic position of a Key relative to an octave\n(composed of only natural notes (white notes of your piano)) as a numeric value.\n",
+        "type": "Maestro.Tone.Key -> Int"
+      },
+      {
+        "name": "keyFromValue",
+        "comment": " keyFromValue given a position relative to an octave returns the\ncorresponding key\n",
+        "type": "Int -> Maybe.Maybe Maestro.Tone.Key"
+      },
+      {
+        "name": "keyToValue",
+        "comment": " keyToValue returns the chromatic position of a Key relative to an octave\nas a numeric value\n",
+        "type": "Maestro.Tone.Key -> Int"
+      },
+      {
+        "name": "newTone",
+        "comment": " newTone is a helper function to create a tone\n",
+        "type": "Maestro.Tone.Key -> Maestro.Tone.Adjustment -> Maestro.Tone.Tone"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "SelectableList",
+    "comment": " Provides `SelectableList`, a list with a selected item. Because the list\nmaintains a selected item at all times, it needs to consist of at least one item.\n\n# Types\n@docs SelectableList\n\n# Modification\n@docs fromList, select\n\n# Membership\n@docs isSelected, items, member, selected\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "SelectableList",
+        "comment": " An ordered list with a selected item.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromList",
+        "comment": " Tries to create a `SelectableList` from a `List`.\nWill fail if the source list is empty.\n",
+        "type": "List a -> Maybe.Maybe (SelectableList.SelectableList a)"
+      },
+      {
+        "name": "isSelected",
+        "comment": " Tests if a value is the currently selected item.\n\n    list = selectableList [1,2,3]\n\n    isSelected 1 list == True\n\n",
+        "type": "a -> SelectableList.SelectableList a -> Bool"
+      },
+      {
+        "name": "items",
+        "comment": " Returns all items contained in the list.\n\n    list = selectableList [1,2,3]\n\n    items list == [1,2,3]\n\n",
+        "type": "SelectableList.SelectableList a -> List a"
+      },
+      {
+        "name": "member",
+        "comment": " Tests if a value is contained in the list.\n\n    list = selectableList [1,2,3]\n\n    member 1 list == True\n    member 4 list == False\n\n",
+        "type": "a -> SelectableList.SelectableList a -> Bool"
+      },
+      {
+        "name": "select",
+        "comment": " Sets an item to be the currently selected item.\nWill fail if the list does not contain the item.\n",
+        "type": "a -> SelectableList.SelectableList a -> Maybe.Maybe (SelectableList.SelectableList a)"
+      },
+      {
+        "name": "selected",
+        "comment": " Returns the currently selected item.\n\n    list = selectableList [1,2,3]\n\n    selected list == 1\n\n",
+        "type": "SelectableList.SelectableList a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

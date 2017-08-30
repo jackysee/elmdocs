@@ -1,0 +1,147 @@
+[
+  {
+    "name": "Nri.FeatureInterest",
+    "comment": "\n@docs NoContent, deleteFeaturesByFeatureIdInterview, deleteFeaturesByFeatureIdUpvote, getFeatures, getFeaturesByFeatureId, postFeaturesByFeatureIdInterview, postFeaturesByFeatureIdUpvote\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "NoContent",
+        "comment": "",
+        "args": [],
+        "cases": [
+          [
+            "NoContent",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "deleteFeaturesByFeatureIdInterview",
+        "comment": "",
+        "type": "String -> String -> Int -> Http.Request Nri.FeatureInterest.NoContent"
+      },
+      {
+        "name": "deleteFeaturesByFeatureIdUpvote",
+        "comment": "",
+        "type": "String -> String -> Int -> Http.Request Nri.FeatureInterest.NoContent"
+      },
+      {
+        "name": "getFeatures",
+        "comment": "",
+        "type": "String -> String -> Http.Request Nri.FeatureInterest.Page.Page"
+      },
+      {
+        "name": "getFeaturesByFeatureId",
+        "comment": "",
+        "type": "String -> String -> Int -> Http.Request Nri.FeatureInterest.Feature.Feature"
+      },
+      {
+        "name": "postFeaturesByFeatureIdInterview",
+        "comment": "",
+        "type": "String -> String -> Int -> Http.Request Nri.FeatureInterest.NoContent"
+      },
+      {
+        "name": "postFeaturesByFeatureIdUpvote",
+        "comment": "",
+        "type": "String -> String -> Int -> Http.Request Nri.FeatureInterest.NoContent"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Nri.FeatureInterest.Admin",
+    "comment": "\n@docs Admin, AdminFeature, decodeAdmin, encodeAdmin, encodeAdminFeature, getFeaturesAdmin, postFeatures, putFeaturesByFeatureId\n",
+    "aliases": [
+      {
+        "name": "Admin",
+        "comment": "",
+        "args": [],
+        "type": "{ id : Int , header : String , body : String , image : Maybe.Maybe String , visible : Bool , interviews : Int , upVotes : Int }"
+      },
+      {
+        "name": "AdminFeature",
+        "comment": "",
+        "args": [],
+        "type": "{ header : String , body : String , image : Maybe.Maybe String , visible : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeAdmin",
+        "comment": "",
+        "type": "Json.Decode.Decoder Nri.FeatureInterest.Admin.Admin"
+      },
+      {
+        "name": "encodeAdmin",
+        "comment": "",
+        "type": "Nri.FeatureInterest.Admin.Admin -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeAdminFeature",
+        "comment": "",
+        "type": "Nri.FeatureInterest.Admin.AdminFeature -> Json.Encode.Value"
+      },
+      {
+        "name": "getFeaturesAdmin",
+        "comment": "",
+        "type": "String -> String -> Http.Request (List Nri.FeatureInterest.Admin.Admin)"
+      },
+      {
+        "name": "postFeatures",
+        "comment": "",
+        "type": "String -> String -> Nri.FeatureInterest.Admin.AdminFeature -> Http.Request Nri.FeatureInterest.Feature.Feature"
+      },
+      {
+        "name": "putFeaturesByFeatureId",
+        "comment": "",
+        "type": "String -> String -> Int -> Nri.FeatureInterest.Admin.AdminFeature -> Http.Request Nri.FeatureInterest.Feature.Feature"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Nri.FeatureInterest.Page",
+    "comment": "\n@docs Page, decodePage\n",
+    "aliases": [
+      {
+        "name": "Page",
+        "comment": "",
+        "args": [],
+        "type": "{ instructions : String , features : List Nri.FeatureInterest.Feature.Feature }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodePage",
+        "comment": "",
+        "type": "Json.Decode.Decoder Nri.FeatureInterest.Page.Page"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Nri.FeatureInterest.Feature",
+    "comment": "\n@docs Feature, decodeFeature\n",
+    "aliases": [
+      {
+        "name": "Feature",
+        "comment": "",
+        "args": [],
+        "type": "{ id : Int , header : String , body : String , image : Maybe.Maybe String , upVotes : Int , upVoted : Bool , interview : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeFeature",
+        "comment": "",
+        "type": "Json.Decode.Decoder Nri.FeatureInterest.Feature.Feature"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

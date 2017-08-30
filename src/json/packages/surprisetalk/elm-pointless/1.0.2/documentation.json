@@ -1,0 +1,95 @@
+[
+  {
+    "name": "Pointless",
+    "comment": " A pointless library to make more less-confusing point-free functions with pointy arrows.\n\n\n# Flarg\n\nThe \"flow-arg\" combinator was inspired by [this post](http://matt.immute.net/content/pointless-fun).\n\nThe main principle is to take a function like this:\n\n    f : a -> b -> c -> d\n\n...and transform its arguments:\n\n    g : i -> j -> k -> l\n    g = f |~> a_to_i ~> b_to_j ~> c_to_k ~> d_to_l\n\nIf you're just using the main flarg operator, use `identity` to \"skip\" arguments:\n\n    h : a -> j -> c -> d\n    h = f |~> identity ~> b_to_j ~> identity ~> identity\n\nYou can omit extra arguments if you end with `identity`.\n\n    h : a -> j -> c -> d\n    h = f |~> identity ~> b_to_j ~> identity\n\nYou can pipe flarg-chains together:\n\n    g : i -> j -> k -> l\n    g = f |~> identity ~> b_to_y ~> c_to_k   ~> identity\n          |~> a_to_i   ~> y_to_j ~> identity ~> d_to_l\n\n\n@docs (~>)\n\n\n# Nargs\n\nOur \"next-arg\" combinators are useful for omitting arguments in your flarg-chain.\n\n`-` represents one argument.\n`=` represents two arguments.\n\nSuppose you have a function.\n\n    f : a -> b -> c -> d\n\nTo transform the first argument and the return value, you can use any of the following:\n\n    g : i -> b -> c -> l\n    g = f |~> a_to_i ~> identity ~> identity ~> d_to_l\n\n    g : i -> b -> c -> l\n    g = f |~> a_to_i ~> identity -~> d_to_l\n\n    g : i -> b -> c -> l\n    g = f |~> a_to_i -~> identity ~> d_to_l\n\n    g : i -> b -> c -> l\n    g = f |~> a_to_i =~> d_to_l\n\n\n@docs (-~>), (=~>)\n\n\n# Plargs\n\nThese operators are most useful as \"plugs\".\n\nFlarg-chains will throw a compiler error unless one of the following three conditions is met:\n- the number of arguments in the flarg-chain matches the target function\n- the flarg-chain may prematurely end with `... ~> identity`\n- the final member of the flarg-chain may be `... ~-> f`\n\nSo if you have a function:\n\n    f : a -> b -> c -> d\n\n...then the following are equivalent:\n\n    g : i -> j -> c -> d\n    g = f |~> a_to_i ~> b_to_j ~> identity ~> identity\n        -- case 1: equal number of arguments\n\n    g : i -> j -> c -> d\n    g = f |~> a_to_i ~> b_to_j ~> identity\n        -- case 2: end with `identity` and ignore the remaining arguments\n\n    g : i -> j -> c -> d\n    g = f |~> a_to_i ~-> b_to_j\n        -- case 3: final flarg-chain operator is `~->`\n\n\n@docs (~->), (-~->), (=~->)\n\n\n# Bargs\n\n\"Begin\" new flarg chains!\n\nThese operators are particularly useful for skipping the first argument(s).\nThey're also helpful when you only want to operate on the first, second, or third argument.\n\nConsider the following function:\n\n    f : a -> b -> c -> d\n\n...then the following are equivalent:\n\n    g : a -> j -> c -> d\n    g = f |~> identity ~> b_to_j ~> identity ~> identity\n\n    g : a -> j -> c -> d\n    g = f |-~> b_to_j ~> identity ~> identity\n\n    g : a -> j -> c -> d\n    g = f |-~-> b_to_j\n\n\n@docs (|~>), (|-~>), (|=~>), (|~->), (|-~->), (|=~->)\n\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "-~->",
+        "comment": " Skip an argument in your flarg-chain *after* skipping and processing the next two. Useful for ending flarg-chains.\n\n    --    f |~> transformA           -~-> transformC\n    -- == f |~> transformA ~> identity ~> transformC ~> identity\n\n    weirdDictSum : (Int -> v -> b -> b) -> b -> List ( Float, v ) -> b\n    weirdDictSum = Dict.foldr \n                   |~> (>>) floor \n                    ~> identity \n                    ~> Dict.fromList \n                    ~> identity\n\n    weirdDictSum : (Int -> v -> b -> b) -> b -> List ( Float, v ) -> b\n    weirdDictSum = Dict.foldr \n                   |~> (>>) floor \n                  -~-> Dict.fromList\n\n    weirdDictSum (\\k v sum -> k + v + sum) 0 [(4.2,9),(93.9,8),(3.0,3)]\n\n",
+        "type": "(a -> a1) -> (a2 -> a1_1) -> (a1 -> a2_1 -> a1_1 -> a3) -> a -> a2_1 -> a2 -> a3",
+        "associativity": "right",
+        "precedence": 2
+      },
+      {
+        "name": "-~>",
+        "comment": " Skip an argument in your flarg-chain.\n\n    --    f |~> transformA            -~> transformC\n    -- == f |~> transformA ~> identity ~> transformC\n\n    weirdRange : Int -> Int -> String\n    weirdRange = List.range \n                 |~> flip (-) 3 \n                  ~> identity \n                  ~> List.join \"\"\n\n    weirdRange : Int -> Int -> String\n    weirdRange = List.range \n                 |~> flip (-) 3 \n                 -~> List.join \"\"\n\n    weirdRange 4 7 == \"1234567\"\n\n",
+        "type": "(a -> a1) -> (b -> c) -> (a1 -> a2 -> b) -> a -> a2 -> c",
+        "associativity": "right",
+        "precedence": 2
+      },
+      {
+        "name": "=~->",
+        "comment": " Skip an argument in your flarg-chain *after* skipping the next two and processing the third. Useful for ending flarg-chains.\n\n    --    f |~> transformA                       =~-> transformD\n    -- == f |~> transformA ~> identity ~> identity ~> transformD ~> identity\n\n",
+        "type": "(a -> a1) -> (a2 -> a1_1) -> (a1 -> a2_1 -> a3 -> a1_1 -> a4) -> a -> a2_1 -> a3 -> a2 -> a4",
+        "associativity": "right",
+        "precedence": 2
+      },
+      {
+        "name": "=~>",
+        "comment": " Skip two arguments in your flarg-chain.\n\n    --    f |~> transformA                        =~> transformD\n    -- == f |~> transformA ~> identity ~> identity ~> transformD\n\n    weirdSlice : Int -> Int -> String -> String\n    weirdSlice = String.slice \n                 |~> (+) 1 \n                  ~> identity \n                  ~> identity \n                  ~> String.reverse\n\n    weirdSlice : Int -> Int -> String -> String\n    weirdSlice = String.slice \n                 |~> (+) 1 \n                 =~> String.reverse\n\n    weirdSlice 0 -1 \"HULLO\" == \"OLLU\"\n\n",
+        "type": "(a -> a1) -> (b -> c) -> (a1 -> a2 -> a3 -> b) -> a -> a2 -> a3 -> c",
+        "associativity": "right",
+        "precedence": 2
+      },
+      {
+        "name": "|-~->",
+        "comment": " Start a flarg-chain after skipping an argument, then end your chain.\n\n    --    f |-~->           transformB\n    -- == f |~> identity ~> transformB ~> identity\n\n",
+        "type": "(a -> a1_1 -> a3) -> (a2 -> a1_1) -> a -> a2 -> a3",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "|-~>",
+        "comment": " Start a flarg-chain after skipping an argument.\n\n    --    f |-~>            transformB\n    -- == f |~> identity ~> transformB\n     \n    revecho : Int -> String -> String\n    revecho = String.repeat \n              |-~> String.reverse \n                ~> (++) \"echo: \"\n\n    revecho 3 \"ah\" == \"echo: hahaha\"\n\n",
+        "type": "(a -> b) -> (b -> c) -> a -> c",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "|=~->",
+        "comment": " Start a flarg-chain after skipping two arguments, then end your chain.\n\n    --    f |=~->                       transformC\n    -- == f |~> identity ~> identity ~> transformC ~> identity\n\n",
+        "type": "(a -> a1 -> a1_1 -> a3) -> (a2 -> a1_1) -> a -> a1 -> a2 -> a3",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "|=~>",
+        "comment": " Start a flarg-chain after skipping two arguments.\n\n    --    f |=~>                        transformC\n    -- == f |~> identity ~> identity ~> transformC\n\n",
+        "type": "(a -> a1 -> b) -> (b -> c) -> a -> a1 -> c",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "|~->",
+        "comment": " Start a flarg-chain, then end it after your first argument. Not that useful.\n\n    --    f |~-> transformA\n    -- == f |~>  transformA ~> identity\n\n",
+        "type": "(a1 -> a) -> (a2 -> a1) -> a2 -> a",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "|~>",
+        "comment": " Start a flarg-chain.\n\nThis operator is identitical to `|>`. The reason this was included was to maintain conceptual consistency.\n\nIn this library, a tilde \"~\" before the arrow \">\" indicates that it's going to parse the next argument.\nThe pipe \"|\" indicates that we're starting our flarg-chain.\n\n",
+        "type": "a -> (a -> b) -> b",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "~->",
+        "comment": " Skip an argument in your flarg-chain *after* processing the next one. Useful for ending flarg-chains.\n\n    --    f |~> transformA ~-> transformB\n    -- == f |~> transformA  ~> transformB ~> identity\n\n    repeatLoudFloat : Float -> String -> String\n    repeatLoudFloat = String.repeat \n                      |~> floor \n                       ~> String.toUpper \n                       ~> identity\n\n    repeatLoudFloat : Float -> String -> String\n    repeatLoudFloat = String.repeat \n                      |~> floor \n                      ~-> String.toUpper\n\n    repeatLoudFloat 3.14 \"ha\" == \"HAHAHA\"\n\n",
+        "type": "(a -> a1) -> (a2 -> a1_1) -> (a1 -> a1_1 -> a3) -> a -> a2 -> a3",
+        "associativity": "right",
+        "precedence": 2
+      },
+      {
+        "name": "~>",
+        "comment": " Build a flarg-chain.\n\n    g = f |~> transformA ~> transformB ~> transformC\n\nFor example, `List.repeat` is normally `Int -> a -> List a`, so let's make something like `List.repeat |~> ((Int -> Int)) ~> ((String -> String)) ~> ((List String -> String))`.\n\n    repeatLoud : Int -> String -> String\n    repeatLoud = List.repeat \n                 |~> (*) 2           \n                  ~> String.toUpper\n                  ~> String.join \" \"\n    \n    repeatLoud 2 \"hey\" == \"HEY HEY HEY HEY\"\n    \n",
+        "type": "(a -> a1) -> (b -> c) -> (a1 -> b) -> a -> c",
+        "associativity": "right",
+        "precedence": 2
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

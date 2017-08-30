@@ -1,0 +1,102 @@
+[
+  {
+    "name": "MultiTouch",
+    "comment": " This module exposes functions\nto deal with multitouch interactions.\n\n@docs onStart, onMove, onEnd, onCancel\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onCancel",
+        "comment": " Triggered on a \"touchcancel\" event.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onEnd",
+        "comment": " Triggered on a \"touchend\" event.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMove",
+        "comment": " Triggered on a \"touchmove\" event.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onStart",
+        "comment": " Triggered on a \"touchstart\" event.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SingleTouch",
+    "comment": " This module exposes functions\nto deal with single touch interactions.\n\nThe coordinates provided are the ones of the first touch in the\n[\"changedTouches\"](https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent) list.\nAs a consequence, it may behave inconsistently\nin case of an accidental multitouch usage.\nIn case of a need for consistency with potential\nunwanted multitouch interactions,\nyou might want to use the `MultiTouch` module which provides\nfiner grained control over the processing of the touch event.\n\n@docs onStart, onMove, onEnd, onCancel\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onCancel",
+        "comment": " Triggered on a \"touchcancel\" event.\n",
+        "type": "(Touch.Coordinates -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onEnd",
+        "comment": " Triggered on a \"touchend\" event.\n",
+        "type": "(Touch.Coordinates -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMove",
+        "comment": " Triggered on a \"touchmove\" event.\n",
+        "type": "(Touch.Coordinates -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onStart",
+        "comment": " Triggered on a \"touchstart\" event.\n",
+        "type": "(Touch.Coordinates -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Touch",
+    "comment": " This module exposes types and functions\ncommon to both single and multi touch interactions.\n\n@docs Event, changedTouches, targetTouches, touches\n\n@docs Coordinates, clientPos\n\n",
+    "aliases": [
+      {
+        "name": "Coordinates",
+        "comment": " A simple type alias for the coordinates of a JavaScript\n[Touch](https://developer.mozilla.org/en-US/docs/Web/API/Touch) object.\n",
+        "args": [],
+        "type": "Private.Touch.Coordinates"
+      },
+      {
+        "name": "Event",
+        "comment": " Type alias for a touch event.\n\nThe properties `touches`, `targetTouches` and `changedTouches`\nare accessible through their corresponding functions.\n\nTo have more info about these properties and how to use them,\nplease refer to the [Mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/Events/touchstart)\n\n",
+        "args": [],
+        "type": "Private.Touch.Event"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "changedTouches",
+        "comment": " Retrieve the `changedTouches` property.\n\nIt returns a dictionary whose keys are the unique identifiers\nof the touches.\n\n",
+        "type": "Touch.Event -> Dict.Dict Int Touch.Coordinates"
+      },
+      {
+        "name": "clientPos",
+        "comment": " Retrieve the clientX and clientY coordinates.\n",
+        "type": "Touch.Coordinates -> ( Float, Float )"
+      },
+      {
+        "name": "targetTouches",
+        "comment": " Retrieve the `targetTouches` property.\n\nIt returns a dictionary whose keys are the unique identifiers\nof the touches.\n\n",
+        "type": "Touch.Event -> Dict.Dict Int Touch.Coordinates"
+      },
+      {
+        "name": "touches",
+        "comment": " Retrieve the `touches` property.\n\nIt returns a dictionary whose keys are the unique identifiers\nof the touches.\n\n",
+        "type": "Touch.Event -> Dict.Dict Int Touch.Coordinates"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

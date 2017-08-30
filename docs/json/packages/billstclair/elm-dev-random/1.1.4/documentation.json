@@ -1,0 +1,62 @@
+[
+  {
+    "name": "DevRandom",
+    "comment": "\nThe `DevRandom` module provides a way to generate cryptographically-secure random numbers. It does this by using two ports to communicate with JavaScript code that calls `window.crypto.getRandomValues()`.\n\nThere are two ways to call the generator, depending on the `Config` parameter to `generate`. One way works in a pure Elm environment, and uses the normal Elm `Random` module, which is _not_ cryptographically secure. The other way requires you to use ports to communicate with JavaScript code, most of which is provided with the example.\n\nSee the [example readme](https://github.com/billstclair/elm-dev-random/tree/master/example) for instructions on creating the ports and using the included JavaScript code.\n\n# Generate random bytes\n@docs SendPort, ReceiveMsgWrapper, Config\n@docs generate\n\n# Generate random integers\n@docs ReceiveIntMsgWrapper, IntConfig\n@docs generateInt\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Parameter to `generate` that determines whether to use the Elm `Random` module or ports to the JavaScript code that calls `window.crypto.getRandomValues()`.\n\nIf `sendPort` is not `Nothing`, will use the ports.\n\nIf `sendPort` is `Nothing`, and `receiveMsgWrapper` is not `Nothing`, will use the Elm `Random` module.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ sendPort : Maybe.Maybe (DevRandom.SendPort msg) , receiveMsgWrapper : Maybe.Maybe (DevRandom.ReceiveMsgWrapper msg) }"
+      },
+      {
+        "name": "IntConfig",
+        "comment": " Parameter to `generateInt` that determines whether to use the Elm `Random` module or ports to the JavaScript code that calls `window.crypto.getRandomValues()`.\n\nIf `sendPort` is not `Nothing`, will use the ports.\n\nIf `sendPort` is `Nothing`, and `receiveIntMsgWrapper` is not `Nothing`, will use the Elm `Random` module.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ sendPort : Maybe.Maybe (DevRandom.SendPort msg) , receiveIntMsgWrapper : Maybe.Maybe (DevRandom.ReceiveIntMsgWrapper msg) }"
+      },
+      {
+        "name": "ReceiveIntMsgWrapper",
+        "comment": " Message wrapper for receiveInt port of dev-random-port.js\n\n    (isSecure, integer) -> msg\n\nIf isSecure is True, then the random number generation was cryptographically secure.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "( Bool, Int ) -> msg"
+      },
+      {
+        "name": "ReceiveMsgWrapper",
+        "comment": " Message wrapper for receive port of dev-random-port.js\n\n    (isSecure, bytes) -> msg\n\nIf isSecure is True, then the random number generation was cryptographically secure.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "( Bool, List Int ) -> msg"
+      },
+      {
+        "name": "SendPort",
+        "comment": " Signature of send port for dev-random-port.js\n\nThe `Int` arg is the number of bytes (8-bit integers) to generate.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Int -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "generate",
+        "comment": " Generate a number of random bytes (integers between 0 and 255, inclusive).\n\n    generate bytes config\n    \nIf `config.sendPort` is not `Nothing`, return a `Cmd` that sends `bytes` through the port. Otherwise, if `config.receiveMsgWrapper` is not `Nothing`, use it to wrap the result of `Random.generate()` as a message for your `update` function.\n",
+        "type": "Int -> DevRandom.Config msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "generateInt",
+        "comment": " Generate a random x uniformly distributed in the range 0 <= x < ceiling.\n\n    generateInt ceiling config\n    \nIf `config.sendPort` is not `Nothing`, return a `Cmd` that sends `bytes` through the port. Otherwise, if `config.receiveIntMsgWrapper` is not `Nothing`, use it to wrap the result of `Random.generate()` as a message for your `update` function.\n",
+        "type": "Int -> DevRandom.IntConfig msg -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

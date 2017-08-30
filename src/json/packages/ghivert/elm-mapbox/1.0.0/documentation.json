@@ -1,0 +1,266 @@
+[
+  {
+    "name": "Mapbox.Maps.SlippyMap",
+    "comment": " Allows to embed a slippy map directly into your Html view.\n\n@docs Options\n@docs Position\n@docs Size\n@docs slippyMap\n\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options you can use into slippy maps.\n",
+        "args": [],
+        "type": "{ zoomwheel : Bool, zoompan : Bool, geocoder : Bool, share : Bool }"
+      },
+      {
+        "name": "Position",
+        "comment": " Initial position you can set into slippy maps.\n",
+        "args": [],
+        "type": "{ zoom : Int, latitude : Int, longitude : Int }"
+      },
+      {
+        "name": "Size",
+        "comment": " Size of the iframe.\n",
+        "args": [],
+        "type": "{ width : Int, height : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "slippyMap",
+        "comment": " Embed a slippy map into your Html view. As indicated in the Readme, you can easily use it like this:\n\n    import Mapbox.Maps.SlippyMap as Mapbox\n    import Mapbox.Endpoint as Endpoint\n\n    mapboxToken : String\n    mapboxToken =\n        \"pk.eyJ1IjoiZ2hpdmVydCIsImEiOiJjajRqbzFlcWYwajVzMzNzZTdpZXU3MTRnIn0.wSGB3LCr5OcvPqQ61BqYyg\"\n\n\n    -- Embed a slippy map into your website and set Options, Hash and Size of the iframe.\n\n    embeddedSlippyMap : Html msg\n    embeddedSlippyMap =\n        Mapbox.slippyMap Endpoint.streets mapboxToken Nothing Nothing (Mapbox.Size 1000 1000)\n\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps -> String -> Maybe.Maybe Mapbox.Maps.SlippyMap.Options -> Maybe.Maybe Mapbox.Maps.SlippyMap.Position -> Mapbox.Maps.SlippyMap.Size -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Mapbox.Maps.EditorProject",
+    "comment": " Allows to retrieve informations from an editor project.\n\n@docs editorProject\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "editorProject",
+        "comment": " Creates an Http.Request GeoJson, retrieving informations from an editor project. The decoder is already here, and returns a GeoJson record, provided by [`mgold/elm-geojson`](https://github.com/mgold/elm-geojson).\n",
+        "type": "Mapbox.Endpoint.Endpoint a -> String -> Http.Request GeoJson.GeoJson"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Mapbox.Maps.Tiles",
+    "comment": " Allows to access tiles API. The tiles are returned as image from Mapbox. As there is no notion of image into elm today, they only return the correct url to use it according to what you want to do.\n\n\n# Tiles\n\n@docs Coordinates\n@docs Format\n@docs ImageFormat\n@docs tiles\n\n\n# Features Tiles\n\n@docs GeoCoordinates\n@docs Parameters\n@docs features\n\n",
+    "aliases": [
+      {
+        "name": "Coordinates",
+        "comment": " Coordinates required by tiles API, in form of x, y and z.\n",
+        "args": [],
+        "type": "{ x : Int, y : Int, z : Int }"
+      },
+      {
+        "name": "GeoCoordinates",
+        "comment": " Geographical coordinates.\n",
+        "args": [],
+        "type": "{ longitude : Float, latitude : Float }"
+      },
+      {
+        "name": "Parameters",
+        "comment": " Parameters accepted by the features tiles requests.\n",
+        "args": [],
+        "type": "{ radius : Maybe.Maybe Int, limit : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Format",
+        "comment": " Format in which you want your tile.\n",
+        "args": [],
+        "cases": [
+          [
+            "UtfGrid",
+            []
+          ],
+          [
+            "Vector",
+            []
+          ],
+          [
+            "Image",
+            [
+              "Mapbox.Maps.Tiles.ImageFormat"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ImageFormat",
+        "comment": " Image format in which you wan your tile.\n",
+        "args": [],
+        "cases": [
+          [
+            "Png",
+            []
+          ],
+          [
+            "Png32",
+            []
+          ],
+          [
+            "Png64",
+            []
+          ],
+          [
+            "Png128",
+            []
+          ],
+          [
+            "Png256",
+            []
+          ],
+          [
+            "Jpg70",
+            []
+          ],
+          [
+            "Jpg80",
+            []
+          ],
+          [
+            "Jpg90",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "features",
+        "comment": " Retrieve a FeatureCollection from tiles. It returns an `Http.Request GeoJson`, in the format you can have in [`mgold/elm-geojson`](https://github.com/mgold/elm-geojson).\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps -> String -> Mapbox.Maps.Tiles.GeoCoordinates -> Mapbox.Maps.Tiles.Parameters -> Http.Request GeoJson.GeoJson"
+      },
+      {
+        "name": "tiles",
+        "comment": " Returns an url to Mapbox, retrieving a tile from the site. It can be either an UTFGrid, a vector, or an image. You can probably extract the data from UTFGrid directly in elm, but you probably need to use JS to retrieve vectors or images.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps -> String -> Mapbox.Maps.Tiles.Coordinates -> Bool -> Mapbox.Maps.Tiles.Format -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Mapbox",
+    "comment": " Generic module to build Mapbox urls. You can use it to construct your own urls to Mapbox, if you need something not provided in the package.\nGenerally, you don't need to use it. If you need to do it, please open an issue or provide a Pull Request to include new API into the package.\n\n@docs url\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "url",
+        "comment": " Construct your own url to Mapbox, by warranting correct `endpoints`, `access_token`, and assuming that your options and format are correct. They must have beginning `/`, and parameters is List of assoc, associating name and value of the parameter, i.e. `(name, value)`\n\nAs described in the Readme, `url` constructs urls based on schema `https://api.mapbox.com/{endpoint}{options}{format}?access_token={accessToken}{parameters}`\n\n",
+        "type": "Mapbox.Endpoint.Endpoint a -> String -> String -> String -> List ( String, String ) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Mapbox.Endpoint",
+    "comment": " Endpoint module construct correct endpoints to Mapbox, and provide predefined endpoints as well as custom endpoints. It ensures that Maps endpoints are correctly reversed in the url generation. (As indicated in Mapbox API for v4 version of Maps.)\n\n\n# Types\n\n@docs Endpoint\n@docs Maps\n\n\n# Url Generation\n\n@docs toUrl\n\n\n# Maps Endpoints\n\n\n## Custom Endpoints\n\n@docs maps\n\n\n## Predefined Endpoints\n\n@docs streets\n@docs light\n@docs dark\n@docs satellite\n@docs streetsSatellite\n@docs wheatpaste\n@docs streetsBasic\n@docs comic\n@docs outdoors\n@docs runBikeHike\n@docs pencil\n@docs pirates\n@docs emerald\n@docs highContrast\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Endpoint",
+        "comment": " Endpoint type typed according to the service used on Mapbox. They are generated using constructors.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Maps",
+        "comment": " Type for Maps Endpoints.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "comic",
+        "comment": " Provide \"mapbox.comic\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "dark",
+        "comment": " Provide \"mapbox.dark\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "emerald",
+        "comment": " Provide \"mapbox.emerald\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "highContrast",
+        "comment": " Provide \"mapbox.high-contrast\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "light",
+        "comment": " Provide \"mapbox.light\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "maps",
+        "comment": " Produce an `Endpoint Maps` endpoint, allowing to use custom username and id.\n",
+        "type": "String -> String -> Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "outdoors",
+        "comment": " Provide \"mapbox.outdoors\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "pencil",
+        "comment": " Provide \"mapbox.pencil\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "pirates",
+        "comment": " Provide \"mapbox.pirates\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "runBikeHike",
+        "comment": " Provide \"mapbox.run-bike-hike\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "satellite",
+        "comment": " Provide \"mapbox.satellite\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "streets",
+        "comment": " Provide \"mapbox.streets\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "streetsBasic",
+        "comment": " Provide \"mapbox.streets-basic\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "streetsSatellite",
+        "comment": " Provide \"mapbox.streets-satellite\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      },
+      {
+        "name": "toUrl",
+        "comment": " Generate string from Endpoints in the correct order to use it into Mapbox urls. You generally don't need to use it, as Mapbox.url calls it.\n",
+        "type": "Mapbox.Endpoint.Endpoint a -> String"
+      },
+      {
+        "name": "wheatpaste",
+        "comment": " Provide \"mapbox.wheatpaste\" endpoint.\n",
+        "type": "Mapbox.Endpoint.Endpoint Mapbox.Endpoint.Maps"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

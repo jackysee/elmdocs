@@ -1,0 +1,1080 @@
+[
+  {
+    "name": "Elm.Processing",
+    "comment": "\n\n\n# Elm.Processing\n\nProcessing raw files with the context of other files and dependencies.\n\n\n# Types\n\n@docs ProcessContext\n\n\n# Functions\n\n@docs init, addFile, addDependency, process\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ProcessContext",
+        "comment": " Opaque type to hold context for the processing\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addDependency",
+        "comment": " Add a whole depenency with its modules to the context.\n",
+        "type": "Elm.Dependency.Dependency -> Elm.Processing.ProcessContext -> Elm.Processing.ProcessContext"
+      },
+      {
+        "name": "addFile",
+        "comment": " Add a file to the context that may be a dependency for the file that will be processed.\n",
+        "type": "Elm.Internal.RawFile.RawFile -> Elm.Processing.ProcessContext -> Elm.Processing.ProcessContext"
+      },
+      {
+        "name": "init",
+        "comment": " Initialise an empty context\n",
+        "type": "Elm.Processing.ProcessContext"
+      },
+      {
+        "name": "process",
+        "comment": " Process a rawfile with a context.\nOperator precedence and documentation will be fixed.\n",
+        "type": "Elm.Processing.ProcessContext -> Elm.Internal.RawFile.RawFile -> Elm.Syntax.File.File"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Parser",
+    "comment": "\n\n\n# Parsing Syntax\n\n@docs parse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse a string\n",
+        "type": "String -> Result.Result (List String) Elm.Internal.RawFile.RawFile"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Dependency",
+    "comment": "\n\n\n# Elm.Dependency\n\n@docs Dependency, Version\n\n",
+    "aliases": [
+      {
+        "name": "Dependency",
+        "comment": " Record that represents a dependency\n",
+        "args": [],
+        "type": "{ name : String , version : Elm.Dependency.Version , interfaces : Dict.Dict Elm.Syntax.Base.ModuleName Elm.Interface.Interface }"
+      },
+      {
+        "name": "Version",
+        "comment": " Alias for a version\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Json.Decode",
+    "comment": "\n\n\n# Elm.Json.Decode\n\nDecoding Elm Code from Json\n\n@docs decode\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decode a file stored in Json\n",
+        "type": "Json.Decode.Decoder Elm.Internal.RawFile.RawFile"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.RawFile",
+    "comment": "\n\n\n# Elm.RawFile\n\n@docs RawFile\n\n@docs moduleName, imports\n\n",
+    "aliases": [
+      {
+        "name": "RawFile",
+        "comment": " A Raw file\n",
+        "args": [],
+        "type": "Elm.Internal.RawFile.RawFile"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "imports",
+        "comment": " Retrieve the imports for a raw file\n",
+        "type": "Elm.RawFile.RawFile -> List Elm.Syntax.Module.Import"
+      },
+      {
+        "name": "moduleName",
+        "comment": " Retrieve the module name for a raw file\n",
+        "type": "Elm.RawFile.RawFile -> Maybe.Maybe Elm.Syntax.Base.ModuleName"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Interface",
+    "comment": "\n\n\n# Elm.Interface\n\n\n## Types\n\n@docs Interface, Exposed\n\n\n## Functions\n\n@docs build, exposesAlias, exposesFunction, operators\n\n",
+    "aliases": [
+      {
+        "name": "Interface",
+        "comment": " An interface\n",
+        "args": [],
+        "type": "List Elm.Interface.Exposed"
+      }
+    ],
+    "types": [
+      {
+        "name": "Exposed",
+        "comment": " Union type for the things that a module can expose\n",
+        "args": [],
+        "cases": [
+          [
+            "Function",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Type",
+            [
+              "( String, List String )"
+            ]
+          ],
+          [
+            "Alias",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Operator",
+            [
+              "Elm.Syntax.Infix.Infix"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "build",
+        "comment": " Build an interface from a file\n",
+        "type": "Elm.Internal.RawFile.RawFile -> Elm.Interface.Interface"
+      },
+      {
+        "name": "exposesAlias",
+        "comment": " Interface property whether a certain alias is exposed.\n",
+        "type": "String -> Elm.Interface.Interface -> Bool"
+      },
+      {
+        "name": "exposesFunction",
+        "comment": " Interface property whether a certain function is exposed.\n",
+        "type": "String -> Elm.Interface.Interface -> Bool"
+      },
+      {
+        "name": "operators",
+        "comment": " Retrieve all infix operators exposed\n",
+        "type": "Elm.Interface.Interface -> List Elm.Syntax.Infix.Infix"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Json.Encode",
+    "comment": "\n\n\n# Elm.Json.Encode\n\nEncoding Elm Code to Json\n\n@docs encode\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "encode",
+        "comment": " Encode a file to a value\n",
+        "type": "Elm.Internal.RawFile.RawFile -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Writer",
+    "comment": "\n\n\n# Elm.Writer\n\nWrite a file to a string.\n\n@docs write, writeFile, writePattern\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "write",
+        "comment": " Transform a writer to a string\n",
+        "type": "StructuredWriter.Writer -> String"
+      },
+      {
+        "name": "writeFile",
+        "comment": " Write a file\n",
+        "type": "Elm.Syntax.File.File -> StructuredWriter.Writer"
+      },
+      {
+        "name": "writePattern",
+        "comment": " Write a pattern\n",
+        "type": "Elm.Syntax.Pattern.Pattern -> StructuredWriter.Writer"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.File",
+    "comment": " File Syntax\n\n\n# Types\n\n@docs File\n\n",
+    "aliases": [
+      {
+        "name": "File",
+        "comment": " Type annotation for a file\n",
+        "args": [],
+        "type": "{ moduleDefinition : Elm.Syntax.Module.Module , imports : List Elm.Syntax.Module.Import , declarations : List Elm.Syntax.Declaration.Declaration , comments : List ( String, Elm.Syntax.Range.Range ) }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Declaration",
+    "comment": " Declarations Syntax\n\n\n# Types\n\n@docs Declaration\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Declaration",
+        "comment": " Union type that represents all different top level declarations.\n",
+        "args": [],
+        "cases": [
+          [
+            "FuncDecl",
+            [
+              "Elm.Syntax.Expression.Function"
+            ]
+          ],
+          [
+            "AliasDecl",
+            [
+              "Elm.Syntax.TypeAlias.TypeAlias"
+            ]
+          ],
+          [
+            "TypeDecl",
+            [
+              "Elm.Syntax.Type.Type"
+            ]
+          ],
+          [
+            "PortDeclaration",
+            [
+              "Elm.Syntax.Expression.FunctionSignature"
+            ]
+          ],
+          [
+            "InfixDeclaration",
+            [
+              "Elm.Syntax.Infix.Infix"
+            ]
+          ],
+          [
+            "Destructuring",
+            [
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Type",
+    "comment": " Type Syntax\n\n\n# Types\n\n@docs Type, ValueConstructor\n\n",
+    "aliases": [
+      {
+        "name": "Type",
+        "comment": " Syntax for a type\n",
+        "args": [],
+        "type": "{ name : String , generics : List String , constructors : List Elm.Syntax.Type.ValueConstructor }"
+      },
+      {
+        "name": "ValueConstructor",
+        "comment": " Syntax for a type value constructor\n",
+        "args": [],
+        "type": "{ name : String , arguments : List Elm.Syntax.TypeAnnotation.TypeAnnotation , range : Elm.Syntax.Range.Range }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.TypeAlias",
+    "comment": " Type Alias Syntax\n\n\n# Types\n\n@docs TypeAlias\n\n",
+    "aliases": [
+      {
+        "name": "TypeAlias",
+        "comment": " Definition for a type alias\n",
+        "args": [],
+        "type": "{ documentation : Maybe.Maybe Elm.Syntax.Documentation.Documentation , name : String , generics : List String , typeAnnotation : Elm.Syntax.TypeAnnotation.TypeAnnotation , range : Elm.Syntax.Range.Range }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Expression",
+    "comment": " Expression Syntax\n\n\n# Expression\n\n@docs Expression, InnerExpression, Lambda\n\n\n# Lets\n\n@docs LetBlock, LetDeclaration\n\n\n# Records\n\n@docs RecordUpdate,RecordSetter\n\n\n# Cases\n\n@docs CaseBlock, Cases, Case\n\n\n# Functions\n\n@docs Function, FunctionDeclaration, FunctionSignature\n\n",
+    "aliases": [
+      {
+        "name": "Case",
+        "comment": " A case in a case block\n",
+        "args": [],
+        "type": "( Elm.Syntax.Pattern.Pattern, Elm.Syntax.Expression.Expression )"
+      },
+      {
+        "name": "CaseBlock",
+        "comment": " Expression for a case block\n",
+        "args": [],
+        "type": "{ expression : Elm.Syntax.Expression.Expression , cases : Elm.Syntax.Expression.Cases }"
+      },
+      {
+        "name": "Cases",
+        "comment": " Type alias for a list of cases\n",
+        "args": [],
+        "type": "List Elm.Syntax.Expression.Case"
+      },
+      {
+        "name": "Expression",
+        "comment": " Wrapper type for an expresion on a certain range\n",
+        "args": [],
+        "type": "( Elm.Syntax.Range.Range, Elm.Syntax.Expression.InnerExpression )"
+      },
+      {
+        "name": "Function",
+        "comment": " Type alias for a full function\n",
+        "args": [],
+        "type": "{ documentation : Maybe.Maybe Elm.Syntax.Documentation.Documentation , signature : Maybe.Maybe Elm.Syntax.Expression.FunctionSignature , declaration : Elm.Syntax.Expression.FunctionDeclaration }"
+      },
+      {
+        "name": "FunctionDeclaration",
+        "comment": " Type alias for declaring a function\n",
+        "args": [],
+        "type": "{ operatorDefinition : Bool , name : Elm.Syntax.Base.VariablePointer , arguments : List Elm.Syntax.Pattern.Pattern , expression : Elm.Syntax.Expression.Expression }"
+      },
+      {
+        "name": "FunctionSignature",
+        "comment": " Type alias for a function signature\n",
+        "args": [],
+        "type": "{ operatorDefinition : Bool , name : String , typeAnnotation : Elm.Syntax.TypeAnnotation.TypeAnnotation , range : Elm.Syntax.Range.Range }"
+      },
+      {
+        "name": "Lambda",
+        "comment": " Expression for a lambda\n",
+        "args": [],
+        "type": "{ args : List Elm.Syntax.Pattern.Pattern , expression : Elm.Syntax.Expression.Expression }"
+      },
+      {
+        "name": "LetBlock",
+        "comment": " Expression for a let block\n",
+        "args": [],
+        "type": "{ declarations : List Elm.Syntax.Expression.LetDeclaration , expression : Elm.Syntax.Expression.Expression }"
+      },
+      {
+        "name": "RecordSetter",
+        "comment": " Expression for setting a record field\n",
+        "args": [],
+        "type": "( String, Elm.Syntax.Expression.Expression )"
+      },
+      {
+        "name": "RecordUpdate",
+        "comment": " Expression for updating a record\n",
+        "args": [],
+        "type": "{ name : String, updates : List Elm.Syntax.Expression.RecordSetter }"
+      }
+    ],
+    "types": [
+      {
+        "name": "InnerExpression",
+        "comment": " Union type containing all possible expressions\n",
+        "args": [],
+        "cases": [
+          [
+            "UnitExpr",
+            []
+          ],
+          [
+            "Application",
+            [
+              "List Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "OperatorApplication",
+            [
+              "String",
+              "Elm.Syntax.Infix.InfixDirection",
+              "Elm.Syntax.Expression.Expression",
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "FunctionOrValue",
+            [
+              "String"
+            ]
+          ],
+          [
+            "IfBlock",
+            [
+              "Elm.Syntax.Expression.Expression",
+              "Elm.Syntax.Expression.Expression",
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "PrefixOperator",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Operator",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Integer",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Floatable",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Negation",
+            [
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "Literal",
+            [
+              "String"
+            ]
+          ],
+          [
+            "CharLiteral",
+            [
+              "Char"
+            ]
+          ],
+          [
+            "TupledExpression",
+            [
+              "List Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "ParenthesizedExpression",
+            [
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "LetExpression",
+            [
+              "Elm.Syntax.Expression.LetBlock"
+            ]
+          ],
+          [
+            "CaseExpression",
+            [
+              "Elm.Syntax.Expression.CaseBlock"
+            ]
+          ],
+          [
+            "LambdaExpression",
+            [
+              "Elm.Syntax.Expression.Lambda"
+            ]
+          ],
+          [
+            "RecordExpr",
+            [
+              "List Elm.Syntax.Expression.RecordSetter"
+            ]
+          ],
+          [
+            "ListExpr",
+            [
+              "List Elm.Syntax.Expression.Expression"
+            ]
+          ],
+          [
+            "QualifiedExpr",
+            [
+              "Elm.Syntax.Base.ModuleName",
+              "String"
+            ]
+          ],
+          [
+            "RecordAccess",
+            [
+              "Elm.Syntax.Expression.Expression",
+              "String"
+            ]
+          ],
+          [
+            "RecordAccessFunction",
+            [
+              "String"
+            ]
+          ],
+          [
+            "RecordUpdateExpression",
+            [
+              "Elm.Syntax.Expression.RecordUpdate"
+            ]
+          ],
+          [
+            "GLSLExpression",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "LetDeclaration",
+        "comment": " Union type for all possible declations in a let block\n",
+        "args": [],
+        "cases": [
+          [
+            "LetFunction",
+            [
+              "Elm.Syntax.Expression.Function"
+            ]
+          ],
+          [
+            "LetDestructuring",
+            [
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Expression.Expression"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.TypeAnnotation",
+    "comment": " Type Annotation Syntax\n\n\n# Types\n\n@docs TypeAnnotation, RecordDefinition, RecordField\n\n",
+    "aliases": [
+      {
+        "name": "RecordDefinition",
+        "comment": " List of fields for a record\n",
+        "args": [],
+        "type": "List Elm.Syntax.TypeAnnotation.RecordField"
+      },
+      {
+        "name": "RecordField",
+        "comment": " Single field of a record. A name and its type\n",
+        "args": [],
+        "type": "( String, Elm.Syntax.TypeAnnotation.TypeAnnotation )"
+      }
+    ],
+    "types": [
+      {
+        "name": "TypeAnnotation",
+        "comment": " Union type for different type aliases\n",
+        "args": [],
+        "cases": [
+          [
+            "GenericType",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "Typed",
+            [
+              "Elm.Syntax.Base.ModuleName",
+              "String",
+              "List Elm.Syntax.TypeAnnotation.TypeAnnotation",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "Unit",
+            [
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "Tupled",
+            [
+              "List Elm.Syntax.TypeAnnotation.TypeAnnotation",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "Record",
+            [
+              "Elm.Syntax.TypeAnnotation.RecordDefinition",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "GenericRecord",
+            [
+              "String",
+              "Elm.Syntax.TypeAnnotation.RecordDefinition",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "FunctionTypeAnnotation",
+            [
+              "Elm.Syntax.TypeAnnotation.TypeAnnotation",
+              "Elm.Syntax.TypeAnnotation.TypeAnnotation",
+              "Elm.Syntax.Range.Range"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Pattern",
+    "comment": " Pattern Syntax\n\n\n# Types\n\n@docs Pattern, QualifiedNameRef\n\n",
+    "aliases": [
+      {
+        "name": "QualifiedNameRef",
+        "comment": " Qualified name reference\n",
+        "args": [],
+        "type": "{ moduleName : List String, name : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Pattern",
+        "comment": " Union type for all the patterns\n",
+        "args": [],
+        "cases": [
+          [
+            "AllPattern",
+            [
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "UnitPattern",
+            [
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "CharPattern",
+            [
+              "Char",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "StringPattern",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "IntPattern",
+            [
+              "Int",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "FloatPattern",
+            [
+              "Float",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "TuplePattern",
+            [
+              "List Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "RecordPattern",
+            [
+              "List Elm.Syntax.Base.VariablePointer",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "UnConsPattern",
+            [
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "ListPattern",
+            [
+              "List Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "VarPattern",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "NamedPattern",
+            [
+              "Elm.Syntax.Pattern.QualifiedNameRef",
+              "List Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "QualifiedNamePattern",
+            [
+              "Elm.Syntax.Pattern.QualifiedNameRef",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "AsPattern",
+            [
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Base.VariablePointer",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "ParenthesizedPattern",
+            [
+              "Elm.Syntax.Pattern.Pattern",
+              "Elm.Syntax.Range.Range"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Module",
+    "comment": " Module Syntax\n\n\n# Module\n\n@docs Module, DefaultModuleData, EffectModuleData\n\n@docs exposingList, moduleName\n\n\n# Import\n\n@docs Import\n\n",
+    "aliases": [
+      {
+        "name": "DefaultModuleData",
+        "comment": " Data for a default default\n",
+        "args": [],
+        "type": "{ moduleName : Elm.Syntax.Base.ModuleName , exposingList : Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.TopLevelExpose }"
+      },
+      {
+        "name": "EffectModuleData",
+        "comment": " Data for an effect module\n",
+        "args": [],
+        "type": "{ moduleName : Elm.Syntax.Base.ModuleName , exposingList : Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.TopLevelExpose , command : Maybe.Maybe String , subscription : Maybe.Maybe String }"
+      },
+      {
+        "name": "Import",
+        "comment": " Import definition\n",
+        "args": [],
+        "type": "{ moduleName : Elm.Syntax.Base.ModuleName , moduleAlias : Maybe.Maybe Elm.Syntax.Base.ModuleName , exposingList : Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.TopLevelExpose , range : Elm.Syntax.Range.Range }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Module",
+        "comment": " Union type for different kind of modules\n",
+        "args": [],
+        "cases": [
+          [
+            "NormalModule",
+            [
+              "Elm.Syntax.Module.DefaultModuleData"
+            ]
+          ],
+          [
+            "PortModule",
+            [
+              "Elm.Syntax.Module.DefaultModuleData"
+            ]
+          ],
+          [
+            "EffectModule",
+            [
+              "Elm.Syntax.Module.EffectModuleData"
+            ]
+          ],
+          [
+            "NoModule",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "exposingList",
+        "comment": " Get the exposing list for a module.\n",
+        "type": "Elm.Syntax.Module.Module -> Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.TopLevelExpose"
+      },
+      {
+        "name": "moduleName",
+        "comment": " Get the name for a module. For older modules this may not be present.\n",
+        "type": "Elm.Syntax.Module.Module -> Maybe.Maybe Elm.Syntax.Base.ModuleName"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Documentation",
+    "comment": " Documenation Syntax\n\n\n# Types\n\n@docs Documentation\n\n",
+    "aliases": [
+      {
+        "name": "Documentation",
+        "comment": " Documentation comment\n",
+        "args": [],
+        "type": "{ text : String, range : Elm.Syntax.Range.Range }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Base",
+    "comment": " Base Syntax\n\n\n# Types\n\n@docs ModuleName, VariablePointer\n\n",
+    "aliases": [
+      {
+        "name": "ModuleName",
+        "comment": " Base representation for a module name\n",
+        "args": [],
+        "type": "List String"
+      },
+      {
+        "name": "VariablePointer",
+        "comment": " A simple variable\n",
+        "args": [],
+        "type": "{ value : String, range : Elm.Syntax.Range.Range }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Exposing",
+    "comment": " Exposing Syntax\n\n\n# Types\n\n@docs Exposing, TopLevelExpose, ExposedType, ValueConstructorExpose\n\n\n# Functions\n\n@docs topLevelExposeRange, exposesFunction, operators\n\n",
+    "aliases": [
+      {
+        "name": "ExposedType",
+        "comment": " Exposed Type\n",
+        "args": [],
+        "type": "{ name : String , constructors : Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.ValueConstructorExpose , range : Elm.Syntax.Range.Range }"
+      },
+      {
+        "name": "ValueConstructorExpose",
+        "comment": " Exposed Value Constructor\n",
+        "args": [],
+        "type": "( String, Elm.Syntax.Range.Range )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Exposing",
+        "comment": " Diffent kind of exposing declarations\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "All",
+            [
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "Explicit",
+            [
+              "List a"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "TopLevelExpose",
+        "comment": " An exposed entity\n",
+        "args": [],
+        "cases": [
+          [
+            "InfixExpose",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "FunctionExpose",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "TypeOrAliasExpose",
+            [
+              "String",
+              "Elm.Syntax.Range.Range"
+            ]
+          ],
+          [
+            "TypeExpose",
+            [
+              "Elm.Syntax.Exposing.ExposedType"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "exposesFunction",
+        "comment": " Check whether an import/module exposing list exposes a certain function\n",
+        "type": "String -> Elm.Syntax.Exposing.Exposing Elm.Syntax.Exposing.TopLevelExpose -> Bool"
+      },
+      {
+        "name": "operators",
+        "comment": " Get all operator names from a list of TopLevelExposes\n",
+        "type": "List Elm.Syntax.Exposing.TopLevelExpose -> List String"
+      },
+      {
+        "name": "topLevelExposeRange",
+        "comment": " Find out the range of a top level expose\n",
+        "type": "Elm.Syntax.Exposing.TopLevelExpose -> Elm.Syntax.Range.Range"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Range",
+    "comment": " Source Code Ranges\n\n\n# Types\n\n@docs Range, Location\n\n\n# Functions\n\n@docs emptyRange, combine\n\n\n# Json\n\n@docs encode, decode\n\n",
+    "aliases": [
+      {
+        "name": "Location",
+        "comment": " Source location\n",
+        "args": [],
+        "type": "{ row : Int, column : Int }"
+      },
+      {
+        "name": "Range",
+        "comment": " Range for a piece of code with a start and end\n",
+        "args": [],
+        "type": "{ start : Elm.Syntax.Range.Location , end : Elm.Syntax.Range.Location }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "combine",
+        "comment": " Compute the smallest area of a list of ranges.\n",
+        "type": "List Elm.Syntax.Range.Range -> Elm.Syntax.Range.Range"
+      },
+      {
+        "name": "decode",
+        "comment": " Decode a range\n",
+        "type": "Json.Decode.Decoder Elm.Syntax.Range.Range"
+      },
+      {
+        "name": "emptyRange",
+        "comment": " Construct an empty range\n",
+        "type": "Elm.Syntax.Range.Range"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode a range\n",
+        "type": "Elm.Syntax.Range.Range -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elm.Syntax.Infix",
+    "comment": " Infix Syntax\n\n#Types\n\n@docs Infix, InfixDirection\n\n\n# Json\n\n@docs encode, encodeDirection, decode, decodeDirection\n\n",
+    "aliases": [
+      {
+        "name": "Infix",
+        "comment": " Type annotation for a infix definition\n",
+        "args": [],
+        "type": "{ direction : Elm.Syntax.Infix.InfixDirection , precedence : Int , operator : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "InfixDirection",
+        "comment": " Union type for infix direction\n",
+        "args": [],
+        "cases": [
+          [
+            "Left",
+            []
+          ],
+          [
+            "Right",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decode an infix\n",
+        "type": "Json.Decode.Decoder Elm.Syntax.Infix.Infix"
+      },
+      {
+        "name": "decodeDirection",
+        "comment": " Decode a infix direction\n",
+        "type": "Json.Decode.Decoder Elm.Syntax.Infix.InfixDirection"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode an infix\n",
+        "type": "Elm.Syntax.Infix.Infix -> Json.Encode.Value"
+      },
+      {
+        "name": "encodeDirection",
+        "comment": " Encode the infix direction\n",
+        "type": "Elm.Syntax.Infix.InfixDirection -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

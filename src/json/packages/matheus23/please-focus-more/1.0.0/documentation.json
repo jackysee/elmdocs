@@ -1,0 +1,46 @@
+[
+  {
+    "name": "FocusMore",
+    "comment": "\n\n\n# Some useful Lenses/Foci/Setters or however you want to call them\n\nMent to be imported together with SwiftNamesake/please-focus's `Focus` module like this:\n\n    import Focus exposing (Setter, (&), (.=), (=>), ($=))\n    import FocusMore as Focus exposing (FieldSetter)\n\n@docs FieldSetter\n\n\n# Setters for Touples\n\n@docs first, second\n\n\n# Setters for Lists\n\n@docs index, indexConcat\n\n\n# Utility\n\n@docs when\n\n",
+    "aliases": [
+      {
+        "name": "FieldSetter",
+        "comment": " A type alias for a simpler kind of Setters.\nWhen the setter can't change the type of a subpart of your record.\nFor example:\n\n    type alias Model a =\n        { isBeautiful : Bool\n        , somePolymorphicContent : a\n        }\n\nThen a Setter for `isBeautiful` would have the type\n\n    isBeautiful : Focus.FieldSetter (Model a) Bool\n\nHowever, a Setter for somePolymorphicContent could change the inner type:\n\n    somePolymorphicContent : Setter (Model a) (Model b) a b\n\nfrom `a` to `b` (and therefore change the Model type from `Model a` to `Model b`)\n\n",
+        "args": [
+          "record",
+          "field"
+        ],
+        "type": "Focus.Setter record record field field"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " A `Setter` for the first (or left) part of a Touple.\n",
+        "type": "Focus.Setter ( a, c ) ( b, c ) a b"
+      },
+      {
+        "name": "index",
+        "comment": " A `Setter` for a specific index of a list. If the index\nis outside the list, no element is updated.\n\n    [1, 2, 3, 4] & Focus.index 1 .= 42\n\nWould result in\n\n    [1, 42, 3, 4]\n\nHowever\n\n    [1, 2, 3, 4] & Focus.index -1 .= 42\n\nWould result in\n\n    [1, 2, 3, 4]\n\n",
+        "type": "Int -> FocusMore.FieldSetter (List a) a"
+      },
+      {
+        "name": "indexConcat",
+        "comment": " Similar to `Focus.index`, but you update each element to a whole\nlist of elements. Using this you can delete elements from the list like so:\n\n    [1, 2, 3, 4] & Focus.index 2 .= []\n\nbecomes\n\n    [1, 2, 4]\n\nOr you can introduce new items to the list, relative to the position you are\nfocusing on:\n\n    [1, 2, 3, 4] & Focus.index 2 $= (\\element -> [1337, element, 42])\n\nbecomes\n\n    [1, 2, 1337, 3, 42, 4]\n\n",
+        "type": "Int -> Focus.Setter (List a) (List a) a (List a)"
+      },
+      {
+        "name": "second",
+        "comment": " A `Setter` for the second (or right) part of a Touple.\n",
+        "type": "Focus.Setter ( c, a ) ( c, b ) a b"
+      },
+      {
+        "name": "when",
+        "comment": " A Utility function to conditionally apply Setters in a pipeline:\n\n    model\n        |> Focus.when shouldRemoveElement\n            (Focus.indexConcat index .= [])\n        |> Focus.when flipBeautyModifier\n            (isBeautiful $= not)\n\n",
+        "type": "Bool -> (a -> a) -> a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

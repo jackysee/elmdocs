@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Net",
+    "comment": " This library provides a Hidden Layer Neural Network,\nbackpropagation training, and a forward pass function for its' use.\n\n\n# Definition\n\n@docs Net, TrainingSet\n\n\n# Helpers\n\n@docs createNetDeterministic, createNetRandom\n\n\n# Training and Forward Pass\n\n@docs backpropagateSet, forwardPass\n\n",
+    "aliases": [
+      {
+        "name": "Net",
+        "comment": " Represents a Hidden Layer Neural Net. This type should not be instantiated\ndirectly, but instead created with `createNetDeterministic` or `createNetRandom`.\n",
+        "args": [],
+        "type": "{ inputs : Int, hidden : Int, outputs : Int, weights : List Float }"
+      },
+      {
+        "name": "TrainingSet",
+        "comment": " Represents a training set for a Neural Net,\ncontaining both the inputs and the targets that should\nbe output for those inputs.\n\n    -- This would be the training set list for XOR\n    [ TrainingSet [0,0] [0]\n    , TrainingSet [0,1] [1]\n    , TrainingSet [1,0] [1]\n    , TrainingSet [1,1] [0]]\n\n",
+        "args": [],
+        "type": "{ inputs : List Float, targets : List Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "backpropagateSet",
+        "comment": " Performs a backpropagation training on a Neural Net,\nreturning the trained Neural Net. The net is provided, as is\nthe learning rate, training set, and number of times to train.\n\n    backpropagateSet net 0.5 [TrainingSet [1,0] [1]] 1000 /= net\n\n",
+        "type": "Net.Net -> Float -> List Net.TrainingSet -> Int -> Net.Net"
+      },
+      {
+        "name": "createNetDeterministic",
+        "comment": " Creates a Neural Net with the specified number of input, hidden,\nand output nodes. A seed is provided so the Random library can populate\nthe pseudo-random initial weights. If a more random Neural Net is required,\nuse the `createNetRandom` method.\n\n    -- Creates a Neural Net with 2 input nodes, 2 hidden nodes, and 1 output node\n    createNetDeterministic 2 2 1 547623465437\n\n",
+        "type": "Int -> Int -> Int -> Int -> Net.Net"
+      },
+      {
+        "name": "createNetRandom",
+        "comment": " Creates a Neural Net with the specified number of input, hidden,\nand output nodes. A command is returned, which will use the provided\nmessage generation function to give the Neural Net to your update function.\nIf a Neural Net is needed immediately without a command, use `createNetDeterministic`.\n\n    init : ( Net, Cmd Msg )\n    init =\n        createNetDeterministic 2 2 1 547623465437 ! [ createNetRandom 2 2 1 NewNet ]\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        case msg of\n            NewNet net ->\n                net ! []\n\n",
+        "type": "Int -> Int -> Int -> (Net.Net -> msg) -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "forwardPass",
+        "comment": " Performs a forward pass on a Neural Net with\nthe provided set of input node values. Returns the\noutput node values.\n\n    -- net is a Neural Net with 2 inputs and 1 output\n    forwardPass net [1, 0] == [0.346433]\n\n",
+        "type": "Net.Net -> List Float -> List Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

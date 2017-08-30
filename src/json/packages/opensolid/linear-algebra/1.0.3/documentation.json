@@ -1,0 +1,130 @@
+[
+  {
+    "name": "OpenSolid.LinearAlgebra.Direction3d",
+    "comment": " Conversion functions for `Direction3d`.\n\n@docs toVec3\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toVec3",
+        "comment": " Convert a `Direction3d` to a `Vec3`.\n\n    Direction3d.toVec3 Direction3d.y\n    --> Vector3.vec3 0 1 0\n\n",
+        "type": "OpenSolid.Geometry.Types.Direction3d -> Math.Vector3.Vec3"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Point2d",
+    "comment": " Conversion functions for `Point2d`.\n\n@docs toVec2, fromVec2\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromVec2",
+        "comment": " Convert a `Vec2` to a `Point2d`.\n\n    Point2d.fromVec2 (Vector2.vec2 2 3)\n    --> Point2d ( 2, 3 )\n\n",
+        "type": "Math.Vector2.Vec2 -> OpenSolid.Geometry.Types.Point2d"
+      },
+      {
+        "name": "toVec2",
+        "comment": " Convert a `Point2d` to a `Vec2`.\n\n    Point2d.toVec2 (Point2d ( 2, 3 ))\n    --> Vector2.vec2 2 3\n\n",
+        "type": "OpenSolid.Geometry.Types.Point2d -> Math.Vector2.Vec2"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Frame3d",
+    "comment": " Conversion functions for `Frame3d`.\n\n@docs toMat4\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toMat4",
+        "comment": " Convert a `Frame3d` to a `Mat4`. The resulting matrix can be thought of in\na couple of ways:\n\n  - It is the transformation matrix that takes the global XYZ frame and\n    transforms it to the given frame\n  - It is the transformation matrix from local coordinates in the given frame\n    to global coordinates\n\nThe first bullet implies that something like\n\n    Frame3d.xyz\n        |> Frame3d.translateBy displacement\n        |> Frame3d.rotateAround axis angle\n        |> Frame3d.mirrorAcross plane\n        |> Frame3d.toMat4\n\ngives you a transformation matrix that is equivalent to applying the given\ndisplacement, then the given rotation, then the given mirror. The second bullet\nmeans that, for example,\n\n    Point3d.placeIn frame\n\nis equivalent to\n\n    Point3d.transformBy (Frame3d.toMat4 frame)\n\nand\n\n    Point3d.relativeTo frame\n\nis equivalent to\n\n    Point3d.transformBy (Matrix4.inverseOrthonormal (Frame3d.toMat4 frame))\n\n",
+        "type": "OpenSolid.Geometry.Types.Frame3d -> Math.Matrix4.Mat4"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Vector2d",
+    "comment": " Conversion functions for `Vector2d`.\n\n@docs toVec2, fromVec2\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromVec2",
+        "comment": " Convert a `Vec2` to a `Vector2d`.\n\n    Vector2d.fromVec2 (Vector2.vec2 2 3)\n    --> Vector2d ( 2, 3 )\n\n",
+        "type": "Math.Vector2.Vec2 -> OpenSolid.Geometry.Types.Vector2d"
+      },
+      {
+        "name": "toVec2",
+        "comment": " Convert a `Vector2d` to a `Vec2`.\n\n    Vector2d.toVec2 (Vector2d ( 2, 3 ))\n    --> Vector2.vec2 2 3\n\n",
+        "type": "OpenSolid.Geometry.Types.Vector2d -> Math.Vector2.Vec2"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Vector3d",
+    "comment": " Conversion and transformation functions for `Vector3d`.\n\n@docs toVec3, fromVec3, transformBy\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromVec3",
+        "comment": " Convert a `Vec3` to a `Vector3d`.\n\n    Vector3d.fromVec3 (Vector3.vec3 2 1 3)\n    --> Vector3d ( 2, 1, 3 )\n\n",
+        "type": "Math.Vector3.Vec3 -> OpenSolid.Geometry.Types.Vector3d"
+      },
+      {
+        "name": "toVec3",
+        "comment": " Convert a `Vector3d` to a `Vec3`.\n\n    Vector3d.toVec3 (Vector3d ( 2, 1, 3 ))\n    --> Vector3.vec3 2 1 3\n\n",
+        "type": "OpenSolid.Geometry.Types.Vector3d -> Math.Vector3.Vec3"
+      },
+      {
+        "name": "transformBy",
+        "comment": " Transform a `Vector3d` by a `Mat4`; note that\n\n    Vector3d.transformBy matrix vector\n\nis similar to but *not* in general equivalent to\n\n    Vector3d.fromVec3 (Matrix4.transform matrix (Vector3d.toVec3 vector))\n\nsince `Matrix4.transform` implicitly assumes that the given argument represents\na point, not a vector, and therefore applies translation to it. Transforming a\nvector by a 4x4 matrix should in fact ignore any translation component of the\nmatrix, which this function does. For example:\n\n    vector =\n        Vector3d ( 2, 1, 3 )\n\n    -- 90 degree rotation around the Z axis, followed by a translation\n    matrix =\n        Matrix4.makeTranslate3 5 5 5\n            |> Matrix4.rotate (degrees 90) Vector3.k\n\n    Vector3d.transformBy matrix vector\n    --> Vector3d ( -1, 2, 3 )\n\n",
+        "type": "Math.Matrix4.Mat4 -> OpenSolid.Geometry.Types.Vector3d -> OpenSolid.Geometry.Types.Vector3d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Point3d",
+    "comment": " Conversion and transformation functions for `Point3d`.\n\n@docs toVec3, fromVec3, transformBy\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fromVec3",
+        "comment": " Convert a `Vec3` to a `Point3d`.\n\n    Point3d.fromVec3 (Vector3.vec3 2 1 3)\n    --> Point3d ( 2, 1, 3 )\n\n",
+        "type": "Math.Vector3.Vec3 -> OpenSolid.Geometry.Types.Point3d"
+      },
+      {
+        "name": "toVec3",
+        "comment": " Convert a `Point3d` to a `Vec3`.\n\n    Point3d.toVec3 (Point3d ( 2, 1, 3 ))\n    --> Vector3.vec3 2 1 3\n\n",
+        "type": "OpenSolid.Geometry.Types.Point3d -> Math.Vector3.Vec3"
+      },
+      {
+        "name": "transformBy",
+        "comment": " Transform a `Point3d` by a `Mat4`;\n\n    Point3d.transformBy matrix point\n\nis equivalent to (but more efficient than)\n\n    Point3d.fromVec3 (Matrix4.transform matrix (Point3d.toVec3 point))\n\nFor example:\n\n    point =\n        Point3d ( 2, 1, 3 )\n\n    matrix =\n        Matrix4.makeTranslate3 3 4 5\n\n    Point3d.transformBy matrix point\n    --> Point3d ( 5, 5, 8 )\n\n",
+        "type": "Math.Matrix4.Mat4 -> OpenSolid.Geometry.Types.Point3d -> OpenSolid.Geometry.Types.Point3d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OpenSolid.LinearAlgebra.Direction2d",
+    "comment": " Conversion functions for `Direction2d`.\n\n@docs toVec2\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toVec2",
+        "comment": " Convert a `Direction2d` to a `Vec2`.\n\n    Direction2d.toVec2 Direction2d.y\n    --> Vector2.vec2 0 1\n\n",
+        "type": "OpenSolid.Geometry.Types.Direction2d -> Math.Vector2.Vec2"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

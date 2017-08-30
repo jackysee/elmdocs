@@ -1,0 +1,88 @@
+[
+  {
+    "name": "Runner",
+    "comment": " Test runner that produces `Html msg` as its output.\n\n# Running tests\n@docs runAll\n\n Complete example of create an example test suite and running it:\n\n    import Expectation exposing (eql, isTrue)\n    import Test exposing (it, describe, Test)\n    import Runner exposing (runAll)\n\n    import Html exposing (Html)\n\n    all : Test\n    all = describe \"Arithmetic operations\"\n      [ describe \"Addition\"\n        [ it \"should add two positive numbers\" <|\n            eql (1 + 2) 3\n        , it \"should be commutative\" <|\n            eql (1 + 2) (2 + 1)\n        , it \"should be associative\" <|\n            eql ((1 + 2) + 3) (1 + (2 + 3))\n      ]\n    ]\n\n    main : Html msg\n    main =\n      runAll all\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "runAll",
+        "comment": " Run the test suite.\n\n Custom expectation\n\n    all : Test\n    all = it \"should add two positive numbers\" <|\n            eql (1 + 2) 3\n\n    main : Html msg\n    main =\n      runAll all\n",
+        "type": "Test.Test -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Test",
+    "comment": " This module provides means to define a test suite. Test suite is a tree formed from other test suites which\nhas tests as its leafs. API is similar to that of Jasmine for JavaScript.\n\n# Definition\n@docs Test.Suite, Test.Test\n\n# Constructing Tests\n@docs it, describe\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Test",
+        "comment": " Tests that can be executed. Tests can be either simple tests that have only one expectation\nor test suites which group other test suites and simple tests together.\n\n Test suite consisting of two tests\n\n    Suite\n      \"mySuite\"\n      [\n        Test \"test +\" eql(2, 1 + 1)\n        , Test \"test -\" eql(2, 3 - 1)\n      ]\n\n It is expected that tests and suite are constructed using helper methods `describe` and `it` rather\n than by using `Suite` and `Test` directly.\n\n Same test suite consisting of two tests, but declared using `describe` and `it`\n\n    describe\n      \"mySuite\"\n      [\n        it \"should add\" eql(2, 1 + 1)\n        , it \"should subtract\" eql(2, 3 - 1)\n      ]\n",
+        "args": [],
+        "cases": [
+          [
+            "Suite",
+            [
+              "String",
+              "List Test.Test"
+            ]
+          ],
+          [
+            "Test",
+            [
+              "String",
+              "Expectation.Expectation"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "describe",
+        "comment": " Constructs a test suite consisting of other test suites or simple tests.\n\n Test suite\n\n    describe \"Arithmetic\"\n     [\n       describe \"+\"\n         [\n           it \"should be commutative\"\n             eql(1 + 2, 2 + 1)\n           it \"should have neutral element\"\n             eql(0 + 2, 2)\n         ]\n      , describe \"*\"\n         [\n           it \"should be commutative\"\n             eql(3 * 2, 2 * 3)\n           it \"should have neutral element\"\n             eql(1 * 2, 2)\n         ]\n    ]\n",
+        "type": "String -> List Test.Test -> Test.Test"
+      },
+      {
+        "name": "it",
+        "comment": " Constructs a single simple test.\n\n Simple test\n\n    it \"should add\" eql(2, 1 + 1)\n",
+        "type": "String -> Expectation.Expectation -> Test.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Expectation",
+    "comment": " This module provides means to define expectations. There should be exactly one expectation per one unit test.\n\n# Definition\n@docs Expectation\n\n# Constructing expectations\n@docs eql, isTrue, isFalse\n\n",
+    "aliases": [
+      {
+        "name": "Expectation",
+        "comment": " Test expectation. Contains an `errorMessage` for the case when the test fails, and the `check` to be executed.\n\n Custom expectation\n\n    isEmpty: a -> a -> Expectation\n    isEmpty actual =\n      Expectation \"is string empty\" (\\() -> isEmpty actual)\n\n Usually there should be no need to define custom expectations as helper methods can be used `eql`, `isTrue`, `isFalse`\n",
+        "args": [],
+        "type": "{ errorMessage : String, check : () -> Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "eql",
+        "comment": " Equality expectation. Verifies that the actual value is equal to the expected one.\n\n Expecting that 3 == 3\n\n    eql(3, 3)\n\n The following expectation can be constructed, but will fail verification\n\n    eql(2, 3)\n",
+        "type": "a -> a -> Expectation.Expectation"
+      },
+      {
+        "name": "isFalse",
+        "comment": " Falsehood expectation. Verifies that the actual value is `False`.\n\n Examples, first will verify successfully, second will fail\n\n    isFalse(2 == 3)\n    isFalse(2 == 2)\n",
+        "type": "Bool -> Expectation.Expectation"
+      },
+      {
+        "name": "isTrue",
+        "comment": " Truth expectation. Verifies that the actual value is `True`.\n\n Examples, first will verify successfully, second will fail\n\n    isTrue(2 == 2)\n    isTrue(2 == 3)\n",
+        "type": "Bool -> Expectation.Expectation"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "MockHttp",
+    "comment": "\nA client-side server to simulate server-side communications that are made\nthrough `elm-lang/Http`.\n\n# Configure Endpoints\n@docs Config, Endpoint, EndpointData, config\n\n# Send Requests\n@docs Request, send, getResult\n\n# GET\n@docs get, getString\n\n# POST\n@docs post\n",
+    "aliases": [
+      {
+        "name": "EndpointData",
+        "comment": " Represents the details of an endpoint\n",
+        "args": [],
+        "type": "{ url : String, response : String, responseTime : Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " configuration for endpoints.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Endpoint",
+        "comment": " Represents an endpoint.\n",
+        "args": [],
+        "cases": [
+          [
+            "Get",
+            [
+              "MockHttp.EndpointData"
+            ]
+          ],
+          [
+            "Post",
+            [
+              "MockHttp.EndpointData"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Request",
+        "comment": " Describes a request.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Create a `Config` from endpoints.\n",
+        "type": "List MockHttp.Endpoint -> MockHttp.Config"
+      },
+      {
+        "name": "get",
+        "comment": " Create a `GET` request and try to decode the response body from JSON to some Elm value.\n\n```elm\n    import MockHttp\n    import Json.Decode exposing (list, string)\n\n    getSpells: MockHttp.Request (List String)\n    getSpells =\n        MockHttp.get \"http://example.com/harrypotter/spells\" (list string)\n```\n\nCompare to `Http.get`\n",
+        "type": "String -> Json.Decode.Decoder a -> MockHttp.Request a"
+      },
+      {
+        "name": "getResult",
+        "comment": " Get response and response time from a `Request` using configured endpoints.\n",
+        "type": "MockHttp.Config -> MockHttp.Request a -> ( Result.Result Http.Error a, Time.Time )"
+      },
+      {
+        "name": "getString",
+        "comment": " Create a `GET` request and interpret the response as a string.\n\n```elm\n    import MockHttp\n\n    getBestHarryPotterCharactersName: MockHttp.Request (String)\n    getBestHarryPotterCharactersName =\n        MockHttp.getString \"http://example.com/harrypotter/bestCharacter\"\n```\n\nCompare to `Http.getString`\n",
+        "type": "String -> MockHttp.Request String"
+      },
+      {
+        "name": "post",
+        "comment": " Create a POST request and try to decode the response body from JSON to an Elm value.\n\n```elm\n    import MockHttp\n\n    disarmOtherWizard: MockHttp.Request (String)\n    disarmOtherWizard =\n        let\n            body =\n                Http.multipartBody\n                    [ stringPart \"spell\" \"expelliarmus\"\n                    ]\n        in\n            MockHttp.post \"http://example.com/harrypotter/castSpell\" body string\n```\n\nCompare to `Http.post`\n",
+        "type": "String -> Http.Body -> Json.Decode.Decoder a -> MockHttp.Request a"
+      },
+      {
+        "name": "send",
+        "comment": " Send a `Request`. We could get the main characters of \"Harry Potter\" like this:\n```elm\nimport Http\nimport Json.Decode exposing (list, string)\nimport MockHttp exposing (Endpoint(..))\n\ntype Msg = Click | ReceiveCharacters (Result Http.Error (List String))\n\nupdate : Msg -> Model -> Model\nupdate msg model =\n    case msg of\n        Click ->\n            ( model, getHarryPotterCharacters )\n\n        ReceiveCharacters (Ok characters) ->\n            ...\n\n        ReceiveCharacters (Err _) ->\n            ...\n\ngetHarryPotterCharacters : Cmd Msg\ngetHarryPotterCharacters =\n    MockHttp.send config ReceiveCharacters <|\n        MockHttp.get \"https://example.com/harrypotter/characters\" (list string)\n\nconfig : MockHttp.Config\nconfig =\n    let\n        endpoints =\n            [ Get\n                { url = \"https://example.com/harrypotter/characters\"\n                , response = \"\"\"\n                    [ \"Harry James Potter\"\n                    , \"Ronald Bilius Weasley\",\n                    , \"Hermione Jean Granger\"\n                    ]\n                \"\"\"\n                }\n            ]\n    in\n        MockHttp.config endpoints\n```\n\nCompare to `Http.send`.\n",
+        "type": "MockHttp.Config -> (Result.Result Http.Error a -> msg) -> MockHttp.Request a -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,250 @@
+[
+  {
+    "name": "Task017",
+    "comment": " Elm 0.18 flipped parameters for `andThen` and `onError`, altered `perform`,\nand removed functions converting from and to `Maybe` and `Result`.\n\n@docs andThen, onError, perform, andMap, fromMaybe, fromResult, toMaybe, toResult\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Put the results of two tasks together. If either task fails, the whole\nthing fails. It also runs in order so the first task will be completely\nfinished before the second task starts.\n\nThis function makes it possible to chain tons of tasks together and pipe them\nall into a single function.\n\n    (f `map` task1 `andMap` task2 `andMap` task3) -- map3 f task1 task2 task3\n",
+        "type": "Task.Task x (a -> b) -> Task.Task x a -> Task.Task x b"
+      },
+      {
+        "name": "andThen",
+        "comment": " Chain together a task and a callback. The first task will run, and if it is\nsuccessful, you give the result to the callback resulting in another task. This\ntask then gets run.\n\n    succeed 2 `andThen` (\\n -> succeed (n + 2)) -- succeed 4\n\nThis is useful for chaining tasks together. Maybe you need to get a user from\nyour servers *and then* lookup their picture once you know their name.\n",
+        "type": "Task.Task x a -> (a -> Task.Task x b) -> Task.Task x b"
+      },
+      {
+        "name": "fromMaybe",
+        "comment": " If you are chaining together a bunch of tasks, it may be useful to treat\na maybe value like a task.\n\n    fromMaybe \"file not found\" Nothing   -- fail \"file not found\"\n    fromMaybe \"file not found\" (Just 42) -- succeed 42\n",
+        "type": "x -> Maybe.Maybe a -> Task.Task x a"
+      },
+      {
+        "name": "fromResult",
+        "comment": " If you are chaining together a bunch of tasks, it may be useful to treat\na result like a task.\n\n    fromResult (Err \"file not found\") -- fail \"file not found\"\n    fromResult (Ok 42)                -- succeed 42\n",
+        "type": "Result.Result x a -> Task.Task x a"
+      },
+      {
+        "name": "onError",
+        "comment": " Recover from a failure in a task. If the given task fails, we use the\ncallback to recover.\n\n    fail \"file not found\" `onError` (\\msg -> succeed 42) -- succeed 42\n    succeed 9 `onError` (\\msg -> succeed 42)             -- succeed 9\n",
+        "type": "Task.Task x a -> (x -> Task.Task y a) -> Task.Task y a"
+      },
+      {
+        "name": "perform",
+        "comment": " Command the runtime system to perform a task. The most important argument\nis the `Task` which describes what you want to happen. But you also need to\nprovide functions to tag the two possible outcomes of the task. It can fail or\nsucceed, but either way, you need to have a message to feed back into your\napplication.\n",
+        "type": "(x -> msg) -> (a -> msg) -> Task.Task x a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "toMaybe",
+        "comment": " Translate a task that can fail into a task that can never fail, by\nconverting any failure into `Nothing` and any success into `Just` something.\n\n    toMaybe (fail \"file not found\") -- succeed Nothing\n    toMaybe (succeed 42)            -- succeed (Just 42)\n\nThis means you can handle the error with the `Maybe` module instead.\n",
+        "type": "Task.Task x a -> Task.Task never (Maybe.Maybe a)"
+      },
+      {
+        "name": "toResult",
+        "comment": " Translate a task that can fail into a task that can never fail, by\nconverting any failure into `Err` something and any success into `Ok` something.\n\n    toResult (fail \"file not found\") -- succeed (Err \"file not found\")\n    toResult (succeed 42)            -- succeed (Ok 42)\n\nThis means you can handle the error with the `Result` module instead.\n",
+        "type": "Task.Task x a -> Task.Task never (Result.Result x a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Result017",
+    "comment": " `formatError` was renamed to `mapError` in Elm 0.18, and\nthe parameters of `andThen` were flipped.\n\n@docs andThen, formatError\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a sequence of computations that may fail. It is helpful\nto see its definition:\n\n    andThen : Result e a -> (a -> Result e b) -> Result e b\n    andThen result callback =\n        case result of\n          Ok value -> callback value\n          Err msg -> Err msg\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`toInt : String -> Result String Int`) to parse\na month and make sure it is between 1 and 12:\n\n    toValidMonth : Int -> Result String Int\n    toValidMonth month =\n        if month >= 1 && month <= 12\n            then Ok month\n            else Err \"months must be between 1 and 12\"\n\n    toMonth : String -> Result String Int\n    toMonth rawString =\n        toInt rawString `andThen` toValidMonth\n\n    -- toMonth \"4\" == Ok 4\n    -- toMonth \"9\" == Ok 9\n    -- toMonth \"a\" == Err \"cannot parse to an Int\"\n    -- toMonth \"0\" == Err \"months must be between 1 and 12\"\n\nThis allows us to come out of a chain of operations with quite a specific error\nmessage. It is often best to create a custom type that explicitly represents\nthe exact ways your computation may fail. This way it is easy to handle in your\ncode.\n",
+        "type": "Result.Result x a -> (a -> Result.Result x b) -> Result.Result x b"
+      },
+      {
+        "name": "formatError",
+        "comment": " Format the error value of a result. If the result is `Ok`, it stays exactly\nthe same, but if the result is an `Err` we will format the error. For example,\nsay the errors we get have too much information:\n\n    parseInt : String -> Result ParseError Int\n\n    type alias ParseError =\n        { message : String\n        , code : Int\n        , position : (Int,Int)\n        }\n\n    formatError .message (parseInt \"123\") == Ok 123\n    formatError .message (parseInt \"abc\") == Err \"char 'a' is not a number\"\n",
+        "type": "(error1 -> error2) -> Result.Result error1 a -> Result.Result error2 a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Basics017",
+    "comment": " Several functions from Elm 0.17 were moved to other modules in Elm 0.18, so\nhere they are!\n\n@docs fst, snd\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fst",
+        "comment": " Given a 2-tuple, returns the first value.\n",
+        "type": "( a, b ) -> a"
+      },
+      {
+        "name": "snd",
+        "comment": " Given a 2-tuple, returns the second value.\n",
+        "type": "( a, b ) -> b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random017",
+    "comment": " Like in other modules, the paramenters of `andThen` were flipped in Elm\n0.18.\n\n@docs andThen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain random operations, threading through the seed. In the following\nexample, we will generate a random letter by putting together uppercase and\nlowercase letters.\n\n    letter : Generator Char\n    letter =\n      bool `andThen` \\b ->\n        if b then uppercaseLetter else lowercaseLetter\n\n    -- bool : Generator Bool\n    -- uppercaseLetter : Generator Char\n    -- lowercaseLetter : Generator Char\n",
+        "type": "Random.Generator a -> (a -> Random.Generator b) -> Random.Generator b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Maybe017",
+    "comment": " Some functions from Elm 0.17\n\n@docs andThen, oneOf\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together many computations that may fail. It is helpful to see its\ndefinition:\n\n    andThen : Maybe a -> (a -> Maybe b) -> Maybe b\n    andThen maybe callback =\n        case maybe of\n            Just value ->\n                callback value\n\n            Nothing ->\n                Nothing\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`head : List Int -> Maybe Int`) to get the\nfirst month from a `List` and then make sure it is between 1 and 12:\n\n    toValidMonth : Int -> Maybe Int\n    toValidMonth month =\n        if month >= 1 && month <= 12 then\n            Just month\n        else\n            Nothing\n\n    getFirstMonth : List Int -> Maybe Int\n    getFirstMonth months =\n        head months `andThen` toValidMonth\n\nIf `head` fails and results in `Nothing` (because the `List` was `empty`),\nthis entire chain of operations will short-circuit and result in `Nothing`.\nIf `toValidMonth` results in `Nothing`, again the chain of computations\nwill result in `Nothing`.\n\n",
+        "type": "Maybe.Maybe a -> (a -> Maybe.Maybe b) -> Maybe.Maybe b"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Pick the first `Maybe` that actually has a value. Useful when you want to\ntry a couple different things, but there is no default value.\n\n    oneOf [ Nothing, Just 42, Just 71 ] == Just 42\n    oneOf [ Nothing, Nothing, Just 71 ] == Just 71\n    oneOf [ Nothing, Nothing, Nothing ] == Nothing\n\n",
+        "type": "List (Maybe.Maybe a) -> Maybe.Maybe a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Json.Decode017",
+    "comment": " There were quite a few changes between Elm 0.17 and 0.18 in Json.Decode.\nHere are some things from Elm 0.17.\n\n@docs andThen, (:=), customDecoder\n@docs object1, object2, object3, object4, object5, object6, object7, object8\n@docs tuple1, tuple2, tuple3, tuple4, tuple5, tuple6, tuple7, tuple8\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": ":=",
+        "comment": " Applies the decoder to the field with the given name.\nFails if the JSON object has no such field.\n\n    nameAndAge : Decoder ( String, Int )\n    nameAndAge =\n        object2 (,)\n            (\"name\" := string)\n            (\"age\" := int)\n\n    optionalProfession : Decoder (Maybe String)\n    optionalProfession =\n        maybe (\"profession\" := string)\n\n",
+        "type": "String -> Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "andThen",
+        "comment": " Helpful when a field tells you about the overall structure of the JSON\nyou are dealing with. For example, imagine we are getting JSON representing\ndifferent shapes. Data like this:\n\n    { \"tag\": \"rectangle\", \"width\": 2, \"height\": 3 }\n    { \"tag\": \"circle\", \"radius\": 2 }\n\nThe following `shape` decoder looks at the `tag` to know what other fields to\nexpect **and then** it extracts the relevant information.\n\n    type Shape\n        = Rectangle Float Float\n        | Circle Float\n\n    shape : Decoder Shape\n    shape =\n        (\"tag\" := string) `andThen` shapeInfo\n\n    shapeInfo : String -> Decoder Shape\n    shapeInfo tag =\n        case tag of\n            \"rectangle\" ->\n                object2 Rectangle (\"width\" := float) (\"height\" := float)\n\n            \"circle\" ->\n                object1 Circle (\"radius\" := float)\n\n            _ ->\n                fail (tag ++ \" is not a recognized tag for shapes\")\n\n",
+        "type": "Json.Decode.Decoder a -> (a -> Json.Decode.Decoder b) -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "customDecoder",
+        "comment": " Create a custom decoder that may do some fancy computation.\n",
+        "type": "Json.Decode.Decoder a -> (a -> Result.Result String b) -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "object1",
+        "comment": " Apply a function to a decoder. You can use this function as `map` if you\nmust (which can be done with any `objectN` function actually).\n\n    object1 sqrt (\"x\" := float)\n\n",
+        "type": "(a -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object2",
+        "comment": " Use two different decoders on a JS value. This is nice for extracting\nmultiple fields from an object.\n\n    point : Decoder ( Float, Float )\n    point =\n        object2 (,)\n            (\"x\" := float)\n            (\"y\" := float)\n\n",
+        "type": "(a -> b -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object3",
+        "comment": " Use three different decoders on a JS value. This is nice for extracting\nmultiple fields from an object.\n\n    type alias Job =\n        { name : String, id : Int, completed : Bool }\n\n    job : Decoder Job\n    job =\n        object3 Job\n            (\"name\" := string)\n            (\"id\" := int)\n            (\"completed\" := bool)\n\n",
+        "type": "(a -> b -> c -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object6",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object7",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "object8",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder h -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple1",
+        "comment": " Handle an array with exactly one element.\n\n    extractString : Decoder String\n    extractString =\n        tuple1 identity string\n\n    authorship : Decoder String\n    authorship =\n        oneOf\n            [ tuple1 (\\author -> \"Author: \" ++ author) string\n            , list string |> map (\\authors -> \"Co-authors: \" ++ String.join \", \" authors)\n            ]\n\n",
+        "type": "(a -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple2",
+        "comment": " Handle an array with exactly two elements. Useful for points and simple\npairs.\n\n    point : Decoder ( Float, Float )\n    point =\n        tuple2 (,) float float\n\n\n    -- [\"John\",\"Doe\"] or [\"Hermann\",\"Hesse\"]\n\n    name : Decoder Name\n    name =\n        tuple2 Name string string\n\n    type alias Name =\n        { first : String, last : String }\n\n",
+        "type": "(a -> b -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple3",
+        "comment": " Handle an array with exactly three elements.\n\n    point3D : Decoder ( Float, Float, Float )\n    point3D =\n        tuple3 (,,) float float float\n\n",
+        "type": "(a -> b -> c -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple6",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple7",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "tuple8",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder h -> Json.Decode.Decoder value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bitwise017",
+    "comment": " Elm 0.18 replaced some functions from Elm 0.17 with flipped versions.\nSo, here are the original unfipped versions.\n\n@docs shiftLeft, shiftRight, shiftRightLogical\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "shiftLeft",
+        "comment": " Shift bits to the left by a given offset, filling new bits with zeros.\nThis can be used to multiply numbers by powers of two.\n\n    8 `shiftLeft` 1 == 16\n    8 `shiftLeft` 2 == 32\n\n",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "shiftRight",
+        "comment": " Shift bits to the right by a given offset, filling new bits with\nwhatever is the topmost bit. This can be used to divide numbers by powers of two.\n\n    32 `shiftRight` 1 == 16\n    32 `shiftRight` 2 == 8\n    -32 `shiftRight` 1 == -16\n\nThis is called an [arithmetic right\nshift](http://en.wikipedia.org/wiki/Bitwise_operation#Arithmetic_shift),\noften written (>>), and sometimes called a sign-propagating\nright shift because it fills empty spots with copies of the highest bit.\n\n",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "shiftRightLogical",
+        "comment": " Shift bits to the right by a given offset, filling new bits with\nzeros.\n\n    32 `shiftRightLogical` 1 == 16\n    32 `shiftRightLogical` 2 == 8\n    -32 `shiftRightLogical` 1 == 2147483632\n\nThis is called an [logical right\nshift](http://en.wikipedia.org/wiki/Bitwise_operation#Logical_shift), often written (>>>),\nand sometimes called a zero-fill right shift because it fills empty spots\nwith zeros.\n\n",
+        "type": "Int -> Int -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

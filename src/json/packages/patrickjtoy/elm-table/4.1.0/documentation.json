@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Table",
+    "comment": " This module provides a feature-rich and semantic table for Elm apps. It is currently under development and should NOT be used.\n\n# Types and Aliases\n@docs Column, Fixed, State, Msg\n\n# Functions\n@docs initialState, defaultColumn, withHeaderCell, withFooterCell, withHeaderAndFooterCells, withSorting, withFiltering, withSortingAndFiltering, update, view\n\n",
+    "aliases": [
+      {
+        "name": "Column",
+        "comment": " The shape of a column for a particular set of data. See the examples provided within this repository for usage details.\n",
+        "args": [
+          "datum"
+        ],
+        "type": "{ id : String , bodyCell : datum -> String , fixed : Maybe.Maybe Table.Fixed , sorting : Maybe.Maybe (datum -> datum -> Basics.Order) , filtering : Maybe.Maybe (Table.Filtering datum) , headerCell : Maybe.Maybe String , footerCell : Maybe.Maybe (List datum -> String) }"
+      },
+      {
+        "name": "State",
+        "comment": " Holds the internal Table state. You need to hold this state in your application's model.\n",
+        "args": [
+          "datum"
+        ],
+        "type": "{ scrollPos : Table.Point , sorter : Dict.Dict String Table.SortDirection , popovers : Dict.Dict String Table.PopoverState , filters : Dict.Dict String (datum -> Bool) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Fixed",
+        "comment": " Provides types for fixed columns. This feature is not yet implemented.\n",
+        "args": [],
+        "cases": [
+          [
+            "Right",
+            []
+          ],
+          [
+            "Left",
+            []
+          ],
+          [
+            "None",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages used internally by the Table module. You need to map the return from the view function to a message in your app and pass the\nreceived sub-message to the Table module's update function. See the example including with the view function below.\n",
+        "args": [
+          "datum"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultColumn",
+        "comment": " Used to quickly create a basic Column with no frills\n\n    defaultColumn \"name\" .name =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Nothing\n        , filtering = Maybe.Nothing\n        , headerCell = Maybe.Nothing\n        , footerCell = Maybe.Nothing\n        }\n",
+        "type": "String -> (datum -> String) -> Table.Column datum"
+      },
+      {
+        "name": "initialState",
+        "comment": " Creates the initial state for a Table.\n",
+        "type": "Table.State datum"
+      },
+      {
+        "name": "update",
+        "comment": " Handles the messages defined above. This function must be called from your application's update function with the Table.Msg, the\noriginal data set, the current data set (stored in your model), the current Table.State (stored in your model), and your application's\nNoOp Msg.\n",
+        "type": "Table.Msg datum -> List datum -> List datum -> Table.State datum -> msg -> Table.Result datum msg"
+      },
+      {
+        "name": "view",
+        "comment": " The entry point for the Table module. You will need to call this from your application's view function. See the examples provided\nwithin this repository for usage details.\n",
+        "type": "Table.Config datum -> Table.State datum -> Html.Html (Table.Msg datum)"
+      },
+      {
+        "name": "withFiltering",
+        "comment": " Adds filtering to a Column\n\n    defaultColumn \"name\" .name |> withFiltering { accessor = .name, label = \"Find Name\" } =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Nothing\n        , filtering = Maybe.Just { accessor = .name, label = \"Find Name\" }\n        , headerCell = Maybe.Nothing\n        , footerCell = Maybe.Nothing\n        }\n",
+        "type": "Table.Filtering datum -> Table.Column datum -> Table.Column datum"
+      },
+      {
+        "name": "withFooterCell",
+        "comment": " Adds a footerCell to a Column\n\n    defaultColumn \"name\" .name |> withFooterCell (List.sum >> toString) =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Nothing\n        , filtering = Maybe.Nothing\n        , headerCell = Maybe.Nothing\n        , footerCell = Maybe.Just \"42\"\n        }\n",
+        "type": "(List datum -> String) -> Table.Column datum -> Table.Column datum"
+      },
+      {
+        "name": "withHeaderAndFooterCells",
+        "comment": " Adds a headerCell and footerCell to a Column\n\n    defaultColumn \"name\" .name |> withHeaderAndFooterCells \"Name\" (List.sum >> toString) =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Nothing\n        , filtering = Maybe.Nothing\n        , headerCell = Maybe.Just \"Name\"\n        , footerCell = Maybe.Just \"42\"\n        }\n",
+        "type": "String -> (List datum -> String) -> Table.Column datum -> Table.Column datum"
+      },
+      {
+        "name": "withHeaderCell",
+        "comment": " Adds a headerCell to a Column\n\n    defaultColumn \"name\" .name |> withHeaderCell \"Name\" =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Nothing\n        , filtering = Maybe.Nothing\n        , headerCell = Maybe.Just \"Name\"\n        , footerCell = Maybe.Nothing\n        }\n",
+        "type": "String -> Table.Column datum -> Table.Column datum"
+      },
+      {
+        "name": "withSorting",
+        "comment": " Adds sorting to a Column\n\n    defaultColumn \"name\" .name |> withSorting (\\x y -> compare x.name y.name) =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Just (\\x y -> compare x.name y.name)\n        , filtering = Maybe.Nothing\n        , headerCell = Maybe.Nothing\n        , footerCell = Maybe.Nothing\n        }\n",
+        "type": "(datum -> datum -> Basics.Order) -> Table.Column datum -> Table.Column datum"
+      },
+      {
+        "name": "withSortingAndFiltering",
+        "comment": " Adds sorting and filtering to a Column\n\n    defaultColumn \"name\" .name |> withSortingAndFiltering (\\x y -> compare x.name y.name) { accessor = .name, label = \"Find Name\" } =\n        { id = \"name\"\n        , bodyCell = \"Jane Doe\"\n        , fixed = Maybe.Nothing\n        , sorting = Maybe.Just (\\x y -> compare x.name y.name)\n        , filtering = Maybe.Just { accessor = .name, label = \"Find Name\" }\n        , headerCell = Maybe.Nothing\n        , footerCell = Maybe.Nothing\n        }\n",
+        "type": "(datum -> datum -> Basics.Order) -> Table.Filtering datum -> Table.Column datum -> Table.Column datum"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

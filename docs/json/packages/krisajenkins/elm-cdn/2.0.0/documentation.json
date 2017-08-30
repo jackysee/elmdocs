@@ -1,0 +1,66 @@
+[
+  {
+    "name": "CDN",
+    "comment": " CDN provides handy links to the web CSS frameworks you want at-hand.\n\nTo use, just put the stylesheet you want in your top-level view function, like so:\n\n    import CDN exposing (bootstrap)\n\n    rootView model =\n        div []\n            [ bootstrap.css\n            , ...\n            ]\n\n# CSS Frameworks\n\nThese are frameworks that are more opinionated, meaning they tend to style things\nfor you in a default way and provide more structure.\n\n@docs bootstrap\n@docs skeleton\n@docs pure\n@docs foundation\n@docs bulma\n@docs wing\n\n# CSS Libraries\n\nThese are more \"mix and match\" libraries.\n\n@docs reset\n@docs fontAwesome\n@docs bass\n@docs colors\n@docs tachyons\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bass",
+        "comment": " [Bass 8.0.2](http://basscss.com/)\n> _\"Low-Level CSS Toolkit.\"_\n\nbasically is an implementation of [functional CSS](https://marcelosomers.com/writing/rationalizing-functional-css/).\n\n    import CDN exposing (bass)\n\n    rootView model =\n        div []\n            [ bass.css\n            , bass.buttonsCss\n            , ...\n            ]\n\nGood to use with [colors](#colors) to style buttons and other things.\n",
+        "type": "{ css : Html.Html msg, buttonsCss : Html.Html msg }"
+      },
+      {
+        "name": "bootstrap",
+        "comment": " [Bootstrap 3](http://getbootstrap.com/)\n> _\"Bootstrap is the most popular HTML, CSS, and JS framework for developing\nresponsive, mobile first projects on the web.\"_\n",
+        "type": "{ css : Html.Html msg, theme : Html.Html msg, js : Html.Html msg }"
+      },
+      {
+        "name": "bulma",
+        "comment": " [Bulma 0.1.2](http://bulma.io/)\n> _\"A modern CSS framework based on Flexbox\"_\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "colors",
+        "comment": " [Colors 2.2.0](http://clrs.cc/)\n> _\"Skinning your prototypes just got easier - colors.css is a collection of skin\n> classes to use while prototyping in the browser.\"_\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "fontAwesome",
+        "comment": " [FontAwesome 4](http://fontawesome.io/)\n> _\"The iconic font and CSS toolkit\"_\n(font icons)\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "foundation",
+        "comment": " [Foundation 6](http://foundation.zurb.com/)\n> _\"A Framework for any device, medium, and accessibility. Foundation is a family of\n> responsive front-end frameworks that make it easy to design beautiful responsive\n> websites, apps and emails that look amazing on any device. Foundation is\n> semantic, readable, flexible, and completely customizable. We’re constantly\n> adding new resources and code snippets, including these handy HTML templates\n> to help get you started!\"_\n",
+        "type": "{ css : Html.Html msg, js : Html.Html msg }"
+      },
+      {
+        "name": "pure",
+        "comment": " [Pure 0.6.0](http://purecss.io)\n> _\"A set of small, responsive CSS modules that you can use in every web project.\"_\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "reset",
+        "comment": " [Eric Meyer's CSS reset](http://meyerweb.com/eric/tools/css/reset/)\n> _\"The goal of a reset stylesheet is to reduce browser inconsistencies in things\n> like default line heights, margins and font sizes of headings, and so on.\"_\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "skeleton",
+        "comment": " [Skeleton 2](http://getskeleton.com/)\n> _\"A dead simple, responsive boilerplate.\"_\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "tachyons",
+        "comment": " [Tachyons 4.6.1](http://tachyons.io/)\n> _\"Create fast loading, highly readable, and 100% responsive interfaces with as\n> little css as possible.\"_\n\nalso is an implementation of [functional CSS](https://marcelosomers.com/writing/rationalizing-functional-css/).\n",
+        "type": "{ css : Html.Html msg }"
+      },
+      {
+        "name": "wing",
+        "comment": " [Wing 0.1.9](http://usewing.ml)\nMinimal CSS Framework\n",
+        "type": "{ css : Html.Html msg }"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,104 @@
+[
+  {
+    "name": "PriceChart",
+    "comment": " SVG price chart implementation in Elm.\n\n\n# Intitial\n\n@docs initialModel\n\n\n# Other\n\n@docs Model, Msg, priceChart, subscriptions, update\n\nTODO: Do this properly\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The model for price charts.\n",
+        "args": [],
+        "type": "{ prices : PriceChart.Types.PriceHistory , focus : Maybe.Maybe PriceChart.Focus , startDate : Date.Date , interval : Date.Extra.Interval , candlestickWidth : Float , candlestickPadding : Float , position : PriceChart.Position , drag : Draggable.State String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Messages used for the price chart implementation.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "initialModel",
+        "comment": " Create a default Model instance.\n",
+        "type": "PriceChart.Model"
+      },
+      {
+        "name": "priceChart",
+        "comment": " Render a price chart. This returns an SVG element but not entire SVG; you\nneed to embed this into an SVG.\n",
+        "type": "PriceChart.Model -> PriceChart.Types.ElementRect -> Svg.Svg PriceChart.Msg"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Subscriptions needed for full price-chart functionality (e.g. draggability).\n",
+        "type": "PriceChart.Model -> Platform.Sub.Sub PriceChart.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update function for the price-chart.\n",
+        "type": "PriceChart.Msg -> PriceChart.Model -> ( PriceChart.Model, Platform.Cmd.Cmd PriceChart.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "PriceChart.Types",
+    "comment": " Types used in the price chart.\n\n\n# Prices and actions\n\n@docs Price, PriceAction, PriceHistory\n\n\n# Price and action utilities\n\n@docs minPrice, maxPrice, actionsByDate, mergeActions, mergeHistory\n\n\n# Rendering\n\n@docs ElementRect\n\n",
+    "aliases": [
+      {
+        "name": "ElementRect",
+        "comment": " The bounding rect of a DOM element\n",
+        "args": [],
+        "type": "{ left : Float, right : Float, top : Float, bottom : Float }"
+      },
+      {
+        "name": "Price",
+        "comment": " The price of a security\n",
+        "args": [],
+        "type": "Float"
+      },
+      {
+        "name": "PriceAction",
+        "comment": " The stats for a price's action over some span of time.\n",
+        "args": [],
+        "type": "{ startDate : Date.Date , endDate : Date.Date , close : PriceChart.Types.Price , volume : Float , open : PriceChart.Types.Price , high : PriceChart.Types.Price , low : PriceChart.Types.Price }"
+      },
+      {
+        "name": "PriceHistory",
+        "comment": " A sequence of price actions, assumed to be in order from most recent to oldest.\n",
+        "args": [],
+        "type": "List PriceChart.Types.PriceAction"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "actionsByDate",
+        "comment": " Retrieve PriceActions from a history that cover a certain date.\n",
+        "type": "Date.Date -> PriceChart.Types.PriceHistory -> PriceChart.Types.PriceHistory"
+      },
+      {
+        "name": "maxPrice",
+        "comment": " Get the hightest price in a history.\n",
+        "type": "PriceChart.Types.PriceHistory -> Maybe.Maybe PriceChart.Types.Price"
+      },
+      {
+        "name": "mergeActions",
+        "comment": " Merge two PriceActions into a single PriceAction that represents the full\ninterval of both.\n",
+        "type": "PriceChart.Types.PriceAction -> PriceChart.Types.PriceAction -> PriceChart.Types.PriceAction"
+      },
+      {
+        "name": "mergeHistory",
+        "comment": " Merge all actions in a history into a single action\n",
+        "type": "PriceChart.Types.PriceHistory -> Maybe.Maybe PriceChart.Types.PriceAction"
+      },
+      {
+        "name": "minPrice",
+        "comment": " Get the lowest price in a history.\n",
+        "type": "PriceChart.Types.PriceHistory -> Maybe.Maybe PriceChart.Types.Price"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

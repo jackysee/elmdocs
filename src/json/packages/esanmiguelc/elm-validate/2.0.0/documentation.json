@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Validations",
+    "comment": " This library is inspired by ecto changeset validations\n\n\n# Result Context\n\n@docs ValidationResult\n\n\n# Functions:\n\n@docs beginValidation\n@docs validatePresenceOf\n@docs validateLengthOf\n@docs validateMatchOf\n@docs equals\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ValidationResult",
+        "comment": " A Validation result behaves very similarly to a Result, the main difference is that you can have an aggregation of all the errors instead of a single one.\n",
+        "args": [
+          "value",
+          "errorMsg"
+        ],
+        "cases": [
+          [
+            "Valid",
+            [
+              "value"
+            ]
+          ],
+          [
+            "Err",
+            [
+              "value",
+              "List errorMsg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "beginValidation",
+        "comment": " Wraps value in a ValidationResult.\n\n    (beginValidation {password = \"somepass\"}) == Valid {password = \"somepass\"}\n\n",
+        "type": "value -> Validations.ValidationResult value errorMsg"
+      },
+      {
+        "name": "equals",
+        "comment": " Validates equality between two values.\n\n    (beginValidation {password = \"somepass\"})\n    |> equals 8 8 \"Values are not the same\" == Err {password = \"somepass} [\"Values are not the same\"]\n\n",
+        "type": "a -> a -> errorMsg -> Validations.ValidationResult value errorMsg -> Validations.ValidationResult value errorMsg"
+      },
+      {
+        "name": "validateLengthOf",
+        "comment": " Validates the length of a string value.\n\n    (beginValidation {password = \"somepass\"})\n    |> validateLengthOf .password 8 \"Password is too short\" == Err {password = \"somepass} [\"Password is too short\"]\n\n",
+        "type": "(value -> String) -> Int -> errorMsg -> Validations.ValidationResult value errorMsg -> Validations.ValidationResult value errorMsg"
+      },
+      {
+        "name": "validateMatchOf",
+        "comment": " Validates a regex match of a value.\n\n    (beginValidation {password = \"somepass\"})\n    |> validateMatchOf .password (regex \"somepass\") \"Not in regex\" == Err {password = \"somepass} [\"Not in regex\"]\n\n",
+        "type": "(value -> String) -> Regex.Regex -> errorMsg -> Validations.ValidationResult value errorMsg -> Validations.ValidationResult value errorMsg"
+      },
+      {
+        "name": "validatePresenceOf",
+        "comment": " Validates the presence of a string value.\n\n    (beginValidation {password = \"somepass\"})\n    |> validatePresenceOf .password \"Password is not present\"\n\n",
+        "type": "(value -> String) -> errorMsg -> Validations.ValidationResult value errorMsg -> Validations.ValidationResult value errorMsg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

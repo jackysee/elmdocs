@@ -1,0 +1,125 @@
+[
+  {
+    "name": "QRCode",
+    "comment": " QR Code encoding and rendering.\n\n@docs QRCode\n\n\n# Encoding\n\n@docs encode, encodeWithECLevel\n\n\n# Rendering\n\n@docs toCanvas, toSvg, toString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "QRCode",
+        "comment": " QRCode type.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "encode",
+        "comment": " Transform a string into a result [Error](./QRCode-Error#Error)\nor a [QRCode](#QRCode) using [`ECLevel.Q`](./QRCode-ECLevel#ECLevel)\n(25% of codewords can be restored).\n",
+        "type": "String -> Result.Result QRCode.Error.Error QRCode.QRCode"
+      },
+      {
+        "name": "encodeWithECLevel",
+        "comment": " Transform a string with a given [EClevel](./QRCode-ECLevel#ECLevel)\ninto a result [Error](./QRCode-Error#Error) or a [QRCode](#QRCode).\n",
+        "type": "String -> QRCode.ECLevel.ECLevel -> Result.Result QRCode.Error.Error QRCode.QRCode"
+      },
+      {
+        "name": "toCanvas",
+        "comment": " Transform a QRCode into a canvas element.\n\n    qrCodeView : String -> Html msg\n    qrCodeView message =\n        QRCode.encode message\n            |> Result.map QRCode.toCanvas\n            |> Result.withDefault\n                (Html.text \"Error while encoding to QRCode.\")\n\n",
+        "type": "QRCode.QRCode -> Html.Html msg"
+      },
+      {
+        "name": "toString",
+        "comment": " Transform a QRCode into a string.\n\n    \"Hello World!\"\n        |> QRCode.encode\n        |> Result.map QRCode.toString\n        |> Result.withDefault \"Error while encoding to QRCode.\"\n\nReturns:\n\n    ■■■■■■■ ■■■■  ■■■■■■■\n    ■     ■ ■■■■  ■     ■\n    ■ ■■■ ■ ■■■■■ ■ ■■■ ■\n    ■ ■■■ ■ ■   ■ ■ ■■■ ■\n    ■ ■■■ ■ ■■■■  ■ ■■■ ■\n    ■     ■    ■  ■     ■\n    ■■■■■■■ ■ ■ ■ ■■■■■■■\n            ■ ■■\n     ■■ ■ ■■  ■   ■ ■■■■■\n    ■■ ■■■   ■■■■ ■■■  ■■\n     ■ ■■ ■■ ■■■■■ ■■■■■■\n     ■■      ■■■■   ■  ■\n    ■  ■ ■■■  ■■■■ ■■\n            ■■ ■■■    ■■\n    ■■■■■■■ ■ ■    ■■ ■■■\n    ■     ■  ■  ■  ■    ■\n    ■ ■■■ ■ ■■■     ■\n    ■ ■■■ ■   ■■  ■■■ ■■\n    ■ ■■■ ■ ■ ■ ■ ■ ■ ■ ■\n    ■     ■ ■  ■    ■  ■\n    ■■■■■■■   ■■■  ■   ■■\n\n",
+        "type": "QRCode.QRCode -> String"
+      },
+      {
+        "name": "toSvg",
+        "comment": " Transform a QRCode into a svg element.\n\n    qrCodeView : String -> Html msg\n    qrCodeView message =\n        QRCode.encode message\n            |> Result.map QRCode.toSvg\n            |> Result.withDefault\n                (Html.text \"Error while encoding to QRCode.\")\n\n**Tip**: You can determine the size of the generated svg setting\n`width` and `height` styles.\n\n",
+        "type": "QRCode.QRCode -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "QRCode.ECLevel",
+    "comment": "\n@docs ECLevel\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ECLevel",
+        "comment": " Error correction level. Provides the following error\ncorrection capability:\n\n- **L** (Low): 7% of codewords can be restored.\n- **M** (Medium): 15% of codewords can be restored.\n- **Q** (Quartile): 25% of codewords can be restored.\n- **H** (High): 30% of codewords can be restored.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "L",
+            []
+          ],
+          [
+            "M",
+            []
+          ],
+          [
+            "Q",
+            []
+          ],
+          [
+            "H",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "QRCode.Error",
+    "comment": "\n@docs Error\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " Possible errors.\n",
+        "args": [],
+        "cases": [
+          [
+            "AlignmentPatternNotFound",
+            []
+          ],
+          [
+            "InvalidNumericChar",
+            []
+          ],
+          [
+            "InvalidAlphanumericChar",
+            []
+          ],
+          [
+            "InvalidUTF8Char",
+            []
+          ],
+          [
+            "LogTableException",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "PolynomialMultiplyException",
+            []
+          ],
+          [
+            "PolynomialModException",
+            []
+          ],
+          [
+            "InputLengthOverflow",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

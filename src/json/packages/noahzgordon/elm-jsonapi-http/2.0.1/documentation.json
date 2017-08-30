@@ -1,0 +1,26 @@
+[
+  {
+    "name": "JsonApi.Http",
+    "comment": " A library for requesting resources from JSON API-compliant servers.\n    Intended to be used in conjunction with `elm-jsonapi`, which provides\n    serializers and helper functions.\n\n@docs getDocument, getPrimaryResource, getPrimaryResourceCollection\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "getDocument",
+        "comment": " Retreives a JSON API document from the given endpoint.\n",
+        "type": "String -> Http.Request JsonApi.Document"
+      },
+      {
+        "name": "getPrimaryResource",
+        "comment": " Retreives the JSON API resource from the given endpoint.\n    If there the payload is malformed or there is no singleton primary resource,\n    the error type will be BadPayload.\n",
+        "type": "String -> Http.Request JsonApi.Resource"
+      },
+      {
+        "name": "getPrimaryResourceCollection",
+        "comment": " Retreives the JSON API resource collection from the given endpoint.\n    If there the payload is malformed or there is no primary resource collection,\n    the error type will be BadPayload.\n",
+        "type": "String -> Http.Request (List JsonApi.Resource)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

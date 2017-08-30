@@ -1,0 +1,197 @@
+[
+  {
+    "name": "Alert",
+    "comment": " This is a basic alert message library. It shows and hides alerts based on time or user input.\n\n\n# Model\n\n@docs Alert, AlertType, Model, initModel\n\n\n# View\n\n@docs view\n\n\n# Subscriptions\n\n@docs subscriptions\n\n\n# State\n\n@docs Msg, update\n\n",
+    "aliases": [
+      {
+        "name": "Alert",
+        "comment": " This is the alert model. `untilRemove` specifies how long until the message will be automatically removed (a value of `-1` for will display it until it is removed manually). If `icon` is `False` then the alert icon will be hidden (this is only useful if you want to prevent the user from closing the alert).\n",
+        "args": [],
+        "type": "{ type_ : Alert.AlertType , message : String , untilRemove : Int , icon : Bool }"
+      },
+      {
+        "name": "Model",
+        "comment": " The model of all alerts, includes a dictionary of alerts, the next key to use and state for keeping track of animations.\n",
+        "args": [],
+        "type": "{ alerts : Dict.Dict Int Alert.Alert , nextKey : Int , useAnimations : Bool , height : Dict.Dict Int (Animation.Messenger.State Alert.Msg) , opacity : Dict.Dict Int (Animation.Messenger.State Alert.Msg) , padding : Dict.Dict Int (Animation.Messenger.State Alert.Msg) , remove : Dict.Dict Int Int , spinner : Dict.Dict Int Spinner.Model }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AlertType",
+        "comment": " The type of alert, determines which class will be attached to the alert. `Loading` will display a spinner instead of a close icon.\n",
+        "args": [],
+        "cases": [
+          [
+            "Info",
+            []
+          ],
+          [
+            "Success",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Error",
+            []
+          ],
+          [
+            "Loading",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " `ClearAll` will clear all alerts other than `Loading` alerts and `ForceClearAll` will clear all alerts including `Loading` alerts. To add an alert use `AddAlert`, to remove an alert use `RemoveAlert`. Do not use any of the other message types.\n",
+        "args": [],
+        "cases": [
+          [
+            "AddAlert",
+            [
+              "Alert.Alert"
+            ]
+          ],
+          [
+            "RemoveAlert",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ClearAll",
+            []
+          ],
+          [
+            "ForceClearAll",
+            []
+          ],
+          [
+            "Tick",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "OpacityAnim",
+            [
+              "Int",
+              "Animation.Msg"
+            ]
+          ],
+          [
+            "HeightAnim",
+            [
+              "Int",
+              "Animation.Msg"
+            ]
+          ],
+          [
+            "PaddingAnim",
+            [
+              "Int",
+              "Animation.Msg"
+            ]
+          ],
+          [
+            "SpinnerMsg",
+            [
+              "Int",
+              "Spinner.Msg"
+            ]
+          ],
+          [
+            "Hide",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "initModel",
+        "comment": " Initialize the model\n",
+        "type": "Bool -> Alert.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " The subscriptions takes the model and returns subscriptions for alerts\n",
+        "type": "Alert.Model -> Platform.Sub.Sub Alert.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "Alert.Msg -> Alert.Model -> ( Alert.Model, Platform.Cmd.Cmd Alert.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " The view takes the model and displays a container with all the alerts\n",
+        "type": "Alert.Model -> Html.Html Alert.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Alert.Stylesheets",
+    "comment": " This is some basic CSS for the alerts.\n\n\n# Namespace\n\n@docs alertNamespace\n\n\n# CSS\n\n@docs alertCss, CssIds, CssClasses\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "CssClasses",
+        "comment": " Classes used in the alerts\n",
+        "args": [],
+        "cases": [
+          [
+            "InfoAlert",
+            []
+          ],
+          [
+            "SuccessAlert",
+            []
+          ],
+          [
+            "WarningAlert",
+            []
+          ],
+          [
+            "ErrorAlert",
+            []
+          ],
+          [
+            "LoadingAlert",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "CssIds",
+        "comment": " Ids used in the alerts\n",
+        "args": [],
+        "cases": [
+          [
+            "AlertsContainer",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "alertCss",
+        "comment": " Basic Styles\n",
+        "type": "Css.Stylesheet"
+      },
+      {
+        "name": "alertNamespace",
+        "comment": " Namespace for alerts\n",
+        "type": "Html.CssHelpers.Namespace String class id msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "name": "LexicalRandom",
+    "comment": " Generate random names based on a lexicon.\n\n\n# Basics\n\n@docs fromString, generator\n\n\n# Advanced\n\nYou need to understand this stuff only if you want to dynamically add entries\nto the lexicon.\n\n@docs Lexicon, Fragment, Definition\n\n",
+    "aliases": [
+      {
+        "name": "Definition",
+        "comment": " A Definition is a List of Fragments used to generate a single name\n",
+        "args": [],
+        "type": "List LexicalRandom.Fragment"
+      },
+      {
+        "name": "Lexicon",
+        "comment": " The Lexicon is a Dict mapping an entry identifier to an Array of all the\nalternative Definitions that can be used to generate a name.\n",
+        "args": [],
+        "type": "Dict.Dict String (Array.Array LexicalRandom.Definition)"
+      }
+    ],
+    "types": [
+      {
+        "name": "Fragment",
+        "comment": " A fragment is used to generate a part of a name.\nIt can either be a constant String, either a reference to an lexicon entry.\n",
+        "args": [],
+        "cases": [
+          [
+            "Constant",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Key",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fromString",
+        "comment": " Parses a Lexicon from a multi-line string\n",
+        "type": "String -> LexicalRandom.Lexicon"
+      },
+      {
+        "name": "generator",
+        "comment": " The function takes:\n\n  - A filler String\n  - A Lexicon\n  - The name of an entry in the Lexicon\n\nand returns a random generator for the specified entry.\n\nThe filler string is used when some definition references a key\nthat does not exist in the Lexicon.\n\nThe filler function is also used to break possible infinite recursions caused by a key.\n\n    nameGenerator =\n        LexicalRandom.generator \"-\" englishGibberishLexicon \"properNoun\"\n\n    ( name, seed ) =\n        Random.step nameGenerator seed\n\n",
+        "type": "String -> LexicalRandom.Lexicon -> String -> Random.Generator String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,183 @@
+[
+  {
+    "name": "SvgAst.Render",
+    "comment": "\nModule that converts SvgAst to Svg\n\n@docs render\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "render",
+        "comment": " Render an SvgAst\n",
+        "type": "SvgAst.SvgAst -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SvgAst.Parser",
+    "comment": "\nModule that parses svg from a string\n\n@docs parse, parser\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse an SvgAst\n",
+        "type": "String -> Result.Result String (List SvgAst.SvgAst)"
+      },
+      {
+        "name": "parser",
+        "comment": " SvgAst Parser\n",
+        "type": "Combine.Parser s (List SvgAst.SvgAst)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SvgAst.Encode",
+    "comment": "\n# Encode an SvgAst\n\n@docs encode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "encode",
+        "comment": " Encode an SvgAst\n",
+        "type": "SvgAst.SvgAst -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SvgAst.Decode",
+    "comment": "\n# Decode an SvgAst\n\n@docs decode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decode an SvgAst\n",
+        "type": "Json.Decode.Decoder SvgAst.SvgAst"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SvgAst",
+    "comment": "\n# SvgAst\n\nModule for parsing and building up an Ast of an SVG. Can also serialize and deserialize to JSON.\n\n@docs Attributes, DElement, Key, SvgAst, Value, map, changeAttribute, fold, getStringAttribute, updateAttribute, getAttributeString\n",
+    "aliases": [
+      {
+        "name": "Key",
+        "comment": " Key of an attribute\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Attributes",
+        "comment": " Svg Attribute\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "DElement",
+        "comment": " D attribute in path elements\n",
+        "args": [],
+        "cases": [
+          [
+            "M",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "L",
+            [
+              "Float",
+              "Float"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "SvgAst",
+        "comment": " SvgAst type\n",
+        "args": [],
+        "cases": [
+          [
+            "Tag",
+            [
+              "SvgAst.TagName",
+              "Dict.Dict SvgAst.Key SvgAst.Value",
+              "List SvgAst.SvgAst"
+            ]
+          ],
+          [
+            "Body",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Comment",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Value",
+        "comment": " Value of an attribute\n",
+        "args": [],
+        "cases": [
+          [
+            "D",
+            [
+              "List SvgAst.DElement"
+            ]
+          ],
+          [
+            "Value",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "changeAttribute",
+        "comment": " Change an attribute of an SvgAst\n",
+        "type": "( SvgAst.Key, SvgAst.Value ) -> SvgAst.SvgAst -> SvgAst.SvgAst"
+      },
+      {
+        "name": "fold",
+        "comment": " fold an SvgAst\n",
+        "type": "(SvgAst.SvgAst -> a -> a) -> a -> SvgAst.SvgAst -> a"
+      },
+      {
+        "name": "getAttributeString",
+        "comment": " Get a string attribute as a string\n",
+        "type": "String -> SvgAst.SvgAst -> Maybe.Maybe String"
+      },
+      {
+        "name": "getStringAttribute",
+        "comment": " Get a string attribute as a string\n",
+        "type": "String -> Dict.Dict SvgAst.Key SvgAst.Value -> Maybe.Maybe String"
+      },
+      {
+        "name": "map",
+        "comment": " map an SvgAst\n",
+        "type": "(SvgAst.SvgAst -> SvgAst.SvgAst) -> SvgAst.SvgAst -> SvgAst.SvgAst"
+      },
+      {
+        "name": "updateAttribute",
+        "comment": " Update an attribute of an SvgAst\n",
+        "type": "SvgAst.Key -> (SvgAst.Value -> SvgAst.Value) -> SvgAst.SvgAst -> SvgAst.SvgAst"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

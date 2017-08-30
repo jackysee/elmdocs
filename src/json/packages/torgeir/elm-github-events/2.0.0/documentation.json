@@ -1,0 +1,139 @@
+[
+  {
+    "name": "Github",
+    "comment": " This library fetches public github events for users using the github api.\n\n\n# Functions\n\n@docs fetchAllEvents\n\n\n# Errors\n\n@docs ApiError\n\n\n# Query types\n\n@docs Username\n\n\n# Response types\n\n@docs Events, Event, EventActor, EventRepo, EventAction, PullRequest\n\n",
+    "aliases": [
+      {
+        "name": "ApiError",
+        "comment": " Error response returned when api calls fail\n",
+        "args": [],
+        "type": "Http.Error"
+      },
+      {
+        "name": "Event",
+        "comment": " Event type returned from the api\n",
+        "args": [],
+        "type": "{ id : String , action : Github.EventAction , created_at : String , actor : Github.EventActor , repo : Github.EventRepo }"
+      },
+      {
+        "name": "EventActor",
+        "comment": " EventActor type that states who triggered the event\n",
+        "args": [],
+        "type": "{ display_login : String, url : String, avatar_url : String }"
+      },
+      {
+        "name": "EventRepo",
+        "comment": " EventRepo type for the repo that has been acted on and its url'en\n",
+        "args": [],
+        "type": "{ name : String, url : String }"
+      },
+      {
+        "name": "Events",
+        "comment": " Events returned from the api\n",
+        "args": [],
+        "type": "List Github.Event"
+      },
+      {
+        "name": "PullRequest",
+        "comment": " PullRequest type with extra info about pull requests\n",
+        "args": [],
+        "type": "{ action : String, number : Int, url : String, title : String }"
+      },
+      {
+        "name": "Username",
+        "comment": " Username query type\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "EventAction",
+        "comment": " EventAction types that represent the action that happened in the event api\n",
+        "args": [],
+        "cases": [
+          [
+            "EventActionPush",
+            [
+              "Github.EventActionPushPayload"
+            ]
+          ],
+          [
+            "EventActionFork",
+            []
+          ],
+          [
+            "EventActionPullRequestReviewComment",
+            [
+              "Github.Comment",
+              "Github.PullRequest"
+            ]
+          ],
+          [
+            "EventActionPullRequest",
+            [
+              "Github.PullRequest"
+            ]
+          ],
+          [
+            "EventActionIssueComment",
+            [
+              "Github.IssueComment"
+            ]
+          ],
+          [
+            "EventActionIssue",
+            [
+              "Github.IssueAction"
+            ]
+          ],
+          [
+            "EventActionCommitComment",
+            [
+              "Github.Comment"
+            ]
+          ],
+          [
+            "EventActionWatch",
+            []
+          ],
+          [
+            "EventActionDelete",
+            [
+              "Github.EventActionDeletePayload"
+            ]
+          ],
+          [
+            "EventActionMember",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "EventActionCreate",
+            [
+              "Maybe.Maybe String",
+              "String",
+              "Maybe.Maybe String"
+            ]
+          ],
+          [
+            "EventActionUnknown",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fetchAllEvents",
+        "comment": " Fetch all github events for a list of string usernames\n",
+        "type": "(Result.Result Http.Error Github.Events -> msg) -> List String -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

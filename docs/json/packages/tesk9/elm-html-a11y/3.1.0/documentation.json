@@ -1,0 +1,755 @@
+[
+  {
+    "name": "Html.A11y",
+    "comment": "\n\n\n## Inputs\n\nInputs defined in this library are offered in three varieties: left-labeled, right-labeled, and featuring an invisible-label.\nInvisible-labeled views require an id.\n\n\n### Text Inputs\n\n@docs textLeftLabeled, textRightLabeled, textInvisibleLabel\n\n\n### Radio Inputs\n\n@docs radioLeftLabeled, radioRightLabeled, radioInvisibleLabel\n\n\n### CheckBox Inputs\n\n@docs checkBoxLeftLabeled, checkBoxRightLabeled, checkBoxInvisibleLabel\n\n\n## Tabs\n\nTogether, `tabList`, `tab`, and `tabPanel` describe the pieces of a tab component view.\n\n    import Html exposing (text)\n    import Html.A11y exposing (tab, tabList, tabPanel)\n    import Html.Attributes\n    import Html.Attributes.A11y as A11yAttributes\n\n    view : Html msg\n    view =\n        tabList\n            [ id \"tab-list\" ]\n            [ tab\n                [ id \"tab-1\"\n                , A11yAttributes.selected True\n                , A11yAttributes.controls \"panel-1\"\n                ]\n                [ text \"Tab One\" ]\n            , tab\n                [ id \"tab-2\"\n                , A11yAttributes.selected False\n                , A11yAttributes.controls \"panel-1\"\n                ]\n                [ text \"Tab Two\" ]\n            , tabPanel\n                [ id \"panel-1\"\n                , A11yAttributes.labelledBy \"tab-1\"\n                , A11yAttributes.hidden False\n                , Html.Attributes.hidden False\n                ]\n                [ text \"Panel One Content\" ]\n            , tabPanel\n                [ id \"panel-2\"\n                , A11yAttributes.labelledBy \"tab-2\"\n                , A11yAttributes.hidden True\n                , Html.Attributes.hidden True\n                ]\n                [ text \"Panel Two Content\" ]\n            ]\n\nFor a more fully-fledged example using these helpers check out [elm-tabs](http://package.elm-lang.org/packages/tesk9/elm-tabs/latest).\n\n@docs tabList, tab, tabPanel\n\n\n## Images\n\n@docs img, decorativeImg, figure\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "checkBoxInvisibleLabel",
+        "comment": " Construct a check box with an invisible label.\n\n    checkBoxInvisibleLabel \"checkbox-id\" \"Checkbox value\" (Just False) [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> String -> Maybe.Maybe Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "checkBoxLeftLabeled",
+        "comment": " Construct a left-labeled check box input.\n\n    checkBoxLeftLabeled \"This is the actual value of the check box.\" (Just True) [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> Maybe.Maybe Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "checkBoxRightLabeled",
+        "comment": " Construct a right-labeled check box input.\n\n    checkBoxRightLabeled  \"This is the actual value of the checkBox.\" (Just True) [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> Maybe.Maybe Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "decorativeImg",
+        "comment": " Use this tag when the image is decorative or provides redundant information. Read through [the w3 decorative image tutorial](https://www.w3.org/WAI/tutorials/images/decorative/) to learn more.\n\n    decorativeImg [ src \"smiling_family.jpg\" ]\n\n",
+        "type": "List (Html.Attribute msg) -> Html.Html msg"
+      },
+      {
+        "name": "figure",
+        "comment": " Adds the group role to a figure.\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "img",
+        "comment": " Use this tag when the image provides information not expressed in the text of the page.\nWhen images are used to express the purpose of a button or link, aim for alternative text that encapsulates the function of the image.\n\nRead through [the w3 informative image tutorial](https://www.w3.org/WAI/tutorials/images/informative/) and the [the w3 functional image tutorial](https://www.w3.org/WAI/tutorials/images/functional/) to learn more.\n\nFor graphs and diagrams, see `figure` and `longDesc`.\n\n    img \"Bear rubbing back on tree\" [ src \"bear.png\" ]\n\n",
+        "type": "String -> List (Html.Attribute msg) -> Html.Html msg"
+      },
+      {
+        "name": "radioInvisibleLabel",
+        "comment": " Construct a radio button with an invisible label.\n\n    radioInvisibleLabel \"best-input-everrr\" \"This is the actual value of the radio.\" [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> String -> String -> Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "radioLeftLabeled",
+        "comment": " Construct a left-labeled radio input.\n\n    radioLeftLabeled \"radio_name\" \"This is the actual value of the radio.\" True [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> String -> Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "radioRightLabeled",
+        "comment": " Construct a right-labeled radio input.\n\n    radioRightLabeled  \"radio_name\" \"This is the actual value of the radio.\" True [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> String -> Bool -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "tab",
+        "comment": " Create a tab. This is the part that you select in order to change panel views.\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tabList",
+        "comment": " Create a tablist. This is the outer container for a list of tabs.\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "tabPanel",
+        "comment": " Create a tab panel.\n\n    tabPanel [] [ h3 [] [ text \"Panel Header\" ], text \"Panel Content\" ]\n\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "textInvisibleLabel",
+        "comment": " Construct a text input with an invisible label.\n\n    textInvisibleLabel \"best-input-everrr\" \"This appears in the text input.\" [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> String -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "textLeftLabeled",
+        "comment": " Construct a left-labeled text input.\n\n    textLeftLabeled \"This appears in the text input.\" [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "textRightLabeled",
+        "comment": " Construct a right-labeled text input.\n\n    textRightLabeled \"This appears in the text input.\" [] <| text \"I'm the label!\"\n\n",
+        "type": "String -> List (Html.Attribute msg) -> Html.Html msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Html.Attributes.A11y",
+    "comment": "\n\n\n## Hiding content\n\nFor more information on hiding/semi-hiding elements, please see [the a11y project.](http://a11yproject.com/posts/how-to-hide-content/)\n\n@docs invisible\n\n\n## Landmark\n\n[On page regions.](https://www.w3.org/TR/WCAG20-TECHS/ARIA11.html)\n\nLandmarks help your users to navigate your site by giving them \"landmarks\" to\nthe regions they might want to see. Are they trying the `search` the site? Do\nthey want to access the `main` content? Do they want information about the content,\nlike copyright and legal notices--`contentInfo`, if you will?\n\nLandmarks keep your users from being overwhelmed by a slew of information to sift through\nor from being bored by need to tab through the same old set of unlabeled links on\nevery single page of your site.\n\nGenerally, these landmark tags are implicit in HTML5. The default landmark roles\nare specified [here](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/HTML5.html).\n`search` does not have a corresponding HTML5 tag.\n\n@docs banner, complementary, contentInfo, form, main_, navigation, search, application, region\n\n\n## Elements\n\n\n### General\n\n@docs article, comboBox, definition, directory, document, img, link, math, note\n\n\n### Dialogs\n\n@docs alertDialog, dialog\n\n\n### Grids\n\n@docs columnHeader, grid, gridCell, row, rowGroup, rowHeader\n\n\n### Grouping\n\n@docs group, radioGroup\n\n\n### Heading\n\n@docs heading\n\n\n### Inputs\n\n@docs button, checkBox, option, radio, textBox\n\n\n### Lists\n\n@docs list, listBox, listItem\n\n\n### Live Regions\n\n@docs alert, log, marquee, timer, status\n\n\n### Menus\n\n@docs menu, menuBar, menuItem, menuItemCheckBox, menuItemRadio\n\n\n### Range-y widgets\n\n@docs progressBar, scrollBar, separator, slider, spinButton\n\n\n### Tabs\n\n@docs tab, tabList, tabPanel\n\n\n### Tools\n\n@docs toolBar, toolTip\n\n\n### Trees\n\n@docs tree, treeGrid, treeItem\n\n\n## Other\n\n@docs presentation\n\n\n## Widget States and Properties\n\nSome of these are also globally available, including: `busy`, `disabled`, `grabbed`, `hidden`, `invalid`\n\n\n### Page Hierarchy\n\n@docs level\n\n\n### State\n\n\n#### Inputs\n\n@docs required\n\n\n##### Button\n\n@docs pressed\n\n\n##### TextBox\n\n@docs multiLine\n\n\n##### Auto-complete behavior\n\n@docs autoCompleteInline, autoCompleteList, autoCompleteBoth\n\nSee [the autocomplete spec](https://www.w3.org/TR/wai-aria-1.1/#aria-autocomplete).\n\n\n##### Selection\n\n@docs checked, selected, indeterminate\n\n\n#### Validity\n\n@docs invalid, invalidGrammar, invalidSpelling\n\n\n### Interactability\n\n@docs expanded, hidden, readOnly, disabled\n\n\n### Pop-Ups\n\n@docs hasMenuPopUp, hasListBoxPopUp, hasTreePopUp, hasGridPopUp, hasDialogPopUp\n\nPop-ups are supported for all elements (but not meant for use on tooltips).\n\nThe pop-up itself needs to have a containing element with one of these roles:\n`menu`, `listbox`, `tree`, `grid`, or `dialog`, and the pop-up value must match.\nThat is, use `hasMenuPopUp` if the pop-up container has a role of `menu`.\n\nSee [the spec](https://www.w3.org/TR/wai-aria-1.1/#aria-haspopup).\n\n\n### Orientation and Range Widgets\n\n@docs orientationHorizontal, orientationVertical, valueMin, valueMax, valueNow, valueText\n\n\n### Table Sort-by-column\n\n@docs sortAscending, sortDescending, sortCustom, sortNone\n\n\n### Misc\n\n@docs multiSelectable\n\n\n## Aria\n\n@docs indeterminate, activeDescendant, controls\n\n\n### Providing More Info\n\n@docs longDescription, details, describedBy, label, labelledBy, labeledBy\n@docs modal, keyShortcuts, roleDescription\n\n\n### Live Region Attributes\n\nLearn more about how to use live regions [here](https://www.w3.org/TR/wai-aria-practices-1.1/#liveprops).\n@docs atomic, busy, livePolite, liveAssertive\n\n\n### Relevant\n\n@docs relevantAdditions, relevantAdditionsText, relevantAll, relevantRemovals, relevantText\n\n\n### Navigation and Flow\n\n@docs flowTo\n\n\n### Textbox Related\n\n@docs placeholder\n\n\n### Table Related\n\n@docs colCount, colIndex, colSpan, rowCount, rowIndex, rowSpan\n\n\n### Set-related\n\n@docs setSize, posInSet\n\n\n### Current\n\n@docs currentItem, currentPage, currentStep, currentLocation, currentDate, currentTime\n\n@docs errorMessage\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "activeDescendant",
+        "comment": " Supported in container-y roles: `application`, `composite`, `group`, `textbox`,\n`comboBox`, `grid`, `listBox`, `menu`, `menuBar`, `radioGroup`, `row`, `searchBox`,\n`select`, `spinButton`, `tabList`, `toolBar`, `tree`, and `treeGrid`.\n\nIdentifies the currently-active element.\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "alert",
+        "comment": " Add `role=\"alert\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "alertDialog",
+        "comment": " Add `role=\"alertdialog\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "application",
+        "comment": " Declare a region as a web application.\nBe careful with this one--see <https://www.w3.org/TR/WCAG20-TECHS/ARIA11.html>.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "article",
+        "comment": " Add `role=\"article\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "atomic",
+        "comment": " Supported for all elements.\n\nThis property indicates that a region is live, and may change even when the\nregion doesn't have focus. When `True`, all the contents of the element will be\npresented to the user.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "autoCompleteBoth",
+        "comment": " Available on `comboBox` or `textbox`.\nUse when there's a suggestion for completing the field when there's both\ninline autocomplete and list autocomplete occurring at once.\n\nBe sure to indicate that the auto-completed text is selected.\n\nSee [the autocomplete spec](https://www.w3.org/TR/wai-aria-1.1/#aria-autocomplete).\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "autoCompleteInline",
+        "comment": " Available on `comboBox` or `textbox`.\nUse when there's a suggestion for completing the field that shows up\nin the line that the user is completing.\n\nBe sure to indicate that the auto-completed text is selected.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "autoCompleteList",
+        "comment": " Available on `comboBox` or `textbox`.\nUse when there's a suggestion for completing the field that shows up as a list\nof options from which the user can pick.\n\nBe sure to indicate that the auto-completed text is selected.\n\nSee [the autocomplete spec](https://www.w3.org/TR/wai-aria-1.1/#aria-autocomplete).\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "banner",
+        "comment": " This banner should have the page title in it. In HTML5, the `header` element\ngenerally is implicitly a `banner`. (For specifics on what DOM relationships will\naffect this default behavior, please check out [W3](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/banner.html).)\n\n    import Html exposing (div, h1, text)\n    import Html.A11y exposing (img)\n    import Html.A11y.Attributes exposing (banner)\n    import Html.Attributes exposing (src)\n\n\n    div\n        [ banner ]\n        [ h1 [] [ text \"Such Site!\"]\n        , img \"Such Logo!\" [ src \"logo.png\" ]\n        ]\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "busy",
+        "comment": " Supported for all elements.\n\nWhen set to `True`, this is the aria equivalent of a loading spinner--indicates\nthat stuff is changing/is not ready for interaction/reading-off yet.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "button",
+        "comment": " Add `role=\"button\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "checkBox",
+        "comment": " Add `role=\"checkbox\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "checked",
+        "comment": " Available on `checkbox`, `option`, `radio`, `switch`\n\nCheck boxes can be checked (`Just True`), unchecked (`Just False`), or indeterminate (`Nothing`).\nOther elements won't support tri-state checkedness.\n\nSee [the checked spec](https://www.w3.org/TR/wai-aria-1.1/#aria-checked).\n\n",
+        "type": "Maybe.Maybe Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "colCount",
+        "comment": " Supported by `table`, `grid`, `treegrid`.\n\nDeclares the number of columns in a grid in which not all of the columns are\ndisplayed. (If all columns are present--skip using this.)\n\n`-1` indicates total column number is unknown.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "colIndex",
+        "comment": " Supported by `cell`, `row`, `columnHeader`, `gridCell`, and `rowHeader`.\n\nIndexing begins from 1, NOT 0. Plus, the colIndex should not be greater than the `colCount`!\nIf a cell stretches across multiple columns, use the starting column index and `colSpan`.\n\nThe simplest rule is to put the `colIndex` on every child of a `row`.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "colSpan",
+        "comment": " Supported by `cell`, `columnHeader`, `gridCell`, and `rowHeader`.\n\nIndicate how many columns-wide a cell is.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "columnHeader",
+        "comment": " Add `role=\"columnheader\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "comboBox",
+        "comment": " Add `role=\"combobox\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "complementary",
+        "comment": " \"Complements\" the main content. If there are more than one complementary elements\non the page, please be sure to use `labeledBy` to point to the heading of each\ncomplementary element.\n\nThe HTML5 `aside` tag has this role by default (you still need to use `labeledBy`\nif there are more than one asides!).\n\nCheck out [W3's docs for `complementary`](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/complementary.html)--\nnote that you can toggle the \"Show Landmarks\" button at the top of the page\nto see a real example of using the complementary role!\n\n    import Html.Attributes.A11y exposing (complementary, labeledBy)\n\n    div []\n        [ div\n            [ complementary, labeledBy \"extra-thoughts\" ]\n            [ h2 [ id \"extra-thoughts\"] [ text \"Extra thoughts...\"]\n            , text \"some content\"\n            ]\n        , div\n            [ complementary, labeledBy \"related-docs\" ]\n            [ h2 [ id \"related-docs\"] [ text \"Related Documentation\"] ]\n        ]\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "contentInfo",
+        "comment": " Copyrights, privacy statements, etc. There ought only be one element with the\ncontent info role per page.\n\nYou may already have a content info element role fulfilled\non your page via the HTML5 `footer` element--as long as its context is the `body`, not\na `section` or `main` or what-have-you (see [W3](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/contentinfo.html) for the full list).\n\n    div [ contentInfo ]\n        [ h2 []\n            [ text \"Link to the Privacy Statement You Probably Really Should Read Someday\" ]\n        ]\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "controls",
+        "comment": " Creates aria controls attribute. Pass the unique string id of whatever is being controlled.\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "currentDate",
+        "comment": " Supported by all elements.\n\nAs in a calendar widget.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "currentItem",
+        "comment": " Supported by all elements.\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "currentLocation",
+        "comment": " Supported by all elements.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "currentPage",
+        "comment": " Supported by all elements.\n\nIndicate that a link in a nav or list is the current location.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "currentStep",
+        "comment": " Supported by all elements.\n\nIndicate which step in a step-based flow is the current one.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "currentTime",
+        "comment": " Supported by all elements.\n\nAs in a timepicker widget.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "definition",
+        "comment": " Add `role=\"definition\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "describedBy",
+        "comment": " Supported by all elements.\n\nKind of a more-verbose version of `labelledBy`. Pass it a list of ids\nof elements that describe the given element.\n\n",
+        "type": "List String -> Html.Attribute msg"
+      },
+      {
+        "name": "details",
+        "comment": " Supported by all elements.\n\nRefer to a single extended description section--maybe a couple of paragraphs\nand a chart. Pass in the section's id.\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "dialog",
+        "comment": " Add `role=\"dialog\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "directory",
+        "comment": " Add `role=\"directory\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "disabled",
+        "comment": " Supported for all elements. Elements are not disabled (are enabled) by default.\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "document",
+        "comment": " Add `role=\"document\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "errorMessage",
+        "comment": " Supported by all elements.\n\nReference the element that has error details. e.g., if you've got an input field\nthat's invalid, add `errorMessage` to the input with the id of whatever element\nis telling the user in what way their submission is wrong.\n\n    input [ invalid True, errorMessage \"error-message-id\" ] []\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "expanded",
+        "comment": " Available on `button`, `comboBox`, `document`, `link`, `section`, `sectionHead`, and `window`.\n\nTrickily, this attribute can be applied to either an element that is itself\nexpanded/collapsed, OR to an elment it controls that is either expanded/collapsed.\nIn the latter case, throw on a `controls` attribute as well to clarify the relationship.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "flowTo",
+        "comment": " Supported by all elements.\n\nProvide an alternative document reading order and offer navigation to the\nelements referenced in the passed-in list of ids.\n\n",
+        "type": "List String -> Html.Attribute msg"
+      },
+      {
+        "name": "form",
+        "comment": " A form container. The HTML5 alternative is to use a `form` element with a `name`.\n\nFor examples, please see [W3](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/form.html).\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "grid",
+        "comment": " Add `role=\"grid\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "gridCell",
+        "comment": " Add `role=\"gridcell\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "group",
+        "comment": " Define a set of controls. (for a group of radio inputs, see radioGroup).\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hasDialogPopUp",
+        "comment": " Indicate that interaction with this element can trigger a `dialog` pop-up.\n\nBe careful while managing focus and triggering.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hasGridPopUp",
+        "comment": " Indicate that interaction with this element can trigger a `grid` pop-up.\n\nBe careful while managing focus and triggering.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hasListBoxPopUp",
+        "comment": " Indicate that interaction with this element can trigger a `listBox` pop-up.\n\nBe careful while managing focus and triggering.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hasMenuPopUp",
+        "comment": " Indicate that interaction with this element can trigger a `menu` pop-up.\n\nBe careful while managing focus and triggering.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hasTreePopUp",
+        "comment": " Indicate that interaction with this element can trigger a `tree` pop-up.\n\nBe careful while managing focus and triggering.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "heading",
+        "comment": " Prefer using `h1`, `h2`, `h3`, `h4`, `h5`, and `h6`.\nReally this attribute should only be necessary if you need an `h7`-type heading.\n\n    div [ heading, level 7 ] []\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "hidden",
+        "comment": " ",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "img",
+        "comment": " Add `role=\"img\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "indeterminate",
+        "comment": " Sets the indeterminate value to be true.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "invalid",
+        "comment": " Supported for all elements.\n\nFor invalid grammar or spelling, please see `invalidGrammar` and `invalidSpelling` respectively.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "invalidGrammar",
+        "comment": " Supported for all elements.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "invalidSpelling",
+        "comment": " Supported for all elements.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "invisible",
+        "comment": " Makes content invisible without making it inaccessible.\n\n    label [ invisible ] [ text \"Screen readers can still read me!\" ]\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "keyShortcuts",
+        "comment": " Supported by all elements.\n\nKeyboard shortcuts!!! Pass in a list of keyboard shortcuts. See [recommendations](https://www.w3.org/TR/wai-aria-practices-1.1/#kbd_shortcuts)\non how to make good shortcuts.\n\n    keyShortcuts [ \"Alt+Shift+P\", \"Control+F\" ]\n\n",
+        "type": "List String -> Html.Attribute msg"
+      },
+      {
+        "name": "label",
+        "comment": " Supported for all elements.\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "labeledBy",
+        "comment": " Creates aria labelledby attribute. Pass the unique string id of the labelling element.\n`labeledBy` and `labelledBy` are identical.\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "labelledBy",
+        "comment": " Creates aria labelledby attribute. Pass the unique string id of the labelling element.\n`labeledBy` and `labelledBy` are identical.\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "level",
+        "comment": " Supported for `grid`, `heading`, `listItem`, `row`, and `tabList`.\n\nThis attribute is about hierarchy--how many \"levels\" deep is an element? Please\nrefer to the [documentation](https://www.w3.org/TR/wai-aria-1.1/#aria-level) to get a better sense of when to use.\n\n    h7 attributes =\n        div (heading :: level 7 :: attributes)\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "link",
+        "comment": " Add `role=\"link\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "list",
+        "comment": " Add `role=\"list\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "listBox",
+        "comment": " Add `role=\"listbox\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "listItem",
+        "comment": " Add `role=\"listitem\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "liveAssertive",
+        "comment": " Supported by all elements.\n\nUpdates to the region will cause the assistive technologies to immediately\ninterrupt the user with the big news.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "livePolite",
+        "comment": " Supported by all elements.\n\nWhen the region's contents change, assistive technologies will wait for a good\nmoment to interrupt and do so politely with the update.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "log",
+        "comment": " Add `role=\"log\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "longDescription",
+        "comment": " Creates the longDesc attribute with the given url, which should point to a text description of the content. This attribute is only supported on img tags.\n\n    Html.A11y.img \"Growth Chart in Some Sweet Unit (Quarter 4)\" [ longDescription \"/quarter_4_summary#Growth\" ]\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "main_",
+        "comment": " Main content in a document. (There should only be one--if you require more than\none element with role main, make sure each is labeled. See [W3](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/main.html).)\n\nHTML5's `main` tag is implicitly role `main`.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "marquee",
+        "comment": " Add `role=\"marquee\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "math",
+        "comment": " Add `role=\"math\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "menu",
+        "comment": " Add `role=\"menu\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "menuBar",
+        "comment": " Add `role=\"menubar\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "menuItem",
+        "comment": " Add `role=\"menuitem\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "menuItemCheckBox",
+        "comment": " Add `role=\"menuitemcheckbox\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "menuItemRadio",
+        "comment": " Add `role=\"menuitemradio\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "modal",
+        "comment": " Supported by `window`, `alert`, and `alertDialog`.\n\nIndicate that a modal is showing and the rest of the page contents are not\ninteractable.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "multiLine",
+        "comment": " Supported for `textbox` only.\n\nIndicate whether the `textbox` is for multi-line inputs or single-line inputs.\n\nCareful of default keyboard behavior when coupling this property with text inputs,\nwhich by default submit their form group on enter.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "multiSelectable",
+        "comment": " Supported on `grid`, `listBox`, `tabList`, `tree`. (However, what would it mean\nfor a `tabList`, say, to have multiple selectable descendants?)\n\nWhen true, users are not restricted to selecting only one selectable descendant at a time.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "navigation",
+        "comment": " Navigation--wrap lists of links intended to help your users navigate your site\nin an element with this role or use HTML5's `nav` tag.\n\nIf there's more than one `nav` list on a given page, please make sure that the\nnavigation is labeled (what kinds of links should your users expect to find in\nthis list?). For examples of how to do this using the `labeledBy` property,\ncheck out [W3](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/navigation.html).\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "note",
+        "comment": " Add `role=\"note\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "option",
+        "comment": " Add `role=\"option\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "orientationHorizontal",
+        "comment": " Supported on roles with some sense of inherent orientation:\n`progressBar`, `scrollbar`, `select`, `separator`, `slider`, `tabList`, `toolBar`\n\nCareful: default behavior is inconsistent across those roles.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "orientationVertical",
+        "comment": " Supported on roles with some sense of inherent orientation:\n`progressBar`, `scrollbar`, `select`, `separator`, `slider`, `tabList`, `toolBar`\n\nCareful: default behavior is inconsistent across those roles.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " Supported by `textbox` and `searchbox`.\n\nProvide a hint about an expected value.\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "posInSet",
+        "comment": " Supported by list-y elements: `article`, `listItem`, `menuItem`, `option`,\n`radio`, `tab`, `menuitemcheckbox`, `menuitemradio`, and `treeItem`.\n\nOnly necessary when not all of the items in the set are in the DOM. Use with `setSize`.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "presentation",
+        "comment": " Sets role presentation.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "pressed",
+        "comment": " Supported on `button`.\n\nUse `pressed` when describing a toggle button--a button that can be \"toggled\" between\nan on state and an off state (or an on state, an indeterminate state, and an off state).\n\nPlease check out these [examples](https://www.w3.org/TR/2016/WD-wai-aria-practices-1.1-20160317/examples/button/button.html)\nas well.\n\n    button\n        [ pressed <| Just True ]\n        [ text \"This button should be styled for site viewers such that it's clear it's pressed!\" ]\n\n",
+        "type": "Maybe.Maybe Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "progressBar",
+        "comment": " Add `role=\"progressbar\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "radio",
+        "comment": " Add `role=\"radio\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "radioGroup",
+        "comment": " Define a set of radio-controls.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "readOnly",
+        "comment": " Supported on `checkBox`, `comboBox`, `grid`, `gridCell`, `listBox`,\n`radioGroup`, `slider`, `spinButton`, and `textBox`.\n\nIndicates read-only status of a widget, although normal navigation rules and\ncopying behavior should apply. (Read: `readOnly` elements are navigable but\nunchangeable, and `disabled` elements are neither navigable nor unchangebale).\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "region",
+        "comment": " Prefer the other Landmark options to `region`. Be sure to add a name when using this attribute!\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "relevantAdditions",
+        "comment": " Supported by live regions.\n\nKeep track of additions to the live region.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "relevantAdditionsText",
+        "comment": " Supported by live regions.\n\nKeep track of node additions to the live region and text additions.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "relevantAll",
+        "comment": " Supported by live regions.\n\nKeep track of everything to occur in the live region. Use sparingly!\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "relevantRemovals",
+        "comment": " Supported by live regions.\n\nKeep track of text or node removals. Use sparingly!\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "relevantText",
+        "comment": " Supported by live regions.\n\nKeep track of text additions to the live region.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "required",
+        "comment": " Supported by `comboBox`, `gridCell`, `listBox`, `radioGroup`, `spinButton`, `textBox`, `tree`\n\nIndicate whether user input is or is not required on a field for valid form submission.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "roleDescription",
+        "comment": " Supported by all elements.\n\nProvide human-readable description of the role of an element. Should be used\nalongside an actual role--this is supplementary information.\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "row",
+        "comment": " Add `role=\"row\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "rowCount",
+        "comment": " Supported by `table`, `grid`, `treegrid`.\n\nDeclares the number of rows in a grid in which not all of the rows are\ndisplayed. (If all rows are present--skip using this.)\n\n`-1` indicates total row number is unknown.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "rowGroup",
+        "comment": " Add `role=\"rowgroup\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "rowHeader",
+        "comment": " Add `role=\"rowheader\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "rowIndex",
+        "comment": " Supported by `cell`, `row`, `columnHeader`, `gridCell`, and `rowHeader`.\n\nAnalagous to `colIndex`.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "rowSpan",
+        "comment": " Supported by `cell`, `columnHeader`, `gridCell`, and `rowHeader`.\n\nIndicate how many rows-wide a cell is.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "scrollBar",
+        "comment": " Add `role=\"scrollbar\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "search",
+        "comment": " A search input. [W3 docs](https://www.w3.org/TR/wai-aria-practices/examples/landmarks/search.html?)\n\nIf you're going to learn about an ARIA Landmark role, this is the one to know,\nas HTML5 does NOT have a corresponding element! Add this property to forms to signify\nthat they describe search functionality.\n\nAs ever, if there's more than one search element on the page, please be sure to label.\n\n    import Html exposing (button, form, text)\n    import Html.A11y exposing (textLeftLabeled)\n    import Html.Attributes exposing (type_, value)\n    import Html.Attributes.A11y exposing (search)\n\n    form [ search ]\n        [ textLeftLabeled \"Search Value\" [] <|\n            text \"Search for something good\"\n        , button [ type_ \"submit\" ] [ text \"Search\" ]\n        ]\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "selected",
+        "comment": " Supported by `gridCell`, `option`, `row`, `tab`.\n\nIndicate whether an element (in a single- or multi-selectable widget) is or is not selected.\n\n",
+        "type": "Bool -> Html.Attribute msg"
+      },
+      {
+        "name": "separator",
+        "comment": " Add `role=\"separator\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "setSize",
+        "comment": " Supported by list-y elements: `article`, `listItem`, `menuItem`, `option`,\n`radio`, `tab`, `menuitemcheckbox`, `menuitemradio`, and `treeItem`.\n\n`setSize` indicates the total number of items in a set where not all the items are\ncurrently present in the DOM.\n\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "slider",
+        "comment": " Add `role=\"slider\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "sortAscending",
+        "comment": " Supported by `columnHeader` and `rowHeader`, but only where those roles are\nused on table or grid headers.\n\nThis should only be applied to one header at a time.\n\nTable is sorted by this column's values in ascending order.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "sortCustom",
+        "comment": " Supported by `columnHeader` and `rowHeader`, but only where those roles are\nused on table or grid headers.\n\nOnly one column in a table should be sorting the values in table.\n\nTable is sorted by this column's values, but the algorithm for that sorting\nis custom (not ascending or descending).\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "sortDescending",
+        "comment": " Supported by `columnHeader` and `rowHeader`, but only where those roles are\nused on table or grid headers.\n\nOnly one column in a table should be sorting the values in table.\n\nTable is sorted by this column's values in descending order.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "sortNone",
+        "comment": " Supported by `columnHeader` and `rowHeader`, but only where those roles are\nused on table or grid headers.\n\nTable is not sorted by this column's values.\n\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "spinButton",
+        "comment": " Add `role=\"spinbutton\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "status",
+        "comment": " Add `role=\"status\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "tab",
+        "comment": " Add `role=\"tab\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "tabList",
+        "comment": " Add `role=\"tablist\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "tabPanel",
+        "comment": " Add `role=\"tabpanel\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "textBox",
+        "comment": " Add `role=\"textbox\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "timer",
+        "comment": " Add `role=\"timer\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "toolBar",
+        "comment": " Add `role=\"toolbar\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "toolTip",
+        "comment": " Add `role=\"tooltip\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "tree",
+        "comment": " Add `role=\"tree\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "treeGrid",
+        "comment": " Add `role=\"treegrid\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "treeItem",
+        "comment": " Add `role=\"treeitem\"` to the attributes of an element.\n",
+        "type": "Html.Attribute msg"
+      },
+      {
+        "name": "valueMax",
+        "comment": " Supported by `progressBar`, `scrollbar`, `separator`, `slider`, and `spinButton`.\n\nSet the max allowed value for a range widget.\n\n",
+        "type": "number -> Html.Attribute msg"
+      },
+      {
+        "name": "valueMin",
+        "comment": " Supported by `progressBar`, `scrollbar`, `separator`, `slider`, and `spinButton`.\n\nSet the min allowed value for a range widget.\n\n",
+        "type": "number -> Html.Attribute msg"
+      },
+      {
+        "name": "valueNow",
+        "comment": " Supported by `progressBar`, `scrollbar`, `separator`, `slider`, and `spinButton`.\n\nSet the current value for a range widget. Don't use this property for indeterminate states.\n\n",
+        "type": "number -> Html.Attribute msg"
+      },
+      {
+        "name": "valueText",
+        "comment": " Supported by `progressBar`, `scrollbar`, `separator`, `slider`, and `spinButton`.\n\nThis property takes precedence over `valueNow`, and should show a human-readable\nversion of the current value. However, `valueNow` should always be used.\n\n",
+        "type": "String -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

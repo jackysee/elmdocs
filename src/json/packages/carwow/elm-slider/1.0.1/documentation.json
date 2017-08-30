@@ -1,0 +1,98 @@
+[
+  {
+    "name": "DoubleSlider",
+    "comment": " A single slider built natively in Elm\n\n\n# Model\n\n@docs Model\n\n\n# Update\n\n@docs Msg, update, subscriptions\n\n\n# Configuring the slider\n\n@docs init\n\n\n# View\n\n@docs view, fallbackView, formatCurrentValue\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The base model for the slider\n",
+        "args": [],
+        "type": "{ min : Float , max : Float , step : Int , lowValue : Float , highValue : Float , dragging : Bool , draggedValueType : DoubleSlider.SliderValueType , rangeStartValue : Float , thumbStartingPosition : Float , dragStartPosition : Float , formatter : Float -> String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The basic type accepted by the update\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fallbackView",
+        "comment": " Displays the slider using two inputs\n",
+        "type": "DoubleSlider.Model -> Html.Html DoubleSlider.Msg"
+      },
+      {
+        "name": "formatCurrentValue",
+        "comment": " renders the current values using the formatter\n",
+        "type": "DoubleSlider.Model -> String"
+      },
+      {
+        "name": "init",
+        "comment": " Returns a default range slider\n",
+        "type": "{ min : Float , max : Float , step : Int , lowValue : Float , highValue : Float , formatter : Float -> String } -> DoubleSlider.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Returns the subscriptions necessary to run\n",
+        "type": "DoubleSlider.Model -> Platform.Sub.Sub DoubleSlider.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " takes a model and a message and applies it to create an updated model\n",
+        "type": "DoubleSlider.Msg -> DoubleSlider.Model -> ( DoubleSlider.Model, Platform.Cmd.Cmd DoubleSlider.Msg, Bool )"
+      },
+      {
+        "name": "view",
+        "comment": " Displays the slider\n",
+        "type": "DoubleSlider.Model -> Html.Html DoubleSlider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SingleSlider",
+    "comment": " A single slider built natively in Elm\n\n\n# Model\n\n@docs Model\n\n\n# Update\n\n@docs Msg, update, subscriptions\n\n\n# Configuring the slider\n\n@docs init\n\n\n# View\n\n@docs view\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The base model for the slider\n",
+        "args": [],
+        "type": "{ min : Float , max : Float , step : Int , value : Float , dragging : Bool , rangeStartValue : Float , thumbStartingPosition : Float , dragStartPosition : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The basic type accepted by the update\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Returns a default range slider\n",
+        "type": "{ min : Float, max : Float, step : Int, value : Float } -> SingleSlider.Model"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Returns the subscriptions necessary to run\n",
+        "type": "SingleSlider.Model -> Platform.Sub.Sub SingleSlider.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " takes a model and a message and applies it to create an updated model\n",
+        "type": "SingleSlider.Msg -> SingleSlider.Model -> ( SingleSlider.Model, Platform.Cmd.Cmd SingleSlider.Msg, Bool )"
+      },
+      {
+        "name": "view",
+        "comment": " Displays the slider\n",
+        "type": "SingleSlider.Model -> Html.Html SingleSlider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "name": "TimeRange",
+    "comment": " A library for representing time ranges in an elegant manner.\n\n# Definition\n@docs TimeRange, fromStartAndEnd\n\n# Accessors\n@docs start, end\n\n# Common Helpers\n@docs difference, isContainedWithin, overlaps\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "TimeRange",
+        "comment": " Representation of a time range.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "difference",
+        "comment": " Get the `Time` difference between the start and end time in the time range.\n",
+        "type": "TimeRange.TimeRange -> Time.Time"
+      },
+      {
+        "name": "end",
+        "comment": " Get the end time for the range.\n",
+        "type": "TimeRange.TimeRange -> Time.Time"
+      },
+      {
+        "name": "fromStartAndEnd",
+        "comment": " Construct a time range from start and end times.\n",
+        "type": "Time.Time -> Time.Time -> TimeRange.TimeRange"
+      },
+      {
+        "name": "isContainedWithin",
+        "comment": " Allows you to find out if a given `Time` is contained within a `TimeRange`.\n",
+        "type": "Time.Time -> TimeRange.TimeRange -> Bool"
+      },
+      {
+        "name": "overlaps",
+        "comment": " Allows you to find out if two `TimeRange`s overlap.\n",
+        "type": "TimeRange.TimeRange -> TimeRange.TimeRange -> Bool"
+      },
+      {
+        "name": "start",
+        "comment": " Get the start time for the range.\n",
+        "type": "TimeRange.TimeRange -> Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

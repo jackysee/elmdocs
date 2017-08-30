@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Base64",
+    "comment": " Library for base64 encoding and decoding.\n\nDecodes UTF-16 into UTF-8 for encoding to base64, and decodes UTF-8 into UTF-16\nwhen decoding from base64.\n\n    encode \"👍\"\n    --> \"8J+RjQ==\"\n\n    decode \"8J+RjQ==\"\n    --> Ok \"👍\"\n\n@docs encode, decode\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decodes Base64 into Elm strings.\n\nThis can result in an `Err \"Invalid base64\"` if the input is not valid base64.\nIf the resulting string cannot be converted to UTF-16, this will result in an\n`Err \"Invalid UTF-16\"`.\n\n",
+        "type": "String -> Result.Result String String"
+      },
+      {
+        "name": "encode",
+        "comment": " Encodes any Elm string into Base64.\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

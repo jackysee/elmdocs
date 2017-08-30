@@ -1,0 +1,41 @@
+[
+  {
+    "name": "SHA",
+    "comment": " SHA hash functions for cryptographic hashing strings. Ported from: (c)\n[Chris Veness](http://www.movable-type.co.uk).\n\n# SHA-1\n\n@docs sha1bytes, sha1sum\n\n# SHA-2\n\n@docs sha224bytes, sha256bytes, sha224sum, sha256sum\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "sha1bytes",
+        "comment": " Takes some `Bytes` and produces a sha1sum (`String`):\n\n    (Bytes.fromHex >> SHA.sha1bytes) \"00\"\n        == \"da39a3ee5e6b4b0d3255bfef95601890afd80709\"\n\n    (Bytes.fromHex >> SHA.sha1bytes) \"195a\"\n        == \"0a1c2d555bbe431ad6288af5a54f93e0449c9232\"\n\n",
+        "type": "Bytes.Bytes -> String"
+      },
+      {
+        "name": "sha1sum",
+        "comment": " Takes a `String` and produces a sha1sum (`String`):\n\n    sha1sum \"foo æ ø å ñ\"\n        == \"48a24ab372f84906d5f02386f94adf8f00238a9c\"\n\n    sha1sum \"The quick brown fox jumps over the lazy dog\"\n        == \"2fd4e1c67a2d28fced849ee1bb76e7391b93eb12\"\n\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "sha224bytes",
+        "comment": " Takes some `Bytes` and produces a sha224sum (`String`):\n\n    (Bytes.fromHex >> SHA.sha224bytes) \"00\"\n        == \"d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f\"\n\n    (Bytes.fromHex >> SHA.sha224bytes) \"5c7b\"\n        == \"daff9bce685eb831f97fc1225b03c275a6c112e2d6e76f5faf7a36e6\"\n",
+        "type": "Bytes.Bytes -> String"
+      },
+      {
+        "name": "sha224sum",
+        "comment": " Takes a `String` and produces a sha224sum (`String`):\n\n    sha224sum \"foo æ ø å ñ\"\n        == \"d028a5ce22044de77a30518c1e9fb46e39c3fb07b3ef07ee0c1b51bc\"\n\n    sha224sum \"The quick brown fox jumps over the lazy dog\"\n        == \"730e109bd7a8a32b1cb9d9a09aa2325d2430587ddbc0c38bad911525\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "sha256bytes",
+        "comment": " Takes some `Bytes` and produces a sha256sum (`String`):\n\n    (Bytes.fromHex >> SHA.sha256bytes) \"00\"\n        == \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n\n    (Bytes.fromHex >> SHA.sha256bytes) \"d3\"\n        == \"28969cdfa74a12c82f3bad960b0b000aca2ac329deea5c2328ebc6f2ba9802c1\"\n",
+        "type": "Bytes.Bytes -> String"
+      },
+      {
+        "name": "sha256sum",
+        "comment": " Takes a `String` and produces a sha256sum (`String`):\n\n    sha256sum \"foo æ ø å ñ\"\n        == \"b4c0dfecf21e1ea3cf64b0a0fe6a82fd24e4bb4480df6d0657f701d5d7c8ac18\"\n\n    sha256sum \"The quick brown fox jumps over the lazy dog\"\n        == \"d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592\"\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

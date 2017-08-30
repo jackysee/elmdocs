@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Countries",
+    "comment": " A searchable [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) based list of country names, codes and emoji flags.\n\nThe library is intended to be used qualified (i.e. `Countries.search`, `Countries.all`).\n\n```\n> import Countries\n> Countries.fromCode \"AU\"\nJust { name = \"Australia\", code = \"AU\", flag = \"🇦🇺\" }\n    : Maybe.Maybe Countries.Country\n```\n\nSee the `examples` folder for a basic country picker example.\n\n# Types\n@docs Country\n\n# Common helpers\n@docs fromCode, search\n\n# Data set\n@docs all\n",
+    "aliases": [
+      {
+        "name": "Country",
+        "comment": " The Country record type.\n\n- name: The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) Country name\n- code: [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two-letter Country code\n- flag: The Country's unicode emoji flag, see [Regional Indicator Symbol](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol)\n\nThis type is intentionally not opaque, as accessing the countries reference data as easily as possible is the primary goal.\n",
+        "args": [],
+        "type": "{ name : String, code : String, flag : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " The full list of all 249 current [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) Country records.\n",
+        "type": "List Countries.Country"
+      },
+      {
+        "name": "fromCode",
+        "comment": " Find a country by its [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two-letter country code.\n",
+        "type": "String -> Maybe.Maybe Countries.Country"
+      },
+      {
+        "name": "search",
+        "comment": " Search all Countries by case-insensitive string matching on name and code\n",
+        "type": "String -> List Countries.Country"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Css.Class",
+    "comment": " Generate CSS class names by hashing their styles.\n\n\n## Creating Classes\n\n@docs Class, class\n\n\n## Adding Classes to Html Values\n\n@docs toAttribute, with\n\n\n## Adding Styles to the Page\n\nYou need to use either `toStyleNode` to render to a `<style>` on the\npage, or `compile` to generate a `.css` file, but not both. Without doing this,\nyou'll have some generated classnames on your elements, but no CSS declarations\nto back them up!\n\nIt only makes sense to use one of these. You don't want to have both a `<style>`\nelement on the page and a `.css` file. If you're not sure which to use, the\n`<style>` element is easier to set up; you call it and use the `Html` it\nreturns in your program's `view` function.\n\n@docs toStyleNode, compile\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Class",
+        "comment": " Styles scoped under an automatically-generated class.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "class",
+        "comment": " Create an Class from CSS styles. Use [`toAttribute`](#toAttribute) to\nturn it into a `class` attribute, and [`toStyleNode`](toStyleNode) for\nhow to turn it into\n\n    import Css exposing (backgroundColor, rgb)\n    import Css.Class as Hashed\n    import Html exposing (Attribute, Html, text)\n    import Html.Attributes exposing (class)\n\n    warning : Class\n    warning =\n        -- Suppose this automatically generates a class of \"fc4bde3a1\"\n        Hashed.class [ backgroundColor (rgb 128 12 12) ]\n\n",
+        "type": "List Css.Style -> Css.Class.Class"
+      },
+      {
+        "name": "compile",
+        "comment": " A drop-in replacement for [`Css.compile`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#compile) (or [`Css.File.compile`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css-File#compile))\nwhich takes `List Class` instead of `List Stylesheet`.\n\nThe most common way to use this is with the `elm-css` command line tool,\nto generate a `.css` file. Strart with the exapmle from the `elm-css` README,\nbut replace `Css.File.compile` with `Hashed.compile` - everything else works\nexactly the same way!\n\n    import Css.Class as Hashed\n    import Css.File exposing (CssCompilerProgram, CssFileStructure)\n    import MyCss\n\n    port files : CssFileStructure -> Cmd msg\n\n    fileStructure : CssFileStructure\n    fileStructure =\n        Css.File.toFileStructure\n            [ ( \"index.css\", Hashed.compile [ MyCss.css ] ) ]\n\n    main : CssCompilerProgram\n    main =\n        Css.File.compiler files fileStructure\n\n",
+        "type": "List Css.Class.Class -> { css : String, warnings : List String }"
+      },
+      {
+        "name": "toAttribute",
+        "comment": " Create an Attribute from a Class.\n",
+        "type": "Css.Class.Class -> Html.Attribute msg"
+      },
+      {
+        "name": "toStyleNode",
+        "comment": " Render autoclasses to a `<style>` element.\n",
+        "type": "List Css.Class.Class -> Html.Html msg"
+      },
+      {
+        "name": "with",
+        "comment": " Prepend a generated class to a `Html.node` function's attributes list.\n\n    import Css exposing (backgroundColor, rgb)\n    import Css.Class as Hashed\n    import Html exposing (Attribute, Html, button, text)\n    import Html.Attributes exposing (class)\n\n    warning : Class\n    warning =\n        -- Let's assume this automatically generates a classname of \"fc4bde3a1\"\n        Hashed.class [ backgroundColor (rgb 128 12 12) ]\n\n    {-| Create a `button` variant that automatically includes the warning style.\n    -}\n    warningButton : List (Attribute msg) -> List (Html msg) -> Html msg\n    warningButton =\n        Hashed.with warning button\n\n    confirmDeleteButton : Html msg\n    confirmDeleteButton =\n        -- Equivalent to:\n        --\n        -- button [ class \"fc4bde3a1\" ][ text \"Confirm Deletion\" ]\n        warningButton [] [ text \"Confirm Deletion\" ]\n\nSince `class` attributes \"stack\" in Elm\n(e.g. `button [ class \"fc4bde3a1\", class \"centered\" ] []` is equivalent to\n`button [ class \"fc4bde3a1 centered\" ] []`), this API permits further\ncustomization of the element's styles, either by using the `style` attribute\nor by stacking additional classes\n(for example `warningButton [ class \"centered\" ] []`).\n\n",
+        "type": "Css.Class.Class -> (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

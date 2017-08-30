@@ -1,0 +1,1956 @@
+[
+  {
+    "name": "Exts.Html",
+    "comment": " Extensions to the `Html` library.\n\n@docs matchText\n@docs nbsp\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "matchText",
+        "comment": " Highlight regex matches in a given piece of text. This is most easily explained with an example:\n\n    import Regex exposing (regex)\n    import Html.Attributes exposing (class)\n\n    matchText\n      [class \"match\"]\n      (regex \"the\")\n      \"the quick brown fox jumped over the lazy dog\"\n\n    =>\n\n    [span [class \"match\"] [text \"the\"]\n    ,text \" quick brown fox jumped over \"\n    ,span [class \"match\"] [text \"the\"]\n    ,text \" lazy dog\"]\n\n    Now you can add a CSS rule like `.match {background-color: yellow;}` to highlight matches\n    for the user.\n\n    (Note that you can supply any attributes you like for the matched sections, or an empty list.)\n\n",
+        "type": "List (Html.Attribute msg) -> Regex.Regex -> String -> List (Html.Html msg)"
+      },
+      {
+        "name": "nbsp",
+        "comment": " A non-breaking space. elm-html doesn't support escape sequences\nlike `text \"&nbsp\"`, so use this string instead.\n",
+        "type": "String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Html.Events",
+    "comment": " Extensions to the `Html.Events` library.\n\n@docs onEnter\n@docs onSelect\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onEnter",
+        "comment": " Send a message when the user hits enter.\n",
+        "type": "msg -> Html.Attribute msg"
+      },
+      {
+        "name": "onSelect",
+        "comment": " An event handler for `<select>` tags. Set the child `<option>` tag's value to \"\" to get a `Nothing`.\n",
+        "type": "(Maybe.Maybe String -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.List",
+    "comment": " Extensions to the core `List` library.\n\n@docs chunk\n@docs mergeBy\n@docs singleton\n@docs maybeSingleton\n@docs firstMatch\n@docs rest\n@docs unique\n@docs exactlyOne\n@docs maximumBy\n@docs minimumBy\n@docs unfold\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "chunk",
+        "comment": " Split a list into chunks of length `n`.\n\n  Be aware that the last sub-list may be smaller than `n`-items long.\n\n  For example `chunk 3 [1..10] => [[1,2,3], [4,5,6], [7,8,9], [10]]`\n",
+        "type": "Int -> List a -> List (List a)"
+      },
+      {
+        "name": "exactlyOne",
+        "comment": " Extract the first item from the `List`, demanding that there be exactly one element.\n\nFor example, `Json.Decode.customDecoder string exactlyOne` creates a\ndecoder that expects a list of strings, where there is only one\nelement in the `List`.\n\nIf you think that's weird, you haven't seen enough real-world JSON. ;-)\n",
+        "type": "List a -> Result.Result String a"
+      },
+      {
+        "name": "firstMatch",
+        "comment": " Find the first element in the `List` that matches the given predicate.\n",
+        "type": "(a -> Bool) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "maximumBy",
+        "comment": " Like `List.maximum`, but it works on non-comparable types by taking a custom function.\n",
+        "type": "(a -> comparable) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "maybeSingleton",
+        "comment": " Wrap a maybe item into a `List`. If the item is `Nothing`, the `List` is empty.\n",
+        "type": "Maybe.Maybe a -> List a"
+      },
+      {
+        "name": "mergeBy",
+        "comment": " Merge two lists. The first argument is a function which returns\nthe unique ID of each element. Where an element appears more than\nonce, the last won wins.\n",
+        "type": "(a -> comparable) -> List a -> List a -> List a"
+      },
+      {
+        "name": "minimumBy",
+        "comment": " Like `List.minimum`, but it works on non-comparable types by taking a custom function.\n",
+        "type": "(a -> comparable) -> List a -> Maybe.Maybe a"
+      },
+      {
+        "name": "rest",
+        "comment": " Like List.tail, but if the list is empty it returns an empty list rather than `Nothing`.\n",
+        "type": "List a -> List a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Wrap a single item into a `List`.\n",
+        "type": "a -> List a"
+      },
+      {
+        "name": "unfold",
+        "comment": " Generate a `List` from a function and a seed value.\n\nI feel sorry for `unfold` - it doesn't get nearly as much love as\n`map` and `fold`, despite being in the same family.\n",
+        "type": "(b -> Maybe.Maybe ( b, a )) -> b -> List a"
+      },
+      {
+        "name": "unique",
+        "comment": " Return a new list with duplicates removed. Order is preserved.\n",
+        "type": "List comparable -> List comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Html.Attributes",
+    "comment": " Extensions to the `Html.Attributes` library.\n\n@docs defaultValue\n@docs defaultString\n@docs defaultInt\n@docs defaultFloat\n@docs styleList\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultFloat",
+        "comment": " Convenience version of `defaultValue`, for `Float`s.\n",
+        "type": "Float -> Html.Attribute msg"
+      },
+      {
+        "name": "defaultInt",
+        "comment": " Convenience version of `defaultValue`, for `Int`s.\n",
+        "type": "Int -> Html.Attribute msg"
+      },
+      {
+        "name": "defaultString",
+        "comment": " Convenience version of `defaultValue`, for `String`s.\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "defaultValue",
+        "comment": " Set a default value for an input field.\n",
+        "type": "Json.Encode.Value -> Html.Attribute msg"
+      },
+      {
+        "name": "styleList",
+        "comment": " This function makes it easier to specify a conditional set of styles.\n   This the style-equivalent of elm-html's classList.\n",
+        "type": "List ( String, String, Bool ) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Validation",
+    "comment": " Simple tools for validation. See also [Richard Feldman's elm-validate](http://package.elm-lang.org/packages/rtfeldman/elm-validate/latest).\n\n@docs Validator\n@docs apply\n@docs (|:)\n@docs required\n@docs notBlank\n@docs matches\n@docs email\n@docs emailRegex\n",
+    "aliases": [
+      {
+        "name": "Validator",
+        "comment": " A validator is a function that takes a possibly-invalid form, and\neither returns an error message, or a form that is definitely valid. For example:\n\n    type alias Form =\n      { message : Maybe String\n      , email : Maybe String\n      , firstName : Maybe String\n      , age : Maybe Int\n      }\n\n    type alias ValidForm =\n      { message : String\n      , email : String\n      , firstName : String\n      , age : Int\n      }\n\n    validateForm : Form -> Result String ValidForm\n    validateForm form =\n      Ok ValidForm\n        |: notBlank \"Message is required and may not be blank.\" form.message\n        |: email \"Email is required and may not be blank.\" form.email\n        |: matches (caseInsensitive (regex \"^[a-z]+$\")) \"First name may only contain letters.\" form.firstName\n        |: required \"Age is required\" form.age\n\nAn error message is typically a `String`, but may be any type you choose.\n",
+        "args": [
+          "e",
+          "a",
+          "b"
+        ],
+        "type": "Maybe.Maybe a -> Result.Result e b"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Chain validators together.\n\n(Hat tip to CircuitHub, who inspired the syntax and guided the code with their [elm-json-extra](http://package.elm-lang.org/packages/circuithub/elm-json-extra/latest) library.)\n",
+        "type": "Result.Result e (a -> b) -> Result.Result e a -> Result.Result e b"
+      },
+      {
+        "name": "email",
+        "comment": " A basic email regex. This is incredibly simplistic, but is\nincluded for convenience.\n\nRemember that the only real way to validate an email address is to\nsend something to it and get a reply.\n",
+        "type": "e -> Exts.Validation.Validator e String String"
+      },
+      {
+        "name": "emailRegex",
+        "comment": " ",
+        "type": "Regex.Regex"
+      },
+      {
+        "name": "matches",
+        "comment": " A field that must match the given regex.\n",
+        "type": "Regex.Regex -> e -> Exts.Validation.Validator e String String"
+      },
+      {
+        "name": "notBlank",
+        "comment": " A field that might be `Nothing`, but is only valid if it is a non-empty `String`.\n",
+        "type": "e -> Exts.Validation.Validator e String String"
+      },
+      {
+        "name": "required",
+        "comment": " A field that might be `Nothing`, but is only valid if it is `Just a`.\n",
+        "type": "e -> Exts.Validation.Validator e a a"
+      },
+      {
+        "name": "|:",
+        "comment": " Convenient synonym for `apply`.\n",
+        "type": "Result.Result e (a -> b) -> Result.Result e a -> Result.Result e b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Function",
+    "comment": " Extensions so generic they just operate on functions.\n\n@docs (>>>)\n@docs (<<<)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "<<<",
+        "comment": " Right-to-left composition of functions that rely on an environment.\n",
+        "type": "(env -> b -> c) -> (env -> a -> b) -> env -> a -> c"
+      },
+      {
+        "name": ">>>",
+        "comment": " Left-to-right composition of functions that rely on an environment.\n\nExample:\n\n    quux (bar (foo model x) model) model\n\nBecomes:\n\n    (foo >>> bar >>> quux) model x\n\nThe operator `>>>` mirrors Haskell's Control.Arrow, because really\nthis is an arrow specialised to Reader.\n",
+        "type": "(env -> a -> b) -> (env -> b -> c) -> env -> a -> c"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Float",
+    "comment": " Extensions to the core `Float` library.\n\n@docs roundTo\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "roundTo",
+        "comment": " Round a `Float` to a given number of decimal places.\n",
+        "type": "Int -> Float -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Set",
+    "comment": " Extensions to the core `Set` library.\n\n@docs select\n@docs uniqueItems\n@docs toggle\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "select",
+        "comment": " Pull any items from a list where (f x) is in the given set.\n",
+        "type": "(a -> comparable) -> Set.Set comparable -> List a -> List a"
+      },
+      {
+        "name": "toggle",
+        "comment": " If x is a member of the set, remove it. Otherwise, add it.\n",
+        "type": "comparable -> Set.Set comparable -> Set.Set comparable"
+      },
+      {
+        "name": "uniqueItems",
+        "comment": " Dive into a `List` to get a set of values.\n\n  For example, pulling a `Set` of countries from a `List` of users.\n",
+        "type": "(a -> Maybe.Maybe comparable) -> List a -> Set.Set comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Tuple",
+    "comment": " Extensions for tuples.\n\n@docs indexedPair\n@docs both\n@docs pair\n@docs fork\n@docs onFirst\n@docs onSecond\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "both",
+        "comment": " Update both components of a pair with a single function.\n",
+        "type": "(a -> b) -> ( a, a ) -> ( b, b )"
+      },
+      {
+        "name": "fork",
+        "comment": " Generate a pair from a single value and a left & right function.\n",
+        "type": "(a -> b) -> (a -> c) -> a -> ( b, c )"
+      },
+      {
+        "name": "indexedPair",
+        "comment": " Turn a items into a key-value pair.\n\n  See also `Exts.Dict.indexBy` and `Exts.Dict.groupBy`.\n",
+        "type": "(a -> b) -> a -> ( b, a )"
+      },
+      {
+        "name": "onFirst",
+        "comment": " Apply a function that considers both elements of a pair and changes the first.\n",
+        "type": "(a -> b -> c) -> ( a, b ) -> ( c, b )"
+      },
+      {
+        "name": "onSecond",
+        "comment": " Apply a function that considers both elements of a pair and changes the second.\n",
+        "type": "(a -> b -> c) -> ( a, b ) -> ( a, c )"
+      },
+      {
+        "name": "pair",
+        "comment": " Update both components of a pair with two functions.\n",
+        "type": "(a -> b) -> (x -> y) -> ( a, x ) -> ( b, y )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Task",
+    "comment": " Extensions to the core `Process` library.\n\n@docs delay\n@docs asCmd\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "asCmd",
+        "comment": " Turn a `Task` into a `Cmd` which returns a `Result`.\n",
+        "type": "Task.Task e a -> Platform.Cmd.Cmd (Result.Result e a)"
+      },
+      {
+        "name": "delay",
+        "comment": " Delay running the `Task` for a given `Time`.\n\nThis is just the example given in `Task.sleep` wrapped up, because it's o useful.\n",
+        "type": "Time.Time -> Task.Task e a -> Task.Task e a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Result",
+    "comment": " Extensions to the core `Result` library.\n\n@docs mapBoth\n@docs isOk\n@docs isErr\n@docs fromOk\n@docs fromErr\n@docs mappend\n@docs either\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "either",
+        "comment": " Collapse a `Result` down to a single value of a single type.\n\nExample:\n\n``` elm\n  case result of\n    Err err -> errorView err\n    Ok value -> okView value\n```\n\n...is equivalent to:\n\n``` elm\n  either errorView okView result\n```\n",
+        "type": "(e -> c) -> (a -> c) -> Result.Result e a -> c"
+      },
+      {
+        "name": "fromErr",
+        "comment": " ",
+        "type": "Result.Result e a -> Maybe.Maybe e"
+      },
+      {
+        "name": "fromOk",
+        "comment": " Convert a `Result` to a `Maybe`.\n",
+        "type": "Result.Result e a -> Maybe.Maybe a"
+      },
+      {
+        "name": "isErr",
+        "comment": " ",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "isOk",
+        "comment": " Boolean checks for success/failure.\n",
+        "type": "Result.Result e a -> Bool"
+      },
+      {
+        "name": "mapBoth",
+        "comment": " Apply functions to both sides of a `Result`, transforming the error and ok types.\n",
+        "type": "(e -> f) -> (a -> b) -> Result.Result e a -> Result.Result f b"
+      },
+      {
+        "name": "mappend",
+        "comment": " Monoidal append - join two Results together as though they were one.\n",
+        "type": "Result.Result e a -> Result.Result e b -> Result.Result e ( a, b )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Maybe",
+    "comment": " Extensions to the core `Maybe` library.\n\n@docs isJust\n@docs isNothing\n@docs maybe\n@docs mappend\n@docs catMaybes\n@docs join\n@docs maybeDefault\n@docs matches\n@docs validate\n@docs when\n@docs oneOf\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "catMaybes",
+        "comment": " Extract all the `Just` values from a List of Maybes.\n",
+        "type": "List (Maybe.Maybe a) -> List a"
+      },
+      {
+        "name": "isJust",
+        "comment": " Boolean checks.\n",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "isNothing",
+        "comment": " ",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "join",
+        "comment": " Join together two `Maybe` values using the supplied function. If\neither value is `Nothing`, the result is `Nothing`.\n",
+        "type": "(a -> b -> c) -> Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe c"
+      },
+      {
+        "name": "mappend",
+        "comment": " Join two `Maybe`s together as though they were one.\n",
+        "type": "Maybe.Maybe a -> Maybe.Maybe b -> Maybe.Maybe ( a, b )"
+      },
+      {
+        "name": "matches",
+        "comment": " Check the if value in the `Maybe` matches a predicate. If it does, pass it through, if not, return nothing.\n\n    matches isEven (Just 2) => Just 2\n    matches isEven (Just 3) => Nothing\n    matches isEven Nothing => Nothing\n",
+        "type": "(a -> Bool) -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "maybe",
+        "comment": " Apply a function to a value, returning the default if the value is `Nothing`.\n\nExample:\n\n``` elm\ngreeting : Maybe User -> String\ngreeting maybeUser =\n  case maybeUser of\n    Just user -> user.name\n    Nothing -> \"Guest\"\n```\n\n...could be replaced with:\n\n``` elm\ngreeting : Maybe User -> String\ngreeting user = maybe \"Guest\" .name user\n```\n\n...or even:\n\n``` elm\ngreeting : Maybe User -> String\ngreeting = maybe \"Guest\" .name\n```\n\n\n_Aside: There's always a judgement call to be made here. Is shorter\ncode clearer (because it removes common plumbing, leaving only\nmeaning), or is it harder to understand (because people can't see how\nthe plumbing works anymore)?  Learn both ways, choose with your eyes\nopen, and stay tasteful out there._\n\n",
+        "type": "b -> (a -> b) -> Maybe.Maybe a -> b"
+      },
+      {
+        "name": "maybeDefault",
+        "comment": " If `x` is a `Just _` value, return it, otherwise return `Just default`.\n",
+        "type": "a -> Maybe.Maybe a -> Maybe.Maybe a"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Return the first non-`Nothing` entry in the list.\n",
+        "type": "List (Maybe.Maybe a) -> Maybe.Maybe a"
+      },
+      {
+        "name": "validate",
+        "comment": " Validate a value against a predicate, returning a `Maybe`.\n\n    validate isEven 2 => Just 2\n    validate isEven 3 => Nothing\n",
+        "type": "(a -> Bool) -> a -> Maybe.Maybe a"
+      },
+      {
+        "name": "when",
+        "comment": " When `test` returns true, return `Just value`, otherwise return `Nothing`.\n",
+        "type": "Bool -> a -> Maybe.Maybe a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.String",
+    "comment": " Extensions to the core `String` library.\n\n@docs removePrefix\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "removePrefix",
+        "comment": " Strip a leading string from a `String`.\n",
+        "type": "String -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Int",
+    "comment": " Extensions to the core `Int` library.\n\n@docs floorBy\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "floorBy",
+        "comment": " Round an int down to the nearest multiple of a factor.\n\n    floorBy  2 143 => Just 142\n    floorBy 50 143 => Just 100\n    floorBy  0 143 => Nothing\n",
+        "type": "Int -> Int -> Maybe.Maybe Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Json.Encode",
+    "comment": " Extensions to the core `Json.Encode` library.\n\n@docs set\n@docs dict\n@docs tuple2\n@docs maybe\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dict",
+        "comment": " Encode a `Dict` to a JSON array .\n",
+        "type": "(comparable -> Json.Encode.Value) -> (v -> Json.Encode.Value) -> Dict.Dict comparable v -> Json.Encode.Value"
+      },
+      {
+        "name": "maybe",
+        "comment": " Encode a `Maybe` value, encoding `Nothing` as `null`.\n",
+        "type": "(a -> Json.Encode.Value) -> Maybe.Maybe a -> Json.Encode.Value"
+      },
+      {
+        "name": "set",
+        "comment": " Encode a `Set` to a JSON array .\n",
+        "type": "(comparable -> Json.Encode.Value) -> Set.Set comparable -> Json.Encode.Value"
+      },
+      {
+        "name": "tuple2",
+        "comment": " Encode a pair to a JSON array .\n",
+        "type": "(a -> Json.Encode.Value) -> (b -> Json.Encode.Value) -> ( a, b ) -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Json.Decode",
+    "comment": " Extensions to the core `Json.Decode` library.\n\n@docs stringIgnoringBlanks\n@docs decodeTime\n@docs decodeDate\n@docs parseWith\n@docs customDecoder\n@docs set\n@docs exactlyOne\n@docs decodeEmptyObject\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "customDecoder",
+        "comment": " Combine a primitive decoder and a parser to make a more sophisticated decoder.\n",
+        "type": "Json.Decode.Decoder a -> (a -> Result.Result String b) -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "decodeDate",
+        "comment": " Decode a Date from a string, using the same format as the core\nfunction `Date.fromString`.\n",
+        "type": "Json.Decode.Decoder Date.Date"
+      },
+      {
+        "name": "decodeEmptyObject",
+        "comment": " Decode the empty object as the value given, and fail otherwise.\n",
+        "type": "a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "decodeTime",
+        "comment": " Decode a Date from seconds-since-the-epoch.\n",
+        "type": "Json.Decode.Decoder Date.Date"
+      },
+      {
+        "name": "exactlyOne",
+        "comment": " Expects a list where *exactly* one element will succeed with the given decoder.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "parseWith",
+        "comment": " DEPRECATED: Use customDecoder instead.\n\nLift a function that parses things, returning a `Result`, into the world of decoders.\n\nIf you're looking for the pre-0.18 function `customDecoder`, you can\nuse something like this instead:\n\n``` elm\ndecodeUUID : Decoder UUID\ndecodeUUID =\n    string\n        |> andThen (parseWith UUID.fromString)\n```\n",
+        "type": "(a -> Result.Result String b) -> a -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "set",
+        "comment": " Decode a JSON array of things directly into a `Set`.\n",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder (Set.Set comparable)"
+      },
+      {
+        "name": "stringIgnoringBlanks",
+        "comment": " A decoder like `(maybe string)`, except an empty or whitespace string is treated as `Nothing`.\n\nUseful for dirty data-models.\n",
+        "type": "Json.Decode.Decoder (Maybe.Maybe String)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.LatLng",
+    "comment": " Calculations between points on the earth.\n\n@docs distanceBetween, bearingTo\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "bearingTo",
+        "comment": " Calculate the heading you'd need to travel on to get from point a to point b.\n",
+        "type": "{ a | latitude : Float, longitude : Float } -> { b | latitude : Float, longitude : Float } -> Float"
+      },
+      {
+        "name": "distanceBetween",
+        "comment": " Calculate the distance in kilometers between two points.\n\n  Note that this assumes the earth is spherical, which is not true, but may be true enough for your purposes.\n",
+        "type": "{ a | latitude : Float, longitude : Float } -> { b | latitude : Float, longitude : Float } -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Html.Bootstrap",
+    "comment": " Base classes for Twitter Bootstrap 3 users.\n\n@docs stylesheet\n@docs container\n@docs containerFluid\n@docs row\n@docs col\n@docs GridWidths\n@docs formGroup\n@docs empty\n@docs twoColumns\n@docs Ratio\n@docs video\n@docs popover\n@docs PopoverDirection\n@docs clearfix\n@docs well\n@docs jumbotron\n@docs badge\n",
+    "aliases": [
+      {
+        "name": "GridWidths",
+        "comment": " Bootstrap grid width definitions. See `col` for usage.\n",
+        "args": [],
+        "type": "{ s1 : String , s2 : String , s3 : String , s4 : String , s5 : String , s6 : String , s7 : String , s8 : String , s9 : String , s10 : String , s11 : String , s12 : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "PopoverDirection",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Top",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ],
+          [
+            "Left",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Ratio",
+        "comment": " Aspect ratios for responsive video embedding.\n",
+        "args": [],
+        "cases": [
+          [
+            "SixteenByNine",
+            []
+          ],
+          [
+            "FourByThree",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "badge",
+        "comment": " Bootstrap badge component.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "clearfix",
+        "comment": " Bootstrap clearfix.\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "col",
+        "comment": " Bootstrap grid width elements. To be used as:\n\n``` elm\ndiv\n    [ classList\n        [ col.xs.s12\n        , col.md.s3\n        ]\n    ]\n    ...\n```\n\nIt doesn't save typing, but it does save _typos_, and that's worth having.\n",
+        "type": "{ xs : Exts.Html.Bootstrap.GridWidths , sm : Exts.Html.Bootstrap.GridWidths , md : Exts.Html.Bootstrap.GridWidths , lg : Exts.Html.Bootstrap.GridWidths }"
+      },
+      {
+        "name": "container",
+        "comment": " Bootstrap grid container.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "containerFluid",
+        "comment": " Bootstrap grid fluid container.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "empty",
+        "comment": " The minimum markup - an empty span.\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "formGroup",
+        "comment": " Bootstrap form group.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "jumbotron",
+        "comment": " Bootstrap jumbotron component.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "popover",
+        "comment": " Interface to the bootstrap popover that does not require bootstrap.js.\n",
+        "type": "Exts.Html.Bootstrap.PopoverDirection -> Bool -> List ( String, String ) -> Maybe.Maybe String -> Html.Html msg -> Html.Html msg"
+      },
+      {
+        "name": "row",
+        "comment": " Bootstrap grid row.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "stylesheet",
+        "comment": " A tag that loads Bootstrap from a CDN.\n\nYou'll probably only want to use this to get you started. By the time you go\ninto production, you should probably be loading this file in the `<head>` tag\nof your page.\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "twoColumns",
+        "comment": " Two evenly-sized columns.\n",
+        "type": "List (Html.Html msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "video",
+        "comment": " Embed a responsive video.\n",
+        "type": "Exts.Html.Bootstrap.Ratio -> String -> Html.Html msg"
+      },
+      {
+        "name": "well",
+        "comment": " Bootstrap well component.\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Html.Bootstrap.Glyphicons",
+    "comment": " Type-safe glyphicons for Twitter Bootstrap 3 users.\n\n@docs glyphicon\n@docs Glyphicon\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Glyphicon",
+        "comment": " A type-safe list of all available glyphicons in Bootstrap. To fit\nElm's syntax we convert from kebab-case to CamelCase, so\n`\"glyphicon-star-empty\"` becomes the type constructor `StarEmpty`.\n",
+        "args": [],
+        "cases": [
+          [
+            "Asterisk",
+            []
+          ],
+          [
+            "Plus",
+            []
+          ],
+          [
+            "Euro",
+            []
+          ],
+          [
+            "Eur",
+            []
+          ],
+          [
+            "Minus",
+            []
+          ],
+          [
+            "Cloud",
+            []
+          ],
+          [
+            "Envelope",
+            []
+          ],
+          [
+            "Pencil",
+            []
+          ],
+          [
+            "Glass",
+            []
+          ],
+          [
+            "Music",
+            []
+          ],
+          [
+            "Search",
+            []
+          ],
+          [
+            "Heart",
+            []
+          ],
+          [
+            "Star",
+            []
+          ],
+          [
+            "StarEmpty",
+            []
+          ],
+          [
+            "User",
+            []
+          ],
+          [
+            "Film",
+            []
+          ],
+          [
+            "ThLarge",
+            []
+          ],
+          [
+            "Th",
+            []
+          ],
+          [
+            "ThList",
+            []
+          ],
+          [
+            "Ok",
+            []
+          ],
+          [
+            "Remove",
+            []
+          ],
+          [
+            "ZoomIn",
+            []
+          ],
+          [
+            "ZoomOut",
+            []
+          ],
+          [
+            "Off",
+            []
+          ],
+          [
+            "Signal",
+            []
+          ],
+          [
+            "Cog",
+            []
+          ],
+          [
+            "Trash",
+            []
+          ],
+          [
+            "Home",
+            []
+          ],
+          [
+            "File",
+            []
+          ],
+          [
+            "Time",
+            []
+          ],
+          [
+            "Road",
+            []
+          ],
+          [
+            "DownloadAlt",
+            []
+          ],
+          [
+            "Download",
+            []
+          ],
+          [
+            "Upload",
+            []
+          ],
+          [
+            "Inbox",
+            []
+          ],
+          [
+            "PlayCircle",
+            []
+          ],
+          [
+            "Repeat",
+            []
+          ],
+          [
+            "Refresh",
+            []
+          ],
+          [
+            "ListAlt",
+            []
+          ],
+          [
+            "Lock",
+            []
+          ],
+          [
+            "Flag",
+            []
+          ],
+          [
+            "Headphones",
+            []
+          ],
+          [
+            "VolumeOff",
+            []
+          ],
+          [
+            "VolumeDown",
+            []
+          ],
+          [
+            "VolumeUp",
+            []
+          ],
+          [
+            "Qrcode",
+            []
+          ],
+          [
+            "Barcode",
+            []
+          ],
+          [
+            "Tag",
+            []
+          ],
+          [
+            "Tags",
+            []
+          ],
+          [
+            "Book",
+            []
+          ],
+          [
+            "Bookmark",
+            []
+          ],
+          [
+            "Print",
+            []
+          ],
+          [
+            "Camera",
+            []
+          ],
+          [
+            "Font",
+            []
+          ],
+          [
+            "Bold",
+            []
+          ],
+          [
+            "Italic",
+            []
+          ],
+          [
+            "TextHeight",
+            []
+          ],
+          [
+            "TextWidth",
+            []
+          ],
+          [
+            "AlignLeft",
+            []
+          ],
+          [
+            "AlignCenter",
+            []
+          ],
+          [
+            "AlignRight",
+            []
+          ],
+          [
+            "AlignJustify",
+            []
+          ],
+          [
+            "List",
+            []
+          ],
+          [
+            "IndentLeft",
+            []
+          ],
+          [
+            "IndentRight",
+            []
+          ],
+          [
+            "FacetimeVideo",
+            []
+          ],
+          [
+            "Picture",
+            []
+          ],
+          [
+            "MapMarker",
+            []
+          ],
+          [
+            "Adjust",
+            []
+          ],
+          [
+            "Tint",
+            []
+          ],
+          [
+            "Edit",
+            []
+          ],
+          [
+            "Share",
+            []
+          ],
+          [
+            "Check",
+            []
+          ],
+          [
+            "Move",
+            []
+          ],
+          [
+            "StepBackward",
+            []
+          ],
+          [
+            "FastBackward",
+            []
+          ],
+          [
+            "Backward",
+            []
+          ],
+          [
+            "Play",
+            []
+          ],
+          [
+            "Pause",
+            []
+          ],
+          [
+            "Stop",
+            []
+          ],
+          [
+            "Forward",
+            []
+          ],
+          [
+            "FastForward",
+            []
+          ],
+          [
+            "StepForward",
+            []
+          ],
+          [
+            "Eject",
+            []
+          ],
+          [
+            "ChevronLeft",
+            []
+          ],
+          [
+            "ChevronRight",
+            []
+          ],
+          [
+            "PlusSign",
+            []
+          ],
+          [
+            "MinusSign",
+            []
+          ],
+          [
+            "RemoveSign",
+            []
+          ],
+          [
+            "OkSign",
+            []
+          ],
+          [
+            "QuestionSign",
+            []
+          ],
+          [
+            "InfoSign",
+            []
+          ],
+          [
+            "Screenshot",
+            []
+          ],
+          [
+            "RemoveCircle",
+            []
+          ],
+          [
+            "OkCircle",
+            []
+          ],
+          [
+            "BanCircle",
+            []
+          ],
+          [
+            "ArrowLeft",
+            []
+          ],
+          [
+            "ArrowRight",
+            []
+          ],
+          [
+            "ArrowUp",
+            []
+          ],
+          [
+            "ArrowDown",
+            []
+          ],
+          [
+            "ShareAlt",
+            []
+          ],
+          [
+            "ResizeFull",
+            []
+          ],
+          [
+            "ResizeSmall",
+            []
+          ],
+          [
+            "ExclamationSign",
+            []
+          ],
+          [
+            "Gift",
+            []
+          ],
+          [
+            "Leaf",
+            []
+          ],
+          [
+            "Fire",
+            []
+          ],
+          [
+            "EyeOpen",
+            []
+          ],
+          [
+            "EyeClose",
+            []
+          ],
+          [
+            "WarningSign",
+            []
+          ],
+          [
+            "Plane",
+            []
+          ],
+          [
+            "Calendar",
+            []
+          ],
+          [
+            "Random",
+            []
+          ],
+          [
+            "Comment",
+            []
+          ],
+          [
+            "Magnet",
+            []
+          ],
+          [
+            "ChevronUp",
+            []
+          ],
+          [
+            "ChevronDown",
+            []
+          ],
+          [
+            "Retweet",
+            []
+          ],
+          [
+            "ShoppingCart",
+            []
+          ],
+          [
+            "FolderClose",
+            []
+          ],
+          [
+            "FolderOpen",
+            []
+          ],
+          [
+            "ResizeVertical",
+            []
+          ],
+          [
+            "ResizeHorizontal",
+            []
+          ],
+          [
+            "Hdd",
+            []
+          ],
+          [
+            "Bullhorn",
+            []
+          ],
+          [
+            "Bell",
+            []
+          ],
+          [
+            "Certificate",
+            []
+          ],
+          [
+            "ThumbsUp",
+            []
+          ],
+          [
+            "ThumbsDown",
+            []
+          ],
+          [
+            "HandRight",
+            []
+          ],
+          [
+            "HandLeft",
+            []
+          ],
+          [
+            "HandUp",
+            []
+          ],
+          [
+            "HandDown",
+            []
+          ],
+          [
+            "CircleArrowRight",
+            []
+          ],
+          [
+            "CircleArrowLeft",
+            []
+          ],
+          [
+            "CircleArrowUp",
+            []
+          ],
+          [
+            "CircleArrowDown",
+            []
+          ],
+          [
+            "Globe",
+            []
+          ],
+          [
+            "Wrench",
+            []
+          ],
+          [
+            "Tasks",
+            []
+          ],
+          [
+            "Filter",
+            []
+          ],
+          [
+            "Briefcase",
+            []
+          ],
+          [
+            "Fullscreen",
+            []
+          ],
+          [
+            "Dashboard",
+            []
+          ],
+          [
+            "Paperclip",
+            []
+          ],
+          [
+            "HeartEmpty",
+            []
+          ],
+          [
+            "Link",
+            []
+          ],
+          [
+            "Phone",
+            []
+          ],
+          [
+            "Pushpin",
+            []
+          ],
+          [
+            "Usd",
+            []
+          ],
+          [
+            "Gbp",
+            []
+          ],
+          [
+            "Sort",
+            []
+          ],
+          [
+            "SortByAlphabet",
+            []
+          ],
+          [
+            "SortByAlphabetAlt",
+            []
+          ],
+          [
+            "SortByOrder",
+            []
+          ],
+          [
+            "SortByOrderAlt",
+            []
+          ],
+          [
+            "SortByAttributes",
+            []
+          ],
+          [
+            "SortByAttributesAlt",
+            []
+          ],
+          [
+            "Unchecked",
+            []
+          ],
+          [
+            "Expand",
+            []
+          ],
+          [
+            "CollapseDown",
+            []
+          ],
+          [
+            "CollapseUp",
+            []
+          ],
+          [
+            "LogIn",
+            []
+          ],
+          [
+            "Flash",
+            []
+          ],
+          [
+            "LogOut",
+            []
+          ],
+          [
+            "NewWindow",
+            []
+          ],
+          [
+            "Record",
+            []
+          ],
+          [
+            "Save",
+            []
+          ],
+          [
+            "Open",
+            []
+          ],
+          [
+            "Saved",
+            []
+          ],
+          [
+            "Import",
+            []
+          ],
+          [
+            "Export",
+            []
+          ],
+          [
+            "Send",
+            []
+          ],
+          [
+            "FloppyDisk",
+            []
+          ],
+          [
+            "FloppySaved",
+            []
+          ],
+          [
+            "FloppyRemove",
+            []
+          ],
+          [
+            "FloppySave",
+            []
+          ],
+          [
+            "FloppyOpen",
+            []
+          ],
+          [
+            "CreditCard",
+            []
+          ],
+          [
+            "Transfer",
+            []
+          ],
+          [
+            "Cutlery",
+            []
+          ],
+          [
+            "Header",
+            []
+          ],
+          [
+            "Compressed",
+            []
+          ],
+          [
+            "Earphone",
+            []
+          ],
+          [
+            "PhoneAlt",
+            []
+          ],
+          [
+            "Tower",
+            []
+          ],
+          [
+            "Stats",
+            []
+          ],
+          [
+            "SdVideo",
+            []
+          ],
+          [
+            "HdVideo",
+            []
+          ],
+          [
+            "Subtitles",
+            []
+          ],
+          [
+            "SoundStereo",
+            []
+          ],
+          [
+            "SoundDolby",
+            []
+          ],
+          [
+            "Sound51",
+            []
+          ],
+          [
+            "Sound61",
+            []
+          ],
+          [
+            "Sound71",
+            []
+          ],
+          [
+            "CopyrightMark",
+            []
+          ],
+          [
+            "RegistrationMark",
+            []
+          ],
+          [
+            "CloudDownload",
+            []
+          ],
+          [
+            "CloudUpload",
+            []
+          ],
+          [
+            "TreeConifer",
+            []
+          ],
+          [
+            "TreeDeciduous",
+            []
+          ],
+          [
+            "Cd",
+            []
+          ],
+          [
+            "SaveFile",
+            []
+          ],
+          [
+            "OpenFile",
+            []
+          ],
+          [
+            "LevelUp",
+            []
+          ],
+          [
+            "Copy",
+            []
+          ],
+          [
+            "Paste",
+            []
+          ],
+          [
+            "Alert",
+            []
+          ],
+          [
+            "Equalizer",
+            []
+          ],
+          [
+            "King",
+            []
+          ],
+          [
+            "Queen",
+            []
+          ],
+          [
+            "Pawn",
+            []
+          ],
+          [
+            "Bishop",
+            []
+          ],
+          [
+            "Knight",
+            []
+          ],
+          [
+            "BabyFormula",
+            []
+          ],
+          [
+            "Tent",
+            []
+          ],
+          [
+            "Blackboard",
+            []
+          ],
+          [
+            "Bed",
+            []
+          ],
+          [
+            "Apple",
+            []
+          ],
+          [
+            "Erase",
+            []
+          ],
+          [
+            "Hourglass",
+            []
+          ],
+          [
+            "Lamp",
+            []
+          ],
+          [
+            "Duplicate",
+            []
+          ],
+          [
+            "PiggyBank",
+            []
+          ],
+          [
+            "Scissors",
+            []
+          ],
+          [
+            "Bitcoin",
+            []
+          ],
+          [
+            "Btc",
+            []
+          ],
+          [
+            "Xbt",
+            []
+          ],
+          [
+            "Yen",
+            []
+          ],
+          [
+            "Jpy",
+            []
+          ],
+          [
+            "Ruble",
+            []
+          ],
+          [
+            "Rub",
+            []
+          ],
+          [
+            "Scale",
+            []
+          ],
+          [
+            "IceLolly",
+            []
+          ],
+          [
+            "IceLollyTasted",
+            []
+          ],
+          [
+            "Education",
+            []
+          ],
+          [
+            "OptionHorizontal",
+            []
+          ],
+          [
+            "OptionVertical",
+            []
+          ],
+          [
+            "MenuHamburger",
+            []
+          ],
+          [
+            "ModalWindow",
+            []
+          ],
+          [
+            "Oil",
+            []
+          ],
+          [
+            "Grain",
+            []
+          ],
+          [
+            "Sunglasses",
+            []
+          ],
+          [
+            "TextSize",
+            []
+          ],
+          [
+            "TextColor",
+            []
+          ],
+          [
+            "TextBackground",
+            []
+          ],
+          [
+            "ObjectAlignTop",
+            []
+          ],
+          [
+            "ObjectAlignBottom",
+            []
+          ],
+          [
+            "ObjectAlignHorizontal",
+            []
+          ],
+          [
+            "ObjectAlignLeft",
+            []
+          ],
+          [
+            "ObjectAlignVertical",
+            []
+          ],
+          [
+            "ObjectAlignRight",
+            []
+          ],
+          [
+            "TriangleRight",
+            []
+          ],
+          [
+            "TriangleLeft",
+            []
+          ],
+          [
+            "TriangleBottom",
+            []
+          ],
+          [
+            "TriangleTop",
+            []
+          ],
+          [
+            "Console",
+            []
+          ],
+          [
+            "Superscript",
+            []
+          ],
+          [
+            "Subscript",
+            []
+          ],
+          [
+            "MenuLeft",
+            []
+          ],
+          [
+            "MenuRight",
+            []
+          ],
+          [
+            "MenuDown",
+            []
+          ],
+          [
+            "MenuUp",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "glyphicon",
+        "comment": " Type-checked Glyphicons.\n",
+        "type": "Exts.Html.Bootstrap.Glyphicons.Glyphicon -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Http",
+    "comment": " Extensions to the `Http` library.\n\n@docs cgiParameters\n@docs formBody\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "cgiParameters",
+        "comment": " Encode a CGI parameter list.\n",
+        "type": "List ( String, String ) -> String"
+      },
+      {
+        "name": "formBody",
+        "comment": " Put some key-value pairs in the body of your `Request`. This will automatically\nadd the `Content-Type: application/x-www-form-urlencoded` header.\n",
+        "type": "List ( String, String ) -> Http.Body"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Html.Table",
+    "comment": " Helpers for simple data tables. Define how a list of items can be\nrendered as a table. The definition is a `List` of `(column-title,\ncolumn-value-accessor)` pairs.\n\n  I find this approach works well for simple tables, but breaks down\n  as soon as you need much customisation. Use it to get you started\n  quickly, but be ready to rewrite when this 80% case no longer suits.\n\n@docs CellDef\n@docs TableDef\n@docs simpleTable\n@docs simpleTableRow\n@docs titleGroup\n@docs valueGroup\n",
+    "aliases": [
+      {
+        "name": "CellDef",
+        "comment": " A table definition looks something like:\n\n    [(text \"Name\", .name >> text)\n    ,(text \"Name\", .age >> toString >> text)]\n\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "( Html.Html msg, a -> Html.Html msg )"
+      },
+      {
+        "name": "TableDef",
+        "comment": " ",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "List (Exts.Html.Table.CellDef a msg)"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "simpleTable",
+        "comment": " Given a table definition, render a list of elements as HTML.\n",
+        "type": "Exts.Html.Table.TableDef a msg -> List a -> Html.Html msg"
+      },
+      {
+        "name": "simpleTableRow",
+        "comment": " Given a table definition, render an element to a <tr> tag. This is\nlower-level. Usually you will want `simpleTable` instead.\n",
+        "type": "Exts.Html.Table.TableDef a msg -> a -> Html.Html msg"
+      },
+      {
+        "name": "titleGroup",
+        "comment": " titleGroup and valueGroup are used to create columns that stack multiple pairs. For example:\n\n    [(titleGroup [\"Latitude\", \"Longitude\"]\n     ,valueGroup [.location >> .lat >> toString >> text\n                 ,.location >> .lng >> toString >> text])\n\n",
+        "type": "List String -> Html.Html msg"
+      },
+      {
+        "name": "valueGroup",
+        "comment": " ",
+        "type": "List (a -> Html.Html msg) -> a -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Dict",
+    "comment": " Extensions to the core `Dict` library.\n\n@docs indexBy\n@docs groupBy\n@docs frequency\n@docs getWithDefault\n@docs foldToList\n@docs updateDict\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "foldToList",
+        "comment": " Run a function over the dictionary entries, resulting in a list of the final results.\n",
+        "type": "(comparable -> v -> b) -> Dict.Dict comparable v -> List b"
+      },
+      {
+        "name": "frequency",
+        "comment": " Create a frequency-map from the given list.\n",
+        "type": "List comparable -> Dict.Dict comparable Int"
+      },
+      {
+        "name": "getWithDefault",
+        "comment": " Attempt to find a key, if it's not there, return a default value.\n",
+        "type": "a -> comparable -> Dict.Dict comparable a -> a"
+      },
+      {
+        "name": "groupBy",
+        "comment": " Group a list of items by a key.\n\n  Supply an indexing function (eg. `.id`) and a list of\n  items. `groupBy` returns a dictionary of group-key/list-of-items.\n\n  If the indexing function returns a unique key for every item, consider `indexBy` instead.\n",
+        "type": "(v -> comparable) -> List v -> Dict.Dict comparable (List v)"
+      },
+      {
+        "name": "indexBy",
+        "comment": " Turn a list of items into an indexed dictionary.\n\n  Supply an indexing function (eg. `.id`) and a list of\n  items. `indexBy` returns a dictionary with each item stored under\n  its index.\n\n  This code assumes each index is unique. If that is not the case, you\n  should use `groupBy` instead.\n",
+        "type": "(v -> comparable) -> List v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "updateDict",
+        "comment": " Apply an Elm update function - `Model -> (Model, Cmd Msg)` - to a `Dict` entry, if present.\n\nIt's quite common in Elm to want to run a model-update function, over\nsome dictionary of models, but only if that model is available.\n\nThis function makes it more convenient to reach inside a `Dict` and\napply an update. If the data is not there, the `Dict` is returned\nunchanged with a `Cmd.none`.\n\n",
+        "type": "(a -> ( a, Platform.Cmd.Cmd cmd )) -> comparable -> Dict.Dict comparable a -> ( Dict.Dict comparable a, Platform.Cmd.Cmd cmd )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Delta",
+    "comment": " A system for tracking players that enter and leave a stage, a-la D3.\n\nImplementation detail: This code is hampered by the lack of Elm's type classes. Note the following:\n1. Performance may degrade badly as the number of elements increases.\n2. It is up to you to ensure (a) implments Eq correctly.\n\n@docs Delta\n@docs empty\n@docs generation\n",
+    "aliases": [
+      {
+        "name": "Delta",
+        "comment": " A data-structure that maintains the difference list of entering, continuing and leaving players.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ entering : List a, continuing : List a, leaving : List a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " A default starting state for Deltas.\n",
+        "type": "Exts.Delta.Delta a"
+      },
+      {
+        "name": "generation",
+        "comment": " Update the delta by inspecting a list of players.\n",
+        "type": "List a -> Exts.Delta.Delta a -> Exts.Delta.Delta a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Basics",
+    "comment": " Extensions to the core `Basics` library.\n\n@docs on\n@docs compareBy\n@docs maxBy\n@docs minBy\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "compareBy",
+        "comment": " Like `Basics.compare`, with a custom function. For example:\n\n``` elm\ncompareBy Date.toTime earlyDate laterDate\n--> LT\n```\n",
+        "type": "(a -> comparable) -> a -> a -> Basics.Order"
+      },
+      {
+        "name": "maxBy",
+        "comment": " Like `Basics.max`, but it works on non-comparable types by taking a custom function. For example:\n\n``` elm\nmaxBy Date.toTime earlyDate laterDate\n--> laterDate\n```\n",
+        "type": "(a -> comparable) -> a -> a -> a"
+      },
+      {
+        "name": "minBy",
+        "comment": " Like `Basics.min`, but it works on non-comparable types by taking a custom function. For example:\n\n``` elm\nminBy Date.toTime earlyDate laterDate\n--> earlyDate\n```\n",
+        "type": "(a -> comparable) -> a -> a -> a"
+      },
+      {
+        "name": "on",
+        "comment": " Run a function on two inputs, before doing something with the\nresult. Can be useful for things like sorts. For example, `compare\n(List.length a) (List.length b)` can be written `on List.length\ncompare`.\n\nSee also `compareBy`.\n",
+        "type": "(a -> b) -> (b -> b -> c) -> a -> a -> c"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Date",
+    "comment": " Extensions to the core `Date` library.\n\n@docs toISOString\n@docs toRFC3339\n@docs monthNumber\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "monthNumber",
+        "comment": " Extract the month of a given date as an `Int`. January is 1.\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "toISOString",
+        "comment": " Format a `Date` as an ISO-standard string.\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "toRFC3339",
+        "comment": " Format a `Date` as an RFC-3339 standard string\n\n  This is useful for passing a `Date` as a value to an HTML input. (See [the W3 spec](https://www.w3.org/TR/html-markup/input.date.html#input.date.attrs.value) for details.)\n",
+        "type": "Date.Date -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Exts.Array",
+    "comment": " Extensions to the core `Array` library.\n\n@docs update\n@docs delete\n@docs unzip\n@docs singleton\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "delete",
+        "comment": " 'Delete' the entry at position `n`.\nindex is out of range, the array is unaltered.\n",
+        "type": "Int -> Array.Array a -> Array.Array a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Wrap a single item into an `Array`.\n",
+        "type": "a -> Array.Array a"
+      },
+      {
+        "name": "unzip",
+        "comment": " Split an array of pairs into a pair of arrays.\n\nThe same as the core `List.unzip`.\n",
+        "type": "Array.Array ( a, b ) -> ( Array.Array a, Array.Array b )"
+      },
+      {
+        "name": "update",
+        "comment": " 'Update' the entry at position `n`, by applying `f` to it. If the\nindex is out of range, the array is unaltered.\n",
+        "type": "Int -> (a -> a) -> Array.Array a -> Array.Array a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

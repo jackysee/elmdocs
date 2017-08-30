@@ -1,0 +1,207 @@
+[
+  {
+    "name": "Bricks",
+    "comment": " The main module for the Bricks library. This module has functions to build\nand modify bricks and a few functions to convert to/from JSON.\n\n\n# Types\n\n@docs Brick, Attr\n\n\n# Constructors\n\nBricks provides many constructors with an API similar to Html. The generic\nconstructor is called \"brick\" instead of \"node\".\n\n@docs brick, text\n\n\n## Attributes\n\n@docs attr, class\n\n\n# Getters\n\n@docs tag, attrs, children, getText\n\n\n# View functions\n\nBricks provide a few functions that render brick objects, and their respective\nJson and string respresentations\n\n@docs view, viewValue, viewString\n\n\n# Standard encoders/decoders\n\nThe main decoding interface is done through the decodeString and decodeValue\nfunctions. If you need more options or if you need to use the decoders\ndirectly, please check the documentation for the Bricks.Json module.\n\nThis module define a few convenience functions that helps decoding JSON data\nto Brick values.\n\nExample\n\n    json = \"{...some valid JSON data here...}\"\n\n    brick =\n        case decodeString json of\n            Ok x -> x\n            Err _ -> brick 'div' [] []\n\n@docs decodeValue, decodeString, encode\n\n",
+    "aliases": [
+      {
+        "name": "Attr",
+        "comment": " Attribute of a Bricks element.\n\nThe list of attributes can be accessed using the `attrs brick` function.\n\n",
+        "args": [],
+        "type": "Bricks.Types.Attr"
+      },
+      {
+        "name": "Brick",
+        "comment": " Main Brick type.\n\nBricks are stored internally as a Brick type. It defines a tag, some\nattributes and a children. Bricks are similar to Html.Html objects and\ncan be easily converted using the view function. They are however a\nlittle more restricted and can be included in models.\n\n",
+        "args": [],
+        "type": "Bricks.Types.Brick"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "attr",
+        "comment": " Adds an arbitrary string attribute\n",
+        "type": "String -> String -> Bricks.Types.Attrs -> Bricks.Types.Attrs"
+      },
+      {
+        "name": "attrs",
+        "comment": " Return a list of attributes\n",
+        "type": "Bricks.Brick -> Bricks.Types.Attrs"
+      },
+      {
+        "name": "brick",
+        "comment": " Creates a brick from a list of attrs and children.\n\nDo not create bricks manually unless you really known what you are doing.\n\n",
+        "type": "String -> List (Bricks.Types.Attrs -> Bricks.Types.Attrs) -> List Bricks.Brick -> Bricks.Brick"
+      },
+      {
+        "name": "children",
+        "comment": " Return a list of child bricks\n",
+        "type": "Bricks.Brick -> List Bricks.Brick"
+      },
+      {
+        "name": "class",
+        "comment": " Add a class to the list of classes in the brick\n",
+        "type": "String -> Bricks.Types.Attrs -> Bricks.Types.Attrs"
+      },
+      {
+        "name": "decodeString",
+        "comment": " Decode a Json String object as a brick result\n",
+        "type": "String -> Result.Result String Bricks.Brick"
+      },
+      {
+        "name": "decodeValue",
+        "comment": " Decode a Json Value object as a brick result\n",
+        "type": "Json.Decode.Value -> Result.Result String Bricks.Brick"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode brick element as a Json string\n",
+        "type": "Int -> Bricks.Brick -> String"
+      },
+      {
+        "name": "getText",
+        "comment": " We assume that brick was created with text \"foo\" and extract\nthe corresponding string data.\n\nReturn empty string if no text data is found.\n\n",
+        "type": "Bricks.Brick -> String"
+      },
+      {
+        "name": "tag",
+        "comment": " Return the Brick's tag value\n",
+        "type": "Bricks.Brick -> String"
+      },
+      {
+        "name": "text",
+        "comment": " Creates a Brick object that represents a text node\n",
+        "type": "String -> Bricks.Brick"
+      },
+      {
+        "name": "view",
+        "comment": " Convert brick to Html.Html element\n",
+        "type": "Bricks.Brick -> Html.Html msg"
+      },
+      {
+        "name": "viewString",
+        "comment": " Decode a Json String object directly as a Html element.\n",
+        "type": "String -> Html.Html msg"
+      },
+      {
+        "name": "viewValue",
+        "comment": " Decode a Json Value object directly as a Html element.\n",
+        "type": "Json.Decode.Value -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bricks.Json",
+    "comment": " JSON decoders and encoders. Use this to compose with other more\ncomplicated JSON pipelines.\n\n\n# Decoders\n\n@docs brick, attr\n\n\n# Encoders\n\n@docs brickEncoder, attrEncoder\n\n\n# JSON Format\n\nBricks are encoded with the following JSON format\n\n    {\n        \"tag\": tag name (string, required),\n        \"attrs\": array of attributes (optional, see bellow),\n        \"children\": array of bricks (optional)\n    }\n\nEach attribute must be encoded as an array with a few special options:\n\n**Regular attributes**\n\n    [\"attr-name\", \"attr-value\"] (both are strings)\n\n**Id**\n\n    \"id-name\"\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attr",
+        "comment": " Decode a single attribute element.\n",
+        "type": "Json.Decode.Decoder Bricks.Types.Attr"
+      },
+      {
+        "name": "attrEncoder",
+        "comment": " Encode a brick attribute as a Json value\n",
+        "type": "Bricks.Types.Attr -> Json.Encode.Value"
+      },
+      {
+        "name": "brick",
+        "comment": " Decode a single brick\n",
+        "type": "Json.Decode.Decoder Bricks.Types.Brick"
+      },
+      {
+        "name": "brickEncoder",
+        "comment": " Encode a brick object as a Json value\n",
+        "type": "Bricks.Types.Brick -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bricks.Types",
+    "comment": " Define the most used types for the Bricks module.\n\nYou generally should not access the types defined in this module directly and\nshould prefer the constructor functions defined in the Bricks main module.\n\n\n# Types\n\n@docs Brick, Attrs, Children, Attr, ActionType\n\n",
+    "aliases": [
+      {
+        "name": "Attrs",
+        "comment": " List of attributes\n",
+        "args": [],
+        "type": "List Bricks.Types.Attr"
+      },
+      {
+        "name": "Brick",
+        "comment": " Main brick type.\n",
+        "args": [],
+        "type": "{ tag : String , attrs : Bricks.Types.Attrs , children : Bricks.Types.Children }"
+      }
+    ],
+    "types": [
+      {
+        "name": "ActionType",
+        "comment": " Represents serialized action.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoOp",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Attr",
+        "comment": " A single attribute of a brick\n",
+        "args": [],
+        "cases": [
+          [
+            "Attr",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Classes",
+            [
+              "List String"
+            ]
+          ],
+          [
+            "Id",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Value",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Action",
+            [
+              "Bricks.Types.ActionType"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Children",
+        "comment": " A list of bricks.\n\nMust be defined like this in order to avoid recursion\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Children",
+            [
+              "List Bricks.Types.Brick"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

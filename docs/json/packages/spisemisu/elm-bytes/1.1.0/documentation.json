@@ -1,0 +1,83 @@
+[
+  {
+    "name": "Bytes",
+    "comment": " A library for fast immutable `Bytes`. The type is built on top of `Core`'s\nimmutable `Array` type limited to values of `Int` in the range of `0` - `255`.\n\n# Bytes\n@docs Bytes\n\n# Creating Bytes\n\n@docs empty, fromBytes, fromHex, fromList, fromURI, fromUTF8\n\n# Basics\n\n@docs isBytes, isEmpty, isHex, length\n\n# Bytes to Array, List or String\n\n@docs toArray, toList, toString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Bytes",
+        "comment": " Representation of fast immutable `Bytes`. The `ByteArray` constructor is not\nexposed from the module which ensures that `Bytes` will always hold valid `Int`\nvalues in the range of `0` - `255`.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " Returns an empty `Bytes` container. To be used with `Result.withDefault`:\n\n    Bytes.empty\n        == (Bytes.fromList [256] |> Result.withDefault empty)\n",
+        "type": "Bytes.Bytes"
+      },
+      {
+        "name": "fromBytes",
+        "comment": " Converts a `String` (`unescape(encodeURI(\"foo\"))`), where each `Char`\nrepresents a single `Byte`, to `Bytes`. It's your responsability to ensure that\nthe `String` complies with this constraint, see `Bytes.isBytes`:\n\n    Bytes.fromBytes \"Ã¦ Ã¸ Ã¥ Ã±\"\n        == Bytes.fromList [195, 166, 32, 195, 184, 32, 195, 165, 32, 195, 177]\n",
+        "type": "String -> Bytes.Bytes"
+      },
+      {
+        "name": "fromHex",
+        "comment": " Converts a `String`, where each `(Char, Char)` tuple represents a single\n`Hex` number, to `Bytes`. It's your responsability to ensure that the `String`\ncomplies with this constraint, see `Bytes.isHex`:\n\n    Bytes.fromHex \"7FFF\"\n        == Bytes.fromList [127, 255]\n\n    Bytes.fromHex \"7fff\"\n        == Bytes.fromList [127, 255]\n",
+        "type": "String -> Bytes.Bytes"
+      },
+      {
+        "name": "fromList",
+        "comment": " Converts a `List` of `Int` to `Bytes` if they are all in the range `0 - 255`\notherwise it will return and error message:\n\n    Bytes.fromList [256]\n        == Err \"Invalid numbers! Numbers must be between 0 and 255\"\n\n    ((Bytes.fromList [255] |> Bytes.toList) == [255])\n        == True\n",
+        "type": "List Int -> Result.Result String Bytes.Bytes"
+      },
+      {
+        "name": "fromURI",
+        "comment": " Converts an `URI` (Uniform Resource Identifier) `String` to `Bytes`:\n\n    Bytes.fromUri \"%C3%A6%20%C3%B8%20%C3%A5%20%C3%B1\"\n        == Bytes.fromList [195, 166, 32, 195, 184, 32, 195, 165, 32, 195, 177]\n",
+        "type": "String -> Bytes.Bytes"
+      },
+      {
+        "name": "fromUTF8",
+        "comment": " Converts an `UTF-8` `String` to `Bytes`:\n\n    Bytes.fromUTF8 \"æ ø å ñ\"\n        == Bytes.fromList [195, 166, 32, 195, 184, 32, 195, 165, 32, 195, 177]\n",
+        "type": "String -> Bytes.Bytes"
+      },
+      {
+        "name": "isBytes",
+        "comment": " Determine if each `Char` in a `String` represents a single `Byte`:\n\n    Bytes.isBytes \"Ã¦ Ã¸ Ã¥ Ã±\"\n        |> Expect.equal True\n\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if the `Bytes` container is empty:\n\n    Bytes.isEmpty Bytes.empty\n        |> Expect.equal True\n",
+        "type": "Bytes.Bytes -> Bool"
+      },
+      {
+        "name": "isHex",
+        "comment": " Determine if all `Char` in a `String` are `HexDigits`:\n\n    Bytes.isHex \"7FFF\"\n        |> Expect.equal True\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": " The number of the `Bytes`:\n\n    Bytes.fromList\n        [ 127, 255 ]\n        |> Result.withDefault empty\n        |> Bytes.length\n        |> Expect.equal 2\n",
+        "type": "Bytes.Bytes -> Int"
+      },
+      {
+        "name": "toArray",
+        "comment": " Creates an `Array` of `Int` from `Bytes`:\n\n    Bytes.fromList\n        [ 127, 255 ]\n        |> Result.withDefault empty\n        |> Bytes.toArray\n        |> Expect.equal ([ 127, 255 ] |> Array.fromList)\n",
+        "type": "Bytes.Bytes -> Array.Array Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Creates a `List` of `Int` from `Bytes`:\n\n    Bytes.fromList\n        [ 127, 255 ]\n        |> Result.withDefault empty\n        |> Bytes.toList\n        |> Expect.equal [ 127, 255 ]\n",
+        "type": "Bytes.Bytes -> List Int"
+      },
+      {
+        "name": "toString",
+        "comment": " Creates a `String` (`unescape(encodeURI(\"foo\"))`), where each `Char`\nrepresents a single `Byte`, from `Bytes`:\n\n    Bytes.fromList\n        [ 195, 166, 32, 195, 184, 32, 195, 165, 32, 195, 177 ]\n        |> Result.withDefault empty\n        |> Bytes.toString\n        |> Expect.equal \"Ã¦ Ã¸ Ã¥ Ã±\"\n",
+        "type": "Bytes.Bytes -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Svg.Coordinates",
+    "comment": " Cartesian to SVG coordinate translation helpers.\n\n# Plane\n@docs Plane, Axis\n\n# Plane based on data\n@docs PlaneConfig, AxisConfig, Point, point, plane\n\n# Cartesian to SVG\n@docs toSVGX, toSVGY, scaleSVG\n\n# SVG to cartesian\n@docs toCartesianX, toCartesianY, scaleCartesian\n\n# Helpers\n@docs place, placeWithOffset\n\n",
+    "aliases": [
+      {
+        "name": "Axis",
+        "comment": " The axis of the plane.\n\n  - The margin properties are the upper and lower margins for the axis. So for example,\n    if you want to add margin on top of the plot, increase the marginUpper of\n    the y-`Axis`.\n  - The length is the length of your SVG axis. (Plane.x.length is the width,\n    Plane.y.length is the height)\n  - The `min` and `max` values is the reach of your plane. (Domain for the y-axis, range\n    for the x-axis)\n",
+        "args": [],
+        "type": "{ marginLower : Float , marginUpper : Float , length : Float , min : Float , max : Float }"
+      },
+      {
+        "name": "AxisConfig",
+        "comment": " The axis in `PlaneConfig`. The only difference from the `Plane` is the reach properties.\n  Here the `min` and `max` properties is for restricting the reach of your plane based on\n  the data. So if for example you'd want to have your x-axis _always_ be always zero,\n  then you'd need to add `min = always 0` on your x-`AxisConfig`.\n",
+        "args": [],
+        "type": "{ marginLower : Float , marginUpper : Float , length : Float , min : Float -> Float , max : Float -> Float }"
+      },
+      {
+        "name": "Plane",
+        "comment": " The properties of your plane.\n",
+        "args": [],
+        "type": "{ x : Svg.Coordinates.Axis, y : Svg.Coordinates.Axis }"
+      },
+      {
+        "name": "PlaneConfig",
+        "comment": " The configuration when you want to build a plane based on some\n  data points.\n",
+        "args": [],
+        "type": "{ x : Svg.Coordinates.AxisConfig, y : Svg.Coordinates.AxisConfig }"
+      },
+      {
+        "name": "Point",
+        "comment": " Representation of a point in your plane.\n",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "place",
+        "comment": " A `transform translate(x, y)` SVG attribute. Beware that using this and\n  and another transform attribute on the same node, will overwrite the first.\n  If that's the case, just make one yourself:\n\n    myTransformAttribute : Svg.Attribute msg\n    myTransformAttribute =\n      transform <|\n        \"translate(\"\n        ++ toString (toSVGX plane x) ++ \",\"\n        ++ toString (toSVGY plane y) ++ \") \"\n        ++ \"rotateX(\" ++ whatever ++ \")\"\n",
+        "type": "Svg.Coordinates.Plane -> Svg.Coordinates.Point -> Svg.Attribute msg"
+      },
+      {
+        "name": "placeWithOffset",
+        "comment": " Place at coordinate, but you may add a SVG offset. See `place` above for important notes.\n",
+        "type": "Svg.Coordinates.Plane -> Svg.Coordinates.Point -> Float -> Float -> Svg.Attribute msg"
+      },
+      {
+        "name": "plane",
+        "comment": " Produce the plane fitting your points.\n",
+        "type": "Svg.Coordinates.PlaneConfig -> List Svg.Coordinates.Point -> Svg.Coordinates.Plane"
+      },
+      {
+        "name": "point",
+        "comment": " Produce a point. First argument is the x-coordinate,\n  second is the y-coordinate.\n",
+        "type": "Float -> Float -> Svg.Coordinates.Point"
+      },
+      {
+        "name": "scaleCartesian",
+        "comment": " For scaling a SVG value to a cartesian value. Note that this will _not_\n  return a coordinate on the plane, but the scaled value.\n",
+        "type": "Svg.Coordinates.Axis -> Float -> Float"
+      },
+      {
+        "name": "scaleSVG",
+        "comment": " For scaling a cartesian value to a SVG value. Note that this will _not_\n  return a coordinate on the plane, but the scaled value.\n",
+        "type": "Svg.Coordinates.Axis -> Float -> Float"
+      },
+      {
+        "name": "toCartesianX",
+        "comment": " Translate a cartesian x-coordinate to its SVG x-coordinate.\n",
+        "type": "Svg.Coordinates.Plane -> Float -> Float"
+      },
+      {
+        "name": "toCartesianY",
+        "comment": " Translate a cartesian y-coordinate to its SVG y-coordinate.\n",
+        "type": "Svg.Coordinates.Plane -> Float -> Float"
+      },
+      {
+        "name": "toSVGX",
+        "comment": " Translate a SVG x-coordinate to its cartesian x-coordinate.\n",
+        "type": "Svg.Coordinates.Plane -> Float -> Float"
+      },
+      {
+        "name": "toSVGY",
+        "comment": " Translate a SVG y-coordinate to its cartesian y-coordinate.\n",
+        "type": "Svg.Coordinates.Plane -> Float -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

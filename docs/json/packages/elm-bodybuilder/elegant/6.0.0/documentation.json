@@ -1,0 +1,2275 @@
+[
+  {
+    "name": "Elegant.Grid",
+    "comment": "\n\n\n# Grid\n\n@docs col\n@docs fullGrid\n@docs grid\n@docs standardGrid\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "col",
+        "comment": " Creates a column\n",
+        "type": "Int -> Int -> List (BodyBuilder.Node interactiveIn phrasingIn spanningIn listIn msg) -> Elegant.Grid.Column interactiveIn phrasingIn spanningIn listIn msg"
+      },
+      {
+        "name": "fullGrid",
+        "comment": " Full grid creates a grid with no gutter\n",
+        "type": "List { a | content : List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg), denominator : Int, numerator : Int } -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "grid",
+        "comment": " Creates a grid with a custom gutter and columns\n",
+        "type": "Elegant.SizeUnit -> List { a | content : List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg), denominator : Int, numerator : Int } -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "standardGrid",
+        "comment": " Standard grid creates a grid with a 12px gutter\n",
+        "type": "List { a | content : List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg), denominator : Int, numerator : Int } -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "BodyBuilder",
+    "comment": "\n\n\n# Type\n\n@docs Interactive\n@docs NotInteractive\n@docs Phrasing\n@docs NotPhrasing\n@docs Spanning\n@docs NotSpanning\n@docs InsideHeading\n@docs OutsideHeading\n@docs ListElement\n@docs NotListElement\n@docs OnMouseEvents\n@docs OnStringInputEvent\n@docs OnIntInputEvent\n@docs OnColorInputEvent\n@docs OnCheckEvent\n@docs OnSubmitEvent\n@docs OnFocusEvent\n@docs OnBlurEvent\n@docs OnEvent\n@docs IdAttribute\n@docs ClassAttribute\n@docs TabindexAttribute\n@docs TitleAttribute\n@docs StyleAttribute\n@docs TargetAttribute\n@docs HrefAttribute\n@docs SrcAttribute\n@docs AltAttribute\n@docs StringValue\n@docs IntValue\n@docs ColorValue\n@docs NameAttribute\n@docs OptionsAttribute\n@docs DisabledAttribute\n@docs WidthAttribute\n@docs HeightAttribute\n@docs AAttributes\n@docs FlowAttributes\n@docs ImgAttributes\n@docs IframeAttributes\n@docs InputHiddenAttributes\n@docs InputTextAttributes\n@docs TextareaAttributes\n@docs ButtonAttributes\n@docs InputNumberAttributes\n@docs InputColorAttributes\n@docs InputCheckboxAttributes\n@docs InputFileAttributes\n@docs InputPasswordAttributes\n@docs InputRadioAttributes\n@docs InputRangeAttributes\n@docs InputSubmitAttributes\n@docs InputUrlAttributes\n@docs SelectAttributes\n@docs ProgressAttributes\n@docs AudioAttributes\n@docs VideoAttributes\n@docs CanvasAttributes\n@docs Node\n@docs Position\n@docs h1\n@docs h2\n@docs h3\n@docs h4\n@docs h5\n@docs h6\n@docs a\n@docs button\n@docs div\n@docs ul\n@docs ol\n@docs li\n@docs p\n@docs br\n@docs span\n@docs textarea\n@docs img\n@docs audio\n@docs progress\n@docs text\n@docs node\n@docs leaf\n@docs container\n@docs olLi\n@docs ulLi\n@docs inputHidden\n@docs inputText\n@docs inputNumber\n@docs inputColor\n@docs inputCheckbox\n@docs inputFile\n@docs inputPassword\n@docs inputRadio\n@docs inputRange\n@docs inputSubmit\n@docs inputUrl\n@docs select\n@docs options\n@docs option\n@docs selectedOption\n@docs href\n@docs value\n@docs checked\n@docs title\n@docs tabindex\n@docs id\n@docs disabled\n@docs min\n@docs max\n@docs step\n@docs label\n@docs position\n@docs autocomplete\n@docs placeholder\n@docs onClick\n@docs onDoubleClick\n@docs onMouseUp\n@docs onMouseOut\n@docs onMouseOver\n@docs onMouseDown\n@docs onMouseLeave\n@docs onMouseEnter\n@docs onInput\n@docs onCheck\n@docs onSubmit\n@docs onFocus\n@docs onBlur\n@docs on\n@docs class\n@docs style\n@docs hoverStyle\n@docs focusStyle\n@docs target\n@docs name\n@docs width\n@docs height\n@docs toTree\n@docs BodyBuilderProgramArgs\n@docs toHtml\n@docs program\n\n",
+    "aliases": [
+      {
+        "name": "AAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.TargetAttribute (BodyBuilder.HrefAttribute (BodyBuilder.VisibleAttributesAndEvents msg {}))"
+      },
+      {
+        "name": "AltAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | alt : String }"
+      },
+      {
+        "name": "AudioAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.SrcAttribute (BodyBuilder.VisibleAttributesAndEvents msg {})"
+      },
+      {
+        "name": "BodyBuilderProgramArgs",
+        "comment": " ",
+        "args": [
+          "model",
+          "a",
+          "b",
+          "c",
+          "msg"
+        ],
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , view : model -> BodyBuilder.Node a b c BodyBuilder.NotListElement msg }"
+      },
+      {
+        "name": "ButtonAttributes",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "BodyBuilder.DisabledAttribute (BodyBuilder.VisibleAttributesAndEvents msg a)"
+      },
+      {
+        "name": "CanvasAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.HeightAttribute (BodyBuilder.WidthAttribute (BodyBuilder.VisibleAttributesAndEvents msg {}))"
+      },
+      {
+        "name": "ClassAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | class : List String }"
+      },
+      {
+        "name": "ColorValue",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "BodyBuilder.ValueAttribute Color.Color a"
+      },
+      {
+        "name": "DisabledAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | disabled : Bool }"
+      },
+      {
+        "name": "FlowAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.VisibleAttributesAndEvents msg {}"
+      },
+      {
+        "name": "HeightAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | height : Maybe.Maybe Int }"
+      },
+      {
+        "name": "HrefAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | href : Maybe.Maybe BodyBuilder.Url }"
+      },
+      {
+        "name": "IdAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | id : Maybe.Maybe String }"
+      },
+      {
+        "name": "IframeAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.SrcAttribute (BodyBuilder.VisibleAttributesAndEvents msg {})"
+      },
+      {
+        "name": "ImgAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.HeightAttribute (BodyBuilder.WidthAttribute (BodyBuilder.AltAttribute (BodyBuilder.SrcAttribute (BodyBuilder.VisibleAttributesAndEvents msg {}))))"
+      },
+      {
+        "name": "InputCheckboxAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.OnCheckEvent msg (BodyBuilder.InputStringValueAttributes msg { checked : Bool })"
+      },
+      {
+        "name": "InputColorAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.OnColorInputEvent msg (BodyBuilder.ColorValue (BodyBuilder.InputVisibleAttributes msg {}))"
+      },
+      {
+        "name": "InputFileAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.InputVisibleAttributes msg {}"
+      },
+      {
+        "name": "InputHiddenAttributes",
+        "comment": " ",
+        "args": [],
+        "type": "BodyBuilder.InputAttributes (BodyBuilder.StringValue { universal : BodyBuilder.UniversalAttributes {}, type_ : String })"
+      },
+      {
+        "name": "InputNumberAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.StepAttribute (BodyBuilder.MaxAttribute (BodyBuilder.MinAttribute (BodyBuilder.OnIntInputEvent msg (BodyBuilder.IntValue (BodyBuilder.InputVisibleAttributes msg {})))))"
+      },
+      {
+        "name": "InputPasswordAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.InputTextAttributes msg {}"
+      },
+      {
+        "name": "InputRadioAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.InputStringValueAttributes msg {}"
+      },
+      {
+        "name": "InputRangeAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.InputNumberAttributes msg"
+      },
+      {
+        "name": "InputSubmitAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.ValueAttribute String (BodyBuilder.OnSubmitEvent msg (BodyBuilder.ButtonAttributes msg { type_ : String }))"
+      },
+      {
+        "name": "InputTextAttributes",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "BodyBuilder.AutocompleteAttribute (BodyBuilder.PlaceholderAttribute (BodyBuilder.OnStringInputEvent msg (BodyBuilder.InputStringValueAttributes msg a)))"
+      },
+      {
+        "name": "InputUrlAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.InputTextAttributes msg {}"
+      },
+      {
+        "name": "IntValue",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "BodyBuilder.ValueAttribute Int a"
+      },
+      {
+        "name": "NameAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | name : Maybe.Maybe String }"
+      },
+      {
+        "name": "OnBlurEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onBlurEvent : Maybe.Maybe msg }"
+      },
+      {
+        "name": "OnCheckEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onCheckEvent : Maybe.Maybe (Bool -> msg) }"
+      },
+      {
+        "name": "OnColorInputEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "BodyBuilder.OnInputEvent Color.Color msg a"
+      },
+      {
+        "name": "OnEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onEvent : Maybe.Maybe ( String, Json.Decode.Decoder msg ) }"
+      },
+      {
+        "name": "OnFocusEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onFocusEvent : Maybe.Maybe msg }"
+      },
+      {
+        "name": "OnIntInputEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "BodyBuilder.OnInputEvent Int msg a"
+      },
+      {
+        "name": "OnMouseEvents",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onMouseEvents : BodyBuilder.OnMouseEventsInside msg }"
+      },
+      {
+        "name": "OnStringInputEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "BodyBuilder.OnInputEvent String msg a"
+      },
+      {
+        "name": "OnSubmitEvent",
+        "comment": " ",
+        "args": [
+          "msg",
+          "a"
+        ],
+        "type": "{ a | onSubmitEvent : Maybe.Maybe msg }"
+      },
+      {
+        "name": "OptionsAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | options : List { value : String, label : String } }"
+      },
+      {
+        "name": "ProgressAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.VisibleAttributesAndEvents msg {}"
+      },
+      {
+        "name": "SelectAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.StringValue (BodyBuilder.OptionsAttribute (BodyBuilder.VisibleAttributesAndEvents msg {}))"
+      },
+      {
+        "name": "SrcAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | src : String }"
+      },
+      {
+        "name": "StringValue",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "BodyBuilder.ValueAttribute String a"
+      },
+      {
+        "name": "StyleAttribute",
+        "comment": " ",
+        "args": [],
+        "type": "{ standard : List (Elegant.Style -> Elegant.Style) , hover : List (Elegant.Style -> Elegant.Style) , focus : List (Elegant.Style -> Elegant.Style) }"
+      },
+      {
+        "name": "TabindexAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | tabindex : Maybe.Maybe Int }"
+      },
+      {
+        "name": "TargetAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | target : Maybe.Maybe String }"
+      },
+      {
+        "name": "TextareaAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.OnStringInputEvent msg (BodyBuilder.NameAttribute (BodyBuilder.StringValue (BodyBuilder.VisibleAttributesAndEvents msg {})))"
+      },
+      {
+        "name": "TitleAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | title : Maybe.Maybe String }"
+      },
+      {
+        "name": "VideoAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "BodyBuilder.VisibleAttributesAndEvents msg {}"
+      },
+      {
+        "name": "WidthAttribute",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "{ a | width : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "InsideHeading",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Interactive",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "ListElement",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Node",
+        "comment": " ",
+        "args": [
+          "interactiveContent",
+          "phrasingContent",
+          "spanningContent",
+          "listContent",
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "NotInteractive",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "NotListElement",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "NotPhrasing",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "NotSpanning",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "OutsideHeading",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Phrasing",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Position",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Before",
+            []
+          ],
+          [
+            "After",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Spanning",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "a",
+        "comment": " ",
+        "type": "List (BodyBuilder.AAttributes msg -> BodyBuilder.AAttributes msg) -> List (BodyBuilder.Node BodyBuilder.NotInteractive phrasingContent spanningContent BodyBuilder.NotListElement msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "audio",
+        "comment": " ",
+        "type": "List (BodyBuilder.AudioAttributes msg -> BodyBuilder.AudioAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "autocomplete",
+        "comment": " ",
+        "type": "Bool -> BodyBuilder.AutocompleteAttribute a -> BodyBuilder.AutocompleteAttribute a"
+      },
+      {
+        "name": "br",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> BodyBuilder.Node interactiveContent BodyBuilder.Phrasing spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "button",
+        "comment": " ",
+        "type": "List (BodyBuilder.ButtonAttributes msg {} -> BodyBuilder.ButtonAttributes msg {}) -> List (BodyBuilder.Node BodyBuilder.NotInteractive phrasingContent spanningContent BodyBuilder.NotListElement msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "checked",
+        "comment": " ",
+        "type": "Bool -> { a | checked : Bool } -> { a | checked : Bool }"
+      },
+      {
+        "name": "class",
+        "comment": " ",
+        "type": "List String -> { a | universal : BodyBuilder.UniversalAttributes b } -> { a | universal : BodyBuilder.UniversalAttributes b }"
+      },
+      {
+        "name": "container",
+        "comment": " ",
+        "type": "List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "disabled",
+        "comment": " ",
+        "type": "BodyBuilder.DisabledAttribute a -> BodyBuilder.DisabledAttribute a"
+      },
+      {
+        "name": "div",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "focusStyle",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> { a | style : BodyBuilder.StyleAttribute } -> { a | style : BodyBuilder.StyleAttribute }"
+      },
+      {
+        "name": "h1",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "h2",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "h3",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "h4",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "h5",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "h6",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "height",
+        "comment": " ",
+        "type": "Int -> BodyBuilder.HeightAttribute a -> BodyBuilder.HeightAttribute a"
+      },
+      {
+        "name": "hoverStyle",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> { a | style : BodyBuilder.StyleAttribute } -> { a | style : BodyBuilder.StyleAttribute }"
+      },
+      {
+        "name": "href",
+        "comment": " ",
+        "type": "String -> BodyBuilder.HrefAttribute a -> BodyBuilder.HrefAttribute a"
+      },
+      {
+        "name": "id",
+        "comment": " ",
+        "type": "String -> { a | universal : BodyBuilder.UniversalAttributes b } -> { a | universal : BodyBuilder.UniversalAttributes b }"
+      },
+      {
+        "name": "img",
+        "comment": " ",
+        "type": "String -> String -> List (BodyBuilder.ImgAttributes msg -> BodyBuilder.ImgAttributes msg) -> BodyBuilder.Node interactiveContent phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "inputCheckbox",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputCheckboxAttributes msg -> BodyBuilder.InputCheckboxAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputColor",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputColorAttributes msg -> BodyBuilder.InputColorAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputFile",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputFileAttributes msg -> BodyBuilder.InputFileAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputHidden",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputHiddenAttributes -> BodyBuilder.InputHiddenAttributes) -> BodyBuilder.Node interactiveContent phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputNumber",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputNumberAttributes msg -> BodyBuilder.InputNumberAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputPassword",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputPasswordAttributes msg -> BodyBuilder.InputPasswordAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputRadio",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputRadioAttributes msg -> BodyBuilder.InputRadioAttributes msg) -> BodyBuilder.Node interactiveContent phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputRange",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputRangeAttributes msg -> BodyBuilder.InputRangeAttributes msg) -> BodyBuilder.Node interactiveContent phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputSubmit",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputSubmitAttributes msg -> BodyBuilder.InputSubmitAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputText",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputTextAttributes msg {} -> BodyBuilder.InputTextAttributes msg {}) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "inputUrl",
+        "comment": " ",
+        "type": "List (BodyBuilder.InputUrlAttributes msg -> BodyBuilder.InputUrlAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "label",
+        "comment": " ",
+        "type": "List (BodyBuilder.LabelAttributes msg -> BodyBuilder.LabelAttributes msg) -> BodyBuilder.Node BodyBuilder.NotInteractive BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg -> BodyBuilder.LabelAttribute msg a -> BodyBuilder.LabelAttribute msg a"
+      },
+      {
+        "name": "leaf",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "li",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.ListElement msg"
+      },
+      {
+        "name": "max",
+        "comment": " ",
+        "type": "Int -> BodyBuilder.MaxAttribute a -> BodyBuilder.MaxAttribute a"
+      },
+      {
+        "name": "min",
+        "comment": " ",
+        "type": "Int -> BodyBuilder.MinAttribute a -> BodyBuilder.MinAttribute a"
+      },
+      {
+        "name": "name",
+        "comment": " ",
+        "type": "String -> BodyBuilder.NameAttribute a -> BodyBuilder.NameAttribute a"
+      },
+      {
+        "name": "node",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "ol",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.ListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "olLi",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "on",
+        "comment": " ",
+        "type": "String -> Json.Decode.Decoder msg -> BodyBuilder.OnEvent msg a -> BodyBuilder.OnEvent msg a"
+      },
+      {
+        "name": "onBlur",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnBlurEvent msg a -> BodyBuilder.OnBlurEvent msg a"
+      },
+      {
+        "name": "onCheck",
+        "comment": " ",
+        "type": "(Bool -> msg) -> BodyBuilder.OnCheckEvent msg a -> BodyBuilder.OnCheckEvent msg a"
+      },
+      {
+        "name": "onClick",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onDoubleClick",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onFocus",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnFocusEvent msg a -> BodyBuilder.OnFocusEvent msg a"
+      },
+      {
+        "name": "onInput",
+        "comment": " ",
+        "type": "(a -> msg) -> BodyBuilder.OnInputEvent a msg b -> BodyBuilder.OnInputEvent a msg b"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onMouseEnter",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onMouseLeave",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onMouseOut",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onMouseOver",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onMouseUp",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnMouseEvents msg a -> BodyBuilder.OnMouseEvents msg a"
+      },
+      {
+        "name": "onSubmit",
+        "comment": " ",
+        "type": "msg -> BodyBuilder.OnSubmitEvent msg a -> BodyBuilder.OnSubmitEvent msg a"
+      },
+      {
+        "name": "option",
+        "comment": " ",
+        "type": "String -> String -> { label : String, value : String }"
+      },
+      {
+        "name": "options",
+        "comment": " ",
+        "type": "List { value : String, label : String } -> BodyBuilder.OptionsAttribute a -> BodyBuilder.OptionsAttribute a"
+      },
+      {
+        "name": "p",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent BodyBuilder.NotPhrasing spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " ",
+        "type": "String -> BodyBuilder.PlaceholderAttribute a -> BodyBuilder.PlaceholderAttribute a"
+      },
+      {
+        "name": "position",
+        "comment": " ",
+        "type": "BodyBuilder.Position -> BodyBuilder.PositionAttribute a -> BodyBuilder.PositionAttribute a"
+      },
+      {
+        "name": "program",
+        "comment": " ",
+        "type": "BodyBuilder.BodyBuilderProgramArgs model a b c msg -> Platform.Program Basics.Never model msg"
+      },
+      {
+        "name": "progress",
+        "comment": " ",
+        "type": "List (BodyBuilder.ProgressAttributes msg -> BodyBuilder.ProgressAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "select",
+        "comment": " ",
+        "type": "List (BodyBuilder.SelectAttributes msg -> BodyBuilder.SelectAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent listContent msg"
+      },
+      {
+        "name": "selectedOption",
+        "comment": " ",
+        "type": "String -> BodyBuilder.StringValue a -> BodyBuilder.StringValue a"
+      },
+      {
+        "name": "span",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent BodyBuilder.Phrasing BodyBuilder.NotSpanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "step",
+        "comment": " ",
+        "type": "Int -> BodyBuilder.StepAttribute a -> BodyBuilder.StepAttribute a"
+      },
+      {
+        "name": "style",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> { a | style : BodyBuilder.StyleAttribute } -> { a | style : BodyBuilder.StyleAttribute }"
+      },
+      {
+        "name": "tabindex",
+        "comment": " ",
+        "type": "Int -> { a | universal : BodyBuilder.UniversalAttributes b } -> { a | universal : BodyBuilder.UniversalAttributes b }"
+      },
+      {
+        "name": "target",
+        "comment": " ",
+        "type": "String -> BodyBuilder.TargetAttribute a -> BodyBuilder.TargetAttribute a"
+      },
+      {
+        "name": "text",
+        "comment": " ",
+        "type": "String -> BodyBuilder.Node interactiveContent phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "textarea",
+        "comment": " ",
+        "type": "List (BodyBuilder.TextareaAttributes msg -> BodyBuilder.TextareaAttributes msg) -> BodyBuilder.Node BodyBuilder.Interactive phrasingContent spanningContent BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "title",
+        "comment": " ",
+        "type": "String -> { a | universal : BodyBuilder.UniversalAttributes b } -> { a | universal : BodyBuilder.UniversalAttributes b }"
+      },
+      {
+        "name": "toHtml",
+        "comment": " ",
+        "type": "BodyBuilder.Node interactiveContent phrasingContent spanningContent listContent msg -> Html.Html msg"
+      },
+      {
+        "name": "toTree",
+        "comment": " ",
+        "type": "BodyBuilder.Node interactiveContent phrasingContent spanningContent listContent msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "ul",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.ListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "ulLi",
+        "comment": " ",
+        "type": "List (BodyBuilder.FlowAttributes msg -> BodyBuilder.FlowAttributes msg) -> List (BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg) -> BodyBuilder.Node interactiveContent phrasingContent BodyBuilder.Spanning BodyBuilder.NotListElement msg"
+      },
+      {
+        "name": "value",
+        "comment": " ",
+        "type": "a -> BodyBuilder.ValueAttribute a b -> BodyBuilder.ValueAttribute a b"
+      },
+      {
+        "name": "width",
+        "comment": " ",
+        "type": "Int -> BodyBuilder.WidthAttribute a -> BodyBuilder.WidthAttribute a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "BodyBuilderHtml",
+    "comment": "\n\n\n# Types\n\n@docs HtmlAttributes\n@docs view\n@docs style\n@docs hoverStyle\n@docs focusStyle\n@docs content\n@docs div\n@docs tag\n@docs text\n@docs node\n@docs leaf\n@docs container\n@docs type_\n@docs max\n@docs min\n@docs step\n@docs src\n@docs alt\n@docs defaultValue\n@docs onInput\n@docs href\n@docs none\n@docs id\n@docs class\n@docs tabindex\n@docs title\n@docs value\n@docs name\n@docs disabled\n@docs checked\n@docs selectOption\n@docs selected\n@docs target\n@docs width\n@docs height\n@docs label\n@docs placeholder\n@docs autocomplete\n@docs onClick\n@docs onDoubleClick\n@docs onMouseUp\n@docs onMouseOut\n@docs onMouseOver\n@docs onMouseDown\n@docs onMouseLeave\n@docs onMouseEnter\n@docs onCheck\n@docs onSubmit\n@docs onBlur\n@docs onFocus\n@docs on\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "HtmlAttributes",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "alt",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "autocomplete",
+        "comment": " ",
+        "type": "Bool -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "checked",
+        "comment": " ",
+        "type": "Bool -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "class",
+        "comment": " ",
+        "type": "List String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "container",
+        "comment": " ",
+        "type": "List (BodyBuilderHtml.HtmlAttributes msg) -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "content",
+        "comment": " ",
+        "type": "List (BodyBuilderHtml.HtmlAttributes msg) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "defaultValue",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "disabled",
+        "comment": " ",
+        "type": "BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "div",
+        "comment": " ",
+        "type": "BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "focusStyle",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "height",
+        "comment": " ",
+        "type": "Int -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "hoverStyle",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "href",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "id",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "label",
+        "comment": " ",
+        "type": "BodyBuilderHtml.Label msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "leaf",
+        "comment": " ",
+        "type": "List (BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg) -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "max",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "min",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "name",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "node",
+        "comment": " ",
+        "type": "List (BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg) -> List (BodyBuilderHtml.HtmlAttributes msg) -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "none",
+        "comment": " ",
+        "type": "BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "on",
+        "comment": " ",
+        "type": "String -> Json.Decode.Decoder msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onBlur",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onCheck",
+        "comment": " ",
+        "type": "(Bool -> msg) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onClick",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onDoubleClick",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onFocus",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onInput",
+        "comment": " ",
+        "type": "(String -> msg) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseEnter",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseLeave",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseOut",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseOver",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onMouseUp",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "onSubmit",
+        "comment": " ",
+        "type": "msg -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "selectOption",
+        "comment": " ",
+        "type": "Maybe.Maybe String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "selected",
+        "comment": " ",
+        "type": "Maybe.Maybe String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "src",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "step",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "style",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "tabindex",
+        "comment": " ",
+        "type": "Int -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "tag",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "target",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "text",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "title",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "type_",
+        "comment": " ",
+        "type": "String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "value",
+        "comment": " ",
+        "type": "Maybe.Maybe String -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      },
+      {
+        "name": "view",
+        "comment": " ",
+        "type": "BodyBuilderHtml.HtmlAttributes msg -> Html.Html msg"
+      },
+      {
+        "name": "width",
+        "comment": " ",
+        "type": "Int -> BodyBuilderHtml.HtmlAttributes msg -> BodyBuilderHtml.HtmlAttributes msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elegant.Elements",
+    "comment": " @docs border\n@docs flexnav\n@docs border\n@docs borderBottom\n@docs link\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "border",
+        "comment": " Create a solid border with 1px of width and the color is a parameter\n",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottom",
+        "comment": " Create a solid border bottom with 1px of width and the color is a parameter\n",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexnav",
+        "comment": " Create a flex navigation\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "link",
+        "comment": " Create a nice looking Link\n",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Elegant",
+    "comment": "\n\n\n# Types\n\n@docs Vector\n@docs Style\n@docs SizeUnit\n@docs BoxShadow\n@docs Offset\n\n# Styling\n@docs defaultStyle\n@docs inlineStyle\n@docs convertStyles\n@docs classes\n@docs classesHover\n@docs classesFocus\n@docs stylesToCss\n@docs screenWidthBetween\n@docs screenWidthGE\n@docs screenWidthLE\n@docs userSelectNone\n@docs userSelectAll\n\n# Styles\n## Positions\n@docs positionStatic\n@docs positionAbsolute\n@docs positionRelative\n@docs positionFixed\n@docs left\n@docs right\n@docs top\n@docs bottom\n@docs absolutelyPositionned\n@docs verticalAlignMiddle\n\n## Align Items\n@docs alignItemsBaseline\n@docs alignItemsCenter\n@docs alignItemsFlexStart\n@docs alignItemsFlexEnd\n@docs alignItemsInherit\n@docs alignItemsInitial\n@docs alignItemsStretch\n@docs alignSelfCenter\n\n\n## SizeUnit operations\n\n@docs opposite\n\n## Paddings\n@docs padding\n@docs paddingHorizontal\n@docs paddingVertical\n@docs paddingLeft\n@docs paddingRight\n@docs paddingTop\n@docs paddingBottom\n\n## Margins\n@docs margin\n@docs marginAuto\n@docs marginHorizontal\n@docs marginVertical\n@docs marginTop\n@docs marginBottom\n@docs marginLeft\n@docs marginRight\n\n## Text Attributes\n@docs textColor\n@docs uppercase\n@docs lowercase\n@docs capitalize\n@docs textDecorationNone\n@docs underline\n@docs lineThrough\n@docs bold\n@docs strong\n@docs lineHeight\n@docs fontWeight\n@docs fontWeightNormal\n@docs fontStyleNormal\n@docs fontStyleItalic\n@docs fontSize\n@docs cursorPointer\n@docs lineHeightNormal\n@docs whiteSpaceNoWrap\n\n## Text Alignements\n@docs textCenter\n@docs textLeft\n@docs textRight\n@docs textJustify\n@docs backgroundColor\n@docs backgroundImage\n@docs withUrl\n@docs backgroundImages\n\n## Border\n@docs borderNone\n@docs borderColor\n@docs borderSolid\n@docs borderDashed\n@docs borderWidth\n@docs borderBottomColor\n@docs borderBottomWidth\n@docs borderBottomSolid\n@docs borderBottomDashed\n@docs borderLeftColor\n@docs borderLeftWidth\n@docs borderLeftSolid\n@docs borderLeftDashed\n@docs borderTopColor\n@docs borderTopWidth\n@docs borderTopSolid\n@docs borderTopDashed\n@docs borderRightColor\n@docs borderRightWidth\n@docs borderRightSolid\n@docs borderRightDashed\n@docs borderBottomLeftRadius\n@docs borderBottomRightRadius\n@docs borderTopLeftRadius\n@docs borderTopRightRadius\n@docs borderRadius\n@docs borderAndTextColor\n@docs outlineWidth\n@docs outlineStyleSolid\n@docs outlineStyleDashed\n@docs outlineColor\n@docs outlineNone\n@docs boxShadow\n@docs boxShadowPlain\n@docs boxShadowBlurry\n@docs boxShadowCenteredBlurry\n\n## Display\n@docs displayBlock\n@docs displayInlineBlock\n@docs displayFlex\n@docs displayInlineFlex\n@docs displayInline\n@docs displayNone\n\n## Flex Attributes\n@docs flex\n@docs flexWrapWrap\n@docs flexWrapNoWrap\n@docs flexBasis\n@docs flexGrow\n@docs flexShrink\n@docs flexDirectionColumn\n@docs flexDirectionRow\n\n## Opacity\n@docs opacity\n\n## Overflow\n@docs overflowAuto\n@docs overflowHidden\n@docs overflowScroll\n@docs overflowVisible\n@docs overflowXAuto\n@docs overflowXVisible\n@docs overflowXHidden\n@docs overflowXScroll\n@docs overflowYAuto\n@docs overflowYVisible\n@docs overflowYHidden\n@docs overflowYScroll\n@docs textOverflowEllipsis\n\n\n## List Style Type\n@docs listStyleNone\n@docs listStyleDisc\n@docs listStyleCircle\n@docs listStyleSquare\n@docs listStyleDecimal\n@docs listStyleGeorgian\n\n## Round\n@docs roundCorner\n@docs round\n\n\n## Justify Content\n\n@docs justifyContentSpaceBetween\n@docs justifyContentSpaceAround\n@docs justifyContentCenter\n\n## Spacings\n@docs spaceBetween\n@docs spaceAround\n@docs fontFamilyInherit\n@docs fontFamilySansSerif\n@docs fontFamily\n@docs FontFamily\n@docs CustomFontFamily\n\n## Width and Height\n@docs width\n@docs widthPercent\n@docs maxWidth\n@docs minWidth\n@docs height\n@docs heightPercent\n@docs maxHeight\n@docs minHeight\n@docs fullWidth\n\n## Z-Index\n@docs zIndex\n\n## Visibility\n@docs visibilityHidden\n\n\n# Constants\n\n## Sizes\n@docs huge\n@docs large\n@docs medium\n@docs small\n@docs tiny\n@docs zero\n\n## Color\n@docs transparent\n\n\n## Headings Helper functions\n\n@docs h1S\n@docs h2S\n@docs h3S\n@docs h4S\n@docs h5S\n@docs h6S\n@docs heading\n\n## Font Sizes\n@docs alpha\n@docs beta\n@docs gamma\n@docs delta\n@docs epsilon\n@docs zeta\n@docs eta\n@docs theta\n@docs iota\n@docs kappa\n\n",
+    "aliases": [
+      {
+        "name": "BoxShadow",
+        "comment": " BoxShadow type\n",
+        "args": [],
+        "type": "{ inset : Bool , spreadRadius : Maybe.Maybe Elegant.SizeUnit , blurRadius : Maybe.Maybe Elegant.SizeUnit , maybeColor : Maybe.Maybe Color.Color , offset : Elegant.Offset }"
+      },
+      {
+        "name": "Offset",
+        "comment": " Offset type\n",
+        "args": [],
+        "type": "( Elegant.SizeUnit, Elegant.SizeUnit )"
+      },
+      {
+        "name": "Vector",
+        "comment": " ",
+        "args": [
+          "a"
+        ],
+        "type": "( a, a )"
+      }
+    ],
+    "types": [
+      {
+        "name": "CustomFontFamily",
+        "comment": " Custom font family\n",
+        "args": [],
+        "cases": [
+          [
+            "SystemFont",
+            [
+              "String"
+            ]
+          ],
+          [
+            "CustomFont",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "FontFamily",
+        "comment": " FontFamily Type\n",
+        "args": [],
+        "cases": [
+          [
+            "FontFamilyInherit",
+            []
+          ],
+          [
+            "FontFamilyCustom",
+            [
+              "List Elegant.CustomFontFamily"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "SizeUnit",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Px",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Pt",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Percent",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Vh",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Em",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Rem",
+            [
+              "Float"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Style",
+        "comment": " Contains all style for an element used with Elegant.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "absolutelyPositionned",
+        "comment": " ",
+        "type": "Elegant.Vector Float -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsBaseline",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsCenter",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsFlexEnd",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsFlexStart",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsInherit",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsInitial",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignItemsStretch",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alignSelfCenter",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "alpha",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "backgroundColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "backgroundImage",
+        "comment": " Add a background image to the styles\n",
+        "type": "Elegant.BackgroundImage -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "backgroundImages",
+        "comment": " Add multiple background images to the styles\n",
+        "type": "List Elegant.BackgroundImage -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "beta",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "bold",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderAndTextColor",
+        "comment": " Set both text and border in same color.\n",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomLeftRadius",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomRightRadius",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderBottomWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderLeftColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderLeftDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderLeftSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderLeftWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderNone",
+        "comment": " Remove the border\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderRadius",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderRightColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderRightDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderRightSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderRightWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopLeftRadius",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopRightRadius",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderTopWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "borderWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "bottom",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "boxShadow",
+        "comment": " Set the box shadow\n",
+        "type": "Elegant.BoxShadow -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "boxShadowBlurry",
+        "comment": " Create a blurry box shadow\n",
+        "type": "Elegant.Offset -> Elegant.SizeUnit -> Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "boxShadowCenteredBlurry",
+        "comment": " Create a centered blurry box shadow\n",
+        "type": "Elegant.SizeUnit -> Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "boxShadowPlain",
+        "comment": " Create a plain box shadow\n",
+        "type": "Elegant.Offset -> Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "capitalize",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "classes",
+        "comment": " Generate all the classes of a list of Styles\n",
+        "type": "Elegant.Style -> String"
+      },
+      {
+        "name": "classesFocus",
+        "comment": " Generate all the classes of a list of Focus Styles\n",
+        "type": "Elegant.Style -> String"
+      },
+      {
+        "name": "classesHover",
+        "comment": " Generate all the classes of a list of Hover Styles\n",
+        "type": "Elegant.Style -> String"
+      },
+      {
+        "name": "convertStyles",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> List ( String, String )"
+      },
+      {
+        "name": "cursorPointer",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "defaultStyle",
+        "comment": " ",
+        "type": "Elegant.Style"
+      },
+      {
+        "name": "delta",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "displayBlock",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "displayFlex",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "displayInline",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "displayInlineBlock",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "displayInlineFlex",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "displayNone",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "epsilon",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "eta",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "flex",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexBasis",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexDirectionColumn",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexDirectionRow",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexGrow",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexShrink",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexWrapNoWrap",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "flexWrapWrap",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontFamily",
+        "comment": " ",
+        "type": "Elegant.FontFamily -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontFamilyInherit",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontFamilySansSerif",
+        "comment": " Standard Sans Serif font family.\nInspired from <https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/>\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontSize",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontStyleItalic",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontStyleNormal",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontWeight",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fontWeightNormal",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "fullWidth",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "gamma",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "h1S",
+        "comment": " helper function to create a h1 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "h2S",
+        "comment": " helper function to create a h2 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "h3S",
+        "comment": " helper function to create a h3 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "h4S",
+        "comment": " helper function to create a h4 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "h5S",
+        "comment": " helper function to create a h5 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "h6S",
+        "comment": " helper function to create a h6 style\n",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "heading",
+        "comment": " helper function to create a heading\n",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "height",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "heightPercent",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "huge",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "inlineStyle",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> Html.Attribute msg"
+      },
+      {
+        "name": "iota",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "justifyContentCenter",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "justifyContentSpaceAround",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "justifyContentSpaceBetween",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "kappa",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "large",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "left",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "lineHeight",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "lineHeightNormal",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "lineThrough",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleCircle",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleDecimal",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleDisc",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleGeorgian",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleNone",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "listStyleSquare",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "lowercase",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "margin",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginAuto",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginBottom",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginHorizontal",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginLeft",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginRight",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginTop",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "marginVertical",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "maxHeight",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "maxWidth",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "medium",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "minHeight",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "minWidth",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "opacity",
+        "comment": " ",
+        "type": "Float -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "opposite",
+        "comment": " Calculate the opposite of a size unit value.\nEx : opposite (Px 2) == Px -2\n",
+        "type": "Elegant.SizeUnit -> Elegant.SizeUnit"
+      },
+      {
+        "name": "outlineColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "outlineNone",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "outlineStyleDashed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "outlineStyleSolid",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "outlineWidth",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowAuto",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowHidden",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowScroll",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowVisible",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowXAuto",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowXHidden",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowXScroll",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowXVisible",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowYAuto",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowYHidden",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowYScroll",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "overflowYVisible",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "padding",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingBottom",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingHorizontal",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingLeft",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingRight",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingTop",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "paddingVertical",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "positionAbsolute",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "positionFixed",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "positionRelative",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "positionStatic",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "right",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "round",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "roundCorner",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "screenWidthBetween",
+        "comment": " ",
+        "type": "Int -> Int -> List (Elegant.Style -> Elegant.Style) -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "screenWidthGE",
+        "comment": " ",
+        "type": "Int -> List (Elegant.Style -> Elegant.Style) -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "screenWidthLE",
+        "comment": " ",
+        "type": "Int -> List (Elegant.Style -> Elegant.Style) -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "small",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "spaceAround",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "spaceBetween",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "strong",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "stylesToCss",
+        "comment": " Generate all the css from a list of tuple : styles and hover\n",
+        "type": "List Elegant.ConditionalStyle -> String"
+      },
+      {
+        "name": "textCenter",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textColor",
+        "comment": " ",
+        "type": "Color.Color -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textDecorationNone",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textJustify",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textLeft",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textOverflowEllipsis",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "textRight",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "theta",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "tiny",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "top",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "transparent",
+        "comment": " ",
+        "type": "Color.Color"
+      },
+      {
+        "name": "underline",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "uppercase",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "userSelectAll",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "userSelectNone",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "verticalAlignMiddle",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "visibilityHidden",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "whiteSpaceNoWrap",
+        "comment": " ",
+        "type": "Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "width",
+        "comment": " ",
+        "type": "Elegant.SizeUnit -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "widthPercent",
+        "comment": " ",
+        "type": "Float -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "withUrl",
+        "comment": " Simple background image with only an url as source\n",
+        "type": "String -> Elegant.BackgroundImage"
+      },
+      {
+        "name": "zIndex",
+        "comment": " ",
+        "type": "Int -> Elegant.Style -> Elegant.Style"
+      },
+      {
+        "name": "zero",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      },
+      {
+        "name": "zeta",
+        "comment": " ",
+        "type": "Elegant.SizeUnit"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

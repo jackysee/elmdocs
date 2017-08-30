@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Adbs",
+    "comment": " This library converts Date.Date type to Dates in the\nBikarm Sambat Calendar (B.S) using the Miti type\n\n\n# Type\n\n@docs Miti\n@docs miti\n\n\n# Converters\n\n@docs ad2bs\n@docs bs2ad\n\n",
+    "aliases": [
+      {
+        "name": "Miti",
+        "comment": " Represent BS Date types in Miti format.\n",
+        "args": [],
+        "type": "{ year : Int, month : Int, day : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "ad2bs",
+        "comment": " Coverts Date type to a date string in BS calendar format\n\n    ad2bs (<Sat Jan 09 1955 00:00:00 GMT +0545 (NPT)> : Date.Date)\n    -- Just { year = 2000, month = 9, day = 17 } : Maybe.Maybe Miti\n\n",
+        "type": "Date.Date -> Maybe.Maybe Adbs.Miti"
+      },
+      {
+        "name": "bs2ad",
+        "comment": " Coverts date string in the BS calendar format to Date type\n\n    bs2ad ({ year = 2000, month = 9, day = 17 } : Miti)\n    -- Just <Sat Jan 09 1955 00:00:00 GMT +0545 (NPT)> : Date.Date)\n\n",
+        "type": "Adbs.Miti -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "miti",
+        "comment": " Constructor to create dates of the Miti type\n\n    miti 2047 3 11 =\n        { year = 2047, month = 3, day = 11 }\n\n",
+        "type": "Int -> Int -> Int -> Adbs.Miti"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

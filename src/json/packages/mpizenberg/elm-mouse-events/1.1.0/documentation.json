@@ -1,0 +1,61 @@
+[
+  {
+    "name": "Mouse",
+    "comment": " Handling detailed mouse events.\n\n@docs Event, Keys, Coordinates, Movement\n\n@docs onDown, onMove, onUp, onWithOptions\n\n@docs eventDecoder\n\n",
+    "aliases": [
+      {
+        "name": "Coordinates",
+        "comment": " Coordinates of a mouse event.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "Event",
+        "comment": " Type that get returned by a mouse event.\n",
+        "args": [],
+        "type": "{ key : Mouse.Keys , clientPos : Mouse.Coordinates , offsetPos : Mouse.Coordinates , movement : Mouse.Movement }"
+      },
+      {
+        "name": "Keys",
+        "comment": " The keys that might have been pressed during mouse event.\n",
+        "args": [],
+        "type": "{ alt : Bool, ctrl : Bool, shift : Bool }"
+      },
+      {
+        "name": "Movement",
+        "comment": " Motion of a mouse movement.\n",
+        "args": [],
+        "type": "( Float, Float )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "eventDecoder",
+        "comment": " An `Event` decoder for mouse events.\n",
+        "type": "Json.Decode.Decoder Mouse.Event"
+      },
+      {
+        "name": "onDown",
+        "comment": " Listen to `mousedown` events.\n",
+        "type": "(Mouse.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMove",
+        "comment": " Listen to `mousemove` events.\n",
+        "type": "(Mouse.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onUp",
+        "comment": " Listen to `mouseup` events.\n",
+        "type": "(Mouse.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onWithOptions",
+        "comment": " Choose the mouse event to listen to, and specify the event options.\n",
+        "type": "String -> Html.Events.Options -> (Mouse.Event -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

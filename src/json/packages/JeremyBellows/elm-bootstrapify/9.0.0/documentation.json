@@ -1,0 +1,585 @@
+[
+  {
+    "name": "Bootstrap.Panels",
+    "comment": " Functions for generating bootstrap panels\n\n# Panels\n@docs PanelType, panelGroup, panel, panelHeading, panelBody\n\n# Panel Headings\n@docs PanelHeadingTitleType, panelHeading\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "PanelHeadingTitleType",
+        "comment": "\n  Types of Panel Headings\n",
+        "args": [],
+        "cases": [
+          [
+            "DefaultTitle",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PanelH1",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PanelH2",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PanelH3",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PanelH4",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PanelH5",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "PanelType",
+        "comment": "\n  A set of options for Panels\n",
+        "args": [],
+        "cases": [
+          [
+            "NormalPanel",
+            []
+          ],
+          [
+            "PrimaryPanel",
+            []
+          ],
+          [
+            "SuccessPanel",
+            []
+          ],
+          [
+            "InfoPanel",
+            []
+          ],
+          [
+            "WarningPanel",
+            []
+          ],
+          [
+            "DangerPanel",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "panel",
+        "comment": " Generates a panel html element\n\n    panel PrimaryPanel [] []\n",
+        "type": "Bootstrap.Panels.PanelType -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelBody",
+        "comment": " Generates a panelBody html element\n\n    panelBody [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelGroup",
+        "comment": " Generates a panelGroup html element\n\n    panelGroup [] []\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "panelHeading",
+        "comment": " Generates a panelHeading html element\n\n    panelHeading PanelH3 [] []\n",
+        "type": "Bootstrap.Panels.PanelHeadingTitleType -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Wells",
+    "comment": " Functions for generating bootstrap wells\n\n# Wells\n@docs WellOption, well\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "WellOption",
+        "comment": "\n  Different Size Wells!\n",
+        "args": [],
+        "cases": [
+          [
+            "WellNormal",
+            []
+          ],
+          [
+            "WellSmall",
+            []
+          ],
+          [
+            "WellLarge",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "well",
+        "comment": " Generates a well html element\n\n    well WellLarge [] []\n",
+        "type": "Bootstrap.Wells.WellOption -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Navbar",
+    "comment": " Functions for generating Bootstrap navbar elements\n\n# Navbar\n@docs NavbarType, navbar, navbarHeader, navbarBrand, navbarCollapse, navbarHamburger\n\n# Navbar List\n@docs NavbarListAdjustment, NavbarPillsOptions, NavbarOptions, navbarList\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "NavbarListAdjustment",
+        "comment": " A set of options for adjusting a navbar list\n",
+        "args": [],
+        "cases": [
+          [
+            "NavbarDefault",
+            []
+          ],
+          [
+            "NavbarRight",
+            []
+          ],
+          [
+            "NavbarLeft",
+            []
+          ],
+          [
+            "NavbarJustified",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "NavbarOptions",
+        "comment": "\n  A set of Navbar Options\n",
+        "args": [],
+        "cases": [
+          [
+            "NavbarNav",
+            []
+          ],
+          [
+            "NavbarTabs",
+            []
+          ],
+          [
+            "NavbarPills",
+            [
+              "Bootstrap.Navbar.NavbarPillsOptions"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "NavbarPillsOptions",
+        "comment": "\n  Option for Navbar Pills\n",
+        "args": [],
+        "cases": [
+          [
+            "PillsNotStacked",
+            []
+          ],
+          [
+            "PillsStacked",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "NavbarType",
+        "comment": "\n  Different types of Navbar styles\n",
+        "args": [],
+        "cases": [
+          [
+            "DefaultNavbar",
+            []
+          ],
+          [
+            "InverseNavbar",
+            []
+          ],
+          [
+            "FormNavbar",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "navbar",
+        "comment": " Generates a navbar html element\n\n    navbar DefaultNavbar [] []\n",
+        "type": "Bootstrap.Navbar.NavbarType -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarBrand",
+        "comment": " Generates a navbarBrand html element\n\n    navbarBrand [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarCollapse",
+        "comment": " Generates a collapse div for navbar lists\n\n    navbarCollapse [ id \"collapseMe\" ]\n     [\n      navbarList (NavbarPills PillsStacked) NavbarRight []\n       [\n        li []\n         [\n          a []\n           [\n            text \"One\"\n           ]\n         ]\n       ]\n     ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarHamburger",
+        "comment": " Generates a collapse breadcrumb button for navbar lists. Parameter is for css selector depicting collapsable target\n\n    navbarHamburger \"#collapseMe\"\n\n",
+        "type": "String -> Html.Html msg"
+      },
+      {
+        "name": "navbarHeader",
+        "comment": " Generates a navbar header html element\n\n    navbarHeader [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "navbarList",
+        "comment": " Generates a navbarList html element\n\n    navbarList (NavbarPills PillsStacked) NavbarRight []\n     [\n     ]\n",
+        "type": "Bootstrap.Navbar.NavbarOptions -> Bootstrap.Navbar.NavbarListAdjustment -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Page",
+    "comment": " Bootstrap page functions\n\n# Page\n@docs pullRight, pageHeader, jumbotron\n\n# Automation\n@docs automationTag\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "automationTag",
+        "comment": " This is for being able to write UI Automation selectors efficiently\n\n    button [ automationTag \"btn\" \"submit\" ] []\n",
+        "type": "String -> String -> Html.Attribute msg"
+      },
+      {
+        "name": "jumbotron",
+        "comment": " Generates a jumbotron html element\n\n    jumbotron [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "pageHeader",
+        "comment": " Generates a page header html element\n\n    pageHeader [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "pullRight",
+        "comment": " Generates a div with the pull-right class\n\n    pullRight [] []\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.ListGroup",
+    "comment": " Functions for generating List group html\n\n# List Group\n@docs listGroup, listGroupItem\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "listGroup",
+        "comment": " Generates a list group html element\n\n    listGroup [] []\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "listGroupItem",
+        "comment": " Generates a list group item html element\n\n    listGroup []\n     [\n      listGroupItem [] []\n     ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Buttons",
+    "comment": " Functions for bootstrap buttons\n\n# Buttons\n@docs ButtonOption, ButtonSizeModifier, ButtonModifier, btn\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ButtonModifier",
+        "comment": "\n  Modifiers for button attributes\n",
+        "args": [],
+        "cases": [
+          [
+            "BtnCollapse",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ButtonOption",
+        "comment": "\n  A set of options for rendering a btn\n",
+        "args": [],
+        "cases": [
+          [
+            "BtnDefault",
+            []
+          ],
+          [
+            "BtnPrimary",
+            []
+          ],
+          [
+            "BtnSuccess",
+            []
+          ],
+          [
+            "BtnWarning",
+            []
+          ],
+          [
+            "BtnInfo",
+            []
+          ],
+          [
+            "BtnDanger",
+            []
+          ],
+          [
+            "BtnLink",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ButtonSizeModifier",
+        "comment": "\n  A set of sizes for rendering a btn\n",
+        "args": [],
+        "cases": [
+          [
+            "BtnLarge",
+            []
+          ],
+          [
+            "BtnBlock",
+            []
+          ],
+          [
+            "BtnSmall",
+            []
+          ],
+          [
+            "BtnExtraSmall",
+            []
+          ],
+          [
+            "NavbarBtn",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "btn",
+        "comment": " Generates a button html element\n\n    btn BtnPrimary [ BtnBlock, BtnLarge ] [ BtnCollapse \"#idOfElement, .orClass\" ] [] [ text \"Hello world!\" ]\n",
+        "type": "Bootstrap.Buttons.ButtonOption -> List Bootstrap.Buttons.ButtonSizeModifier -> List Bootstrap.Buttons.ButtonModifier -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Forms",
+    "comment": " Bootstrap functions pertaining to forms\n\n# Forms\n@docs FormAlignmentOption, form, formGroup, FormGroupOption, formLabel, formInput, formTextArea\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "FormAlignmentOption",
+        "comment": " Options for Form Alignment\n\n    case formAlignmentOption of\n      FormDefault -> \"\"\n      FormHorizontal -> \"form-horizontal\"\n      FormInline -> \"form-inline\"\n",
+        "args": [],
+        "cases": [
+          [
+            "FormDefault",
+            []
+          ],
+          [
+            "FormHorizontal",
+            []
+          ],
+          [
+            "FormInline",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "FormGroupOption",
+        "comment": "\n  A set of different Form group options\n",
+        "args": [],
+        "cases": [
+          [
+            "FormGroupDefault",
+            []
+          ],
+          [
+            "FormGroupSmall",
+            []
+          ],
+          [
+            "FormGroupLarge",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "form",
+        "comment": " Generates a form with the supplied alignment\n\n    form FormDefault [ onSubmit SomeMsg ]\n     [\n     ]\n",
+        "type": "Bootstrap.Forms.FormAlignmentOption -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "formGroup",
+        "comment": " Generates a formGroup html element\n\n    form FormDefault [ onSubmit SomeMsg ]\n     [\n      formGroup FormGroupDefault\n        [\n        ]\n     ]\n",
+        "type": "Bootstrap.Forms.FormGroupOption -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "formInput",
+        "comment": " Generates a formInput html element\n\n    form FormDefault [ onSubmit SomeMsg ]\n     [\n      formGroup FormGroupDefault\n        [\n         formInput [] []\n        ]\n     ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "formLabel",
+        "comment": " Generates a formLabel html element\n\n    form FormDefault [ onSubmit SomeMsg ]\n     [\n      formGroup FormGroupDefault\n        [\n         formLabel [] []\n        ]\n     ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "formTextArea",
+        "comment": " Generates a form text area html element\n\n    form FormDefault [ onSubmit SomeMsg ]\n     [\n      formGroup FormGroupDefault\n        [\n         formTextArea [] []\n        ]\n     ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Bootstrap.Grid",
+    "comment": " Bootstrap grid functions for generating html\n\n# Grid\n@docs containerFluid, container, row, column\n\n# Column\n@docs ColumnSize, ColumnType, column\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ColumnSize",
+        "comment": " Type to be used when determining column size\n  Note that a row can only container up to 12 column size units\n",
+        "args": [],
+        "cases": [
+          [
+            "One",
+            []
+          ],
+          [
+            "Two",
+            []
+          ],
+          [
+            "Three",
+            []
+          ],
+          [
+            "Four",
+            []
+          ],
+          [
+            "Five",
+            []
+          ],
+          [
+            "Six",
+            []
+          ],
+          [
+            "Seven",
+            []
+          ],
+          [
+            "Eight",
+            []
+          ],
+          [
+            "Nine",
+            []
+          ],
+          [
+            "Ten",
+            []
+          ],
+          [
+            "Eleven",
+            []
+          ],
+          [
+            "Twelve",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ColumnType",
+        "comment": "\n  Type to be used when determining column size based on screen size\n  Extra small devices Phones (<768px)\n  Small devices Tablets (≥768px)\n  Medium devices Desktops (≥992px)\n  Large devices Desktops (≥1200px)\n",
+        "args": [],
+        "cases": [
+          [
+            "ExtraSmall",
+            [
+              "Bootstrap.Grid.ColumnSize"
+            ]
+          ],
+          [
+            "Small",
+            [
+              "Bootstrap.Grid.ColumnSize"
+            ]
+          ],
+          [
+            "Medium",
+            [
+              "Bootstrap.Grid.ColumnSize"
+            ]
+          ],
+          [
+            "Large",
+            [
+              "Bootstrap.Grid.ColumnSize"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "column",
+        "comment": " Generates a column html element\n\n    containerFluid\n     [\n      row\n       [\n        column [ ExtraSmall Twelve, Small Twelve, Medium Twelve, Large Twelve ]\n         [\n         ]\n       ]\n     ]\n",
+        "type": "List Bootstrap.Grid.ColumnType -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "container",
+        "comment": " Generates a container html element\n\n    container [ ]\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "containerFluid",
+        "comment": " Generates a fluid container html element\n\n    containerFluid [ ]\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "row",
+        "comment": " Generates a row html element\n\n    containerFluid\n     [\n      row\n       [\n       ]\n     ]\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

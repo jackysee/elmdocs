@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Semver",
+    "comment": " Provides basic functionality for handling semantic version numbers. Follows\nthe Semver 2.0.0 standard strictly. No loose mode, no prefixes to version\nnumbers.\n\nFor the definition of semantic versioning with Semver 2.0.0, see\n<http://semver.org>.\n\n\n# Versions\n\n@docs Version, version, isValid\n\n\n# Comparing Versions\n\n@docs compare, lessThan, greaterThan\n\n\n# Handling Version Strings\n\n@docs print, parse, decode, encode\n\n",
+    "aliases": [
+      {
+        "name": "Version",
+        "comment": " Represents a version with major, minor and patch number, as well as\noptionally a prerelease version and build metadata.\n",
+        "args": [],
+        "type": "{ major : Int , minor : Int , patch : Int , prerelease : List String , build : List String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "compare",
+        "comment": " Compares two versions for precedence.\n\nImplements the ordering procedure defined in Semver 2.0.0.\n\n",
+        "type": "Semver.Version -> Semver.Version -> Basics.Order"
+      },
+      {
+        "name": "decode",
+        "comment": " Decode a version from a JSON value.\n",
+        "type": "Json.Decode.Decoder Semver.Version"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode a version as JSON.\n",
+        "type": "Semver.Version -> Json.Encode.Value"
+      },
+      {
+        "name": "greaterThan",
+        "comment": " Shorthand for determining whether `versionA` is preceded by `versionB`.\n",
+        "type": "Semver.Version -> Semver.Version -> Bool"
+      },
+      {
+        "name": "isValid",
+        "comment": " Checks whether a version is valid according to the specification.\n",
+        "type": "Semver.Version -> Bool"
+      },
+      {
+        "name": "lessThan",
+        "comment": " Shorthand for determining whether `versionA` precedes `versionB`.\n",
+        "type": "Semver.Version -> Semver.Version -> Bool"
+      },
+      {
+        "name": "parse",
+        "comment": " Parses a version string.\n\nParsing fails if the string is not legal according to Semver 2.0.0.\n\nDoes not accept loose syntax or prefixes ('v') to the version string.\n\n",
+        "type": "String -> Maybe.Maybe Semver.Version"
+      },
+      {
+        "name": "print",
+        "comment": " Produce a version's string representation.\n\nThe output format is such that\n\n    (v |> print |> parse == v)\n\n",
+        "type": "Semver.Version -> String"
+      },
+      {
+        "name": "version",
+        "comment": " Creates a version.\n",
+        "type": "Int -> Int -> Int -> List String -> List String -> Semver.Version"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

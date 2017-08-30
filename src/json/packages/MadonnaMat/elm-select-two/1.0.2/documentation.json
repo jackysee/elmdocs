@@ -1,0 +1,228 @@
+[
+  {
+    "name": "SelectTwo.Html",
+    "comment": " this file is for all things related to select2 in the view. this will build your html and has a few helpers for some other areas\n\n\n# Essentials\n\n@docs select2Css, select2, select2Dropdown, select2Close\n\n\n# Helpers\n\n@docs preventScrolling, widthGuess\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "preventScrolling",
+        "comment": " Select2 only works when a parent div is not scrollable, this makes parent divs not scrollable while the dropdown is open\n",
+        "type": "String -> SelectTwo.Types.Model b msg -> List ( String, String )"
+      },
+      {
+        "name": "select2",
+        "comment": " This the select2 dropdown itself, you pass it a sender and a config and you get back a select2 dropdown. Example:\n\n    let\n        testList msg =\n            [ ( Just \"a\", \"a\" )\n            , ( Just \"b\", \"b\" )\n            , ( Just \"c\", \"c\" )\n            ]\n                |> SelectTwo.basicSelectOptions msg\n    in\n        select2 SelectTwo\n            { defaults =\n                (testList Test)\n                    |> List.concatMap (\\( _, l ) -> l)\n                    |> List.filter (\\l -> (Just (Test model.test)) == (l |> Tuple3.first))\n            , id_ = \"test-1\"\n            , list = testList Test\n            , parents = [ \"parent\" ]\n            , clearMsg = Just (\\_ -> Test Nothing)\n            , width = \"300px\"\n            , placeholder = \"Select Test\"\n            , disabled = False\n            , showSearch = True\n            , multiSelect = False\n            , url = Nothing\n            , data = (\\_ -> \"\")\n            , processResults = (\\( _, params ) -> ( [], params ))\n            , delay = 0\n            }\n\n",
+        "type": "(SelectTwo.Types.SelectTwoMsg msg -> msg) -> SelectTwo.Types.SelectTwoConfig msg -> Html.Html msg"
+      },
+      {
+        "name": "select2Close",
+        "comment": " This is an event you put on the body of your elm view, so when a user click away it closes the dropdown\n",
+        "type": "(SelectTwo.Types.SelectTwoMsg msg -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "select2Css",
+        "comment": " This is a stylesheet link tag to the select2 minified css, use this while developing, but it is more recommended that you use it in your head once\nyou compile the code instead\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "select2Dropdown",
+        "comment": " The dropdown to be shown on the page, this needs to be placed somewhere on the bottome of the view\n",
+        "type": "SelectTwo.Types.Model b msg -> Html.Html msg"
+      },
+      {
+        "name": "widthGuess",
+        "comment": " Use this helper method in the select2 config in order to get select2's width resolve functionality\n",
+        "type": "Float -> List (SelectTwo.Types.GroupSelectTwoOption msg) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SelectTwo",
+    "comment": " This library is the basic controls for your model's select2 object and some helper methods\n\n#Basic Controls\n@docs update, new, map, setSearch\n\n\n# Helper Methods\n\n@docs basicSelectOptions, basicGroupSelectOptions\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "basicGroupSelectOptions",
+        "comment": " turn a list of Tuples3 into a list of GroupSelectTwoOptions with actual grouping. The first parameter is their shared trigger message, the\nsecond parameter is the list of tuples which are formatted as (Key, \"Display\", \"Group Name\"), and the return can be used in the list option of the config\n\n    [ ( Just \"a\", \"a\", \"Group 1\")\n    , ( Just \"b\", \"b\", \"Group 1\")\n    , ( Just \"c\", \"c\", \"Group 2\")\n    ]\n        |> SelectTwo.basicSelectOptions Test\n\n",
+        "type": "(a -> msg) -> List ( a, String, String ) -> List (SelectTwo.Types.GroupSelectTwoOption msg)"
+      },
+      {
+        "name": "basicSelectOptions",
+        "comment": " turn a list of Tuples into a list of GroupSelectTwoOptions with one group. The first parameter is their shared trigger message, the\nsecond parameter is the list of tuples which are formatted as (Key, \"Display\"), and the return can be used in the list option of the config\n\n    [ ( Just \"a\", \"a\" )\n    , ( Just \"b\", \"b\" )\n    , ( Just \"c\", \"c\" )\n    ]\n        |> SelectTwo.basicSelectOptions Test\n\n",
+        "type": "(a -> msg) -> List ( a, String ) -> List (SelectTwo.Types.GroupSelectTwoOption msg)"
+      },
+      {
+        "name": "map",
+        "comment": " modify selectTwo record in your model\n",
+        "type": "(SelectTwo.Types.SelectTwo msg -> SelectTwo.Types.SelectTwo msg) -> SelectTwo.Types.Model b msg -> SelectTwo.Types.Model b msg"
+      },
+      {
+        "name": "new",
+        "comment": " Create a new instance of the selectTwo record in your model\n",
+        "type": "List String -> SelectTwo.Types.SelectTwoDropdown msg -> SelectTwo.Types.Model b msg -> SelectTwo.Types.Model b msg"
+      },
+      {
+        "name": "setSearch",
+        "comment": " set the search parameter in your selectTwo record\n",
+        "type": "String -> SelectTwo.Types.Model b msg -> SelectTwo.Types.Model b msg"
+      },
+      {
+        "name": "update",
+        "comment": " used in your elm project's update as a way to control the select two boxes on screen it is used by\n\n    yourUpdate : Msg -> Model -> ( Model, Cmd Msg )\n    yourUpdate msg model =\n        case msg of\n            SelectTwo stmsg ->\n                update stmsg model\n\n",
+        "type": "SelectTwo.Types.SelectTwoMsg msg -> SelectTwo.Types.Model b msg -> ( SelectTwo.Types.Model b msg, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "SelectTwo.Types",
+    "comment": " SelectTwo Types\n\n\n# Types\n\n@docs SelectTwoConfig, SelectTwoMsg, Model,SelectTwo, SelectTwoDropdown, GroupSelectTwoOption, SelectTwoOption, SelectTwoAjaxStuff, AjaxParams, ScrollInfo\n\n",
+    "aliases": [
+      {
+        "name": "AjaxParams",
+        "comment": " Parameters used in ajax calls\n",
+        "args": [],
+        "type": "{ page : Int, term : String, more : Bool, loading : Bool }"
+      },
+      {
+        "name": "GroupSelectTwoOption",
+        "comment": " Grouped SelectTwoOption, first option in the tuple is the name of the group\n",
+        "args": [
+          "a"
+        ],
+        "type": "( String, List (SelectTwo.Types.SelectTwoOption a) )"
+      },
+      {
+        "name": "Model",
+        "comment": " Model structure needed for selectTwo, all records using selectTwo should have this structure\n",
+        "args": [
+          "b",
+          "a"
+        ],
+        "type": "{ b | selectTwo : Maybe.Maybe (SelectTwo.Types.SelectTwo a) }"
+      },
+      {
+        "name": "ScrollInfo",
+        "comment": " ",
+        "args": [],
+        "type": "{ scrollHeight : Int, scrollTop : Int }"
+      },
+      {
+        "name": "SelectTwo",
+        "comment": " Structure created in users model when select2 is activated\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ dropdown : SelectTwo.Types.SelectTwoDropdown a , hovered : Maybe.Maybe a , search : Maybe.Maybe String , parents : List String , list : Maybe.Maybe (List (SelectTwo.Types.GroupSelectTwoOption a)) , ajaxStuff : Maybe.Maybe (SelectTwo.Types.SelectTwoAjaxStuff a) }"
+      },
+      {
+        "name": "SelectTwoAjaxStuff",
+        "comment": " Things needed to make Ajax calls\n",
+        "args": [
+          "a"
+        ],
+        "type": "( String , ( String, SelectTwo.Types.AjaxParams ) -> String , ( String, SelectTwo.Types.AjaxParams ) -> ( List (SelectTwo.Types.GroupSelectTwoOption a) , SelectTwo.Types.AjaxParams ) , SelectTwo.Types.AjaxParams )"
+      },
+      {
+        "name": "SelectTwoConfig",
+        "comment": " Config for SelectTwo used when initializing your select2 box\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ defaults : List (SelectTwo.Types.SelectTwoOption a) , id_ : String , list : List (SelectTwo.Types.GroupSelectTwoOption a) , parents : List String , url : Maybe.Maybe String , data : ( String, SelectTwo.Types.AjaxParams ) -> String , processResults : ( String, SelectTwo.Types.AjaxParams ) -> ( List (SelectTwo.Types.GroupSelectTwoOption a) , SelectTwo.Types.AjaxParams ) , clearMsg : Maybe.Maybe (Maybe.Maybe a -> a) , showSearch : Bool , width : String , placeholder : String , disabled : Bool , multiSelect : Bool , delay : Float }"
+      },
+      {
+        "name": "SelectTwoDropdown",
+        "comment": " Data to generate the dropdown\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ id_ : String , sender : SelectTwo.Types.SelectTwoMsg a -> a , defaults : List (SelectTwo.Types.SelectTwoOption a) , list : List (SelectTwo.Types.GroupSelectTwoOption a) , showSearch : Bool , x : Float , y : Float , width : Float , ajaxStuff : Maybe.Maybe (SelectTwo.Types.SelectTwoAjaxStuff a) , delay : Float }"
+      },
+      {
+        "name": "SelectTwoOption",
+        "comment": " Rows in a select table, first option is the command message to be sent, second is the html to be displayed, and third is the string to search on\n",
+        "args": [
+          "a"
+        ],
+        "type": "( Maybe.Maybe a, Html.Html a, String )"
+      }
+    ],
+    "types": [
+      {
+        "name": "SelectTwoMsg",
+        "comment": " Command Messages for SelectTwo\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "SelectTwoTrigger",
+            [
+              "List String",
+              "SelectTwo.Types.SelectTwoDropdown a"
+            ]
+          ],
+          [
+            "SelectTwoHovered",
+            [
+              "Maybe.Maybe a"
+            ]
+          ],
+          [
+            "SelectTwoSelected",
+            [
+              "Maybe.Maybe a"
+            ]
+          ],
+          [
+            "SetSelectTwoSearch",
+            [
+              "String"
+            ]
+          ],
+          [
+            "DelayedSelectTwoAjax",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SelectTwoAjax",
+            [
+              "SelectTwo.Types.SelectTwoAjaxStuff a",
+              "Result.Result Http.Error String"
+            ]
+          ],
+          [
+            "STRes",
+            [
+              "Result.Result Dom.Error ()"
+            ]
+          ],
+          [
+            "STMsg",
+            [
+              "a"
+            ]
+          ],
+          [
+            "STNull",
+            []
+          ],
+          [
+            "ResultScroll",
+            [
+              "SelectTwo.Types.ScrollInfo"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Ternary",
+    "comment": " This simple package provides infix functions for shorter if/then/else\nconditionals, known as ternary, and a \"null\" coalescing operator for Maybes\n\n@docs ifThenElse, (?), (?:)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "?",
+        "comment": " A ternary operator for Elm's if, the most common syntax would be\n`condition ? trueCase : falseCase`, but this is not possible in Elm because `:`\nis special. So we can use right pipe instead.\n\nReference: [<https://en.wikipedia.org/wiki/%3F>](https://en.wikipedia.org/wiki/%3F)\n\n    >>> (1 + 1 == 2) ? \"Math works!\" <| \"Math is wrong ):\"\n    \"Math works!\"\n\n    >>> String.isEmpty \"pudim\" ? \"Pudim is empty\" <| \"Pudim is not empty\"\n    \"Pudim is not empty\"\n\n",
+        "type": "Bool -> a -> a -> a"
+      },
+      {
+        "name": "?:",
+        "comment": " A null coalescing operator, but since Elm doesn't have nulls, it works on\nMaybes. Is it basically a flipped, infix version of `withDefault`.\nIt is also called \"the Elvis operator\".\n\nReferences:\n[<https://en.wikipedia.org/wiki/Null_coalescing_operator>](https://en.wikipedia.org/wiki/Null_coalescing_operator)\n[<https://en.wikipedia.org/wiki/Elvis_operator>](https://en.wikipedia.org/wiki/Elvis_operator)\n\n    >>> Just \"foo\" ?: \"bar\"\n    \"foo\"\n\n    >>> Nothing ?: \"bar\"\n    \"bar\"\n\n",
+        "type": "Maybe.Maybe a -> a -> a"
+      },
+      {
+        "name": "ifThenElse",
+        "comment": " A shorter version for Elm's if special syntax, like clojure.core `if` function\n\nReference: [<https://clojuredocs.org/clojure.core/if>](https://clojuredocs.org/clojure.core/if)\n\n    >>> ifThenElse (1 + 1 == 2) \"Math works!\" \"Math is wrong\"\n    \"Math works!\"\n\n    >>> ifThenElse (String.isEmpty \"pudim\") \"Pudim is empty\" \"Pudim is not empty\"\n    \"Pudim is not empty\"\n\n",
+        "type": "Bool -> a -> a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

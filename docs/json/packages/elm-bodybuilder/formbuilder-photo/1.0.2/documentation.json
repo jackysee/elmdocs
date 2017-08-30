@@ -1,0 +1,44 @@
+[
+  {
+    "name": "FormBuilder.Photo",
+    "comment": " Create a photo selector field in FormBuilder.\n\n@docs default\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "default",
+        "comment": " Generates a default photo selector field.\n",
+        "type": "List (FormBuilder.FieldBuilder.Attributes.AttributesModifier (FormBuilder.Photo.Attributes.PhotoAttributes msg) msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "FormBuilder.Photo.Attributes",
+    "comment": " Attributes of the photo selector.\n\n# Type\n@docs PhotoAttributes\n\n# Attributes\n@docs defaultAttributes\n@docs selection\n",
+    "aliases": [
+      {
+        "name": "PhotoAttributes",
+        "comment": " Attributes of the photo field. Expand FormBuilder.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ photosAlbums : Maybe.Maybe FormBuilder.Photo.Attributes.PhotosAlbums , selectedPhotoId : Maybe.Maybe String , onPhotoClick : Maybe.Maybe (FormBuilder.FieldBuilder.Events.Event msg) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultAttributes",
+        "comment": " Default Attributes of the photo field.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.Photo.Attributes.PhotoAttributes msg) msg"
+      },
+      {
+        "name": "selection",
+        "comment": " Set the different parameters for the photos selection.\n- photos is list of labelled lists (List (String, List String)) of URLs.\n- selectedPhotoId is a Maybe String, containing the selected photo if any.\n- onPhotoClick represent the message to send when a photo is clicked.\n- fieldAttributes are the attributes of the field.\n",
+        "type": "Maybe.Maybe FormBuilder.Photo.Attributes.PhotosAlbums -> Maybe.Maybe String -> (String -> msg) -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.Photo.Attributes.PhotoAttributes msg) msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.Photo.Attributes.PhotoAttributes msg) msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,171 @@
+[
+  {
+    "name": "UrlParser",
+    "comment": " ## Introduction\nThis library makes it easy to Parse URLs and create your own parsers using Parser Combinators.\n\n# Definition\n@docs Parser, UrlSegment\n\n# Parse\n@docs parseLocation, parseUrl, parse\n\n# Basic Parsers\n@docs string, int, path\n\n# Primitive Parsers\n@docs return, fail\n\n# Basic combinators\n@docs or, andThen, keep, follow\n\n# List combinators\n@docs oneOf, many, sequence, append\n\n# Advanced combinators\n@docs bind, apply, map\n\n# Infixes\n@docs (<|>), (.>>.), (>>.), (.>>), (<*>), (>>=)\n\n",
+    "aliases": [
+      {
+        "name": "UrlSegment",
+        "comment": " Represents a UrlSegment as a String, from an Url splitted between the `/`'s\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Parser",
+        "comment": " Represents a Parser returning a result of type `result`.\nA `Parser` encapsulates a function which takes a List of\nUrlSegments as input, and returns a List of tuples\ncontaining the result and a List of the remaining UrlSegments.\n\n    -- This parser consumes and returns any input as is\n    string : Parser String\n    string =\n        Parser <|\n            \\input ->\n                case input of\n                    [] ->\n                        -- Failure\n                        []\n\n                    head :: rest ->\n                        -- Success!\n                        -- Return the input and the rest\n                        --  of the input.\n                        [ ( head, rest ) ]\n",
+        "args": [
+          "result"
+        ],
+        "cases": [
+          [
+            "Parser",
+            [
+              "List UrlParser.UrlSegment -> List ( result, List UrlParser.UrlSegment )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": ".>>",
+        "comment": " Infix version of [`follow`](UrlParser#follow)\nThe `.` on the left side means, keep the left side, but satisfy the right.\n\n    -- Return `HomePage` when next path is also 'home'\n    > homeParser = return HomePage .>> path \"home\"\n    > parseUrl homeParser \"/home\"\n    Just HomePage\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser b -> UrlParser.Parser a",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": ".>>.",
+        "comment": " Infix version of [`andThen`](UrlParser#andThen)\n\n    -- Parse path \"user\" andThen an int,\n    -- keeping both results\n    path \"user\" .>>. int\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser b -> UrlParser.Parser ( a, b )",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "<*>",
+        "comment": " Infix version of [`apply`](UrlParser#apply)\n\n    -- Create a parser that applies a\n    -- `string Parser` to the `String.toInt Parser`\n    return String.toInt <*> string\n",
+        "type": "UrlParser.Parser (a -> b) -> UrlParser.Parser a -> UrlParser.Parser b",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": "<|>",
+        "comment": " Infix version of [`or`](UrlParser#or)\n\n    -- Parse path \"user\" or path \"member\"\n    path \"user\" <|> path \"member\"\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser a -> UrlParser.Parser a",
+        "associativity": "non",
+        "precedence": 7
+      },
+      {
+        "name": ">>.",
+        "comment": " Infix version of [`keep`](UrlParser#keep).\nThe `.` on the right side means, keep the right side.\n\n     -- Return a string after the path \"user\"\n    path \"user\" >>. string\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser b -> UrlParser.Parser b",
+        "associativity": "left",
+        "precedence": 7
+      },
+      {
+        "name": ">>=",
+        "comment": " Infix version of [`bind`](UrlParser#bind)\n\n    -- Create a parser that parses an int and\n    -- multiplies the result\n    int >>= (\\result -> return (result * 2))\n",
+        "type": "UrlParser.Parser a -> (a -> UrlParser.Parser b) -> UrlParser.Parser b",
+        "associativity": "non",
+        "precedence": 7
+      },
+      {
+        "name": "andThen",
+        "comment": " Bitwise `and`, combining both results in a tuple (a, b)\n",
+        "type": "UrlParser.Parser b -> UrlParser.Parser a -> UrlParser.Parser ( a, b )"
+      },
+      {
+        "name": "append",
+        "comment": " Append two parsers returning lists into a new parser where\nthe lists are appended to eachother. Used to create the [`sequence`](UrlParser#sequence)\nand [`many`](UrlParser#many) parsers.\n",
+        "type": "UrlParser.Parser (List a) -> UrlParser.Parser (List a) -> UrlParser.Parser (List a)"
+      },
+      {
+        "name": "apply",
+        "comment": " Apply a [`Parser a`](UrlParser#Parser) into a new [`Parser b`](UrlParser#Parser)\n\n    -- Create a parser that applies a\n    -- `string Parser` to the `String.toInt Parser`\n    return String.toInt\n        |> apply string\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser (a -> b) -> UrlParser.Parser b"
+      },
+      {
+        "name": "bind",
+        "comment": " Bind a [`Parser a`](UrlParser#Parser) into a new [`Parser b`](UrlParser#Parser)\n\n    -- Create a parser that parses an int and\n    -- multiplies the result\n    int\n        |> bind (\\result -> return (result * 2))\n",
+        "type": "(a -> UrlParser.Parser b) -> UrlParser.Parser a -> UrlParser.Parser b"
+      },
+      {
+        "name": "fail",
+        "comment": " A [`Parser`](UrlParser#Parser) that always fails\n",
+        "type": "UrlParser.Parser a"
+      },
+      {
+        "name": "follow",
+        "comment": " Bitwise `and`, keeping only the first result.\n\n    -- Return `HomePage` when next path is 'home'\n    return HomePage\n         |> follow (path \"home\")\n",
+        "type": "UrlParser.Parser b -> UrlParser.Parser a -> UrlParser.Parser a"
+      },
+      {
+        "name": "int",
+        "comment": " A [`Parser`](UrlParser#Parser) that returns a [`UrlSegment`](UrlParser#UrlSegment) as an `Int`\n\n    > parseUrl int \"/1\"\n    Just 1 : Maybe.Maybe Int\n",
+        "type": "UrlParser.Parser Int"
+      },
+      {
+        "name": "keep",
+        "comment": " Bitwise `and`, keeping only the last result\n\n    -- Return a string after the path \"user\"\n    path \"user\"\n        |> keep string\n",
+        "type": "UrlParser.Parser b -> UrlParser.Parser a -> UrlParser.Parser b"
+      },
+      {
+        "name": "many",
+        "comment": " Parse one or more times\n\n    > parseUrl (many int) \"/1/2\"\n    Just [1, 2]\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser (List a)"
+      },
+      {
+        "name": "map",
+        "comment": " Map a [`Parser a`](UrlParser#Parser) into a new [`Parser b`](UrlParser#Parser)\n\n    -- Create a parser that maps `String.toInt`\n    -- to the 'string Parser'\n    string\n        |> map String.toInt\n",
+        "type": "(a -> b) -> UrlParser.Parser a -> UrlParser.Parser b"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Choose one of the list of Parsers\n\n    oneOf [ return Home .>> path \"home\"\n          , return User .>> path \"user\" <*> int\n          , return Contact .>> path \"contact\" ]\n\n",
+        "type": "List (UrlParser.Parser a) -> UrlParser.Parser a"
+      },
+      {
+        "name": "or",
+        "comment": " Bitwise `or` between two parsers.\n\n    -- Parse path \"user\" or path \"member\"\n    or (path \"user\") (path \"member\")\n",
+        "type": "UrlParser.Parser a -> UrlParser.Parser a -> UrlParser.Parser a"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse a list of UrlSegments using the given Parser\n\n    > parseUrl (path \"user\" >>. string) [ \"user\", \"test\" ]\n    Just \"test\" : Maybe.Maybe String\n\n",
+        "type": "UrlParser.Parser a -> List UrlParser.UrlSegment -> List ( a, List String )"
+      },
+      {
+        "name": "parseLocation",
+        "comment": " Parse the current location using the given Parser\n\n    parseLocation parser location\n",
+        "type": "UrlParser.Parser a -> Navigation.Location -> Maybe.Maybe a"
+      },
+      {
+        "name": "parseUrl",
+        "comment": " Parse an URL using the given Parser\n\n    > parseUrl (path \"user\" >>. string) \"/user/test\"\n    Just \"test\" : Maybe.Maybe String\n\n",
+        "type": "UrlParser.Parser a -> String -> Maybe.Maybe a"
+      },
+      {
+        "name": "path",
+        "comment": " A [`Parser`](UrlParser#Parser) that returns a [`UrlSegment`](UrlParser#UrlSegment) as a `String`\nwhen it's given `path` matches with the parsed [`UrlSegment`](UrlParser#UrlSegment)\n\n    > userPathParser = path \"user\"\n\n    > parseUrl userPathParser \"/user\"\n    Just \"user\" : Maybe.Maybe String\n\n    > parseUrl userPathParser \"/other-path\"\n    Nothing : Maybe.Maybe String\n\n",
+        "type": "UrlParser.UrlSegment -> UrlParser.Parser String"
+      },
+      {
+        "name": "return",
+        "comment": " Create a [`Parser`](UrlParser#Parser) that always returns `a` without consuming any input\n\n    return \"always_return_this\"\n",
+        "type": "a -> UrlParser.Parser a"
+      },
+      {
+        "name": "sequence",
+        "comment": " Sequence a list of parsers into a new parser,\nthat returns a list of results for the given parsers.\n\n    > threeInts = sequence [int, int, int]\n    > parseUrl threeInts \"/1/2/3\"\n    Just [1,2,3] : Maybe.Maybe (List Int)\n",
+        "type": "List (UrlParser.Parser a) -> UrlParser.Parser (List a)"
+      },
+      {
+        "name": "string",
+        "comment": " A [`Parser`](UrlParser#Parser) that returns a [`UrlSegment`](UrlParser#UrlSegment) as a `String`\n\n    > parseUrl string \"/test\"\n    Just \"test\" : Maybe.Maybe String\n\n",
+        "type": "UrlParser.Parser String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

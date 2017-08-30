@@ -1,0 +1,78 @@
+[
+  {
+    "name": "MultiEmailInput",
+    "comment": " A component to input multiple emails and display/manage them comfortably. It tokenizes emails on tab, space, enter and blur. It also allows you to paste emails in bulk, remove existing emails or go back and ammend the previous one.\n\n\n# Main workflow\n\n@docs Msg, State, init, update, view\n\n\n# Extras\n\n@docs isEmailValid\n\n",
+    "aliases": [
+      {
+        "name": "State",
+        "comment": " Component's internal state.\n",
+        "args": [],
+        "type": "{ nextEmail : String, id : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Internal messages to manage the component's state.\n",
+        "args": [],
+        "cases": [
+          [
+            "FocusElement",
+            []
+          ],
+          [
+            "TextareaFocused",
+            []
+          ],
+          [
+            "TextareaBlurred",
+            [
+              "String"
+            ]
+          ],
+          [
+            "KeyDown",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "RemoveEmail",
+            [
+              "String"
+            ]
+          ],
+          [
+            "InputChanged",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initialize the component's state. It needs the component's ID so that it can refocus the textarea when new emails are inserted. By default, we begin with an empty textarea.\n",
+        "type": "String -> MultiEmailInput.State"
+      },
+      {
+        "name": "isEmailValid",
+        "comment": " Returns true only if the email is valid. This component validates emails against quite a basic regular expression, following the dont-waste-your-time rule in [this article](http://www.regular-expressions.info/email.html) and many others.\n\nIf you have a use case for using a custom regular expression, we could have the component receive it as a parameter. PRs are welcome!\n\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the component's state and a supplied list of emails.\n\nGiven a particular change on the input (e.g. a list of emails have been pasted, the component has lost focus, a special key has been pressed...) it will update the list of distinct emails and the current state of the component.\n\n",
+        "type": "MultiEmailInput.Msg -> MultiEmailInput.State -> List String -> ( MultiEmailInput.State , List String , Platform.Cmd.Cmd MultiEmailInput.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Renders the component visually.\n\n       MultiEmailInput.view MultiEmailInputMsg [] \"Write a placeholder here\" model.inputEmails model.inputEmailsState\n\nSee README for actual examples.\n\n",
+        "type": "(MultiEmailInput.Msg -> msg) -> List (Html.Attribute msg) -> String -> List String -> MultiEmailInput.State -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

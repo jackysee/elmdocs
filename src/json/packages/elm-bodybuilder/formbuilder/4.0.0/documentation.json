@@ -1,0 +1,228 @@
+[
+  {
+    "name": "FormBuilder",
+    "comment": " Create a new form by using differents fields. The form is modular and accepts a list of Html msg, allowing everyone to add custom fields.\n\n\n# Creation\n\n@docs new\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "new",
+        "comment": " Creates and render a new form. Should be used in main views.\n",
+        "type": "String -> { a | id : Maybe.Maybe Int } -> String -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "FormBuilder.FieldBuilder",
+    "comment": " Creates generic fields for FormBuilder. It can be used as a base to creates new customs fields.\n\n\n# Types\n\n@docs FieldView\n\n\n# Fields\n\n@docs object\n@docs default\n@docs defaultHidden\n\n",
+    "aliases": [
+      {
+        "name": "FieldView",
+        "comment": " Represent a view for a field. Takes attributes in parameters, and returns an HTML msg.\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> Html.Html msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "default",
+        "comment": " Generates a default input field. Generates default attributes, use the default view, and render the field with their attributes.\n",
+        "type": "List (FormBuilder.FieldBuilder.Attributes.AttributesModifier {} msg) -> Html.Html msg"
+      },
+      {
+        "name": "defaultHidden",
+        "comment": " Generates a default hidden input field. Generates default attributes, and force the field to be hidden.\n",
+        "type": "List (FormBuilder.FieldBuilder.Attributes.AttributesModifier {} msg) -> Html.Html msg"
+      },
+      {
+        "name": "object",
+        "comment": " Generates a generic object, ready to be renderd by FormBuilder. Accepts attributes, view and modifiers.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> Maybe.Maybe (FormBuilder.FieldBuilder.FieldView a msg) -> List (FormBuilder.FieldBuilder.Attributes.AttributesModifier a msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "FormBuilder.FieldBuilder.Events",
+    "comment": " Handle events which may happen on fields. Each modifier can be combined with others with function composition.\n\n\n# Type\n\n@docs Event\n\n\n# Events\n\n@docs onInput\n@docs onFocus\n@docs onBlur\n@docs onChange\n\n",
+    "aliases": [
+      {
+        "name": "Event",
+        "comment": " Event for triggering Cmd on action on a field.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "String -> msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onBlur",
+        "comment": " Set the event to trigger on blur on the field.\n",
+        "type": "msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "onChange",
+        "comment": " Set the event to trigger on change on the field.\n",
+        "type": "(Json.Decode.Value -> msg) -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "onFocus",
+        "comment": " Set the event to trigger on focus on the field.\n",
+        "type": "msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "onInput",
+        "comment": " Set the event to trigger on input on the field.\n",
+        "type": "FormBuilder.FieldBuilder.Events.Event msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "FormBuilder.FieldBuilder.Attributes",
+    "comment": " Handle fields attributes. Create default attributes, and provide setters to modifiy them easily. Each modifier can be combined with others with function composition.\n\n\n# Types\n\n@docs InputType\n@docs AttributesModifier\n@docs FieldAttributes\n@docs CommonAttributes\n\n\n# Default Fields\n\n@docs defaultAttributes\n@docs commonAttributes\n\n\n# Attributes Modifiers\n\n@docs label\n@docs objectName\n@docs fieldName\n@docs nestedName\n@docs nestedIndice\n@docs noBottomPadding\n@docs removeNameIfEmpty\n@docs value\n@docs autocomplete\n@docs type_\n@docs mandatory\n@docs placeholder\n@docs hidden\n@docs options\n\n",
+    "aliases": [
+      {
+        "name": "AttributesModifier",
+        "comment": " Represent a modifier for field attributes. Take attributes as input, and output modified attributes.\n",
+        "args": [
+          "a",
+          "msg"
+        ],
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "CommonAttributes",
+        "comment": " Common attributes shared by all form fields.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ value : Maybe.Maybe String , objectName : Maybe.Maybe String , fieldName : Maybe.Maybe String , nestedName : Maybe.Maybe String , nestedIndice : Maybe.Maybe Int , type_ : Maybe.Maybe FormBuilder.FieldBuilder.Attributes.InputType , label : Maybe.Maybe String , placeholder : Maybe.Maybe String , autocomplete : Maybe.Maybe Bool , mandatory : Bool , hidden : Bool , options : Maybe.Maybe (List ( String, Int )) , noBottomPadding : Bool , removeNameIfEmpty : Bool , onInput : Maybe.Maybe (String -> msg) , onFocus : Maybe.Maybe msg , onBlur : Maybe.Maybe msg , onChange : Maybe.Maybe (Json.Decode.Value -> msg) }"
+      },
+      {
+        "name": "FieldAttributes",
+        "comment": " Attributes for a field. Could be extended by subfields.\n",
+        "args": [
+          "sub",
+          "msg"
+        ],
+        "type": "{ sub | common : FormBuilder.FieldBuilder.Attributes.CommonAttributes msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "InputType",
+        "comment": " Represent the desired type for the input. If it should be Hidden, TextArea, Text or File.\n",
+        "args": [],
+        "cases": [
+          [
+            "Hidden",
+            []
+          ],
+          [
+            "TextArea",
+            []
+          ],
+          [
+            "Text",
+            []
+          ],
+          [
+            "File",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "autocomplete",
+        "comment": " Set the html autocomplete attribute.\n",
+        "type": "Bool -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "commonAttributes",
+        "comment": " Instantiate default attributes for any fields.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.CommonAttributes msg"
+      },
+      {
+        "name": "defaultAttributes",
+        "comment": " Instantiate default attributes for any fields.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes {} msg"
+      },
+      {
+        "name": "fieldName",
+        "comment": " Set the fieldName of the field.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "hidden",
+        "comment": " Hide the field.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "label",
+        "comment": " Set the value of the label.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "mandatory",
+        "comment": " Makes the field mandatory.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "nestedIndice",
+        "comment": " Set the nestedIndice of the field.\n",
+        "type": "Int -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "nestedName",
+        "comment": " Set the nestedName of the field.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "noBottomPadding",
+        "comment": " Disable bottom padding.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "objectName",
+        "comment": " Set the objectName of the field.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "options",
+        "comment": " Set the options of the field.\n",
+        "type": "List ( String, Int ) -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " Set the placeholder of the field.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "removeNameIfEmpty",
+        "comment": " Remove the html name attribute if the value is Nothing or empty\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "type_",
+        "comment": " Set the type of the field.\n",
+        "type": "FormBuilder.FieldBuilder.Attributes.InputType -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      },
+      {
+        "name": "value",
+        "comment": " Set the value of the field.\n",
+        "type": "String -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes a msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

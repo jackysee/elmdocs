@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Loop",
+    "comment": " Loop functions, just like the ones in C syntax programming languages.\n\n@docs while, until\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "until",
+        "comment": " A twist on the classic while loop. It loops while the condition is NOT met.\n\n\n    countJustForFun : Int -> Int\n    countJustForFun to =\n        Loop.until\n            ((==) to)\n            0\n            ((+) 1)\n\n",
+        "type": "(a -> Bool) -> a -> (a -> a) -> a"
+      },
+      {
+        "name": "while",
+        "comment": " The classic while loop.\n\n\n    count : Int\n    count =\n        Loop.while ((>) 100) 0 ((+) 1)\n\n    -- is basically analagous to..\n    --\n    -- var i = 0;\n    -- while ( i < 100) {\n    --   i++;\n    -- }\n",
+        "type": "(a -> Bool) -> a -> (a -> a) -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

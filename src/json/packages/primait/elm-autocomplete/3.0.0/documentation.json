@@ -1,0 +1,108 @@
+[
+  {
+    "name": "Prima.Autocomplete",
+    "comment": "\n Documentation will come eventually ^_^\n\n@docs State\n@docs Config\n@docs Customizations\n@docs Msg\n@docs initialState\n@docs setInputValue\n@docs getInputValue\n@docs onKeyDown\n@docs config\n@docs customConfig\n@docs view\n@docs hasData\n@docs hasNoData\n@docs isPristine\n",
+    "aliases": [
+      {
+        "name": "Customizations",
+        "comment": "\n  Customize the autocomplete!\n",
+        "args": [
+          "data",
+          "msg"
+        ],
+        "type": "{ placeholder : String , threshold : Int , container : Prima.Autocomplete.ViewState msg -> Html.Html msg -> Html.Html msg , input : List (Html.Attribute msg) -> Html.Html msg , listContainer : (( Bool, data, msg ) -> Html.Html msg) -> List ( Bool, data, msg ) -> Html.Html msg , elementContainer : ( Bool, data, msg ) -> Html.Html msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": "\n  Config type.\n",
+        "args": [
+          "data",
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": "\n  Messages your app can listen to.\n",
+        "args": [
+          "data"
+        ],
+        "cases": [
+          [
+            "OnSearch",
+            [
+              "{ value : String, thresholdReached : Bool }"
+            ]
+          ],
+          [
+            "OnSelect",
+            [
+              "data"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "State",
+        "comment": "\n  Holds the state of the Autocomplete.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "config",
+        "comment": "\n  Setup config.\n",
+        "type": "(( Prima.Autocomplete.State, Prima.Autocomplete.Msg data ) -> msg) -> (data -> Html.Html msg) -> Prima.Autocomplete.Config data msg"
+      },
+      {
+        "name": "customConfig",
+        "comment": "\n  Setup custom config.\n",
+        "type": "{ toMsg : ( Prima.Autocomplete.State, Prima.Autocomplete.Msg data ) -> msg , customizations : Prima.Autocomplete.Customizations data msg } -> Prima.Autocomplete.Config data msg"
+      },
+      {
+        "name": "getInputValue",
+        "comment": "\n  Get the current input value.\n",
+        "type": "Prima.Autocomplete.State -> String"
+      },
+      {
+        "name": "hasData",
+        "comment": "\n  Utility helper\n",
+        "type": "Prima.Autocomplete.ViewState msg -> Bool"
+      },
+      {
+        "name": "hasNoData",
+        "comment": "\n  Utility helper\n",
+        "type": "Prima.Autocomplete.ViewState msg -> Bool"
+      },
+      {
+        "name": "initialState",
+        "comment": "\n  Initial state.\n",
+        "type": "Prima.Autocomplete.State"
+      },
+      {
+        "name": "isPristine",
+        "comment": "\n  Utility helper\n",
+        "type": "Prima.Autocomplete.ViewState msg -> Bool"
+      },
+      {
+        "name": "onKeyDown",
+        "comment": "\n  Handle Keyboard events.\n",
+        "type": "Int -> List data -> Prima.Autocomplete.State -> ( Prima.Autocomplete.State , Maybe.Maybe (Prima.Autocomplete.Msg data) )"
+      },
+      {
+        "name": "setInputValue",
+        "comment": "\n  Update the autocomplete value from your app.\n",
+        "type": "String -> Prima.Autocomplete.State -> Prima.Autocomplete.State"
+      },
+      {
+        "name": "view",
+        "comment": "\n  Autocomplete view.\n",
+        "type": "Prima.Autocomplete.Config data msg -> Prima.Autocomplete.State -> List data -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

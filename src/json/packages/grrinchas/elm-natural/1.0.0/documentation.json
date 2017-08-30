@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Nat",
+    "comment": " A library for natural numbers. Every natural number is either a zero or a positive number. The numbers are\nrepresented as [Peano](https://en.wikipedia.org/wiki/Peano_axioms) numbers using only zero value and a successor\nfunction.\n\n# Constructors\n@docs Nat\n\n# Operations\n@docs isZero, isSucc, succ, pred, plus, minus, mult, pow\n\n# Comparisons\n@docs compare, lt, lte, gt, gte, min, max\n\n# Conversions\n@docs toInt, fromInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Nat",
+        "comment": " A `Nat` is either zero `Z` or one more than some other natural number `S Nat`.\n\n    Z -- constructs zero\n    S Z -- constructs one\n    S (S Z) -- constructs two\n",
+        "args": [],
+        "cases": [
+          [
+            "Z",
+            []
+          ],
+          [
+            "S",
+            [
+              "Nat.Nat"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "compare",
+        "comment": " Compares two `Nat` together and returns value of `Order`.\n\n    -- comparing zero with zero yields EQ\n    compare Z Z == EQ\n\n    -- comparing one with zero yields GT\n    compare (S Z) Z == GT\n\n    -- comparing zero with one yields LT\n    compare Z (S Z) == LT\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Basics.Order"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Converts `Int` to `Nat`. If `Int` is negative, then resulting `Nat` will be zero.\n\n    fromInt 0 == Z\n    fromInt 3 == S (S (S Z))\n\n    -- converting negative `Int` yields zero\n    fromInt -1 == Z\n",
+        "type": "Int -> Nat.Nat"
+      },
+      {
+        "name": "gt",
+        "comment": " Checks if the first `Nat` is greater than the second `Nat`.\nReturns `True` if this is the case or `False` otherwise.\n\n    -- comparing zero with zero yields False\n    gt Z Z == False\n\n    -- comparing one with zero yields True\n    gt (S Z) Z == True\n\n    -- comparing zero with one yields False\n    gt Z (S Z) == False\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Bool"
+      },
+      {
+        "name": "gte",
+        "comment": " Checks if the first `Nat` is greater than or equal to the second `Nat`.\nReturns `True` if this is the case or `False` otherwise.\n\n    -- comparing zero with zero yields True\n    gte Z Z == True\n\n    -- comparing one with zero yields True\n    gte (S Z) Z == True\n\n    -- comparing zero with one yields False\n    gte Z (S Z) == False\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Bool"
+      },
+      {
+        "name": "isSucc",
+        "comment": " Checks if `Nat` is not a zero. Returns `True` if it is not or `False` if it is.\n\n    isSucc Z == False\n    isSucc (S Z) == True\n\n",
+        "type": "Nat.Nat -> Bool"
+      },
+      {
+        "name": "isZero",
+        "comment": " Checks if `Nat` is zero. Returns `True` if it is or `False` if it isn't.\n\n    isZero Z == True\n    isZero (S Z) == False\n\n",
+        "type": "Nat.Nat -> Bool"
+      },
+      {
+        "name": "lt",
+        "comment": " Checks if the first `Nat` is less than the second `Nat`.\nReturns `True` if this is the case or `False` otherwise.\n\n    -- comparing zero with zero yields False\n    lt Z Z == False\n\n    -- comparing one with zero yields False\n    lt (S Z) Z == False\n\n    -- comparing zero with one yields True\n    lt Z (S Z) == True\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Bool"
+      },
+      {
+        "name": "lte",
+        "comment": " Checks if the first `Nat` is less than or equal to the second `Nat`.\nReturns `True` if this is the case or `False` otherwise.\n\n    -- comparing zero with zero yields True\n    lte Z Z == True\n\n    -- comparing one with zero yields False\n    lte (S Z) Z == False\n\n    -- comparing zero with one yields True\n    lte Z (S Z) == True\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Bool"
+      },
+      {
+        "name": "max",
+        "comment": " Compares two `Nat` together and returns larger one.\n\n    -- maximum of zero and zero is zero\n    max Z Z == Z\n\n    -- maximum of one and zero is one\n    max (S Z) Z == S Z\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "min",
+        "comment": " Compares two `Nat` together and returns smaller one.\n\n    -- minimum of zero and zero is zero\n    min Z Z == Z\n\n    -- minimum of one and zero is zero\n    min (S Z) Z == Z\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "minus",
+        "comment": " Subtracts second `Nat` from the first one. If the second `Nat` is\nlarger than the first one, then resulting `Nat` will be zero.\n\n    -- subtracting zero from zero yields zero\n    minus Z Z == Z\n\n    -- subtracting one from zero yields zero\n    minus Z (S Z) == Z\n\n    -- subtracting one from two yields one\n    minus (S (S Z)) (S Z) == (S Z)\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "mult",
+        "comment": " Multiplies two `Nat` together.\n\n    -- multiplying zero by one yields zero\n    mult Z (S Z) == Z\n\n    -- multiplying two by two yields four\n    mult (S (S Z)) (S (S Z)) == S (S (S (S Z)))\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "plus",
+        "comment": " Adds two `Nat` together.\n\n    -- adding zero and zero yields zero\n    plus Z Z == Z\n\n    -- adding zero and one yields one\n    plus Z (S Z) == S Z\n\n    -- adding one and one yields two\n    plus (S Z) (S Z) == S (S Z)\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "pow",
+        "comment": " Rises the first `Nat` by the second `Nat`.\n\n    -- rising zero by zero yields one\n    pow Z Z == S Z\n\n    -- rising one by two yields one\n    pow (S Z) (S (S Z)) == S Z\n\n    -- rising two by two yields four\n    pow (S (S Z)) (S (S Z)) == S (S (S (S Z)))\n\n",
+        "type": "Nat.Nat -> Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "pred",
+        "comment": " Decrements `Nat` by one. If input `Nat` is zero, then resulting `Nat` will be zero as well.\n\n    -- decrementing two yields one\n    pred (S (S Z)) == S Z\n\n    -- decrementing one yields zero\n    pred (S Z) == Z\n\n    -- decrementing zero yields zero\n    pred Z == Z\n\n",
+        "type": "Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "succ",
+        "comment": " Increments `Nat` by one.\n\n    -- incrementing zero yields one\n    succ Z == S Z\n\n    -- incrementing one yields two\n    succ (S Z) == S (S Z)\n\n",
+        "type": "Nat.Nat -> Nat.Nat"
+      },
+      {
+        "name": "toInt",
+        "comment": " Converts `Nat` to `Int`.\n\n    toInt Z == 0\n    toInt (S Z) == 1\n",
+        "type": "Nat.Nat -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Memo",
+    "comment": " Memoization library in pure elm.\n\n@docs Memo, memo, call\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Memo",
+        "comment": " A memoized single argument function.\n",
+        "args": [
+          "comparable",
+          "result"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "call",
+        "comment": " Calls a memoized single argument function.\n\nThe output of the function is a tuple `(newMemo, result)`, for example:\n\n    let\n        m0 = memo (\\x -> x * x)\n        m1 = call m0 4 |> Tuple.first\n    in\n        [ (call m0 4 |> Tuple.first)  /= m0\n        , (call m1 4 |> Tuple.first)  == m1\n        , (call m0 4 |> Tuple.second) == 16\n        , (call m1 4 |> Tuple.second) == 16\n        ]\n        |> List.all identity\n    --> True\n\nTo work with values that are not comparable, first map them to a comparable\nvalue with a hash function and compose with a call to the memoized function:\n\n    import TestHelpers exposing (Person)\n\n    let\n        barney = Person \"Bob\" 3\n        hash = (\\person -> ( person.name, person.age ))\n        m0 = memo (\\(name, age) -> List.repeat age name)\n        m1 = (hash >> call m0) barney |> Tuple.first\n    in\n        [ (==)\n              ((hash >> call m1) barney |> Tuple.first)\n              m1\n        , (==)\n              ((hash >> call m1) barney |> Tuple.second)\n              [\"Bob\", \"Bob\", \"Bob\"]\n        ]\n        |> List.all identity\n    --> True\n\nYou can be sure that the source function is only called when needed. This\nexample shows how a non-pure (natively implemented) function is not called twice\nfor the same argument:\n\n    import NonPureRandom as Random\n\n    let\n        upper = 1000000000\n        randIntMemo = call (memo Random.int) upper\n            |> Tuple.first\n    in\n        [ (/=)\n              (Random.int upper)\n              (Random.int upper)\n        , (==)\n              (call randIntMemo upper |> Tuple.second)\n              (call randIntMemo upper |> Tuple.second)\n        ]\n        |> List.all identity\n    --> True\n",
+        "type": "Memo.Memo comparable r -> comparable -> ( Memo.Memo comparable r, r )"
+      },
+      {
+        "name": "memo",
+        "comment": " Creates a memoized single argument function.\n\nThe argument to `memo` is the function which will be memoized. Only single\nargument functions for which the argument is comparable can be memoized.\nUse [Memo.call](#call) to apply the function to an argument.\n\n    memo (\\x -> x * x)\n",
+        "type": "(comparable -> r) -> Memo.Memo comparable r"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

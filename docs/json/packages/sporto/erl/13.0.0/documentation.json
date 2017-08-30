@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Erl",
+    "comment": " Library for parsing and constructing URLs\n\n\n# Types\n\n@docs Url, Query\n\n\n# Parse\n\n@docs parse\n\n\n# Parse helpers\n\n@docs extractHash, extractHost, extractPath, extractProtocol, extractPort, extractQuery\n\n\n# Construct\n\n@docs new\n\n\n# Mutation helpers\n\n@docs addQuery, setQuery, removeQuery, clearQuery, appendPathSegments\n\n\n# Serialize\n\n@docs toString, toAbsoluteString\n\n\n# Serialization helpers\n\n@docs queryToString\n\n\n# Other helpers\n\n@docs getQueryValuesForKey\n\n",
+    "aliases": [
+      {
+        "name": "Query",
+        "comment": " List of tuples that holds the keys and values in the query string\n",
+        "args": [],
+        "type": "Erl.Types.Query"
+      },
+      {
+        "name": "Url",
+        "comment": " Record that holds url attributes\n",
+        "args": [],
+        "type": "{ protocol : String , username : String , password : String , host : List String , port_ : Int , path : List String , hasLeadingSlash : Bool , hasTrailingSlash : Bool , hash : String , query : Erl.Query }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addQuery",
+        "comment": " Adds key/value in query string\n\n    Erl.addQuery key value url\n\nThis doesn't replace existing keys, so if this is a duplicated this key is just added.\n\n",
+        "type": "String -> String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "appendPathSegments",
+        "comment": " Append some path segments to a url\n\n    Erl.appendPathSegments [\"hello\", \"world\"] url\n\n",
+        "type": "List String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "clearQuery",
+        "comment": " Clears the current query string\n\n    Erl.clearQuery url\n\n",
+        "type": "Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "extractHash",
+        "comment": " Extract the hash (hash) from the url\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractHost",
+        "comment": " Extract the host from the url\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractPath",
+        "comment": " Extract the path from the url\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractPort",
+        "comment": " Extract the port from the url\n\nIf no port is included in the url then Erl will attempt to add a default port:\n\nHttp -> 80\nHttps -> 443\nFTP -> 21\nSFTP -> 22\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "extractProtocol",
+        "comment": " Extract the protocol from the url\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extractQuery",
+        "comment": " Extract the query string from the url\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "getQueryValuesForKey",
+        "comment": " Gets values for a key in the query\n\n    url = Erl.parse \"?a=1&b=2&a=3\"\n\n    Erl.getQueryValuesForKey \"a\" url\n\n    == [\"1\", \"3\"]\n\n",
+        "type": "String -> Erl.Url -> List String"
+      },
+      {
+        "name": "new",
+        "comment": " Generate an empty Erl.Url record\n\n    Erl.new ==\n\n    { protocol = \"\"\n    , username = \"\"\n    , password = \"\"\n    , host = []\n    , path = []\n    , hasLeadingSlash = False\n    , hasTrailingSlash = False\n    , port_ = 0\n    , hash = \"\"\n    , query = Dict.empty\n    }\n\n",
+        "type": "Erl.Url"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse a url string, returns an Erl.Url record\n\n    Erl.parse \"http://api.example.com/users/1#x/1?a=1\" == Erl.Url{...}\n\n",
+        "type": "String -> Erl.Url"
+      },
+      {
+        "name": "queryToString",
+        "comment": " Convert to a string only the query component of an url, this includes '?'\n\n    Erl.queryToString url == \"?a=1&b=2\"\n\n",
+        "type": "Erl.Url -> String"
+      },
+      {
+        "name": "removeQuery",
+        "comment": " Removes key from query string\n\n    Erl.removeQuery key url\n\n",
+        "type": "String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "setQuery",
+        "comment": " Set key/value in query string, removes any existing one if necessary.\n\n    Erl.setQuery key value url\n\n",
+        "type": "String -> String -> Erl.Url -> Erl.Url"
+      },
+      {
+        "name": "toAbsoluteString",
+        "comment": " Generate a url that starts at the path\n\n    url = { protocol = \"http\",\n          , username = \"\",\n          , password = \"\",\n          , host = [\"www\", \"foo\", \"com\"],\n          , path = [\"users\", \"1\"],\n          , hasLeadingSlash = False\n          , hasTrailingSlash = False\n          , port_ = 2000,\n          , hash = \"a/b\",\n          , query = Dict.empty |> Dict.insert \"q\" \"1\" |> Dict.insert \"k\" \"2\"\n          }\n\n    Erl.toAbsoluteString url == \"/users/1?k=2&q=1#a/b\"\n\n",
+        "type": "Erl.Url -> String"
+      },
+      {
+        "name": "toString",
+        "comment": " Generate a url string from an Erl.Url record\n\n    url = { protocol = \"http\",\n          , username = \"\",\n          , password = \"\",\n          , host = [\"www\", \"foo\", \"com\"],\n          , path = [\"users\", \"1\"],\n          , hasLeadingSlash = False\n          , hasTrailingSlash = False\n          , port_ = 2000,\n          , hash = \"a/b\",\n          , query = Dict.empty |> Dict.insert \"q\" \"1\" |> Dict.insert \"k\" \"2\"\n          }\n\n    Erl.toString url == \"http://www.foo.com:2000/users/1?k=2&q=1#a/b\"\n\n",
+        "type": "Erl.Url -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Erl.Query",
+    "comment": " Functions to work with a Query record\n\n\n# Parse\n\n@docs parse\n\n\n# Mutation helpers\n\n@docs add, set, remove\n\n\n# Serialize\n\n@docs toString\n\n\n# Other helpers\n\n@docs getValuesForKey\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Adds key/value in query string\n\n    Erl.Query.add key value query\n\nThis doesn't replace existing keys, so if this is a duplicated this key is just added.\n\n",
+        "type": "String -> String -> Erl.Types.Query -> Erl.Types.Query"
+      },
+      {
+        "name": "getValuesForKey",
+        "comment": " Gets values for a key in the query\n\n    url = Erl.parse \"?a=1&b=2&a=3\"\n\n    Erl.Query.getQueryValuesForKey \"a\" url.query\n\n    == [\"1\", \"3\"]\n\n",
+        "type": "String -> Erl.Types.Query -> List String"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse a query string\n\n    Erl.Query.parse \"?a=1&b=2&a=3\" == [(\"a\", \"1\"), (\"b\", \"2\"), (\"a\", \"1\")]\n\n",
+        "type": "String -> Erl.Types.Query"
+      },
+      {
+        "name": "remove",
+        "comment": " Removes key from query string\n\n    Erl.Query.remove key query\n\n",
+        "type": "String -> Erl.Types.Query -> Erl.Types.Query"
+      },
+      {
+        "name": "set",
+        "comment": " Set key/value in query string, removes any existing one if necessary.\n\n    Erl.Query.set key value query\n\n",
+        "type": "String -> String -> Erl.Types.Query -> Erl.Types.Query"
+      },
+      {
+        "name": "toString",
+        "comment": " Convert to a string, this includes '?'\n\n    Erl.Query.toString query == \"?a=1&b=2\"\n\n",
+        "type": "Erl.Types.Query -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

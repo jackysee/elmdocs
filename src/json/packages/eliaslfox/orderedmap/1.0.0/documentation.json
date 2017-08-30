@@ -1,0 +1,46 @@
+[
+  {
+    "name": "OrderedMap",
+    "comment": "\nThis module allows creating map data structures which preserve order of inserts\n\n# Definition\n@docs OrderedMap, new\n\n# Usage\n@docs upsert, get, toList\n\n# Reserving Locations\n@docs reserve\n\n",
+    "aliases": [
+      {
+        "name": "OrderedMap",
+        "comment": " Type alias for storing an ordered map\n",
+        "args": [
+          "comparable",
+          "b"
+        ],
+        "type": "{ list : List comparable , map : Dict.Dict comparable (Maybe.Maybe b) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "get",
+        "comment": " Pull inserted data out of an ordered map. Returns nothing fo either a nonexistant, or a reserved value.\n\n    get 42 om == \"the answer\"\n",
+        "type": "comparable -> OrderedMap.OrderedMap comparable b -> Maybe.Maybe b"
+      },
+      {
+        "name": "new",
+        "comment": " Create a new ordered map.\n\n    om = new\n",
+        "type": "OrderedMap.OrderedMap comparable b"
+      },
+      {
+        "name": "reserve",
+        "comment": " Reserve a key for a value, but insert nothing there. This is used when the order of keys is known already, but their data\nmay be inserted in an arbitrary order.\n\n    reserve 1337 om\n",
+        "type": "comparable -> OrderedMap.OrderedMap comparable b -> OrderedMap.OrderedMap comparable b"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert an orderd map to a list, with items in the order that they were inserted.\n\n    new\n        |> upsert 2 \"hello\"\n        |> upsert 1 \"world\"\n        |> toList\n        \n    == [\"hello\", \"world\"]\n",
+        "type": "OrderedMap.OrderedMap comparable b -> List b"
+      },
+      {
+        "name": "upsert",
+        "comment": " Upsert a key pair to the ordered map.\n\n    upsert 42 \"the answer\" om\n",
+        "type": "comparable -> b -> OrderedMap.OrderedMap comparable b -> OrderedMap.OrderedMap comparable b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

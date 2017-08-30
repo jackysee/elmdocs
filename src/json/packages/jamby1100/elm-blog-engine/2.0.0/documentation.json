@@ -1,0 +1,221 @@
+[
+  {
+    "name": "Main",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs init, subscriptions, main\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Navigation.Location -> ( Models.Model, Platform.Cmd.Cmd Messages.Msg )"
+      },
+      {
+        "name": "main",
+        "comment": " Does nothing yet\n    main == Navigation.program\n",
+        "type": "Platform.Program Basics.Never Models.Model Messages.Msg"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Does nothing yet\n    subscriptions == Sub.none\n",
+        "type": "Models.Model -> Platform.Sub.Sub Messages.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Update",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs update\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "update",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Messages.Msg -> Models.Model -> ( Models.Model, Platform.Cmd.Cmd Messages.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "View",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs view, page, playerShowPage, notFoundView\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "notFoundView",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Html.Html Messages.Msg"
+      },
+      {
+        "name": "page",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Models.Model -> Html.Html Messages.Msg"
+      },
+      {
+        "name": "playerShowPage",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Models.Model -> Players.Models.PlayerId -> Html.Html Messages.Msg"
+      },
+      {
+        "name": "view",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Models.Model -> Html.Html Messages.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Players.Commands",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs collectionDecoder,fetchAll,fetchAllUrl,memberDecoder,memberEncoded,save, saveRequest,saveUrl\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "collectionDecoder",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Json.Decode.Decoder (List Players.Models.Player)"
+      },
+      {
+        "name": "fetchAll",
+        "comment": " Does nothing yet\n   fetchAll == None\n",
+        "type": "Platform.Cmd.Cmd Players.Messages.Msg"
+      },
+      {
+        "name": "fetchAllUrl",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "String"
+      },
+      {
+        "name": "memberDecoder",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Json.Decode.Decoder Players.Models.Player"
+      },
+      {
+        "name": "memberEncoded",
+        "comment": " Does nothing yet\n   init == None\n\n  Decode.map8 Player\n    (field \"id\" Decode.string)\n    (field \"title\" Decode.string)\n    (field \"body\" Decode.string)\n    (field \"user_id\" Decode.string)\n    (field \"published_at\" Decode.string)\n    (field \"published_until\" Decode.string)\n    (field \"category_slug\" Decode.string)\n    (field \"updated_at\" Decode.string)\n",
+        "type": "Players.Models.Player -> Json.Encode.Value"
+      },
+      {
+        "name": "save",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Players.Models.Player -> Platform.Cmd.Cmd Players.Messages.Msg"
+      },
+      {
+        "name": "saveRequest",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Players.Models.Player -> Http.Request Players.Models.Player"
+      },
+      {
+        "name": "saveUrl",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Players.Models.PlayerId -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Messages",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs Msg\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Does nothing yet\n   init == None\n",
+        "args": [],
+        "cases": [
+          [
+            "PlayersMsg",
+            [
+              "Players.Messages.Msg"
+            ]
+          ],
+          [
+            "OnLocationChange",
+            [
+              "Navigation.Location"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Models",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs Model, initialModel\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Does nothing yet\n   init == None\n",
+        "args": [],
+        "type": "{ players : List Players.Models.Player, route : Routing.Route }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initialModel",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Routing.Route -> Models.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Routing",
+    "comment": " A library for markdown parsing. This is just an Elm API built on top of the\n[marked](https://github.com/chjj/marked) project which focuses on speed.\n\n# Parsing Markdown\n@docs Route, matchers, parseLocation, CategoryName\n",
+    "aliases": [
+      {
+        "name": "CategoryName",
+        "comment": " Does nothing yet\n   init == None\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Route",
+        "comment": " Does nothing yet\n   init == None\n",
+        "args": [],
+        "cases": [
+          [
+            "PlayersRoute",
+            []
+          ],
+          [
+            "PlayerRoute",
+            [
+              "Players.Models.PlayerId"
+            ]
+          ],
+          [
+            "CategoryRoute",
+            [
+              "Routing.CategoryName"
+            ]
+          ],
+          [
+            "NotFoundRoute",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "matchers",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "UrlParser.Parser (Routing.Route -> a) a"
+      },
+      {
+        "name": "parseLocation",
+        "comment": " Does nothing yet\n   init == None\n",
+        "type": "Navigation.Location -> Routing.Route"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

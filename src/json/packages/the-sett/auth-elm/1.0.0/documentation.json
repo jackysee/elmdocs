@@ -1,0 +1,122 @@
+[
+  {
+    "name": "AuthController",
+    "comment": "\nMaintains the auth state and follows the TEA pattern to provide a stateful auth\nmodule that can be wired in to TEA applications update cycles.\n@docs Model, Msg\n@docs init, logonAttempted, update, updateFromAuthCmd, extractAuthState\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " The complete state of this auth module.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Describes the events this controller responds to.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "extractAuthState",
+        "comment": "\nExtracts the publicly visible auth state from the model.\n",
+        "type": "AuthController.Model -> Auth.AuthState"
+      },
+      {
+        "name": "init",
+        "comment": " The initial unauthed state.\n",
+        "type": "{ forwardLocation : String, logoutLocation : String } -> AuthController.Model"
+      },
+      {
+        "name": "logonAttempted",
+        "comment": " Reports whether a logon has been attempted.\n",
+        "type": "AuthController.Model -> Bool"
+      },
+      {
+        "name": "update",
+        "comment": " Updates the auth state and triggers events needed to communicate with the\nauth server.\n",
+        "type": "AuthController.Msg -> AuthController.Model -> ( AuthController.Model, Platform.Cmd.Cmd AuthController.Msg )"
+      },
+      {
+        "name": "updateFromAuthCmd",
+        "comment": "\nProcesses an AuthCmd representing a side effect request to perform some auth action\nand to update the state.\n",
+        "type": "Internal.AuthCmd -> AuthController.Model -> ( AuthController.Model, Platform.Cmd.Cmd AuthController.Msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Auth",
+    "comment": "\nProvides the API for interacting with the authentication module, that most\nof an application is interested in. This exludes the API that is needed to wire\nup the authentication module into the Elm update cycle, which can be found in the\nAuthController module.\n\n@docs Credentials\n@docs AuthState, isLoggedIn, permissions, expiresAt, username, hasPermission\n@docs AuthCmd, login, logout, refresh, unauthed\n",
+    "aliases": [
+      {
+        "name": "AuthCmd",
+        "comment": "\nDefines the side effects that consumers of the auth module may request.\n",
+        "args": [],
+        "type": "Internal.AuthCmd"
+      },
+      {
+        "name": "AuthState",
+        "comment": " A sub-section of the auth module state describing whether or not the user\nis logged in, what permissions they have, and when their auth token will expire.\nThis is the part of the auth state that most consumers of the Auth module are\ninterested in.\nA set of operators is provided to extract information from the AuthState for\nconvenience.\n",
+        "args": [],
+        "type": "Internal.AuthState"
+      },
+      {
+        "name": "Credentials",
+        "comment": "\nUsername and password based login credentials.\n",
+        "args": [],
+        "type": "{ username : String, password : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "expiresAt",
+        "comment": "\nChecks when the current users token will expire. The user may not have a token,\nor may not have one that expires at all, in which case Nothing will be returned.\n",
+        "type": "Auth.AuthState -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "hasPermission",
+        "comment": "\nChecks if the current user has a particular named permission.\n",
+        "type": "String -> Auth.AuthState -> Bool"
+      },
+      {
+        "name": "isLoggedIn",
+        "comment": "\nChecks if the user is currently authenticated.\n",
+        "type": "Auth.AuthState -> Bool"
+      },
+      {
+        "name": "login",
+        "comment": "\nRequests that a login be performed.\n",
+        "type": "Auth.Credentials -> Auth.AuthCmd"
+      },
+      {
+        "name": "logout",
+        "comment": "\nRequests that a logout (including notifying the server of the logout) be\nperformed.\n",
+        "type": "Auth.AuthCmd"
+      },
+      {
+        "name": "permissions",
+        "comment": "\nObtains a list of permissions held by the current user.\n",
+        "type": "Auth.AuthState -> List String"
+      },
+      {
+        "name": "refresh",
+        "comment": "\nRequests that an attempt be made to refresh the auth token from the refresh\ntoken.\n",
+        "type": "Auth.AuthCmd"
+      },
+      {
+        "name": "unauthed",
+        "comment": "\nRequests that the auth state be cleared to the unauthed state. Usually in\nresponse to receiving a 401 or 403 error from a server.\n",
+        "type": "Auth.AuthCmd"
+      },
+      {
+        "name": "username",
+        "comment": "\nObtains the current users username, provided they are logged in. If the user\nis not logged in, the empty string will be returned.\n",
+        "type": "Auth.AuthState -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

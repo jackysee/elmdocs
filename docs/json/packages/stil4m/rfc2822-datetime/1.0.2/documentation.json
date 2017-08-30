@@ -1,0 +1,185 @@
+[
+  {
+    "name": "Rfc2822Datetime",
+    "comment": " This implementation follows section 3.3 of the [RFC2822](https://tools.ietf.org/html/rfc2822#section-3.3) specification.\n\n\n## Types\n\n@docs Datetime, Date, Time, WeekDay, Month, Zone\n\n\n## Parsing\n\n@docs parse\n\n",
+    "aliases": [
+      {
+        "name": "Date",
+        "comment": " Record containing all the date information in the [RFC2822](https://tools.ietf.org/html/rfc2822) standard.\n",
+        "args": [],
+        "type": "{ year : Int, month : Rfc2822Datetime.Month, day : Int }"
+      },
+      {
+        "name": "Datetime",
+        "comment": " Record containing all the date time information in the [RFC2822](https://tools.ietf.org/html/rfc2822) standard.\n",
+        "args": [],
+        "type": "{ dayOfWeek : Maybe.Maybe Rfc2822Datetime.WeekDay , date : Rfc2822Datetime.Date , time : Rfc2822Datetime.Time }"
+      },
+      {
+        "name": "Time",
+        "comment": " Record containing all the time information in the [RFC2822](https://tools.ietf.org/html/rfc2822) standard.\n",
+        "args": [],
+        "type": "{ hour : Int , minute : Int , second : Maybe.Maybe Int , zone : Rfc2822Datetime.Zone }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Month",
+        "comment": " Months as specified in [RFC2822](https://tools.ietf.org/html/rfc2822)\n",
+        "args": [],
+        "cases": [
+          [
+            "Jan",
+            []
+          ],
+          [
+            "Feb",
+            []
+          ],
+          [
+            "Mar",
+            []
+          ],
+          [
+            "Apr",
+            []
+          ],
+          [
+            "May",
+            []
+          ],
+          [
+            "Jun",
+            []
+          ],
+          [
+            "Jul",
+            []
+          ],
+          [
+            "Aug",
+            []
+          ],
+          [
+            "Sep",
+            []
+          ],
+          [
+            "Oct",
+            []
+          ],
+          [
+            "Nov",
+            []
+          ],
+          [
+            "Dec",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "WeekDay",
+        "comment": " Day of weeks as specified in [RFC2822](https://tools.ietf.org/html/rfc2822)\n",
+        "args": [],
+        "cases": [
+          [
+            "Mon",
+            []
+          ],
+          [
+            "Tue",
+            []
+          ],
+          [
+            "Wed",
+            []
+          ],
+          [
+            "Thu",
+            []
+          ],
+          [
+            "Fri",
+            []
+          ],
+          [
+            "Sat",
+            []
+          ],
+          [
+            "Sun",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Zone",
+        "comment": " Different time zones as specified in [RFC2822](https://tools.ietf.org/html/rfc2822)\n",
+        "args": [],
+        "cases": [
+          [
+            "UT",
+            []
+          ],
+          [
+            "GMT",
+            []
+          ],
+          [
+            "EST",
+            []
+          ],
+          [
+            "CST",
+            []
+          ],
+          [
+            "MST",
+            []
+          ],
+          [
+            "PST",
+            []
+          ],
+          [
+            "EDT",
+            []
+          ],
+          [
+            "CDT",
+            []
+          ],
+          [
+            "MDT",
+            []
+          ],
+          [
+            "PDT",
+            []
+          ],
+          [
+            "Offset",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Military",
+            [
+              "Char"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse a raw string to Datetime.\n\n    parse \"Mon, 06 Mar 2017 21:22:23 +0000\" == Ok { date = { year = 2017, month = Mar, day = 6 }, time = { hour = 21, minute = 22, second = Just 23, zone = Offset 0 }}\n    parse \"foo\" == Err\n\n",
+        "type": "String -> Result.Result String Rfc2822Datetime.Datetime"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

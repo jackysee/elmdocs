@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Couchdb",
+    "comment": " The primary functions used to access CouchDB.\n\n# Database\n@docs Database, defineDb\n\n# Simple requests\n@docs fetch, specialView, view, store\n\n# Views\n@docs Row, view, specialView\n",
+    "aliases": [
+      {
+        "name": "Database",
+        "comment": " Represents a single database with an address and a database name.\n",
+        "args": [],
+        "type": "Couchdb.Internal.Database"
+      },
+      {
+        "name": "Row",
+        "comment": " Row in a view. Contains `.id`, `.key`, and `.value`.\n",
+        "args": [
+          "key",
+          "value"
+        ],
+        "type": "Couchdb.View.Row key value"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defineDb",
+        "comment": " Create a database reference. Note that no communication needs to\ntake place as the CouchDB protocol is RESTful. Users are not supported\nat this time.\n\n    defineDb \"localhost:5984\" \"exampledb\" : Database\n",
+        "type": "String -> String -> Couchdb.Database"
+      },
+      {
+        "name": "fetch",
+        "comment": " Create a fetch request for a particular document. You must provide \nthe decoder for the document and the document id.\n\n    fetch (Json.Decode.field \"value\" Json.Decode.string) database docId : Request String\n",
+        "type": "Json.Decode.Decoder a -> Couchdb.Database -> String -> Http.Request a"
+      },
+      {
+        "name": "specialView",
+        "comment": " Create a request for a view at a particular path as opposed to\nwithin a specific design document. For more view options, see\n`Couchdb.View`.\n\n    specialView (Json.Decode.string) docDecoder database \"_all_docs\" : Request a\n",
+        "type": "Json.Decode.Decoder key -> Json.Decode.Decoder value -> Couchdb.Database -> String -> Http.Request (List (Couchdb.Row key value))"
+      },
+      {
+        "name": "store",
+        "comment": " Create a request to store a document. Note that you are responsible\nfor including the revision with your document if this is updating an\nalready-existing document.\n",
+        "type": "(a -> Json.Encode.Value) -> Couchdb.Database -> String -> a -> Http.Request String"
+      },
+      {
+        "name": "view",
+        "comment": " Create a request for a view in a design document. In order to\nextract the rows from the response, you must provide a JSON decoder for\nthe key and for the value. For more view options, see `Couchdb.View`.\n\n    view keyDecoder valueDecoder database designName viewName : Request a\n",
+        "type": "Json.Decode.Decoder key -> Json.Decode.Decoder value -> Couchdb.Database -> String -> String -> Http.Request (List (Couchdb.Row key value))"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Couchdb.View",
+    "comment": "\n# Views with options\n@docs Row, viewWith, specialViewWith\n\n# Options\n@docs Options, initOptions, key, start_key, end_key\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Type for view options.\n",
+        "args": [],
+        "type": "{ key : Maybe.Maybe String , start_key : Maybe.Maybe String , end_key : Maybe.Maybe String }"
+      },
+      {
+        "name": "Row",
+        "comment": " Row in a view. Contains `.id`, `.key`, and `.value`.\n",
+        "args": [
+          "key",
+          "value"
+        ],
+        "type": "{ id : String, key : key, value : value }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "end_key",
+        "comment": " Add \"end_key\" option for query.\n",
+        "type": "Json.Encode.Value -> Couchdb.View.Options -> Couchdb.View.Options"
+      },
+      {
+        "name": "initOptions",
+        "comment": " Blank set of options.\n",
+        "type": "Couchdb.View.Options"
+      },
+      {
+        "name": "key",
+        "comment": " Add \"key\" option for query.\n",
+        "type": "Json.Encode.Value -> Couchdb.View.Options -> Couchdb.View.Options"
+      },
+      {
+        "name": "specialViewWith",
+        "comment": " Create a request for a view at a particular path with the specified\noptions.\n",
+        "type": "Couchdb.View.Options -> Json.Decode.Decoder key -> Json.Decode.Decoder value -> Couchdb.Internal.Database -> String -> Http.Request (List (Couchdb.View.Row key value))"
+      },
+      {
+        "name": "start_key",
+        "comment": " Add \"start_key\" option for query.\n",
+        "type": "Json.Encode.Value -> Couchdb.View.Options -> Couchdb.View.Options"
+      },
+      {
+        "name": "viewWith",
+        "comment": " Create a request for a view in a design document with the specified\noptions. In order to extract the rows from the response, you must\nprovide a JSON decoder for the key and for the value.\n",
+        "type": "Couchdb.View.Options -> Json.Decode.Decoder key -> Json.Decode.Decoder value -> Couchdb.Internal.Database -> String -> String -> Http.Request (List (Couchdb.View.Row key value))"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,421 @@
+[
+  {
+    "name": "AccordionMenu.Style",
+    "comment": " Helper functions for styling menus.\n\nAll these helpers are intended to be piped onto `AccordionMenu.Config`\ninstances.\n\nExample usage with inline styles:\n\n    AccordionMenu.blankConfig UpdateMenu\n        |> Style.resetListStyles\n        |> Style.listItemStyles styleListItems\n        |> Style.absolutePositioned styleMenuList\n        |> Style.staticMenuStyles styleMenu\n        |> Style.menuTitleStyles styleMenuTitle\n        |> Style.menuListStyles styleMenuList\n        |> Style.subMenuTitleStyles styleMenuTitle\n\nExample usage with CSS classes:\n\n    AccordionMenu.blankConfig UpdateMenu\n        |> Style.listClass \"dropdown\"\n        |> Style.menuClasses\n            (\\state ->\n                [ (\"menu-container\",True)\n                , (\"menu-open\", state == AccordionMenu.Open)\n                , (\"menu-closed\", state == AccordionMenu.Closed)\n                ]\n            )\n        |> Style.staticMenuTitleClass \"menu-title\"\n        |> Style.menuListClass \"menu-list\"\n        |> Style.subMenuClasses\n            (\\state ->\n                [ (\"menu-submenu-container\",True)\n                , (\"menu-submenu-open\", state == AccordionMenu.Open)\n                , (\"menu-submenu-closed\", state == AccordionMenu.Closed)\n                ]\n            )\n\n\n# \"Porcelain\" styling\n\nThese are shortcuts for typical combinations of styles, resets, etc. They still\nare very minimalistic, leaving all but the most basic structural styling to the\napplication designer.\n\n@docs absolutePositioned, resetListStyles\n\n\n# Finer-grained styling\n\nHelpers for setting inline styles or CSS class(es) on various elements of the\nmenu.\n\n\n## Top-level menu\n\n@docs staticMenuClass , staticMenuStyles , menuClass , menuClasses , menuStyles\n\n\n## Top-level menu title\n\n@docs staticMenuTitleClass , staticMenuTitleStyles , menuTitleClass , menuTitleClasses , menuTitleStyles\n\n\n## Top-level menu list\n\n@docs menuListClass , menuListStyles\n\n\n## Submenu\n\n@docs staticSubMenuClass , staticSubMenuStyles , subMenuClass , subMenuClasses , subMenuStyles\n\n\n## Submenu title\n\n@docs staticSubMenuTitleClass , staticSubMenuTitleStyles , subMenuTitleClass , subMenuTitleClasses , subMenuTitleStyles\n\n\n## Submenu list\n\n@docs subMenuListClass , subMenuListStyles\n\n\n## Lists and list items in general\n\n@docs listClass , listStyles , listItemClass , listItemStyles\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "absolutePositioned",
+        "comment": " Set up the styles for the menu list to be absolute-positioned under its\ncontainer, i.e. so it looks like a menu, sticking out of the document flow.\n\nNote that if you use this, you should not set further styles on the menu\ncontainer, but pass them in as the first parameter.\n\nAlso note you will likely want to set the menu list `top` (or `translateY`) to\nat least the height of the menu title, so the list appears below the title\ninstead of obscuring it.\n\n    myConfig\n        |> absolutePositioned otherMenuStyles\n        |> menuListStyles [ (\"top\", \"30px\") ]\n\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "listClass",
+        "comment": " Set CSS class for all menu lists (`ul`).\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "listItemClass",
+        "comment": " Set CSS class for all menu list items (`li`).\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "listItemStyles",
+        "comment": " Set inline styles for all menu list items (`li`).\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "listStyles",
+        "comment": " Set inline styles for all menu lists (`ul`).\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuClass",
+        "comment": " Set CSS class for menu container (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> String) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuClasses",
+        "comment": " Set CSS classes for menu container (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, Bool )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuListClass",
+        "comment": " Set CSS class for menu list (`ul`).\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuListStyles",
+        "comment": " Set inline styles for menu list (`ul`).\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuStyles",
+        "comment": " Set inline styles for menu container (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, String )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuTitleClass",
+        "comment": " Set CSS class for menu title (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> String) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuTitleClasses",
+        "comment": " Set CSS classes for menu title (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, Bool )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuTitleStyles",
+        "comment": " Set inline styles for menu title (`div`), as a function of menu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, String )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "resetListStyles",
+        "comment": " A reset for all menu lists (`ul`). Removes `padding` and `margin` and\n`list-style-type`.\n",
+        "type": "AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuClass",
+        "comment": " Set CSS class for menu container (`div`), ignoring menu state.\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuStyles",
+        "comment": " Set inline styles for menu container (`div`), ignoring menu state.\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuTitleClass",
+        "comment": " Set CSS class for menu title (`div`), ignoring menu state.\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuTitleStyles",
+        "comment": " Set inline styles for menu title (`div`), ignoring menu state.\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuClass",
+        "comment": " Set CSS class for submenu container (`li`), ignoring menu state.\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuStyles",
+        "comment": " Set inline styles for submenu container (`li`), ignoring menu state.\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuTitleClass",
+        "comment": " Set CSS class for submenu title (`div`), ignoring submenu state.\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuTitleStyles",
+        "comment": " Set inline styles for submenu title (`div`), ignoring submenu state.\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuClass",
+        "comment": " Set CSS class for submenu container (`li`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> String) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuClasses",
+        "comment": " Set CSS classes for submenu container (`li`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, Bool )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuListClass",
+        "comment": " Set CSS class for submenu list (`ul`).\n",
+        "type": "String -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuListStyles",
+        "comment": " Set inline styles for submenu list (`ul`).\n",
+        "type": "List ( String, String ) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuStyles",
+        "comment": " Set inline styles for submenu container (`li`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, String )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuTitleClass",
+        "comment": " Set CSS class for submenu title (`div`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> String) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuTitleClasses",
+        "comment": " Set CSS classes for submenu title (`div`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, Bool )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuTitleStyles",
+        "comment": " Set inline styles for submenu title (`div`), as a function of submenu state.\n",
+        "type": "(AccordionMenu.MenuState -> List ( String, String )) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "AccordionMenu",
+    "comment": " A library for designing expandable menus or other \"accordion\" interfaces.\n\n\n# Features and constraints:\n\n  - Menu items can be whatever you want. They have the msg type of your\n    application. Builder functions are provided for common cases.\n\n  - The only state managed by the menu is open/closed state. (If you want\n    to keep track of the \"last selected menu item\" for instance, you do that\n    within your application.)\n\n  - Menus can respond to either clicks or hover (mouseenter/mouseleave).\n\n  - Only a single submenu level is permitted. (But\n    [what about a tree view?](#what-about-a-tree-view-))\n\n  - Absolute minimum styling, with helpers for typical cases and more fine-\n    grained styling via inline styles or classes.\n\nSee [Simple example](https://github.com/ericgj/elm-accordion-menu/blob/master/examples/Simple.elm)\nfor basic usage, and [live demo](https://ericgj.github.io/elm-accordion-menu/).\n\n\n# Menu state\n\n@docs MenuState\n\n\n# Building the menu\n\n@docs menu, separator, link, action, subMenu, customMenuItem\n\n@docs subMenuLink, subMenuAction, customSubMenuItem\n\n@docs Menu, MenuItem, SubMenu, SubMenuItem\n\n\n# Displaying and updating the menu\n\n@docs view, update, Msg\n\n@docs closeMenu, closeSubMenus, closeMenuAndSubMenus, toggleMenu\n\n\n# Configuring the menu\n\n@docs blankConfig, customConfig, Config\n\n\n## Open/close behavior\n\nYou can decide whether the menu and submenus should toggle open/closed when a\nuser clicks, or whether they should open when a user hovers (mouseenter) and\nclose when they move away (mouseleave).\n\n@docs setMenuEventsOnHover, setMenuEventsOnClick, MenuEventsOn\n\n\n## Open/close arrows\n\nYou may want to indicate the presence of a menu/submenu with an *arrow* (AKA\n\"caret\"). This lets you specify separate arrows for opening and closing.\n(Note these attributes and child nodes will be attached to a `span` node,\nwhich by default is `display: inline`).\n\n@docs HtmlDetails, setOpenArrow, setCloseArrow\n\n\n## Top-level menu styling\n\nFunctions for adding attributes to the top-level menu container, to the\nmenu title, and to the menu list. You can either add attributes dependent on\ncurrent menu state, or regardless of menu state with the `static*` functions.\n\nNote that for styling purposes, the higher-level setters in\n`AccordionMenu.Style` are probably more useful.\n\n@docs staticMenuAttributes, menuAttributes, staticMenuTitleAttributes, menuTitleAttributes\n\n@docs addMenuListAttributes\n\n\n## Submenu styling\n\nFunctions for adding attributes to all submenu containers, to the\nsubmenu titles, and to the submenu lists. You can either add attributes\ndependent on current submenu state, or regardless of submenu state with the\n`static*` functions.\n\nNote that for styling purposes, the higher-level setters in\n`AccordionMenu.Style` are probably more useful.\n\n@docs staticSubMenuAttributes, subMenuAttributes, staticSubMenuTitleAttributes, subMenuTitleAttributes\n\n@docs addSubMenuListAttributes\n\n\n## Generic list styling\n\nYou may have attributes to apply to *both* the top-level menu\nlist (`ul`) and list items (`li`), *and* all submenu lists and list items. Most\nlikely you will want to use the helpers in `AccordionMenu.Style` for setting\nstyles and classes, but these give you lower-level setters.\n\n@docs addListAttributes, addListItemAttributes\n\n\n# Q & A\n\n\n## Do I really need a library for this?\n\nNope. The two main places it helps are with the opening and closing of menu\nsegments, and the absolute-positioning typically needed for menus. It doesn't\nsound like a lot, but if you're like me, getting the UI right for these kinds\nof things, in a cross-browser-compatible way, is a royal pain. This library\nisn't quite there yet, but it's a start.\n\nEventually I hope to add some more UI improvements such as \"bordered zones\" to\ndeal with the infamous diagonal mouse-movement issues (see for instance this\n[CSS-Tricks writeup](https://css-tricks.com/dropdown-menus-with-more-forgiving-mouse-movement-paths/)\n).\n\n\n## What about a tree view?\n\nHaving only a single level of submenu here is a *design decision*. Just because\nit's easier (in some ways) to represent a structure as a tree, doesn't mean you\n*should*.\n\nAre you sure you want to inflict a hierarchical tree view on your users? Is\nthere not a better way?\n\nOld, but still relevant:\n[\"users prefer simple, flat lists\"](https://blog.codinghorror.com/trees-treeviews-and-ui/)\n\n\n## Can I animate opening and closing a menu?\n\nWith CSS. Example coming soon.\n\n",
+    "aliases": [
+      {
+        "name": "HtmlDetails",
+        "comment": " Html attributes and child nodes. Used in specifying open/closed arrows in\nconfiguration.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ attributes : List (Html.Attribute msg) , children : List (Html.Html msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Menu configuration\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Menu",
+        "comment": " Top-level menu title, items, and current state\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "MenuEventsOn",
+        "comment": " How menus and submenus are opened/closed: with a mouse click or hover.\nSpecified in configuration.\n",
+        "args": [],
+        "cases": [
+          [
+            "Hover",
+            []
+          ],
+          [
+            "Click",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "MenuItem",
+        "comment": " Top-level menu item\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "MenuState",
+        "comment": " A menu can be either open (i.e., its list of items are visible) or closed\n(i.e., not visible). This describes both the state of the top-level menu, and\nthe state of submenus.\n",
+        "args": [],
+        "cases": [
+          [
+            "Open",
+            []
+          ],
+          [
+            "Closed",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " Msg type for internal menu updates\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "SubMenu",
+        "comment": " Submenu title, items, and current state\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "SubMenuItem",
+        "comment": " Submenu item. Cannot be a deeper submenu.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "action",
+        "comment": " Construct an \"action\" menu item which triggers the given update msg, with\nthe given name and attributes.\n",
+        "type": "msg -> String -> List (Html.Attribute msg) -> AccordionMenu.MenuItem msg"
+      },
+      {
+        "name": "addListAttributes",
+        "comment": " Specify generic list (`ul`) attributes for all menus and submenus.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "addListItemAttributes",
+        "comment": " Specify generic list item (`li`) attributes for all menus and submenus.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "addMenuListAttributes",
+        "comment": " Specify top-level menu list (`ul`) attributes.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "addSubMenuListAttributes",
+        "comment": " Specify submenu list (`ul`) attributes.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "blankConfig",
+        "comment": " Construct a menu configuration with no styling and no arrows, with the given\nupdate mapper function. Useful for building from a \"blank slate\" config with\nsetter functions, especially if you don't have all the config data in scope at\nonce.\n\nNote that by default it constructs a config for a menu that responds to\nclicks rather than mouse hover.\n\n    AccordionMenu.blankConfig UpdateMenu\n        |> AccordionMenu.setMenuEventsOnHover\n        |> AccordionMenu.setOpenArrow myArrow\n        |> AccordionMenu.setCloseArrow myArrow\n        |> AccordionMenu.Style.resetListStyles\n        |> ...\n\nConfiguration is passed into the `view` function.\n\n",
+        "type": "(AccordionMenu.Msg -> msg) -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "closeMenu",
+        "comment": " Manually close menu. This is useful if you want to close the menu after the\nuser clicks on a menu item, for instance.\n\n    andCloseMenu : Model -> Model\n    andCloseMenu model =\n        { model | menu = AccordionMenu.closeMenu model.menu }\n\n    update : Msg -> Model -> Model\n    update msg model\n        case msg of\n            SelectMenuItem item ->\n               { model | selectedItem = item }\n                   |> andCloseMenu\n\n            ...\n\n",
+        "type": "AccordionMenu.Menu msg -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "closeMenuAndSubMenus",
+        "comment": " Manually close all submenus and the main menu, resetting the menu to its\ndefault state. This is useful if you want \"zip up everything\" after the user\nclicks on a menu or submenu item.\n\n    andCloseAll : Model -> Model\n    andCloseAll model =\n        { model | menu = AccordionMenu.closeMenuAndSubMenus model.menu }\n\n    update : Msg -> Model -> Model\n    update msg model\n        case msg of\n            SelectMenuItem item ->\n               { model | selectedItem = item }\n                   |> andCloseAll\n\n            ...\n\n",
+        "type": "AccordionMenu.Menu msg -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "closeSubMenus",
+        "comment": " Manually close all submenus. This is useful if you want to close all\nsubmenus after the user clicks on a submenu item, but want to keep the main\nmenu open.\n\n    andCloseSubMenus : Model -> Model\n    andCloseSubMenus model =\n        { model | menu = AccordionMenu.closeSubMenus model.menu }\n\n    update : Msg -> Model -> Model\n    update msg model\n        case msg of\n            SelectMenuItem item ->\n               { model | selectedItem = item }\n                   |> andCloseSubMenus\n\n            ...\n\n",
+        "type": "AccordionMenu.Menu msg -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "customConfig",
+        "comment": " Construct menu configuration from scratch. Note it may be easier to\nstart with `blankConfig` and pipe setter functions onto it if you don't have\nall the necessary data in scope at once.\n",
+        "type": "{ a | updateMenu : AccordionMenu.Msg -> msg, menuEventsOn : AccordionMenu.MenuEventsOn, openArrow : AccordionMenu.HtmlDetails Basics.Never, closeArrow : AccordionMenu.HtmlDetails Basics.Never, ul : List (Html.Attribute Basics.Never), li : List (Html.Attribute Basics.Never), menu : AccordionMenu.MenuState -> List (Html.Attribute Basics.Never), menuTitle : AccordionMenu.MenuState -> List (Html.Attribute Basics.Never), menuList : List (Html.Attribute Basics.Never), menuSubMenu : AccordionMenu.MenuState -> List (Html.Attribute Basics.Never), subMenuTitle : AccordionMenu.MenuState -> List (Html.Attribute Basics.Never), subMenuList : List (Html.Attribute Basics.Never) } -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "customMenuItem",
+        "comment": " Construct a custom menu item with the given name (virtual-dom key), list of\nattributes, and list of child nodes. Use this to define your own constructors\nfor more complex menu items, with multiple user interactions, etc.\n\n    contactCardMenuItem : ContactInfo -> Image -> MenuItem Msg\n    contactCardMenuItem contact url =\n        customMenuItem\n            contact.id\n            []\n            [ viewContactCard contact url ]\n\n",
+        "type": "String -> List (Html.Attribute msg) -> List (Html.Html msg) -> AccordionMenu.MenuItem msg"
+      },
+      {
+        "name": "customSubMenuItem",
+        "comment": " Same as `customMenuItem`, except to construct a submenu item.\n",
+        "type": "String -> List (Html.Attribute msg) -> List (Html.Html msg) -> AccordionMenu.SubMenuItem msg"
+      },
+      {
+        "name": "link",
+        "comment": " Construct a link menu item with the given name, href, and attributes.\nClicking on this menu item will trigger standard browser navigation.\n",
+        "type": "String -> String -> List (Html.Attribute msg) -> AccordionMenu.MenuItem msg"
+      },
+      {
+        "name": "menu",
+        "comment": " Construct a menu with the given title and list of menu items.\n\n    AccordionMenu.menu \"Instruments\"\n        [ AccordionMenu.link \"Ukelele\" \"#/uke\" []\n        , AccordionMenu.link \"Guitar\" \"#/guitar\" []\n        , AccordionMenu.link \"Banjo\" \"#/banjo\" []\n        , AccordionMenu.separator \"separator1\" []\n        , AccordionMenu.action Play \"Play\" []\n        ]\n\n",
+        "type": "String -> List (AccordionMenu.MenuItem msg) -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "menuAttributes",
+        "comment": " Specify top-level menu container (`div`) attributes, as a function of the\ncurrent menu state (Open or Closed).\n",
+        "type": "(AccordionMenu.MenuState -> List (Html.Attribute Basics.Never)) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "menuTitleAttributes",
+        "comment": " Specify top-level menu title (`div`) attributes, as a function of the\ncurrent menu state (Open or Closed).\n",
+        "type": "(AccordionMenu.MenuState -> List (Html.Attribute Basics.Never)) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "separator",
+        "comment": " Construct a separator (`hr`) menu item with the given name and attributes.\n(Note that the name given will be used to key the menu item to avoid any\nvirtual-dom confusion with multiple separators.)\n",
+        "type": "String -> List (Html.Attribute msg) -> AccordionMenu.MenuItem msg"
+      },
+      {
+        "name": "setCloseArrow",
+        "comment": " Specify what a menu or submenu arrow (caret) should look like when the menu\nis closed.\n",
+        "type": "AccordionMenu.HtmlDetails Basics.Never -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "setMenuEventsOnClick",
+        "comment": " Menu responds to clicks rather than mouse hover.\n",
+        "type": "AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "setMenuEventsOnHover",
+        "comment": " Menu responds to mouse hover rather than clicks.\n",
+        "type": "AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "setOpenArrow",
+        "comment": " Specify what a menu or submenu arrow (caret) should look like when the menu\nis open.\n",
+        "type": "AccordionMenu.HtmlDetails Basics.Never -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuAttributes",
+        "comment": " Specify top-level menu container (`div`) attributes, ignoring current menu\nstate.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticMenuTitleAttributes",
+        "comment": " Specify top-level menu title (`div`) attributes, ignoring current menu\nstate.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuAttributes",
+        "comment": " Specify submenu container (`li`) attributes, ignoring current submenu\nstate.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "staticSubMenuTitleAttributes",
+        "comment": " Specify subsubmenu title (`div`) attributes, ignoring current menu state.\n",
+        "type": "List (Html.Attribute Basics.Never) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenu",
+        "comment": " Construct a submenu with the given title and list of submenu items.\n\n    AccordionMenu.menu \"Instruments\"\n        [ AccordionMenu.subMenu \"Brass\"\n            [ AccordionMenu.subMenuAction (Select id Trumpet) \"Trumpet\" []\n            , AccordionMenu.subMenuAction (Select id Trombone) \"Trombone\" []\n            ]\n        ]\n\n",
+        "type": "String -> List (AccordionMenu.SubMenuItem msg) -> AccordionMenu.MenuItem msg"
+      },
+      {
+        "name": "subMenuAction",
+        "comment": " Same as `action`, except to construct a submenu item.\n",
+        "type": "msg -> String -> List (Html.Attribute msg) -> AccordionMenu.SubMenuItem msg"
+      },
+      {
+        "name": "subMenuAttributes",
+        "comment": " Specify submenu container (`li`) attributes, as a function of the\ncurrent submenu state (Open or Closed).\n",
+        "type": "(AccordionMenu.MenuState -> List (Html.Attribute Basics.Never)) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "subMenuLink",
+        "comment": " Same as `link`, except to construct a submenu item.\n",
+        "type": "String -> String -> List (Html.Attribute msg) -> AccordionMenu.SubMenuItem msg"
+      },
+      {
+        "name": "subMenuTitleAttributes",
+        "comment": " Specify submenu title (`div`) attributes, as a function of the\ncurrent submenu state (Open or Closed).\n",
+        "type": "(AccordionMenu.MenuState -> List (Html.Attribute Basics.Never)) -> AccordionMenu.Config msg -> AccordionMenu.Config msg"
+      },
+      {
+        "name": "toggleMenu",
+        "comment": " Manually toggle menu state from Open to Closed or Closed to Open.\nNot usually called from application code.\n",
+        "type": "AccordionMenu.Menu msg -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update menu state. This should be called from your application `update`,\nusing the same mapper msg you specify in the config.\n\n    type Model =\n        { menu : AccordionMenu.Menu Msg\n        }\n\n    config : AccordionMenu.Config Msg\n    config =\n        AccordionMenu.blankConfig UpdateMenu\n            |> ....\n\n    type Msg\n       = UpdateMenu AccordionMenu.Msg\n       | ...\n\n    update : Msg -> Model -> Model\n    update msg model\n        case msg of\n            UpdateMenu menuMsg ->\n               { model | menu = AccordionMenu.update menuMsg model.menu }\n\n            ...\n\n    view : Model -> Html Msg\n    view model =\n        ...\n            [ div [ class \"menu\" ]\n                [ AccordionMenu.view config model.menu ]\n            ]\n\nSee [Simple example](https://github.com/ericgj/elm-accordion-menu/blob/master/examples/Simple.elm)\nfor a more fully worked-out example.\n\n",
+        "type": "AccordionMenu.Msg -> AccordionMenu.Menu msg -> AccordionMenu.Menu msg"
+      },
+      {
+        "name": "view",
+        "comment": " The menu view. Pass in configuration and menu data.\n",
+        "type": "AccordionMenu.Config msg -> AccordionMenu.Menu msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Lofi.Schema.Output.ReactProps",
+    "comment": "\n\n# Functions\n@docs createPropTypesCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createPropTypesCode",
+        "comment": " Generates JavaScript code creating a React PropTypes declaration ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.Swift",
+    "comment": "\n\n# Functions\n@docs createStructCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createStructCode",
+        "comment": " Generates Swift code declaring a struct ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.Mongoose",
+    "comment": "\n\n# Functions\n@docs createModelCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createModelCode",
+        "comment": " Generates JavaScript code creating a mongoose.Schema ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.MySQL",
+    "comment": "\n\n# Functions\n@docs createTableCommand, insertRowCommand\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createTableCommand",
+        "comment": " Generates a CREATE TABLE MySQL command for the passed schema ",
+        "type": "Lofi.Schema.Schema -> String"
+      },
+      {
+        "name": "insertRowCommand",
+        "comment": " Generates a INSERT MySQL command for the passed schema ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.Joi",
+    "comment": "\n\n# Functions\n@docs createSchemaCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createSchemaCode",
+        "comment": " Generates JavaScript code creating a Joi schema ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.Elm",
+    "comment": "\n\n# Functions\n@docs createTypeAliasCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createTypeAliasCode",
+        "comment": " Generates Elm code declaring a record type alias ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema.Output.Go",
+    "comment": "\n\n# Functions\n@docs createStructCode\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "createStructCode",
+        "comment": " Generates Golang code declaring a struct ",
+        "type": "Lofi.Schema.Schema -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi.Schema",
+    "comment": "\n\n# Types\n@docs Kind, Item, Schema\n\n# Functions\n@docs fromElement\n",
+    "aliases": [
+      {
+        "name": "Item",
+        "comment": " An individual attribute of a schema ",
+        "args": [],
+        "type": "{ name : String , kind : Lofi.Schema.Kind , optional : Bool , isPrimaryKey : Bool }"
+      },
+      {
+        "name": "Schema",
+        "comment": " A representation of a model and its names and kinds ",
+        "args": [],
+        "type": "{ collectionName : String , individualName : String , items : List Lofi.Schema.Item }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Kind",
+        "comment": " The kind of value, e.g. text, number, date ",
+        "args": [],
+        "cases": [
+          [
+            "Text",
+            [
+              "{ maximumLength : Maybe.Maybe Int , isEmail : Bool , default : Maybe.Maybe String }"
+            ]
+          ],
+          [
+            "Number",
+            [
+              "{ real : Bool, allowNegative : Bool, default : Maybe.Maybe Float }"
+            ]
+          ],
+          [
+            "Date",
+            [
+              "{ time : Bool, defaultIsNow : Bool }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fromElement",
+        "comment": " Convert a Lofi.Element to a schema Item ",
+        "type": "Lofi.Element -> Lofi.Schema.Item"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

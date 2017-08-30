@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Slider",
+    "comment": " Convenience wrapper around <input type=\"range\"> HTML elements.\n\n# Model\n@docs Model, init\n\n# Controller\n@docs Msg, update\n\n# View\n@docs view, Property, props2view, onChange\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model that holds slider data\n",
+        "args": [],
+        "type": "{ val : Float, minVal : Float, maxVal : Float, step : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Messages related to slider updates\n",
+        "args": [],
+        "cases": [
+          [
+            "UpdateVal",
+            [
+              "Float"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Property",
+        "comment": " Properties specific to this slider component.\nUsed to render the view correctly.\n\nMinVal -> the inclusive lower bound of the input range element.\n\nMaxVal -> the inclusive upper bound of the input range element.\n\nVal -> the current value of the input range element.\n\nStep -> the smallest possible increment by input in the input range element.\n\nOnChange -> the inclusive lower bound of the input range element.\n\nAttr -> Custom Html attributes to be applied to the input element.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "MinVal",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "MaxVal",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Val",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Step",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "OnChange",
+            [
+              "List (Html.Attribute msg)"
+            ]
+          ],
+          [
+            "Attr",
+            [
+              "Html.Attribute msg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Standard init in elm-style pattern\n",
+        "type": "( Slider.Model, Platform.Cmd.Cmd Slider.Msg )"
+      },
+      {
+        "name": "onChange",
+        "comment": " Handles on \"input\" and on \"change\" events conveniently\n",
+        "type": "(Float -> msg) -> Slider.Property msg"
+      },
+      {
+        "name": "props2view",
+        "comment": " If you don't want to treat the slider as a component, and only care about\nthe 'current value', it may be simpler to use this to define your own slider.\n\nFor example:\n\n    import Slider exposing (MinVal, MaxVal, Step, onChange, props2view)\n\n    type Msg = NoOp | CustomSliderUpdate Float\n\n    viewSlider : Html Msg\n        [MinVal 10, MaxVal 20, Step = 0.5, onChange CustomSliderUpdate]\n            |> props2view\n",
+        "type": "List (Slider.Property msg) -> Html.Html msg"
+      },
+      {
+        "name": "update",
+        "comment": " Standard elm-style update\n",
+        "type": "Slider.Msg -> Slider.Model -> ( Slider.Model, Platform.Cmd.Cmd Slider.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Standard view function when using the standard component-driven API\n",
+        "type": "Slider.Model -> Html.Html Slider.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

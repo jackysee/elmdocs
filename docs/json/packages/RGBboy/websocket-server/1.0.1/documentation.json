@@ -1,0 +1,49 @@
+[
+  {
+    "name": "WebSocketServer",
+    "comment": " Web socket server enables you to write the server part of your websocket\napplication in Elm.\n\n# Web Socket Server\n@docs Socket, Location, eventDecoder\n# Commands\n@docs sendToOne, sendToMany, sendToOthers, close\n",
+    "aliases": [
+      {
+        "name": "Location",
+        "comment": " The same Location type as found in [`elm-lang/navigation`][navigation].\n\n[navigation]: https://github.com/elm-lang/navigation\n",
+        "args": [],
+        "type": "Navigation.Location"
+      },
+      {
+        "name": "Socket",
+        "comment": " A pointer to the socket in the node.js world. These are based on uuids and\nare unique to each connection that is created.\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "close",
+        "comment": " Close a socket connection. Given you have an output port:\n\n    port outputPort : Encode.Value -> Cmd msg\n\nYou would write something like this to create a cmd to close a socket:\n\n    close outputPort socketA\n",
+        "type": "(Json.Encode.Value -> a) -> WebSocketServer.Socket -> a"
+      },
+      {
+        "name": "eventDecoder",
+        "comment": " Create a decoder to use with your input port. This allows you to hook into\nthe events that will be triggered over a sockets lifetime and respond to them\nin your update function.\n\n    onConnection : Socket -> Location -> msg\n\nTriggered when a new connection is made. Can be used to get the new connection\nand the Location that the connection was made to. This can be useful to\nsegregate connections into groups or associating a private id.\n\n    onDisconnection : Socket -> Location -> msg\n\nTriggered when a disconnection happens. Can be used to clean up the connection\nfrom anywhere it has been saved in your application state.\n\n    onMessage : Socket -> Location -> String -> msg\n\nTriggered when a socket recieves a message.\n\n**Note 1:** Almost everyone will want to use a URL parsing library like\n[`evancz/url-parser`][parse] to turn a `Location` into something more useful.\n\n[parse]: https://github.com/evancz/url-parser\n\n",
+        "type": "{ onConnection : WebSocketServer.Socket -> WebSocketServer.Location -> msg , onDisconnection : WebSocketServer.Socket -> WebSocketServer.Location -> msg , onMessage : WebSocketServer.Socket -> WebSocketServer.Location -> String -> msg } -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "sendToMany",
+        "comment": " Send a message to a many sockets. Given you have an output port:\n\n    port outputPort : Encode.Value -> Cmd msg\n\nYou would write something like this to create a cmd to send messages:\n\n    sendToMany outputPort \"Hello!\" [socketA, socketB]\n      |> Cmd.batch\n",
+        "type": "(Json.Encode.Value -> a) -> String -> List WebSocketServer.Socket -> List a"
+      },
+      {
+        "name": "sendToOne",
+        "comment": " Send a message to a particular socket. Given you have an output port:\n\n    port outputPort : Encode.Value -> Cmd msg\n\nYou would write something like this to create a cmd to send a message:\n\n    sendToOne outputPort \"Hello!\" socketA\n",
+        "type": "(Json.Encode.Value -> a) -> String -> WebSocketServer.Socket -> a"
+      },
+      {
+        "name": "sendToOthers",
+        "comment": " Send a message to a all sockets except one. Given you have an output port:\n\n    port outputPort : Encode.Value -> Cmd msg\n\nYou would write something like this to create a cmd to send messages:\n\n    sendToOthers outputPort \"Hello!\" socketA [socketA, socketB, socketC]\n      |> Cmd.batch\n",
+        "type": "(Json.Encode.Value -> a) -> String -> WebSocketServer.Socket -> List WebSocketServer.Socket -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

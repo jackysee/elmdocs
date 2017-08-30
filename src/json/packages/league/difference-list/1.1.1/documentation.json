@@ -1,0 +1,82 @@
+[
+  {
+    "name": "DList",
+    "comment": " A representation of lists with an efficient append operation.\n\nThis is particularly useful for efficient logging and pretty printing, where\nrepeatedly appending lists quickly becomes too expensive. Internally, `DList`\nis a function that prepends elements to its parameter. Thus the `append`\noperation is just function composition. Ultimately, a `DList` is converted to a\nregular `List` by applying the function to the empty list.\n\nSome limitations of the `DList` representation are:\n\n  - We cannot ask for the length of a `DList` without converting it to a\n    regular list.\n\n  - We cannot test equality on two `DList` structures without converting them\n    to regular lists.\n\n@docs DList, toList\n\n# Construction\n@docs empty, singleton, cons, snoc, append, (+&+), fromList\n\n# Processing\n@docs concat, foldr, intersperse, map\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DList",
+        "comment": " A difference list containing elements of type `a`. ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "+&+",
+        "comment": " An operator for append. ",
+        "type": "DList.DList a -> DList.DList a -> DList.DList a",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": "append",
+        "comment": " Concatenate two lists. ",
+        "type": "DList.DList a -> DList.DList a -> DList.DList a"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate a list of difference lists. ",
+        "type": "List (DList.DList a) -> DList.DList a"
+      },
+      {
+        "name": "cons",
+        "comment": " Prepend an element onto the front of the list. ",
+        "type": "a -> DList.DList a -> DList.DList a"
+      },
+      {
+        "name": "empty",
+        "comment": " The empty list. ",
+        "type": "DList.DList a"
+      },
+      {
+        "name": "foldr",
+        "comment": " Iterate through a `DList`. ",
+        "type": "(a -> b -> b) -> b -> DList.DList a -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a regular Elm `List` to a difference list. ",
+        "type": "List a -> DList.DList a"
+      },
+      {
+        "name": "intersperse",
+        "comment": " Intersperse the contents of a `DList` between other lists. ",
+        "type": "DList.DList a -> List (DList.DList a) -> DList.DList a"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to each element, accumulating the results as a `DList`. ",
+        "type": "(a -> b) -> DList.DList a -> DList.DList b"
+      },
+      {
+        "name": "singleton",
+        "comment": " Construct a list containing one element. ",
+        "type": "a -> DList.DList a"
+      },
+      {
+        "name": "snoc",
+        "comment": " Add an element onto the back of the list. O(1) just like `append`. ",
+        "type": "DList.DList a -> a -> DList.DList a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert to a regular Elm `List` by applying the underlying function\n    representation. ",
+        "type": "DList.DList a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

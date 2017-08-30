@@ -1,0 +1,90 @@
+[
+  {
+    "name": "List.Unique",
+    "comment": " A type to arrange things an order\n\n# UniqueList\n\n@docs UniqueList\n\n# Basics\n\n@docs empty, isEmpty, fromList, toList, length, reverse, member\n\n# Modifying UniqueLists\n\n@docs remove, cons, addBefore, addAfter, isBefore, isAfter, isFirst\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "UniqueList",
+        "comment": " An arrangement of things in an order. An `UniqueList` is kind of like a `List`, except there cant be duplicate elements. And, its kind of like a `Set`, except an `UniqueList`s elements go from first to last.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addAfter",
+        "comment": " Add an element to a `UniqueList` before another element\n\n    addAfter `b` `c` (List.Unique.fromList [ `a`, `b`, `d` ])\n        == List.Unique.fromList [ `a`, `b`, `c`, `d` ]\n\n",
+        "type": "a -> a -> List.Unique.UniqueList a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "addBefore",
+        "comment": " Add an element to a `UniqueList` before another element\n\n    addBefore `c` `b` (List.Unique.fromList [ `a`, `c`, `d` ])\n        == List.Unique.fromList [ `a`, `b`, `c`, `d` ]\n\n",
+        "type": "a -> a -> List.Unique.UniqueList a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "cons",
+        "comment": " Add an element to the beginning of a `UniqueList`\n",
+        "type": "a -> List.Unique.UniqueList a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty `UniqueList\n\n    List.Unique.empty == List.Unique.fromList []\n\n",
+        "type": "List.Unique.UniqueList a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create a `UniqueList` from a `List`\n",
+        "type": "List a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "isAfter",
+        "comment": " Check if an element is after another, if it is in the `UniqueList` at all.\n",
+        "type": "a -> a -> List.Unique.UniqueList a -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "isBefore",
+        "comment": " Check if an element is before another, if it is in the `UniqueList` at all.\n\n    germanStates = List.Unique.fromList [ \"Bavaria\", \"Brandenberg\" ]\n\n    (\"Bavaria\" |> List.Unique.isBefore \"Brandenberg\") germanStates == Just True\n\n    (\"Bavaria\" |> List.Unique.isBefore \"New York City\") germanStates == Nothing\n",
+        "type": "a -> a -> List.Unique.UniqueList a -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Check if an Order is empty\n\n    Order.isEmpty Order.empty == True\n",
+        "type": "List.Unique.UniqueList a -> Bool"
+      },
+      {
+        "name": "isFirst",
+        "comment": " Check is an element is the first in a `UniqueList`\n",
+        "type": "a -> List.Unique.UniqueList a -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "length",
+        "comment": " Get the length of a `UniqueList`\n\n    nobleGases = List.Unique.fromList\n        [ helium\n        , neon\n        , argon\n        , krypton\n        , xenon\n        , radon\n        ]\n\n    List.Unique.length nobleGases == 6\n",
+        "type": "List.Unique.UniqueList a -> Int"
+      },
+      {
+        "name": "member",
+        "comment": " Check if something is in a `UniqueList`\n\n    List.Unique.member \"Grover Cleveland\" usPresidents == True\n\n",
+        "type": "a -> List.Unique.UniqueList a -> Bool"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove an element from a `UniqueList\n",
+        "type": "a -> List.Unique.UniqueList a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse a `UniqueList`\n\n    bestCoffeeDrinks ==\n        List.Unique.fromList\n            [ cortado\n            , latte\n            , coldbrew\n            , coffee\n            , mocha\n            ]\n\n    worstCoffeeDrinks : UniqueList Coffee\n    worstCoffeeDrinks =\n        List.Unique.reverse bestCoffeeDrinks\n\n",
+        "type": "List.Unique.UniqueList a -> List.Unique.UniqueList a"
+      },
+      {
+        "name": "toList",
+        "comment": " Turn a `UniqueList` into a `List`\n\n    let\n        u = [ 'u' ]\n\n        doubleU = [ 'u', 'u' ]\n    in\n        u == (List.Unique.toList <| List.Unique.fromList doubleU)\n\n",
+        "type": "List.Unique.UniqueList a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

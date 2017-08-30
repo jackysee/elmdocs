@@ -1,0 +1,58 @@
+[
+  {
+    "name": "NestedList",
+    "comment": "  Nested lists and associated Json decoders and encoders for Elm. \n\n## Definition\n\n@docs NestedList\n\n## JSON\n\n### Decoder\n\n@docs decode\n\n### Encoder\n\n@docs encode\n\n## Functions\n@docs map, reduce, flatten\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "NestedList",
+        "comment": " Represents a tree (or nested list)\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "Element",
+            [
+              "a"
+            ]
+          ],
+          [
+            "Nested",
+            [
+              "List (NestedList.NestedList a)"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "decode",
+        "comment": " Decode a nested list like [[1,2,[3]],4]\n\n    >>> import Json.Decode exposing (decodeString, int, list)\n    >>> decodeString (decode int) \"[[1,2],3]\"\n    Ok (Nested [Nested [Element 1, Element 2], Element 3])\n    >>> decodeString (decode (list int)) \"[[1,2],[3]]\"\n    Ok (Nested [Element [1, 2], Element [3]])\n\n",
+        "type": "Json.Decode.Decoder baseType -> Json.Decode.Decoder (NestedList.NestedList baseType)"
+      },
+      {
+        "name": "encode",
+        "comment": " Encode a nested list in JSON\n\n    >>> import Json.Encode\n    >>> let\n    ...    nestedList = Nested [Nested [Element 1, Nested [Element 2]], Element 3]\n    ... in\n    ...    Json.Encode.encode 0 (encode Json.Encode.int nestedList)\n    \"[[1,[2]],3]\"\n",
+        "type": "(a -> Json.Encode.Value) -> NestedList.NestedList a -> Json.Encode.Value"
+      },
+      {
+        "name": "flatten",
+        "comment": " Flatten a NestedList to a normal List\n\n    >>> flatten (Nested [ Nested [ Element 1, Element 2, Nested [ Element 3 ] ], Element 4 ])\n    [1,2,3,4]\n",
+        "type": "NestedList.NestedList a -> List a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a nested list\n\n    >>> map ((+)1) (Nested [Element 1, Nested [Element 2]])\n    Nested [Element 2, Nested [Element 3]]\n",
+        "type": "(a -> b) -> NestedList.NestedList a -> NestedList.NestedList b"
+      },
+      {
+        "name": "reduce",
+        "comment": " Reduce a nested list with a reducer that takes a non-nested list of object and returns a single object\n\n    >>> reduce List.sum (Nested [Nested [Element 1, Element 2], Element 3])\n    6\n",
+        "type": "(List b -> b) -> NestedList.NestedList b -> b"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

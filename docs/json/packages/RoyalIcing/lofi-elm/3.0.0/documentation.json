@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Lofi.Parse",
+    "comment": " Parse #lofi strings into elements\n\n# Run Parsers\n@docs parseElement\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parseElement",
+        "comment": " Parses a single #lofi line into an Element\n\n    parseElement \"Click me #button #primary\"\n",
+        "type": "String -> Lofi.Element"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lofi",
+    "comment": " A library for #lofi parsing\n\n# Types\n@docs Element, Text, Mention, KeyPath, Tags, TagValue\n\n",
+    "aliases": [
+      {
+        "name": "KeyPath",
+        "comment": " A list of keys used in @mentions ",
+        "args": [],
+        "type": "List String"
+      },
+      {
+        "name": "Mention",
+        "comment": " A reference to an external resource ",
+        "args": [],
+        "type": "Lofi.KeyPath"
+      },
+      {
+        "name": "Tags",
+        "comment": " A collection of tags ",
+        "args": [],
+        "type": "Dict.Dict String Lofi.TagValue"
+      },
+      {
+        "name": "Text",
+        "comment": " Normal text to be displayed as-is ",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Element",
+        "comment": " A #lofi element, representing a single line ",
+        "args": [],
+        "cases": [
+          [
+            "Element",
+            [
+              "{ texts : List Lofi.Text , mentions : List Lofi.Mention , tags : Lofi.Tags , items : List Lofi.Element }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "TagValue",
+        "comment": " The value of a tag, either a boolean, or nested content ",
+        "args": [],
+        "cases": [
+          [
+            "Flag",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "Content",
+            [
+              "{ texts : List Lofi.Text, mentions : List Lofi.Mention }"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,1111 @@
+[
+  {
+    "name": "DictList",
+    "comment": " Have you ever wanted a `Dict`, but you need to maintain an arbitrary\nordering of keys? Or, a `List`, but you want to efficiently lookup values\nby a key? With `DictList`, now you can!\n\n`DictList` implements the full API for `Dict` (and should be a drop-in\nreplacement for it). However, instead of ordering things from lowest\nkey to highest key, it allows for an arbitrary ordering.\n\nWe also implement most of the API for `List`. However, the API is not\nidentical, since we need to account for both keys and values.\n\nAn alternative would be to maintain your own \"association list\" -- that is,\na `List (k, v)` instead of a `DictList k v`. You can move back and forth\nbetween an association list and a `DictList` via `toList` and `fromList`.\n\n# DictList\n\n@docs DictList, eq\n\n# Build\n\nFunctions which create or update a dictionary.\n\n@docs empty, singleton, insert, update, remove\n@docs take, drop\n@docs removeWhen, removeMany, keepOnly\n@docs cons, insertAfter, insertBefore, insertRelativeTo\n\n# Combine\n\nFunctions which combine two dictionaries.\n\n@docs append, concat\n@docs union, intersect, diff, merge\n\n# Query\n\nFunctions which get information about a dictionary.\n\n@docs isEmpty, size, length\n@docs all, any\n@docs sum, product, maximum, minimum\n\n# Elements\n\nFunctions that pick out an element of a dictionary,\nor provide information about an element.\n\n@docs member, get, getAt, getKeyAt\n@docs indexOfKey, relativePosition, atRelativePosition\n@docs head, tail\n@docs next, previous\n\n# Transform\n\nFunctions that transform a dictionary\n\n@docs map, mapKeys, foldl, foldr, filter, partition\n@docs indexedMap, filterMap, reverse\n@docs sort, sortBy, sortWith\n\n# Convert\n\nFunctions that convert between a dictionary and a related type.\n\n@docs keys, values, toList, fromList, fromListBy, groupBy\n@docs toDict, fromDict\n@docs toAllDictList, fromAllDictList\n\n# JSON\n\nFunctions that help to decode a dictionary.\n\n@docs decodeObject, decodeArray, decodeArray2, decodeWithKeys, decodeKeysAndValues\n\n",
+    "aliases": [
+      {
+        "name": "DictList",
+        "comment": " A `Dict` that maintains an arbitrary ordering of keys (rather than sorting\nthem, as a normal `Dict` does. Or, a `List` that permits efficient lookup of\nvalues by a key. You can look at it either way.\n",
+        "args": [
+          "k",
+          "v"
+        ],
+        "type": "AllDictList.AllDictList k v k"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Determine if all elements satisfy the predicate.\n",
+        "type": "(comparable -> value -> Bool) -> DictList.DictList comparable value -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine if any elements satisfy the predicate.\n",
+        "type": "(comparable -> value -> Bool) -> DictList.DictList comparable value -> Bool"
+      },
+      {
+        "name": "append",
+        "comment": " Put two dictionaries together.\n\nIf keys collide, preference is given to the value from the second dictionary.\nAlso, the order of the keys in the second dictionary will be preserved at the\nend of the result.\n\nSo, you could think of `append` as biased towards the second argument. The end\nof the result should be equal to the second argument, both in value and key-order.\nThe front of the result will then be whatever is left from the first argument --\nthat is, those keys (and their values) that were not in the second argument.\n\nFor a similar function that is biased towards the first argument, see `union`.\n",
+        "type": "DictList.DictList comparable value -> DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "atRelativePosition",
+        "comment": " Gets the key-value pair currently at the indicated relative position.\n",
+        "type": "AllDictList.RelativePosition comparable -> DictList.DictList comparable value -> Maybe.Maybe ( comparable, value )"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate a bunch of dictionaries into a single dictionary.\n\nWorks from left to right, applying `append` as it goes.\n",
+        "type": "List (DictList.DictList comparable value) -> DictList.DictList comparable value"
+      },
+      {
+        "name": "cons",
+        "comment": " Insert a key-value pair at the front. Moves the key to the front if\n    it already exists.\n",
+        "type": "comparable -> value -> DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "decodeArray",
+        "comment": " Given a decoder for the value, and a way of turning the value into a key,\ndecode an array of values into a dictionary. The order within the dictionary\nwill be the order of the JSON array.\n",
+        "type": "(value -> comparable) -> Json.Decode.Decoder value -> Json.Decode.Decoder (DictList.DictList comparable value)"
+      },
+      {
+        "name": "decodeArray2",
+        "comment": " Decodes a JSON array into the DictList. You supply two decoders. Given an element\nof your JSON array, the first decoder should decode the key, and the second decoder\nshould decode the value.\n",
+        "type": "Json.Decode.Decoder comparable -> Json.Decode.Decoder value -> Json.Decode.Decoder (DictList.DictList comparable value)"
+      },
+      {
+        "name": "decodeKeysAndValues",
+        "comment": " Like `decodeWithKeys`, but you supply a decoder for the keys, rather than the keys themselves.\n\nNote that the starting point for all decoders will be the same place, so you need to construct your\ndecoders in a way that makes that work.\n",
+        "type": "Json.Decode.Decoder (List comparable) -> (comparable -> Json.Decode.Decoder value) -> Json.Decode.Decoder (DictList.DictList comparable value)"
+      },
+      {
+        "name": "decodeObject",
+        "comment": " Turn any object into a dictionary of key-value pairs, including inherited\nenumerable properties. Fails if _any_ value can't be decoded with the given\ndecoder.\n\nUnfortunately, it is not possible to preserve the apparent order of the keys in\nthe JSON, because the keys in Javascript objects are fundamentally un-ordered.\nThus, you will typically need to have at least your keys in an array in the JSON,\nand use `decodeWithKeys`, `decodeArray` or `decodeArray2`.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (DictList.DictList String a)"
+      },
+      {
+        "name": "decodeWithKeys",
+        "comment": " This function produces a decoder you can use if you can decode a list of your keys,\nand given a key, you can produce a decoder for the corresponding value. The\norder within the dictionary will be the order of your list of keys.\n",
+        "type": "List comparable -> (comparable -> Json.Decode.Decoder value) -> Json.Decode.Decoder (DictList.DictList comparable value)"
+      },
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "DictList.DictList comparable v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "drop",
+        "comment": " Drop the first *n* values.\n",
+        "type": "Int -> DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary.\n",
+        "type": "DictList.DictList comparable v"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality.\n",
+        "type": "DictList.DictList comparable v -> DictList.DictList comparable v -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate.\n",
+        "type": "(comparable -> v -> Bool) -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "filterMap",
+        "comment": " Apply a function that may succeed to all key-value pairs, but only keep\nthe successes.\n",
+        "type": "(comparable -> a -> Maybe.Maybe b) -> DictList.DictList comparable a -> DictList.DictList comparable b"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the first\nkey to the last key (given the arbitrary order maintained by the dictionary).\n",
+        "type": "(comparable -> v -> b -> b) -> b -> DictList.DictList comparable v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the last\nkey to the first key (given the arbitrary order maintained by the dictionary.\n",
+        "type": "(comparable -> v -> b -> b) -> b -> DictList.DictList comparable v -> b"
+      },
+      {
+        "name": "fromAllDictList",
+        "comment": " Given an `AllDictList`, create a `DictList`.\n",
+        "type": "AllDictList.AllDictList comparable v comparable -> DictList.DictList comparable v"
+      },
+      {
+        "name": "fromDict",
+        "comment": " Given a `Dict`, create a `DictList`. The keys will initially be in the\norder that the `Dict` provides.\n",
+        "type": "Dict.Dict comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary, maintaining the order of the list.\n",
+        "type": "List ( comparable, v ) -> DictList.DictList comparable v"
+      },
+      {
+        "name": "fromListBy",
+        "comment": " Create a dictionary from a list of values, by passing a function that can\nget a key from any such value. If the function does not return unique keys,\nearlier values are discarded.\n\nThis can, for instance, be useful when constructing a dictionary from a List of\nrecords with `id` fields:\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    fromListBy .id [mary, jack, jill] == DictList.fromList [(1, jack), (2, jill)]\n",
+        "type": "(a -> comparable) -> List a -> DictList.DictList comparable a"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`.\n",
+        "type": "comparable -> DictList.DictList comparable v -> Maybe.Maybe v"
+      },
+      {
+        "name": "getAt",
+        "comment": " Gets the key and value at the specified index (0-based).\n",
+        "type": "Int -> DictList.DictList comparable value -> Maybe.Maybe ( comparable, value )"
+      },
+      {
+        "name": "getKeyAt",
+        "comment": " Gets the key at the specified index (0-based).\n",
+        "type": "Int -> DictList.DictList comparable value -> Maybe.Maybe comparable"
+      },
+      {
+        "name": "groupBy",
+        "comment": " Takes a key-fn and a list.\n\nCreates a dictionary which maps the key to a list of matching elements.\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    groupBy .id [mary, jack, jill] == DictList.fromList [(1, [mary, jill]), (2, [jack])]\n",
+        "type": "(a -> comparable) -> List a -> DictList.DictList comparable (List a)"
+      },
+      {
+        "name": "head",
+        "comment": " Gets the first key with its value.\n",
+        "type": "DictList.DictList comparable value -> Maybe.Maybe ( comparable, value )"
+      },
+      {
+        "name": "indexOfKey",
+        "comment": " Given a key, what index does that key occupy (0-based) in the\norder maintained by the dictionary?\n",
+        "type": "comparable -> DictList.DictList comparable value -> Maybe.Maybe Int"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Like `map` but the function is also given the index of each\nelement (starting at zero).\n",
+        "type": "(Int -> comparable -> a -> b) -> DictList.DictList comparable a -> DictList.DictList comparable b"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces the value when the\nkeys collide, leaving the keys in the same order as they had been in.\nIf the key did not previously exist, it is added to the end of\nthe list.\n",
+        "type": "comparable -> v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "insertAfter",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted after\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the end.\n",
+        "type": "comparable -> comparable -> v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "insertBefore",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted before\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the beginning.\n",
+        "type": "comparable -> comparable -> v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "insertRelativeTo",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted\nrelative to the existing key (even if the new key already exists). If the\nexisting key cannot be found, the new key/value pair will be inserted at the\nbeginning (if the new key was to be before the existing key) or the end (if the\nnew key was to be after).\n",
+        "type": "AllDictList.RelativePosition comparable -> comparable -> v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. The resulting\norder of keys will be as it was in the first dictionary.\n",
+        "type": "DictList.DictList comparable v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine whether a dictionary is empty.\n",
+        "type": "DictList.DictList comparable v -> Bool"
+      },
+      {
+        "name": "keepOnly",
+        "comment": " Keep a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "DictList.DictList comparable v -> List comparable"
+      },
+      {
+        "name": "length",
+        "comment": " The number of key-value pairs in the dictionary.\n",
+        "type": "DictList.DictList comparable value -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\n",
+        "type": "(comparable -> a -> b) -> DictList.DictList comparable a -> DictList.DictList comparable b"
+      },
+      {
+        "name": "mapKeys",
+        "comment": " Apply a function to all keys in a dictionary.\n",
+        "type": "(comparable1 -> comparable2) -> DictList.DictList comparable1 v -> DictList.DictList comparable2 v"
+      },
+      {
+        "name": "maximum",
+        "comment": " Find the maximum value. Returns `Nothing` if empty.\n",
+        "type": "DictList.DictList comparable1 comparable2 -> Maybe.Maybe comparable2"
+      },
+      {
+        "name": "member",
+        "comment": " Determine whether a key is in the dictionary.\n",
+        "type": "comparable -> DictList.DictList comparable v -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two dictionaries. You provide three\naccumulators for when a given key appears:\n\n  1. Only in the left dictionary.\n  2. In both dictionaries.\n  3. Only in the right dictionary.\n\nYou then traverse all the keys and values, building up whatever\nyou want.\n\nThe keys and values from the first dictionary will be provided first,\nin the order maintained by the first dictionary. Then, any keys which are\nonly in the second dictionary will be provided, in the order maintained\nby the second dictionary.\n",
+        "type": "(comparable -> a -> result -> result) -> (comparable -> a -> b -> result -> result) -> (comparable -> b -> result -> result) -> DictList.DictList comparable a -> DictList.DictList comparable b -> result -> result"
+      },
+      {
+        "name": "minimum",
+        "comment": " Find the minimum value. Returns `Nothing` if empty.\n",
+        "type": "DictList.DictList comparable1 comparable2 -> Maybe.Maybe comparable2"
+      },
+      {
+        "name": "next",
+        "comment": " Given a key, get the key and value at the next position.\n",
+        "type": "comparable -> DictList.DictList comparable value -> Maybe.Maybe ( comparable, value )"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(comparable -> v -> Bool) -> DictList.DictList comparable v -> ( DictList.DictList comparable v, DictList.DictList comparable v )"
+      },
+      {
+        "name": "previous",
+        "comment": " Given a key, get the key and value at the previous position.\n",
+        "type": "comparable -> DictList.DictList comparable value -> Maybe.Maybe ( comparable, value )"
+      },
+      {
+        "name": "product",
+        "comment": " Get the product of the values.\n",
+        "type": "DictList.DictList comparable number -> number"
+      },
+      {
+        "name": "relativePosition",
+        "comment": " Get the position of a key relative to the previous key (or next, if the\nfirst key). Returns `Nothing` if the key was not found.\n",
+        "type": "comparable -> DictList.DictList comparable v -> Maybe.Maybe (AllDictList.RelativePosition comparable)"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made.\n",
+        "type": "comparable -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "removeMany",
+        "comment": " Remove a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "removeWhen",
+        "comment": " Remove elements which satisfies the predicate.\n\n    removeWhen (\\_ v -> v == 1) (DictList.fromList [(\"Mary\", 1), (\"Jack\", 2), (\"Jill\", 1)]) == DictList.fromList [(\"Jack\", 2)]\n",
+        "type": "(comparable -> v -> Bool) -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse the order of the key-value pairs.\n",
+        "type": "DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair.\n",
+        "type": "comparable -> v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "size",
+        "comment": " Determine the number of key-value pairs in the dictionary.\n",
+        "type": "DictList.DictList comparable v -> Int"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort values from lowest to highest\n",
+        "type": "DictList.DictList comparable1 comparable2 -> DictList.DictList comparable1 comparable2"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Sort values by a derived property.\n",
+        "type": "(value -> comparable) -> DictList.DictList comparable2 value -> DictList.DictList comparable2 value"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Sort values with a custom comparison function.\n",
+        "type": "(value -> value -> Basics.Order) -> DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "sum",
+        "comment": " Get the sum of the values.\n",
+        "type": "DictList.DictList comparable number -> number"
+      },
+      {
+        "name": "tail",
+        "comment": " Extract the rest of the dictionary, without the first key/value pair.\n",
+        "type": "DictList.DictList comparable value -> Maybe.Maybe (DictList.DictList comparable value)"
+      },
+      {
+        "name": "take",
+        "comment": " Take the first *n* values.\n",
+        "type": "Int -> DictList.DictList comparable value -> DictList.DictList comparable value"
+      },
+      {
+        "name": "toAllDictList",
+        "comment": " Convert a `DictList` to an `AllDictList`\n",
+        "type": "DictList.DictList comparable v -> AllDictList.AllDictList comparable v comparable"
+      },
+      {
+        "name": "toDict",
+        "comment": " Extract a `Dict` from a `DictList`\n",
+        "type": "DictList.DictList comparable v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs, in the order maintained by the dictionary.\n",
+        "type": "DictList.DictList comparable v -> List ( comparable, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If keys collide, preference is given\nto the value from the first dictionary.\n\nKeys already in the first dictionary will remain in their original order.\n\nKeys newly added from the second dictionary will be added at the end.\n\nSo, you might think of `union` as being biased towards the first argument,\nsince it preserves both key-order and values from the first argument, only\nadding things on the right (from the second argument) for keys that were not\npresent in the first. This seems to correspond best to the logic of `Dict.union`.\n\nFor a similar function that is biased towards the second argument, see `append`.\n",
+        "type": "DictList.DictList comparable v -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value for a specific key with a given function. Maintains\nthe order of the key, or inserts it at the end if it is new.\n",
+        "type": "comparable -> (Maybe.Maybe v -> Maybe.Maybe v) -> DictList.DictList comparable v -> DictList.DictList comparable v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "DictList.DictList comparable v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "EveryDictList",
+    "comment": " Have you ever wanted an `EveryDict`, but you need to maintain an arbitrary\nordering of keys? Or, a `List`, but you want to efficiently lookup values\nby a key? With `EveryDictList`, now you can!\n\n`EveryDictList` implements the full API for `EveryDict` (and should be a drop-in\nreplacement for it). However, instead of ordering things from lowest\nkey to highest key, it allows for an arbitrary ordering.\n\nWe also implement most of the API for `List`. However, the API is not\nidentical, since we need to account for both keys and values.\n\nAn alternative would be to maintain your own \"association list\" -- that is,\na `List (k, v)` instead of an `EveryDictList k v`. You can move back and forth\nbetween an association list and a dictionary via `toList` and `fromList`.\n\n# EveryDictList\n\n@docs EveryDictList, eq\n\n# Build\n\nFunctions which create or update a dictionary.\n\n@docs empty, singleton, insert, update, remove\n@docs take, drop\n@docs removeWhen, removeMany, keepOnly\n@docs cons, insertAfter, insertBefore, insertRelativeTo\n\n# Combine\n\nFunctions which combine two dictionaries.\n\n@docs append, concat\n@docs union, intersect, diff, merge\n\n# Query\n\nFunctions which get information about a dictionary.\n\n@docs isEmpty, size, length\n@docs all, any\n@docs sum, product, maximum, minimum\n\n# Elements\n\nFunctions that pick out an element of a dictionary,\nor provide information about an element.\n\n@docs member, get, getAt, getKeyAt\n@docs indexOfKey, relativePosition, atRelativePosition\n@docs head, tail\n@docs next, previous\n\n# Transform\n\nFunctions that transform a dictionary\n\n@docs map, mapKeys, foldl, foldr, filter, partition\n@docs indexedMap, filterMap, reverse\n@docs sort, sortBy, sortWith\n\n# Convert\n\nFunctions that convert between a dictionary and a related type.\n\n@docs keys, values, toList, fromList, fromListBy, groupBy\n@docs toDict, fromDict\n@docs toAllDictList, fromAllDictList\n\n# JSON\n\nFunctions that help to decode a dictionary.\n\n@docs decodeObject, decodeArray, decodeArray2, decodeWithKeys, decodeKeysAndValues\n\n",
+    "aliases": [
+      {
+        "name": "EveryDictList",
+        "comment": " A `Dict` that maintains an arbitrary ordering of keys (rather than sorting\nthem, as a normal `Dict` does. Or, a `List` that permits efficient lookup of\nvalues by a key. You can look at it either way.\n",
+        "args": [
+          "k",
+          "v"
+        ],
+        "type": "AllDictList.AllDictList k v String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Determine if all elements satisfy the predicate.\n",
+        "type": "(k -> v -> Bool) -> EveryDictList.EveryDictList k v -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine if any elements satisfy the predicate.\n",
+        "type": "(k -> v -> Bool) -> EveryDictList.EveryDictList k v -> Bool"
+      },
+      {
+        "name": "append",
+        "comment": " Put two dictionaries together.\n\nIf keys collide, preference is given to the value from the second dictionary.\nAlso, the order of the keys in the second dictionary will be preserved at the\nend of the result.\n\nSo, you could think of `append` as biased towards the second argument. The end\nof the result should be equal to the second argument, both in value and key-order.\nThe front of the result will then be whatever is left from the first argument --\nthat is, those keys (and their values) that were not in the second argument.\n\nFor a similar function that is biased towards the first argument, see `union`.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "atRelativePosition",
+        "comment": " Gets the key-value pair currently at the indicated relative position.\n",
+        "type": "AllDictList.RelativePosition k -> EveryDictList.EveryDictList k v -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate a bunch of dictionaries into a single dictionary.\n\nWorks from left to right, applying `append` as it goes.\n",
+        "type": "List (EveryDictList.EveryDictList k v) -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "cons",
+        "comment": " Insert a key-value pair at the front. Moves the key to the front if\n    it already exists.\n",
+        "type": "k -> v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "decodeArray",
+        "comment": " Given a decoder for the value, and a way of turning the value into a key,\ndecode an array of values into a dictionary. The order within the dictionary\nwill be the order of the JSON array.\n",
+        "type": "(v -> k) -> Json.Decode.Decoder v -> Json.Decode.Decoder (EveryDictList.EveryDictList k v)"
+      },
+      {
+        "name": "decodeArray2",
+        "comment": " Decodes a JSON array into the EveryDictList. You supply two decoders. Given an element\nof your JSON array, the first decoder should decode the key, and the second decoder\nshould decode the value.\n",
+        "type": "Json.Decode.Decoder k -> Json.Decode.Decoder v -> Json.Decode.Decoder (EveryDictList.EveryDictList k v)"
+      },
+      {
+        "name": "decodeKeysAndValues",
+        "comment": " Like `decodeWithKeys`, but you supply a decoder for the keys, rather than the keys themselves.\n\nNote that the starting point for all decoders will be the same place, so you need to construct your\ndecoders in a way that makes that work.\n",
+        "type": "Json.Decode.Decoder (List k) -> (k -> Json.Decode.Decoder v) -> Json.Decode.Decoder (EveryDictList.EveryDictList k v)"
+      },
+      {
+        "name": "decodeObject",
+        "comment": " Turn any object into a dictionary of key-value pairs, including inherited\nenumerable properties. Fails if _any_ value can't be decoded with the given\ndecoder.\n\nUnfortunately, it is not possible to preserve the apparent order of the keys in\nthe JSON, because the keys in Javascript objects are fundamentally un-ordered.\nThus, you will typically need to have at least your keys in an array in the JSON,\nand use `decodeWithKeys`, `decodeArray` or `decodeArray2`.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (EveryDictList.EveryDictList String a)"
+      },
+      {
+        "name": "decodeWithKeys",
+        "comment": " This function produces a decoder you can use if you can decode a list of your keys,\nand given a key, you can produce a decoder for the corresponding value. The\norder within the dictionary will be the order of your list of keys.\n",
+        "type": "List k -> (k -> Json.Decode.Decoder v) -> Json.Decode.Decoder (EveryDictList.EveryDictList k v)"
+      },
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "drop",
+        "comment": " Drop the first *n* values.\n",
+        "type": "Int -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate.\n",
+        "type": "(k -> v -> Bool) -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "filterMap",
+        "comment": " Apply a function that may succeed to all key-value pairs, but only keep\nthe successes.\n",
+        "type": "(k -> a -> Maybe.Maybe b) -> EveryDictList.EveryDictList k a -> EveryDictList.EveryDictList k b"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the first\nkey to the last key (given the arbitrary order maintained by the dictionary).\n",
+        "type": "(k -> v -> b -> b) -> b -> EveryDictList.EveryDictList k v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the last\nkey to the first key (given the arbitrary order maintained by the dictionary.\n",
+        "type": "(k -> v -> b -> b) -> b -> EveryDictList.EveryDictList k v -> b"
+      },
+      {
+        "name": "fromAllDictList",
+        "comment": " Given an `AllDictList`, create an `EveryDictList`.\n",
+        "type": "AllDictList.AllDictList k v String -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "fromDict",
+        "comment": " Given a `Dict`, create a dictionary. The keys will initially be in the\norder that the `Dict` provides.\n",
+        "type": "Dict.Dict comparable v -> EveryDictList.EveryDictList comparable v"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary, maintaining the order of the list.\n",
+        "type": "List ( k, v ) -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "fromListBy",
+        "comment": " Create a dictionary from a list of values, by passing a function that can\nget a key from any such value. If the function does not return unique keys,\nearlier values are discarded.\n\nThis can, for instance, be useful when constructing a dictionary from a List of\nrecords with `id` fields:\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    fromListBy .id [mary, jack, jill] == EveryDictList.fromList [(1, jack), (2, jill)]\n",
+        "type": "(a -> k) -> List a -> EveryDictList.EveryDictList k a"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Maybe.Maybe v"
+      },
+      {
+        "name": "getAt",
+        "comment": " Gets the key and value at the specified index (0-based).\n",
+        "type": "Int -> EveryDictList.EveryDictList k v -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "getKeyAt",
+        "comment": " Gets the key at the specified index (0-based).\n",
+        "type": "Int -> EveryDictList.EveryDictList k v -> Maybe.Maybe k"
+      },
+      {
+        "name": "groupBy",
+        "comment": " Takes a key-fn and a list.\n\nCreates a dictionary which maps the key to a list of matching elements.\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    groupBy .id [mary, jack, jill] == EveryDictList.fromList [(1, [mary, jill]), (2, [jack])]\n",
+        "type": "(a -> k) -> List a -> EveryDictList.EveryDictList k (List a)"
+      },
+      {
+        "name": "head",
+        "comment": " Gets the first key with its value.\n",
+        "type": "EveryDictList.EveryDictList k v -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "indexOfKey",
+        "comment": " Given a key, what index does that key occupy (0-based) in the\norder maintained by the dictionary?\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Maybe.Maybe Int"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Like `map` but the function is also given the index of each\nelement (starting at zero).\n",
+        "type": "(Int -> k -> a -> b) -> EveryDictList.EveryDictList k a -> EveryDictList.EveryDictList k b"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces the value when the\nkeys collide, leaving the keys in the same order as they had been in.\nIf the key did not previously exist, it is added to the end of\nthe list.\n",
+        "type": "k -> v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "insertAfter",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted after\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the end.\n",
+        "type": "k -> k -> v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "insertBefore",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted before\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the beginning.\n",
+        "type": "k -> k -> v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "insertRelativeTo",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted\nrelative to the existing key (even if the new key already exists). If the\nexisting key cannot be found, the new key/value pair will be inserted at the\nbeginning (if the new key was to be before the existing key) or the end (if the\nnew key was to be after).\n",
+        "type": "AllDictList.RelativePosition k -> k -> v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. The resulting\norder of keys will be as it was in the first dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine whether a dictionary is empty.\n",
+        "type": "EveryDictList.EveryDictList k v -> Bool"
+      },
+      {
+        "name": "keepOnly",
+        "comment": " Keep a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> EveryDictList.EveryDictList comparable v -> EveryDictList.EveryDictList comparable v"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> List k"
+      },
+      {
+        "name": "length",
+        "comment": " The number of key-value pairs in the dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\n",
+        "type": "(k -> a -> b) -> EveryDictList.EveryDictList k a -> EveryDictList.EveryDictList k b"
+      },
+      {
+        "name": "mapKeys",
+        "comment": " Apply a function to all keys in a dictionary.\n",
+        "type": "(k1 -> k2) -> EveryDictList.EveryDictList k1 v -> EveryDictList.EveryDictList k2 v"
+      },
+      {
+        "name": "maximum",
+        "comment": " Find the maximum value. Returns `Nothing` if empty.\n",
+        "type": "EveryDictList.EveryDictList k comparable -> Maybe.Maybe comparable"
+      },
+      {
+        "name": "member",
+        "comment": " Determine whether a key is in the dictionary.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two dictionaries. You provide three\naccumulators for when a given key appears:\n\n  1. Only in the left dictionary.\n  2. In both dictionaries.\n  3. Only in the right dictionary.\n\nYou then traverse all the keys and values, building up whatever\nyou want.\n\nThe keys and values from the first dictionary will be provided first,\nin the order maintained by the first dictionary. Then, any keys which are\nonly in the second dictionary will be provided, in the order maintained\nby the second dictionary.\n",
+        "type": "(k -> a -> result -> result) -> (k -> a -> b -> result -> result) -> (k -> b -> result -> result) -> EveryDictList.EveryDictList k a -> EveryDictList.EveryDictList k b -> result -> result"
+      },
+      {
+        "name": "minimum",
+        "comment": " Find the minimum value. Returns `Nothing` if empty.\n",
+        "type": "EveryDictList.EveryDictList k comparable -> Maybe.Maybe comparable"
+      },
+      {
+        "name": "next",
+        "comment": " Given a key, get the key and value at the next position.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(k -> v -> Bool) -> EveryDictList.EveryDictList k v -> ( EveryDictList.EveryDictList k v , EveryDictList.EveryDictList k v )"
+      },
+      {
+        "name": "previous",
+        "comment": " Given a key, get the key and value at the previous position.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "product",
+        "comment": " Get the product of the values.\n",
+        "type": "EveryDictList.EveryDictList k number -> number"
+      },
+      {
+        "name": "relativePosition",
+        "comment": " Get the position of a key relative to the previous key (or next, if the\nfirst key). Returns `Nothing` if the key was not found.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> Maybe.Maybe (AllDictList.RelativePosition k)"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made.\n",
+        "type": "k -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "removeMany",
+        "comment": " Remove a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable -> EveryDictList.EveryDictList comparable v -> EveryDictList.EveryDictList comparable v"
+      },
+      {
+        "name": "removeWhen",
+        "comment": " Remove elements which satisfies the predicate.\n\n    removeWhen (\\_ v -> v == 1) (EveryDictList.fromList [(\"Mary\", 1), (\"Jack\", 2), (\"Jill\", 1)]) == EveryDictList.fromList [(\"Jack\", 2)]\n",
+        "type": "(k -> v -> Bool) -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse the order of the key-value pairs.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair.\n",
+        "type": "k -> v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "size",
+        "comment": " Determine the number of key-value pairs in the dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> Int"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort values from lowest to highest\n",
+        "type": "EveryDictList.EveryDictList k comparable -> EveryDictList.EveryDictList k comparable"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Sort values by a derived property.\n",
+        "type": "(v -> comparable) -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Sort values with a custom comparison function.\n",
+        "type": "(v -> v -> Basics.Order) -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "sum",
+        "comment": " Get the sum of the values.\n",
+        "type": "EveryDictList.EveryDictList k number -> number"
+      },
+      {
+        "name": "tail",
+        "comment": " Extract the rest of the dictionary, without the first key/value pair.\n",
+        "type": "EveryDictList.EveryDictList k v -> Maybe.Maybe (EveryDictList.EveryDictList k v)"
+      },
+      {
+        "name": "take",
+        "comment": " Take the first *n* values.\n",
+        "type": "Int -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "toAllDictList",
+        "comment": " Convert an `EveryDictList` to an `AllDictList`\n",
+        "type": "EveryDictList.EveryDictList k v -> AllDictList.AllDictList k v String"
+      },
+      {
+        "name": "toDict",
+        "comment": " Extract a `Dict` from a dictionary\n",
+        "type": "EveryDictList.EveryDictList comparable v -> Dict.Dict comparable v"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs, in the order maintained by the dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> List ( k, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If keys collide, preference is given\nto the value from the first dictionary.\n\nKeys already in the first dictionary will remain in their original order.\n\nKeys newly added from the second dictionary will be added at the end.\n\nSo, you might think of `union` as being biased towards the first argument,\nsince it preserves both key-order and values from the first argument, only\nadding things on the right (from the second argument) for keys that were not\npresent in the first. This seems to correspond best to the logic of `Dict.union`.\n\nFor a similar function that is biased towards the second argument, see `append`.\n",
+        "type": "EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value for a specific key with a given function. Maintains\nthe order of the key, or inserts it at the end if it is new.\n",
+        "type": "k -> (Maybe.Maybe v -> Maybe.Maybe v) -> EveryDictList.EveryDictList k v -> EveryDictList.EveryDictList k v"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "EveryDictList.EveryDictList k v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "AllDictList",
+    "comment": " Have you ever wanted an `AllDict`, but you need to maintain an arbitrary\nordering of keys? Or, a `List`, but you want to efficiently lookup values\nby a key? With `AllDictList`, now you can!\n\n`AllDictList` implements the full API for `AllDict` (and should be a drop-in\nreplacement for it). However, instead of ordering things from lowest\nkey to highest key, it allows for an arbitrary ordering.\n\nWe also implement most of the API for `List`. However, the API is not\nidentical, since we need to account for both keys and values.\n\nAn alternative would be to maintain your own \"association list\" -- that is,\na `List (k, v)` instead of an `AllDictList k v`. You can move back and forth\nbetween an association list and a dictionary via `toList` and `fromList`.\n\n# AllDictList\n\n@docs AllDictList, RelativePosition\n@docs eq, fullEq, getOrd\n\n# Build\n\nFunctions which create or update a dictionary.\n\n@docs empty, singleton, insert, update, remove\n@docs take, drop\n@docs removeWhen, removeMany, keepOnly\n@docs cons, insertAfter, insertBefore, insertRelativeTo\n\n# Combine\n\nFunctions which combine two `AllDictLists`.\n\n@docs append, concat\n@docs union, intersect, diff, merge\n\n# Query\n\nFunctions which get information about a dictionary.\n\n@docs isEmpty, size, length\n@docs all, any\n@docs sum, product, maximum, minimum\n\n# Elements\n\nFunctions that pick out an element of a dictionary,\nor provide information about an element.\n\n@docs member, get, getAt, getKeyAt\n@docs indexOfKey, relativePosition, atRelativePosition\n@docs head, tail\n@docs next, previous\n\n# Transform\n\nFunctions that transform a dictionary\n\n@docs map, mapKeys, foldl, foldr, filter, partition\n@docs indexedMap, filterMap, reverse\n@docs sort, sortBy, sortWith\n\n# Convert\n\nFunctions that convert between a dictionary and a related type.\n\n@docs keys, values, toList, fromList, fromListBy, groupBy\n@docs toAllDict, fromAllDict\n@docs toDict, fromDict\n\n# JSON\n\nFunctions that help to decode a dictionary.\n\n@docs decodeObject, decodeArray, decodeArray2, decodeWithKeys, decodeKeysAndValues\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "AllDictList",
+        "comment": " An `AllDict` that maintains an arbitrary ordering of keys (rather than sorting\nthem, as a normal `AllDict` does). Or, a `List` that permits efficient lookup of\nvalues by a key. You can look at it either way.\n",
+        "args": [
+          "k",
+          "v",
+          "comparable"
+        ],
+        "cases": []
+      },
+      {
+        "name": "RelativePosition",
+        "comment": " Describes the position of a key in relation to another key (before or after\nit), rather than using an index.\n",
+        "args": [
+          "k"
+        ],
+        "cases": [
+          [
+            "BeforeKey",
+            [
+              "k"
+            ]
+          ],
+          [
+            "AfterKey",
+            [
+              "k"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "all",
+        "comment": " Determine if all elements satisfy the predicate.\n",
+        "type": "(k -> v -> Bool) -> AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "any",
+        "comment": " Determine if any elements satisfy the predicate.\n",
+        "type": "(k -> v -> Bool) -> AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "append",
+        "comment": " Put two dictionaries together.\n\nIf keys collide, preference is given to the value from the second dictionary.\nAlso, the order of the keys in the second dictionary will be preserved at the\nend of the result.\n\nSo, you could think of `append` as biased towards the second argument. The end\nof the result should be equal to the second argument, both in value and key-order.\nThe front of the result will then be whatever is left from the first argument --\nthat is, those keys (and their values) that were not in the second argument.\n\nFor a similar function that is biased towards the first argument, see `union`.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "atRelativePosition",
+        "comment": " Gets the key-value pair currently at the indicated relative position.\n",
+        "type": "AllDictList.RelativePosition k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "concat",
+        "comment": " Concatenate a bunch of dictionaries into a single dictionary.\n\nWorks from left to right, applying `append` as it goes.\n",
+        "type": "(k -> comparable) -> List (AllDictList.AllDictList k v comparable) -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "cons",
+        "comment": " Insert a key-value pair at the front. Moves the key to the front if\n    it already exists.\n",
+        "type": "k -> v -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "decodeArray",
+        "comment": " Given a decoder for the value, and a way of turning the value into a key,\ndecode an array of values into a dictionary. The order within the dictionary\nwill be the order of the JSON array.\n",
+        "type": "(k -> comparable) -> (v -> k) -> Json.Decode.Decoder v -> Json.Decode.Decoder (AllDictList.AllDictList k v comparable)"
+      },
+      {
+        "name": "decodeArray2",
+        "comment": " Decodes a JSON array into the AllDictList. You supply two decoders. Given an element\nof your JSON array, the first decoder should decode the key, and the second decoder\nshould decode the value.\n",
+        "type": "(k -> comparable) -> Json.Decode.Decoder k -> Json.Decode.Decoder v -> Json.Decode.Decoder (AllDictList.AllDictList k v comparable)"
+      },
+      {
+        "name": "decodeKeysAndValues",
+        "comment": " Like `decodeWithKeys`, but you supply a decoder for the keys, rather than the keys themselves.\n\nNote that the starting point for all decoders will be the same place, so you need to construct your\ndecoders in a way that makes that work.\n",
+        "type": "(k -> comparable) -> Json.Decode.Decoder (List k) -> (k -> Json.Decode.Decoder v) -> Json.Decode.Decoder (AllDictList.AllDictList k v comparable)"
+      },
+      {
+        "name": "decodeObject",
+        "comment": " Turn any object into a dictionary of key-value pairs, including inherited\nenumerable properties. Fails if _any_ value can't be decoded with the given\ndecoder.\n\nUnfortunately, it is not possible to preserve the apparent order of the keys in\nthe JSON, because the keys in Javascript objects are fundamentally un-ordered.\nThus, you will typically need to have at least your keys in an array in the JSON,\nand use `decodeWithKeys`, `decodeArray` or `decodeArray2`.\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (AllDictList.AllDictList String a String)"
+      },
+      {
+        "name": "decodeWithKeys",
+        "comment": " This function produces a decoder you can use if you can decode a list of your keys,\nand given a key, you can produce a decoder for the corresponding value. The\norder within the resulting dictionary will be the order of your list of keys.\n",
+        "type": "(k -> comparable) -> List k -> (k -> Json.Decode.Decoder v) -> Json.Decode.Decoder (AllDictList.AllDictList k v comparable)"
+      },
+      {
+        "name": "diff",
+        "comment": " Keep a key-value pair when its key does not appear in the second dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "drop",
+        "comment": " Drop the first *n* values.\n",
+        "type": "Int -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty dictionary using a given ord function to calculate hashes.\n",
+        "type": "(k -> comparable) -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "eq",
+        "comment": " Element equality. Does not check equality of the ord functions.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep a key-value pair when it satisfies a predicate.\n",
+        "type": "(k -> v -> Bool) -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "filterMap",
+        "comment": " Apply a function that may succeed to all key-value pairs, but only keep\nthe successes.\n",
+        "type": "(k -> v1 -> Maybe.Maybe v2) -> AllDictList.AllDictList k v1 comparable -> AllDictList.AllDictList k v2 comparable"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the first\nkey to the last key (given the arbitrary order maintained by the dictionary).\n",
+        "type": "(k -> v -> b -> b) -> b -> AllDictList.AllDictList k v comparable -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the key-value pairs in a dictionary, in order from the last\nkey to the first key (given the arbitrary order maintained by the dictionary.\n",
+        "type": "(k -> v -> b -> b) -> b -> AllDictList.AllDictList k v comparable -> b"
+      },
+      {
+        "name": "fromAllDict",
+        "comment": " Given an `AllDict`, create an `AllDictList`. The keys will initially be in the\norder that the `AllDict` provides.\n",
+        "type": "AllDict.AllDict k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "fromDict",
+        "comment": " Given a `Dict`, create an `AllDictList`. The keys will initially be in the\norder that the `Dict` provides.\n",
+        "type": "Dict.Dict comparable v -> AllDictList.AllDictList comparable v comparable"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert an association list into a dictionary, maintaining the order of the list.\n",
+        "type": "(k -> comparable) -> List ( k, v ) -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "fromListBy",
+        "comment": " Create a dictionary from a list of values, by passing a function that can\nget a key from any such value. If the function does not return unique keys,\nearlier values are discarded.\n\nThis can, for instance, be useful when constructing a dictionary from a List of\nrecords with `id` fields:\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    fromListBy .id [mary, jack, jill] == AllDictList.fromList [(1, jack), (2, jill)]\n",
+        "type": "(k -> comparable) -> (v -> k) -> List v -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "fullEq",
+        "comment": " Element equality and checks referential equality of the ord functions.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value associated with a key. If the key is not found, return\n`Nothing`.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe v"
+      },
+      {
+        "name": "getAt",
+        "comment": " Gets the key and value at the specified index (0-based).\n",
+        "type": "Int -> AllDictList.AllDictList k v comparable -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "getKeyAt",
+        "comment": " Gets the key at the specified index (0-based).\n",
+        "type": "Int -> AllDictList.AllDictList k v comparable -> Maybe.Maybe k"
+      },
+      {
+        "name": "getOrd",
+        "comment": " Get the ord function used by the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> k -> comparable"
+      },
+      {
+        "name": "groupBy",
+        "comment": " Takes a key-fn and a list.\n\nCreates a dictionary which maps the key to a list of matching elements.\n\n    mary = {id=1, name=\"Mary\"}\n    jack = {id=2, name=\"Jack\"}\n    jill = {id=1, name=\"Jill\"}\n\n    groupBy .id [mary, jack, jill] == AllDictList.fromList [(1, [mary, jill]), (2, [jack])]\n",
+        "type": "(k -> comparable) -> (v -> k) -> List v -> AllDictList.AllDictList k (List v) comparable"
+      },
+      {
+        "name": "head",
+        "comment": " Gets the first key with its value.\n",
+        "type": "AllDictList.AllDictList k v comparable -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "indexOfKey",
+        "comment": " Given a key, what index does that key occupy (0-based) in the\norder maintained by the dictionary?\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe Int"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Like `map` but the function is also given the index of each\nelement (starting at zero).\n",
+        "type": "(Int -> k -> v1 -> v2) -> AllDictList.AllDictList k v1 comparable -> AllDictList.AllDictList k v2 comparable"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert a key-value pair into a dictionary. Replaces the value when the\nkeys collide, leaving the keys in the same order as they had been in.\nIf the key did not previously exist, it is added to the end of\nthe list.\n",
+        "type": "k -> v -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "insertAfter",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted after\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the end.\n",
+        "type": "k -> k -> v -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "insertBefore",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted before\nthe existing key (even if the new key already exists). If the existing key\ncannot be found, the new key/value pair will be inserted at the beginning.\n",
+        "type": "k -> k -> v -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "insertRelativeTo",
+        "comment": " Insert a key-value pair into a dictionary, replacing an existing value if\nthe keys collide. The first parameter represents an existing key, while the\nsecond parameter is the new key. The new key and value will be inserted\nrelative to the existing key (even if the new key already exists). If the\nexisting key cannot be found, the new key/value pair will be inserted at the\nbeginning (if the new key was to be before the existing key) or the end (if the\nnew key was to be after).\n",
+        "type": "AllDictList.RelativePosition k -> k -> v -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "intersect",
+        "comment": " Keep a key-value pair when its key appears in the second dictionary.\nPreference is given to values in the first dictionary. The resulting\norder of keys will be as it was in the first dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine whether a dictionary is empty.\n",
+        "type": "AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "keepOnly",
+        "comment": " Keep a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable1 -> AllDictList.AllDictList comparable1 v comparable2 -> AllDictList.AllDictList comparable1 v comparable2"
+      },
+      {
+        "name": "keys",
+        "comment": " Get all of the keys in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> List k"
+      },
+      {
+        "name": "length",
+        "comment": " The number of key-value pairs in the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to all values in a dictionary.\n",
+        "type": "(k -> a -> b) -> AllDictList.AllDictList k a comparable -> AllDictList.AllDictList k b comparable"
+      },
+      {
+        "name": "mapKeys",
+        "comment": " Apply a function to all keys in a dictionary.\n",
+        "type": "(k2 -> comparable2) -> (k1 -> k2) -> AllDictList.AllDictList k1 v comparable1 -> AllDictList.AllDictList k2 v comparable2"
+      },
+      {
+        "name": "maximum",
+        "comment": " Find the maximum value. Returns `Nothing` if empty.\n",
+        "type": "AllDictList.AllDictList k comparable1 comparable2 -> Maybe.Maybe comparable1"
+      },
+      {
+        "name": "member",
+        "comment": " Determine whether a key is in the dictionary.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Bool"
+      },
+      {
+        "name": "merge",
+        "comment": " The most general way of combining two dictionaries. You provide three\naccumulators for when a given key appears:\n\n  1. Only in the left dictionary.\n  2. In both dictionaries.\n  3. Only in the right dictionary.\n\nYou then traverse all the keys and values, building up whatever\nyou want.\n\nThe keys and values from the first dictionary will be provided first,\nin the order maintained by the first dictionary. Then, any keys which are\nonly in the second dictionary will be provided, in the order maintained\nby the second dictionary.\n",
+        "type": "(k -> a -> result -> result) -> (k -> a -> b -> result -> result) -> (k -> b -> result -> result) -> AllDictList.AllDictList k a comparable -> AllDictList.AllDictList k b comparable -> result -> result"
+      },
+      {
+        "name": "minimum",
+        "comment": " Find the minimum value. Returns `Nothing` if empty.\n",
+        "type": "AllDictList.AllDictList k comparable1 comparable2 -> Maybe.Maybe comparable1"
+      },
+      {
+        "name": "next",
+        "comment": " Given a key, get the key and value at the next position.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "partition",
+        "comment": " Partition a dictionary according to a predicate. The first dictionary\ncontains all key-value pairs which satisfy the predicate, and the second\ncontains the rest.\n",
+        "type": "(k -> v -> Bool) -> AllDictList.AllDictList k v comparable -> ( AllDictList.AllDictList k v comparable , AllDictList.AllDictList k v comparable )"
+      },
+      {
+        "name": "previous",
+        "comment": " Given a key, get the key and value at the previous position.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe ( k, v )"
+      },
+      {
+        "name": "product",
+        "comment": " Get the product of the values.\n",
+        "type": "AllDictList.AllDictList k number comparable -> number"
+      },
+      {
+        "name": "relativePosition",
+        "comment": " Get the position of a key relative to the previous key (or next, if the\nfirst key). Returns `Nothing` if the key was not found.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> Maybe.Maybe (AllDictList.RelativePosition k)"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove a key-value pair from a dictionary. If the key is not found,\nno changes are made.\n",
+        "type": "k -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "removeMany",
+        "comment": " Remove a key-value pair if its key appears in the set.\n",
+        "type": "Set.Set comparable1 -> AllDictList.AllDictList comparable1 v comparable2 -> AllDictList.AllDictList comparable1 v comparable2"
+      },
+      {
+        "name": "removeWhen",
+        "comment": " Remove elements which satisfies the predicate.\n\n    removeWhen (\\_ v -> v == 1) (AllDictList.fromList [(\"Mary\", 1), (\"Jack\", 2), (\"Jill\", 1)]) == AllDictList.fromList [(\"Jack\", 2)]\n",
+        "type": "(k -> v -> Bool) -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse the order of the key-value pairs.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a dictionary with one key-value pair.\n",
+        "type": "(k -> comparable) -> k -> v -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "size",
+        "comment": " Determine the number of key-value pairs in the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> Int"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort values from lowest to highest\n",
+        "type": "AllDictList.AllDictList k comparable1 comparable2 -> AllDictList.AllDictList k comparable1 comparable2"
+      },
+      {
+        "name": "sortBy",
+        "comment": " Sort values by a derived property.\n",
+        "type": "(v -> comparable1) -> AllDictList.AllDictList k v comparable2 -> AllDictList.AllDictList k v comparable2"
+      },
+      {
+        "name": "sortWith",
+        "comment": " Sort values with a custom comparison function.\n",
+        "type": "(v -> v -> Basics.Order) -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "sum",
+        "comment": " Get the sum of the values.\n",
+        "type": "AllDictList.AllDictList k number comparable -> number"
+      },
+      {
+        "name": "tail",
+        "comment": " Extract the rest of the dictionary, without the first key/value pair.\n",
+        "type": "AllDictList.AllDictList k v comparable -> Maybe.Maybe (AllDictList.AllDictList k v comparable)"
+      },
+      {
+        "name": "take",
+        "comment": " Take the first *n* values.\n",
+        "type": "Int -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "toAllDict",
+        "comment": " Extract an `AllDict` from an `AllDictList`\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDict.AllDict k v comparable"
+      },
+      {
+        "name": "toDict",
+        "comment": " Extract a `Dict` from an `AllDictList`.\n",
+        "type": "AllDictList.AllDictList comparable1 v comparable2 -> Dict.Dict comparable1 v"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a dictionary into an association list of key-value pairs, in the order maintained by the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> List ( k, v )"
+      },
+      {
+        "name": "union",
+        "comment": " Combine two dictionaries. If keys collide, preference is given\nto the value from the first dictionary.\n\nKeys already in the first dictionary will remain in their original order.\n\nKeys newly added from the second dictionary will be added at the end.\n\nSo, you might think of `union` as being biased towards the first argument,\nsince it preserves both key-order and values from the first argument, only\nadding things on the right (from the second argument) for keys that were not\npresent in the first. This seems to correspond best to the logic of `AllDict.union`.\n\nFor a similar function that is biased towards the second argument, see `append`.\n",
+        "type": "AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "update",
+        "comment": " Update the value for a specific key with a given function. Maintains\nthe order of the key, or inserts it at the end if it is new.\n",
+        "type": "k -> (Maybe.Maybe v -> Maybe.Maybe v) -> AllDictList.AllDictList k v comparable -> AllDictList.AllDictList k v comparable"
+      },
+      {
+        "name": "values",
+        "comment": " Get all of the values in a dictionary, in the order maintained by the dictionary.\n",
+        "type": "AllDictList.AllDictList k v comparable -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

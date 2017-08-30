@@ -1,0 +1,36 @@
+[
+  {
+    "name": "CKEditor",
+    "comment": "\n\n\n# HTML Element\n\n@docs ckeditor\n\n\n# Attributes\n\n@docs config, content, onCKEditorChange\n\n\n# Helpers\n\n@docs defaultConfig\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "ckeditor",
+        "comment": " Render a CKEditor instance\n\n    view model =\n        ckeditor\n            [ config defaultConfig\n            , content model.content\n            , onCKEditorChange CKEditorChanged\n            ]\n            []\n\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "config",
+        "comment": " Config property of the CKEditor web component. Upon changing the config,\nthe CKEditor instance is reloaded to apply the changes.\n\n    config <|\n        Json.Encode.object\n            [ ( \"uiColor\", JsonEncode.string \"#AADC6E\" ) ]\n\nAvailable options are documented at\n<http://docs.ckeditor.com/#!/api/CKEDITOR.config>\n\n",
+        "type": "Json.Encode.Value -> Html.Attribute msg"
+      },
+      {
+        "name": "content",
+        "comment": " Content property of the CKEditor web component. This is an HTML string.\n\n    content \"<p>Hello CKEditor!</p>\\n\"\n\n",
+        "type": "String -> Html.Attribute msg"
+      },
+      {
+        "name": "defaultConfig",
+        "comment": " Default CKEditor config, this is just an empty JSON object value\n",
+        "type": "Json.Encode.Value"
+      },
+      {
+        "name": "onCKEditorChange",
+        "comment": " Event fired when the CKEditor content changed. This event will not\nnecessarily fire on every single input action.\n\n    type Msg\n        = CKEditorChanged String\n\n    onCKEditorChange CKEditorChanged\n\n",
+        "type": "(String -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

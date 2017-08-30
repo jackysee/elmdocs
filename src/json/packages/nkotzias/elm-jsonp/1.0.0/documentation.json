@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Jsonp",
+    "comment": " This library makes it possible to get data from a JSONP API.\nIf you are not sure what JSONP is then you probably don't need this,\nbut more information about it can be found here: https://en.wikipedia.org/wiki/JSONP\n\n# Script Tag\n@docs script\n\n# Response event handler\n@docs onJsonp\n\n# Helpers\n@docs padding, polling\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onJsonp",
+        "comment": " A jsonp event handler. It will emit a Msg with a Value that can be then be handled\nin the update function. The Value will be the JSON response of the API. A typical use\nof this model could be:\n\n\n    type Msg\n        = Response Value\n\n\n    update : Msg -> Model -> (Model, Cmd Msg)\n    update msg model =\n        case msg of\n            Response value ->\n                case (Json.Decode.decodeValue responseDecoder value) of\n                    Ok data ->\n\n                    Err msg ->\n\n\n    view : Model -> Html Msg\n    view model =\n        div []\n            [ script [ onJsonp Response ] [ text padding ]\n            , script [ type_ \"application/javascript\", src \"http://www.example.com/api/resource?callback=parseResponse\" ] []\n            ]\n\n",
+        "type": "(Json.Decode.Value -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "padding",
+        "comment": " A default \"padding\" function which can be used to parse jsonp requests.\nThis exposes two variables to the Window object, paddingScript and parseResponse.\n",
+        "type": "String"
+      },
+      {
+        "name": "polling",
+        "comment": " A variation of the default padding function which implements polling. The script tag\nwill be replaced on a successful response after six seconds. Note that if the server does\nnot respond for any reason, the wrapper function will not run and the polling will stop.\n",
+        "type": "String"
+      },
+      {
+        "name": "script",
+        "comment": " Define a script tag. This works like any other HTML node in Elm.\nIf a src attribute is passed a resource will be fetched. If plain text\nis added to the DOM, it will be interpreted as Javascript from the browser\nwho will run it:\n\n    script [] [ text \"console.log('Hello Elm');\" ]\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

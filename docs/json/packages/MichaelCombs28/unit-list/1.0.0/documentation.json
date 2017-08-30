@@ -1,0 +1,139 @@
+[
+  {
+    "name": "UnitList.Decode",
+    "comment": " A simple decoder for UnitList provided for convenience.\n\n# Decoder\n@docs unitList\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "unitList",
+        "comment": "\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (UnitList.UnitList a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "UnitList",
+    "comment": " An Elm library for lists with at least a single element.\n\n# Type\nA UnitList consists of a focus, history, and past.\nThe focus is the current element selected, the history is a set of previous elements and the future\nare elements that have yet to be traversed.\n@docs UnitList\n\n# Basics\n@docs singleton, push, isSingleton, fromList, toList\n\n# Running\n@docs current, history, future\n\n# Traversing\n@docs next, previous, step\n\n# Manipulation\n@docs initialize, archive, updateCurrent, updateHistory, updateFuture\n\n# Mapping\n@docs map, map2, map3, map4, map5\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "UnitList",
+        "comment": " The main type.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "archive",
+        "comment": " Sets a new focus and archives the current unitlist\ninto the history\n\n```\narchive 5 (singleton 1) == Unitlist [5] 1 []\n```\n",
+        "type": "a -> UnitList.UnitList a -> UnitList.UnitList a"
+      },
+      {
+        "name": "current",
+        "comment": " Retrieves the current focus.\n\n```\ncurrent (singleton 1) == 1\n```\n\n",
+        "type": "UnitList.UnitList a -> a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Creates a unitlist from an initial focus and a list.\n",
+        "type": "a -> List a -> UnitList.UnitList a"
+      },
+      {
+        "name": "future",
+        "comment": " Retrieves the future.\n\n```\nfuture (push 5 <| singleton 1) == [5]\n```\n\n",
+        "type": "UnitList.UnitList a -> List a"
+      },
+      {
+        "name": "history",
+        "comment": " Retrieves history.\n\n```\nhistory (singleton 1) == []\n```\n\n",
+        "type": "UnitList.UnitList a -> List a"
+      },
+      {
+        "name": "initialize",
+        "comment": " Initializes the list changing the focus to the head of\n    the history if there is a history.\n\n```\ninitialize (push 5 <| singleton 1) == UnitList [] 1 [5]\n```\n\n",
+        "type": "UnitList.UnitList a -> UnitList.UnitList a"
+      },
+      {
+        "name": "isSingleton",
+        "comment": " Checks if the UnitList contains a focus with an empty history and past.\n\n```\nisSingleton (singleton 5) == True\n```\n\n",
+        "type": "UnitList.UnitList a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Transforms the model leaving the structure intact.\n",
+        "type": "(a -> b) -> UnitList.UnitList a -> UnitList.UnitList b"
+      },
+      {
+        "name": "map2",
+        "comment": " Combines 2 unitlists with a function.\n",
+        "type": "(a -> b -> c) -> UnitList.UnitList a -> UnitList.UnitList b -> UnitList.UnitList c"
+      },
+      {
+        "name": "map3",
+        "comment": "\n",
+        "type": "(a -> b -> c -> d) -> UnitList.UnitList a -> UnitList.UnitList b -> UnitList.UnitList c -> UnitList.UnitList d"
+      },
+      {
+        "name": "map4",
+        "comment": "\n",
+        "type": "(a -> b -> c -> d -> e) -> UnitList.UnitList a -> UnitList.UnitList b -> UnitList.UnitList c -> UnitList.UnitList d -> UnitList.UnitList e"
+      },
+      {
+        "name": "map5",
+        "comment": "\n",
+        "type": "(a -> b -> c -> d -> e -> f) -> UnitList.UnitList a -> UnitList.UnitList b -> UnitList.UnitList c -> UnitList.UnitList d -> UnitList.UnitList e -> UnitList.UnitList f"
+      },
+      {
+        "name": "next",
+        "comment": " Steps to the head of the future list unless it's\nempty which case returns Nothing.\n\n```\nsingleton 1\n    |> push 2\n    |> next == UnitList [1] 2 []\n```\n\n",
+        "type": "UnitList.UnitList a -> Maybe.Maybe (UnitList.UnitList a)"
+      },
+      {
+        "name": "previous",
+        "comment": " Cycles to the last element of the history\nand adds the focus to the future unless it's empty\nwhich case the identity is returned.\n\n```\nsingleton 1\n    |> push 2\n    |> archive\n    |> previous == UnitList [] 1 [2]\n```\n\n",
+        "type": "UnitList.UnitList a -> Maybe.Maybe (UnitList.UnitList a)"
+      },
+      {
+        "name": "push",
+        "comment": " Pushes an element onto the queue.\n\n```\nsingleton 1\n    |> push 2 == Unitlist [] 1 [2]\n```\n\n",
+        "type": "a -> UnitList.UnitList a -> UnitList.UnitList a"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a unitlist for a given type taking the\nargument as the current focus.\n\n```\ninit : UnitList Int\ninit =\n    singleton 0\n```\n\n",
+        "type": "a -> UnitList.UnitList a"
+      },
+      {
+        "name": "step",
+        "comment": " Cycles forward or backward through the Unitlist,\n    if n == 0 then the result is returned. If there\n    are more elements than cycles, nothing is returned.\n",
+        "type": "Int -> UnitList.UnitList a -> Maybe.Maybe (UnitList.UnitList a)"
+      },
+      {
+        "name": "toList",
+        "comment": " Combines past focus and future into a List\n",
+        "type": "UnitList.UnitList a -> List a"
+      },
+      {
+        "name": "updateCurrent",
+        "comment": " Lift an endomorphism function to the focus.\n\n```\nupdateCurrent ((+) 5) (singleton 1) == singleton 6\n```\n\n",
+        "type": "(a -> a) -> UnitList.UnitList a -> UnitList.UnitList a"
+      },
+      {
+        "name": "updateFuture",
+        "comment": " Lift a function to the future.\n\n```\nsingleton 1\n    |> push 2\n    |> updateFuture ((+) 1)\n    |> future == [3]\n```\n\n",
+        "type": "(List a -> List a) -> UnitList.UnitList a -> UnitList.UnitList a"
+      },
+      {
+        "name": "updateHistory",
+        "comment": " Lift a function to the history.\n\n```\nsingleton 1\n    |> push 2\n    |> archive 3\n    |> updateHistory (List.map ((+) 1))\n    |> history == [2,3]\n```\n\n",
+        "type": "(List a -> List a) -> UnitList.UnitList a -> UnitList.UnitList a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

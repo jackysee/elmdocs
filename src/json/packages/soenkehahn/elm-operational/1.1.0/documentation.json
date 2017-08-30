@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Operational",
+    "comment": " This module allows to write elm components without using the usual `Cmd`\ntype. This is useful for being able test commands that apps perform using\n`elm-operational-mocks`.\n\n# Converting to `Cmd`\n\n@docs toCmd\n@docs toCmdWithFlags\n\n# Convenience functions\n@docs (!!)\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "!!",
+        "comment": " Convenience function in analogy to `Platform.Cmd.!`.\n\n    (model, primitiveCommands) === model !! primitiveCommands\n\n",
+        "type": "model -> List a -> ( model, List a )"
+      },
+      {
+        "name": "toCmd",
+        "comment": " `toCmd` can be used to turn components that are defined in terms of your own\nprimitive commands into a proper elm component where `init` and `update` return\noperations of type `Cmd`.\n",
+        "type": "(primitive -> Platform.Cmd.Cmd msg) -> { program | init : ( model, List primitive ), update : msg -> model -> ( model, List primitive ) } -> { program | init : ( model, Platform.Cmd.Cmd msg ), update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) }"
+      },
+      {
+        "name": "toCmdWithFlags",
+        "comment": " Variant of `toCmd` that allows the usage of flags. See\n`Platform.programWithFlags`.\n",
+        "type": "(primitive -> Platform.Cmd.Cmd msg) -> { program | init : flags -> ( model, List primitive ), update : msg -> model -> ( model, List primitive ) } -> { program | init : flags -> ( model, Platform.Cmd.Cmd msg ), update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) }"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

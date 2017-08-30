@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Test.Update",
+    "comment": " Generate all possible models by running randomly-generated sequences of\nmessages through `update` on an initial model.\n\n\n## Testing\n\n@docs fuzz, fuzzBasic\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fuzz",
+        "comment": " Given an initial model, an `update`, and a message fuzzer, run a randomly-\ngenerated sequence of messages through `update` on that initial model. Take\nthe resulting model and run an `Expectation` on it.\n\nThis is different from [`fuzzBasic`](#fuzzBasic) in that it accepts an `update` which\nreturns a `( model, cmd )` tuple rather than a `model` alone.\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        model\n\n\n    msgFuzzer : Fuzzer Msg\n    msgFuzzer =\n        Fuzz.oneOf [ NoOp, Bar, Baz ]\n\n\n    Test.Update.fuzz update msgFuzzer initialModel \"username is not empty\" <|\n        \\model ->\n            model.username\n                |> Expect.notEqual \"\"\n\n",
+        "type": "(msg -> model -> ( model, cmd )) -> Fuzz.Fuzzer msg -> model -> String -> (model -> Expect.Expectation) -> Test.Test"
+      },
+      {
+        "name": "fuzzBasic",
+        "comment": " Given an initial model, an `update`, and a message fuzzer, run a randomly-\ngenerated sequence of messages through `update` on that initial model. Take\nthe resulting model and run an `Expectation` on it.\n\nThis is different from [`fuzz`](#fuzz) in that it accepts an `update` which\nreturns a `model` alone rather than a `( model, cmd )` tuple.\n\n    update : Msg -> Model -> Model\n    update msg model =\n        model\n\n\n    msgFuzzer : Fuzzer Msg\n    msgFuzzer =\n        Fuzz.oneOf [ NoOp, Bar, Baz ]\n\n\n    Test.Update.fuzzBasic update msgFuzzer initialModel \"username is not empty\" <|\n        \\model ->\n            model.username\n                |> Expect.notEqual \"\"\n\n",
+        "type": "(msg -> model -> model) -> Fuzz.Fuzzer msg -> model -> String -> (model -> Expect.Expectation) -> Test.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

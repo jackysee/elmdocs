@@ -1,0 +1,60 @@
+[
+  {
+    "name": "SweetPoll",
+    "comment": "\n\n# Configuration\n@docs Config, defaultConfig\n\n# Elm Artchitecture\n@docs Model, Msg, init, UpdateResult, update\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " ",
+        "args": [
+          "data"
+        ],
+        "type": "{ url : String , decoder : Json.Decode.Decoder data , delay : Time.Time , samesBeforeDelay : Int , delayMultiplier : Float , maxDelay : Time.Time }"
+      },
+      {
+        "name": "UpdateResult",
+        "comment": "\n\n - sweetPollModel: the new state of the SweetPoll\n - newData: any new data received by the SweetPoll\n - error: any new error occurring in the current update cycle\n - cmd: a Cmd to keep the SweetPoll running\n",
+        "args": [
+          "data"
+        ],
+        "type": "{ sweetPollModel : SweetPoll.Model data , newData : Maybe.Maybe data , error : Maybe.Maybe Http.Error , cmd : Platform.Cmd.Cmd (SweetPoll.Msg data) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " Private state of the SweetPoll component\n",
+        "args": [
+          "data"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [
+          "data"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultConfig",
+        "comment": " Default configuration for SweetPoll\n",
+        "type": "Json.Decode.Decoder data -> String -> SweetPoll.Config data"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "SweetPoll.Config data -> ( SweetPoll.Model data, Platform.Cmd.Cmd (SweetPoll.Msg data) )"
+      },
+      {
+        "name": "update",
+        "comment": " The SweetPoll StartApp-style update function\n",
+        "type": "SweetPoll.Msg data -> SweetPoll.Model data -> SweetPoll.UpdateResult data"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

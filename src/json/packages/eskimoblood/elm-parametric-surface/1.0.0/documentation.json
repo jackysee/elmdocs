@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Surface",
+    "comment": "\n# Surface\n@docs surface\n@docs surfaceExtended\n@docs Vertex\n@docs ExtentFunc\n",
+    "aliases": [
+      {
+        "name": "ExtentFunc",
+        "comment": "\nThe function that can be used to extend the basic vertex, with additional attributes. The function needs to return the basic\nattributes `position`, `coord` and `normal` plus the fields defined in extra. As it is not possible to add fields to an exisiting\nrecord you have to copy all the fields plus the extra into a new record.\n\n```\naddColor : ExtentFn {color : Vec3}\naddColor { position, coord, normal } =\n        { normal = normal, position = position, coord = coord, color = position}\n```\n",
+        "args": [
+          "extra"
+        ],
+        "type": "{ position : Math.Vector3.Vec3 , coord : Math.Vector2.Vec2 , normal : () } -> { extra | position : Math.Vector3.Vec3, coord : Math.Vector2.Vec2, normal : () }"
+      },
+      {
+        "name": "Vertex",
+        "comment": "\nThe vertex record that is used as the type of the resulting `Mesh`.\n\n* `position`: position of the vertex\n* `normal`: the normal interpolated by the normal of all the triangles that contains the vertex\n* `coord`: value  between 0 and resolution width / height\n* `extra`: any additional field you can add by `ExtentFunc`\n",
+        "args": [
+          "extra"
+        ],
+        "type": "{ extra | normal : Math.Vector3.Vec3, position : Math.Vector3.Vec3, coord : Math.Vector2.Vec2 }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "surface",
+        "comment": "\nCreates a mesh from a given `Type`, `width` and `height`\n\n\n",
+        "type": "Type.Type -> Int -> Int -> WebGL.Mesh (Surface.Vertex {})"
+      },
+      {
+        "name": "surfaceExtended",
+        "comment": "\nCreates a mesh from a given `Type`, `width`, `height`and a function to extend the vertex.\nThe extend function can be used to add additional attributes, like colour, to your vertecies.\n\n",
+        "type": "Type.Type -> Int -> Int -> Surface.ExtentFunc extra -> WebGL.Mesh (Surface.Vertex extra)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Type",
+    "comment": "\n# Type\n@docs Type\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Type",
+        "comment": "\nSurface types then can be created with the package\n\n* `Sphere`\n* `Moebius innerRadius outerRadius`\n* `Roman`\n* `SuperShape a b m1 n1_1 n1_2 n1_3 m2 n2_1 n2_2 n2_3`\n",
+        "args": [],
+        "cases": [
+          [
+            "Sphere",
+            []
+          ],
+          [
+            "Moebius",
+            [
+              "Float",
+              "Float"
+            ]
+          ],
+          [
+            "Roman",
+            []
+          ],
+          [
+            "SuperShape",
+            [
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float",
+              "Float"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

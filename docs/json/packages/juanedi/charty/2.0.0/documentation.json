@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Charty.PieChart",
+    "comment": " This module is in charge of drawing pie charts.\n\n# Data representation\n@docs Dataset\n@docs Group\n\n# Settings\n@docs Config\n@docs defaults\n\n# Drawing\n@docs view\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Configuration for how the chart will be drawn. Note that\n[`PieChart.defaults`](Charty-PieChart#defaults) can be used as a base\nconfiguration.\n\nIf the color assignment is changed and a `maxGroupCount` is specified, keep in\nmind that the dataset passed to the function may have some of your groups merged\ninto a single \"Others\" category.\n",
+        "args": [],
+        "type": "{ background : Charty.Color.Color , labelsColor : Charty.Color.Color , maxGroupCount : Maybe.Maybe Int , colorAssignment : Charty.PieChart.Dataset -> List ( Charty.Color.Color, Charty.PieChart.Group ) }"
+      },
+      {
+        "name": "Dataset",
+        "comment": " A dataset is just a list of groups.\n",
+        "args": [],
+        "type": "List Charty.PieChart.Group"
+      },
+      {
+        "name": "Group",
+        "comment": " A group that will be drawn in the chart. Note that depending on the\n`maxGroupCount` setting, a group may end up being grouped with others in an\n\"Others\" slice of the pie.\n",
+        "args": [],
+        "type": "{ label : String, value : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaults",
+        "comment": " Default configuration. At most 8 slices will be drawn and a default color\npalette is used.\n",
+        "type": "Charty.PieChart.Config"
+      },
+      {
+        "name": "view",
+        "comment": " This function generates svg markup for the chart, provided a the necessary\nconfiguration and dataset. Example usage:\n\n    sampleDataset : PieChart.Dataset\n    sampleDataset =\n        [ ( \"Group A\", 40.0 )\n        , ( \"Group B\", 25.0 )\n        , ( \"Group C\", 35.0 )\n        ]\n\n    view : Model -> Html Msg\n    view model =\n        Html.div\n          []\n          [ Html.p [] [ Html.text \"Wow!\" ]\n          , PieChart.view PieChart.defaults dataset\n          ]\n",
+        "type": "Charty.PieChart.Config -> Charty.PieChart.Dataset -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Charty.LineChart",
+    "comment": " This module is in charge of drawing line charts.\n\n# Data representation\n@docs Dataset\n@docs Series\n@docs DataPoint\n\n# Settings\n@docs Config\n@docs defaults\n\n# Drawing\n@docs view\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Configuration for how the chart will be drawn. Note that\n[`LineChart.defaults`](Charty-LineChart#defaults) can be used as a base\nconfiguration.\n",
+        "args": [],
+        "type": "{ drawPoints : Bool , background : Charty.Color.Color , colorAssignment : Charty.LineChart.Dataset -> List ( Charty.Color.Color, Charty.LineChart.Series ) , labelPrecision : Int , drawLabels : Bool }"
+      },
+      {
+        "name": "DataPoint",
+        "comment": " An (x,y) pair that will be drawn in the line chart\n",
+        "args": [],
+        "type": "( Float, Float )"
+      },
+      {
+        "name": "Dataset",
+        "comment": " A dataset is just a list of series.\n",
+        "args": [],
+        "type": "List Charty.LineChart.Series"
+      },
+      {
+        "name": "Series",
+        "comment": " A series of points that will be draw as a separate line\n",
+        "args": [],
+        "type": "{ label : String, data : List Charty.LineChart.DataPoint }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaults",
+        "comment": " Default configuration. Labels have at most two decimal places and a default\ncolor palette is used.\n",
+        "type": "Charty.LineChart.Config"
+      },
+      {
+        "name": "view",
+        "comment": " This function generates svg markup for the chart, provided a the necessary\nconfiguration and dataset. Example usage:\n\n    sampleDataset : LineChart.Dataset\n    sampleDataset =\n        [ [ ( 100000, 3 ), ( 100001, 4 ) ]\n        , [ ( 100000, 1 ), ( 100001, 2.5 ) ]\n        ]\n\n    view : Model -> Html Msg\n    view model =\n        Html.div\n          []\n          [ Html.p [] [ Html.text \"Wow!\" ]\n          , LineChart.view LineChart.defaults dataset\n          ]\n",
+        "type": "Charty.LineChart.Config -> Charty.LineChart.Dataset -> Svg.Svg msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Charty.Color",
+    "comment": " Utilities for assigning colors to series/data groups.\nYou probably won't need to use it unless yo want to modify or use the default color paletter for other purposes.\n\n@docs Color\n@docs defaultPalette\n@docs assignDefaults\n",
+    "aliases": [
+      {
+        "name": "Color",
+        "comment": " The color used to draw a line. For the moment, any string used to specify\nSVG colors is valid, so things such as \"red\" and \"#FF0000\" should work.\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "assignDefaults",
+        "comment": " Assigns a color of the default palette to each element of the least.\nIf the list has too many items, color will be repeated.\n",
+        "type": "List a -> List ( Charty.Color.Color, a )"
+      },
+      {
+        "name": "defaultPalette",
+        "comment": " Default color palette.\nAll credits for this beautiful palette go to http://www.mulinblog.com/a-color-palette-optimized-for-data-visualization/\n",
+        "type": "Array.Array Charty.Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

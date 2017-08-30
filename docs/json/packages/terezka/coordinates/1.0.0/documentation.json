@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Svg.Coordinates",
+    "comment": "\n\n# Frame\n@docs Frame, Size, Margin\n\n# Dimension\n@docs Dimension, Orientation, Bounds, bounds\n\n# Translation\n@docs toSvg, toCartesian\n\n",
+    "aliases": [
+      {
+        "name": "Bounds",
+        "comment": " ",
+        "args": [],
+        "type": "{ min : Float, max : Float }"
+      },
+      {
+        "name": "Dimension",
+        "comment": " Specifies the orientation and bounds of an axis.\n",
+        "args": [],
+        "type": "{ orientation : Svg.Coordinates.Orientation , bounds : Svg.Coordinates.Bounds }"
+      },
+      {
+        "name": "Frame",
+        "comment": " Specifies the size and margins of your graphic.\n",
+        "args": [],
+        "type": "{ margin : Svg.Coordinates.Margin, size : Svg.Coordinates.Size }"
+      },
+      {
+        "name": "Margin",
+        "comment": " ",
+        "args": [],
+        "type": "{ top : Float, right : Float, bottom : Float, left : Float }"
+      },
+      {
+        "name": "Size",
+        "comment": " ",
+        "args": [],
+        "type": "{ width : Float, height : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Orientation",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Horizontal",
+            []
+          ],
+          [
+            "Vertical",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "bounds",
+        "comment": " Helper to determine the bounds of your dimension.\n\n      xAxis =\n        { orientation = Horizontal\n        , bounds = bounds .x points\n        }\n",
+        "type": "(a -> Float) -> List a -> Svg.Coordinates.Bounds"
+      },
+      {
+        "name": "toCartesian",
+        "comment": " Translate value from SVG to cartesian.\n",
+        "type": "Svg.Coordinates.Frame -> Svg.Coordinates.Dimension -> Float -> Float"
+      },
+      {
+        "name": "toSvg",
+        "comment": " Translate value from cartesian to SVG.\n",
+        "type": "Svg.Coordinates.Frame -> Svg.Coordinates.Dimension -> Float -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

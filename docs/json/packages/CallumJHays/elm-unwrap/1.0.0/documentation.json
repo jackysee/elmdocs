@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Unwrap",
+    "comment": " This library provides quick functions for uunwrapping value wrapper\ntypes such as Maybe and Result types. I have found myself rewriting this time\nand time again, so I thought to separate it out into a package.\n\nOnly use these if the program SHOULD crash in the case of the value not being\npresent.\n\n# functions\n@docs maybe, result\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "maybe",
+        "comment": " Forcibly unwraps a maybe. Crash the program when it is Nothing.\n\n    Unwrap.maybe (Just 42) == 42\n    Unwrap.maybe Nothing -- CRASHES\n",
+        "type": "Maybe.Maybe a -> a"
+      },
+      {
+        "name": "result",
+        "comment": " Forcibly unwraps a result. Crash the program when it is Err\n\n    Unwrap.result (Ok 42) == 42\n    Unwrap.result (Err \"Should never happen\") -- CRASHES\n",
+        "type": "Result.Result err a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

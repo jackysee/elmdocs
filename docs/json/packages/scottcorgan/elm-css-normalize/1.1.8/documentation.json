@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Css.Normalize",
+    "comment": " This library is mostly a direct port of [normalize.css](https://github.com/necolas/normalize.css) v7.0.0.\nCompile it with your elm-css code to have easier cross-browser styling experience.\n\n\n# Normalizing CSS Stylesheet\n\n@docs css\n\n\n# Css Snippets\n\n@docs snippets\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "css",
+        "comment": " A [Stylesheet](https://github.com/rtfeldman/elm-css) to rest values to make them more consistent across most browsers. You can\ninclude this stylesheet in your elm-css compilation file.\n\n    port module Stylesheets exposing (..)\n\n    import Css.File exposing (CssCompilerProgram, CssFileStructure)\n    import MyCss\n\n    port files : CssFileStructure -> Cmd msg\n\n    fileStructure : CssFileStructure\n    fileStructure =\n        Css.File.toFileStructure\n            [ ( \"dist/styles.css\"\n              , Css.File.compile\n                    [ Css.Normalize.css\n                    , MyCss.css\n                    ]\n              )\n            ]\n\n    main : CssCompilerProgram\n    main =\n        Css.File.compiler files fileStructure\n\n",
+        "type": "Css.Stylesheet"
+      },
+      {
+        "name": "snippets",
+        "comment": " The snippets used to generate the normalizing stylesheet. Use this if you want to append\nthese to your own style sheet. This is useful if you prefer to use inline styles over\ngenerator a stylesheet with the [elm-css preprocessor](https://www.npmjs.com/package/elm-css)\n\n    module MyModule exposing (..)\n\n    import Css exposing (..)\n    import Css.Elements exposing (..)\n    import Css.Namespace exposing (namespace)\n    import Css.Normalize\n\n    css : Css.Stylesheet\n    css =\n        (Css.stylesheet << namespace \"my-styles\") <|\n            List.append\n                Css.Normalize.snippets\n                [ everything\n                    [ boxSizing borderBox ]\n                ]\n\n",
+        "type": "List Css.Snippet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

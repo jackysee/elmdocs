@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const download = require("download");
+//const download = require("download");
+const request = require('request');
 const mkdirp = require("mkdirp");
 const pify = require("pify");
 const fsP = pify(fs);
@@ -9,25 +10,40 @@ const beautify = require("json-beautify");
 const site = "http://package.elm-lang.org/";
 const target = "src/json/"
 
-function get(file, dest){
-    process.stdout.write("Fetching " + file + " ... ");
-    return download(site + file).then(
-        data => {
-            if(!dest){
-                process.stdout.write("done.\n");
-                return Promise.resolve(data);
+
+function download(uri){
+    return new Promise((resolve, reject) => {
+        request(uri, (err, resp, body) => {
+            if(err){
+                reject(err);
+                return;
             }
-            process.stdout.write("saved.\n");
-            return pify(mkdirp)(path.dirname(dest))
-                .then(() => fsP.writeFileSync(dest, data))
-                .then(() => data);
-        },
-        err => {
-            process.stdout.write("failed.\n");
-            console.error("cannot get file ", err);
-            return Promise.reject(err);
+            resolve(body);
+        });
+    });
+
+}
+
+async function get(file, dest){
+    process.stdout.write("Fetching " + file + " ... ");
+
+    try{
+        let data = await download(site + file);
+        if(!dest){
+            process.stdout.write("done.\n");
+            return data;
         }
-    );
+        process.stdout.write("saved.\n");
+        return pify(mkdirp)(path.dirname(dest))
+            .then(() => fsP.writeFileSync(dest, data))
+            .then(() => data);
+
+    }
+    catch(err){
+        process.stdout.write("failed.\n");
+        console.error("cannot get file ", err);
+        return Promise.reject(err);
+    }
 }
 
 function getList(list, count){

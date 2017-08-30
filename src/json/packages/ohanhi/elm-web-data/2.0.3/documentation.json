@@ -1,0 +1,120 @@
+[
+  {
+    "name": "WebData.Http",
+    "comment": " Friendly abstraction over remote API communication in JSON.\n\n# Commands\n@docs get, getWithCache, post, put, patch, delete\n\n# Tasks\n@docs getTask, getWithCacheTask, postTask, putTask, patchTask, deleteTask\n\n# Helpers\n@docs url\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "delete",
+        "comment": " `DELETE` request as a command.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Json.Decode.Value -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "deleteTask",
+        "comment": " `DELETE` request as a task.\n",
+        "type": "String -> Json.Decode.Decoder success -> Json.Decode.Value -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "get",
+        "comment": " `GET` request as a command.\nHas a `no-cache` header to ensure data integrity.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getTask",
+        "comment": " `GET` request as a task.\nHas a `no-cache` header to ensure data integrity.\n",
+        "type": "String -> Json.Decode.Decoder success -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "getWithCache",
+        "comment": " `GET` request as a command, with cache. *NB.* allowing cache in API `GET` calls can lead\nto strange conditions.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "getWithCacheTask",
+        "comment": " `GET` request as a task, with cache. *NB.* allowing cache in API `GET` calls can lead\nto strange conditions.\n",
+        "type": "String -> Json.Decode.Decoder success -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "patch",
+        "comment": " `PATCH` request as a command.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Json.Decode.Value -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "patchTask",
+        "comment": " `PATCH` request as a task.\n",
+        "type": "String -> Json.Decode.Decoder success -> Json.Decode.Value -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "post",
+        "comment": " `POST` request as a command.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Json.Decode.Value -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "postTask",
+        "comment": " `POST` request as a task.\n",
+        "type": "String -> Json.Decode.Decoder success -> Json.Decode.Value -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "put",
+        "comment": " `PUT` request as a command.\n",
+        "type": "String -> (WebData.WebData success -> msg) -> Json.Decode.Decoder success -> Json.Decode.Value -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "putTask",
+        "comment": " `PUT` request as a task.\n",
+        "type": "String -> Json.Decode.Decoder success -> Json.Decode.Value -> Task.Task Basics.Never (WebData.WebData success)"
+      },
+      {
+        "name": "url",
+        "comment": " This is the old `url` function from evancz/elm-http.\n\nCreate a properly encoded URL with a [query string][qs]. The first argument is\nthe portion of the URL before the query string, which is assumed to be\nproperly encoded already. The second argument is a list of all the\nkey/value pairs needed for the query string. Both the keys and values\nwill be appropriately encoded, so they can contain spaces, ampersands, etc.\n[qs]: http://en.wikipedia.org/wiki/Query_string\n    url \"http://example.com/users\" [ (\"name\", \"john doe\"), (\"age\", \"30\") ]\n    -- http://example.com/users?name=john+doe&age=30\n",
+        "type": "String -> List ( String, String ) -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "WebData",
+    "comment": " Type representing remote API data.\n\n@docs WebData, fromResult\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "WebData",
+        "comment": " Type representing remote API data. A `Success` value contains the type that you\nprovide a decoder for, while the `Failure` value contains an `HttpBuilder.Error String`.\nRead more about the [HttpBuilder errors](http://package.elm-lang.org/packages/lukewestby/elm-http-builder/2.0.0/HttpBuilder#Error).\n\nThis idea is originally from the Kris Jenkins'\n[RemoteData](http://package.elm-lang.org/packages/krisajenkins/elm-exts/25.8.0/Exts-RemoteData)\npattern.\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "NotAsked",
+            []
+          ],
+          [
+            "Loading",
+            []
+          ],
+          [
+            "Failure",
+            [
+              "Http.Error"
+            ]
+          ],
+          [
+            "Success",
+            [
+              "a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fromResult",
+        "comment": " Convert a `Result Error` produced by HttpBuilder, to a `WebData` value.\n",
+        "type": "Result.Result Http.Error success -> WebData.WebData success"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

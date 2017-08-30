@@ -1,0 +1,367 @@
+[
+  {
+    "name": "Stylesheet.Shorthand",
+    "comment": "\n## Shorthand representation of a CSS rule set\n@docs Shorthand\n\n# Converting from shorthand to standard representations\n@docs toRuleSetList, toStylesheet\n\n",
+    "aliases": [
+      {
+        "name": "Shorthand",
+        "comment": " A simplified rule set record without a media query option. Useful for\nbuilding longer stylesheets when you don't want to use the constructor\nfunctions.\n\n    short =\n      [ { selectors =\n          [ Tag \"body\"\n          , Tag \"button\"\n          , Tag \"input\"\n          , Tag \"select\"\n          , Tag \"textarea\"\n          ]\n        , declarations =\n          [ (\"font-family\", Str \"Roboto\")\n          ]\n        }\n\n      , { selectors =\n          [ Tag \"code\"\n          , Tag \"pre\"\n          ]\n        , declarations =\n          [ (\"font-family\", Str \"Monaco\")\n          ]\n        }\n\n      ]\n\n",
+        "args": [],
+        "type": "{ selectors : List Stylesheet.Selector , declarations : List CssBasics.Declaration }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "toRuleSetList",
+        "comment": " Convert a list of `Shorthand` rule sets to a `RuleSet` list\n\n    short\n      |> toRuleSetList\n",
+        "type": "List Stylesheet.Shorthand.Shorthand -> List Stylesheet.RuleSet"
+      },
+      {
+        "name": "toStylesheet",
+        "comment": " Construct a `Stylesheet` from a list of `Shorthand` rule sets\n\n    short\n      |> toStylesheet\n",
+        "type": "List Stylesheet.Shorthand.Shorthand -> Stylesheet.Stylesheet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Stylesheet.FontImport",
+    "comment": "\n\n## Helpers for importing Google Fonts\n\nSee\n[examples/BasicUse.elm](https://github.com/danielnarey/elm-stylesheet/tree/master/examples)\nfor a full working example.\n\n# Font Family Representation\n@docs FontFamily\n\n# Constructing a Font Family\n@docs newFontFamily, withVariants, addVariant, withSubsets, addSubset\n\n# Adding an Import Directive to a Stylesheet\n@docs importFonts\n\n",
+    "aliases": [
+      {
+        "name": "FontFamily",
+        "comment": " Represents a family of fonts that may have multiple variants and character\nsubsets. Used to construct import directives for Google Fonts.\n",
+        "args": [],
+        "type": "{ name : String, variants : List String, subsets : List String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "addSubset",
+        "comment": " Add a new character subset to a font family, *retaining* any existing\nsubsets\n",
+        "type": "String -> Stylesheet.FontImport.FontFamily -> Stylesheet.FontImport.FontFamily"
+      },
+      {
+        "name": "addVariant",
+        "comment": " Add a new variant to a font family, *retaining* any existing variants\n",
+        "type": "String -> Stylesheet.FontImport.FontFamily -> Stylesheet.FontImport.FontFamily"
+      },
+      {
+        "name": "importFonts",
+        "comment": " Given a list of `FontFamily` records and a stylesheet, generate an import\ndirective containing an API query that will retreive the specified\nfamilies/variants from Google Fonts and prepend it to the stylesheet\n",
+        "type": "List Stylesheet.FontImport.FontFamily -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "newFontFamily",
+        "comment": " Initialize a new font family; the string argument provides the font name\n",
+        "type": "String -> Stylesheet.FontImport.FontFamily"
+      },
+      {
+        "name": "withSubsets",
+        "comment": " Add a list of character subsets (e.g., \"cyrillic\") to a font family,\n*replacing* any existing subsets\n",
+        "type": "List String -> Stylesheet.FontImport.FontFamily -> Stylesheet.FontImport.FontFamily"
+      },
+      {
+        "name": "withVariants",
+        "comment": " Add a list of variants to a font family, *replacing* any existing variants\n",
+        "type": "List String -> Stylesheet.FontImport.FontFamily -> Stylesheet.FontImport.FontFamily"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Stylesheet.Combinators",
+    "comment": "\n\n## Semantic constructor functions for combinator and pseudo selectors\n\n# Combinators\n@docs combinedWith, descendantOf, childOf, siblingOf, adjacentTo\n\n# Pseudo Classes and Elements\n@docs pseudoClass, pseudoElement\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "adjacentTo",
+        "comment": " Constructor function to create an adjacent selector; intended to be used\nsemantically as a pipeline function\n\n    Tag \"ul\" |> adjacentTo (Tag \"p\")\n\n    --> p + ul\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "childOf",
+        "comment": " Constructor function to create a child selector; intended to be used\nsemantically as a pipeline function\n\n    Tag \"li\" |> childOf (Tag \"ul\")\n\n    --> ul > li\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "combinedWith",
+        "comment": " Constructor function to combine two selectors; intended to be\nused semantically as a pipeline function\n\n    Tag \"a\" |> combinedWith (Class \"button\")\n\n    --> a.button\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "descendantOf",
+        "comment": " Constructor function to create a descendent selector; intended to be\nused semantically as a pipeline function\n\n    Tag \"p\" |> descendantOf (Tag \"article\")\n\n    --> article p\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "pseudoClass",
+        "comment": " Constructor function to create a pseudo class selector; intended to be used\nsemantically as a pipeline function\n\n    Tag \"li\" |> pseudoClass \"hover\"\n\n    --> li:hover\n",
+        "type": "String -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "pseudoElement",
+        "comment": " Constructor function to create a pseudo element selector; intended to be\nused semantically as a pipeline function\n\n    Tag \"li\" |> pseudoElement \"after\"\n\n    --> li::after\n",
+        "type": "String -> Stylesheet.Selector -> Stylesheet.Selector"
+      },
+      {
+        "name": "siblingOf",
+        "comment": " Constructor function to create a sibling selector; intended to be used\nsemantically as a pipeline function\n\n    Tag \"ul\" |> siblingOf (Tag \"p\")\n\n    --> p ~ ul\n",
+        "type": "Stylesheet.Selector -> Stylesheet.Selector -> Stylesheet.Selector"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Stylesheet",
+    "comment": "\n\n## A flexible API for generating a complete CSS stylesheet in Elm\n\nThe basic workflow for using this library is: (1) create rule sets, consisting\nof selectors (identifying elements) and declarations (defining styles), (2) add\nyour rule sets to a new stylesheet along with any import URLs needed to access\nexternal resources (e.g., Google fonts), and (3) render your stylesheet to an\nHTML `<style>` node or to a data structure for exporting to a *.css* file.\n\nSee\n[examples/BasicUse.elm](https://github.com/danielnarey/elm-stylesheet/tree/master/examples)\nfor a full working example. See the package\n[README](http://package.elm-lang.org/packages/danielnarey/elm-stylesheet/latest/)\nfor instructions on exporting to a *.css* file.\n\n\n# CSS Representation\n@docs Stylesheet, RuleSet, Selector, MatchValue\n\n# Constructing Rule Sets\n@docs newRuleSet, withSelectors, addSelector, withDeclarations, addDeclaration\n@docs withMediaQuery\n\n# Constructing a Stylesheet\n@docs newStylesheet, withImports, addImport, withPrepends, addPrepend\n@docs withRules, withRuleSets, addRuleSet, scoped\n\n# Compiling/Rendering a Stylesheet\n@docs toCssString, toStyleNode, toFileStructure, CssFileStructure\n\n",
+    "aliases": [
+      {
+        "name": "CssFileStructure",
+        "comment": " Alias for [rtfeldman/elm-css/Css/File/CssFileStructure](https://github.com/rtfeldman/elm-css/blob/master/src/Css/File.elm)\n",
+        "args": [],
+        "type": "List { filename : String, content : String, success : Bool }"
+      },
+      {
+        "name": "RuleSet",
+        "comment": " A rule set consists of one or more selectors that define a set of elements\n(and/or pseudo-elements) and one or more style declarations that apply to those\nelements.\n",
+        "args": [],
+        "type": "{ selectors : List Stylesheet.Selector , declarations : List CssBasics.Declaration , mediaQuery : Maybe.Maybe String }"
+      },
+      {
+        "name": "Stylesheet",
+        "comment": " A stylesheet consists of one or more rule sets and, optionally: (1) a list\nof external style resources to import; (2) a list of inline CSS code snippets\nto prepend above the stylesheet's rule statements. By default, a stylesheet\napplies globally to the HTML document, but it also contains a `scoped` attribute\nthat can be set to `True` to take advantage of CSS scoping in HTML 5\n(currently only implemented in the Firefox browser).\n",
+        "args": [],
+        "type": "{ imports : List String , prepends : List String , rules : List Stylesheet.RuleSet , scoped : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "MatchValue",
+        "comment": " Represents an expression that defines a set of matching values for a given\nHTML attribute. Specifications for attribute selectors may be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors).\n`IsDefined` corresponds to [attr], `Exactly` corresponds to [attr=value],\n`Includes` corresponds to [attr~=value], `StartsWith` corresponds to\n[attr^=value], `EndsWith` corresponds to [attr$=value], `Contains`\ncorresponds to [attr*=value], and `Prefix` corresponds to [attr|=value].\n",
+        "args": [],
+        "cases": [
+          [
+            "IsDefined",
+            []
+          ],
+          [
+            "Exactly",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Includes",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StartsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "EndsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Contains",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Prefix",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Selector",
+        "comment": " A selector defines the set of elements (and/or pseudo-elements) to which a\nset of style declarations apply. Specifications for each of the selector types\nmay be found\n[here](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).\n\nThe `Any` selector will apply a rule set to every element in the DOM. This is\nsometimes used to set more generic browser rendering options.\n\n    Any\n      --> \"*\"\n\nThe next four are the most common selectors, selecting for an HTML tag,\nan `id` attribute, a `class` attribute, and an exact or partial match to an\nattribute value, respectively:\n\n    Tag \"div\"\n      --> div\n\n    Id \"identifier\"\n      --> #identifier\n\n    Class \"class-name\"\n      --> .class-name\n\n    Attribute (\"href\", StartsWith \"#\")\n      --> [href^=\"#\"]\n\nThe following combinator selectors allow basic selectors to be put together in a\nvariety of ways to contextually refine a query. See\n[Stylesheet.Combinators](http://package.elm-lang.org/packages/danielnarey/elm-stylesheet/latest/Stylesheet-Combinators)\nfor a set of pipeline functions that provide a nicer syntax for generating\ncombinator selectors.\n\n    Combined [Tag \"a\", Class \"button\", Attribute (\"href\", StartsWith \"#\")]\n      --> a.button[href^=\"#\"]\n\n    Descendant (Tag \"article\", Tag \"p\")\n      --> article p\n\n    Child (Tag \"ul\", Tag \"li\")\n      --> ul > li\n\n    Sibling (Tag \"p\", Tag \"ul\")\n      --> p ~ ul\n\n    Adjacent (Tag \"p\", Tag \"ul\")\n      --> p + ul\n\n    PseudoClass (Tag \"li\", [ \"nth-child(1)\", \"hover\" ])\n      --> li:nth-child(1):hover\n\n    PseudoElement (Tag \"li\", \"after\")\n      --> li::after\n\nOn occasion, it might be simpler and more readable just to define the selector\nusing CSS code. That is what the `CssCode` type is for:\n\n    CssCode \"article p ~ ul > li:nth-child(1)\"\n      --> article p ~ ul > li:nth-child(1)\n\nThe `CssCode` type key can also be used to create a `@font-face` rule as\nfollows:\n\n    newRuleSet\n      |> addSelector (CssCode \"@font-face\")\n      |> withDeclarations\n        [ (\"font-family\", Str \"myFont\")\n        , (\"src\", Str \"url(my_font.woff)\")\n        ]\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Any",
+            []
+          ],
+          [
+            "Tag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Id",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Class",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Attribute",
+            [
+              "( String, Stylesheet.MatchValue )"
+            ]
+          ],
+          [
+            "Combined",
+            [
+              "List Stylesheet.Selector"
+            ]
+          ],
+          [
+            "Descendant",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Child",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Sibling",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "Adjacent",
+            [
+              "( Stylesheet.Selector, Stylesheet.Selector )"
+            ]
+          ],
+          [
+            "PseudoClass",
+            [
+              "( Stylesheet.Selector, List String )"
+            ]
+          ],
+          [
+            "PseudoElement",
+            [
+              "( Stylesheet.Selector, String )"
+            ]
+          ],
+          [
+            "CssCode",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "addDeclaration",
+        "comment": " Add a new style declaration to a rule set, *retaining* any existing\ndeclarations\n",
+        "type": "CssBasics.Declaration -> Stylesheet.RuleSet -> Stylesheet.RuleSet"
+      },
+      {
+        "name": "addImport",
+        "comment": " Add a new import to a stylesheet, *retaining* any existing imports\n",
+        "type": "String -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addPrepend",
+        "comment": " Add a string of CSS code into a stylesheet after its imports (and after\nany existing prepends) and before its rule statements; this constructor will\n*retain* any existing prepends\n",
+        "type": "String -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addRuleSet",
+        "comment": " Add a new rule set to a stylesheet, *retaining* any existing rule sets\n",
+        "type": "Stylesheet.RuleSet -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "addSelector",
+        "comment": " Add a new selector to a rule set, *retaining* any existing selectors\n",
+        "type": "Stylesheet.Selector -> Stylesheet.RuleSet -> Stylesheet.RuleSet"
+      },
+      {
+        "name": "newRuleSet",
+        "comment": " Initialize a new rule set\n",
+        "type": "Stylesheet.RuleSet"
+      },
+      {
+        "name": "newStylesheet",
+        "comment": " Initialize a new stylesheet\n",
+        "type": "Stylesheet.Stylesheet"
+      },
+      {
+        "name": "scoped",
+        "comment": " Set the stylesheet's `scoped` attribute to `True`. In an HTML 5 compliant\nbrowser, the stylesheet will only be applied to the element on which\n`embedStylesheet` is called and all of that element's children. As of October\n2016 this scoping feature is only embedded in the Firefox browser.\n",
+        "type": "Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "toCssString",
+        "comment": " Returns the compiled stylesheet as a string of CSS code\n",
+        "type": "Stylesheet.Stylesheet -> String"
+      },
+      {
+        "name": "toFileStructure",
+        "comment": " Returns the compiled stylesheet in the format required to export it to a\n.css file using rtfeldman's [elm-css](https://github.com/rtfeldman/elm-css)\nNode module.\n\n",
+        "type": "String -> Stylesheet.Stylesheet -> Stylesheet.CssFileStructure"
+      },
+      {
+        "name": "toStyleNode",
+        "comment": " Returns an `Html.node` with a `<style>` tag, which contains the stylesheet\nrendered as a string of CSS code\n",
+        "type": "Stylesheet.Stylesheet -> Html.Html msg"
+      },
+      {
+        "name": "withDeclarations",
+        "comment": " Add a list of style declarations to a rule set, *replacing* any existing\ndeclarations\n",
+        "type": "List CssBasics.Declaration -> Stylesheet.RuleSet -> Stylesheet.RuleSet"
+      },
+      {
+        "name": "withImports",
+        "comment": " Add a list of imports to a stylesheet, *replacing* any existing imports\n",
+        "type": "List String -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withMediaQuery",
+        "comment": " Restrict the scope of a rule set by applying a media query. The first\nargument is a media type, given as a string, and the second argument is a list\nof media features, given as declarations. *Replaces* any existing media queries.\n\n    myRuleSet\n      |> withMediaQuery \"screen\" [(\"min-width\", Unit 1250 Px)]\n",
+        "type": "String -> List CssBasics.Declaration -> Stylesheet.RuleSet -> Stylesheet.RuleSet"
+      },
+      {
+        "name": "withPrepends",
+        "comment": " Insert one or more strings of CSS code into a stylesheet after its imports\nand before its rule statements; this constructor will *replace* any existing\nprepends\n",
+        "type": "List String -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withRuleSets",
+        "comment": " Alias for `withRules`\n",
+        "type": "List Stylesheet.RuleSet -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withRules",
+        "comment": " Add a list of rule sets to a stylesheet, *replacing* any existing rule sets\n",
+        "type": "List Stylesheet.RuleSet -> Stylesheet.Stylesheet -> Stylesheet.Stylesheet"
+      },
+      {
+        "name": "withSelectors",
+        "comment": " Add a list of selectors to a rule set, *replacing* any existing selectors\n",
+        "type": "List Stylesheet.Selector -> Stylesheet.RuleSet -> Stylesheet.RuleSet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

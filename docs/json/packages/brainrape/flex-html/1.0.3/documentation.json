@@ -1,0 +1,141 @@
+[
+  {
+    "name": "Flex",
+    "comment": " Companion library to elm-html. Helps with flexbox layout\n\n# Flex Types\n@docs Direction, Alignment, WrapValue\n\n# Flex Mixins\nMixins can be used alone or as a combinator to specify flex-related styles.\n@docs display, flow, direction, wrap, alignItems, justifyContent, grow, shrink, basis, flex, order, alignSelf\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Alignment",
+        "comment": " The `Alignment` type specifies all the values possible for the `alignItems`\nand `justifyConteent` mixins.\n\n  - Start: Content is left-aligned.\n  - Center: Content is center-aligned.\n  - End: Content is right-aligned.\n  - Stretch: Content-width is stretched to fill up the space.\n  - Surround: Extra space is devided into equal spaces around the content.\n",
+        "args": [],
+        "cases": [
+          [
+            "Start",
+            []
+          ],
+          [
+            "Center",
+            []
+          ],
+          [
+            "End",
+            []
+          ],
+          [
+            "Stretch",
+            []
+          ],
+          [
+            "Surround",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Direction",
+        "comment": " The `Direction` type specifies all the direction values possible for the\n`flexDirection` mixin.\n\n  - Horizontal: Default value. The flexible items are displayed horizontally, as a row.\n  - Vertical: The flexible items are displayed vertically, as a column.\n  - HorizontalReverse: Same as `Horizontal`, but in reverse order.\n  - verticalReverse: Same as `Vertical`, but in reverse order.\n",
+        "args": [],
+        "cases": [
+          [
+            "Horizontal",
+            []
+          ],
+          [
+            "Vertical",
+            []
+          ],
+          [
+            "HorizontalReverse",
+            []
+          ],
+          [
+            "VerticalReverse",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "WrapValue",
+        "comment": " The `WrapValue` type specifies all the wrapping values possible for the\n`wrap` mixin.\n\n  - Wrap: Specifies that the flexible items will wrap if necessary.\n  - NoWrap: Default value. Specifies that the flexible items will not wrap.\n  - WrapReverse: Specifies that the flexible items will wrap, if necessary, in reverse order.\n",
+        "args": [],
+        "cases": [
+          [
+            "Wrap",
+            []
+          ],
+          [
+            "NoWrap",
+            []
+          ],
+          [
+            "WrapReverse",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "alignItems",
+        "comment": " The `alignItems` mixin specifies the default alignment for items inside\nthe flexible container.\n",
+        "type": "Flex.Alignment -> List ( String, String )"
+      },
+      {
+        "name": "alignSelf",
+        "comment": " The `alignSelf` mixin specifies the alignment for the selected item inside\nthe flexible container.\n",
+        "type": "Flex.Alignment -> List ( String, String )"
+      },
+      {
+        "name": "basis",
+        "comment": " The `basis` mixin specifies the initial length of a flexible item.\n",
+        "type": "String -> List ( String, String )"
+      },
+      {
+        "name": "direction",
+        "comment": " The `direction` mixin specifies the direction of the flexible items.\n",
+        "type": "Flex.Direction -> List ( String, String )"
+      },
+      {
+        "name": "display",
+        "comment": " Displays an element as an block-level flex container. ",
+        "type": "List ( String, String )"
+      },
+      {
+        "name": "flex",
+        "comment": " The `flex` mixin specifies the length of the item, relative to the rest of\nthe flexible items inside the same container.\n\nIt's a style shorthand for flexGrow, flexShrink and flexBasis\n",
+        "type": "Float -> Float -> String -> List ( String, String )"
+      },
+      {
+        "name": "flow",
+        "comment": " The `flow` mixin specifies how much the item will grow relative to the rest\nof the flexible items inside the same container.\n",
+        "type": "Flex.Direction -> Flex.WrapValue -> List ( String, String )"
+      },
+      {
+        "name": "grow",
+        "comment": " The `grow` mixin specifies how much the item will grow relative to the rest\nof the flexible items inside the same container.\n",
+        "type": "Float -> List ( String, String )"
+      },
+      {
+        "name": "justifyContent",
+        "comment": " The `justifyContent` mixin aligns the flexible container's items when the\nitems do not use all available space on the main-axis.\n",
+        "type": "Flex.Alignment -> List ( String, String )"
+      },
+      {
+        "name": "order",
+        "comment": " The `order` mixin specifies the order of a flexible item relative to the\nrest of the flexible items inside the same container.\n",
+        "type": "Int -> List ( String, String )"
+      },
+      {
+        "name": "shrink",
+        "comment": " The `shrink` mixin specifies how the item will shrink relative to the rest\nof the flexible items inside the same container.\n",
+        "type": "Float -> List ( String, String )"
+      },
+      {
+        "name": "wrap",
+        "comment": " The `wrap` mixin specifies whether the flexible items should wrap or not.\n",
+        "type": "Flex.WrapValue -> List ( String, String )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

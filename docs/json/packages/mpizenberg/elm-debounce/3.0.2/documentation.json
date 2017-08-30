@@ -1,0 +1,94 @@
+[
+  {
+    "name": "Control.Throttle",
+    "comment": " Throttle messages.\n\nThrottling is similar to debouncing,\nexcept that instead of triggering only 1 message of a group of messages,\nit triggers one every certain amount of time.\n\nFor a complete minimalist example,\nplease refer to the file: examples/ThrottleButton.elm\n\n@docs leading, trailing, both\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "both",
+        "comment": " Throttle on both leading and trailing edges.\n\nThe trailing edge happen only if at least 2 messages are captured.\nWe don't want to trigger two times the same event.\n\n    throttle : Msg -> Msg\n    throttle = Control.Throttle.both Throttle (1 * Time.second)\n\n    view model =\n        button\n            [ map throttle <| onClick Increment ]\n            [ text \"Click Fast!\" ]\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      },
+      {
+        "name": "leading",
+        "comment": " Throttle on leading edge (\"immediate\").\n\n    throttle : Msg -> Msg\n    throttle = Control.Throttle.leading Throttle (1 * Time.second)\n\n    view model =\n        button\n            [ map throttle <| onClick Increment ]\n            [ text \"Click Fast!\" ]\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      },
+      {
+        "name": "trailing",
+        "comment": " Throttle on trailing edge (\"later\").\n\n    throttle : Msg -> Msg\n    throttle = Control.Throttle.trailing Throttle (1 * Time.second)\n\n    view model =\n        button\n            [ map throttle <| onClick Increment ]\n            [ text \"Click Fast!\" ]\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Control.Debounce",
+    "comment": " Debounce messages.\n\nDebounced messages are grouped together.\nMeaning if a message is emitted every second,\nbut with a debounced delay of 2s,\nthey will be all grouped together and only one\nof these messages will be triggered.\n\nDebouncing on leading edge will trigger the first message\nof the group (so immediately) whereas trailing edge will\ntrigger the last of the group (later).\n\nIf the `both` strategy is selected, and the group of messages\ncontains at least 2 messages, both the first message (immediately)\nand the last one (later) of the group will be triggered.\n\nFor complete minimalist examples,\nplease refer to the files:\n\n* examples/DebounceTextTrailing.elm\n* examples/DebounceButtonBoth.elm\n\n@docs leading, trailing, both\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "both",
+        "comment": " Debounce on both leading and trailing edges.\n\nThe trailing edge happen only if at least 2 messages are captured.\nWe don't want to trigger two times the same event.\n\n    debounce : Msg -> Msg\n    debounce = Control.Debounce.both Deb (1 * Time.second)\n\n    view model =\n        button\n            [ map debounce <| onClick Increment ]\n            [ text \"Click Fast!\" ]\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      },
+      {
+        "name": "leading",
+        "comment": " Debounce on leading edge (\"immediate\").\n\n    debounce : Msg -> Msg\n    debounce = Control.Debounce.leading Deb (1 * Time.second)\n\n    view model =\n        button\n            [ map debounce <| onClick Increment ]\n            [ text \"Click Fast!\" ]\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      },
+      {
+        "name": "trailing",
+        "comment": " Debounce on trailing edge (\"later\").\n\n    debounce : Msg -> Msg\n    debounce = Control.Debounce.trailing Deb (1 * Time.second)\n\n    view model = input [map debounce <| onInput Text] []\n",
+        "type": "Control.Wrapper msg -> Time.Time -> msg -> msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Control",
+    "comment": " Common types and functions shared by Debounce and Throttle.\n\n# Initialize the state of the message controller\n\n@docs State, initialState\n\n# Types aliases used in all the library\n\n@docs Control, Wrapper\n\n# Update your model\n\n@docs update\n\n",
+    "aliases": [
+      {
+        "name": "Control",
+        "comment": " An alias for the specific \"State Monad\"\nused internally for controlling the messages.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Control.State msg -> ( Control.State msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "State",
+        "comment": " Internal state used for controlling the messages.\n\n    type alias Model = { ... , state : Control.State Msg }\n",
+        "args": [
+          "msg"
+        ],
+        "type": "State.State msg"
+      },
+      {
+        "name": "Wrapper",
+        "comment": " Type alias for a user defined message wrapper,\ntransforming `Control msg` into user `msg`.\n\nThis is usually the type constructor (`Deb` here)\nyou used in your Msg definition.\n\n    type Msg = ... | Deb (Control Msg)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Control.Control msg -> msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "initialState",
+        "comment": " Initialisation of the internal state.\n\n    initialModel = { ... , state = Control.initialState }\n",
+        "type": "Control.State msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update your model.\n\nIt needs a user defined State setter to be able to\nupdate the state inside the model.\n\n    update msg model =\n        case msg of\n            ... -> ...\n            Deb debMsg ->\n                Control.update (\\s -> { model | state = s }) model.state debMsg\n",
+        "type": "(Control.State msg -> model) -> Control.State msg -> Control.Control msg -> ( model, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

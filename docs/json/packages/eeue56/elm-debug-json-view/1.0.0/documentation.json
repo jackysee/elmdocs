@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Debug.Json.View",
+    "comment": " This module contains two main ways of debugging decoders\n\nThe first approach is to test your decoder outside of your existing application. This takes in a url and a decoder,\nand then provides useful information based on the result\n\n@docs program\n\nThe second approach is to allow you to embed decoder view inside your program.\n\n@docs viewValue, viewString\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " Takes in a URL and a decoder, and produces a program which will run against that url\n\nThe URL can be changed later at runtime through an input field\n\n    main =\n        program \"/user.json\" decodeUser\n\n",
+        "type": "String -> Json.Decode.Decoder a -> Platform.Program Basics.Never (Debug.Json.View.Model a) (Debug.Json.View.Msg a)"
+      },
+      {
+        "name": "viewString",
+        "comment": " Takes in a decoder and a string, then runs the decoder against the string\n\n    viewString decodeUser \"{ \\\"name\\\" : \\\"noah\\\", \\\"age\\\": 26 }\"\n\n",
+        "type": "Json.Decode.Decoder a -> String -> Html.Html msg"
+      },
+      {
+        "name": "viewValue",
+        "comment": " Takes in a decoder and a value, then runs the decoder on the value\n\n    viewValue decodeUser someJson\n\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Value -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

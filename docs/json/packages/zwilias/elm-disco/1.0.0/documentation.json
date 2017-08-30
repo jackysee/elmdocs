@@ -1,0 +1,396 @@
+[
+  {
+    "name": "Disco",
+    "comment": " Exploratory package for views where the model isn't explicitly passed around\nand data extraction from the store is decoupled from the view logic.\n\n\n# Building blocks\n\n@docs View, Query, with, split, map\n\n\n# More args\n\n@docs with2, with3, with4, with5, with6\n\n\n# DOM\n\n@docs render, wrap\n\n\n## Tags\n\n\n### Headers\n\n@docs h1, h2, h3, h4, h5, h6\n\n\n### Grouping content\n\n@docs div, p, hr, pre, blockquote\n\n\n### Text\n\n@docs text, span, a, code, em, strong, i, b, u, sub, sup, br\n\n\n### Lists\n\n@docs ol, ul, li, dl, dt, dd\n\n\n### Embedded content\n\n@docs img, iframe, canvas, math\n\n\n### Forms\n\n@docs form, input, textarea, button, select, option, label, fieldset, legend\n\n\n### Sections\n\n@docs section, nav, article, aside, header, footer, address, main_\n\n\n### Figures\n\n@docs figure, figcaption\n\n\n### Tables\n\n@docs table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th\n\n\n### Weird stuff\n\n@docs progress\n\n",
+    "aliases": [
+      {
+        "name": "Query",
+        "comment": " A query is just a function that extracts some data from a store.\n",
+        "args": [
+          "store",
+          "data"
+        ],
+        "type": "store -> data"
+      }
+    ],
+    "types": [
+      {
+        "name": "View",
+        "comment": " A view is a function that renders some data, which it can extract from a\nstore. That store is also made available to its children, again without having\nexplicit, direct access to this store.\n",
+        "args": [
+          "store",
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "a",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "address",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "article",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "aside",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "b",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "blockquote",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "br",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> Disco.View store msg"
+      },
+      {
+        "name": "button",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "canvas",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "caption",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "code",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "col",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "colgroup",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "dd",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "div",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "dl",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "dt",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "em",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "fieldset",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "figcaption",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "figure",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "footer",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "form",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h1",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h2",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h3",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h4",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h5",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "h6",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "header",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "hr",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> Disco.View store msg"
+      },
+      {
+        "name": "i",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "iframe",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "img",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> Disco.View store msg"
+      },
+      {
+        "name": "input",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "label",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "legend",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "li",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "main_",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "map",
+        "comment": " The equivalent of `Html.map` to map the `msg` part of the view.\n",
+        "type": "(subMsg -> msg) -> Disco.View partial subMsg -> Disco.View partial msg"
+      },
+      {
+        "name": "math",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "nav",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "ol",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "option",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "p",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "pre",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "progress",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "render",
+        "comment": " Given a view and a store, render it to plain old `Html`. This allows\nembedding disco views in regular views, and is also useful for passing your view\nto `Html.program` and friends.\n",
+        "type": "Disco.View store msg -> store -> Html.Html msg"
+      },
+      {
+        "name": "section",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "select",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "span",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "split",
+        "comment": " Include a `View` that works on a different data-model, by using a query to\ntransform/extract the new data-model from the current data-model.\n",
+        "type": "Disco.Query store partial -> Disco.View partial msg -> Disco.View store msg"
+      },
+      {
+        "name": "strong",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "sub",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "sup",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "table",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "tbody",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "td",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "text",
+        "comment": " ",
+        "type": "String -> Disco.View store msg"
+      },
+      {
+        "name": "textarea",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "tfoot",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "th",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "thead",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "tr",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "u",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "ul",
+        "comment": " ",
+        "type": "List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with",
+        "comment": " Allows building a view that actually _uses_ some of the data from the store,\nusing a `Query` to extract data to use.\n",
+        "type": "Disco.Query store data -> (data -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with2",
+        "comment": " View with 2 pieces of data.\n",
+        "type": "Disco.Query store data1 -> Disco.Query store data2 -> (data1 -> data2 -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with3",
+        "comment": " View with 3 pieces of data.\n",
+        "type": "Disco.Query store data1 -> Disco.Query store data2 -> Disco.Query store data3 -> (data1 -> data2 -> data3 -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with4",
+        "comment": " View with 4 pieces of data.\n",
+        "type": "Disco.Query store data1 -> Disco.Query store data2 -> Disco.Query store data3 -> Disco.Query store data4 -> (data1 -> data2 -> data3 -> data4 -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with5",
+        "comment": " View with 5 pieces of data.\n",
+        "type": "Disco.Query store data1 -> Disco.Query store data2 -> Disco.Query store data3 -> Disco.Query store data4 -> Disco.Query store data5 -> (data1 -> data2 -> data3 -> data4 -> data5 -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "with6",
+        "comment": " View with 6 pieces of data.\n",
+        "type": "Disco.Query store data1 -> Disco.Query store data2 -> Disco.Query store data3 -> Disco.Query store data4 -> Disco.Query store data5 -> Disco.Query store data6 -> (data1 -> data2 -> data3 -> data4 -> data5 -> data6 -> Disco.View store msg) -> Disco.View store msg"
+      },
+      {
+        "name": "wrap",
+        "comment": " Lift a regular old `Html` node into the world of `Disco`.\n",
+        "type": "(List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> List (Html.Attribute msg) -> List (Disco.View store msg) -> Disco.View store msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

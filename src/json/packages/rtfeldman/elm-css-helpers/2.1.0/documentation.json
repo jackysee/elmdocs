@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Html.CssHelpers",
+    "comment": " Helper functions for using elm-css with elm-html.\n\n@docs withNamespace, withClass, style, stylesheetLink\n\n@docs Helpers, Namespace\n",
+    "aliases": [
+      {
+        "name": "Helpers",
+        "comment": " Helpers for working on a given class/id\n",
+        "args": [
+          "class",
+          "id",
+          "msg"
+        ],
+        "type": "{ class : List class -> Html.Attribute msg , classList : List ( class, Bool ) -> Html.Attribute msg , id : id -> Html.Attribute msg }"
+      },
+      {
+        "name": "Namespace",
+        "comment": " namespaced helpers for working on a given class/id\n",
+        "args": [
+          "name",
+          "class",
+          "id",
+          "msg"
+        ],
+        "type": "{ class : List class -> Html.Attribute msg , classList : List ( class, Bool ) -> Html.Attribute msg , id : id -> Html.Attribute msg , name : name }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "style",
+        "comment": " Create an inline style from CSS\n",
+        "type": "String -> Html.Html msg"
+      },
+      {
+        "name": "stylesheetLink",
+        "comment": " Link in a stylesheet from a url\n",
+        "type": "String -> Html.Html msg"
+      },
+      {
+        "name": "withClass",
+        "comment": " Prepend the given class name to a `Html.node` function's attributes list.\n\n    import Html exposing (Html, Attribute, text)\n    import Html.Attributes exposing (class)\n    import Html.CssHelpers exposing (withClass)\n\n\n    {-| Create a `button` variant that automatically includes a \"warning\" class.\n    -}\n    warningButton : List (Attribute msg) -> List (Html msg) -> Html msg\n    warningButton =\n        withClass \"warning\" button\n\n\n    confirmDeleteButton : Html msg\n    confirmDeleteButton =\n        -- Equivalent to:\n        --\n        -- button [ class \"warning\" ] [ text \"Confirm Deletion\" ]\n        warningButton [] [ text \"Confirm Deletion\" ]\n\nSince `class` attributes \"stack\" in Elm (e.g.\n`button [ class \"warning\", class \"centered\" ] []` is equivalent to\n`button [ class \"warning centered\" ] []`), this API permits further\ncustomization on a per-instance basis, either by using the `style` attribute\nor by stacking additional classes\n(for example `warningButton [ class \"centered\" ] []`).\n",
+        "type": "String -> (List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg) -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "withNamespace",
+        "comment": " Takes a namespace and returns helper functions for `id`, `class`, and\n`classList` which work just like their equivalents in `elm-html` except that\nthey accept union types and automatically incorporate the given namespace. Also\nnote that `class` accepts a `List` instead of a single element; this is so you\ncan specify multiple classes without having to call `classList` passing tuples\nthat all end in `True`.\n\n    -- Put this before your view code to specify a namespace.\n    { id, class, classList } = withNamespace \"homepage\"\n\n    view =\n        h1 [ id Hero, class [ Fancy ] ] [ text \"Hello, World!\" ]\n\n    type HomepageIds = Hero | SomethingElse | AnotherId\n    type HomepageClasses = Fancy | AnotherClass | SomeOtherClass\n\nThe above would generate this DOM element:\n\n    <h1 id=\"Hero\" class=\"homepage_Fancy\">Hello, World!</h1>\n",
+        "type": "name -> Html.CssHelpers.Namespace name class id msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

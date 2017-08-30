@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Dropdown",
+    "comment": " This library provides a dropdown that handles items of any type `t`.\nItems are not part of this component's internal model, meaning that there is a\nsingle source of truth: your own `Model`.\nIt sets the selected item by value, rather than by index, which can be useful\nwhen the set of items is dynamic. User selection is communicated by returning\nan Event that contains the selected item.\n\n\n# Types\n\n@docs Dropdown, Event, Msg, Settings\n\n\n# Functions\n\n@docs defaultSettings, init, initWithSettings, update, view\n\n",
+    "aliases": [
+      {
+        "name": "Settings",
+        "comment": " @docs Customization settings.\n",
+        "args": [],
+        "type": "{ placeHolder : String , closedClass : String , openedClass : String , menuClass : String , buttonClass : String , arrowUpClass : String , arrowDownClass : String , itemClass : String , activeItemClass : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Dropdown",
+        "comment": " @docs The Dropdown (opaque) model.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Event",
+        "comment": " @docs Events that are used to communicate changes in state relevant to\nusers of this component.\n",
+        "args": [
+          "t"
+        ],
+        "cases": [
+          [
+            "Unchanged",
+            []
+          ],
+          [
+            "ItemSelected",
+            [
+              "t"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " @docs Opaque type representing messages used to change internal state.\n",
+        "args": [
+          "t"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultSettings",
+        "comment": " @docs Default look and feel settings.\n",
+        "type": "Dropdown.Settings"
+      },
+      {
+        "name": "init",
+        "comment": " @docs Initialize a Dropdown with default settings.\n",
+        "type": "Dropdown.Dropdown"
+      },
+      {
+        "name": "initWithSettings",
+        "comment": " @docs Initialize a Dropdown with custom settings.\n",
+        "type": "Dropdown.Settings -> Dropdown.Dropdown"
+      },
+      {
+        "name": "update",
+        "comment": " @docs Update a Dropdown. Returns the updated Dropdown and an Event\nthat communicates changes that are relevant to the outside world, if\nany (e.g. item selection).\n",
+        "type": "Dropdown.Msg t -> Dropdown.Dropdown -> ( Dropdown.Dropdown, Dropdown.Event t )"
+      },
+      {
+        "name": "view",
+        "comment": " @docs Render a Dropdown using provided items, optional selected item, and\nfunction that returns a string representation of an item.\n",
+        "type": "List t -> Maybe.Maybe t -> (t -> String) -> Dropdown.Dropdown -> Html.Html (Dropdown.Msg t)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

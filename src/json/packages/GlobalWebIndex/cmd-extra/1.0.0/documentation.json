@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Cmd.Extra",
+    "comment": " Extra functions for working with Cmds.\n# Basics\n@docs perform, attempt\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attempt",
+        "comment": " Similar to perform but takes `Result msg` and performs action only on `Ok`.\n```\nattempt (Ok 1) : Cmd number\nattempt (Ok \"I'm fine\") : Cmd String\nattempt (Err \"Failed\") == Cmd.none => True\n```\n",
+        "type": "Result.Result x msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "perform",
+        "comment": " Cmd costructor.\nUsefull when you want to artificially emit Cmd from update function.\n\n```\nperform \"Hi\" : Cmd String\nperform 1 : Cmd number\n```\n\n\"real world\" exaple:\n\n```\ntype alias Model = ()\ntype Msg = Fire | FireRockets\n\nupdate : Msg -> Model -> (Model, Cmd Msg)\nupdate msg model =\n  case msg of\n    Fire ->\n      ((), perform FireRockets)\n    FireRockets ->\n      Debug.crash \"World ended:(\"\n```\n\n",
+        "type": "msg -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

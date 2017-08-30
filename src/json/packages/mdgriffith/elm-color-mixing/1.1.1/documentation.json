@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Color.Mixing",
+    "comment": " Color Mixing!\n\n@docs Factor, lighten, darken, saturate, desaturate, fade, fadeIn, fadeOut, mix, spin, tint, shade\n\n@docs average, difference, exclusion, hardlight, multiply, negation, overlay, screen, softlight\n\n\n## Mapping a Function Over a Channel\n\nGive a function that takes the current channel value and returns a new channel value.\n\n@docs mapRed, mapGreen, mapBlue, mapAlpha\n\nThe `..Percent` version of the maps will take the current channel value as a *percentage* and return a new percentage that the channel should be.\n\nSo\n\n        -- Add %50 to the red channel\n        Color.blue\n            |> Color.Mixing.mapRedPercent ((+) 0.5)\n\nYou can also set the percentage for a channel using `always`\n\n        -- Set red channel to %50\n        Color.blue\n            |> Color.Mixing.mapRedPercent (always 0.5)\n\n@docs mapRedPercent, mapGreenPercent, mapBluePercent, mapAlphaPercent\n\n\n## Map HSL Channels\n\n@docs mapSaturation, mapHue, mapLightness\n\n\n## Map HSL Channels as Percent\n\n@docs mapSaturationPercent, mapHuePercent, mapLightnessPercent\n\n",
+    "aliases": [
+      {
+        "name": "Factor",
+        "comment": " A Float that should be between 0.0 and 1.0\n",
+        "args": [],
+        "type": "Float"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "average",
+        "comment": " Compute the average of two colors on a per-channel (RGB) basis.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "darken",
+        "comment": " Decrease the lightness of a color.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "desaturate",
+        "comment": " Decrease the saturation of a color in the HSL color space by an absolute amount.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "difference",
+        "comment": " Subtracts the second color from the first color on a channel-by-channel basis. Negative values are inverted. Subtracting black results in no change; subtracting white results in color inversion.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "exclusion",
+        "comment": " A similar effect to difference with lower contrast.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "fade",
+        "comment": " Set the absolute transparency of a color.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "fadeIn",
+        "comment": " Decrease the transparency of a color, making it more opaque.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "fadeOut",
+        "comment": " Increase the transparency of a color, making it less opaque.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "hardlight",
+        "comment": " The same as overlay but with the color roles reversed.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "lighten",
+        "comment": " Increase the lightness of a color.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapAlpha",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapAlphaPercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapBlue",
+        "comment": " ",
+        "type": "(Int -> Int) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapBluePercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapGreen",
+        "comment": " ",
+        "type": "(Int -> Int) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapGreenPercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapHue",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapHuePercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapLightness",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapLightnessPercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapRed",
+        "comment": " ",
+        "type": "(Int -> Int) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapRedPercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapSaturation",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mapSaturationPercent",
+        "comment": " ",
+        "type": "(Float -> Float) -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "mix",
+        "comment": " Mix two colors together in variable proportion. Opacity is included in the calculations.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "multiply",
+        "comment": " Multiply two colors. Corresponding RGB channels from each of the two colors are multiplied together then divided by 255. The result is a darker color.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "negation",
+        "comment": " Do the opposite effect to difference.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "overlay",
+        "comment": " Combines the effects of both multiply and screen. Conditionally make light channels lighter and dark channels darker.\n\n**Note:** The results of the conditions are determined by the first color parameter.\n\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "saturate",
+        "comment": " Increase the saturation of a color in the HSL color space by an absolute amount.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "screen",
+        "comment": " Do the opposite of `multiply`. The result is a brighter color.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "shade",
+        "comment": " Mix color with black in variable proportion. Same as calling `mix` with black.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "softlight",
+        "comment": " Similar to overlay but avoids pure black resulting in pure black, and pure white resulting in pure white.\n",
+        "type": "Color.Color -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "spin",
+        "comment": " Rotate the hue angle of a color in either direction.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "tint",
+        "comment": " Mix color with white in variable proportion. Same as calling `mix` with white.\n",
+        "type": "Color.Mixing.Factor -> Color.Color -> Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

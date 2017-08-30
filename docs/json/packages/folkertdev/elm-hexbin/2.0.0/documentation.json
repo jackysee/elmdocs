@@ -1,0 +1,94 @@
+[
+  {
+    "name": "HexBin",
+    "comment": " A module for binning 2D points into hexagons.\n\nPlay with it [on Ellie](https://ellie-app.com/3DR8Yd6sHBQa1/0)\n\n## Data\n@docs HexBin\n\n## Construct\n@docs empty\n\n## Insert\n@docs update, updateMany\n\n## Render\n@docs render, areaEncoding, colorEncoding, Config\n\n## Modify\n@docs map, indexedMap, get, set, modify\n\n## Convert\n@docs toList, toMatrix\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " A config for rendering a HexBin\n\n* `isEmpty`: predicate to determine whether a cell is empty\n* `displayEmpty`: should empty cells be drawn?\n* `borderColor`: Color of the border\n* `borderWidth`: Width of the border\n* `interpolateColor`: based on a cell's context, give a value between 0 and 1\n* `fillColorMin`: Color of the cell when the color interpolation is 0\n* `fillColorMax`: Color of the cell when the color interpolation is 1\n* `modifyRadius`: Based on a cell's context, modify the radius it has when rendered\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ isEmpty : a -> Bool , displayEmpty : Bool , borderColor : Color.Color , borderWidth : Float , interpolateColor : { radius : Float , value : a , row : Int , column : Int } -> Float , fillColorMin : Color.Color , fillColorMax : Color.Color , modifyRadius : { radius : Float , value : a , row : Int , column : Int } -> Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HexBin",
+        "comment": " Opaque type representing a grid of hexagon-shaped cells/bins.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "areaEncoding",
+        "comment": " Turn the value of each cell into an area\n\n* `domain`: typically the minimal and maximal value a cell might have\n* `range`: the minimal and maximal value the radius may have\n\nThe default uses a square root scale to convert the cell value (domain) into a radius (range).\n",
+        "type": "( Float, Float ) -> ( Float, Float ) -> HexBin.Config Int"
+      },
+      {
+        "name": "colorEncoding",
+        "comment": " Turn the value of each cell into a color\n\n* `largest`: value that is considered \"full\". The cell fill color will be `fillColorMax` when the value in the cell is this value.\n",
+        "type": "Float -> HexBin.Config Int"
+      },
+      {
+        "name": "empty",
+        "comment": " Construct a new `HexBin`.\n\n* `radius`: The radius of the hexagons in the grid\n* `(bottomLeft, topRight)`: The extend of the plot. Data outside of it will be ignored.\n* `v`: The initial value of every cell\n",
+        "type": "Float -> ( ( Float, Float ), ( Float, Float ) ) -> a -> HexBin.HexBin a"
+      },
+      {
+        "name": "get",
+        "comment": " Get the value of a particular cell\n",
+        "type": "Int -> Int -> HexBin.HexBin a -> Maybe.Maybe a"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Apply a function to every cell  in the HexBin, using the `row` and `column` of the cell.\n",
+        "type": "(Int -> Int -> a -> b) -> HexBin.HexBin a -> HexBin.HexBin b"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to every element in the HexBin\n",
+        "type": "(a -> b) -> HexBin.HexBin a -> HexBin.HexBin b"
+      },
+      {
+        "name": "modify",
+        "comment": " Modify the value of a particular cell\n",
+        "type": "Int -> Int -> (a -> a) -> HexBin.HexBin a -> HexBin.HexBin a"
+      },
+      {
+        "name": "render",
+        "comment": " Turn a HexBin into svg\n",
+        "type": "HexBin.Config a -> HexBin.HexBin a -> List (TypedSvg.Core.Svg msg)"
+      },
+      {
+        "name": "set",
+        "comment": " Set the value of a particular cell. Returns an unchanged HexBin when the row or column is out of bounds.\n",
+        "type": "Int -> Int -> a -> HexBin.HexBin a -> HexBin.HexBin a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a HexBin to a List\n",
+        "type": "HexBin.HexBin a -> List a"
+      },
+      {
+        "name": "toMatrix",
+        "comment": " Convert a HexBin to a [`Matrix`](http://package.elm-lang.org/packages/eeue56/elm-flat-matrix/3.0.2/Matrix#Matrix)\n",
+        "type": "HexBin.HexBin a -> Matrix.Matrix a"
+      },
+      {
+        "name": "update",
+        "comment": " Update the HexBin with a new data point\n\nThe cell that the data point is placed in will be updated with the function that is the first argument.\n\n\n    -- hexbin keeping track of the\n    -- number of data points each cell\n    hexbin : HexBin Int\n\n    -- insert a data point with\n    update (\\current -> current + 1) (x, y) hexbin\n\nIf you want to overwrite a value, use\n\n    insert : a -> ( Float, Float ) -> HexBin a -> HexBin a\n    insert value ( x, y ) =\n        update (\\_ -> value) ( x, y )\n",
+        "type": "(a -> a) -> ( Float, Float ) -> HexBin.HexBin a -> HexBin.HexBin a"
+      },
+      {
+        "name": "updateMany",
+        "comment": " Convenience function for updating many values at once\n",
+        "type": "(a -> a) -> List ( Float, Float ) -> HexBin.HexBin a -> HexBin.HexBin a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

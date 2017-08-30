@@ -1,0 +1,1133 @@
+[
+  {
+    "name": "Date.Extra.Utils",
+    "comment": " Date Utils.\r\n\r\n2016/14/23 `fromString` was removed as its extra date validity checking had problems in\r\nmany timezones so it became the same as `Date.fromString`.\r\n\r\n## Date parsing\r\n**Be careful with unsafeFromString it will Debug.crash() if it cant parse date.**\r\n@docs unsafeFromString\r\n\r\n## Utility\r\n@docs dayList\r\n@docs isoWeek\r\n@docs isoWeekOne\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayList",
+        "comment": " Return a list of days dayLength long for successive days\r\nstarting from startDate.\r\n",
+        "type": "Int -> Date.Date -> List Date.Date"
+      },
+      {
+        "name": "isoWeek",
+        "comment": " Return iso week values year, week, isoDayOfWeek.\r\nInput date is expected to be in local time zone of vm.\r\n",
+        "type": "Date.Date -> ( Int, Int, Int )"
+      },
+      {
+        "name": "isoWeekOne",
+        "comment": " Return date of start of ISO week one for given year. ",
+        "type": "Int -> Date.Date"
+      },
+      {
+        "name": "unsafeFromString",
+        "comment": " Utility for known input string date creation cases.\r\nChecks for a fail just in case and calls Debug.crash().\r\n",
+        "type": "String -> Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.TimeUnit",
+    "comment": " Reduce or Increase a date to a given start or end of a TimeUnit granularity.\r\n\r\nThis allows you to modify a date to reset to minimum or maximum values\r\nall values below a given TimeUnit granulariy.\r\n\r\nThis operates in local time zone so if you are not in UTC time zone\r\nand you output date in UTC time zone the datefields will not be to the start\r\nor end of the TimeUnit.\r\n\r\nExample `TimeUnit.startOfTime Hour date` will return a modified date with\r\n* Minutes to 0\r\n* Seconds to 0\r\n* Milliseconds to 0\r\n\r\nExample `TimeUnit.endOfTime Hour date` will return a modified date with\r\n* Minutes to 59\r\n* Seconds to 59\r\n* Milliseconds to 999\r\n\r\n\r\n@docs startOfTime\r\n@docs endOfTime\r\n@docs TimeUnit\r\n\r\n**Warning about using endOfTime for date ranges**\r\n\r\nIn the past when I have encountered people using a function like endOfTime\r\n(max date at a given granularity) it was being used in ways that could introduce\r\nproblems.\r\n\r\nHere is why.\r\n\r\n* You want to do a date range comparison between the minimum date\r\n(or current date) and this maximum date. In all the cases I can\r\nremember they were doing a date range comparison using\r\nGreater Than Or Equal To minimum date and Less Than or Equal To maximum date.\r\n * I can't state strongly enough that this is not the way to do date ranges\r\n it leads to missed matches that fall between the generated maximum date\r\n and the following date at the same granularity in systems were you are\r\n working at a granularity larger than the underlying stored granularity.\r\n Even if you are working at the smallest granularity of the system its a\r\n not a good way to think about ranges.\r\n * When comparing date ranges I strongly suggest you always use a\r\n half closed interval. This means always build date ranges using\r\n Greater Than or Equal To minimum date and Less Than maximum date.\r\n (This applies to floating point numbers as well).\r\n  * Its equivalently safe to go Greater Than minimum and\r\n  Less Than or Equal to maximum, in my experience business understanding\r\n  nearly always dictated include minimum excluded maximum.\r\n * Once you do this there is no possible gap and it becomes easier to think about.\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "TimeUnit",
+        "comment": " Date granularity of operations. ",
+        "args": [],
+        "cases": [
+          [
+            "Millisecond",
+            []
+          ],
+          [
+            "Second",
+            []
+          ],
+          [
+            "Minute",
+            []
+          ],
+          [
+            "Hour",
+            []
+          ],
+          [
+            "Day",
+            []
+          ],
+          [
+            "Month",
+            []
+          ],
+          [
+            "Year",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "endOfTime",
+        "comment": " Return a date created by increasing to maximum value all values below\r\na given TimeUnit granularity.\r\n\r\nThis modifies in local time zone values, as the date element parts\r\nare pulled straight from the local time zone date values.\r\n",
+        "type": "Date.Extra.TimeUnit.TimeUnit -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "startOfTime",
+        "comment": " Return a date created by reducing to minimum value all values below\r\na given TimeUnit granularity.\r\n\r\nThis modifies date in local time zone values, as the date element parts\r\nare pulled straight from the local time zone date values.\r\n",
+        "type": "Date.Extra.TimeUnit.TimeUnit -> Date.Date -> Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Field",
+    "comment": " Setting a date field on a date.\r\n\r\n@docs fieldToDate\r\n@docs fieldToDateClamp\r\n@docs Field\r\n\r\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Field",
+        "comment": " Configured Field and Value to set on date.\r\n\r\nAll field values are applied Modulus there maximum value.\r\n\r\n\r\n* DayOfWeek\r\n * The week keeps the same start of week day as passed in and changes day.\r\n* Month\r\n * Will not change year only the month of year.\r\n\r\n",
+        "args": [],
+        "cases": [
+          [
+            "Millisecond",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Second",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Minute",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Hour",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "DayOfWeek",
+            [
+              "( Date.Day, Date.Day )"
+            ]
+          ],
+          [
+            "DayOfMonth",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Month",
+            [
+              "Date.Month"
+            ]
+          ],
+          [
+            "Year",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "fieldToDate",
+        "comment": " Set a field on a date to a specific value.\r\n\r\nIf your value in field is out side of valid range for\r\nthe date field this function will return Nothing.\r\n\r\n* DayOfWeek cannot be invalid input range\r\n* Month cannot be invalid\r\n\r\nValid ranges\r\n* Millisecond 0 to 999\r\n* Second 0 to 59\r\n* Minute 0 to 59\r\n* Hour 0 to 23\r\n* DayOfMonth 1 to max day of month for year\r\n* Year >= 0\r\n\r\n",
+        "type": "Date.Extra.Field.Field -> Date.Date -> Maybe.Maybe Date.Date"
+      },
+      {
+        "name": "fieldToDateClamp",
+        "comment": "  Set a field on a date to a specific value.\r\n\r\nThis version clamps any input Field values to valid ranges as\r\ndescribed in the doc for fieldToDate function.\r\n",
+        "type": "Date.Extra.Field.Field -> Date.Date -> Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Duration",
+    "comment": " A Duration is a length of time that may vary with with calendar date\r\nand time. It can be used to modify a date.\r\n\r\nWhen modify dates using Durations (Day | Month | Week | Year) this module\r\ncompensates for day light saving hour variations to minimise the scenarios\r\nthat cause the Hour field in the result to be different to the input date.\r\nIt can't completely avoid the hour changing as some hours are not a real\r\nworld date and hence will modify the hour more than the Duration modified.\r\n\r\nThis behaviour is modelled on momentjs so any observed behaviour that is\r\nnot the same as momentjs should be raised as in issue.\r\n\r\nNote adding or subtracting 24 * Hour units from a date may produce a\r\ndifferent answer to adding or subtracting a Day if day light saving\r\ntransitions occur as part of the date change.\r\n\r\n**Warning**\r\n\r\nBe careful if you add Duration Delta to a Date as Duration contains months\r\nand Years which are not fixed elapsed times like Period Delta, however if\r\nyou really need a relative number of months or years then it may meet\r\nyour needs.\r\n\r\n@docs add\r\n@docs Duration\r\n@docs DeltaRecord\r\n@docs zeroDelta\r\n@docs diff\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [
+      {
+        "name": "DeltaRecord",
+        "comment": " A multi granularity duration delta.\r\n\r\nThis does not contain week like Period.DeltaRecord.\r\nIt does contain month and year.\r\n",
+        "args": [],
+        "type": "{ year : Int , month : Int , day : Int , hour : Int , minute : Int , second : Int , millisecond : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Duration",
+        "comment": " A Duration is time period that may vary with with calendar and time.\r\n\r\nUsing `Duration` adding 24 hours can produce different result to adding 1 day.\r\n\r\n",
+        "args": [],
+        "cases": [
+          [
+            "Millisecond",
+            []
+          ],
+          [
+            "Second",
+            []
+          ],
+          [
+            "Minute",
+            []
+          ],
+          [
+            "Hour",
+            []
+          ],
+          [
+            "Day",
+            []
+          ],
+          [
+            "Week",
+            []
+          ],
+          [
+            "Month",
+            []
+          ],
+          [
+            "Year",
+            []
+          ],
+          [
+            "Delta",
+            [
+              "Date.Extra.Duration.DeltaRecord"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add duration * count to date. ",
+        "type": "Date.Extra.Duration.Duration -> Int -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "diff",
+        "comment": " Return a Period representing date difference. date1 - date2.\r\n\r\nIf  you add the result of this function to date2 with addend of 1\r\nwill return date1.\r\n\r\n**Differences to Period.diff**\r\n\r\n* Duration DeltaRecord excludes week field\r\n* Duration DeltaRecord includes month field\r\n* Duration DeltaRecord includes year field\r\n* Day is number of days difference between months.\r\n\r\nWhen adding a Duration DeltaRecord to a date.\r\nThe larger granularity fields are added before lower granularity fields\r\nso Years are added before Months before Days etc.\r\n\r\n* Very different behaviour to Period diff\r\n * If date1 > date2 then all fields in DeltaRecord will be positive or zero.\r\n * If date1 < date2 then all fields in DeltaRecord will be negative or zero.\r\n* Because it deals with non fixed length periods of time\r\n\r\nExample 1.\r\n  days in 2016/05 (May) = 31\r\n  days in 2016/04 (Apr) = 30\r\n  days in 2016/03 (Mar) = 31\r\n\r\n  days in 2015/03 (Mar) = 31\r\n\r\n  diff of \"2016/05/15\" \"2015/03/20\"\r\n  result naive field diff.\r\n    year 1, month 2, day -5\r\n\r\n  days \"2015/03/20\" to \"2015/04/01\" (31 - 20) = 11 days (12). still in march with 11.\r\n  days \"2015/04/01\" to \"2016/04/15\" (15 - 1) = 14 days\r\n  months \"2016/04/15\" to \"2016/05/15\" 1 months\r\n  result field diff\r\n    year 1, month 1, day 26\r\n\r\n  This logic applies all the way down to milliseconds.\r\n\r\n\r\n\r\n ",
+        "type": "Date.Date -> Date.Date -> Date.Extra.Duration.DeltaRecord"
+      },
+      {
+        "name": "zeroDelta",
+        "comment": " All zero delta.\r\nUseful as a starting point if you want to set a few fields only.\r\n",
+        "type": "Date.Extra.Duration.DeltaRecord"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Format",
+    "comment": " Date Format, turning dates into strings.\r\n\r\nThe format code originally came from and was modified and extended from.\r\nhttps://github.com/mgold/elm-date-format/blob/1.0.4/src/Date/Format.elm\r\n\r\n## Date presentation\r\n@docs format\r\n@docs formatUtc\r\n@docs formatOffset\r\n\r\n## Extra presentation convenience\r\n@docs isoString\r\n@docs isoStringNoOffset\r\n@docs utcIsoString\r\n\r\n## Low level formats used in specific places in library.\r\n@docs isoDateString\r\n@docs utcIsoDateString\r\n\r\n## Useful strings for format\r\n@docs isoFormat\r\n@docs isoMsecFormat\r\n@docs isoOffsetFormat\r\n@docs isoMsecOffsetFormat\r\n@docs isoDateFormat\r\n@docs isoTimeFormat\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "format",
+        "comment": " Use a format string to format a date.\r\nThis gets time zone offset from provided date.\r\n",
+        "type": "Date.Extra.Config.Config -> String -> Date.Date -> String"
+      },
+      {
+        "name": "formatOffset",
+        "comment": " This adjusts date for offset, and renders with the offset ",
+        "type": "Date.Extra.Config.Config -> Int -> String -> Date.Date -> String"
+      },
+      {
+        "name": "formatUtc",
+        "comment": " Convert date to utc then format it with offset set to 0 if rendered. ",
+        "type": "Date.Extra.Config.Config -> String -> Date.Date -> String"
+      },
+      {
+        "name": "isoDateFormat",
+        "comment": " ISO Date. ",
+        "type": "String"
+      },
+      {
+        "name": "isoDateString",
+        "comment": " Return date as string.\r\n\r\nLow level routine required by areas like checkDateResult to avoid\r\nrecursive loops in Format.format.\r\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "isoFormat",
+        "comment": " ISO date time, 24hr. ",
+        "type": "String"
+      },
+      {
+        "name": "isoMsecFormat",
+        "comment": " ISO Date time with milliseconds, 24hr. ",
+        "type": "String"
+      },
+      {
+        "name": "isoMsecOffsetFormat",
+        "comment": " ISO Date time with milliseconds and timezone, 24hr. ",
+        "type": "String"
+      },
+      {
+        "name": "isoOffsetFormat",
+        "comment": " ISO Date time with timezone, 24hr. ",
+        "type": "String"
+      },
+      {
+        "name": "isoString",
+        "comment": " Return date and time as string in local zone. ",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "isoStringNoOffset",
+        "comment": " Return date and time as string in local zone, without\r\na timezone offset as otuput by `Format.isoString`.\r\nIntroduced to deal with dates assuming local time zone.\r\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "isoTimeFormat",
+        "comment": " ISO Time 24hr. ",
+        "type": "String"
+      },
+      {
+        "name": "utcIsoDateString",
+        "comment": " Utc variant of isoDateString.\r\n\r\nLow level routine required by areas like checkDateResult to avoid\r\nrecursive loops in Format.format.\r\n",
+        "type": "Date.Date -> String"
+      },
+      {
+        "name": "utcIsoString",
+        "comment": " Return date and time as string in ISO form with Z for UTC offset. ",
+        "type": "Date.Date -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Create",
+    "comment": " Create dates and offsets.\r\n\r\n@docs getTimezoneOffset\r\n@docs dateFromFields\r\n@docs timeFromFields\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dateFromFields",
+        "comment": " Create a date in current time zone from given fields.\r\nAll field values are clamped to there allowed range values.\r\nHours are input in 24 hour time range 0 to 23 valid.\r\nReturns dates in current time zone.\r\n\r\nUsing algorithm from http://howardhinnant.github.io/date_algorithms.html\r\nSpecifically days_from_civil function.\r\n\r\nThe two `<*>Compensate` values adjust for the zone offset time\r\nintroduced by `epochDate` as starting point.\r\n",
+        "type": "Int -> Date.Month -> Int -> Int -> Int -> Int -> Int -> Date.Date"
+      },
+      {
+        "name": "getTimezoneOffset",
+        "comment": " Return the time zone offset of current javascript environment underneath\r\nElm in Minutes. This should produce the same result getTimezoneOffset()\r\nfor a given date in the same javascript VM.\r\n\r\nTime zone offset is always for a given date and time so an input date is required.\r\n\r\nGiven that timezones change (though slowly) this is not strictly pure, but\r\nI suspect it is sufficiently pure to be useful. Is is dependent on the timezone\r\nmechanics of the javascript VM.\r\n\r\n### Example zone stuff.\r\nFor an offset of -600 minutes, in +10:00 time zone offset.\r\n",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "timeFromFields",
+        "comment": " Create a time in current time zone from given fields, for\r\nwhen you dont care about the date part but need time part anyway.\r\n\r\nAll field values are clamped to there allowed range values.\r\nThis can only return dates in current time zone.\r\n\r\nHours are input in 24 hour time range 0 to 23 valid.\r\n\r\nThis defaults to year 1970, month Jan, day of month 1 for date part.\r\n",
+        "type": "Int -> Int -> Int -> Int -> Date.Date"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Configs",
+    "comment": " Get a Date Extra Config based up on a locale code.\r\n\r\n@docs getConfig\r\n@docs configs\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "configs",
+        "comment": " Built in configurations. ",
+        "type": "Dict.Dict String Date.Extra.Config.Config"
+      },
+      {
+        "name": "getConfig",
+        "comment": " Get a Date Extra Config for a locale id.\r\n\r\nLower case matches strings and accepts \"-\" or \"_\" to seperate\r\nthe characters in code.\r\n\r\nReturns \"en_us\" config if it can't find a match in configs.\r\n",
+        "type": "String -> Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_en_gb",
+    "comment": " This is the UK english config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Bruno Girin\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for en-gb. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_en_us",
+    "comment": " This is the default english config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for en-us. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_en_au",
+    "comment": " This is the default english config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for en-au. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_ro_ro",
+    "comment": " This is the Romanian config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Cezar Halmagean\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for ro_ro. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_pl_pl",
+    "comment": " This is the Polish config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Bartosz Sokół\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for pl-pl. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_nl_nl",
+    "comment": " This is the Dutch config for formatting dates.\n\n@docs config\n\nCopyright (c) 2016 Mats Stijlaart\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for nl-nl.\n",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_pt_br",
+    "comment": " This is the Brazilian Portuguese config for formatting dates.\n\n@docs config\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for pt-br.\n",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_fi_fi",
+    "comment": " This is the Finnish config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Ossi Hanhinen\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for fi-fi. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_ja_jp",
+    "comment": " This is the Japanese config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2017 Yosuke Torii\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for ja_jp. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_et_ee",
+    "comment": " This is the default Estonian config for formatting dates.\n\n@docs config\n\nCopyright (c) 2016 Robin Luiten\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for en-us.\n",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config.Config_fr_fr",
+    "comment": " This is the French config for formatting dates.\r\n\r\n@docs config\r\n\r\nCopyright (c) 2016 Bruno Girin\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "config",
+        "comment": " Config for fr-fr. ",
+        "type": "Date.Extra.Config.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Period",
+    "comment": " Period is a fixed length of time. It is an elapsed time concept, which\r\ndoes not include the concept of Years Months or Daylight saving variations.\r\n\r\nName of type concept copied from NodaTime.\r\n\r\n@docs add\r\n@docs diff\r\n@docs Period\r\n@docs DeltaRecord\r\n@docs zeroDelta\r\n@docs toTicks\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [
+      {
+        "name": "DeltaRecord",
+        "comment": " A multi granularity period delta. ",
+        "args": [],
+        "type": "{ week : Int , day : Int , hour : Int , minute : Int , second : Int , millisecond : Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Period",
+        "comment": " A Period.\r\n\r\nWeek is a convenience for users if they want to use it, it does\r\njust scale Day in functionality so is not strictly required.\r\n\r\nDELTARECORD values are multiplied addend on application.\r\n",
+        "args": [],
+        "cases": [
+          [
+            "Millisecond",
+            []
+          ],
+          [
+            "Second",
+            []
+          ],
+          [
+            "Minute",
+            []
+          ],
+          [
+            "Hour",
+            []
+          ],
+          [
+            "Day",
+            []
+          ],
+          [
+            "Week",
+            []
+          ],
+          [
+            "Delta",
+            [
+              "Date.Extra.Period.DeltaRecord"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "add",
+        "comment": " Add Period count to date. ",
+        "type": "Date.Extra.Period.Period -> Int -> Date.Date -> Date.Date"
+      },
+      {
+        "name": "diff",
+        "comment": " Return a Period representing date difference. date1 - date2.\r\n\r\nIf  you add the result of this function to date2 with addend of 1\r\nwill return date1.\r\n ",
+        "type": "Date.Date -> Date.Date -> Date.Extra.Period.DeltaRecord"
+      },
+      {
+        "name": "toTicks",
+        "comment": " Return tick counts for periods.\r\nUseful to get total ticks in a Delta.\r\n",
+        "type": "Date.Extra.Period.Period -> Int"
+      },
+      {
+        "name": "zeroDelta",
+        "comment": " All zero delta.\r\nUseful as a starting point if you want to set a few fields only.\r\n",
+        "type": "Date.Extra.Period.DeltaRecord"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Compare",
+    "comment": " Compare dates.\r\n\r\n@docs is\r\n@docs is3\r\n@docs Compare2\r\n@docs Compare3\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Compare2",
+        "comment": " Date comparison type for 2 dates.\r\n\r\n* After\r\n * Return True if date1 is after date2.\r\n* Before\r\n * Return True if date1 is before date2.\r\n* Same\r\n * Return True if date1 is same as date2.\r\n* SameOrAfter\r\n * Return True if date1 is same or after date2.\r\n* SameOrBefore\r\n * Return True if date1 is same or before date2.\r\n",
+        "args": [],
+        "cases": [
+          [
+            "After",
+            []
+          ],
+          [
+            "Before",
+            []
+          ],
+          [
+            "Same",
+            []
+          ],
+          [
+            "SameOrAfter",
+            []
+          ],
+          [
+            "SameOrBefore",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Compare3",
+        "comment": " Date comparison type for 3 dates.\r\n\r\nBetween does not care if date2 > date3 or date2 < date3.\r\n\r\n* Between\r\n * Return True if date1 is After date2 and Before date3\r\n * Return True if date1 is After date3 and Before date2\r\n* BetweenOpenStart\r\n * Return True if date1 is SameOrAfter date2 and Before date3\r\n* BetweenOpenEnd\r\n * Return True if date1 is After date2 and SameOrBefore date3\r\n* BetweenOpen\r\n * Return True if date1 is SameOrAfter date2 and SameOrBefore date3\r\n",
+        "args": [],
+        "cases": [
+          [
+            "Between",
+            []
+          ],
+          [
+            "BetweenOpenStart",
+            []
+          ],
+          [
+            "BetweenOpenEnd",
+            []
+          ],
+          [
+            "BetweenOpen",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "is",
+        "comment": " Compare two dates.\r\n",
+        "type": "Date.Extra.Compare.Compare2 -> Date.Date -> Date.Date -> Bool"
+      },
+      {
+        "name": "is3",
+        "comment": " Compare three dates.\r\n\r\nThis figures out the low and high bounds from date2\r\nand date3 using minimum and maximum of them respectively.\r\n",
+        "type": "Date.Extra.Compare.Compare3 -> Date.Date -> Date.Date -> Date.Date -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_en_us",
+    "comment": " English values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " Returns a common english idiom for days of month.\r\nPad indicates space pad the day of month value so single\r\ndigit outputs have space padding to make them same\r\nlength as double digit days of monnth.\r\n",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_ro_ro",
+    "comment": " Romanian values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2016 Cezar Halmagean\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " No suffixes for Romanian ",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Config",
+    "comment": " Date configuration.\r\n\r\nFor i18n for day and month names.\r\nParameter to Format.format* functions.\r\n\r\nThere is scope to put in some default format strings here.\r\n\r\n@docs Config\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Configuration for formatting dates. ",
+        "args": [],
+        "type": "{ i18n : { dayShort : Date.Day -> String , dayName : Date.Day -> String , monthShort : Date.Month -> String , monthName : Date.Month -> String , dayOfMonthWithSuffix : Bool -> Int -> String } , format : { date : String , longDate : String , time : String , longTime : String , dateTime : String , firstDayOfWeek : Date.Day } }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_pt_br",
+    "comment": " Brazilian Portuguese values for day and month names.\n\n@docs dayShort\n@docs dayName\n@docs monthShort\n@docs monthName\n@docs dayOfMonthWithSuffix\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " Returns a common Brazilian Portuguse idiom for days of month. Pad indicates\nspace pad the day of month value so single digit outputs have space padding to\nmake them same length as double digit days of month.\n\nBecause only one day has a suffix I am not sure what to do with padding.\nHere 4 left seemed wrong as its a lot of white space for most numbers\nso have reduced it to 2.\n",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name.\n",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name.\n",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_nl_nl",
+    "comment": " Dutch values for day and month names.\n\n@docs dayShort\n@docs dayName\n@docs monthShort\n@docs monthName\n@docs dayOfMonthWithSuffix\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " There is no idiom of day suffixes in Dutch. ",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name.\n",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name.\n",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_ja_jp",
+    "comment": " Japanese values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2017 Yosuke Torii\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " No suffixes for Japanese ",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_pl_pl",
+    "comment": " Polish values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2016 Bartosz Sokół\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " This may not do anything in French ",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_fr_fr",
+    "comment": " French values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2016 Bruno Girin\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " Returns a common French idiom for days of month.\r\nPad indicates space pad the day of month value so single\r\ndigit outputs have space padding to make them same\r\nlength as double digit days of month.\r\n\r\nNote that the French idiom is to use the ordinal number\r\nfor the first day of the month (1er janvier) and\r\ncardinal numbers for all other days (15 janvier). This\r\nmethod doesn't pad the value on the right even if the\r\n`pad` argument is `true`.\r\n",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_et_ee",
+    "comment": " Estonian values for day and month names.\n\n@docs dayShort\n@docs dayName\n@docs monthShort\n@docs monthName\n@docs dayOfMonthWithSuffix\n\nCopyright (c) 2016 Robin Luiten\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " Nothing to do here for Estonian.\n",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name.\n",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name.\n",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name.\n",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.I18n.I_fi_fi",
+    "comment": " Finnish values for day and month names.\r\n\r\n@docs dayShort\r\n@docs dayName\r\n@docs monthShort\r\n@docs monthName\r\n@docs dayOfMonthWithSuffix\r\n\r\nCopyright (c) 2016 Ossi Hanhinen\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dayName",
+        "comment": " Day full name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "dayOfMonthWithSuffix",
+        "comment": " This may not do anything in Finish ",
+        "type": "Bool -> Int -> String"
+      },
+      {
+        "name": "dayShort",
+        "comment": " Day short name. ",
+        "type": "Date.Day -> String"
+      },
+      {
+        "name": "monthName",
+        "comment": " Month full name. ",
+        "type": "Date.Month -> String"
+      },
+      {
+        "name": "monthShort",
+        "comment": " Month short name. ",
+        "type": "Date.Month -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Extra.Core",
+    "comment": " Date core.\r\n\r\n## Info\r\n@docs monthToInt\r\n@docs intToMonth\r\n@docs daysInMonth\r\n@docs monthList\r\n@docs daysInNextMonth\r\n@docs daysInPrevMonth\r\n@docs daysInMonthDate\r\n@docs isLeapYear\r\n@docs isLeapYearDate\r\n@docs yearToDayLength\r\n@docs isoDayOfWeek\r\n\r\n## Utility\r\n@docs toFirstOfMonth\r\n@docs firstOfNextMonthDate\r\n@docs lastOfMonthDate\r\n@docs lastOfPrevMonthDate\r\n@docs daysBackToStartOfWeek\r\n\r\n## Conversion\r\n@docs fromTime\r\n@docs toTime\r\n\r\n## Iteration Utility\r\n@docs nextDay\r\n@docs prevDay\r\n@docs nextMonth\r\n@docs prevMonth\r\n\r\n## Date constants\r\n@docs epochDateStr\r\n\r\n## Date constants\r\n@docs ticksAMillisecond\r\n@docs ticksASecond\r\n@docs ticksAMinute\r\n@docs ticksAnHour\r\n@docs ticksADay\r\n@docs ticksAWeek\r\n\r\nCopyright (c) 2016 Robin Luiten\r\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "daysBackToStartOfWeek",
+        "comment": " Return number of days back to start of week day.\r\n\r\nFirst parameter Date.day - is current day of week.\r\nSecond parameter Date.day - is start day of week.\r\n",
+        "type": "Date.Day -> Date.Day -> Int"
+      },
+      {
+        "name": "daysInMonth",
+        "comment": " Return days in month for year month. ",
+        "type": "Int -> Date.Month -> Int"
+      },
+      {
+        "name": "daysInMonthDate",
+        "comment": " Days in month for given date. ",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "daysInNextMonth",
+        "comment": " Return days in next calendar month. ",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "daysInPrevMonth",
+        "comment": " Return days in previous calendar month. ",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "epochDateStr",
+        "comment": " Epoch starting point for tick 0. ",
+        "type": "String"
+      },
+      {
+        "name": "firstOfNextMonthDate",
+        "comment": " Return first of next month date. ",
+        "type": "Date.Date -> Date.Date"
+      },
+      {
+        "name": "fromTime",
+        "comment": " Convenience fromTime as time ticks are Elm Ints in this library. ",
+        "type": "Int -> Date.Date"
+      },
+      {
+        "name": "intToMonth",
+        "comment": " Return integer as month. Jan <= 1 Feb == 2 up to Dec > 11. ",
+        "type": "Int -> Date.Month"
+      },
+      {
+        "name": "isLeapYear",
+        "comment": " Return True if Year is a leap year. ",
+        "type": "Int -> Bool"
+      },
+      {
+        "name": "isLeapYearDate",
+        "comment": " Return True if Year of Date is a leap year. ",
+        "type": "Date.Date -> Bool"
+      },
+      {
+        "name": "isoDayOfWeek",
+        "comment": " Return the Iso DayOfWeek Monday 1, to Sunday 7. ",
+        "type": "Date.Day -> Int"
+      },
+      {
+        "name": "lastOfMonthDate",
+        "comment": " Resturn date of last day of month. ",
+        "type": "Date.Date -> Date.Date"
+      },
+      {
+        "name": "lastOfPrevMonthDate",
+        "comment": " Return last of previous month date. ",
+        "type": "Date.Date -> Date.Date"
+      },
+      {
+        "name": "monthList",
+        "comment": " List of months in order from Jan to Dec. ",
+        "type": "List Date.Month"
+      },
+      {
+        "name": "monthToInt",
+        "comment": " Return month as integer. Jan = 1 to Dec = 12. ",
+        "type": "Date.Month -> Int"
+      },
+      {
+        "name": "nextDay",
+        "comment": " Return next day in calendar sequence. ",
+        "type": "Date.Day -> Date.Day"
+      },
+      {
+        "name": "nextMonth",
+        "comment": " Return next month in calendar sequence. ",
+        "type": "Date.Month -> Date.Month"
+      },
+      {
+        "name": "prevDay",
+        "comment": " Return previous day in calendar sequence. ",
+        "type": "Date.Day -> Date.Day"
+      },
+      {
+        "name": "prevMonth",
+        "comment": " Return previous month in calendar sequence. ",
+        "type": "Date.Month -> Date.Month"
+      },
+      {
+        "name": "ticksADay",
+        "comment": " Ticks in a day. ",
+        "type": "Int"
+      },
+      {
+        "name": "ticksAMillisecond",
+        "comment": " Ticks in a millisecond. (this is 1 on Win 7 in Chrome) ",
+        "type": "Int"
+      },
+      {
+        "name": "ticksAMinute",
+        "comment": " Ticks in a minute. ",
+        "type": "Int"
+      },
+      {
+        "name": "ticksASecond",
+        "comment": " Ticks in a second. ",
+        "type": "Int"
+      },
+      {
+        "name": "ticksAWeek",
+        "comment": " Ticks in a week. ",
+        "type": "Int"
+      },
+      {
+        "name": "ticksAnHour",
+        "comment": " Ticks in an hour. ",
+        "type": "Int"
+      },
+      {
+        "name": "toFirstOfMonth",
+        "comment": " Return date of first of month. ",
+        "type": "Date.Date -> Date.Date"
+      },
+      {
+        "name": "toTime",
+        "comment": " Convenience toTime as time ticks are Elm Ints in this library. ",
+        "type": "Date.Date -> Int"
+      },
+      {
+        "name": "yearToDayLength",
+        "comment": " Return number of days in a year. ",
+        "type": "Int -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

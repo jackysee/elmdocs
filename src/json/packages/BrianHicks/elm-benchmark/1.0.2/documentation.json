@@ -1,0 +1,316 @@
+[
+  {
+    "name": "Benchmark.Runner",
+    "comment": " Browser Benchmark Runner\n\n@docs program, BenchmarkProgram\n",
+    "aliases": [
+      {
+        "name": "BenchmarkProgram",
+        "comment": " A handy type alias for values produced by [`program`](#program)\n",
+        "args": [],
+        "type": "Platform.Program Basics.Never Benchmark.Runner.Model Benchmark.Runner.Msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "program",
+        "comment": " Create a runner program from a benchmark. For example:\n\n    main : BenchmarkProgram\n    main =\n        Runner.program <|\n            Benchmark.group \"your benchmarks\"\n                [ -- your benchmarks here\n                ]\n\nCompile this and visit the result in your browser to run the benchmarks.\n",
+        "type": "Benchmark.Benchmark -> Benchmark.Runner.BenchmarkProgram"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Benchmark.Reporting",
+    "comment": " Reporting for Benchmarks\n\n@docs Report, Status, Stats, stats\n\n@docs fromBenchmark\n\n# Analysis\n@docs totalOperations, totalRuntime\n\n@docs meanRuntime, compareMeanRuntime\n\n@docs operationsPerSecond, compareOperationsPerSecond\n\n# Serialization\n@docs encoder, decoder\n",
+    "aliases": [
+      {
+        "name": "Stats",
+        "comment": " Stats returned from a successful benchmarking run\n",
+        "args": [],
+        "type": "{ sampleSize : Int, samples : List Time.Time }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Report",
+        "comment": " Reports are the public version of Benchmarks.\n\nEach tag of Report has a name and some other information about the structure of\na benchmarking run.\n",
+        "args": [],
+        "cases": [
+          [
+            "Benchmark",
+            [
+              "String",
+              "Benchmark.Reporting.Status"
+            ]
+          ],
+          [
+            "Group",
+            [
+              "String",
+              "List Benchmark.Reporting.Report"
+            ]
+          ],
+          [
+            "Compare",
+            [
+              "String",
+              "Benchmark.Reporting.Report",
+              "Benchmark.Reporting.Report"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Status",
+        "comment": " The current status of a single benchmark.\n",
+        "args": [],
+        "cases": [
+          [
+            "ToSize",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "Pending",
+            [
+              "Time.Time",
+              "Int",
+              "List Time.Time"
+            ]
+          ],
+          [
+            "Failure",
+            [
+              "Benchmark.LowLevel.Error"
+            ]
+          ],
+          [
+            "Success",
+            [
+              "Benchmark.Reporting.Stats"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "compareMeanRuntime",
+        "comment": " Compare mean runtimes, given as a percentage difference of the first to the\nsecond\n",
+        "type": "Benchmark.Reporting.Stats -> Benchmark.Reporting.Stats -> Float"
+      },
+      {
+        "name": "compareOperationsPerSecond",
+        "comment": " Compare operations per second, given as a percentage difference of the first\nto the second\n",
+        "type": "Benchmark.Reporting.Stats -> Benchmark.Reporting.Stats -> Float"
+      },
+      {
+        "name": "decoder",
+        "comment": " parse a Report from a JSON value\n",
+        "type": "Json.Decode.Decoder Benchmark.Reporting.Report"
+      },
+      {
+        "name": "encoder",
+        "comment": " convert a Report to a JSON value\n",
+        "type": "Benchmark.Reporting.Report -> Json.Encode.Value"
+      },
+      {
+        "name": "fromBenchmark",
+        "comment": " Get a report from a Benchmark.\n",
+        "type": "Benchmark.Internal.Benchmark -> Benchmark.Reporting.Report"
+      },
+      {
+        "name": "meanRuntime",
+        "comment": " Calculate mean runtime. The returned value is `(runtime, stddev)`\n",
+        "type": "Benchmark.Reporting.Stats -> ( Time.Time, Time.Time )"
+      },
+      {
+        "name": "operationsPerSecond",
+        "comment": " Calculate operations per second. The returned value is `(meanOpsPerSec, stddev)`\n",
+        "type": "Benchmark.Reporting.Stats -> ( Float, Float )"
+      },
+      {
+        "name": "stats",
+        "comment": " Calculate stats from a sample size and total runtime\n",
+        "type": "Int -> List Time.Time -> Benchmark.Reporting.Stats"
+      },
+      {
+        "name": "totalOperations",
+        "comment": " total number of samples\n",
+        "type": "Benchmark.Reporting.Stats -> Int"
+      },
+      {
+        "name": "totalRuntime",
+        "comment": " total runtime\n",
+        "type": "Benchmark.Reporting.Stats -> Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Benchmark",
+    "comment": " Benchmark Elm Programs\n\n@docs Benchmark\n\n# Creating Benchmarks\n@docs benchmark, benchmark1, benchmark2, benchmark3, benchmark4, benchmark5, benchmark6, benchmark7, benchmark8, describe, compare\n\n# Sizing\n@docs withRuntime\n\n# Running\n@docs step\n",
+    "aliases": [
+      {
+        "name": "Benchmark",
+        "comment": " Benchmarks that contain potential, in-progress, and completed runs.\n\nTo make these, try [`benchmark`](#benchmark), [`describe`](#describe), or\n[`compare`](#compare)\n",
+        "args": [],
+        "type": "Benchmark.Internal.Benchmark"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "benchmark",
+        "comment": " Benchmark a function.\n\nThe first argument to the benchmark* functions is the name of the thing you're\nmeasuring. The rest of the arguments specify how to take samples.\n\nIn the case of `benchmark`, we just need an anonymous function that performs\nsome calculation.\n\n    benchmark \"list head\" (\\_ -> List.head [1])\n\n`benchmark1` through `benchmark8` have a nicer API which doesn't force you to\ndefine anonymous functions. For example, the benchmark above can be defined as:\n\n    benchmark1 \"list head\" List.head [1]\n",
+        "type": "String -> (() -> a) -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark1",
+        "comment": " Benchmark a function with a single argument.\n\n    benchmark1 \"list head\" List.head [1]\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b) -> a -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark2",
+        "comment": " Benchmark a function with two arguments.\n\n    benchmark2 \"dict get\" Dict.get \"a\" (Dict.singleton \"a\" 1)\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c) -> a -> b -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark3",
+        "comment": " Benchmark a function with three arguments.\n\n    benchmark3 \"dict insert\" Dict.insert \"b\" 2 (Dict.singleton \"a\" 1)\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d) -> a -> b -> c -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark4",
+        "comment": " Benchmark a function with four arguments.\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d -> e) -> a -> b -> c -> d -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark5",
+        "comment": " Benchmark a function with five arguments.\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d -> e -> f) -> a -> b -> c -> d -> e -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark6",
+        "comment": " Benchmark a function with six arguments.\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d -> e -> f -> g) -> a -> b -> c -> d -> e -> f -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark7",
+        "comment": " Benchmark a function with seven arguments.\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d -> e -> f -> g -> h) -> a -> b -> c -> d -> e -> f -> g -> Benchmark.Benchmark"
+      },
+      {
+        "name": "benchmark8",
+        "comment": " Benchmark a function with eight arguments.\n\nSee the docs for [`benchmark`](#benchmark) for why this exists.\n",
+        "type": "String -> (a -> b -> c -> d -> e -> f -> g -> h -> i) -> a -> b -> c -> d -> e -> f -> g -> h -> Benchmark.Benchmark"
+      },
+      {
+        "name": "compare",
+        "comment": " Specify that two benchmarks are meant to be directly compared.\n\nAs with [`benchmark`](#benchmark), the first argument is the name for the\ncomparison.\n\n    compare \"initialize\"\n        (benchmark2 \"HAMT\" HAMT.initialize 10000 identity)\n        (benchmark2 \"Core\" Array.initialize 10000 identity)\n\nWhen you're doing comparisons, try as hard as possible to **make the arguments\nthe same**. The comparison above wouldn't be accurate if we told HAMT to\ninitialize an array with only 5,000 elements. Likewise, try to **use the same\nbenchmark function**. For example, use only `benchmark2` instead of mixing\n`benchmark` and `benchmark2`. The difference between the different benchmark\nfunctions is small, but not so small that it won't influence your results.\nSee the chart in the README for more on the runtime cost of different functions.\n",
+        "type": "String -> Benchmark.Benchmark -> Benchmark.Benchmark -> Benchmark.Benchmark"
+      },
+      {
+        "name": "describe",
+        "comment": " Group a number of benchmarks together. Grouping benchmarks using `describe`\nwill never effect measurement, only organization.\n\nYou'll typically have at least one call to this in your benchmark program, at\nthe top level:\n\n    describe \"your program\"\n        [ -- all your benchmarks\n        ]\n",
+        "type": "String -> List Benchmark.Benchmark -> Benchmark.Benchmark"
+      },
+      {
+        "name": "step",
+        "comment": " Step a benchmark forward to completion. This is where all the interleaving\nmagic happens.\n\n`step` is only useful for writing runners. You'll probably never need it!\n",
+        "type": "Benchmark.Benchmark -> Maybe.Maybe (Task.Task Basics.Never Benchmark.Benchmark)"
+      },
+      {
+        "name": "withRuntime",
+        "comment": " Set the expected runtime for a [`Benchmark`](#Benchmark). This is the\ndefault method of determining benchmark run size.\n\nFor example, to set the expected runtime to 1 second (away from the default of 5\nseconds):\n\n    benchmark1 \"list head\" List.head [1] |> withRuntime Time.second\n\nThis works with all the kinds of benchmarks you can create. If you provide a\ncomposite benchmark (a group or comparison) the same expected runtime will be\nset for all members.\n\nNote that this sets the *expected* runtime, not *actual* runtime. You're\nguaranteed to get *at least* this runtime. It will usually be more (usually on\nthe order of a several hundredths of a second.)\n",
+        "type": "Time.Time -> Benchmark.Benchmark -> Benchmark.Benchmark"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Benchmark.LowLevel",
+    "comment": " Low Level Elm Benchmarking API\n\nThis API exposes the raw tasks necessary to create higher-level benchmarking\nabstractions.\n\nAs a user, you're probably not going to need to use this library. Take a look at\n`Benchmark` instead, it has the user-friendly primitives. If you *do* find\nyourself using this library often, please [open an issue on\n`elm-benchmark`](https://github.com/BrianHicks/elm-benchmark/issues/new) and\nwe'll find a way to make your use case friendlier.\n\n# Operations\n@docs Operation, operation, operation1, operation2,  operation3, operation4, operation5, operation6, operation7, operation8\n\n# Measuring\n@docs Error, sample\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Error",
+        "comment": " Error states that can terminate a sample.\n",
+        "args": [],
+        "cases": [
+          [
+            "StackOverflow",
+            []
+          ],
+          [
+            "UnknownError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Operation",
+        "comment": " A low-level representation of a benchmarking operation. This contains a\nsingle function call.\n\nCreate these using `operation` through `operation8` and take runtime samples\nusing `sample`.\n\n**Note:** Small samples of `operation` through `operation8` produce results that\nare close enough to be deceiving. Across large enough sample sizes, comparing\noperations created with different functions will result in larger and larger\nskews. Prefer `operation1` through `operation8` if you can (they're easier to\nuse) but if in doubt, stick everything in `operation`. Benchmark speed is not an\n*absolute* measure, but a *relative* one. Make sure that you get your relations\nright. See the chart in the README for more context.\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "operation",
+        "comment": " Create an operation.\n\nSee docs for [`Operation`](#Operation).\n",
+        "type": "(() -> a) -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation1",
+        "comment": " Create an operation for a function with a single argument.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b) -> a -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation2",
+        "comment": " Create an operation for a function with two arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c) -> a -> b -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation3",
+        "comment": " Create an operation for a function with three arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d) -> a -> b -> c -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation4",
+        "comment": " Create an operation for a function with four arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d -> e) -> a -> b -> c -> d -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation5",
+        "comment": " Create an operation for a function with five arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d -> e -> f) -> a -> b -> c -> d -> e -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation6",
+        "comment": " Create an operation for a function with six arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g) -> a -> b -> c -> d -> e -> f -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation7",
+        "comment": " Create an operation for a function with seven arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h) -> a -> b -> c -> d -> e -> f -> g -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "operation8",
+        "comment": " Create an operation for a function with eight arguments.\n\nSee docs for [`operation`](#operation).\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> i) -> a -> b -> c -> d -> e -> f -> g -> h -> Benchmark.LowLevel.Operation"
+      },
+      {
+        "name": "sample",
+        "comment": " Run an operation a specified number of times. The returned value is the\ntotal time it took for the given number of runs.\n\nIn the browser, high-resolution timing data from these functions comes from the\n[Performance API](https://developer.mozilla.org/en-US/docs/Web/API/Performance)\nand is accurate to 5µs. If `performance.now` is unavailable, it will fall back\nto [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date),\naccurate to 1ms.\n\nIn alternative runners, consult the runner documentation for resolution\ninformation.\n",
+        "type": "Int -> Benchmark.LowLevel.Operation -> Task.Task Benchmark.LowLevel.Error Time.Time"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

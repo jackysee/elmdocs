@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Flash",
+    "comment": "\nA Flash module\n\nThis module provides a mechanism for controlling the events around showing and hiding a flash message.\n\n# Types\n@docs State\n\n# Initializing an empty flash message\n@docs none\n\n# Getting the flash message out\n@docs getMessage\n\n# Setting the flash and timer\n@docs setFlash\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "State",
+        "comment": " The State type\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "getMessage",
+        "comment": " Getting the flash message out of the state container\n",
+        "type": "Flash.State -> Maybe.Maybe String"
+      },
+      {
+        "name": "none",
+        "comment": " An empty State, no flash message\n",
+        "type": "Flash.State"
+      },
+      {
+        "name": "setFlash",
+        "comment": " Initializing the timer with a flash message\n\n  Example:\n\n    Flash.setFlash RemoveFlash 2000 \"My flash message for 2 seconds\"\n",
+        "type": "msg -> Time.Time -> String -> ( Flash.State, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

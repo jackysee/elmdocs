@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Elmoji",
+    "comment": " This library is for conveniently supporting\n[emoji](http://unicode.org/emoji/charts/full-emoji-list.html) in Elm\napplications.\n\nThere is a high-level drop-in replacement for `Html.text` which has to make\nsome extra assumptions about the app, and customizable mapping over emojis.\n\n# The high level\n@docs text_\n\n# Customizable\n@docs textWith, replaceWithEmojiOne, replaceWithTwemoji\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "replaceWithEmojiOne",
+        "comment": " Turn an emoji unicode sequence into an `<img>` pointing at\n[EmojiOne](http://emojione.com/), with classes `elmoji-img` and `elmoji-one`.\n\n    -- this is the definition of text' from this module.\n    text' : String -> Html a\n    text' =\n        textWith replaceWithEmojiOne >> span [ class \"elmoji\" ]\n",
+        "type": "List String -> Html.Html a"
+      },
+      {
+        "name": "replaceWithTwemoji",
+        "comment": " Convert an emoji unicode sequence into a\n[Twemoji](http://twitter.github.io/twemoji/) `<img>` tag. It will have CSS\nclasses `elmoji-img` and `elmoji-twem`.\n\n    -- build your own Html.text drop-in replacement\n    text' : String -> Html a\n    text' body =\n        span [] ( textWith replaceWithTwemoji body )\n",
+        "type": "List String -> Html.Html a"
+      },
+      {
+        "name": "textWith",
+        "comment": " Create a customized emoji converter. The function argument maps emoji\n(identified by the lowercase hex-encoded unicode code point sequence) to\nHtml nodes.\n\n    mapEmoji : List String -> Html a\n    mapEmoji codePoints =\n        text (\"(I'm code \" ++ (String.join \"-\" codePoints) ++ \")\")\n\n    div []\n        ( textWith mapEmoji \"here's a penguin:🐧\" )\n",
+        "type": "(List String -> Html.Html a) -> String -> List (Html.Html a)"
+      },
+      {
+        "name": "text_",
+        "comment": " Convert a String with unicode emoji characters into an Html element\ncontaining the text with `<img>` tags replacing the emojis.\n\nThis function produces a `<span class='elmoji'>` containing the text, replacing\nemojis with `<img class='elmoji-img elmoji-one'>` tags pointing to CDN-hosted\n[EmojiOne](http://emojione.com/).\n\n    div [] [ text' \"Live long and prosper 🖖\" ]\n",
+        "type": "String -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

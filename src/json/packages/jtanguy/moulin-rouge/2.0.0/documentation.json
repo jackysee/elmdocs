@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Slides",
+    "comment": " This library helps you create slideshows\n\n# Creation\n@docs slide, slideshow\n\n# View\n@docs view, beginning\n\n# Run\n@docs basicProgram, Presenter, keyboard\n\n\n# Update\n@docs Msg\n\n# Definition\n@docs Slideshow, Slide, Config, State\n\n",
+    "aliases": [
+      {
+        "name": "Presenter",
+        "comment": " Represent a presenting tool, such as a keyboard or a wireless remote.\nYou can implement your own presenters and use them for your slideshow.\n",
+        "args": [],
+        "type": "{ events : Platform.Sub.Sub (Maybe.Maybe Slides.Msg) }"
+      },
+      {
+        "name": "Slideshow",
+        "comment": " Helpers for working with a slideshow\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ config : Slides.Config msg , update : msg -> Slides.State -> Slides.State }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration for your slideshow, with all the slides.\n\n**Note:** Your `Config` should *never* be held in your model.\nIt should only appear in `view` code.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Represent the set of actions one can perform in the slideshow\n",
+        "args": [],
+        "cases": [
+          [
+            "Next",
+            []
+          ],
+          [
+            "Prev",
+            []
+          ],
+          [
+            "Begin",
+            []
+          ],
+          [
+            "End",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Slide",
+        "comment": " Represents a slide contents\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " Track the current state of the slideshow\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "basicProgram",
+        "comment": " Create a simple Program from a slideshow.\n",
+        "type": "List (Slides.Slide (Maybe.Maybe Slides.Msg)) -> Platform.Program Basics.Never Slides.State (Maybe.Maybe Slides.Msg)"
+      },
+      {
+        "name": "beginning",
+        "comment": " Create a slideshow state. It's the first slide\n",
+        "type": "Slides.State"
+      },
+      {
+        "name": "keyboard",
+        "comment": " A basic keyboard presenter\nThe Left/Right arrow keys and PageDown/PageUp keys move Forwards and Backwards\nrespectively, and the Begin/End keys go to the beginning/end of the slideshow.\n",
+        "type": "Slides.Presenter"
+      },
+      {
+        "name": "slide",
+        "comment": " Create a slide with its contents and style.\n\n    mySlide : Slide msg\n    mySlide =\n        slide\n            [ ( \"background-color\", \"#111\" )\n            , ( \"color\", \"#eee\" )\n            ]\n            [ text \"Hello world !\" ]\n\nFor more complex css, you might want to use a library like\n[elm-css](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest).\n",
+        "type": "List ( String, String ) -> List (Html.Html msg) -> Slides.Slide msg"
+      },
+      {
+        "name": "slideshow",
+        "comment": " Create a slideshow configuration and returns a helper function to update the\nslideshow state.\n\n    { config, update } =\n        Slides.slideshow\n            { slides =\n                [ slide [ h1 [] [ text \"Hello World !\" ] ] []\n                , slide [ h1 [] [ text \"The End.\" ] ] []\n                ]\n            }\n\nYou can then use the `config` and `update` functions in your application\n",
+        "type": "{ slides : List (Slides.Slide msg) , toMsg : msg -> Maybe.Maybe Slides.Msg } -> Slides.Slideshow msg"
+      },
+      {
+        "name": "view",
+        "comment": " Take a slideshow and turn it into html. The `Config` argument is the\nslideshow configuration, given by `Slides.config`.\n\n    view : { model | state: State} -> Html msg\n    view model =\n        Slides.view config model.state\n\n**Note:** Your `Config` should *not* be  in your model, and the `State` should\nonly be in the model.\n",
+        "type": "Slides.Config msg -> Slides.State -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

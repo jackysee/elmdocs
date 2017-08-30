@@ -1,0 +1,171 @@
+[
+  {
+    "name": "Quantiles",
+    "comment": " Calculate quantiles, using various rounding/interpolation functions \n(or providing your own).\n\n# Sorting\n\nBefore calling any quantile function, you must guarantee it is a sorted\n`List Float`.\n\n@docs sort\n\n# Single quantiles\n\nQuantiles are specified as a percentile between 0 and 1.\nNote an empty list of data results in `Nothing`.\n\n@docs quantile, quantileWith, quantileR1, quantileR2, quantileR3, quantileR4, quantileR5, quantileR6, quantileR7, quantileR8, quantileR9\n\n\n# Multiple quantiles\n\nQuantiles are specified as a list of percentiles between 0 and 1, and results\nare returned as a list matching the specified percentiles.\n\nNote an empty list of data results in `Nothing`.\n\n@docs quantiles, quantilesWith, quantilesR1, quantilesR2, quantilesR3, quantilesR4, quantilesR5, quantilesR6, quantilesR7, quantilesR8, quantilesR9\n\n\n# Predefined interpolation functions\n\nThese correspond to the R language types 1 to 9. For implementation details, see \n[wikipedia](https://en.wikipedia.org/wiki/Quantile) and \n[R sample quantiles](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/quantile) \ndocumentation.\n\n@docs r1, r2, r3, r4, r5, r6, r7, r8, r9\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "quantile",
+        "comment": " Calculate a single quantile. Note: uses the R default interpolation \nfunction (R-7).\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR1",
+        "comment": " Calculate a single quantile using the R-1 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR2",
+        "comment": " Calculate a single quantile using the R-2 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR3",
+        "comment": " Calculate a single quantile using the R-3 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR4",
+        "comment": " Calculate a single quantile using the R-4 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR5",
+        "comment": " Calculate a single quantile using the R-5 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR6",
+        "comment": " Calculate a single quantile using the R-6 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR7",
+        "comment": " Calculate a single quantile using the R-7 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR8",
+        "comment": " Calculate a single quantile using the R-8 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileR9",
+        "comment": " Calculate a single quantile using the R-9 interpolation function.\n",
+        "type": "Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantileWith",
+        "comment": " Calculate a single quantile using the given interpolation function.\n\n    median = quantileWith r5 0.5 data\n",
+        "type": "(Float -> Array.Array Float -> Maybe.Maybe Float) -> Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe Float"
+      },
+      {
+        "name": "quantiles",
+        "comment": " Calculate a list of quantiles. Note: uses the R default interpolation \nfunction (R-7).\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR1",
+        "comment": " Calculate a list of quantiles using the R-1 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR2",
+        "comment": " Calculate a list of quantiles using the R-2 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR3",
+        "comment": " Calculate a list of quantiles using the R-3 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR4",
+        "comment": " Calculate a list of quantiles using the R-4 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR5",
+        "comment": " Calculate a list of quantiles using the R-5 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR6",
+        "comment": " Calculate a list of quantiles using the R-6 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR7",
+        "comment": " Calculate a list of quantiles using the R-7 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR8",
+        "comment": " Calculate a list of quantiles using the R-8 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesR9",
+        "comment": " Calculate a list of quantiles using the R-9 interpolation function.\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "quantilesWith",
+        "comment": " Calculate a list of quantiles using the given _interpolation function_.\n\nIn most cases you will want to use one of the interpolation functions defined\nby this module, named `r1` to `r9`, following the naming convention used by R.\n\nSee below, \n[Predefined interpolation functions](#predefined-interpolation-functions).\n",
+        "type": "(Float -> Array.Array Float -> Maybe.Maybe Float) -> List Float -> Sort.TaggedList Float Sort.Sorted -> Maybe.Maybe (List Float)"
+      },
+      {
+        "name": "r1",
+        "comment": " The R-1 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r2",
+        "comment": " The R-2 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r3",
+        "comment": " The R-3 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r4",
+        "comment": " The R-4 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r5",
+        "comment": " The R-5 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r6",
+        "comment": " The R-6 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r7",
+        "comment": " The R-7 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r8",
+        "comment": " The R-8 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "r9",
+        "comment": " The R-9 interpolation function.\n",
+        "type": "Float -> Array.Array Float -> Maybe.Maybe Float"
+      },
+      {
+        "name": "sort",
+        "comment": " Sort a list of floats. Note you must pass your data into this function\nbefore calculating quantiles.\n\n    data |> sort |> quantilesR3 [0.25, 0.5, 0.75]\n\n",
+        "type": "List Float -> Sort.TaggedList Float Sort.Sorted"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "name": "MultikeyHandling",
+    "comment": " Extra helpers for building Html.Attribute handling multiple key combinations.\n\n# Html Attribute builder\n\n@docs onKeydown\n\n# Predefined key decoders\n\n@docs whenKeydown, whenEnter, whenMetaEnter, whenEscape, defaultKeyHandler\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultKeyHandler",
+        "comment": " Default key handler, always return fails\n",
+        "type": "Json.Decode.Decoder msg"
+      },
+      {
+        "name": "onKeydown",
+        "comment": " Build Html.Attribute from Json.Decoder\n",
+        "type": "Json.Decode.Decoder msg -> Html.Attribute msg"
+      },
+      {
+        "name": "whenEnter",
+        "comment": " Build Decoder on enter key\n",
+        "type": "msg -> Json.Decode.Decoder msg -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "whenEscape",
+        "comment": " Build Decoder on Escape key\n",
+        "type": "msg -> Json.Decode.Decoder msg -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "whenKeydown",
+        "comment": " Build Decoder on custom key code\n",
+        "type": "Int -> msg -> Json.Decode.Decoder msg -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "whenMetaEnter",
+        "comment": " Build Decoder on Meta + Enter key\n",
+        "type": "msg -> Json.Decode.Decoder msg -> Json.Decode.Decoder msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,230 @@
+[
+  {
+    "name": "Avl.Dict",
+    "comment": " A dictionary mapping unique keys to values. The keys can have\nany type, since the user is required to provide an explicit comparison\nfunction with type `key -> key -> Order`.\n\nThe interface is otherwise very similar to the core `Dict` type.\n\n\n# Dictionaries\n@docs Dict\n\n# Build\n@docs empty, singleton, insert, update, remove\n\n# Query\n@docs isEmpty, member, get, size, eq\n\n# Lists\n@docs keys, values, toList, fromList\n\n# Transform\n@docs foldl, foldr\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Dict",
+        "comment": " A dictionary from keys to values ",
+        "args": [
+          "k",
+          "v"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " The empty dictionary. ",
+        "type": "Avl.Dict.Dict k v"
+      },
+      {
+        "name": "eq",
+        "comment": " Tests if two dictionaries contain the same key-value pairs. ",
+        "type": "Avl.Eq k -> Avl.Eq v -> Avl.Dict.Dict k v -> Avl.Dict.Dict k v -> Bool"
+      },
+      {
+        "name": "foldl",
+        "comment": " Folds the given function over the dictionary's key-value pairs,\nstarting with the lowest-valued key and ending with the highest-valued one. ",
+        "type": "(k -> v -> b -> b) -> b -> Avl.Dict.Dict k v -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Folds the given function over the dictionary's key-value pairs,\nstarting with the highest-valued key and ending with the lowest-valued one. ",
+        "type": "(k -> v -> b -> b) -> b -> Avl.Dict.Dict k v -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Constructs a new dictionary from a list of key-value pairs. ",
+        "type": "Avl.Cmp k -> List ( k, v ) -> Avl.Dict.Dict k v"
+      },
+      {
+        "name": "get",
+        "comment": " Returns the value associated with the key. If the key isn't in\nthe dictionary, `Nothing` is returned. ",
+        "type": "Avl.Cmp k -> k -> Avl.Dict.Dict k v -> Maybe.Maybe v"
+      },
+      {
+        "name": "insert",
+        "comment": " Inserts a key-value mapping. If the key is already in the\ndictionary, the mapping is updated with the given value. ",
+        "type": "Avl.Cmp k -> k -> v -> Avl.Dict.Dict k v -> Avl.Dict.Dict k v"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " `True` if the dictionary is empty (i.e., maps no keys),\nFalse` otherwise. ",
+        "type": "Avl.Dict.Dict k v -> Bool"
+      },
+      {
+        "name": "keys",
+        "comment": " Returns a list of all the keys in the dictionary, in order from lowest\nto highest. ",
+        "type": "Avl.Dict.Dict k v -> List k"
+      },
+      {
+        "name": "member",
+        "comment": " `True` if the key is in the dictionary, `False` otherwise. ",
+        "type": "Avl.Cmp k -> k -> Avl.Dict.Dict k v -> Bool"
+      },
+      {
+        "name": "remove",
+        "comment": " Removes a key-value mapping. If the key is not in the dictionary,\nthen the dictionary is unchanged. ",
+        "type": "Avl.Cmp k -> k -> Avl.Dict.Dict k v -> Avl.Dict.Dict k v"
+      },
+      {
+        "name": "singleton",
+        "comment": " Creates a dictionary with one key-value mapping. ",
+        "type": "k -> v -> Avl.Dict.Dict k v"
+      },
+      {
+        "name": "size",
+        "comment": " The number of keys mapped by the dictionary. ",
+        "type": "Avl.Dict.Dict k v -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Returns a list of all the key-value pairs in the dictionary, in order\nfrom lowest to highest by key. ",
+        "type": "Avl.Dict.Dict k v -> List ( k, v )"
+      },
+      {
+        "name": "update",
+        "comment": " Updates a key-value mapping using the given function. If the function\nreturns `Nothing`, then any existing mapping for the given key will be removed. ",
+        "type": "Avl.Cmp k -> k -> (Maybe.Maybe v -> Maybe.Maybe v) -> Avl.Dict.Dict k v -> Avl.Dict.Dict k v"
+      },
+      {
+        "name": "values",
+        "comment": " Returns a list of all the values in the dictionary, in order of their\ncorresponding keys, from lowest to highest. ",
+        "type": "Avl.Dict.Dict k v -> List v"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Avl.Set",
+    "comment": " A set of elements. The elements can have any type,\nsince the user is required to provide an explicit comparison\nfunction with type `k -> k -> Order`.\n\n# Sets\n@docs Set\n\n# Build\n@docs empty, singleton, insert, remove, union, intersect, difference\n\n# Query\n@docs isEmpty, member, size, subset, eq\n\n# Lists\n@docs toList, fromList\n\n# Transform\n@docs foldl, foldr\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Set",
+        "comment": " A set of elements. ",
+        "args": [
+          "k"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "difference",
+        "comment": " Constructs the set difference of the given sets. ",
+        "type": "Avl.Cmp k -> Avl.Set.Set k -> Avl.Set.Set k -> Avl.Set.Set k"
+      },
+      {
+        "name": "empty",
+        "comment": " The empty set. ",
+        "type": "Avl.Set.Set k"
+      },
+      {
+        "name": "eq",
+        "comment": " Tests if two sets contain the same elements. ",
+        "type": "Avl.Eq k -> Avl.Set.Set k -> Avl.Set.Set k -> Bool"
+      },
+      {
+        "name": "foldl",
+        "comment": " Folds the given function over the elements of the set, in order from\nthe least element to the greatest. ",
+        "type": "(k -> b -> b) -> b -> Avl.Set.Set k -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Folds the given function over the elements of the set, in order from\nthe greatest element to the least. ",
+        "type": "(k -> b -> b) -> b -> Avl.Set.Set k -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Constructs a set from a list of elements. ",
+        "type": "Avl.Cmp k -> List k -> Avl.Set.Set k"
+      },
+      {
+        "name": "insert",
+        "comment": " Inserts an element into the set. ",
+        "type": "Avl.Cmp k -> k -> Avl.Set.Set k -> Avl.Set.Set k"
+      },
+      {
+        "name": "intersect",
+        "comment": " Constructs the intersection of the given sets. ",
+        "type": "Avl.Cmp k -> Avl.Set.Set k -> Avl.Set.Set k -> Avl.Set.Set k"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " `True` if the set is empty, `False` otherwise. ",
+        "type": "Avl.Set.Set k -> Bool"
+      },
+      {
+        "name": "member",
+        "comment": " `True` if the given element is in the set, `False` otherwise. ",
+        "type": "Avl.Cmp k -> k -> Avl.Set.Set k -> Bool"
+      },
+      {
+        "name": "remove",
+        "comment": " Removes an element from the set. ",
+        "type": "Avl.Cmp k -> k -> Avl.Set.Set k -> Avl.Set.Set k"
+      },
+      {
+        "name": "singleton",
+        "comment": " Constructs a set with a single element. ",
+        "type": "k -> Avl.Set.Set k"
+      },
+      {
+        "name": "size",
+        "comment": " The size (or cardinality) of the set. ",
+        "type": "Avl.Set.Set k -> Int"
+      },
+      {
+        "name": "subset",
+        "comment": " `True` if the first set is a subset of the second,\n`False` otherwise. ",
+        "type": "Avl.Cmp k -> Avl.Set.Set k -> Avl.Set.Set k -> Bool"
+      },
+      {
+        "name": "toList",
+        "comment": " Returns a list containing all of the set's elements, in order from\nleast to greatest. ",
+        "type": "Avl.Set.Set k -> List k"
+      },
+      {
+        "name": "union",
+        "comment": " Constructs the union of the given sets. ",
+        "type": "Avl.Cmp k -> Avl.Set.Set k -> Avl.Set.Set k -> Avl.Set.Set k"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Avl",
+    "comment": " AVL tree-based collections.\n\nUnlike the elm-core `Dict` and `Set` types, the collections\ndefined in this package can be used with any type of key,\nsince they require the user to provide an explicit comparison\nfunction.\n\nThe obvious downside of this approach is that the user must be\nvigilant to always use the *same* comparison function on the same\ndata structure.\n\nThe upside, of course, is that you are not limited to using\n`comparable` types as keys.\n\n(The implementation is based on Blelloch, Ferizovic, and Sun:\n\"[Just Join for Parallel Ordered Sets](https://www.cs.cmu.edu/~guyb/papers/BFS16.pdf),\" SPAA 2016.)\n\n# Comparison\n@docs Cmp\n\n# Equality\n@docs Eq\n\n# Utilities\n@docs cmpToEq\n\n",
+    "aliases": [
+      {
+        "name": "Cmp",
+        "comment": " The type of comparison functions over arbitrary key types. ",
+        "args": [
+          "k"
+        ],
+        "type": "k -> k -> Basics.Order"
+      },
+      {
+        "name": "Eq",
+        "comment": " The type of equality predicates over arbitrary value types (only\nused for equality tests over dictionaries and sets). ",
+        "args": [
+          "k"
+        ],
+        "type": "k -> k -> Bool"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "cmpToEq",
+        "comment": " Utility that weakens a comparison function into an equality\npredicate. ",
+        "type": "Avl.Cmp k -> Avl.Eq k"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

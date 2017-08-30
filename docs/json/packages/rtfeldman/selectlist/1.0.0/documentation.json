@@ -1,0 +1,94 @@
+[
+  {
+    "name": "SelectList",
+    "comment": " A `SelectList` is a nonempty list which always has exactly one element selected.\n\nIt is an example of a list [zipper](https://en.wikipedia.org/wiki/Zipper_(data_structure)).\n\n@docs SelectList, fromLists, singleton\n\n\n## Reading\n\n@docs toList, before, selected, after\n\n\n## Transforming\n\n@docs map, mapBy, Position, select, append, prepend\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Position",
+        "comment": " Used with [`mapBy`](#mapBy).\n",
+        "args": [],
+        "cases": [
+          [
+            "BeforeSelected",
+            []
+          ],
+          [
+            "Selected",
+            []
+          ],
+          [
+            "AfterSelected",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "SelectList",
+        "comment": " A nonempty list which always has exactly one element selected.\n\nCreate one using [`fromLists`](#fromLists).\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "after",
+        "comment": " Return the elements after the selected element.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.after\n\n    == [ 3, 4, 5 ]\n\n",
+        "type": "SelectList.SelectList a -> List a"
+      },
+      {
+        "name": "append",
+        "comment": " Add elements to the end of a `SelectList`.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4 ]\n        |> SelectList.append [ 5, 6 ]\n\n    == SelectList.fromLists [ 1 ] 2 [ 3, 4, 5, 6 ]\n\n",
+        "type": "List a -> SelectList.SelectList a -> SelectList.SelectList a"
+      },
+      {
+        "name": "before",
+        "comment": " Return the elements before the selected element.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.before\n\n    == [ 1, 2 ]\n\n",
+        "type": "SelectList.SelectList a -> List a"
+      },
+      {
+        "name": "fromLists",
+        "comment": " Returns a `SelectList`.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.selected\n\n    == 3\n\n",
+        "type": "List a -> a -> List a -> SelectList.SelectList a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform each element of the `SelectList`.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.map (\\num -> num * 2)\n\n    == SelectList.fromLists [ 2, 4 ] 6 [ 8, 10, 12 ]\n\n",
+        "type": "(a -> b) -> SelectList.SelectList a -> SelectList.SelectList b"
+      },
+      {
+        "name": "mapBy",
+        "comment": " Transform each element of the `SelectList`. The transform\nfunction receives a `Position` which is `Selected` if it was passed\nthe SelectList's selected element, `BeforeSelected` if it was passed an element\nbefore the selected element, and `AfterSelected` otherwise.\n\n    import SelectList exposing (Position(..))\n\n    doubleOrNegate position num =\n        if position == Selected then\n            num * -1\n        else\n            num * 2\n\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.mapBy doubleOrNegate\n\n    == SelectList.fromLists [ 2, 4 ] -3 [ 8, 10, 12 ]\n\n",
+        "type": "(SelectList.Position -> a -> b) -> SelectList.SelectList a -> SelectList.SelectList b"
+      },
+      {
+        "name": "prepend",
+        "comment": " Add elements to the beginning of a `SelectList`.\n\n    import SelectList\n\n    SelectList.fromLists [ 3 ] 4 [ 5, 6 ]\n        |> SelectList.prepend [ 1, 2 ]\n\n    == SelectList.fromLists [ 1, 2, 3 ] 4 [ 5, 6 ]\n\n",
+        "type": "List a -> SelectList.SelectList a -> SelectList.SelectList a"
+      },
+      {
+        "name": "select",
+        "comment": " Change the selected element to the first one which passes a\npredicate function. If no elements pass, the `SelectList` is unchanged.\n\n    import SelectList\n\n    isEven num =\n        num % 2 == 0\n\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.select isEven\n\n    == SelectList.fromLists [ 1 ] 2 [ 3, 4, 5, 6 ]\n\n",
+        "type": "(a -> Bool) -> SelectList.SelectList a -> SelectList.SelectList a"
+      },
+      {
+        "name": "selected",
+        "comment": " Return the selected element.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2 ] 3 [ 4, 5, 6 ]\n        |> SelectList.selected\n\n    == 3\n\n",
+        "type": "SelectList.SelectList a -> a"
+      },
+      {
+        "name": "singleton",
+        "comment": " A `SelectList` containing exactly one element.\n\n    import SelectList\n\n    SelectList.singleton \"foo\"\n\n    == SelectList.fromLists [] \"foo\" []\n\n",
+        "type": "a -> SelectList.SelectList a"
+      },
+      {
+        "name": "toList",
+        "comment": " Return a `List` containing the elements in a `SelectList`.\n\n    import SelectList\n\n    SelectList.fromLists [ 1, 2, 3 ] 4 [ 5, 6 ]\n        |> SelectList.toList\n\n    == [ 1, 2, 3, 4, 5, 6 ]\n\n",
+        "type": "SelectList.SelectList a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

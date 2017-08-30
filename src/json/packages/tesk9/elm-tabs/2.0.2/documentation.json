@@ -1,0 +1,99 @@
+[
+  {
+    "name": "Tabs.View",
+    "comment": "\n@docs view\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " Create a tab interface. Pass in a unique id and a zipper of (tab header content, panel content) pairs.\n",
+        "type": "Tabs.Model.Model -> Html.Html Tabs.Update.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Tabs.Update",
+    "comment": "\n@docs Msg, update\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " Msg for tabs.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoOp",
+            []
+          ],
+          [
+            "SelectPreviousTab",
+            []
+          ],
+          [
+            "SelectCurrentTab",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SelectNextTab",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "update",
+        "comment": " Map over this to select a tab.\n",
+        "type": "Tabs.Update.Msg -> Tabs.Model.Model -> Tabs.Model.Model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Tabs.Model",
+    "comment": "\n@docs Model, TabPanels, TabAndPanel, tabAndPanel, section, selected\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The model contains tabpanels and the groupid for the tab collection.\n",
+        "args": [],
+        "type": "{ tabPanels : Tabs.Model.TabPanels, groupId : String }"
+      },
+      {
+        "name": "TabAndPanel",
+        "comment": " Internal represenation of a tab/panel pair.\n",
+        "args": [],
+        "type": "{ identifier : Int , tabContent : Html.Html Basics.Never , panelContent : Html.Html Basics.Never , section : String , isSelected : Bool }"
+      },
+      {
+        "name": "TabPanels",
+        "comment": " Zipper tabs are represented as a Zipper with an id, tab html, and tab panel html.\n",
+        "args": [],
+        "type": "List.Zipper.Zipper ( Int, Html.Html Basics.Never, Html.Html Basics.Never )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "section",
+        "comment": " Set a TabAndPanel section to be the given string.\n",
+        "type": "String -> Tabs.Model.TabAndPanel -> Tabs.Model.TabAndPanel"
+      },
+      {
+        "name": "selected",
+        "comment": " Set a TabAndPanel to be selected.\n",
+        "type": "Tabs.Model.TabAndPanel -> Tabs.Model.TabAndPanel"
+      },
+      {
+        "name": "tabAndPanel",
+        "comment": " Initialize a pre-selection and pre-section tab/panel pair.\n",
+        "type": "( Int, Html.Html Basics.Never, Html.Html Basics.Never ) -> Tabs.Model.TabAndPanel"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

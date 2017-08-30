@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Collision2D",
+    "comment": " Detect collision/intersection of geometry in a defined 2D coordinate space\nAKA tell me when objects are touching or overlapping.\n\nAll objects use the same coordinate system you might see in an algebra or\nphysics problem, origin (0,0) is at the center of the object,\nso they're compatible with the core Graphics.Collage coordinate system.\n\n# Basic geometry\n@docs Rectangle, rectangle, Circle, circle\n\n# Rectangle to Rectangle Collision\n@docs axisAlignedBoundingBox, rectangleSide, Side\n\n# Circle to Circle Collision\n@docs circleToCircle\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Circle",
+        "comment": " Represents circular geometry.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Rectangle",
+        "comment": " Represents rectangular hitbox geometry.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Side",
+        "comment": " Represents sides of a Rectangle\n",
+        "args": [],
+        "cases": [
+          [
+            "Top",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Bottom",
+            []
+          ],
+          [
+            "Left",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "axisAlignedBoundingBox",
+        "comment": " Super efficient collision detection between\ntwo Rectangles that are axis aligned — meaning no rotation.\n\n    rect1 = rectangle 5 5 10 10\n    rect2 = rectangle 7 5 10 10\n\n    axisAlignedBoundingBox rect1 rect2 -- True\n    -- rect1 is coliding with rect2\n",
+        "type": "Collision2D.Rectangle -> Collision2D.Rectangle -> Bool"
+      },
+      {
+        "name": "circle",
+        "comment": " Create a Circle Hitbox from from coordinates (cx, cy) and geometry (radius)\n\nArguments:\n\n    circle centerX centerY radius\n\nExample:\n\n    circle 5 5 10 -- a radius 10 circle centered on coordinates 5,5\n",
+        "type": "Float -> Float -> Float -> Collision2D.Circle"
+      },
+      {
+        "name": "circleToCircle",
+        "comment": " Super efficient collision detection between two Circles\n\n    circle1 = circle 5 5 5\n    circle2 = circle 7 5 5\n\n    circleToCircle circle1 circle2 -- True\n    -- circle1 is coliding with circle2\n",
+        "type": "Collision2D.Circle -> Collision2D.Circle -> Bool"
+      },
+      {
+        "name": "rectangle",
+        "comment": " Create a Rectangle hitbox from coordinates (cx, cy) and geometry (width and height)\n\nArguments:\n\n    rectangle centerX centerY width height\n\nExample:\n\n    rectangle 5 5 10 10\n    -- a 10 x 10 rectangle centered on coordinates 5,5\n",
+        "type": "Float -> Float -> Float -> Float -> Collision2D.Rectangle"
+      },
+      {
+        "name": "rectangleSide",
+        "comment": " Very efficiently detect which side of a Rectangle is colliding with another Rectangle\n\n    rect1 = rectangle 5 5 10 10\n    rect2 = rectangle 7 5 10 10\n\n    rectangleSide rect1 rect2 -- Just Right\n    -- rect1 is coliding with it's right side onto rect2\n",
+        "type": "Collision2D.Rectangle -> Collision2D.Rectangle -> Maybe.Maybe Collision2D.Side"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

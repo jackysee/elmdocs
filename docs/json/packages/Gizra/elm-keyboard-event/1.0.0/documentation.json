@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Keyboard.Event",
+    "comment": " Most Elm keyboard-related packages (such as [elm-lang/keyboard][keyboard-pkg], and\nothers which build on it) only decode the `KeyCode` from Javascript's\n[keyboard event][keyboard-event] (possiby building up some additional state from the\nsequence of keycodes).\n\n[keyboard-pkg]: http://package.elm-lang.org/packages/elm-lang/keyboard/latest\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n\nThis ignores some potentially useful information reported in Javascript's\n[keyboard event][keyboard-event]:\n\n  - the state of modifier keys (such as the shift key)\n\n  - whether the event is a \"repeated\" keyboard event (due to a key being held\n    down)\n\nThis package provides decoders for that additional information, and examples\nof using those decoders when listening for keyboard events on HTML elements,\nor the `window` object itself (as [elm-lang/keyboard][keyboard-pkg] does).\n\nTo listen for keyboard events on HTML elements, you can do something like this:\n\n    div\n        [ on \"keydown\" <|\n            Json.Decode.map HandleKeyboardEvent decodeKeyboardEvent\n        , tabindex 0\n        , id \"id-for-auto-focus\"\n        , style [ ( \"outline\", \"none\" ) ]\n        ]\n        []\n\nSee the `examples` directory in the source code for complete examples.\n\n  - [Listen for events on an outermost div](https://gizra.github.io/elm-keyboard-event/OutermostDiv.html)\n  - [Listen for events on multiple divs](https://gizra.github.io/elm-keyboard-event/TwoDivs.html)\n  - [Listen for events on the `window` object](https://gizra.github.io/elm-keyboard-event/Window.html)\n\nNote that an HTML element must be focused in order to receive keyboard events\n(unlike in [elm-lang/keyboard][keyboard-pkg], since it attaches a listener to the\nJavascript `window` object). This is either an advantage or a disadvantage,\ndepending on your circumstances. If you want to handle keyboard events\ndifferently depending on what is focused, it is an advantage. Otherwise, you\ncan work around the need to focus, in this way:\n\n  - provide the element with a `tabindex` attribute (as demonstrated above),\n    so that it is focusable\n\n  - possibly give it a style of `outline: none;` to avoid the default outline\n    that would be drawn when the element is focused\n\n  - possibly use [elm-lang/dom][dom-package] to automatically focus the element when\n    you initialize the page\n\n[dom-package]: http://package.elm-lang.org/packages/elm-lang/dom/latest\n\nAlternatively, the `examples` directory also\n[contains an example](https://gizra.github.io/elm-keyboard-event/Window.html)\nof subscribing to keyboard events on the `window` object, as\n[elm-lang/keyboard][keyboard-pkg] does, but supplying your own decoder instead\nof just getting the `KeyCode`. In that case, you can avoid the need to focus on\nany particular HTML element.\n\n\n## KeyboardEvent\n\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n\n@docs KeyboardEvent, decodeKeyboardEvent, considerKeyboardEvent\n\n\n## Helpers\n\nSome lower-level helpers that you might find useful.\n\n@docs KeyCode, decodeKeyCode, decodeKey\n\n",
+    "aliases": [
+      {
+        "name": "KeyCode",
+        "comment": " A type alias for `Int`.\n",
+        "args": [],
+        "type": "Int"
+      },
+      {
+        "name": "KeyboardEvent",
+        "comment": " A representation of a [keyboard event][keyboard-event].\n\nThe `key` field may or may not be present, depending on the listener (\"keydown\"\nvs. \"keypress\" vs. \"keyup\"), browser, and key pressed (character key vs.\nspecial key). If not present, it will be `Nothing` here.\n\nThe `keyCode` is normalized by `decodeKeyboardEvent` to use whichever of\n`which`, `keyCode` or `charCode` is provided, and made type-safe via\n`Keyboard.Key`\n(see the excellent [SwiftsNamesake/proper-keyboard][proper-keyboard-pkg] for\nfurther manipulation of a `Key`).\n\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n[proper-keyboard-pkg]: http://package.elm-lang.org/packages/SwiftsNamesake/proper-keyboard/latest\n\n",
+        "args": [],
+        "type": "{ altKey : Bool , ctrlKey : Bool , key : Maybe.Maybe String , keyCode : Keyboard.Key.Key , metaKey : Bool , repeat : Bool , shiftKey : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "considerKeyboardEvent",
+        "comment": " You provide a function which, given a `KeyboardEvent`, turns it into a\nmessage your `update` function can handle. You get back a `Decoder` for those\nmessages.\n\nWhen your function returns `Nothing`, the decoder will fail. This means that\nthe event will simply be ignored -- that is, it will not reach your `update`\nfunction at all.\n\nEssentially, this allows you to filter keyboard events inside the decoder\nitself, rather than in the `update` function. Whether this is a good idea or\nnot will depend on your scenario.\n\n",
+        "type": "(Keyboard.Event.KeyboardEvent -> Maybe.Maybe msg) -> Json.Decode.Decoder msg"
+      },
+      {
+        "name": "decodeKey",
+        "comment": " Decodes the `key` field from a [keyboard event][keyboard-event].\nResults in `Nothing` if the `key` field is not present, or blank.\n\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n\n",
+        "type": "Json.Decode.Decoder (Maybe.Maybe String)"
+      },
+      {
+        "name": "decodeKeyCode",
+        "comment": " Decodes `keyCode`, `which` or `charCode` from a [keyboard event][keyboard-event]\nto get a numeric code for the key that was pressed.\n\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n\n",
+        "type": "Json.Decode.Decoder Keyboard.Event.KeyCode"
+      },
+      {
+        "name": "decodeKeyboardEvent",
+        "comment": " Decodes a `KeyboardEvent` from a [keyboard event][keyboard-event].\n\n[keyboard-event]: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent\n\n",
+        "type": "Json.Decode.Decoder Keyboard.Event.KeyboardEvent"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

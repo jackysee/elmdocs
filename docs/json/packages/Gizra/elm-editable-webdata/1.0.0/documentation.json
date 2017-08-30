@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Editable.WebData",
+    "comment": " An EditableWebData represents an Editable value, along with WebData.\n\n`EditableWebData` is a wrapper type around [Editable](http://package.elm-lang.org/packages/stoeffel/editable/latest)\nand [WebData](http://package.elm-lang.org/packages/krisajenkins/remotedata/latest)\n\nIt is used in order to keep track of the state of the Editable upon saving. That is,\nas we change the `Editable` value, and send it to the backend, we can keep track of their state\n(e.g. `RemoteData.Success` or `RemoteData.Failure`).\n\n@docs EditableWebData, create, map, toEditable, state, toWebData\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "EditableWebData",
+        "comment": " A wrapper for `Editable`, that allows provides the means to track saving\nback to the backend via `WebData`.\n\n    import Editable\n\n    view : EditableWebData String -> Html msg\n    view editableWebData =\n        let\n            value =\n                Editable.WebData.toEditable |> Editable.value\n\n            toWebData =\n                Editable.WebData.toWebData\n        in\n        text <| \"Editable value is: \" ++ toString value ++ \" with a WebDataValue of \" ++ toString toWebData\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "EditableWebData",
+            [
+              "Editable.Editable a",
+              "RemoteData.WebData ()"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "create",
+        "comment": " Creates a new `EditableWebData`.\n\nThis will create the `EditableWebData` with the default values `ReadOnly` for\nthe `Editable` and `NotAsked` for the WebData, as those are the values you are\nlikely to begin with. You can of course later updated it, for example:\n\n    import Editable\n    import RemoteData\n\n    -- Change the `Editable` value\n    Editable.WebData.create \"old\"\n        |> Editable.WebData.map (Editable.edit)\n        |> Editable.WebData.map (Editable.update \"new\")\n        |> Editable.WebData.toEditable\n        |> Editable.value --> \"new\"\n\n    -- Change the `WebData` state\n    Editable.WebData.create \"original\"\n        |> Editable.WebData.state RemoteData.Loading\n        |> Editable.WebData.toWebData --> RemoteData.Loading\n\n",
+        "type": "a -> Editable.WebData.EditableWebData a"
+      },
+      {
+        "name": "map",
+        "comment": " Maps function to the `Editable`.\n\n    import Editable\n\n    Editable.WebData.create \"old\"\n        |> Editable.WebData.map (Editable.edit)\n        |> Editable.WebData.map (Editable.update \"new\")\n        |> Editable.WebData.toEditable\n        |> Editable.value --> \"new\"\n\n",
+        "type": "(Editable.Editable a -> Editable.Editable a) -> Editable.WebData.EditableWebData a -> Editable.WebData.EditableWebData a"
+      },
+      {
+        "name": "state",
+        "comment": " Updates the `WebData` value.\n\nFor updating the value of the `Editable` itself, see the example of `map`.\n\n    import RemoteData\n\n    Editable.WebData.create \"new\"\n        |> Editable.WebData.state RemoteData.Loading\n        |> Editable.WebData.toWebData --> RemoteData.Loading\n\n    Editable.WebData.create \"new\"\n        |> Editable.WebData.state (RemoteData.Success ())\n        |> Editable.WebData.toWebData --> RemoteData.Success ()\n\n",
+        "type": "RemoteData.WebData () -> Editable.WebData.EditableWebData a -> Editable.WebData.EditableWebData a"
+      },
+      {
+        "name": "toEditable",
+        "comment": " Extracts the `Editable` value.\n\n    import Editable\n\n    Editable.WebData.create \"new\"\n        |> Editable.WebData.toEditable --> Editable.ReadOnly \"new\"\n\n    Editable.WebData.create \"old\"\n        |> Editable.WebData.map(Editable.edit)\n        |> Editable.WebData.map(Editable.update \"new\")\n        |> Editable.WebData.toEditable --> Editable.Editable \"old\" \"new\"\n\n",
+        "type": "Editable.WebData.EditableWebData a -> Editable.Editable a"
+      },
+      {
+        "name": "toWebData",
+        "comment": " Extracts the `WebData` value.\n\n    import RemoteData\n\n    Editable.WebData.create \"new\"\n        |> Editable.WebData.toWebData --> RemoteData.NotAsked\n\n    Editable.WebData.create \"new\"\n        |> Editable.WebData.state RemoteData.Loading\n        |> Editable.WebData.toWebData --> RemoteData.Loading\n\n",
+        "type": "Editable.WebData.EditableWebData a -> RemoteData.WebData ()"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

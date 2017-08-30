@@ -1,0 +1,706 @@
+[
+  {
+    "name": "HtmlTemplate.PlayDiv",
+    "comment": " Implements the HtmlTemplate example's \"Play\" page, which allows the user to type Markdown or JSON strings and see how they parse, evaluate, and render.\n\nSee `examples/template.elm` for an example of use.\n\n@docs PlayState, emptyPlayState\n@docs playDiv, playDivFunction\n@docs Update, playStringUpdate, updatePlayState\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "PlayState",
+        "comment": " State passed to `playDiv` and updated by `updatePlayState`.\n\n`emptyPlatState` returns an initial instance, for storing in your `Model`.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Update",
+        "comment": " Passed through your `update` function to `updatePlayState`.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "emptyPlayState",
+        "comment": " An initial PlayState instance, for your `Model`.\n",
+        "type": "HtmlTemplate.PlayDiv.PlayState msg"
+      },
+      {
+        "name": "playDiv",
+        "comment": " Render a `div` containing the user interface.\nThe `(String -> msg)` arg should wrap an updated string as a `Msg`,\nwhich your `update` function will pass to `updatePlayState`.\n",
+        "type": "(HtmlTemplate.PlayDiv.Update -> msg) -> HtmlTemplate.PlayDiv.PlayState msg -> Html.Html msg"
+      },
+      {
+        "name": "playDivFunction",
+        "comment": " Creates a function suitable for `HtmlTemplate.insertFunctions`.\n\nYou'll usually use it as:\n\n    insertFunctions\n      [ ( \"playDiv\"\n        , playDivFunction\n              UpdatePlayState model.playState\n        )\n      ]\n\nWhere `UpdatePlayState` is your `Msg` that takes an `Update` arg for passing to `updatePlayState`, and I've assumed you've named as `playState` the property in your `Model` used to store the `PlayState` instance in `emptyPlayState` and passed to and returned from `updatePlayState`.\n\nNote that you'll need to reinsert this function around each call of `HtmlTemplate.render` in your Elm code, since it needs an updated instance of the `PlayState`.\n\nIt is a very thin wrapper around a call to `playDiv`.\n",
+        "type": "(HtmlTemplate.PlayDiv.Update -> msg) -> HtmlTemplate.PlayDiv.PlayState msg -> args -> dicts -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "playStringUpdate",
+        "comment": " Return an `Update` that you can pass to `updatePlayState` to\ninitialize the user-entered string.\n",
+        "type": "String -> HtmlTemplate.PlayDiv.Update"
+      },
+      {
+        "name": "updatePlayState",
+        "comment": " Your `update` function will call this in response to receiving\nan Update you wrapped with the tagger you passed as the first arg to\n`playDiv` or `playDivFunction`.\n\nYou might also call it in your `init` function, with the result of\n`playStringUpdate String`, to intialize the displayed string.\n",
+        "type": "HtmlTemplate.PlayDiv.Update -> HtmlTemplate.Types.Loaders msg extra -> HtmlTemplate.PlayDiv.PlayState msg -> HtmlTemplate.PlayDiv.PlayState msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlTemplate",
+    "comment": " The `HtmlTemplate` module allows you to code the `view` part of an Elm web page in JSON. You can parse that JSON into `Atom` instances as you desire, and then call `render` to render an `Atom` instance into an `Html` instance.\n\nSee the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md) and its scripting language. The documentation here tells you only how to use the Elm API for the Elm part of your application.\n\nI plan to eventually expand scripting to be usable for the `update` and `Msg` parts of an Elm application, so that you can do almost the whole thing dynamically. For some applications that will make sense. For now, you need to write `update` in Elm, define your `Msg` type in Elm, and create entries for the `TemplateDicts.messages` table to enable creation of those `Msg` types from the scripting language.\n\nThe example defined by `examples/template.elm` is live at [lisplog.org/elm-html-template](https://lisplog.org/elm-html-template/).\n\n# Basic State\n\nUse these functions to initialize your application by loading the templates and pages needed to display the first web page.\n\nBesides the function descriptions, you'll need to grok the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md) in order to make much progress here. Or just pattern match from the application in the `examples` directory.\n\n@docs makeLoaders, insertMessages\n@docs addOutstandingPagesAndTemplates\n@docs loadOutstandingPageOrTemplate, maybeLoadOutstandingPageOrTemplate\n@docs loadTemplate, receiveTemplate\n@docs loadPage, receivePage, receiveCustomPage\n@docs getExtra, setExtra, addPageProcessors\n@docs clearPages, clearTemplates, clearAtoms\n\n# Turning the Parsed JSON into Html\n\nThis is the point of the `HtmlTemplate` module. It creates an `Html Msg` that you can return from your `view` function (or as part of the whole page created by your `view` function).\n\n@docs render\n\n# More State Accessors\n@docs getAtom, setAtom, setAtoms, removeAtom\n@docs getTemplate, setTemplate, setTemplates, removeTemplate\n@docs getPage, setPage, setPages, removePage\n@docs insertFunctions, insertDelayedBindingsFunctions\n@docs insertStringMessages, insertBoolMessages\n@docs cantFuncall, tagWrap\n@docs getDicts, getDictsAtom, setDictsAtom, removeDictsAtom\n\n# Did Somebody Say Eval?\n@docs eval\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "addOutstandingPagesAndTemplates",
+        "comment": " Call this to initialize the list of toplevel templates and pages you need to render your application's first page. You don't need to mention everything, since the `HtmlTemplate` module will find pages and templates referenced by those you provide here, and call the `templateLoader` and and `pageLoader` functions you provided in your call to `makeLoaders` to load them.\n",
+        "type": "List String -> List String -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "addPageProcessors",
+        "comment": "\nSometimes you need to do something when a page is loaded. If so, instead of checking for that after your call to receivePage, you can ask `HtmlTemplate` to do the checking for you. The args to a page processor passed here are:\n\n    pageName page loaders\n    \nAfter adding relevant state, your page processor returns the modified `loaders`.\n\nIf you add a page processor for a page with a blank name (`\"\"`), it will be called for EVERY page that does not have an explicit page processor for its name.\n",
+        "type": "List ( String , String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "cantFuncall",
+        "comment": " Useful for reporting on badly-formed arguments to a function added with `insertFunctions` (or `insertMessages`). Turns the function call into a string, so that you can see that on your `render`ed web page.\n\nI plan to eventually provide a delayed-evaluation mechanism, so that instead of turning a function call into a string, you can wrap it with that, but until then, this is what you've got.\n",
+        "type": "String -> List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "clearAtoms",
+        "comment": "\nRemoves all Atoms from the table inside of the `Loaders`. This function exists only as a mirror of `clearPages` and `clearTemplates`. You will rarely need to call it.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "clearPages",
+        "comment": " Removes all pages from the table inside of the `Loaders`. You will usually call `loadPage` right after this, to load the page the user just asked to display, and all the pages and templates it references.\n\nThe application in the `examples` directory calls this every time the page changes to force all changed pages to be reloaded.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "clearTemplates",
+        "comment": " Removes all templates from the table inside of the `Loaders`. You will usually call `loadPage` or `loadTemplate` right after this.\n\nThe application in the `examples` directory doesn't ever reload its templates, requiring a page refresh to do that, so it never calls `clearTemplates`.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "eval",
+        "comment": " This is exposed primarily so that the example application can use it on its `play` page. It can currently result in an `Atom` with function calls changed to strings and attributes already rendered into `Html`.\n\nYou shouldn't need to use it.\n",
+        "type": "HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Dicts msg -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "getAtom",
+        "comment": " Lookup the atom with the given name. Same as `\"$<name>\"` in a JSON file.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> Maybe.Maybe (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "getDicts",
+        "comment": " Get the `Dicts` out of a `Loaders`. Rarely needed.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Dicts msg"
+      },
+      {
+        "name": "getDictsAtom",
+        "comment": " Lookup an atom. Sometimes useful inside of functions added with `insertFunctions` or `insertMessages`.\n\nSame as `getAtom name <| getDicts loaders`.\n",
+        "type": "String -> HtmlTemplate.Types.Dicts msg -> Maybe.Maybe (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "getExtra",
+        "comment": " If you use the `extra` arg to `makeLoaders` to put state there that you need in your page or template loader, you can fetch that state with this function.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> x"
+      },
+      {
+        "name": "getPage",
+        "comment": " Lookup the page with the given name. Same as `\"@<name>\"` in a JSON file.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> Maybe.Maybe (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "getTemplate",
+        "comment": " Lookup the template with the given name. Same as `\"?<name>\"` in a JSON file.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> Maybe.Maybe (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "insertBoolMessages",
+        "comment": " If you need to script `onCheck` or other event attributes receiving a Bool arg that are processed by your `update` function, you'll need to define message functions to create them for your scripting code. Call `insertStringMessages` in your `init` function, with a list of those functions, before stashing the `Loaders` in your `Model`.\n\nThere are more details about message functions in the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md).\n",
+        "type": "List ( String , List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> Bool -> msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "insertDelayedBindingsFunctions",
+        "comment": " Some functions, e.g. variable binding functions like `\"#let\"` and `\"#loop\"`, and short-circuiting functions like `_if`, `\"#&&\"` and `\"#||\"`, need to delay evaluation of their arguments. If one of the functions you add with `insertFunctions` (or `insertMessages`) needs to be called with unevaluated arguments, declare that with `insertDelayedBindingsFunctions`.\n",
+        "type": "List String -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "insertFunctions",
+        "comment": " If you want to define your own function to be available via \"#foo\" in your JSON files, you can do so with `insertFunctions` (or `insertMessages`).\n\nThere is more information about defining functions in the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md).\n",
+        "type": "List ( String , List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> HtmlTemplate.Types.Atom msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "insertMessages",
+        "comment": " If you need to script `onClick` or other event attributes that are processed by your `update` function, you'll need to define message functions to create them for your scripting code. Call `insertMessages` in your `init` function, with a list of those functions, before stashing the `Loaders` in your `Model`.\n\nThere are more details about message functions in the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md).\n",
+        "type": "List ( String , List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "insertStringMessages",
+        "comment": " If you need to script `onInput` or other event attributes receiving a String arg that are processed by your `update` function, you'll need to define message functions to create them for your scripting code. Call `insertStringMessages` in your `init` function, with a list of those functions, before stashing the `Loaders` in your `Model`.\n\nThere are more details about message functions in the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md).\n",
+        "type": "List ( String , List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> String -> msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "loadOutstandingPageOrTemplate",
+        "comment": " If there are pages or templates in the `Loaders` that have not been loaded, return a command to load one of them. Otherwise, return Cmd.none. You will usually call this in your `init` function and use the returned `Cmd` in the returned `( Model, Cmd Msg )`.\n\nCalls the `templateLoader` or `pageLoader` you passed to `makeLoaders` to create the `Cmd`s.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "loadPage",
+        "comment": " Start the load of the page with the given name. Calls the `pageLoader` you used when you created the `Loaders` to get the returned `Cmd`. There's nothing special here. You could call that function yourself, or create the `Cmd` some other way.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "loadTemplate",
+        "comment": " Start the load of the template with the given name. Calls the `templateLoader` you used when you created the `Loaders` to get the returned `Cmd`. There's nothing special here. You could call that function yourself, or create the `Cmd` some other way.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "makeLoaders",
+        "comment": " Call `makeLoaders` in your `init` function to create the object that stores state for `HtmlTemplate`:\n\n    makeLoaders templateLoader pageLoader extra\n    \n`templateLoader name loaders` returns a Cmd to load a template, usually either from a file on the web server, via `Http`, or from a database.\n\n`pageLoader name Loaders` does likewise for pages.\n\nSee the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md) for more about pages and templates.\n",
+        "type": "(String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg) -> (String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg) -> x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "maybeLoadOutstandingPageOrTemplate",
+        "comment": " If there are pages or templates in the `Loaders` that have not been loaded, return a command to load one of them. Otherwise, return Nothing. At startup, applications will usually want to display a loading screen until Nothing comes back from here, at which time they can switch to the start page, since all of its templates and included pages will be in `Loaders`' tables then.\n\nCalls the `templateLoader` or `pageLoader` you passed to `makeLoaders` to create the `Cmd`s.\n",
+        "type": "HtmlTemplate.Types.Loaders msg x -> Maybe.Maybe (Platform.Cmd.Cmd msg)"
+      },
+      {
+        "name": "receiveCustomPage",
+        "comment": " `ReceivePage` parses the page text as JSON. If you have alternative formats for your pages, call this to parse the text yourself.\n\n    receivePage name json loaders\n\nis the same as:\n\n    receiveCustomPage decodeAtom name json loaders\n",
+        "type": "(String -> Result.Result String (HtmlTemplate.Types.Atom msg)) -> String -> String -> HtmlTemplate.Types.Loaders msg x -> Result.Result String (HtmlTemplate.Types.Loaders msg x)"
+      },
+      {
+        "name": "receivePage",
+        "comment": " After your command to load a page has passed a `Msg` to your `update` function, and has some JSON in hand, call this function to decode that JSON into an `Atom`, and store it in `Loaders`' tables with the given name.\n\n    receivePage name json loaders\n    \nThe returned `Result` will be `Ok` with the modified `Loaders` if decoding was successful, or `Err msg`, where `msg` is the decoding error string otherwise.\n\nUsually, you will then call `maybeLoadOutstandingPageOrTemplate` to continue loading referenced pages and templates.\n",
+        "type": "String -> String -> HtmlTemplate.Types.Loaders msg x -> Result.Result String (HtmlTemplate.Types.Loaders msg x)"
+      },
+      {
+        "name": "receiveTemplate",
+        "comment": " After your command to load a template has passed a `Msg` to your `update` function, and has some JSON in hand, call this function to decode that JSON into an `Atom`, and store it in `Loaders`' tables with the given name.\n\n    receiveTemplate name json loaders\n    \nThe returned `Result` will be `Ok` with the modified `Loaders` if decoding was successful, or `Err msg`, where `msg` is the decoding error string otherwise.\n\nUsually, you will then call `maybeLoadOutstandingPageOrTemplate` to continue loading referenced pages and templates.\n",
+        "type": "String -> String -> HtmlTemplate.Types.Loaders msg x -> Result.Result String (HtmlTemplate.Types.Loaders msg x)"
+      },
+      {
+        "name": "removeAtom",
+        "comment": " Remove an atom.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "removeDictsAtom",
+        "comment": " Remove an atom. Sometimes useful inside of functions added with `insertFunctions` or `insertMessages`.\n\nSame as `removeAtom name <| getDicts loaders`.\n",
+        "type": "String -> HtmlTemplate.Types.Dicts msg -> HtmlTemplate.Types.Dicts msg"
+      },
+      {
+        "name": "removePage",
+        "comment": " Remove a page.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "removeTemplate",
+        "comment": " Remove a template.\n",
+        "type": "String -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "render",
+        "comment": " Convert an `Atom` to `Html` for rendering a browser page. You will usually pass a template here, but since the only difference between a template, a page, or any other `Atom` is how you use them, that's up to you.\n\nThe application in the `examples` directory always passes its `page` template here (except on its `play` page, where it passes the `Atom` decoded from the user input).\n",
+        "type": "HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> Html.Html msg"
+      },
+      {
+        "name": "setAtom",
+        "comment": " Store an atom with the given name. Done with `\"#let\"` in a JSON file.\n",
+        "type": "String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setAtoms",
+        "comment": " Set multiple atoms. The same as calling `setAtom` for each pair.\n",
+        "type": "List ( String, HtmlTemplate.Types.Atom msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setDictsAtom",
+        "comment": " Store an atom with the given name. Sometimes useful inside of functions added with `insertFunctions` or `insertMessages`.\n\nSame as `setAtom name atom <| getDicts loaders`.\n",
+        "type": "String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Dicts msg -> HtmlTemplate.Types.Dicts msg"
+      },
+      {
+        "name": "setExtra",
+        "comment": " If you use the `extra` arg to `makeLoaders` to put state there that you need in your page or template loader, you can set that state with this function.\n",
+        "type": "x -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setPage",
+        "comment": " Store a page with the given name.\n",
+        "type": "String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setPages",
+        "comment": " Set multiple pages. The same as calling `setPage` for each pair.\n",
+        "type": "List ( String, HtmlTemplate.Types.Atom msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setTemplate",
+        "comment": " Store a template with the given name.\n",
+        "type": "String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "setTemplates",
+        "comment": " Set multiple templates. The same as calling `setTemplate` for each pair.\n",
+        "type": "List ( String, HtmlTemplate.Types.Atom msg ) -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x"
+      },
+      {
+        "name": "tagWrap",
+        "comment": "\nUseful if a function added with `insertFunctions` wants to return a standard Html tag.\n\nSame as `RecordAtom { tag = tag, attributes = attributes, body = body }`\n",
+        "type": "String -> List ( String, HtmlTemplate.Types.Atom msg ) -> List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Atom msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlTemplate.Markdown",
+    "comment": " A Markdown to JSON converter.\n\n# The \"Normal\" Entry Points\n@docs mdFunction, mdnpFunction\n\n# High-level internals\n@docs Token, run\n\n# Lower-level internals\n@docs parseTokens, processTokens, splitIntoLines\n\n# Parsers\n@docs markdownParser, tokenListParser\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Token",
+        "comment": " The parsers create tokens or lists of tokens.\n",
+        "args": [],
+        "cases": [
+          [
+            "SymbolToken",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StringToken",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Backticks",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Newline",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "Preformatted",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Table",
+            [
+              "List (List HtmlTemplate.Markdown.Token)",
+              "List (List (List HtmlTemplate.Markdown.Token))"
+            ]
+          ],
+          [
+            "Blockquote",
+            [
+              "List (List HtmlTemplate.Markdown.Token)"
+            ]
+          ],
+          [
+            "Codeblock",
+            [
+              "List HtmlTemplate.Markdown.Token"
+            ]
+          ],
+          [
+            "NumberDot",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ListToken",
+            [
+              "Bool",
+              "List HtmlTemplate.Markdown.ListRecord"
+            ]
+          ],
+          [
+            "SharpToken",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "JsonToken",
+            [
+              "String"
+            ]
+          ],
+          [
+            "HorizontalRule",
+            [
+              "String"
+            ]
+          ],
+          [
+            "PlistToken",
+            [
+              "List ( String, String )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "markdownParser",
+        "comment": " The `Parser` that `run` invokes.\n",
+        "type": "Parser.Parser (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "mdFunction",
+        "comment": " The code for the \"#md\" JSON function.\n\nRecursively descends the `Atom`s, converting all strings from Markdown to Atoms.\n",
+        "type": "List (HtmlTemplate.Types.Atom msg) -> d -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "mdnpFunction",
+        "comment": " The code for the \"#mdnp\" JSON function.\n\nCalls `mdFunction`, and strips off the outer paragraph, if there is one.\n",
+        "type": "List (HtmlTemplate.Types.Atom msg) -> d -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "parseTokens",
+        "comment": " Debugging function. Parses a Markdown string into a list of `Token`s.\n",
+        "type": "String -> List HtmlTemplate.Markdown.Token"
+      },
+      {
+        "name": "processTokens",
+        "comment": " Turns the list of `Token`s created by `tokenListParser` into an `Atom`.\n",
+        "type": "List HtmlTemplate.Markdown.Token -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "run",
+        "comment": " Run the Markdown parser on a string.\n\nThe result will have often contain adjacent strings and extraneous lists.\nYou may want to call `Utility.mergeStrings` on it.\n",
+        "type": "String -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "splitIntoLines",
+        "comment": " Splits a token list into lines, breaking on `Newline` and `PlistToken` tokens.\n",
+        "type": "List HtmlTemplate.Markdown.Token -> List (List HtmlTemplate.Markdown.Token)"
+      },
+      {
+        "name": "tokenListParser",
+        "comment": " The `Parser` that `parseTokens` invokes.\n",
+        "type": "Parser.Parser (List HtmlTemplate.Markdown.Token)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlTemplate.Utility",
+    "comment": " Some utility functions.\n\n@docs walkAtom, mergeStrings, mergeListStrings\n@docs hasWhitespacePrefix, hasWhitespaceSuffix\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "hasWhitespacePrefix",
+        "comment": " True if the string begins with whitespace.\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "hasWhitespaceSuffix",
+        "comment": " True if the string ends with whitespace.\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "mergeListStrings",
+        "comment": " Like `mergeStrings`, but sometimes you have a `List` in your hand.\n",
+        "type": "List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "mergeStrings",
+        "comment": " Merge adjacent strings together and remove extraneous lists.\n",
+        "type": "HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Atom msg"
+      },
+      {
+        "name": "walkAtom",
+        "comment": " Call a function on every leaf of the `Atom` arg,\nand replace it with the returned value.\n",
+        "type": "(HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Atom msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlTemplate.EncodeDecode",
+    "comment": "\nJSON encoding and decoding for Atoms.\n\n@docs decodeAtom, atomDecoder\n@docs encodeAtom, customEncodeAtom, atomEncoder\n@docs functionLookupPrefix\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "atomDecoder",
+        "comment": "\nA `Json.Decode.Decoder` to parse JSON into an `Atom`. You will usually use `decodeAtom` for this, but if you have a data structure that includes an `Atom`, this allows you to include it in your own decoder.\n",
+        "type": "Json.Decode.Decoder (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "atomEncoder",
+        "comment": "\nEncode an `Atom` as a `Json.Encode.Value`. You will usually use `encodeAtom` to get a JSON `String`, but if you have a data structure that includes an `Atom`, this allows you to include it in your own encoder.\n",
+        "type": "HtmlTemplate.Types.Atom msg -> Json.Encode.Value"
+      },
+      {
+        "name": "customEncodeAtom",
+        "comment": " Passes an `Atom` to `atomEncoder` and returns the resulting JSON `String`.\n\nConvenience function. You can call `Json.Encode.encode` yourself, if you prefer.\n",
+        "type": "Int -> HtmlTemplate.Types.Atom msg -> String"
+      },
+      {
+        "name": "decodeAtom",
+        "comment": " Passes a JSON string to `atomDecoder` and return the `Result`.\n\nConvenience function. You can call `Json.Decode.decodeString` yourself, if you prefer.\n",
+        "type": "String -> Result.Result String (HtmlTemplate.Types.Atom msg)"
+      },
+      {
+        "name": "encodeAtom",
+        "comment": " Passes an `Atom` to `atomEncoder` and returns the resulting JSON `String`. Uses indentation of `1`. Call `customEncodeAtom` to specify the indentation yourself.\n\nConvenience function. You can call `Json.Encode.encode` yourself, if you prefer.\n",
+        "type": "HtmlTemplate.Types.Atom msg -> String"
+      },
+      {
+        "name": "functionLookupPrefix",
+        "comment": " The character that introduces a function, e.g. `\"#md\"`.\n",
+        "type": "String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "HtmlTemplate.Types",
+    "comment": " This module defines the shared types for the billstclair/elm-html-template package.\n\nUser code will usually want to import it as follows:\n\n    import HtmlTemplate.Types exposing ( Atom(..), Loaders, Dicts )\n\n@docs Atom, Loaders, Dicts\n@docs TemplateDicts, HtmlTemplateRecord, HtmlTemplateFuncall\n@docs LoadersRecord\n@docs AttributeFunction\n",
+    "aliases": [
+      {
+        "name": "HtmlTemplateFuncall",
+        "comment": " Storage for JSON:\n    [ \"#&lt;function name>\"\n     , arg\n     , ...\n    ]\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ function : String, args : List (HtmlTemplate.Types.Atom msg) }"
+      },
+      {
+        "name": "HtmlTemplateRecord",
+        "comment": " Storage for JSON:\n    [ \"&lt;tag>\"\n     , {\"&lt;name>\":\"&lt;value>\", ...}\n     , [...]\n    ]\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ tag : String , attributes : List ( String, HtmlTemplate.Types.Atom msg ) , body : List (HtmlTemplate.Types.Atom msg) }"
+      },
+      {
+        "name": "LoadersRecord",
+        "comment": " The guts of the `Loaders` type.\n",
+        "args": [
+          "msg",
+          "x"
+        ],
+        "type": "{ templateLoader : String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg , templatesToLoad : Set.Set String , pageLoader : String -> HtmlTemplate.Types.Loaders msg x -> Platform.Cmd.Cmd msg , pagesToLoad : Set.Set String , dicts : HtmlTemplate.Types.TemplateDicts msg , pageProcessors : Dict.Dict String (String -> HtmlTemplate.Types.Atom msg -> HtmlTemplate.Types.Loaders msg x -> HtmlTemplate.Types.Loaders msg x) , extra : x }"
+      },
+      {
+        "name": "TemplateDicts",
+        "comment": " The dictionaries for looking up atoms (`\"$foo\"`), templates (`\"?foo\"`), pages (`\"@foo\"`, and functions/delayed bindings/messages (`\"#foo\"`).\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ atoms : Dict.Dict String (HtmlTemplate.Types.Atom msg) , templates : Dict.Dict String (HtmlTemplate.Types.Atom msg) , pages : Dict.Dict String (HtmlTemplate.Types.Atom msg) , functions : Dict.Dict String (List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> HtmlTemplate.Types.Atom msg) , delayedBindingsFunctions : Set.Set String , messages : Dict.Dict String (List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> msg) , stringMessages : Dict.Dict String (List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> String -> msg) , boolMessages : Dict.Dict String (List (HtmlTemplate.Types.Atom msg) -> HtmlTemplate.Types.Dicts msg -> Bool -> msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Atom",
+        "comment": "\n`Atom` is the basic data type of the `HtmlTemplate` module. JSON is parsed into an `Atom`, and an `Atom` is what `render` renders as `Html`. Remember to always say `Atom Msg` in your code, where `Msg` is your message type. The `Msg` is only needed by the functions you install with `insertMessages`, but they're used in any attribute that needs to invoke your `update` function.\n\nSee the [JSON documentation](https://github.com/billstclair/elm-html-template/blob/master/JSON.md) for details about which atom types represent which Elm objects.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "StringAtom",
+            [
+              "String"
+            ]
+          ],
+          [
+            "IntAtom",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "FloatAtom",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "BoolAtom",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "LookupAtom",
+            [
+              "String"
+            ]
+          ],
+          [
+            "LookupPageAtom",
+            [
+              "String"
+            ]
+          ],
+          [
+            "LookupTemplateAtom",
+            [
+              "String"
+            ]
+          ],
+          [
+            "LookupFunctionAtom",
+            [
+              "String"
+            ]
+          ],
+          [
+            "FuncallAtom",
+            [
+              "HtmlTemplate.Types.HtmlTemplateFuncall msg"
+            ]
+          ],
+          [
+            "ListAtom",
+            [
+              "List (HtmlTemplate.Types.Atom msg)"
+            ]
+          ],
+          [
+            "PListAtom",
+            [
+              "List ( String, HtmlTemplate.Types.Atom msg )"
+            ]
+          ],
+          [
+            "RecordAtom",
+            [
+              "HtmlTemplate.Types.HtmlTemplateRecord msg"
+            ]
+          ],
+          [
+            "HtmlAtom",
+            [
+              "Html.Html msg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "AttributeFunction",
+        "comment": " Used to wrap message functions for calling the Html.Attributes functions.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "StringAttributeFunction",
+            [
+              "String -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "IntAttributeFunction",
+            [
+              "Int -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "FloatAttributeFunction",
+            [
+              "Float -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "BoolAttributeFunction",
+            [
+              "Bool -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "AtomsAttributeFunction",
+            [
+              "List (HtmlTemplate.Types.Atom msg) -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "MsgAttributeFunction",
+            [
+              "msg -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "MsgAttributeStringLookupFunction",
+            [
+              "(String -> msg) -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "MsgAttributeBoolLookupFunction",
+            [
+              "(Bool -> msg) -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "StringPairListAttributeFunction",
+            [
+              "List ( String, String ) -> Html.Attribute msg"
+            ]
+          ],
+          [
+            "CharAttributeFunction",
+            [
+              "Char -> Html.Attribute msg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Dicts",
+        "comment": " User-level wrapper for `TemplateDicts`.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "TheDicts",
+            [
+              "HtmlTemplate.Types.TemplateDicts msg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Loaders",
+        "comment": " `Loaders` stores all the state about loading templates and pages, and the tables for looking them up at `render` time. You should create one in your `init` function by calling `makeLoaders`, initialize it with `insertMessages`, `addOutstandingPagesAndTemplates`, call `loadOutstandingPageOrTemplate` to get a `Cmd` to start loading the pages and templates, then include it in your `Model`.\n\nYou should always reference it as `Loaders Msg x`, where `Msg` is your `Msg` type, and `x` is whatever type you decide to use if you need to store state for your template and page loaders. See `getExtra` and `setExtra`.\n\n`Loaders` is opaque to user code, though there are a bunch of functions for querying and modifying it.\n",
+        "args": [
+          "msg",
+          "x"
+        ],
+        "cases": [
+          [
+            "TheLoaders",
+            [
+              "HtmlTemplate.Types.LoadersRecord msg x"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

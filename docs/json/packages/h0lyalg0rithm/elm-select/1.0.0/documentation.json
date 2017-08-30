@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Select",
+    "comment": " This library handles the logic for the dropdown. To use the library you have to pass in the\ndifferent options in the dropdown as a List of Tuple (String, Model)\n\nThe Model must be of the same type when in the list.\n\nExample\n[(1,{id=1, name=\"test\"}),(2, {id=2, name=\"second\"})]\n\n@docs Model, Msg, view, init, empty, getValue, updateItems\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": "\n@docs Internal model of the dropdown.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ items : List ( String, a ) , value : Maybe.Maybe ( String, a ) , visibleItems : List ( String, a ) , isOpen : Bool , searchValue : String , canClear : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " @docs Different Msg used for the internal working of the dropdown\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " @docs Empty model helper - Can be used to initialize an empty Model\n",
+        "type": "Select.Model a"
+      },
+      {
+        "name": "getValue",
+        "comment": " @docs Returns the selected value from the dropdown\n",
+        "type": "Select.Model a -> Maybe.Maybe a"
+      },
+      {
+        "name": "init",
+        "comment": " @docs Initial model generated based on the List (String , a) Tuple provided by the user\n",
+        "type": "List ( String, a ) -> Maybe.Maybe ( String, a ) -> Select.Model a"
+      },
+      {
+        "name": "updateItems",
+        "comment": " @docs Helper to generate new state of dropdown with the provided Model from the user\n",
+        "type": "Select.Model a -> List ( String, a ) -> Maybe.Maybe ( String, a ) -> Select.Model a"
+      },
+      {
+        "name": "view",
+        "comment": "\n@docs Dropdown view\n",
+        "type": "Select.Model a -> Html.Html (Select.Msg a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

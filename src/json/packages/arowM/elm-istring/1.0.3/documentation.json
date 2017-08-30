@@ -1,0 +1,43 @@
+[
+  {
+    "name": "IString",
+    "comment": " A module to handle difficulty of using `Html.Lazy.lazy` with `Html.Events.onInput`.\n\nIn particular situation, using `Html.Lazy.lazy` with view that fires `Html.Events.onInput` event does not behave as same as one without `lazy`.\nFor detail about the situation, please see [package documentation](http://package.elm-lang.org/packages/arowM/elm-istring/latest).\n\nThis module provides a `IString` type and related functions to handle the difficulty mentioned above.\n\n# Types\n\n@docs IString\n\n# Constructors\n\n@docs fromString\n\n# Functions to unwrap `IString`\n\n@docs toString\n\n# Operators\n\n@docs map\n@docs set\n\n# Lens\n\n@docs lens\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "IString",
+        "comment": " A main opaque type.\n\n    IString.toString <| IString.fromString \"foo\"\n    --> \"foo\"\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromString",
+        "comment": " A constructor for `IString`.\n",
+        "type": "String -> IString.IString"
+      },
+      {
+        "name": "lens",
+        "comment": " A lens value for convenience\n",
+        "type": "Monocle.Lens.Lens IString.IString String"
+      },
+      {
+        "name": "map",
+        "comment": " Modify `IString` value.\n",
+        "type": "(String -> String) -> IString.IString -> IString.IString"
+      },
+      {
+        "name": "set",
+        "comment": " Update `IString`.\n",
+        "type": "String -> IString.IString -> IString.IString"
+      },
+      {
+        "name": "toString",
+        "comment": " Pick `String` value out of `IString`.\n",
+        "type": "IString.IString -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

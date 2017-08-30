@@ -1,0 +1,43 @@
+[
+  {
+    "name": "ElementRelativeMouseEvents",
+    "comment": " These functions are just like the `Html.Events` functions `onMouseDown`, `onMouseUp`, etc, except that they pass along a `Point`, representing exactly where on the html element the mouse activity occured.\n\n@docs Point, onMouseDown, onMouseUp, onMouseMove, onClick, onDoubleClick\n",
+    "aliases": [
+      {
+        "name": "Point",
+        "comment": " This is the basic type we use to represent where a mouse event happens on the screen ",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onClick",
+        "comment": " ",
+        "type": "(ElementRelativeMouseEvents.Point -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onDoubleClick",
+        "comment": " ",
+        "type": "(ElementRelativeMouseEvents.Point -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " Just like the `onMouseDown` in `Html.Events`, but this one passes along a `Point` that is relative to the html element. So clicking right in the middle of a 200x200 div will return `Point 100 100`.\n\n    Canvas.toHtml\n        [ Canvas.Events.onClick CanvasClick ]\n        canvas\n\n    -- ..\n\n    case message of\n        CanvasClick point ->\n            -- ..\n",
+        "type": "(ElementRelativeMouseEvents.Point -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseMove",
+        "comment": " ",
+        "type": "(ElementRelativeMouseEvents.Point -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseUp",
+        "comment": " ",
+        "type": "(ElementRelativeMouseEvents.Point -> msg) -> Html.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

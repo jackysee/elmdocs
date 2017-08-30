@@ -1,0 +1,211 @@
+[
+  {
+    "name": "DateTimePicker",
+    "comment": " DateTime Picker\n\n\n# View\n\n@docs datePicker, datePickerWithConfig, dateTimePicker, dateTimePickerWithConfig, timePicker, timePickerWithConfig\n\n\n# Initial\n\n@docs initialState, initialStateWithToday, initialCmd\n\n\n# Internal State\n\n@docs State\n\n",
+    "aliases": [
+      {
+        "name": "State",
+        "comment": " The state of the date time picker (for Internal Use)\n",
+        "args": [],
+        "type": "DateTimePicker.Internal.InternalState"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "datePicker",
+        "comment": " Date Picker view function with default configuration.\n\nExample:\ntype alias Model = { datePickerState : DateTimePicker.State, value : Maybe Date }\n\n    type Msg\n        = DatePickerChanged DateTimePicker.State (Maybe Date)\n\n    view =\n        DateTimePicker.datePicker\n            DatePickerChanged\n            [ class \"my-datepicker\" ]\n            model.datePickerState\n            model.value\n\n",
+        "type": "(DateTimePicker.State -> Maybe.Maybe Date.Date -> msg) -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "datePickerWithConfig",
+        "comment": " Date Picker view function with custom configuration.\n\nExample:\ntype alias Model = { datePickerState : DateTimePicker.State, value : Maybe Date }\n\n    type Msg\n        = DatePickerChanged DateTimePicker.State (Maybe Date)\n\n    customConfig =\n        let\n            default =\n                DateTimePicker.defaultConfig DatePickerChanged\n        in\n        { default\n            | firstDayOfWeek = Date.Mon\n            , autoClose = True\n        }\n\n    view =\n        DateTimePicker.datePickerWithConfig\n            customConfig\n            DateTimePicker.defaultDatePickerConfig\n            [ class \"my-datepicker\" ]\n            model.datePickerState\n            model.value\n\n",
+        "type": "DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig {}) msg -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "dateTimePicker",
+        "comment": " Date and Time Picker view with default configuration\nExample:\ntype alias Model = { dateTimePickerState : DateTimePicker.State, value : Maybe DateType }\n\n    type Msg\n        = DatePickerChanged DateTimePicker.State (Maybe Date)\n\n    view =\n        DateTimePicker.dateTimePicker\n            DatePickerChanged\n            [ class \"my-datetimepicker\" ]\n            model.dateTimePickerState\n            model.value\n\n",
+        "type": "(DateTimePicker.State -> Maybe.Maybe Date.Date -> msg) -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "dateTimePickerWithConfig",
+        "comment": " Date and Time Picker view with custom configuration\nExample:\ntype alias Model = { dateTimePickerState : DateTimePicker.State, value : Maybe Date }\n\n    type Msg\n        = DatePickerChanged DateTimePicker.State (Maybe Date)\n\n    customConfig =\n        let\n            default =\n                DateTimePicker.defaultDateTimePickerConfig DatePickerChanged\n        in\n        { default\n            | firstDayOfWeek = Date.Mon\n            , autoClose = True\n        }\n\n    view =\n        DateTimePicker.dateTimePickerWithConfig\n            customConfig\n            [ class \"my-datetimepicker\" ]\n            model.dateTimePickerState\n            model.value\n\n",
+        "type": "DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig DateTimePicker.Config.TimePickerConfig) msg -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "initialCmd",
+        "comment": " Initial Cmd to set the initial month to be displayed in the datepicker to the current month.\n",
+        "type": "(DateTimePicker.State -> Maybe.Maybe Date.Date -> msg) -> DateTimePicker.State -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "initialState",
+        "comment": " Initial state of the DatePicker\n",
+        "type": "DateTimePicker.State"
+      },
+      {
+        "name": "initialStateWithToday",
+        "comment": " Initial state of the DatePicker with today Date\n",
+        "type": "Date.Date -> DateTimePicker.State"
+      },
+      {
+        "name": "timePicker",
+        "comment": " Time Picker view with default configuration\nExample:\ntype alias Model = { timePickerState : DateTimePicker.State, value : Maybe DateType }\n\n    type Msg\n        = TimePickerChanged DateTimePicker.State (Maybe Date)\n\n    view =\n        DateTimePicker.timePicker\n            TimePickerChanged\n            [ class \"my-timepicker\" ]\n            model.timePickerState\n            model.value\n\n",
+        "type": "(DateTimePicker.State -> Maybe.Maybe Date.Date -> msg) -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      },
+      {
+        "name": "timePickerWithConfig",
+        "comment": " Time Picker view with custom configuration\nExample:\ntype alias Model = { timePickerState : DateTimePicker.State, value : Maybe Date }\n\n    type Msg\n        = TimePickerChanged DateTimePicker.State (Maybe Date)\n\n    customConfig =\n        let\n            default =\n                DateTimePicker.defaultTimePickerConfig TimePickerChanged\n        in\n        { default\n            | autoClose = True\n        }\n\n    view =\n        DateTimePicker.timePickerWithConfig\n            customConfig\n            [ class \"my-datetimepicker\" ]\n            model.timePickerState\n            model.value\n\n",
+        "type": "DateTimePicker.Config.Config DateTimePicker.Config.TimePickerConfig msg -> List (Html.Attribute msg) -> DateTimePicker.State -> Maybe.Maybe Date.Date -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DateTimePicker.Css",
+    "comment": " DateTimePicker.Css\n\nUsing [rtfeldman/elm-css](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest)\nInclude this in your elm-css port module to be included in your project's css file.\n\n\n# Css\n\n@docs css\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "css",
+        "comment": " DatePicker's Css Stylesheet\n",
+        "type": "Css.Stylesheet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DateTimePicker.Config",
+    "comment": " DateTimePicker configuration\n\n\n# Configuration\n\n@docs Config, I18n, InputFormat, DatePickerConfig, TimePickerConfig, NameOfDays, TimePickerType, Type\n\n\n# Default Configuration\n\n@docs defaultDatePickerConfig, defaultTimePickerConfig, defaultDateTimePickerConfig, defaultDateI18n, defaultTimeI18n, defaultDateTimeI18n, defaultDateInputFormat, defaultDateTimeInputFormat\n\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " Configuration\n\n  - `onChange` is the message for when the selected value and internal `State` in the date picker has changed.\n  - `autoClose` is a flag to indicate whether the dialog should be automatically closed when a date and/or time is selected.\n  - `i18n` is internationalization configuration.\n\n",
+        "args": [
+          "otherConfig",
+          "msg"
+        ],
+        "type": "{ otherConfig | onChange : DateTimePicker.Config.State -> Maybe.Maybe Date.Date -> msg, autoClose : Bool, i18n : DateTimePicker.Config.I18n, usePicker : Bool, attributes : List (Html.Attribute msg) }"
+      },
+      {
+        "name": "DatePickerConfig",
+        "comment": " Configuration for the DatePicker\n\n  - `nameOfDays` is the configuration for name of days in a week.\n  - `firstDayOfWeek` is the first day of the week.\n  - `titleFormatter` is the Date to String formatter for the dialog's title.\n  - `footerFormatter` is the Date to String formatter for the dialog's footer.\n  - `allowYearNavigation` show/hide year navigation button.\n  - `earliestDate` if given, dates before this cannot be selected\n\n",
+        "args": [
+          "otherConfig"
+        ],
+        "type": "{ otherConfig | nameOfDays : DateTimePicker.Config.NameOfDays, firstDayOfWeek : Date.Day, allowYearNavigation : Bool, earliestDate : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "I18n",
+        "comment": " Internationalization configuration\n\n  - `footerFormatter` is a Date to string formatter used to display the date in the footer section.\n  - `titleFormatter` is a Date to string formatter used to display the date in the title section.\n  - `timeTitleFormatter` is a Date to string formatter used to display the time in the title section.\n  - `inputFormat` is an input date formatter and parser.\n\n",
+        "args": [],
+        "type": "{ titleFormatter : Date.Date -> String , footerFormatter : Date.Date -> String , timeTitleFormatter : Date.Date -> String , inputFormat : DateTimePicker.Config.InputFormat }"
+      },
+      {
+        "name": "InputFormat",
+        "comment": " Input formatter and parser\n\n  - `inputFormatter` is a Date to string formatter used to display the date in the input text\n  - `inputParser` is a String to Date parser used to parsed input text into Date\n\n",
+        "args": [],
+        "type": "{ inputFormatter : Date.Date -> String , inputParser : String -> Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "NameOfDays",
+        "comment": " Configuration for name of days in a week.\n\nThis will be displayed as the calendar's header.\nDefault:\n\n  - sunday = \"Su\"\n  - monday = \"Mo\"\n  - tuesday = \"Tu\"\n  - wednesday = \"We\"\n  - thursday = \"Th\"\n  - friday = \"Fr\"\n  - saturday = \"Sa\"\n\n",
+        "args": [],
+        "type": "{ sunday : String , monday : String , tuesday : String , wednesday : String , thursday : String , friday : String , saturday : String }"
+      },
+      {
+        "name": "TimePickerConfig",
+        "comment": " Configuration for TimePicker\n\n  - `timePickerType` is the type of the time picker, either Analog or Digital\n\n",
+        "args": [],
+        "type": "{ timePickerType : DateTimePicker.Config.TimePickerType }"
+      }
+    ],
+    "types": [
+      {
+        "name": "TimePickerType",
+        "comment": " The type of time picker, can be either Digital or Analog\n",
+        "args": [],
+        "cases": [
+          [
+            "Digital",
+            []
+          ],
+          [
+            "Analog",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Type",
+        "comment": " The type of picker (for Internal Use)\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "DateType",
+            [
+              "DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig {}) msg"
+            ]
+          ],
+          [
+            "DateTimeType",
+            [
+              "DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig DateTimePicker.Config.TimePickerConfig) msg"
+            ]
+          ],
+          [
+            "TimeType",
+            [
+              "DateTimePicker.Config.Config DateTimePicker.Config.TimePickerConfig msg"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultDateI18n",
+        "comment": " Default Date internationalization\n\n  - `titleFormatter` Default: `\"%B %Y\"`\n  - `footerFormatter` Default: `\"%A, %B %d, %Y\"`\n  - `inputFormat` Default: \"%m/%d/%Y\"\n\n",
+        "type": "DateTimePicker.Config.I18n"
+      },
+      {
+        "name": "defaultDateInputFormat",
+        "comment": " Default input format for date picker\n",
+        "type": "DateTimePicker.Config.InputFormat"
+      },
+      {
+        "name": "defaultDatePickerConfig",
+        "comment": " Default configuration for DatePicker\n\n  - `onChange` No Default\n  - `autoClose` Default: True\n  - `nameOfDays` see `NameOfDays` for the default values.\n  - `firstDayOfWeek` Default: Sunday.\n  - `allowYearNavigation` Default : True\n  - `earliestDate` Default : Nothing\n\n",
+        "type": "(DateTimePicker.Config.State -> Maybe.Maybe Date.Date -> msg) -> DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig {}) msg"
+      },
+      {
+        "name": "defaultDateTimeI18n",
+        "comment": " Default Date and Time internationalization\n\n  - `titleFormatter` Default: `\"%B %Y\"`\n  - `footerFormatter` Default: `\"%A, %B %d, %Y\"`\n  - `inputFormat` Default: \"%m/%d/%Y %I:%M %p\"\n\n",
+        "type": "DateTimePicker.Config.I18n"
+      },
+      {
+        "name": "defaultDateTimeInputFormat",
+        "comment": " Default input format for date and time picker\n",
+        "type": "DateTimePicker.Config.InputFormat"
+      },
+      {
+        "name": "defaultDateTimePickerConfig",
+        "comment": " Default configuration for DateTimePicker\n\n  - `onChange` No Default\n  - `dateFormatter` Default: `\"%m/%d/%Y\"`\n  - `dateTimeFormatter` Default: `\"%m/%d/%Y %I:%M %p\"`\n  - `autoClose` Default: False\n  - `nameOfDays` see `NameOfDays` for the default values.\n  - `firstDayOfWeek` Default: Sunday.\n  - `titleFormatter` Default: `\"%B %Y\"`\n  - `fullDateFormatter` Default: `\"%A, %B %d, %Y\"`\n  - `timeFormatter` Default: `\"%I:%M %p\"`\n  - `timePickerType` Default: Analog\n  - `allowYearNavigation` Default : True\n  - `earliestDate` Default : Nothing\n\n",
+        "type": "(DateTimePicker.Config.State -> Maybe.Maybe Date.Date -> msg) -> DateTimePicker.Config.Config (DateTimePicker.Config.DatePickerConfig DateTimePicker.Config.TimePickerConfig) msg"
+      },
+      {
+        "name": "defaultTimeI18n",
+        "comment": " Default Time internationalization\n\n  - `titleFormatter` Default: `\"%B %Y\"`\n  - `footerFormatter` Default: `\"%A, %B %d, %Y\"`\n  - `inputFormat` Default: \"%I:%M %p\"\n\n",
+        "type": "DateTimePicker.Config.I18n"
+      },
+      {
+        "name": "defaultTimePickerConfig",
+        "comment": " Default configuration for TimePicker\n\n  - `onChange` No Default\n  - `dateFormatter` Default: `\"%m/%d/%Y\"`\n  - `dateTimeFormatter` Default: `\"%m/%d/%Y %I:%M %p\"`\n  - `autoClose` Default: False\n  - `timeFormatter` Default: `\"%I:%M %p\"`\n  - `timePickerType` Default: Analog\n\n",
+        "type": "(DateTimePicker.Config.State -> Maybe.Maybe Date.Date -> msg) -> DateTimePicker.Config.Config DateTimePicker.Config.TimePickerConfig msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Json",
+    "comment": "\nThis module is intended to explore an alternative API to Json.\n@docs decodeField\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeField",
+        "comment": "\n    Decode a field using a given setter to get it out of an object. This function is designed to be chained!\n\n    >>> import Json.Decode\n    >>> import Json.Encode\n    >>> decodeField\n    ... \"name\"\n    ... Json.Decode.string\n    ... (\\model name -> { model | name = name })\n    ... (Json.Encode.object [ (\"name\", Json.Encode.string \"noah\") ])\n    ... (Ok { name = \"\" })\n    Ok { name = \"noah\" }\n\n    >>> decodeField\n    ... \"name\"\n    ... Json.Decode.string\n    ... (\\model name -> { model | name = name })\n    ... (Json.Encode.object [ (\"age\", Json.Encode.int 18) ])\n    ... (Ok { name = \"\" })\n    Err \"Expecting an object with a field named `name` but instead got: {\\\"age\\\":18}\"\n\n    >>> decodeField\n    ... \"name\"\n    ... Json.Decode.string\n    ... (\\model name -> { model | name = name })\n    ... (Json.Encode.object [ (\"age\", Json.Encode.int 18) ])\n    ... (Err \"Something failed!\")\n    Err \"Something failed!\\nAnd Expecting an object with a field named `name` but instead got: {\\\"age\\\":18}\"\n",
+        "type": "String -> Json.Decode.Decoder a -> (model -> a -> model) -> Json.Decode.Value -> Result.Result String model -> Result.Result String model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

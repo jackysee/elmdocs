@@ -1,0 +1,99 @@
+[
+  {
+    "name": "MouseEvents",
+    "comment": " Offers MouseEvents that expose more information about these events than\n`elm-lang/html`.\n\nSpecifically, the position of mouse events can be determined precisely as\nclient coordinates and element (`targetPos`) coordinates are included.\n\n# Example\n\n```elm\nimport MouseEvents exposing (onMouseMove)\n\ntype Msg =\n    Clicked MouseEvent\n\ndiv\n  [ onClick MouseMove ]\n  [ text \"Example div\" ]\n```\n\nThe `Clicked` message will contain the coordinates of the click.\n\n# Data structures\n@docs Position\n@docs relPos\n\n@docs MouseEvent\n\n# Events\n@docs onClick\n@docs onContextMenu\n@docs onDoubleClick\n@docs onMouseDown\n@docs onMouseEnter\n@docs onMouseLeave\n@docs onMouseMove\n@docs onMouseOut\n@docs onMouseOver\n@docs onMouseUp\n@docs onPointerLockChange\n@docs onPointerLockError\n@docs onSelect\n@docs onWheel\n",
+    "aliases": [
+      {
+        "name": "MouseEvent",
+        "comment": " Mouse event data. Does not include the type of the event, but information\ncommon to all mouse events like position.\n\n## Fields\n* `clientPos`: Event position relative to the document\n* `targetPos`: Position of the element that fired the event\n",
+        "args": [],
+        "type": "{ clientPos : MouseEvents.Position , targetPos : MouseEvents.Position }"
+      },
+      {
+        "name": "Position",
+        "comment": " Encodes a position on screen\n",
+        "args": [],
+        "type": "{ x : Int, y : Int }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "onClick",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onContextMenu",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onDoubleClick",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseEnter",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n\nNote that `onMouseEnter` and other events may be prone to strange behaviour\nsimilar to [Z-fighting](https://en.wikipedia.org/wiki/Z-fighting) they overlap\nwhile no `z-index` style attribute is set.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseLeave",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseMove",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseOut",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseOver",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMouseUp",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onPointerLockChange",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onPointerLockError",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onSelect",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onWheel",
+        "comment": " A mouse event, maps to the JS event with the same name. See\nhttps://developer.mozilla.org/en-US/docs/Web/Events for details.\n",
+        "type": "(MouseEvents.MouseEvent -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "relPos",
+        "comment": " Calculates the relative position of an Event.\n\n",
+        "type": "MouseEvents.MouseEvent -> MouseEvents.Position"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

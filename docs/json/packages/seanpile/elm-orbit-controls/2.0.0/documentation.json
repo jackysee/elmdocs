@@ -1,0 +1,56 @@
+[
+  {
+    "name": "OrbitControls",
+    "comment": " OrbitControls allows you to rotate and zoom around a target in 3D.\n\n\n# Definition\n\n@docs OrbitEvent, State, Options\n\n\n# Initialization\n\n@docs defaultState, defaultOptions\n\n\n# Listeners\n\n@docs listeners\n\n\n# Updating\n\n@docs apply, applyWithOptions\n\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " The available options that can be used to customize the controls.\n",
+        "args": [],
+        "type": "{ minDistance : Float , maxDistance : Float , minPolarAngle : Float , maxPolarAngle : Float , minAzimuthAngle : Float , maxAzimuthAngle : Float , rotateSpeed : Float , zoomSpeed : Float , up : Math.Vector3.Vec3 , target : Math.Vector3.Vec3 }"
+      }
+    ],
+    "types": [
+      {
+        "name": "OrbitEvent",
+        "comment": " Defines the bridge type that will allow the main program to communicate with the OrbitControls. These events are emitted\nby OrbitControls and then handled by the main program.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " The state that needs to be maintained by OrbitControls. This is intentionally opaque to the user\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Apply the orbit event to the given position and state. This is a shortcut for `applyWithOptions` using `defaultOptions`\n",
+        "type": "OrbitControls.OrbitEvent -> ( Math.Vector3.Vec3, OrbitControls.State ) -> ( Math.Vector3.Vec3, OrbitControls.State )"
+      },
+      {
+        "name": "applyWithOptions",
+        "comment": " Apply the orbit event to the given position and state. This function applies the orbiting controls that are triggered\nby an underlying event.\n\n    type Msg =\n        OnOrbit OrbitEvent\n        | ...\n\n    type alias Model = {\n        state: OrbitControls.State\n    }\n\n    options = OrbitControls.defaultOptions\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        case msg of\n            OnOrbit event ->\n                let\n                    -- Client logic\n                    currentPosition = ...\n\n                    (updatedPosition, updatedState) =\n                        OrbitControls.applyWithOptions\n                            options\n                            event\n                            (currentPosition, model.state)\n\n                    -- Process the new position\n                    ...\n                in\n                    -- Keep track of the new state\n                    ( { model | state = updatedState })\n\n",
+        "type": "OrbitControls.Options -> OrbitControls.OrbitEvent -> ( Math.Vector3.Vec3, OrbitControls.State ) -> ( Math.Vector3.Vec3, OrbitControls.State )"
+      },
+      {
+        "name": "defaultOptions",
+        "comment": " The set of options with mostly sensible defaults. To override:\n\n    defaults =\n        OrbitControls.defaultOptions\n\n    options =\n        { defaults\n            | minDistance = 1\n            , maxDistance = 10\n            , ...\n        }\n\n",
+        "type": "OrbitControls.Options"
+      },
+      {
+        "name": "defaultState",
+        "comment": " Initialize the OrbitControl state that you will need to pass to OrbitControls\n",
+        "type": "OrbitControls.State"
+      },
+      {
+        "name": "listeners",
+        "comment": " The list of listeners that should be included in the attributes of the HTML element you are\nmonitoring. For example:\n\n    type Msg =\n        OnOrbit OrbitEvent\n        | ...\n\n    state = OrbitControls.defaultState\n\n    div [ listeners state OnOrbit ]\n        [ WebGL.toHtml ... ]\n\n",
+        "type": "OrbitControls.State -> (OrbitControls.OrbitEvent -> msg) -> List (Html.Attribute msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

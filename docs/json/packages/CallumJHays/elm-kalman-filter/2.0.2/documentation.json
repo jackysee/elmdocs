@@ -1,0 +1,65 @@
+[
+  {
+    "name": "KalmanFilter",
+    "comment": " Simple 1D Kalman Filters in Elm.\nKalman filters are great for estimating true values of sequenced noisy data.\nFor example, it can be useful for calculating and displaying moving averages in\notherwise noisy data. Kalman filters are generalizable to work in N dimensions,\nhowever this library is only equipped to deal with 1D data.\n\nFor more information on the theory of the Kalman Filter, check out [a great\nintro paper here](http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf).\n\n# Basic Usage\n\nThese are the simplest way to get started using Kalman filters. You just apply\nthe filter to the list and it works. Voila!~~\n\n@docs filter, filterWithNoiseEstimates\n\n# Advanced Usage\n\nThese functions should be used if you don't like the way `filter` does\nstuff, or you need your implementation to be on-line (with rolling updates)\n\n## Model\n@docs Model, Params, State, defaultParams, init, fromMeasurement\n\n## Functions\n@docs filterMeasurement, predictNext\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Holds the kalman filter state and parameters.\n",
+        "args": [],
+        "type": "{ state : KalmanFilter.State, params : KalmanFilter.Params }"
+      },
+      {
+        "name": "Params",
+        "comment": " Parameters for the kalman filter. Use these to tune the filter for your\nuse case.\n",
+        "args": [],
+        "type": "{ expectedNoisePower : Float , desiredNoisePower : Float , stateFactor : Float , controlFactor : Float , measurementFactor : Float }"
+      },
+      {
+        "name": "State",
+        "comment": " Current state of the filter.\nThe `prediction` field holds what the filter thinks the last value learned from\n'should' have been. The `covariance` field is for internal use.\n",
+        "args": [],
+        "type": "{ prediction : Float, covariance : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultParams",
+        "comment": " Decent default parameters for a kalman filter. It is highly recommended\nthat you fine-tune this for a better convergence / training time balance.\n",
+        "type": "KalmanFilter.Params"
+      },
+      {
+        "name": "filter",
+        "comment": " Filters a noisy signal, providing the predicted 'true' value of\nthe signal. Makes working with kalman filters very easy.\n",
+        "type": "Maybe.Maybe KalmanFilter.Params -> List Float -> List Float"
+      },
+      {
+        "name": "filterMeasurement",
+        "comment": " Run a measurement through a filter with an optional `controlFactor`,\nreturning the model with its parameters updated to reflect the measurement\nrecording.\n\nWhat the filter thinks the maximum likelihood for the 'true' value of the last\nmeasurement should be can be accessed in the resulting `model.state.prediction`\n\n`maybeNoiseEstimation` may be provided to if an indicator of what the noise\nfor this measurement is able to be provided. For example, if using the most\nlikely value from a probability density histogram, the probability of the value\ninversely compared to the probability of the rest may be a good indicator of\nthe amount of noise associated with a measurement.\n",
+        "type": "KalmanFilter.Model -> Maybe.Maybe Float -> Float -> KalmanFilter.Model"
+      },
+      {
+        "name": "filterWithNoiseEstimates",
+        "comment": " Like `filter` but including noise estimation as the second item in\nthe tuple of examples. If not appliccable for some signals, `0` can be supplied\nas the noiseEstimation.\n",
+        "type": "Maybe.Maybe KalmanFilter.Params -> List ( Float, Float ) -> List Float"
+      },
+      {
+        "name": "fromMeasurement",
+        "comment": " Initialize a kalman filter from a measurement. This is the recommended way\nto instantiate a `KalmanFilter.Model` as it converges much faster than when\nstarting at 0.\n",
+        "type": "Maybe.Maybe KalmanFilter.Params -> Float -> KalmanFilter.Model"
+      },
+      {
+        "name": "init",
+        "comment": " Initializes a kalman filter with an initial prediction of 0 and a\ncovariance of 1. If possible, it is recommended to use `fromMeasurement`\nto instantiate a `KalmanFilter.Model` as it will converge much faster.\n",
+        "type": "Maybe.Maybe KalmanFilter.Params -> KalmanFilter.Model"
+      },
+      {
+        "name": "predictNext",
+        "comment": " Predict the next value in the series.\nThis is a prediction about what it thinks the 'true' value of the next element\nshould be before seeing the next measurement.\n",
+        "type": "KalmanFilter.Model -> Maybe.Maybe Float -> Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

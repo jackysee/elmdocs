@@ -1,0 +1,108 @@
+[
+  {
+    "name": "BigInt",
+    "comment": " Infinite digits integers\n\n@docs BigInt\n\n\n# From/To\n\n@docs fromInt, fromString, toString\n\n\n# Operations\n\n@docs add, sub, mul, div, mod, divmod\n\n\n# Sign\n\n@docs abs, negate\n\n\n# Comparison\n\n@docs compare, gt, gte, lt, lte, max, min\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "BigInt",
+        "comment": " BigInt type\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "abs",
+        "comment": " Absolute value\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "add",
+        "comment": " Adds two BigInts\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "compare",
+        "comment": " Compares two BigInts\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Basics.Order"
+      },
+      {
+        "name": "div",
+        "comment": " BigInt division. Produces 0 when dividing by 0 (like (//)).\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "divmod",
+        "comment": " Division and modulus\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Maybe.Maybe ( BigInt.BigInt, BigInt.BigInt )"
+      },
+      {
+        "name": "fromInt",
+        "comment": " Makes an BigInt from an Int\n",
+        "type": "Int -> BigInt.BigInt"
+      },
+      {
+        "name": "fromString",
+        "comment": " Makes an BigInt from a String\n",
+        "type": "String -> Maybe.Maybe BigInt.BigInt"
+      },
+      {
+        "name": "gt",
+        "comment": " Greater than\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Bool"
+      },
+      {
+        "name": "gte",
+        "comment": " Greater than or equals\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Bool"
+      },
+      {
+        "name": "lt",
+        "comment": " Less than\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Bool"
+      },
+      {
+        "name": "lte",
+        "comment": " Less than or equals\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> Bool"
+      },
+      {
+        "name": "max",
+        "comment": " Returns the largest of two BigInts\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "min",
+        "comment": " Returns the smallest of two BigInts\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "mod",
+        "comment": " Modulus. Crashes on zero (like (%)).\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "mul",
+        "comment": " Multiplies two BigInts\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "negate",
+        "comment": " Changes the sign of an BigInt\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "sub",
+        "comment": " Substracts the second BigInt from the first\n",
+        "type": "BigInt.BigInt -> BigInt.BigInt -> BigInt.BigInt"
+      },
+      {
+        "name": "toString",
+        "comment": " Converts the BigInt to a String\n",
+        "type": "BigInt.BigInt -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

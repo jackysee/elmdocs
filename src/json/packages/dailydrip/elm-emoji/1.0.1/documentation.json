@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Emoji",
+    "comment": " A searchable emoji database\n\nThis is a simple Elm package that collects all of the emoji into a module and\nprovides a means of searching the database for a given emoji.\n\nThere's an example emoji picker app that uses it in [the repository's `example`\ndirectory.](https://github.com/dailydrip/elm-emoji/tree/master/example)\n\n# Types\n@docs Emoji, Emojis\n\n# Functions\n@docs string, search, toList, emojis\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Emoji",
+        "comment": " An opaque type for an Emoji\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Emojis",
+        "comment": " An opaque type for the Emoji database\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "emojis",
+        "comment": " All of the emojis\n",
+        "type": "Emoji.Emojis"
+      },
+      {
+        "name": "search",
+        "comment": " Search for an emoji by common name part\n",
+        "type": "String -> Emoji.Emojis -> Emoji.Emojis"
+      },
+      {
+        "name": "string",
+        "comment": " Get the string for an emoji\n",
+        "type": "Emoji.Emoji -> String"
+      },
+      {
+        "name": "toList",
+        "comment": " Turn an `Emojis` into a list of `( key, emoji )`\n",
+        "type": "Emoji.Emojis -> List ( String, Emoji.Emoji )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

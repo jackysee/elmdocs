@@ -1,0 +1,53 @@
+[
+  {
+    "name": "FieldLens",
+    "comment": " A module that allows field names to become parameters to functions. That is,\na module which provides first class field names.\n\nThese operations are intended for use with field names, but the types are\ngeneral enough for integration with other data types should the need arise.\n\n# Field Lenses\n\n@docs FieldLens\n\n# Manipulating Fields\n\n@docs get, set, modify\n\n# Composing field names\n\n@docs compose, (>->), (<-<)\n",
+    "aliases": [
+      {
+        "name": "FieldLens",
+        "comment": " A record that provides a getter and setter function. Allows for the fact\nthat fields can change their type.\n\nDefinitions of the this type will be boilerplate, and will all have a form like\nthis:\n\n    field_name = { .field_name, (\\a r -> { r | field_name = a })}\n\nThis example leverages the fact that the field_name can be used as both the\nrecord's name and the field, but it could be called anything.\n",
+        "args": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "type": "{ get : a -> b, set : c -> a -> d }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "<-<",
+        "comment": " Right associative infix synonym for compose.\n\n    set (x <-< pos) 10 player == Player (Pos 10 0)\n",
+        "type": "FieldLens.FieldLens b c g d -> FieldLens.FieldLens a b d e -> FieldLens.FieldLens a c g e"
+      },
+      {
+        "name": ">->",
+        "comment": " Left associative infix synonym for compose.\n\n    set (pos >-> x) 10 player == Player (Pos 10 0)\n",
+        "type": "FieldLens.FieldLens a b d e -> FieldLens.FieldLens b c g d -> FieldLens.FieldLens a c g e"
+      },
+      {
+        "name": "compose",
+        "comment": " Compose field names, useful when records are nested.\n\n    player : { pos : { x : Int, y : Int }}\n    player = Player (Pos 0 0)\n\n    set (compose pos x) 10 player == Player (Pos 10 0)\n\n",
+        "type": "FieldLens.FieldLens a b d e -> FieldLens.FieldLens b c g d -> FieldLens.FieldLens a c g e"
+      },
+      {
+        "name": "get",
+        "comment": " Synonym for `.get`. Allows for slightly nicer usage of the field name.\n\n    get num_lives player == 5\n\n",
+        "type": "FieldLens.FieldLens a b c d -> a -> b"
+      },
+      {
+        "name": "modify",
+        "comment": " Allows applying an update function to the specific field of the record.\n\n    modify num_lives ((+) 1) player\n\n",
+        "type": "FieldLens.FieldLens a b c d -> (b -> c) -> a -> d"
+      },
+      {
+        "name": "set",
+        "comment": " As with `get`, this is simply a synonym for `.set` and allows for slightly\nnicer usage of the field name.\n\n     set num_lives 10 player == { num_lives = 10, ... }\n\n",
+        "type": "FieldLens.FieldLens a b c d -> c -> a -> d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

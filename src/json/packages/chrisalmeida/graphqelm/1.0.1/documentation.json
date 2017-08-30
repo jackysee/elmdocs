@@ -1,0 +1,48 @@
+[
+  {
+    "name": "GraphQElm",
+    "comment": " GraphQElm exposes a simple Elm API for composing GraphQL queries and making requests to a GraphQL endpoint.\n\n\n# Defining and Composing Queries\n\n@docs Query, gql, concatQueries, nest\n\n\n# Making Requests\n\n@docs get, mutate, concatGQLUrl\n\n",
+    "aliases": [
+      {
+        "name": "Query",
+        "comment": " Query type used to define a GraphQElm query.\n\n    import GraphQElm exposing (Query)\n\n    query : Query\n    query =\n        { resource = \"products\"\n        , fields = [ \"name\", \"price\" ]\n        , args = []\n        , alias = \"\"\n        }\n\n",
+        "args": [],
+        "type": "{ resource : String , fields : List String , args : List ( String, String ) , alias : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "concatGQLUrl",
+        "comment": " Concatenates a URL and query string.\nUseful for custom Http requests as the url field.\n\n    mutate : Bool\n    mutate = False\n\n    usersQuery : Query\n    usersQuery =\n        {resource = \"users\"\n        , fields = [\"name\", \"age\"]\n        , args = []\n        , alias = \"\"}\n\n    url = concatGQLUrl mutate \"http://localhost:4000/graphql\" (gql usersQuery)\n\n    url == \"http://localhost:4000/graphql?query={users{name, age}}\"\n\n",
+        "type": "Bool -> String -> String -> String"
+      },
+      {
+        "name": "concatQueries",
+        "comment": " Concatenates non-nested queries, allowing for multiple top-level queries.\n\n    import GraphQElm exposing (Query, gql, concatQueries)\n\n    usersQuery : Query\n    usersQuery =\n        {resource = \"users\"\n        , fields = [\"name\", \"age\", \"city\"]\n        , args = []\n        , alias = \"\"\n        }\n\n    boardsQuery : Query\n    boardsQuery =\n        {resource = \"boards\"\n        , fields = [\"title\", \"created_at\"]\n        , args = []\n        , alias = \"\"\n        }\n\n    concatQueries [(gql query1), (gql query2)] == \"users{name, age, city}, boards{title, created_at}\"\n\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "get",
+        "comment": " Creates a \"GET\" request for a given query.\n\n    ...\n\n    userQuery : Query\n    userQuery =\n        {resource = \"user\"\n        , fields = [\"name\", \"email_address\"]\n        , args = []\n        , alias = \"\"\n        }\n\n\n    view : Model -> Html Msg\n    view model =\n        div [onClick (QueryGQL (gql userQuery))] [button [] [text \"Send Query\"]]\n\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update m model =\n        case m of\n            QueryGQL query ->\n                ( model, Http.send (\\res -> GQLResponse res) (get model.serverBaseUrl query userDecoder) )\n    ...\n\n",
+        "type": "String -> String -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "gql",
+        "comment": " Converts a Query type into a GraphQL query.\n\n    import GraphQElm exposing (Query, gql)\n\n    query : Query\n    query =\n        {resource = \"user\"\n        , fields = [\"name\", \"age\", \"city\"]\n        , args = [(\"email\", \"steve@apple.com\")]\n        , alias = \"steveJobs\"\n        }\n\n    gql query == \"steveJobs: users(email: \"steve@apple.com\"){name, age, city}\"\n\n",
+        "type": "GraphQElm.Query -> String"
+      },
+      {
+        "name": "mutate",
+        "comment": " Creates a \"POST\" request for a given query.\n\n    ...\n\n    createUser : Query\n    createUser =\n        {resource = \"user\"\n        , fields = [\"name\", \"email_address\"]\n        , args = [(\"name\", \"Chris\"), (\"email_address\", \"chris@example.com\")]\n        , alias = \"\"\n        }\n\n\n    view : Model -> Html Msg\n    view model =\n        div []\n            [button [onClick (QueryGQL (gql createUser))] [text \"Send Query\"]\n            ]\n\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update m model =\n        case m of\n            QueryGQL query ->\n                ( model, Http.send (\\res -> GQLResponse res) (mutate model.serverBaseUrl query userDecoder) )\n    ...\n\n",
+        "type": "String -> String -> Json.Decode.Decoder a -> Http.Request a"
+      },
+      {
+        "name": "nest",
+        "comment": " Used for nesting a query.\n\n    import module GraphQElm exposing (Query, gql, nest)\n\n    usersQuery : Query\n    usersQuery =\n        {resource = \"users\"\n        , fields = [\"name\", \"age\", \"city\"]\n        , args = []\n        , alias = \"\"\n        }\n\n    boardsQuery : Query\n    boardsQuery =\n        {resource = \"boards\"\n        , fields = [\"title\", \"created_at\"]\n        , args = []\n        , alias = \"\"\n        }\n\n    usersBoards =\n        nest usersQuery boardsQuery\n\n    usersBoards == \"users{name, age, city, boards{title, created_at}}\"\n\n    -- another way to achieve nested queries would be to add (gql someQuery) to the Query fields list.\n\n    usersQuery : Query\n    usersQuery =\n        {resource = \"users\"\n        , fields = [\"name\", \"age\", \"city\", (gql boardsQuery)]\n        , args = []\n        , alias = \"\"\n        }\n\n    usersBoards =\n        gql usersQuery\n\n",
+        "type": "String -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

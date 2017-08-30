@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Cms",
+    "comment": " This library creates a minimalistic content management interface based solely on a detailed definition of records and fields to work with. Connects to a REST API.\n\nIt works something like the following:\n\n*client: I want to edit jobs with a text title and a markdown content. I have some custom validations and default values too. Oh, and I also have a REST API at this URL. I'm already authenticating users and have access to their names in client-side JavaScript.*\n\n*elm-cms: Super cool! Just use my types to declare your records, and pass the rest to me as flags. Hope you like minimalistic!*\n\nThis library tries to be simple. It supports:\n* input, textarea and radio fields\n* a markdown editor\n* an image uploader widget (must subscribe to port to handle the upload and send back the uploaded image URL)\n* for the time being, it stores all data as a string. Other data types have to be encoded as strings and converted by the users of the API. Hang in there while I think through a nice way to handle numbers, booleans and maybe possible even JSON\n\nIt will conceivably support:\n* lists (stored as a stringified array of strings)\n* yaml editor (if I can pull off writing a `peterszerzo/elm-yaml` package)\n* two basic roles: editor, who may edit records, and an admin, who may also create and edit records\n* trash\n\nIt is unlikely it will ever support:\n* auth logic. This app should start once the cms user is already logged in and the auth token or cookie is already set\n* drafts and versions\n\n\n# Definitions\n@docs Record, Config, defaultConfig, Model, Flags, Msg\n\n# The program\n@docs programWithFlags\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " General program configuration. This is also a place to pass in the ports you will use to handle image uploads and custom validations. For now, please consult the example to see how this is wired up. More docs to follow shortly!\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Internal.Models.Config msg"
+      },
+      {
+        "name": "Flags",
+        "comment": " The flags the program will need contain the user name and the base url for the REST API. The user name should be human-readable (it shows up as a greeting), and the REST API url should not contain a trailing slash.\n\n    type alias Flags =\n        { user : String\n        , apiUrl : String\n        }\n",
+        "args": [],
+        "type": "Internal.Models.Flags"
+      },
+      {
+        "name": "Model",
+        "comment": " Opaque type annotation for the program's model.\n",
+        "args": [],
+        "type": "Internal.Models.Model"
+      },
+      {
+        "name": "Msg",
+        "comment": " Opaque type annotation for the program's message.\n",
+        "args": [],
+        "type": "Internal.Messages.Msg"
+      },
+      {
+        "name": "Record",
+        "comment": " Describes a record. For the time being, this is just a list of fields.\n",
+        "args": [],
+        "type": "Internal.Models.Record"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultConfig",
+        "comment": " Default program configuration. Use for use cases not involving image uploads or custom validations.\n",
+        "type": "Cms.Config msg"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Create that dashboard. No need to pass models, inputs and views this time, just a list of records.\n",
+        "type": "List ( String, Cms.Record ) -> Cms.Config Internal.Messages.Msg -> Platform.Program Internal.Models.Flags Internal.Models.Model Internal.Messages.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Cms.Field",
+    "comment": " This module contains the types describing record fields. For example, your next static page will have a `metaDescription` field, which is unique, at least 15 characters long, should show in the list view (unlike that long static content field), and should be entered in a single-line text input. Looking for a markdown field with live preview, and the library has you covered.\n\n# Definitions\n@docs Field, Type, ValidationType\n",
+    "aliases": [
+      {
+        "name": "Field",
+        "comment": " Describes a field, including display options, default values, validations, etc.\n",
+        "args": [],
+        "type": "{ id : String , type_ : Cms.Field.Type , showInListView : Bool , default : Maybe.Maybe String , validation : Maybe.Maybe { type_ : Cms.Field.ValidationType, errorMessage : String } }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Type",
+        "comment": " Currently available form input types. Markdown fields have a live preview similar to the Ghost editor.\n",
+        "args": [],
+        "cases": [
+          [
+            "Text",
+            []
+          ],
+          [
+            "TextArea",
+            []
+          ],
+          [
+            "Markdown",
+            []
+          ],
+          [
+            "Radio",
+            [
+              "List String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ValidationType",
+        "comment": " Describes a validation type.\n\n    Custom validations allow you to communicate with JavaScript to perform more complex validations and send back a transformed version of the field for display (e.g. a YAML value converted to JSON). See example in the repo for documentation and stay tuned for more docs.\n",
+        "args": [],
+        "cases": [
+          [
+            "AnyValue",
+            []
+          ],
+          [
+            "FieldRegex",
+            [
+              "Regex.Regex"
+            ]
+          ],
+          [
+            "Custom",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

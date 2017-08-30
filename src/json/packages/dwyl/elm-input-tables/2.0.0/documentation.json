@@ -1,0 +1,302 @@
+[
+  {
+    "name": "InputTable.View",
+    "comment": " Displays the InputTable\n@docs view\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " When passed the tableState, this will create the InputTable view\n",
+        "type": "InputTable.Model.TableState rowData -> Html.Html (InputTable.Messages.TableMsg rowData)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "InputTable.Update",
+    "comment": " Handles messages sent to InputTable\n@docs update\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "update",
+        "comment": " When sent a TableMsg, this function will update the TableState appropriately\n",
+        "type": "InputTable.Messages.TableMsg rowData -> InputTable.Model.TableState rowData -> InputTable.Model.TableState rowData"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "InputTable.Messages",
+    "comment": " This module lists the messages that may be sent by InputTable events\n# Definition\n@docs TableMsg\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "TableMsg",
+        "comment": " TableMsg union type contains all messages sent by InputTable events\n",
+        "args": [
+          "rowData"
+        ],
+        "cases": [
+          [
+            "SetCellValue",
+            [
+              "rowData -> String -> rowData",
+              "Int",
+              "String"
+            ]
+          ],
+          [
+            "SetBoolCellValue",
+            [
+              "rowData -> Bool -> rowData",
+              "Int"
+            ]
+          ],
+          [
+            "ToggleCellDropdown",
+            [
+              "Int",
+              "Int"
+            ]
+          ],
+          [
+            "SelectDropdownParent",
+            [
+              "Int",
+              "Int",
+              "String",
+              "rowData -> ( String, Maybe.Maybe String ) -> rowData"
+            ]
+          ],
+          [
+            "ViewDropdownChildren",
+            [
+              "Int",
+              "Int",
+              "String",
+              "rowData -> ( String, Maybe.Maybe String ) -> rowData"
+            ]
+          ],
+          [
+            "SelectDropdownChild",
+            [
+              "Int",
+              "Int",
+              "String",
+              "String",
+              "rowData -> ( String, Maybe.Maybe String ) -> rowData"
+            ]
+          ],
+          [
+            "SetSearchText",
+            [
+              "String"
+            ]
+          ],
+          [
+            "SetColumnFilterText",
+            [
+              "Int",
+              "String"
+            ]
+          ],
+          [
+            "SwitchColumnCheckboxFilter",
+            [
+              "Int",
+              "Maybe.Maybe Bool"
+            ]
+          ],
+          [
+            "ToggleRowCheckbox",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "ToggleVisibleRowsCheckboxes",
+            [
+              "List (InputTable.Model.Row rowData)"
+            ]
+          ],
+          [
+            "ToggleChooseVisibleColumnsUi",
+            []
+          ],
+          [
+            "ToggleColumnVisibility",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "SortRows",
+            [
+              "InputTable.Model.Column rowData"
+            ]
+          ],
+          [
+            "TableClick",
+            []
+          ],
+          [
+            "PreviousPage",
+            []
+          ],
+          [
+            "NextPage",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "InputTable.Model",
+    "comment": " This module specifies the model for the InputTable\n@docs TableState, CheckboxColumnProps, Column, ColumnSubType, DisplayColumnProps, DropdownColumnProps, Row, Sorting, SubDropdownColumnProps, SubDropdownOptionProps, TextColumnProps\n",
+    "aliases": [
+      {
+        "name": "CheckboxColumnProps",
+        "comment": " Specifies state of a checkbox input column\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ get : rowData -> Bool , set : rowData -> Bool -> rowData , filter : Maybe.Maybe Bool }"
+      },
+      {
+        "name": "Column",
+        "comment": " Models a column on the table\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ id : Int , name : String , visible : Bool , subType : InputTable.Model.ColumnSubType rowData }"
+      },
+      {
+        "name": "DisplayColumnProps",
+        "comment": " Specifies state of a display column\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ get : rowData -> String, filter : String }"
+      },
+      {
+        "name": "DropdownColumnProps",
+        "comment": " Specifies state of a dropdown input column\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ get : rowData -> String , set : rowData -> String -> rowData , filter : String , options : List String }"
+      },
+      {
+        "name": "Row",
+        "comment": " Holds row state, with component user specifying rowData structure\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ id : Int, data : rowData, checked : Bool }"
+      },
+      {
+        "name": "SubDropdownColumnProps",
+        "comment": " Specifies state of a subdropdown input column (dropdown with child dropdowns)\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ get : rowData -> ( String, Maybe.Maybe String ) , set : rowData -> ( String, Maybe.Maybe String ) -> rowData , filter : String , options : List InputTable.Model.SubDropdownOptionProps , focussedRowId : Maybe.Maybe Int , focussedOption : Maybe.Maybe String }"
+      },
+      {
+        "name": "SubDropdownOptionProps",
+        "comment": " Specifies state of a child dropdown within a subdropdown parent)\n",
+        "args": [],
+        "type": "{ parent : String , childHeader : Maybe.Maybe String , children : List String }"
+      },
+      {
+        "name": "TableState",
+        "comment": " Holds the state of the table\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ columns : List (InputTable.Model.Column rowData) , rows : List (InputTable.Model.Row rowData) , searchText : String , showVisibleColumnsUi : Bool , sorting : InputTable.Model.Sorting , externalFilter : InputTable.Model.Row rowData -> Bool , pageSize : Maybe.Maybe Int , currentPage : Int , rowsAreSelectable : Bool }"
+      },
+      {
+        "name": "TextColumnProps",
+        "comment": " Specifies state of a text input column\n",
+        "args": [
+          "rowData"
+        ],
+        "type": "{ get : rowData -> String , set : rowData -> String -> rowData , filter : String , isTextArea : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "ColumnSubType",
+        "comment": " Defines a column subtype and holds the properties specific to that subtype\n",
+        "args": [
+          "rowData"
+        ],
+        "cases": [
+          [
+            "DisplayColumn",
+            [
+              "InputTable.Model.DisplayColumnProps rowData"
+            ]
+          ],
+          [
+            "TextColumn",
+            [
+              "InputTable.Model.TextColumnProps rowData"
+            ]
+          ],
+          [
+            "DropdownColumn",
+            [
+              "InputTable.Model.DropdownColumnProps rowData"
+            ]
+          ],
+          [
+            "SubDropdownColumn",
+            [
+              "InputTable.Model.SubDropdownColumnProps rowData"
+            ]
+          ],
+          [
+            "CheckboxColumn",
+            [
+              "InputTable.Model.CheckboxColumnProps rowData"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Sorting",
+        "comment": " Possible types of sorting on table, with Ints being column ids.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoSorting",
+            []
+          ],
+          [
+            "Asc",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Desc",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,317 @@
+[
+  {
+    "name": "DragAndDrop.ReorderList",
+    "comment": "\n\n\n# Make a reorderable list of elements\n\nThis module is ment to be imported like this:\n\n    import DragAndDrop.ReorderList as ReorderList\n    import DragAndDrop.Divider as Divider\n\nUsing this module you can simply refactor your `List a` of non-reorderable\nelements in your model to reorderable elements, by changing the type to\n[`ReorderList.Model a`](DragAndDrop-ReorderList#Model) and adding some\nupdate functions, subscriptions and messages.\n\n\n# Model\n\n@docs Model, init, Msg, Event\n\n\n# Update\n\n@docs update, updateWithEvents, subscriptions\n\n\n# View\n\n@docs ViewConfig, view, viewKeyed\n\n\n# Model utilities\n\n@docs elements\n\n",
+    "aliases": [
+      {
+        "name": "Event",
+        "comment": " The alias for the type of DragAndDrop-event that the underlying\nlow-level api produces. It's just a shorthand.\nSee [`DragAndDrop.Event`](DragAndDrop#Event).\n",
+        "args": [],
+        "type": "DragAndDrop.Event Int Int"
+      },
+      {
+        "name": "Model",
+        "comment": " The model for a list of reorderable elements.\n\nYou can use this as a replacement for lists in your model\n(which werent reorderable before). So if you have this:\n\n    type alias Model =\n        { catImages : List CatImage\n        }\n\nYou can refactor it to this:\n\n    type alias Model =\n        { catImages : ReorderList.Model CatImage\n        }\n\nUse [`init`](#init) to create an initial model.\n\nMaintains the [`DragAndDrop.Model`](DragAndDrop#Model) for making use of the\n[`DragAndDrop`](DragAndDrop)-module.\n\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ elements : List a, dragModel : DragAndDrop.Model Int Int }"
+      },
+      {
+        "name": "ViewConfig",
+        "comment": " A configuration for the viewing function. It should be the same\nfor all of your calls, so could be top-level defined.\n\n    reorderListConfig : ViewConfig MyStyle MyVariants Msg\n    reorderListConfig =\n        { nostyle = MyNoStyle -- your representation of no styles for an element\n        , dividerSize = 40 -- size for the dividers between elements, that can be dropped to in pixels\n        , orientation = Divider.Horizontal -- the orientation the the *dividers* have (not the overall list)\n        }\n\n",
+        "args": [
+          "style"
+        ],
+        "type": "{ nostyle : style , dividerSize : Float , orientation : DragAndDrop.Divider.Orientation }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " This is the type of messages this list can create. Include it in your\nmessage union type like so:\n\n    type Msg\n        = UpdateCatImage Int\n        | ReorderListMsg ReorderList.Msg\n\n",
+        "args": [],
+        "cases": [
+          [
+            "DragAndDropMsg",
+            [
+              "DragAndDrop.Msg Int Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "elements",
+        "comment": " Focus on a subpart of the model, the list of elements.\n",
+        "type": "Focus.Setter (DragAndDrop.ReorderList.Model a) (DragAndDrop.ReorderList.Model b) (List a) (List b)"
+      },
+      {
+        "name": "init",
+        "comment": " Create an initial [`ReorderList.Model`](#Model) from a list of elements.\n",
+        "type": "List a -> DragAndDrop.ReorderList.Model a"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " The subscriptions necessary for running this module and generating needed\nmessages for drag and drop actions.\n",
+        "type": "DragAndDrop.ReorderList.Model a -> Platform.Sub.Sub DragAndDrop.ReorderList.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " The updating function that updates the model when it's given\n[`Msg`](#Msg)s.\n\nIn your update function:\n\n    update : Msg -> Model -> Model\n    update msg model =\n        case msg of\n            UpdateCatImage index ->\n                ...\n\n            ReorderListMsg reorderListMsg ->\n                { model | catImages = ReorderList.update reorderListMsg model.catImages }\n\n",
+        "type": "DragAndDrop.ReorderList.Msg -> DragAndDrop.ReorderList.Model a -> DragAndDrop.ReorderList.Model a"
+      },
+      {
+        "name": "updateWithEvents",
+        "comment": " Similar to [`update`](#update), but also gives information about changes\nin the drag-and-drop state. See [`DragAndDrop.Event`](DragAndDrop#Event)\n",
+        "type": "DragAndDrop.ReorderList.Msg -> DragAndDrop.ReorderList.Model a -> ( DragAndDrop.ReorderList.Model a , Maybe.Maybe DragAndDrop.ReorderList.Event )"
+      },
+      {
+        "name": "view",
+        "comment": " View a reorderable list of elements, but without combining them all together. You get\nback a `List (Element style variant msg)`. You can work with this list however you\nwant to. Only show the first 10 elements, or only the last 7, or you can interleave these\nelements with other `Element`s.\n\nYou need to provide a [`ViewConfig`](#ViewConfig), a way to inject messages into your message\nunion type, a viewing function for elements and a [`ReorderList.Model`](#Model).\n\nThis already attaches dividers when dragging elements.\n\n",
+        "type": "DragAndDrop.ReorderList.ViewConfig style -> (DragAndDrop.ReorderList.Msg -> msg) -> (List a -> List (Element.Element style variant msg)) -> DragAndDrop.ReorderList.Model a -> List (Element.Element style variant msg)"
+      },
+      {
+        "name": "viewKeyed",
+        "comment": " Keyed version of [`view`](#view). Helps the virtualdom to figure out a better mapping from past to\npresent elements.\n",
+        "type": "DragAndDrop.ReorderList.ViewConfig style -> (DragAndDrop.ReorderList.Msg -> msg) -> (List a -> List ( String, Element.Element style variant msg )) -> DragAndDrop.ReorderList.Model a -> List ( String, Element.Element style variant msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DragAndDrop",
+    "comment": "\n\n\n# DragAndDrop\n\nThis model is the low-level interface for drag and drop. It can still directly be\nuseful for applications, though.\n\n\n# Model\n\n@docs Model, DraggingData, NotDraggingData, init\n\n\n# Messages\n\n@docs Msg, Event\n\n\n# Updating\n\n@docs updateWithEvents, update, subscriptions\n\n\n# Make Elements draggable/droppable in your View\n\n@docs draggable, draggableInstant, droppable, draggableHtml, droppableHtml\n\n\n# Querying the Dragging Model\n\n@docs isDragging, isDraggingId, isHoveringDraggableId, isHoveringDroppableId\n\n",
+    "aliases": [
+      {
+        "name": "DraggingData",
+        "comment": " This is the Model that is present during a Dragging action. The `dragId`\nis the element that was dragged, and the `hoverDropId` is `Just dropId`, if\nthe user is currently dragging above a droppable element, but has not released\nthe mouse yet, or `Nothing` if not hovering any droppable element.\n\nDroppable elements are elements with attributes from the functions\n`droppable` or `droppableHtml`.\n\n`dragPoint` and `absolutePosition` can be used to show a dragging image/element\nat the current position of the mouse. `dragPoint` is the position of the mouse\nrelative to the top left corner of the dragged element when the user initiated\nthe drag and `absolutePosition` is the current absolute position of the mouse\non the page (see [Mouse.position](http://package.elm-lang.org/packages/elm-lang/mouse/1.0.1/Mouse))\n\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "type": "{ dragId : dragId , hoverDropId : Maybe.Maybe dropId , dragPoint : Mouse.Position , absolutePosition : Mouse.Position }"
+      },
+      {
+        "name": "NotDraggingData",
+        "comment": " This is the Model that is present while no element is being dragged.\nIn this case `hoverDragId` stores `Just dragId` if the mouse is currently\nover a draggable element (see [`draggable`](#draggable) and\n[`draggableHtml`](#draggableHtml)), but the user did not yet started to\ndrag the element.\n",
+        "args": [
+          "dragId"
+        ],
+        "type": "{ hoverDragId : Maybe.Maybe dragId }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Event",
+        "comment": " Events that can be produced by the [`updateWithEvents`](#updateWithEvents)\nfunction after a drop action, that is a user hovering a draggable element,\nstarting to drag the mouse and then releasing the mouse.\n\nIf the user has released the mouse while hovering a droppable element,\nthen a `SuccessfulDrop dragId dropId`, if not, a\n`FailedDrop dragId` is generated.\n\nUpon starting to drag a draggable element, a `StartedDrag dragId` event is\nproduced.\n\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "cases": [
+          [
+            "StartedDrag",
+            [
+              "dragId"
+            ]
+          ],
+          [
+            "SuccessfulDrop",
+            [
+              "dragId",
+              "dropId"
+            ]
+          ],
+          [
+            "FailedDrop",
+            [
+              "dragId"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Model",
+        "comment": " The model for the low level drag-and-drop api. It is ment to be stored\ninside the model of the component using this module.\n\nAlong the lines of this:\n\n    type alias Model =\n        { draggableCatImages : List CatIdentifier\n        , droppableCatBaskets : List (List CatIdentifier)\n        , dragModel : DragAndDrop.Model CatIdentifier Int\n        }\n\nWhere the `dragId` is the `CatIdentifier` used to find out what cat image\nwas dragged by the user, and `dropId` is an `Int` for identifying the\nbasked that the cat image was dropped to.\n\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "cases": [
+          [
+            "Dragging",
+            [
+              "DragAndDrop.DraggingData dragId dropId"
+            ]
+          ],
+          [
+            "NotDragging",
+            [
+              "DragAndDrop.NotDraggingData dragId"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " The messages for this module. Include them in your Msg type like so:\n\n    type Msg\n        = ...\n        | DragAndDropMsg (DragAndDrop.Msg CatIdentifier Int)\n\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "cases": [
+          [
+            "EnterDraggable",
+            [
+              "dragId"
+            ]
+          ],
+          [
+            "LeaveDraggable",
+            [
+              "dragId"
+            ]
+          ],
+          [
+            "EnterDroppable",
+            [
+              "dropId"
+            ]
+          ],
+          [
+            "LeaveDroppable",
+            [
+              "dropId"
+            ]
+          ],
+          [
+            "StartDragging",
+            [
+              "dragId",
+              "Mouse.Position"
+            ]
+          ],
+          [
+            "UpdatePosition",
+            [
+              "Mouse.Position"
+            ]
+          ],
+          [
+            "StopDragging",
+            []
+          ],
+          [
+            "NoOp",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "draggable",
+        "comment": " Make a style-element `Element` draggable in your view by appending these attributes:\n\n    viewCatImage : Model -> CatIdentifier -> Element Style Variation Msg\n    viewCatImage model identifier =\n        Element.el Style\n            (DragAndDrop.draggable model.dragModel DragAndDropMsg identifier)\n            (viewImage model identifier)\n\n",
+        "type": "DragAndDrop.Model dragId dropId -> (DragAndDrop.Msg dragId dropId -> msg) -> dragId -> List (Element.Attribute varying msg)"
+      },
+      {
+        "name": "draggableHtml",
+        "comment": " A version of [`draggable`](#draggable) for usage without the\nstyle-elements package, but with elm-lang/html.\n",
+        "type": "DragAndDrop.Model dragId dropId -> (DragAndDrop.Msg dragId dropId -> msg) -> dragId -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "draggableInstant",
+        "comment": " Make a style-element `Element` draggable in your view by appending these attributes:\n\n    viewCatImage : Model -> CatIdentifier -> Element Style Variation Msg\n    viewCatImage model identifier =\n        Element.el Style\n            (DragAndDrop.draggable model.dragModel DragAndDropMsg identifier)\n            (viewImage model identifier)\n\n",
+        "type": "DragAndDrop.Model dragId dropId -> (DragAndDrop.Msg dragId dropId -> msg) -> dragId -> List (Element.Attribute varying msg)"
+      },
+      {
+        "name": "droppable",
+        "comment": " Make a style-element `Element` droppable in your view by appending these attributes:\n\n    viewBasket : Model -> Int -> Element Style Variation Msg\n    viewBasket model basketIndex =\n        Element.el Style\n            (DragAndDrop.droppable model.dragModel DragAndDropMsg basketIndex)\n            renderedBasket\n\n",
+        "type": "DragAndDrop.Model dragId dropId -> (DragAndDrop.Msg dragId dropId -> msg) -> dropId -> List (Element.Attribute varying msg)"
+      },
+      {
+        "name": "droppableHtml",
+        "comment": " A version of [`droppable`](#droppable) for usage without the\nstyle-elements package, but with elm-lang/html.\n",
+        "type": "DragAndDrop.Model dragId dropId -> (DragAndDrop.Msg dragId dropId -> msg) -> dropId -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "init",
+        "comment": " The initial model for this module's `Model`\n",
+        "type": "DragAndDrop.Model dragId dropId"
+      },
+      {
+        "name": "isDragging",
+        "comment": " Find out whether the user is currently dragging an element.\n",
+        "type": "DragAndDrop.Model dragId dropId -> Bool"
+      },
+      {
+        "name": "isDraggingId",
+        "comment": " Find out whether the user is currently dragging a specific element\n",
+        "type": "dragId -> DragAndDrop.Model dragId dropId -> Bool"
+      },
+      {
+        "name": "isHoveringDraggableId",
+        "comment": " Find out wheter the user is currently hovering over a specific draggable\nelement (while not dragging)\n",
+        "type": "dragId -> DragAndDrop.Model dragId dropId -> Bool"
+      },
+      {
+        "name": "isHoveringDroppableId",
+        "comment": " Find out whether the user is currently hovering over a specific droppable\nelement (while dragging)\n",
+        "type": "dropId -> DragAndDrop.Model dragId dropId -> Bool"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " You need to include the subscriptions for this project in order for\ndrop events to be registered, since this listens on `Mouse.ups`.\n\nAdd it to your subscriptions like this:\n\n    subscriptions : Sub Msg\n    subscriptions model =\n        Sub.batch\n            [ ...\n            , Sub.map DragAndDropMsg (DragAndDrop.subscriptions model.dragModel)\n            ]\n\n",
+        "type": "DragAndDrop.Model dragId dropId -> Platform.Sub.Sub (DragAndDrop.Msg dragId dropId)"
+      },
+      {
+        "name": "update",
+        "comment": " Similar to [`updateWithEvents`](#udpateWithEvents) but non-sticky by\ndefault and without producing events.\n\nIn your own update function:\n\n    update : Msg -> Model -> Model\n    update msg model =\n        case msg of\n            DragAndDropMsg dragAndDropMsg ->\n                { model | dragModel = DragAndDrop.update dragAndDropMsg model.dragModel }\n\n            ... -> ...\n\n",
+        "type": "DragAndDrop.Msg dragId dropId -> DragAndDrop.Model dragId dropId -> DragAndDrop.Model dragId dropId"
+      },
+      {
+        "name": "updateWithEvents",
+        "comment": " Use this method in your update function to receive [`Event`](#Event)s if\nthe user sucessfully drag-and-dropped an element or failed to do so, etc.\n\nUpdating can be done sticky, that means a drop is successful, even if the user\ndoes not hover the droppable area anymore, but has done so before.\n\nUse it in your update function:\n\n    update : Msg -> Model -> Model\n    update msg model =\n        case DragAndDropMsg dndMsg ->\n            let ( dragModel, maybeEvent ) =\n                    updateWithEvents True dndMsg model.dragModel\n\n                newModel = { model | dragModel = dragModel }\n            in\n            Maybe.withDefault newModel (Maybe.map maybeEvent (updateDrop newModel))\n\n    updateDrop : DragAndDrop.Event CatIdentifier Int -> Model -> Model\n    updateDrop event = ...\n\n",
+        "type": "Bool -> DragAndDrop.Msg dragId dropId -> DragAndDrop.Model dragId dropId -> ( DragAndDrop.Model dragId dropId , Maybe.Maybe (DragAndDrop.Event dragId dropId) )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DragAndDrop.Divider",
+    "comment": " This module's contents are almost all unexposed right now. This might change in the future,\nwhen you can customize the dividers in your [`ReorderList`](DragAndDrop-ReorderList).\n\n    import DragAndDrop.Divider as Divider\n\n@docs Orientation\n\n\n# Unstable API\n\n@docs viewWith, defaultDivider\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Orientation",
+        "comment": " The orientation the divider is dividing.\n\nThink of a divider as a fine line between elements. It is a horizontal divider,\nwhen the line is horizontal (even though it divides elements vertically).\n\nThis might be really confusing right now can should change in the future.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Horizontal",
+            []
+          ],
+          [
+            "Vertical",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultDivider",
+        "comment": " A default divider.\n\nShows a fine, black line when hovered and a fine grey line when not hovered.\n\nThe line is oriented the way given as orientation.\n\nApi might change in the future.\n\n",
+        "type": "DragAndDrop.Divider.DividerImage msg"
+      },
+      {
+        "name": "viewWith",
+        "comment": " View a divider\n\n    Divider.viewWith (Divider.defaultDivider isHovered) orientation size attributes\n\nApi might change in the future.\n\n",
+        "type": "(DragAndDrop.Divider.Orientation -> Float -> Html.Html msg) -> DragAndDrop.Divider.ViewFunction msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

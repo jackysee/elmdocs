@@ -1,0 +1,271 @@
+[
+  {
+    "name": "OAuth.Implicit",
+    "comment": " The implicit grant type is used to obtain access tokens (it does not\nsupport the issuance of refresh tokens) and is optimized for public clients known to operate a\nparticular redirection URI. These clients are typically implemented in a browser using a\nscripting language such as JavaScript.\n\nThis is a 2-step process:\n\n  - The client asks for an authorization and implicit authentication to the OAuth provider: the user is redirected.\n  - The provider redirects the user back and the client parses the request query parameters from the url.\n\nAfter those steps, the client owns an `access_token` that can be used to authorize any subsequent\nrequest.\n\n\n## Authorize\n\n@docs authorize, parse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "authorize",
+        "comment": " Redirects the resource owner (user) to the resource provider server using the specified\nauthorization flow.\n\nIn this case, use `Token` as a `responseType`\n\n",
+        "type": "OAuth.Authorization -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse the location looking for a parameters set by the resource provider server after\nredirecting the resource owner (user).\n\nFails with `ParseErr Empty` when there's nothing\n\n",
+        "type": "Navigation.Location -> Result.Result OAuth.ParseErr OAuth.ResponseToken"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OAuth.ClientCredentials",
+    "comment": " The client can request an access token using only its client\ncredentials (or other supported means of authentication) when the client is requesting access to\nthe protected resources under its control, or those of another resource owner that have been\npreviously arranged with the authorization server (the method of which is beyond the scope of\nthis specification).\n\nThere's only one step in this process:\n\n  - The client authenticates itself directly using credentials it owns.\n\nAfter this step, the client owns an `access_token` that can be used to authorize any subsequent\nrequest.\n\n\n## Authenticate\n\n@docs authenticate\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " Authenticate the client using the authorization code obtained from the authorization.\n\nIn this case, use the `ClientCredentials` constructor.\n\n",
+        "type": "OAuth.Authentication -> Http.Request OAuth.ResponseToken"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OAuth.Password",
+    "comment": " The resource owner password credentials grant type is suitable in\ncases where the resource owner has a trust relationship with the\nclient, such as the device operating system or a highly privileged\napplication. The authorization server should take special care when\nenabling this grant type and only allow it when other flows are not\nviable.\n\nThere's only one step in this process:\n\n  - The client authenticates itself directly using the resource owner (user) credentials\n\nAfter this step, the client owns an `access_token` that can be used to authorize any subsequent\nrequest.\n\n\n## Authenticate\n\n@docs authenticate\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " Authenticate the client using the authorization code obtained from the authorization.\n\nIn this case, use the `Password` constructor.\n\n",
+        "type": "OAuth.Authentication -> Http.Request OAuth.ResponseToken"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OAuth.AuthorizationCode",
+    "comment": " The authorization code grant type is used to obtain both access\ntokens and refresh tokens and is optimized for confidential clients.\nSince this is a redirection-based flow, the client must be capable of\ninteracting with the resource owner's user-agent (typically a web\nbrowser) and capable of receiving incoming requests (via redirection)\nfrom the authorization server.\n\nThis is a 3-step process:\n\n  - The client asks for an authorization to the OAuth provider: the user is redirected.\n  - The provider redirects the user back and the client parses the request query parameters from the url.\n  - The client authenticate itself using the authorization code found in the previous step.\n\nAfter those steps, the client owns an `access_token` that can be used to authorize any subsequent\nrequest.\n\n\n## Authorize\n\n@docs authorize, parse\n\n\n## Authenticate\n\n@docs authenticate\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "authenticate",
+        "comment": " Authenticate the client using the authorization code obtained from the authorization.\n\nIn this case, use the `AuthorizationCode` constructor.\n\n",
+        "type": "OAuth.Authentication -> Http.Request OAuth.ResponseToken"
+      },
+      {
+        "name": "authorize",
+        "comment": " Redirects the resource owner (user) to the resource provider server using the specified\nauthorization flow.\n\nIn this case, use `Code` as a `responseType`\n\n",
+        "type": "OAuth.Authorization -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "parse",
+        "comment": " Parse the location looking for a parameters set by the resource provider server after\nredirecting the resource owner (user).\n\nFails with a `ParseErr Empty` when there's nothing\n\n",
+        "type": "Navigation.Location -> Result.Result OAuth.ParseErr OAuth.ResponseCode"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "OAuth",
+    "comment": " Utility library to manage client-side OAuth 2.0 authentications\n\nThe library contains a main OAuth module exposing types used accross other modules. In practice,\nyou'll only need tu use one of the additional modules:\n\n  - OAuth.AuthorizationCode: The authorization code grant type is used to obtain both access tokens\n    and refresh tokens via a redirection-based flow and is optimized for confidential clients\n    [4.1](https://tools.ietf.org/html/rfc6749#section-4.1).\n\n  - OAuth.Implicit: The implicit grant type is used to obtain access tokens (it does not support the\n    issuance of refresh tokens) and is optimized for public clients known to operate a particular\n    redirection URI [4.2](https://tools.ietf.org/html/rfc6749#section-4.2).\n\n  - OAuth.Password: The resource owner password credentials grant type is suitable in cases where the\n    resource owner has a trust relationship with the client, such as the device operating system or a\n    highly privileged application [4.3](https://tools.ietf.org/html/rfc6749#section-4.3)\n\n  - OAuth.ClientCredentials: The client can request an access token using only its client credentials\n    (or other supported means of authentication) when the client is requesting access to the protected\n    resources under its control, or those of another resource owner that have been previously arranged\n    with the authorization server (the method of which is beyond the scope of this specification)\n    [4.4](https://tools.ietf.org/html/rfc6749#section-4.3).\n\nIn practice, you most probably want to use the *OAuth.Implicit* module which is the most commonly\nused.\n\n\n## Use a token\n\n@docs use\n\n\n## Requests\n\n@docs Authorization, Authentication, Credentials, ResponseType, showResponseType\n\n\n## Responses\n\n@docs ResponseToken, ResponseCode, Token, Err, ParseErr, ErrCode, showToken, showErrCode, errCodeFromString, errDecoder\n\n",
+    "aliases": [
+      {
+        "name": "Authorization",
+        "comment": " Request configuration for an authorization (Authorization Code & Implicit flows)\n",
+        "args": [],
+        "type": "{ clientId : String , url : String , redirectUri : String , responseType : OAuth.ResponseType , scope : List String , state : Maybe.Maybe String }"
+      },
+      {
+        "name": "Credentials",
+        "comment": " Describes a couple of client credentials used for Basic authentication\n",
+        "args": [],
+        "type": "{ clientId : String, secret : String }"
+      },
+      {
+        "name": "Err",
+        "comment": " Describes an OAuth error as a result of a request failure\n\n  - error (*REQUIRED*):\n    A single ASCII error code.\n\n  - errorDescription (*OPTIONAL*)\n    Human-readable ASCII text providing additional information, used to assist the client developer in\n    understanding the error that occurred. Values for the `errorDescription` parameter MUST NOT\n    include characters outside the set `%x20-21 / %x23-5B / %x5D-7E`.\n\n  - errorUri (*OPTIONAL*):\n    A URI identifying a human-readable web page with information about the error, used to\n    provide the client developer with additional information about the error. Values for the\n    `errorUri` parameter MUST conform to the URI-reference syntax and thus MUST NOT include\n    characters outside the set `%x21 / %x23-5B / %x5D-7E`.\n\n  - state (*REQUIRED if `state` was present in the authorization request*):\n    The exact value received from the client\n\n",
+        "args": [],
+        "type": "{ error : OAuth.ErrCode , errorDescription : Maybe.Maybe String , errorUri : Maybe.Maybe String , state : Maybe.Maybe String }"
+      },
+      {
+        "name": "ResponseCode",
+        "comment": " The response obtained as a result of an authorization\n\n  - code (*REQUIRED*):\n    The authorization code generated by the authorization server. The authorization code MUST expire\n    shortly after it is issued to mitigate the risk of leaks. A maximum authorization code lifetime of\n    10 minutes is RECOMMENDED. The client MUST NOT use the authorization code more than once. If an\n    authorization code is used more than once, the authorization server MUST deny the request and\n    SHOULD revoke (when possible) all tokens previously issued based on that authorization code. The\n    authorization code is bound to the client identifier and redirection URI.\n\n  - state (*REQUIRED if `state` was present in the authorization request*):\n    The exact value received from the client\n\n",
+        "args": [],
+        "type": "{ code : String, state : Maybe.Maybe String }"
+      },
+      {
+        "name": "ResponseToken",
+        "comment": " The response obtained as a result of an authentication (implicit or not)\n\n  - expiresIn (*RECOMMENDED*):\n    The lifetime in seconds of the access token. For example, the value \"3600\" denotes that the\n    access token will expire in one hour from the time the response was generated. If omitted, the\n    authorization server SHOULD provide the expiration time via other means or document the default\n    value.\n\n  - refreshToken (*OPTIONAL*):\n    The refresh token, which can be used to obtain new access tokens using the same authorization\n    grant as described in [Section 6](https://tools.ietf.org/html/rfc6749#section-6).\n\n  - scope (*OPTIONAL, if identical to the scope requested; otherwise, REQUIRED*):\n    The scope of the access token as described by [Section 3.3](https://tools.ietf.org/html/rfc6749#section-3.3).\n\n  - state (*REQUIRED if `state` was present in the authentication request*):\n    The exact value received from the client\n\n  - token (*REQUIRED*):\n    The access token issued by the authorization server.\n\n",
+        "args": [],
+        "type": "{ expiresIn : Maybe.Maybe Int , refreshToken : Maybe.Maybe OAuth.Token , scope : List String , state : Maybe.Maybe String , token : OAuth.Token }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Authentication",
+        "comment": " Request configuration for an authentication (Authorization Code, Password & Client Credentials\nflows)\n\n    -- AuthorizationCode\n    let req = OAuth.AuthorizationCode\n          { credentials =\n              -- Only the clientId is required. Specify a secret\n              -- if a Basic OAuth is required by the resource\n              -- provider\n              { clientId = \"<my-client-id>\"\n              , secret = \"\"\n              }\n          -- Authorization code from the authorization result\n          , code = \"<authorization-code>\"\n          -- Token endpoint of the resource provider\n          , url = \"<token-endpoint>\"\n          -- Redirect Uri to your webserver\n          , redirectUri = \"<my-web-server>\"\n          -- Scopes requested, can be empty\n          , scope = [\"read:whatever\"]\n          -- A state, echoed back by the resource provider\n          , state = Just \"whatever\"\n          }\n\n    -- ClientCredentials\n    let req = OAuth.ClientCredentials\n          { credentials =\n              -- Credentials passed along via Basic auth\n              { clientId = \"<my-client-id>\"\n              , secret = \"<my-client-secret>\"\n              }\n          -- Token endpoint of the resource provider\n          , url = \"<token-endpoint>\"\n          -- Scopes requested, can be empty\n          , scope = [\"read:whatever\"]\n          -- A state, echoed back by the resource provider\n          , state = Just \"whatever\"\n          }\n\n    -- Password\n    let req = OAuth.Password\n          { credentials = Just\n              -- Optional, unless required by the resource provider\n              { clientId = \"<my-client-id>\"\n              , secret = \"<my-client-secret>\"\n              }\n          -- Resource owner's password\n          , password = \"<user-password>\"\n          -- Scopes requested, can be empty\n          , scope = [\"read:whatever\"]\n          -- A state, echoed back by the resource provider\n          , state = Just \"whatever\"\n          -- Token endpoint of the resource provider\n          , url = \"<token-endpoint>\"\n          -- Resource owner's username\n          , username = \"<user-username>\"\n          }\n\n    -- Refresh\n    let req = OAuth.Refresh\n          -- Optional, unless required by the resource provider\n          { credentials = Nothing\n          -- Scopes requested, can be empty\n          , scope = [\"read:whatever\"]\n          -- A refresh token previously delivered\n          , token = OAuth.Bearer \"abcdef1234567890\"\n          -- Token endpoint of the resource provider\n          , url = \"<token-endpoint>\"\n          }\n\n",
+        "args": [],
+        "cases": [
+          [
+            "AuthorizationCode",
+            [
+              "{ credentials : OAuth.Credentials , code : String , redirectUri : String , scope : List String , state : Maybe.Maybe String , url : String }"
+            ]
+          ],
+          [
+            "ClientCredentials",
+            [
+              "{ credentials : OAuth.Credentials , scope : List String , state : Maybe.Maybe String , url : String }"
+            ]
+          ],
+          [
+            "Password",
+            [
+              "{ credentials : Maybe.Maybe OAuth.Credentials , password : String , scope : List String , state : Maybe.Maybe String , url : String , username : String }"
+            ]
+          ],
+          [
+            "Refresh",
+            [
+              "{ credentials : Maybe.Maybe OAuth.Credentials , token : OAuth.Token , scope : List String , url : String }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ErrCode",
+        "comment": " Describes an OAuth error response [4.1.2.1](https://tools.ietf.org/html/rfc6749#section-4.1.2.1)\n\n  - InvalidRequest: The request is missing a required parameter, includes an invalid parameter value,\n    includes a parameter more than once, or is otherwise malformed.\n\n  - UnauthorizedClient: The client is not authorized to request an authorization code using this\n    method.\n\n  - AccessDenied: The resource owner or authorization server denied the request.\n\n  - UnsupportedResponseType: The authorization server does not support obtaining an authorization code\n    using this method.\n\n  - InvalidScope: The requested scope is invalid, unknown, or malformed.\n\n  - ServerError: The authorization server encountered an unexpected condition that prevented it from\n    fulfilling the request. (This error code is needed because a 500 Internal Server Error HTTP status\n    code cannot be returned to the client via an HTTP redirect.)\n\n  - TemporarilyUnavailable: The authorization server is currently unable to handle the request due to\n    a temporary overloading or maintenance of the server. (This error code is needed because a 503\n    Service Unavailable HTTP status code cannot be returned to the client via an HTTP redirect.)\n\n  - Unknown: The server returned an unknown error code.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "InvalidRequest",
+            []
+          ],
+          [
+            "UnauthorizedClient",
+            []
+          ],
+          [
+            "AccessDenied",
+            []
+          ],
+          [
+            "UnsupportedResponseType",
+            []
+          ],
+          [
+            "InvalidScope",
+            []
+          ],
+          [
+            "ServerError",
+            []
+          ],
+          [
+            "TemporarilyUnavailable",
+            []
+          ],
+          [
+            "Unknown",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ParseErr",
+        "comment": " Describes errors coming from attempting to parse a url after an OAuth redirection\n\n  - Empty: means there were nothing (related to OAuth 2.0) to parse\n  - OAuthErr: a successfully parsed OAuth 2.0 error\n  - Missing: means the OAuth provider didn't with all the required parameters for the given grant type.\n  - Invalid: means the OAuth provider did reply with an invalid parameter for the given grant type.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Empty",
+            []
+          ],
+          [
+            "OAuthErr",
+            [
+              "OAuth.Err"
+            ]
+          ],
+          [
+            "Missing",
+            [
+              "List String"
+            ]
+          ],
+          [
+            "Invalid",
+            [
+              "List String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "ResponseType",
+        "comment": " Describes the desired type of response to an authorization. Use `Code` to ask for an\nauthorization code and continue with the according flow. Use `Token` to do an implicit\nauthentication and directly retrieve a `Token` from the authorization.\n",
+        "args": [],
+        "cases": [
+          [
+            "Code",
+            []
+          ],
+          [
+            "Token",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Token",
+        "comment": " Describes the type of access token to use.\n\n  - Bearer: Utilized by simply including the access token string in the request\n    [rfc6750](https://tools.ietf.org/html/rfc6750)\n\n  - Mac: Not yet supported.\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Bearer",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "errCodeFromString",
+        "comment": " Attempts to parse a `String` into an `ErrCode` code. Will parse to `Unknown` when the string\nisn't recognized.\n",
+        "type": "String -> OAuth.ErrCode"
+      },
+      {
+        "name": "errDecoder",
+        "comment": " A json decoder for response error carried by the `Result Http.Error OAuth.ResponseToken` result of\nan http call.\n",
+        "type": "Json.Decode.Decoder OAuth.Err"
+      },
+      {
+        "name": "showErrCode",
+        "comment": " Gets the `String` representation of an `ErrCode`.\n",
+        "type": "OAuth.ErrCode -> String"
+      },
+      {
+        "name": "showResponseType",
+        "comment": " Gets the `String` representation of a `ResponseType`.\n",
+        "type": "OAuth.ResponseType -> String"
+      },
+      {
+        "name": "showToken",
+        "comment": " Gets the `String` representation of a `Token`.\n",
+        "type": "OAuth.Token -> String"
+      },
+      {
+        "name": "use",
+        "comment": " Use a token to authenticate a request.\n",
+        "type": "OAuth.Token -> List Http.Header -> List Http.Header"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

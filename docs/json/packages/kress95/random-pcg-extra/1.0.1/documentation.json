@@ -1,0 +1,1560 @@
+[
+  {
+    "name": "Random.Pcg.Date",
+    "comment": " Extra randomized functions on dates.\n\n# Generators\n@docs date, day, month, year, hour, hour24, hour12, minute, second\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "date",
+        "comment": " Generate a random date given a start date and an end date.\n",
+        "type": "Date.Date -> Date.Date -> Random.Pcg.Generator Date.Date"
+      },
+      {
+        "name": "day",
+        "comment": " Generate a random day of the week.\n",
+        "type": "Random.Pcg.Generator Date.Day"
+      },
+      {
+        "name": "hour",
+        "comment": " Generate a random hour (random int between 0 and 23 inclusive)\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "hour12",
+        "comment": " Generate a random 12-hour day hour (random int between 0 and 11 inclusive)\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "hour24",
+        "comment": " Generate a random 24-hour day hour (random int between 0 and 23 inclusive)\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "minute",
+        "comment": " Generate a random minute (random int between 0 and 59 inclusive)\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "month",
+        "comment": " Generate a random month of the year.\n",
+        "type": "Random.Pcg.Generator Date.Month"
+      },
+      {
+        "name": "second",
+        "comment": " Generate a random second (random int between 0 and 59 inclusive)\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "year",
+        "comment": " Generate a random year given a start year and end year (alias for `int`)\n",
+        "type": "Int -> Int -> Random.Pcg.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Set",
+    "comment": " Extra randomized functions on sets.\n\n# Create a Set\n@docs set\n\n# Create a Generator\n@docs sample\n\n# Modify a Generator\n@docs notInSet\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "notInSet",
+        "comment": " Filter a generator of all values not in a given set.\n",
+        "type": "Set.Set comparable -> Random.Pcg.Generator comparable -> Random.Pcg.Generator comparable"
+      },
+      {
+        "name": "sample",
+        "comment": " Select a value from a set uniformly at random, or `Nothing` for an empty set.\nAnalogous to `Random.Pcg.Extra.sample` but with sets.\n",
+        "type": "Set.Set comparable -> Random.Pcg.Generator (Maybe.Maybe comparable)"
+      },
+      {
+        "name": "set",
+        "comment": " Generate a set of at most the given size from a generator.\n\nThe size of a generated set is limited both by the integer provided and the\nnumber of unique values the generator can produce. It is very likely, but not\nguaranteed, that generated sets will be as big as the smaller of these two limits.\n",
+        "type": "Int -> Random.Pcg.Generator comparable -> Random.Pcg.Generator (Set.Set comparable)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Order",
+    "comment": " An extra random generator for the `Order` type.\n\n@docs order\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "order",
+        "comment": " Generate a random order with equal probability.\n",
+        "type": "Random.Pcg.Generator Basics.Order"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.List",
+    "comment": " Extra randomized functions on lists.\n\n# Work with a List\n@docs choose, shuffle\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "choose",
+        "comment": " Sample without replacement: produce a randomly selected element of the\nlist, and the list with that element omitted. If the list is empty, the\nselected element will be `Nothing`.\n",
+        "type": "List a -> Random.Pcg.Generator ( Maybe.Maybe a, List a )"
+      },
+      {
+        "name": "shuffle",
+        "comment": " Shuffle the list using the Fisher-Yates algorithm. Takes O(_n_ log _n_)\ntime and O(_n_) additional space.\n",
+        "type": "List a -> Random.Pcg.Generator (List a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Char",
+    "comment": " Extra randomized functions on characters.\n\n# Basic Generators\n@docs char, lowerCaseLatin, upperCaseLatin, latin, english, ascii, unicode\n\n# Unicode Generators (UTF-8)\n@docs basicLatin, latin1Supplement, latinExtendedA, latinExtendedB, ipaExtensions, spacingModifier, combiningDiacriticalMarks, greekAndCoptic, cyrillic, cyrillicSupplement, armenian, hebrew, arabic, syriac, arabicSupplement, thaana, nko, samaritan, mandaic, arabicExtendedA, devanagari, bengali, gurmukhi, gujarati, oriya, tamil, telugu, kannada, malayalam, sinhala, thai, lao, tibetan, myanmar, georgian, hangulJamo, ethiopic, ethiopicSupplement, cherokee, unifiedCanadianAboriginalSyllabic, ogham, runic, tagalog, hanunoo, buhid, tagbanwa, khmer, mongolian, unifiedCanadianAboriginalSyllabicExtended, limbu, taiLe, newTaiLue, khmerSymbol, buginese, taiTham, balinese, sundanese, batak, lepcha, olChiki, sundaneseSupplement, vedicExtensions, phoneticExtensions, phoneticExtensionsSupplement, combiningDiacriticalMarksSupplement, latinExtendedAdditional, greekExtended, generalPunctuation, superscriptOrSubscript, currencySymbol, combiningDiacriticalMarksForSymbols, letterlikeSymbol, numberForm, arrow, mathematicalOperator, miscellaneousTechnical, controlPicture, opticalCharacterRecognition, enclosedAlphanumeric, boxDrawing, blockElement, geometricShape, miscellaneousSymbol, dingbat, miscellaneousMathematicalSymbolA, supplementalArrowA, braillePattern, supplementalArrowB, miscellaneousMathematicalSymbolB, supplementalMathematicalOperator, miscellaneousSymbolOrArrow, glagolitic, latinExtendedC, coptic, georgianSupplement, tifinagh, ethiopicExtended, cyrillicExtendedA, supplementalPunctuation, cjkRadicalSupplement, kangxiRadical, ideographicDescription, cjkSymbolOrPunctuation, hiragana, katakana, bopomofo, hangulCompatibilityJamo, kanbun, bopomofoExtended, cjkStroke, katakanaPhoneticExtension, enclosedCJKLetterOrMonth, cjkCompatibility, cjkUnifiedIdeographExtensionA, yijingHexagramSymbol, cjkUnifiedIdeograph, yiSyllable, yiRadical, lisu, vai, cyrillicExtendedB, bamum, modifierToneLetter, latinExtendedD, sylotiNagri, commonIndicNumberForm, phagsPa, saurashtra, devanagariExtended, kayahLi, rejang, hangulJamoExtendedA, javanese, cham, myanmarExtendedA, taiViet, meeteiMayekExtension, ethiopicExtendedA, meeteiMayek, hangulSyllable, hangulJamoExtendedB, highSurrogate, highPrivateUseSurrogate, lowSurrogate, privateUseArea, cjkCompatibilityIdeograph, alphabeticPresentationForm, arabicPresentationFormA, variationSelector, verticalForm, combiningHalfMark, cjkCompatibilityForm, smallFormVariant, arabicPresentationFormB, halfwidthOrFullwidthForm, special, linearBSyllable, linearBIdeogram, aegeanNumber, ancientGreekNumber, ancientSymbol, phaistosDisc, lycian, carian, oldItalic, gothic, ugaritic, oldPersian, deseret, shavian, osmanya, cypriotSyllable, imperialAramaic, phoenician, lydian, meroiticHieroglyph, meroiticCursive, kharoshthi, oldSouthArabian, avestan, inscriptionalParthian, inscriptionalPahlavi, oldTurkic, rumiNumericalSymbol, brahmi, kaithi, soraSompeng, chakma, sharada, takri, cuneiform, cuneiformNumberOrPunctuation, egyptianHieroglyph, bamumSupplement, miao, kanaSupplement, byzantineMusicalSymbol, musicalSymbol, ancientGreekMusicalNotationSymbol, taiXuanJingSymbol, countingRodNumeral, mathematicalAlphanumericSymbol, arabicMathematicalAlphabeticSymbol, mahjongTile, dominoTile, playingCard, enclosedAlphanumericSupplement, enclosedIdeographicSupplement, miscellaneousSymbolOrPictograph, emoticon, transportOrMapSymbol, alchemicalSymbol, cjkUnifiedIdeographExtensionB, cjkUnifiedIdeographExtensionC, cjkUnifiedIdeographExtensionD, cjkCompatibilityIdeographSupplement, tag, variationSelectorSupplement, supplementaryPrivateUseAreaA, supplementaryPrivateUseAreaB\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "aegeanNumber",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "alchemicalSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "alphabeticPresentationForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ancientGreekMusicalNotationSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ancientGreekNumber",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ancientSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabicExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabicMathematicalAlphabeticSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabicPresentationFormA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabicPresentationFormB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arabicSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "armenian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "arrow",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ascii",
+        "comment": " Generate a random ASCII Character\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "avestan",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "balinese",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "bamum",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "bamumSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "basicLatin",
+        "comment": " UTF-8\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "batak",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "bengali",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "blockElement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "bopomofo",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "bopomofoExtended",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "boxDrawing",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "brahmi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "braillePattern",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "buginese",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "buhid",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "byzantineMusicalSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "carian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "chakma",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cham",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "char",
+        "comment": " Generate a random character within a certain keyCode range\n\n    lowerCaseLetter = char 65 90\n",
+        "type": "Int -> Int -> Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cherokee",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkCompatibility",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityIdeograph",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkCompatibilityIdeographSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkRadicalSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkStroke",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkSymbolOrPunctuation",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeograph",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionC",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cjkUnifiedIdeographExtensionD",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarks",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarksForSymbols",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "combiningDiacriticalMarksSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "combiningHalfMark",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "commonIndicNumberForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "controlPicture",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "coptic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "countingRodNumeral",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cuneiform",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cuneiformNumberOrPunctuation",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "currencySymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cypriotSyllable",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cyrillic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cyrillicExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cyrillicExtendedB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "cyrillicSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "deseret",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "devanagari",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "devanagariExtended",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "dingbat",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "dominoTile",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "egyptianHieroglyph",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "emoticon",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "enclosedAlphanumeric",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "enclosedAlphanumericSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "enclosedCJKLetterOrMonth",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "enclosedIdeographicSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "english",
+        "comment": " Generate a random English Letter (alias for `latin`)\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ethiopic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ethiopicExtended",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ethiopicExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ethiopicSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "generalPunctuation",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "geometricShape",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "georgian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "georgianSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "glagolitic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "gothic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "greekAndCoptic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "greekExtended",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "gujarati",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "gurmukhi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "halfwidthOrFullwidthForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hangulCompatibilityJamo",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hangulJamo",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hangulJamoExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hangulJamoExtendedB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hangulSyllable",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hanunoo",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hebrew",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "highPrivateUseSurrogate",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "highSurrogate",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "hiragana",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ideographicDescription",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "imperialAramaic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "inscriptionalPahlavi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "inscriptionalParthian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ipaExtensions",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "javanese",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kaithi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kanaSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kanbun",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kangxiRadical",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kannada",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "katakana",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "katakanaPhoneticExtension",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kayahLi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "kharoshthi",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "khmer",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "khmerSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lao",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latin",
+        "comment": " Generate a random Latin Letter\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latin1Supplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latinExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latinExtendedAdditional",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latinExtendedB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latinExtendedC",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "latinExtendedD",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lepcha",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "letterlikeSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "limbu",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "linearBIdeogram",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "linearBSyllable",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lisu",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lowSurrogate",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lowerCaseLatin",
+        "comment": " Generate a random lower-case Latin Letter\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lycian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "lydian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "mahjongTile",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "malayalam",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "mandaic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "mathematicalAlphanumericSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "mathematicalOperator",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "meeteiMayek",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "meeteiMayekExtension",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "meroiticCursive",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "meroiticHieroglyph",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miao",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousMathematicalSymbolA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousMathematicalSymbolB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbolOrArrow",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousSymbolOrPictograph",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "miscellaneousTechnical",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "modifierToneLetter",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "mongolian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "musicalSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "myanmar",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "myanmarExtendedA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "newTaiLue",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "nko",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "numberForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ogham",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "olChiki",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "oldItalic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "oldPersian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "oldSouthArabian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "oldTurkic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "opticalCharacterRecognition",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "oriya",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "osmanya",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "phagsPa",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "phaistosDisc",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "phoenician",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "phoneticExtensions",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "phoneticExtensionsSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "playingCard",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "privateUseArea",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "rejang",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "rumiNumericalSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "runic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "samaritan",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "saurashtra",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "sharada",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "shavian",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "sinhala",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "smallFormVariant",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "soraSompeng",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "spacingModifier",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "special",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "sundanese",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "sundaneseSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "superscriptOrSubscript",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementalArrowA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementalArrowB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementalMathematicalOperator",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementalPunctuation",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementaryPrivateUseAreaA",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "supplementaryPrivateUseAreaB",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "sylotiNagri",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "syriac",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tag",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tagalog",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tagbanwa",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "taiLe",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "taiTham",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "taiViet",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "taiXuanJingSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "takri",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tamil",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "telugu",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "thaana",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "thai",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tibetan",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "tifinagh",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "transportOrMapSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "ugaritic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "unicode",
+        "comment": " Generate a random Character in the valid unicode range.\nNote: This can produce garbage values as unicode doesn't use all valid values.\nTo test for specific languages and character sets, use the appropriate one\nfrom the list.\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "unifiedCanadianAboriginalSyllabic",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "unifiedCanadianAboriginalSyllabicExtended",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "upperCaseLatin",
+        "comment": " Generate a random upper-case Latin Letter\n",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "vai",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "variationSelector",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "variationSelectorSupplement",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "vedicExtensions",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "verticalForm",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "yiRadical",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "yiSyllable",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      },
+      {
+        "name": "yijingHexagramSymbol",
+        "comment": " ",
+        "type": "Random.Pcg.Generator Char"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Array",
+    "comment": " Extra randomized functions on arrays.\n\n# Create an Array\n@docs array, rangeLengthArray\n\n# Work with an Array\n@docs sample, choose, shuffle\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "array",
+        "comment": " Generate a random array of given size given a random generator\n\n    randomLength5IntArray = array 5 (int 0 100)\n",
+        "type": "Int -> Random.Pcg.Generator a -> Random.Pcg.Generator (Array.Array a)"
+      },
+      {
+        "name": "choose",
+        "comment": " Sample without replacement: produce a randomly selected element of the\narray, and the array with that element omitted (shifting all later elements\ndown). If the array is empty, the selected element will be `Nothing`.\n",
+        "type": "Array.Array a -> Random.Pcg.Generator ( Maybe.Maybe a, Array.Array a )"
+      },
+      {
+        "name": "rangeLengthArray",
+        "comment": " Generate a random array of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Pcg.Generator a -> Random.Pcg.Generator (Array.Array a)"
+      },
+      {
+        "name": "sample",
+        "comment": " Sample with replacement: produce a randomly selected element of the\narray, or `Nothing` for an empty array. Takes O(1) time.\n",
+        "type": "Array.Array a -> Random.Pcg.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "shuffle",
+        "comment": " Shuffle the array using the Fisher-Yates algorithm. Takes O(_n_ log _n_)\ntime and O(_n_) additional space.\n",
+        "type": "Array.Array a -> Random.Pcg.Generator (Array.Array a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Int",
+    "comment": " Extra randomized functions on ints.\n\n# Generators\n@docs anyInt, positiveInt, negativeInt, intGreaterThan, intLessThan\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "anyInt",
+        "comment": " A generator that generates any int that can be generated by the\nrandom generator algorithm.\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "intGreaterThan",
+        "comment": " A generator that generates an int greater than a given int\n",
+        "type": "Int -> Random.Pcg.Generator Int"
+      },
+      {
+        "name": "intLessThan",
+        "comment": " A generator that generates an int less than a given int\n",
+        "type": "Int -> Random.Pcg.Generator Int"
+      },
+      {
+        "name": "negativeInt",
+        "comment": " A generator that generates a negative int\n",
+        "type": "Random.Pcg.Generator Int"
+      },
+      {
+        "name": "positiveInt",
+        "comment": " A generator that generates a positive int\n",
+        "type": "Random.Pcg.Generator Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.String",
+    "comment": " Extra randomized functions on strings.\n\n# Create a String\n@docs string, rangeLengthString\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rangeLengthString",
+        "comment": " Generates a random string of random length given the minimum length\nand maximum length and a given character generator.\n",
+        "type": "Int -> Int -> Random.Pcg.Generator Char -> Random.Pcg.Generator String"
+      },
+      {
+        "name": "string",
+        "comment": " Generate a random string of a given length with a given character generator\n\n    fiveLetterEnglishWord = string 5 Random.Pcg.Char.english\n",
+        "type": "Int -> Random.Pcg.Generator Char -> Random.Pcg.Generator String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Color",
+    "comment": " Extra randomized functions on colors.\n\n# Random.Pcg Colors by Components\n@docs rgb, rgba, hsl, hsla\n\n# Random.Pcg Colors by Shade\n@docs greyscale, grayscale, red, green, blue\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "blue",
+        "comment": " Generate a random shade of blue.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "grayscale",
+        "comment": " Alias for greyscale.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "green",
+        "comment": " Generate a random shade of green.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "greyscale",
+        "comment": " Generate a random shade of grey\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "hsl",
+        "comment": " Generate a random non-transparent color by random HSL values.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "hsla",
+        "comment": " Generate a random transparent color by random HSLA values.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "red",
+        "comment": " Generate a random shade of red.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "rgb",
+        "comment": " Generate a random non-transparent color by random RGB values.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      },
+      {
+        "name": "rgba",
+        "comment": " Generate a random transparent color by random RGBA values.\n",
+        "type": "Random.Pcg.Generator Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Dict",
+    "comment": " Extra randomized functions on dicts.\n\n# Generators\n@docs dict, rangeLengthDict\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "dict",
+        "comment": " Generate a random dict with given length, key generator, and value generator\n\n    randomLength10StringIntDict = dict 10 (englishWord 10) (int 0 100)\n",
+        "type": "Int -> Random.Pcg.Generator comparable -> Random.Pcg.Generator value -> Random.Pcg.Generator (Dict.Dict comparable value)"
+      },
+      {
+        "name": "rangeLengthDict",
+        "comment": " Generate a random dict of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Pcg.Generator comparable -> Random.Pcg.Generator value -> Random.Pcg.Generator (Dict.Dict comparable value)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Float",
+    "comment": " Extra randomized functions on floats.\n\n# Arithmetic Generators\n@docs anyFloat, positiveFloat, negativeFloat, floatGreaterThan, floatLessThan\n\n# Gaussian Generators\n@docs normal, standardNormal\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "anyFloat",
+        "comment": " A generator that generates any float\n",
+        "type": "Random.Pcg.Generator Float"
+      },
+      {
+        "name": "floatGreaterThan",
+        "comment": " A generator that generates a float greater than a given float\n",
+        "type": "Float -> Random.Pcg.Generator Float"
+      },
+      {
+        "name": "floatLessThan",
+        "comment": " A generator that generates a float less than a given float\n",
+        "type": "Float -> Random.Pcg.Generator Float"
+      },
+      {
+        "name": "negativeFloat",
+        "comment": " A generator that generates any negative float\n",
+        "type": "Random.Pcg.Generator Float"
+      },
+      {
+        "name": "normal",
+        "comment": " Create a generator of floats that is normally distributed with\ngiven mean and standard deviation.\n",
+        "type": "Float -> Float -> Random.Pcg.Generator Float"
+      },
+      {
+        "name": "positiveFloat",
+        "comment": " A generator that generates any positive float\n",
+        "type": "Random.Pcg.Generator Float"
+      },
+      {
+        "name": "standardNormal",
+        "comment": " A generator that follows a standard normal distribution (as opposed to\na uniform distribution)\n",
+        "type": "Random.Pcg.Generator Float"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Random.Pcg.Extra",
+    "comment": " This module provides many common and general-purpose helper functions for\ncore's Random.Pcg library. You can find even more useful functions for a particular\ntype in the other modules.\n\n# Constant Generators\n@docs constant\n\n# Maps\nFor `map` and `mapN` up through N=5, use the core library.\n@docs map6, andMap\n\n# New Generators\n@docs oneIn, maybe, result, choice\n\n# Working with Lists\n@docs choices, frequency, sample, combine, rangeLengthList\n\n# Filtered Generators\n@docs filter\n\n# andThenN\nThese functions are like `mapN` except the function you pass in does not return\nan exact value, but instead another generator. That means you can take in several\nrandom arguments to drive more randomness.\n@docs andThen2, andThen3, andThen4, andThen5, andThen6\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andMap",
+        "comment": " Map over any number of generators.\n\n    randomPerson : Generator Person\n    randomPerson =\n      map person genFirstName\n        |> andMap genLastName\n        |> andMap genBirthday\n        |> andMap genPhoneNumber\n        |> andMap genAddress\n        |> andMap genEmail\n",
+        "type": "Random.Pcg.Generator a -> Random.Pcg.Generator (a -> b) -> Random.Pcg.Generator b"
+      },
+      {
+        "name": "andThen2",
+        "comment": " ",
+        "type": "(a -> b -> Random.Pcg.Generator c) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c"
+      },
+      {
+        "name": "andThen3",
+        "comment": " ",
+        "type": "(a -> b -> c -> Random.Pcg.Generator d) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d"
+      },
+      {
+        "name": "andThen4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> Random.Pcg.Generator e) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e"
+      },
+      {
+        "name": "andThen5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> Random.Pcg.Generator f) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e -> Random.Pcg.Generator f"
+      },
+      {
+        "name": "andThen6",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> Random.Pcg.Generator g) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e -> Random.Pcg.Generator f -> Random.Pcg.Generator g"
+      },
+      {
+        "name": "choice",
+        "comment": " Choose between two values with equal probability.\n\n    type Flip = Heads | Tails\n\n    coinFlip : Generator Flip\n    coinFlip =\n      choice Heads Tails\n\nNote that this function takes values, not generators. That's because it's meant\nto be a lightweight helper for a specific use. If you need to choose between two\ngenerators, use `choices [gen1, gen2]`.\n",
+        "type": "a -> a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "choices",
+        "comment": " Create a generator that chooses a generator from a list of generators\nwith equal probability.\n\n**Warning:** Do not pass an empty list or your program will crash! In practice\nthis is usually not a problem since you pass a list literal.\n",
+        "type": "List (Random.Pcg.Generator a) -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "combine",
+        "comment": " Turn a list of generators into a generator of lists.\n",
+        "type": "List (Random.Pcg.Generator a) -> Random.Pcg.Generator (List a)"
+      },
+      {
+        "name": "constant",
+        "comment": " Create a generator that always produces the value provided. This is useful\nwhen creating complicated chained generators and you need to handle a simple\ncase. It's also useful for the base case of recursive generators.\n",
+        "type": "a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter a generator so that all generated values satisfy the given predicate.\n\n    evens : Generator Int\n    evens =\n      filter (\\i -> i % 2 == 0) (int minInt maxInt)\n\n**Warning:** If the predicate is unsatisfiable, the generator will not\nterminate, your application will crash with a stack overflow, and you will be\nsad. You should also avoid predicates that are merely very difficult to satisfy.\n\n    badCrashingGenerator =\n      filter (\\_ -> False) anotherGenerator\n\n    likelyCrashingGenerator =\n      filter (\\i -> i % 2000 == 0) (int minInt maxInt)\n",
+        "type": "(a -> Bool) -> Random.Pcg.Generator a -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "frequency",
+        "comment": " Create a generator that chooses a generator from a list of generators\nbased on the provided weight. The likelihood of a given generator being\nchosen is its weight divided by the total weight (which doesn't have to equal 1).\n\n**Warning:** Do not pass an empty list or your program will crash! In practice\nthis is usually not a problem since you pass a list literal.\n",
+        "type": "List ( Float, Random.Pcg.Generator a ) -> Random.Pcg.Generator a"
+      },
+      {
+        "name": "map6",
+        "comment": " Map a function of six arguments over six generators.\n",
+        "type": "(a -> b -> c -> d -> e -> f -> g) -> Random.Pcg.Generator a -> Random.Pcg.Generator b -> Random.Pcg.Generator c -> Random.Pcg.Generator d -> Random.Pcg.Generator e -> Random.Pcg.Generator f -> Random.Pcg.Generator g"
+      },
+      {
+        "name": "maybe",
+        "comment": " Produce `Just` a value on `True`, and `Nothing` on `False`.\n\nYou can use `bool` or `oneIn n` for the first argument.\n",
+        "type": "Random.Pcg.Generator Bool -> Random.Pcg.Generator a -> Random.Pcg.Generator (Maybe.Maybe a)"
+      },
+      {
+        "name": "oneIn",
+        "comment": " Produce `True` one-in-n times on average.\n\nDo not pass a value less then one to this function.\n\n    flippedHeads = oneIn 2\n    rolled6 = oneIn 6\n",
+        "type": "Int -> Random.Pcg.Generator Bool"
+      },
+      {
+        "name": "rangeLengthList",
+        "comment": " Generate a random list of random length given a minimum length and\na maximum length.\n",
+        "type": "Int -> Int -> Random.Pcg.Generator a -> Random.Pcg.Generator (List a)"
+      },
+      {
+        "name": "result",
+        "comment": " Produce an `Ok` a value on `True`, and an `Err` value on `False`.\n\nYou can use `bool` or `oneIn n` for the first argument.\n",
+        "type": "Random.Pcg.Generator Bool -> Random.Pcg.Generator err -> Random.Pcg.Generator val -> Random.Pcg.Generator (Result.Result err val)"
+      },
+      {
+        "name": "sample",
+        "comment": " Given a list, choose an element uniformly at random. `Nothing` is only\nproduced if the list is empty.\n\n    type Direction = North | South | East | West\n\n    direction : Generator Direction\n    direction =\n      sample [North, South, East, West]\n        |> map (Maybe.withDefault North)\n\n",
+        "type": "List a -> Random.Pcg.Generator (Maybe.Maybe a)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

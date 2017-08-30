@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Prelude",
+    "comment": " Extra standard functions.\n\n## Tuples\n\n@docs fst, snd, fst3, snd3, thd3\n\n## Maybe\n\n@docs maybe, mapMaybe, catMaybes, isJust, isNothing\n\n## Result\n\n@docs result, isOk, isErr, resultFlip, resultValues, resultErrors\n\n## Other\n\n@docs const, uncurry3, curry3\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "catMaybes",
+        "comment": " Takes a list of `Maybe` and returns a list of all the `Just` values. ",
+        "type": "List (Maybe.Maybe a) -> List a"
+      },
+      {
+        "name": "const",
+        "comment": " Unary function which evaluates to `x` for all inputs. ",
+        "type": "a -> b -> a"
+      },
+      {
+        "name": "curry3",
+        "comment": " Converts an uncurried function with 3 parameters to a curried function. ",
+        "type": "(( a, b, c ) -> d) -> a -> b -> c -> d"
+      },
+      {
+        "name": "fst",
+        "comment": " Alias of `Tuple.first`",
+        "type": "( a1, a2 ) -> a1"
+      },
+      {
+        "name": "fst3",
+        "comment": " Extract the first component of a triplet.",
+        "type": "( a1, a2, a3 ) -> a1"
+      },
+      {
+        "name": "isErr",
+        "comment": " True if the `Result` is an `Err` value. ",
+        "type": "Result.Result a b -> Bool"
+      },
+      {
+        "name": "isJust",
+        "comment": " Returns `True` if its argument is of the form `Just _` ",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "isNothing",
+        "comment": " Returns `True` if its argument is `Nothing` ",
+        "type": "Maybe.Maybe a -> Bool"
+      },
+      {
+        "name": "isOk",
+        "comment": " True if the `Result` is an `Ok` value. ",
+        "type": "Result.Result a b -> Bool"
+      },
+      {
+        "name": "mapMaybe",
+        "comment": " Version of map which throw out elements. ",
+        "type": "(a -> Maybe.Maybe b) -> List a -> List b"
+      },
+      {
+        "name": "maybe",
+        "comment": " Takes a default value, a function, and a `Maybe` value. If the `Maybe` value \nis `Nothing`, the function returns the default value. Otherwise, it applies the \nfunction to the value inside the `Just` and returns the result.",
+        "type": "b -> (a -> b) -> Maybe.Maybe a -> b"
+      },
+      {
+        "name": "result",
+        "comment": " Case analysis for the `Result` type. If the value is `Err a`, apply the first \nfunction to `a`; if it is `Ok b`, apply the second function to `b`. ",
+        "type": "(a -> c) -> (b -> c) -> Result.Result a b -> c"
+      },
+      {
+        "name": "resultErrors",
+        "comment": " Extracts from a list of `Result` all the `Ok` elements. ",
+        "type": "List (Result.Result a b) -> List a"
+      },
+      {
+        "name": "resultFlip",
+        "comment": " Flip the `Err` and `Ok` values. ",
+        "type": "Result.Result a b -> Result.Result b a"
+      },
+      {
+        "name": "resultValues",
+        "comment": " Extracts from a list of `Result` all the `Err` elements. ",
+        "type": "List (Result.Result a b) -> List b"
+      },
+      {
+        "name": "snd",
+        "comment": " Alias of `Tuple.second`.",
+        "type": "( a1, a2 ) -> a2"
+      },
+      {
+        "name": "snd3",
+        "comment": " Extract the second component of a triplet.",
+        "type": "( a1, a2, a3 ) -> a2"
+      },
+      {
+        "name": "thd3",
+        "comment": " Extract the third component of a triplet.",
+        "type": "( a1, a2, a3 ) -> a3"
+      },
+      {
+        "name": "uncurry3",
+        "comment": " Converts a curried function with 3 parameters to a function on pairs. ",
+        "type": "(a -> b -> c -> d) -> ( a, b, c ) -> d"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

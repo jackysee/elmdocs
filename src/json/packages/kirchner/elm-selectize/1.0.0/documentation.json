@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Selectize",
+    "comment": " This is a dropdown menu whose entries can be filtered. You can\nselect entries using the mouse or with the keyboard (arrow up/down and\nenter).\n\nThe dropdown menu manages the keyboard and mouse focus, as well as the\nopen/closed state itself. The (unfiltered) list of possible entries and\nthe eventually selected entry have to live in the model of the\nactual application.\n\nIf you want to use it, your model should look something like this\n\n    type alias Model =\n        { selection : Maybe Tree\n        , menu : Selectize.State Tree\n        , entries : List (Selectize.Entry Tree)\n        }\n\n    type alias Tree =\n        { name : String\n        , latinName : String\n        }\n\nAnd you have to hook it up in your update function like so\n\n    type Msg\n        = MenuMsg (Selectize.Msg Tree)\n        | SelectTree (Maybe Tree)\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n        case msg of\n            MenuMsg selectizeMsg ->\n                let\n                    ( newMenu, menuCmd, maybeMsg ) =\n                        Selectize.update updateConfig model selectizeMsg\n\n                    newModel =\n                        { model | menu = newMenu }\n\n                    cmd =\n                        menuCmd |> Cmd.map MenuMsg\n                in\n                case maybeMsg of\n                    Just nextMsg ->\n                        update nextMsg newModel\n                            |> andDo cmd\n\n                    Nothing ->\n                        ( newModel, cmd )\n\n            SelectTree newSelection ->\n                ( { model | selection = newSelection }, Cmd.none )\n\n    andDo : Cmd msg -> ( model, Cmd msg ) -> ( model, Cmd msg )\n    andDo cmd ( model, cmds ) =\n        ( model\n        , Cmd.batch [ cmd, cmds ]\n        )\n\nwhere the update configuration is given by\n\n    updateConfig : Selectize.UpdateConfig String Msg Model\n    updateConfig =\n        Selectize.updateConfig sharedConfig\n            { select = SelectTree }\n\n    sharedConfig : Selectize.SharedConfig String Model\n    sharedConfig =\n        Selectize.sharedConfig\n            { toLabel = \\tree -> tree.name ++ \"(\" ++ tree.latinName ++ \")\"\n            , state = \\model -> model.menu\n            , entries = \\model -> model.entries\n            , selection = \\model -> model.selection\n            , id = \"tree-menu\"\n            }\n\nFinally, the menu can be rendered like this\n\n    view : Model -> Html Msg\n    view model =\n        Html.div []\n            [ Selectize.view viewConfig model |> Html.map MenuMsg ]\n\nwith the view configuration given by\n\n    viewConfig : Selectize.ViewConfig String Model\n    viewConfig =\n        Selectize.viewConfig sharedConfig\n            { placeholder = \"Select a Tree\"\n            , container =\n                [ Attributes.class \"selectize__container\" ]\n            , input =\n                \\sthSelected open ->\n                    [ Attributes.class \"selectize__textfield\"\n                    , Attributes.classList\n                        [ ( \"selectize__textfield--selection\", sthSelected )\n                        , ( \"selectize__textfield--no-selection\", not sthSelected )\n                        , ( \"selectize__textfield--menu-open\", open )\n                        ]\n                    ]\n            , toggle =\n                \\open ->\n                    Html.div\n                        [ Attributes.class \"selectize__menu-toggle\"\n                        , Attributes.classList\n                            [ ( \"selectize__menu-toggle--menu-open\", open ) ]\n                        ]\n                        [ Html.i\n                            [ Attributes.class \"material-icons\"\n                            , Attributes.class \"selectize__icon\"\n                            ]\n                            [ if open then\n                                Html.text \"arrow_drop_up\"\n                              else\n                                Html.text \"arrow_drop_down\"\n                            ]\n                        ]\n            , menu =\n                [ Attributes.class \"selectize__menu\" ]\n            , ul =\n                [ Attributes.class \"selectize__list\" ]\n            , entry =\n                \\tree mouseFocused keyboardFocused ->\n                    { attributes =\n                        [ Attributes.class \"selectize__item\"\n                        , Attributes.classList\n                            [ ( \"selectize__item--mouse-selected\"\n                              , mouseFocused\n                              )\n                            , ( \"selectize__item--key-selected\"\n                              , keyboardFocused\n                              )\n                            ]\n                        ]\n                    , children =\n                        [ Html.text tree ]\n                    }\n            , divider =\n                \\title ->\n                    { attributes =\n                        [ Attributes.class \"selectize__divider\" ]\n                    , children =\n                        [ Html.text title ]\n                    }\n            }\n\n\n# Types\n\n@docs State, empty, Entry, entry, divider\n\n\n# Configuration\n\n@docs SharedConfig, sharedConfig, UpdateConfig, updateConfig, ViewConfig, viewConfig\n\n\n# Update\n\n@docs Msg, update\n\n\n# View\n\n@docs view, HtmlDetails\n\n",
+    "aliases": [
+      {
+        "name": "HtmlDetails",
+        "comment": " `entry` and `divider` should return this.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ attributes : List (Html.Attribute msg) , children : List (Html.Html msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Entry",
+        "comment": " Each entry of the menu has to be wrapped in this type. C.f. `entry`\nand `divider`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The dropdown menu produces these messages.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "SharedConfig",
+        "comment": " The part of the configuration which is shared by `update` and `view`.\n",
+        "args": [
+          "a",
+          "model"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " The internal state of the dropdown menu. This lives in your model.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "UpdateConfig",
+        "comment": " The configuration for `Selectize.update`.\n",
+        "args": [
+          "a",
+          "msg",
+          "model"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ViewConfig",
+        "comment": " The configuration for `Selectize.view`.\n",
+        "args": [
+          "a",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "divider",
+        "comment": " Create a divider, which cannot be selected and which is skipped\nwhile traversing the list via arrow up/down keys.\n",
+        "type": "String -> Selectize.Entry a"
+      },
+      {
+        "name": "empty",
+        "comment": " The initial dropdown state.\n",
+        "type": "Selectize.State a"
+      },
+      {
+        "name": "entry",
+        "comment": " Create a selectable `Entry a`.\n",
+        "type": "a -> Selectize.Entry a"
+      },
+      {
+        "name": "sharedConfig",
+        "comment": " Create the shared configuration, for example\n\n    sharedConfig : Selectize.SharedConfig String Model\n    sharedConfig =\n        Selectize.sharedConfig\n            { toLabel = \\tree -> tree.name ++ \"(\" ++ tree.latinName ++ \")\"\n            , state = .menu\n            , entries = .entries\n            , selection = .selection\n            , id = \"tree-menu\"\n            }\n\n  - `toLabel` should return a unique string representation of `a`.\n  - tell the dropdown with `state`, `entries` and `selection` how to\n    obtain each of them from the model\n  - `id` should be a unique CSS-id for the dropdown (we need this to\n    handle focus and blur events correctly)\n\n",
+        "type": "{ toLabel : a -> String , state : model -> Selectize.State a , entries : model -> List (Selectize.Entry a) , selection : model -> Maybe.Maybe a , id : String } -> Selectize.SharedConfig a model"
+      },
+      {
+        "name": "update",
+        "comment": " The dropdown's update function. C.f. the modul documentation to see\nwhat boilerplate is needed in your main update.\n",
+        "type": "Selectize.UpdateConfig a msg model -> model -> Selectize.Msg a -> ( Selectize.State a , Platform.Cmd.Cmd (Selectize.Msg a) , Maybe.Maybe msg )"
+      },
+      {
+        "name": "updateConfig",
+        "comment": " Create the update configuration, for example\n\n    updateConfig : Selectize.UpdateConfig String Msg Model\n    updateConfig =\n        Selectize.updateConfig sharedConfig\n            { select = SelectTree }\n\n  - tell the dropdown with `select` how we can ask the main application to\n    change the selection\n\n",
+        "type": "Selectize.SharedConfig a model -> { select : Maybe.Maybe a -> msg } -> Selectize.UpdateConfig a msg model"
+      },
+      {
+        "name": "view",
+        "comment": " The dropdown's view function.\n",
+        "type": "Selectize.ViewConfig a model -> model -> Html.Html (Selectize.Msg a)"
+      },
+      {
+        "name": "viewConfig",
+        "comment": " Create the view configuration, for example\n\n    viewConfig : Selectize.ViewConfig String Model\n    viewConfig =\n        Selectize.viewConfig sharedConfig\n            { placeholder = \"Select a Tree\"\n            , container = [ ... ]\n            , input =\n                \\sthSelected open -> [ ... ]\n            , toggle =\n                \\open ->\n                    Html.div\n                        ...\n            , menu = [ ... ]\n            , ul = [ ... ]\n            , entry =\n                \\tree mouseFocused keyboardFocused ->\n                    { attributes = ...\n                    , children = ...\n                    }\n            , divider =\n                \\title ->\n                    { attributes = ...\n                    , children = ...\n                    }\n            }\n\n  - tell us the `placeholder` if the selection is empty\n  - `container`, `input`, `toggle`, `menu`, `ul`, `entry` and `divider`\n    can be used to style the different parts of the dropdown view, c.f.\n    the modul documentation for an example.\n\n",
+        "type": "Selectize.SharedConfig a model -> { placeholder : String , container : List (Html.Attribute Basics.Never) , input : Bool -> Bool -> List (Html.Attribute Basics.Never) , toggle : Bool -> Html.Html Basics.Never , menu : List (Html.Attribute Basics.Never) , ul : List (Html.Attribute Basics.Never) , entry : a -> Bool -> Bool -> Selectize.HtmlDetails Basics.Never , divider : String -> Selectize.HtmlDetails Basics.Never } -> Selectize.ViewConfig a model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,91 @@
+[
+  {
+    "name": "DisjointSet.Computation",
+    "comment": " Composable \"Computation\" objects that handle threading the updated DisjointSet object for you.\n\n# Definition\n@docs Computation, find, union, eval, return\n\n# Composition\n@docs andThen, map\n\n# List Helpers\n@docs sequence, mapM\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Computation",
+        "comment": " Represents a series of operations over a DisjointSet object producing a result of type a.\nThat is, a `Computation Int` produces an `Int` when evaluated.\n\nTo actually evaluate a computation, see the [`eval`](#eval) function.\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain computations together where the second may depend on the result of the first\n",
+        "type": "(a -> DisjointSet.Computation.Computation b) -> DisjointSet.Computation.Computation a -> DisjointSet.Computation.Computation b"
+      },
+      {
+        "name": "eval",
+        "comment": " Run a computation\n",
+        "type": "DisjointSet.DisjointSet -> DisjointSet.Computation.Computation a -> ( a, DisjointSet.DisjointSet )"
+      },
+      {
+        "name": "find",
+        "comment": " Create a computation that finds which subset the given id's set belongs to.\n",
+        "type": "Int -> DisjointSet.Computation.Computation Int"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the result of a computation\n",
+        "type": "(a -> b) -> DisjointSet.Computation.Computation a -> DisjointSet.Computation.Computation b"
+      },
+      {
+        "name": "mapM",
+        "comment": " ",
+        "type": "(a -> DisjointSet.Computation.Computation b) -> List a -> DisjointSet.Computation.Computation (List b)"
+      },
+      {
+        "name": "return",
+        "comment": " Create a computation that always returns the value given. Frequently used to end an `andThen` chain.\n",
+        "type": "a -> DisjointSet.Computation.Computation a"
+      },
+      {
+        "name": "sequence",
+        "comment": " Create a computation that runs each of a list of computations in sequence\n",
+        "type": "List (DisjointSet.Computation.Computation a) -> DisjointSet.Computation.Computation (List a)"
+      },
+      {
+        "name": "union",
+        "comment": " Create a computation that unions the two given sets\n",
+        "type": "Int -> Int -> DisjointSet.Computation.Computation ()"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "DisjointSet",
+    "comment": " An implementation of the Disjoint Set data structure\n\n# Disjoint Set\n\n@docs DisjointSet\n\n# Operations\n\n@docs init, find, union\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DisjointSet",
+        "comment": " Data structure containing a set of (initially independent) subsets.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "find",
+        "comment": " Find which subset the given id's set belongs to.\n\n    find 2 (init 5) |> fst -- 2\n    find 2 (union 3 2 (init 5)) |> fst -- 3\n\nNote that this function returns a tuple with the first element containg the\nresult of the find and the second a new DisjointSet object. This is because\n`find` performs an optimization which changes some internal structure (without\nchanging the sets themselves).\n\nFor simplicity, if the id asked for is not valid, the result is always that same\nvalue.\n\n    find 100 (init 5) |> fst -- 100\n\nThis behavior may change in the future, but I wanted to avoid muddying the api\nwith a `Maybe` result here.\n\n",
+        "type": "Int -> DisjointSet.DisjointSet -> ( Int, DisjointSet.DisjointSet )"
+      },
+      {
+        "name": "init",
+        "comment": " Create a new DisjointSet of the specified size. The subsets are assigned\ninteger ids starting at 0.\n\n    init 8 -- create a disjoint set of 8 independent subsets numbered 0-7\n",
+        "type": "Int -> DisjointSet.DisjointSet"
+      },
+      {
+        "name": "union",
+        "comment": " Join two subsets into a single subset.\n\n    let\n        set =\n            union 0 1 (init 3)\n\n        ( p0, set2 ) =\n            find 0 set\n\n        ( p1, set3 ) =\n            find 1 set2\n\n        ( p1, set4 ) =\n            find 2 set3\n    in\n        ( p0 == p1, p1 == p2 ) -- ( True, False )\n\nIn the above example, you can see that keeping up with the set as it updates\nacross several operations can start to get a little cumbersome. Check out the\n`DisjointSet.Computation` module for some tools that help deal with this.\n",
+        "type": "Int -> Int -> DisjointSet.DisjointSet -> DisjointSet.DisjointSet"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

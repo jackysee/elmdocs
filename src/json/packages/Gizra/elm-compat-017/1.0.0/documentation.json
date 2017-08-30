@@ -1,0 +1,233 @@
+[
+  {
+    "name": "Task018",
+    "comment": " Elm 0.18 flipped parameters for `andThen` and `onError`,\nadded `attempt` and altered `perform`.\n\n@docs attempt, andThen, onError, perform\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a task and a callback. The first task will run, and if it is\nsuccessful, you give the result to the callback resulting in another task. This\ntask then gets run.\n\n    succeed 2\n      |> andThen (\\n -> succeed (n + 2))\n      -- succeed 4\n\nThis is useful for chaining tasks together. Maybe you need to get a user from\nyour servers *and then* lookup their picture once you know their name.\n",
+        "type": "(a -> Task.Task x b) -> Task.Task x a -> Task.Task x b"
+      },
+      {
+        "name": "attempt",
+        "comment": " Command the Elm runtime to attempt a task that might fail!\n",
+        "type": "(Result.Result x a -> msg) -> Task.Task x a -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "onError",
+        "comment": " Recover from a failure in a task. If the given task fails, we use the\ncallback to recover.\n\n    fail \"file not found\"\n      |> onError (\\msg -> succeed 42)\n      -- succeed 42\n\n    succeed 9\n      |> onError (\\msg -> succeed 42)\n      -- succeed 9\n",
+        "type": "(x -> Task.Task y a) -> Task.Task x a -> Task.Task y a"
+      },
+      {
+        "name": "perform",
+        "comment": " The only way to *do* things in Elm is to give commands to the Elm runtime.\nSo we describe some complex behavior with a `Task` and then command the runtime\nto `perform` that task. For example, getting the current time looks like this:\n\n    import Task\n    import Time exposing (Time)\n\n    type Msg = Click | NewTime Time\n\n    update : Msg -> Model -> ( Model, Cmd Msg )\n    update msg model =\n      case msg of\n        Click ->\n          ( model, Task.perform NewTime Time.now )\n\n        NewTime time ->\n          ...\n",
+        "type": "(a -> msg) -> Task.Task Basics.Never a -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Result018",
+    "comment": " `formatError` was renamed to `mapError` in Elm 0.18, and\nthe parameters of `andThen` were flipped.\n\n@docs andThen, mapError\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a sequence of computations that may fail. It is helpful\nto see its definition:\n\n    andThen : (a -> Result e b) -> Result e a -> Result e b\n    andThen callback result =\n        case result of\n          Ok value -> callback value\n          Err msg -> Err msg\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`toInt : String -> Result String Int`) to parse\na month and make sure it is between 1 and 12:\n\n    toValidMonth : Int -> Result String Int\n    toValidMonth month =\n        if month >= 1 && month <= 12\n            then Ok month\n            else Err \"months must be between 1 and 12\"\n\n    toMonth : String -> Result String Int\n    toMonth rawString =\n        toInt rawString\n          |> andThen toValidMonth\n\n    -- toMonth \"4\" == Ok 4\n    -- toMonth \"9\" == Ok 9\n    -- toMonth \"a\" == Err \"cannot parse to an Int\"\n    -- toMonth \"0\" == Err \"months must be between 1 and 12\"\n\nThis allows us to come out of a chain of operations with quite a specific error\nmessage. It is often best to create a custom type that explicitly represents\nthe exact ways your computation may fail. This way it is easy to handle in your\ncode.\n",
+        "type": "(a -> Result.Result x b) -> Result.Result x a -> Result.Result x b"
+      },
+      {
+        "name": "mapError",
+        "comment": " Transform an `Err` value. For example, say the errors we get have too much\ninformation:\n\n    parseInt : String -> Result ParseError Int\n\n    type alias ParseError =\n        { message : String\n        , code : Int\n        , position : (Int,Int)\n        }\n\n    mapError .message (parseInt \"123\") == Ok 123\n    mapError .message (parseInt \"abc\") == Err \"char 'a' is not a number\"\n",
+        "type": "(x -> y) -> Result.Result x a -> Result.Result y a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Tuple018",
+    "comment": " The `Tuple` module was new in Elm 0.18. So, here it is!\n\n@docs first, second, mapFirst, mapSecond\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "first",
+        "comment": " Extract the first value from a tuple.\n\n    first (3, 4) == 3\n    first (\"john\", \"doe\") == \"john\"\n\n",
+        "type": "( a1, a2 ) -> a1"
+      },
+      {
+        "name": "mapFirst",
+        "comment": " Transform the first value in a tuple.\n\n    import String\n\n    mapFirst String.reverse (\"stressed\", 16) == (\"desserts\", 16)\n    mapFirst String.length (\"stressed\", 16) == (8, 16)\n\n",
+        "type": "(a -> b) -> ( a, a2 ) -> ( b, a2 )"
+      },
+      {
+        "name": "mapSecond",
+        "comment": " Transform the second value in a tuple.\n\n    import String\n\n    mapSecond sqrt (\"stressed\", 16) == (\"stressed\", 4)\n    mapSecond (\\x -> x + 1) (\"stressed\", 16) == (\"stressed\", 17)\n\n",
+        "type": "(a -> b) -> ( a1, a ) -> ( a1, b )"
+      },
+      {
+        "name": "second",
+        "comment": " Extract the second value from a tuple.\n\n    second (3, 4) == 4\n    second (\"john\", \"doe\") == \"doe\"\n\n",
+        "type": "( a1, a2 ) -> a2"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Random018",
+    "comment": " Like in other modules, the paramenters of `andThen` were flipped in Elm\n0.18.\n\n@docs andThen\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain random operations, threading through the seed. In the following\nexample, we will generate a random letter by putting together uppercase and\nlowercase letters.\n\n    letter : Generator Char\n    letter =\n      bool\n        |> andThen upperOrLower\n\n    upperOrLower : Bool -> Generator Char\n    upperOrLower b =\n      if b then uppercaseLetter else lowercaseLetter\n\n    -- bool : Generator Bool\n    -- uppercaseLetter : Generator Char\n    -- lowercaseLetter : Generator Char\n",
+        "type": "(a -> Random.Generator b) -> Random.Generator a -> Random.Generator b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Json.Decode018",
+    "comment": " There were quite a few changes between Elm 0.17 and 0.18 in `Json.Decode`.\nHere are some things from Elm 0.18 that you might want to use in Elm 0.17.\n\n@docs andThen, field, index, lazy\n@docs map2, map3, map4, map5, map6, map7, map8\n@docs nullable\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Create decoders that depend on previous results. If you are creating\nversioned data, you might do something like this:\n\n    info : Decoder Info\n    info =\n        field \"version\" int\n            |> andThen infoHelp\n\n    infoHelp : Int -> Decoder Info\n    infoHelp version =\n        case version of\n            4 ->\n                infoDecoder4\n\n            3 ->\n                infoDecoder3\n\n            _ ->\n                fail <|\n                    \"Trying to decode info, but version \"\n                        ++ toString version\n                        ++ \" is not supported.\"\n\n\n    -- infoDecoder4 : Decoder Info\n    -- infoDecoder3 : Decoder Info\n\n",
+        "type": "(a -> Json.Decode.Decoder b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b"
+      },
+      {
+        "name": "field",
+        "comment": " Decode a JSON object, requiring a particular field.\n\n    decodeString (field \"x\" int) \"{ \"x\": 3 }\" == Ok 3\n    decodeString (field \"x\" int) \"{ \"x\": 3, \"y\": 4 }\" == Ok 3\n    decodeString (field \"x\" int) \"{ \"x\": true }\" == Err ...\n    decodeString (field \"x\" int) \"{ \"y\": 4 }\" == Err ...\n    decodeString (field \"name\" string) \"{ \"name\": \"tom\" }\" == Ok \"tom\"\n\nThe object *can* have other fields. Lots of them! The only thing this decoder\ncares about is if `x` is present and that the value there is an `Int`.\nCheck out [`map2`](#map2) to see how to decode multiple fields!\n\n",
+        "type": "String -> Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "index",
+        "comment": " Decode a JSON array, requiring a particular index.\n\n    json = \"\"\"[ \"alice\", \"bob\", \"chuck\" ]\"\"\"\n\n    decodeString (index 0 string) json  == Ok \"alice\"\n    decodeString (index 1 string) json  == Ok \"bob\"\n    decodeString (index 2 string) json  == Ok \"chuck\"\n    decodeString (index 3 string) json  == Err ...\n\n",
+        "type": "Int -> Json.Decode.Decoder a -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "lazy",
+        "comment": " Sometimes you have JSON with recursive structure, like nested comments.\nYou can use `lazy` to make sure your decoder unrolls lazily.\n\n    type alias Comment =\n        { message : String\n        , responses : Responses\n        }\n\n    type Responses\n        = Responses (List Comment)\n\n    comment : Decoder Comment\n    comment =\n        map2 Comment\n            (field \"message\" string)\n            (field \"responses\" (map Responses (list (lazy (\\_ -> comment)))))\n\nIf we had said `list comment` instead, we would start expanding the value\ninfinitely. What is a `comment`? It is a decoder for objects where the\n`responses` field contains comments. What is a `comment` though? Etc.\n\nBy using `list (lazy (\\_ -> comment))` we make sure the decoder only expands\nto be as deep as the JSON we are given. You can read more about recursive data\nstructures [here].\n[here]: <https://github.com/elm-lang/elm-compiler/blob/master/hints/recursive-alias.md>\n\n",
+        "type": "(() -> Json.Decode.Decoder a) -> Json.Decode.Decoder a"
+      },
+      {
+        "name": "map2",
+        "comment": " Try two decoders and then combine the result. We can use this to decode\nobjects with many fields:\n\n    type alias Point =\n        { x : Float, y : Float }\n\n    point : Decoder Point\n    point =\n        map2 Point\n            (field \"x\" float)\n            (field \"y\" float)\n\n\n    -- decodeString point \"\"\"{ \"x\": 3, \"y\": 4 }\"\"\" == Ok { x = 3, y = 4 }\n\nIt tries each individual decoder and puts the result together with the `Point`\nconstructor.\n\n",
+        "type": "(a -> b -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map3",
+        "comment": " Try three decoders and then combine the result. We can use this to decode\nobjects with many fields:\n\n    type alias Person =\n        { name : String, age : Int, height : Float }\n\n    person : Decoder Person\n    person =\n        map3 Person\n            (at [ \"name\" ] string)\n            (at [ \"info\", \"age\" ] int)\n            (at [ \"info\", \"height\" ] float)\n\n\n    -- json = \"\"\"{ \"name\": \"tom\", \"info\": { \"age\": 42, \"height\": 1.8 } }\"\"\"\n    -- decodeString person json == Ok { name = \"tom\", age = 42, height = 1.8 }\n\nLike `map2` it tries each decoder in order and then give the results to the\n`Person` constructor. That can be any function though!\n\n",
+        "type": "(a -> b -> c -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map4",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map5",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map6",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map7",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "map8",
+        "comment": " ",
+        "type": "(a -> b -> c -> d -> e -> f -> g -> h -> value) -> Json.Decode.Decoder a -> Json.Decode.Decoder b -> Json.Decode.Decoder c -> Json.Decode.Decoder d -> Json.Decode.Decoder e -> Json.Decode.Decoder f -> Json.Decode.Decoder g -> Json.Decode.Decoder h -> Json.Decode.Decoder value"
+      },
+      {
+        "name": "nullable",
+        "comment": " Decode a nullable JSON value into an Elm value.\n\n    decodeString (nullable int) \"13\"    == Ok (Just 13)\n    decodeString (nullable int) \"42\"    == Ok (Just 42)\n    decodeString (nullable int) \"null\"  == Ok Nothing\n    decodeString (nullable int) \"true\"  == Err ..\n\n",
+        "type": "Json.Decode.Decoder a -> Json.Decode.Decoder (Maybe.Maybe a)"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "List018",
+    "comment": " Elm 0.18 added a couple of functions to `List`. Enjoy!\n\n@docs range, singleton\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "range",
+        "comment": " Create a list of numbers, every element increasing by one.\nYou give the lowest and highest number that should be in the list.\n\n    range 3 6 == [3, 4, 5, 6]\n    range 3 3 == [3]\n    range 6 3 == []\n\n",
+        "type": "Int -> Int -> List Int"
+      },
+      {
+        "name": "singleton",
+        "comment": " Create a list with only one element:\n\n    singleton 1234 == [1234]\n    singleton \"hi\" == [\"hi\"]\n\n",
+        "type": "a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Basics018",
+    "comment": " The `never` function was new in Elm 0.18, so here it is.\n\n@docs never\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "never",
+        "comment": " A function that can never be called. Seems extremely pointless, but it\n*can* come in handy. Imagine you have some HTML that should never produce any\nmessages. And say you want to use it in some other HTML that *does* produce\nmessages. You could say:\n\n    import Html exposing (..)\n\n    embedHtml : Html Never -> Html msg\n    embedHtml staticStuff =\n        div []\n            [ text \"hello\"\n            , Html.map never staticStuff\n            ]\n\nSo the `never` function is basically telling the type system, make sure no one\never calls me!\n\n",
+        "type": "Basics.Never -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Maybe018",
+    "comment": " Elm 0.18 flipped the arguments to `andThen`, for the sake of ease\nof use in pipelines.\n\n@docs andThen\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together many computations that may fail. It is helpful to see its\ndefinition:\n\n    andThen : (a -> Maybe b) -> Maybe a -> Maybe b\n    andThen callback maybe =\n        case maybe of\n            Just value ->\n                callback value\n\n            Nothing ->\n                Nothing\n\nThis means we only continue with the callback if things are going well. For\nexample, say you need to use (`head : List Int -> Maybe Int`) to get the\nfirst month from a `List` and then make sure it is between 1 and 12:\n\n    toValidMonth : Int -> Maybe Int\n    toValidMonth month =\n        if month >= 1 && month <= 12 then\n            Just month\n        else\n            Nothing\n\n    getFirstMonth : List Int -> Maybe Int\n    getFirstMonth months =\n        head months\n            |> andThen toValidMonth\n\nIf `head` fails and results in `Nothing` (because the `List` was `empty`),\nthis entire chain of operations will short-circuit and result in `Nothing`.\nIf `toValidMonth` results in `Nothing`, again the chain of computations\nwill result in `Nothing`.\n\n",
+        "type": "(a -> Maybe.Maybe b) -> Maybe.Maybe a -> Maybe.Maybe b"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  },
+  {
+    "name": "Bitwise018",
+    "comment": " Several functions were replaced with \"flipped\" versions in Elm 0.18 --\nhere are the new versions.\n\n@docs shiftLeftBy, shiftRightBy, shiftRightZfBy\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "shiftLeftBy",
+        "comment": " Shift bits to the left by a given offset, filling new bits with zeros.\nThis can be used to multiply numbers by powers of two.\n\n    shiftLeftBy 1 5 == 10\n    shiftLeftBy 5 1 == 32\n\n",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "shiftRightBy",
+        "comment": " Shift bits to the right by a given offset, filling new bits with\nwhatever is the topmost bit. This can be used to divide numbers by powers of two.\n\n    shiftRightBy 1 32 == 16\n    shiftRightBy 2 32 == 8\n    shiftRightBy 1 -32 == -16\n\nThis is called an [arithmetic right shift][ars], often written (>>), and\nsometimes called a sign-propagating right shift because it fills empty spots\nwith copies of the highest bit.\n\n[ars]: <http://en.wikipedia.org/wiki/Bitwise_operation#Arithmetic_shift>\n\n",
+        "type": "Int -> Int -> Int"
+      },
+      {
+        "name": "shiftRightZfBy",
+        "comment": " Shift bits to the right by a given offset, filling new bits with zeros.\n\n    shiftRightZfBy 1 32 == 16\n    shiftRightZfBy 2 32 == 8\n    shiftRightZfBy 1 -32 == 2147483632\n\nThis is called an [logical right shift][lrs], often written (>>>), and\nsometimes called a zero-fill right shift because it fills empty spots with\nzeros.\n\n[lrs]: <http://en.wikipedia.org/wiki/Bitwise_operation#Logical_shift>\n\n",
+        "type": "Int -> Int -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.17.1"
+  }
+]

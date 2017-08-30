@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Bag",
+    "comment": " A set of values where, unlike `Set`, each value can appear multiple times.\n\nIt's basically just a fancy wrapper for `Dict`, so like `Dict`,\ninsert, remove, and query operations all take *O(log n)* time.\n\n# Bags\n@docs Bag\n\n# Build\n@docs empty, repeat, insert, remove\n\n# Query\n@docs isEmpty, member, count, size\n\n# Combine\n@docs union, intersect, diff\n\n# Lists\n@docs toList, fromList\n\n# Transform\n@docs map, foldl, foldr, filter, partition\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Bag",
+        "comment": " A set of possibly multiple values.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "count",
+        "comment": " Determine the number of copies of a value in a bag.\n",
+        "type": "comparable -> Bag.Bag comparable -> Int"
+      },
+      {
+        "name": "diff",
+        "comment": " Get the difference between of two bags.\nFor a value, the count of the second is removed from the count of the first.\n",
+        "type": "Bag.Bag comparable -> Bag.Bag comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty bag.\n",
+        "type": "Bag.Bag a"
+      },
+      {
+        "name": "filter",
+        "comment": " Create a new bag consisting only of values which satisfy a predicate.\n",
+        "type": "(comparable -> Bool) -> Bag.Bag comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over the values in a bag, in order from lowest to highest.\n",
+        "type": "(comparable -> b -> b) -> b -> Bag.Bag comparable -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Fold over the values in a bag, in order from highest to lowest\n",
+        "type": "(comparable -> b -> b) -> b -> Bag.Bag comparable -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Convert a list into a bag.\n",
+        "type": "List comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "insert",
+        "comment": " Insert n copies of a value into a bag.\n",
+        "type": "Int -> comparable -> Bag.Bag comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "intersect",
+        "comment": " Get the intersection of two bags. For a value, the lesser of its two counts is taken.\n",
+        "type": "Bag.Bag comparable -> Bag.Bag comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if a bag is empty.\n",
+        "type": "Bag.Bag a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Map a function onto a bag, creating a new bag.\n",
+        "type": "(comparable -> comparable2) -> Bag.Bag comparable -> Bag.Bag comparable2"
+      },
+      {
+        "name": "member",
+        "comment": " Determine if a value is in a bag.\n",
+        "type": "comparable -> Bag.Bag comparable -> Bool"
+      },
+      {
+        "name": "partition",
+        "comment": " Create two new bags; the first consisting of values which satisfy a predicate,\nthe second consisting of values which do not.\n",
+        "type": "(comparable -> Bool) -> Bag.Bag comparable -> ( Bag.Bag comparable, Bag.Bag comparable )"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove n copies of a value from a bag.\nIf n is greater than the numbers of copies that are in the bag, then all copies are simply removed.\n\n    bag = fromList ['a', 'a', 'b']\n\n    remove 3 'a' bag == fromList ['b']\n",
+        "type": "Int -> comparable -> Bag.Bag comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "repeat",
+        "comment": " Create a bag with n copies of a value.\n",
+        "type": "Int -> comparable -> Bag.Bag comparable"
+      },
+      {
+        "name": "size",
+        "comment": " Determine the number of values in a bag.\n",
+        "type": "Bag.Bag a -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a bag into a list, sorted from lowest to highest.\n",
+        "type": "Bag.Bag comparable -> List comparable"
+      },
+      {
+        "name": "union",
+        "comment": " Get the union of two bags. For a value, its two counts are added.\n",
+        "type": "Bag.Bag comparable -> Bag.Bag comparable -> Bag.Bag comparable"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

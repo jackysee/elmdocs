@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Html5.DragDrop",
+    "comment": " This library handles dragging and dropping using the API\nfrom the HTML 5 recommendation at\nhttps://www.w3.org/TR/html/editing.html#drag-and-drop.\n\nIt provides attributes and a model/update to handle\ndragging and dropping between your elements.\n\nTypes are parametrized with a `dragId` and a `dropId` parameter, which are the\ntypes for the drag identifier passed to the [`draggable`](#draggable) function\nand the drop identifier passed to the [`droppable`](#droppable) function.\nYou can put whatever data you like in these, but don't use function types.\n\nYou can use several instances of this model at the same time and they won't\ninterfere with each other. Drag and drop are connected to an instance by the\nMsg constructor used, and the update function will not send a result if a drop\nwas made from another instance.\n\n# Model and update\n@docs Model, init, Msg, update, updateSticky\n\n# View attributes\n@docs draggable, droppable\n\n# Status functions\n@docs getDragId, getDropId\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " The drag and drop state.\n\nThis should be placed inside your application's model like this:\n```elm\ntype alias Model =\n    { ...\n    , dragDrop : Html5.DragDrop.Model DragId DropId\n    }\n```\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The drag and drop messages.\n\nThis should be placed inside your application's messages like this:\n```elm\ntype Msg\n    = ...\n    | DragDropMsg (Html5.DragDrop.Msg DragId DropId)\n```\n\n",
+        "args": [
+          "dragId",
+          "dropId"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "draggable",
+        "comment": " Attributes to make a node draggable.\n\nThe node you put these attributes on will be draggable with the `dragId` you provide.\nIt should be used like this:\n```elm\nview =\n   ...\n   div (... ++ Html5.DragDrop.draggable DragDropMsg dragId) [...]\n```\n",
+        "type": "(Html5.DragDrop.Msg dragId dropId -> msg) -> dragId -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "droppable",
+        "comment": " Droppable attributes for your view function.\n\nThe node you put these attributes on will be droppable with the `dropId` you provide.\nIt should be used like this:\n```elm\nview =\n   ...\n   div (... ++ Html5.DragDrop.droppable DragDropMsg dropId) [...]\n```\n",
+        "type": "(Html5.DragDrop.Msg dragId dropId -> msg) -> dropId -> List (Html.Attribute msg)"
+      },
+      {
+        "name": "getDragId",
+        "comment": " Get the current `dragId` if available.\n\nThis function can be used for instance to hide the draggable when dragging.\n",
+        "type": "Html5.DragDrop.Model dragId dropId -> Maybe.Maybe dragId"
+      },
+      {
+        "name": "getDropId",
+        "comment": " Get the current `dropId` if available.\n\nThis function can be used for instance to highlight the droppable when dragging over it.\n",
+        "type": "Html5.DragDrop.Model dragId dropId -> Maybe.Maybe dropId"
+      },
+      {
+        "name": "init",
+        "comment": " The initial drag and drop state.\n\nYou should use this as the initital value for the drag and drop state in your model.\n",
+        "type": "Html5.DragDrop.Model dragId dropId"
+      },
+      {
+        "name": "update",
+        "comment": " The update function.\n\nWhen a successful drag and drop is made, this function will return a result\nconsisting of the `dragId` and `dropId` that was specified in the\n[`draggable`](#draggable) and [`droppable`](#droppable)\ncalls for the corresponding nodes.\n\nThis should be placed inside your application's update function, like this:\n```elm\nupdate msg model =\n    case msg of\n        ...\n        DragDropMsg msg_ ->\n            let\n                ( model_, result ) =\n                    Html5.DragDrop.update msg_ model.dragDrop\n            in\n                { model\n                    | dragDrop = model_\n                    , ...use result if available...\n                }\n```\n",
+        "type": "Html5.DragDrop.Msg dragId dropId -> Html5.DragDrop.Model dragId dropId -> ( Html5.DragDrop.Model dragId dropId , Maybe.Maybe ( dragId, dropId ) )"
+      },
+      {
+        "name": "updateSticky",
+        "comment": " A \"sticky\" version of the `update` function.\n\nIt's used the same way as the `update` function, but when you use this version,\ndroppables are \"sticky\" so when you drag out of them and release the mouse button,\na drop will still be registered at the last droppable. You should preferably\nprovide some sort of indication (using `getDropId`) where the drop will take\nplace if you use this function.\n",
+        "type": "Html5.DragDrop.Msg dragId dropId -> Html5.DragDrop.Model dragId dropId -> ( Html5.DragDrop.Model dragId dropId , Maybe.Maybe ( dragId, dropId ) )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,169 @@
+[
+  {
+    "name": "ColorMath",
+    "comment": "\n\nThis package includes functions for\n[getting and setting](#getting-and-setting-color-components)\nindividual rgba and hsla\ncolor components, functions for\n[relative color scaling](#relative-color-scaling)\nby hue, saturation,\nlightness, and alpha, and functions for converting among color\nrepresentations, including\n[converting hexadecimal color codes](#converting-to-and-from-hex-codes)\nto Elm `Color` values and vice versa.\n\n# Getting and Setting Color Components\n\n## RGB Components\n@docs getRed, setRed, getGreen, setGreen, getBlue, setBlue\n\n## HSL Components\n@docs getHue, setHue, getSaturation, setSaturation, getLightness, setLightness\n\n## Alpha\n@docs getAlpha, setAlpha\n\n# Relative Color Scaling\n\n## Lightness\n@docs lighten, darken\n\n## Saturation\n@docs saturate, desaturate\n\n## Alpha\n@docs moreOpaque, moreTransparent\n\n## Hue\n@docs rotateHue, scaleToRed, scaleToAqua\n\n# Converting to and from Hex Codes\n@docs hexToColor, colorToHex, colorToHex8\n\n# Intermediate Color Representations\n@docs Rgba, Hsla\n\n### Converting back to `Color`\n@docs rgbaToColor, hslaToColor\n\n# Applying a color transform function to a [`CssValue`](http://package.elm-lang.org/packages/danielnarey/elm-css-basics/latest/CssBasics#CssValue)\n@docs colorTransform\n",
+    "aliases": [
+      {
+        "name": "Hsla",
+        "comment": " Represents the components of an HSLA color value. This is an alias for the\ntype returned when `Color.toHsl` is called.\n",
+        "args": [],
+        "type": "{ hue : Float, saturation : Float, lightness : Float, alpha : Float }"
+      },
+      {
+        "name": "Rgba",
+        "comment": " Represents the components of an RGBA color value. This is an alias for the\ntype returned when `Color.toRgb` is called.\n",
+        "args": [],
+        "type": "{ red : Int, green : Int, blue : Int, alpha : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "colorToHex",
+        "comment": " Given a `Color`, returns the equivalent hexademimal color code as a\n6-character string, with the alpha channel ignored.\n",
+        "type": "Color.Color -> String"
+      },
+      {
+        "name": "colorToHex8",
+        "comment": " Given a `Color`, returns the equivalent hexademimal color code as an\n8-character string, with the alpha channel represented by the last two\ncharacters (note that 8-digit hex codes are not yet supported by all browsers).\n",
+        "type": "Color.Color -> String"
+      },
+      {
+        "name": "colorTransform",
+        "comment": " For use with the\n[`CssBasics`](http://package.elm-lang.org/packages/danielnarey/elm-css-basics/latest/CssBasics)\npackage: Apply a color transform function to a `Col` value; returns an error\nmessage if the `CssValue` is not of type `Col`.\n",
+        "type": "(Color.Color -> Color.Color) -> CssBasics.CssValue -> Result.Result String CssBasics.CssValue"
+      },
+      {
+        "name": "darken",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the lightness *L* decreased proportionally by the formula:\n\n    L - (x * L)\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "desaturate",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the saturation *S* decreased proportionally by the formula:\n\n    S - (x * S)\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "getAlpha",
+        "comment": " Given a `Color`, returns its alpha channel as a decimal value between 0 and\n1.\n",
+        "type": "Color.Color -> Float"
+      },
+      {
+        "name": "getBlue",
+        "comment": " Given a `Color`, returns the value of its blue channel.\n",
+        "type": "Color.Color -> Int"
+      },
+      {
+        "name": "getGreen",
+        "comment": " Given a `Color`, returns the value of its green channel.\n",
+        "type": "Color.Color -> Int"
+      },
+      {
+        "name": "getHue",
+        "comment": " Given a `Color`, returns its hue as a decimal value between 0 and 360,\nrepresenting degrees on a color wheel. (Note that the standard Elm\nrepresentation of hue in the `Color` module is in radians rather than degrees.\nDegrees are used in this package for compatibility with CSS and for the sake\nof human readability.)\n",
+        "type": "Color.Color -> Float"
+      },
+      {
+        "name": "getLightness",
+        "comment": " Given a `Color`, returns its lightness as a decimal value between 0 and 1.\n",
+        "type": "Color.Color -> Float"
+      },
+      {
+        "name": "getRed",
+        "comment": " Given a `Color`, returns the value of its red channel.\n",
+        "type": "Color.Color -> Int"
+      },
+      {
+        "name": "getSaturation",
+        "comment": " Given a `Color`, returns its saturation as a decimal value between 0 and 1.\n",
+        "type": "Color.Color -> Float"
+      },
+      {
+        "name": "hexToColor",
+        "comment": " Converts a string containing a 3-, 4-, 6-, or 8-digit hexadecimal color code\nto a `Color`. Returns an error message if the string argument is not a valid\nhexadecimal code. The hex code may be given with or without a leading \"#\".\n",
+        "type": "String -> Result.Result String Color.Color"
+      },
+      {
+        "name": "hslaToColor",
+        "comment": " Converts HSLA components to a\n[`Color`](http://package.elm-lang.org/packages/elm-lang/core/latest/Color#Color).\n",
+        "type": "ColorMath.Hsla -> Color.Color"
+      },
+      {
+        "name": "lighten",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the lightness *L* increased proportionally by the formula:\n\n    L + ( x * (1 - L) )\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "moreOpaque",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the alpha *A* increased proportionally by the formula:\n\n    A + ( x * (1 - A) )\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "moreTransparent",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the alpha *A* decreased proportionally by the formula:\n\n    A - (x * A)\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "rgbaToColor",
+        "comment": " Converts RGBA components to a\n[`Color`](http://package.elm-lang.org/packages/elm-lang/core/latest/Color#Color).\n",
+        "type": "ColorMath.Rgba -> Color.Color"
+      },
+      {
+        "name": "rotateHue",
+        "comment": " Given a decimal value *x* between -1 and 1 and a `Color`, returns an updated\n`Color` with the hue rotated by _(x * 360)_ degrees, as represented on a color\nwheel.\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "saturate",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the saturation *S* increased proportionally by the formula:\n\n    S + ( x * (1 - S) )\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "scaleToAqua",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the hue *H* scaled proportionally toward aqua by the formula:\n\n    if H <= 180 then\n      H + ( x * (180 - H) )\n    else\n      H - ( x * (H - 180) )\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "scaleToRed",
+        "comment": " Given a decimal value *x* between 0 and 1 and a `Color`, returns an updated\n`Color` with the hue *H* scaled proportionally toward red by the formula:\n\n    if H >= 180 then\n      H + ( x * (360 - H) )\n    else\n      H - (x * H)\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setAlpha",
+        "comment": " Given a decimal value between 0 and 1 and a `Color`, returns an updated\n`Color` with the alpha channel set to the input value.\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setBlue",
+        "comment": " Given an integer value from 0 to 255 and a `Color`, returns an\nupdated `Color` with the blue channel set to the input value.\n",
+        "type": "Int -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setGreen",
+        "comment": " Given an integer value from 0 to 255 and a `Color`, returns an\nupdated `Color` with the green channel set to the input value.\n",
+        "type": "Int -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setHue",
+        "comment": " Given a decimal value between 0 and 360 (representing degrees on a color\nwheel) and a `Color`, returns an updated `Color` with the hue set to the input\nvalue.\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setLightness",
+        "comment": " Given a decimal value between 0 and 1 and a `Color`, returns an updated\n`Color` with the lightness set to the input value.\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setRed",
+        "comment": " Given an integer value from 0 to 255 and a `Color`, returns an\nupdated `Color` with the red channel set to the input value.\n",
+        "type": "Int -> Color.Color -> Color.Color"
+      },
+      {
+        "name": "setSaturation",
+        "comment": " Given a decimal value between 0 and 1 and a `Color`, returns an updated\n`Color` with the saturation set to the input value.\n",
+        "type": "Float -> Color.Color -> Color.Color"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

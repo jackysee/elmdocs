@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Stack",
+    "comment": "\n\n# Creating Stacks\n@docs Stack, empty\n# Getting top\n@docs top\n# Pushing/Popping\n@docs push, pop\n# Append\n@docs append\n# To List\n@docs toList\n# From List\n@docs fromList\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Stack",
+        "comment": " A Stack containing items of type `a`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "append",
+        "comment": " Appends a List into the Stack.\n    Stack.empty\n    |> Stack.push 1\n    |> Stack.append [2, 3]\n    |> Stack.toList\n      -- == [3, 2, 1]\n",
+        "type": "List a -> Stack.Stack a -> Stack.Stack a"
+      },
+      {
+        "name": "empty",
+        "comment": " Creates an empty Stack.\n\n    Stack.empty\n",
+        "type": "Stack.Stack a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Converts a List into a Stack\n\n    Stack.fromLista [1, 2]\n    |> Stack.push 3\n    |> Stack.toList\n      -- == [3, 2, 1]\n",
+        "type": "List a -> Stack.Stack a"
+      },
+      {
+        "name": "pop",
+        "comment": " Pops an item from the Stack.\n\n    Stack.empty\n    |> Stack.push 1\n    |> Stack.pop\n      -- == (Just 1, Stack.empty)\n",
+        "type": "Stack.Stack a -> ( Maybe.Maybe a, Stack.Stack a )"
+      },
+      {
+        "name": "push",
+        "comment": " Pushes an item into the Stack.\n\n    Stack.empty\n    |> Stack.push 1\n    |> Stack.toList\n      -- == [1]\n",
+        "type": "a -> Stack.Stack a -> Stack.Stack a"
+      },
+      {
+        "name": "toList",
+        "comment": " Converts a Stack into a List\n\n    Stack.empty\n    |> Stack.push 1\n    |> Stack.push 2\n    |> Stack.toList\n      -- == [2, 1]\n",
+        "type": "Stack.Stack a -> List a"
+      },
+      {
+        "name": "top",
+        "comment": " Gets the top of the Stack.\n\n    Stack.empty\n    |> Stack.push 1\n    |> Stack.top\n      -- == Just 1\n",
+        "type": "Stack.Stack a -> Maybe.Maybe a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Queue",
+    "comment": "\n\n# Creating Queues\n@docs Queue, empty\n# Getting first\n@docs first\n# Enqueuing/Dequeuing\n@docs enq, deq\n# To List\n@docs toList\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Queue",
+        "comment": " A Queue containing items of type `a`.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "deq",
+        "comment": " Dequeues an item from the Queue.\n\n    Queue.empty\n    |> Queue.enq 1\n    |> Queue.deq\n      -- == (Just 1, Queue.empty)\n",
+        "type": "Queue.Queue a -> ( Maybe.Maybe a, Queue.Queue a )"
+      },
+      {
+        "name": "empty",
+        "comment": " Creates an empty Queue.\n\n    Queue.empty\n",
+        "type": "Queue.Queue a"
+      },
+      {
+        "name": "enq",
+        "comment": " Enqueues an item to the Queue.\n\n    Queue.empty\n    |> Queue.enq 1\n    |> Queue.toList\n      -- == [1]\n",
+        "type": "a -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "first",
+        "comment": " Gets first item of Queue.\n\n    Queue.empty\n    |> Queue.enq 1\n    |> Queue.first\n      -- == Just 1\n",
+        "type": "Queue.Queue a -> Maybe.Maybe a"
+      },
+      {
+        "name": "toList",
+        "comment": " Converts a Queue into a List.\n\n    Queue.empty\n    |> Queue.enq 1\n    |> Queue.enq 2\n    |> Queue.toList\n      -- == [1, 2]\n",
+        "type": "Queue.Queue a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

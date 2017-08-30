@@ -1,0 +1,388 @@
+[
+  {
+    "name": "Parser.LowLevel",
+    "comment": " You are unlikely to need any of this under normal circumstances.\n\n# Indentation\n@docs getIndentLevel, withIndentLevel\n\n# Row, Column, Offset, and Source\n@docs getPosition, getRow, getCol, getOffset, getSource\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "getCol",
+        "comment": " The `getCol` parser succeeds with your current column within\nthe string you are parsing.\n",
+        "type": "Parser.Parser Int"
+      },
+      {
+        "name": "getIndentLevel",
+        "comment": " This parser tracks “indentation level” so you can parse indentation\nsensitive languages. Indentation levels correspond to column numbers, so\nit starts at 1.\n",
+        "type": "Parser.Parser Int"
+      },
+      {
+        "name": "getOffset",
+        "comment": " Editors think of code as a grid, but behind the scenes it is just\na flat array of UTF16 characters. `getOffset` tells you your index in\nthat flat array. So if you have read `\"\\n\\n\\n\\n\"` you are on row 5,\ncolumn 1, and offset 4.\n\n**Note:** browsers use UTF16 strings, so characters may be one or two 16-bit\nwords. This means you can read 4 characters, but your offset will move by 8.\n",
+        "type": "Parser.Parser Int"
+      },
+      {
+        "name": "getPosition",
+        "comment": " Code editors treat code like a grid. There are rows and columns.\nIn most editors, rows and colums are 1-indexed. You move to a new row\nwhenever you see a `\\n` character.\n\nThe `getPosition` parser succeeds with your current row and column\nwithin the string you are parsing.\n",
+        "type": "Parser.Parser ( Int, Int )"
+      },
+      {
+        "name": "getRow",
+        "comment": " The `getRow` parser succeeds with your current row within\nthe string you are parsing.\n",
+        "type": "Parser.Parser Int"
+      },
+      {
+        "name": "getSource",
+        "comment": " Get the entire string you are parsing right now. Paired with\n`getOffset` this can let you use `String.slice` to grab substrings\nwith very little intermediate allocation.\n",
+        "type": "Parser.Parser String"
+      },
+      {
+        "name": "withIndentLevel",
+        "comment": " Run a parser with a given indentation level. So you will likely\nuse `getCol` to get the current column, `andThen` give that to\n`withIndentLevel`.\n",
+        "type": "Int -> Parser.Parser a -> Parser.Parser a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Parser.LanguageKit",
+    "comment": "\n\n# Variables\n@docs variable\n\n# Lists, records, and that sort of thing\n@docs list, record, tuple, sequence, Trailing\n\n# Whitespace\n@docs whitespace, LineComment, MultiComment\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "LineComment",
+        "comment": " Are line comments allowed? If so, what symbol do they start with?\n\n    LineComment \"--\"   -- Elm\n    LineComment \"//\"   -- JS\n    LineComment \"#\"    -- Python\n    NoLineComment      -- OCaml\n",
+        "args": [],
+        "cases": [
+          [
+            "NoLineComment",
+            []
+          ],
+          [
+            "LineComment",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "MultiComment",
+        "comment": " Are multi-line comments allowed? If so, what symbols do they start\nand end with?\n\n    NestableComment \"{-\" \"-}\"    -- Elm\n    UnnestableComment \"/*\" \"*/\"  -- JS\n    NoMultiComment               -- Python\n\nIn Elm, you can nest multi-line comments. In C-like languages, like JS,\nthis is not allowed. As soon as you see a `*/` the comment is over no\nmatter what.\n",
+        "args": [],
+        "cases": [
+          [
+            "NoMultiComment",
+            []
+          ],
+          [
+            "NestableComment",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "UnnestableComment",
+            [
+              "String",
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Trailing",
+        "comment": " What’s the deal with trailing commas? Are they `Forbidden`?\nAre they `Optional`? Are they `Mandatory`? Welcome to [shapes\nclub](http://poorlydrawnlines.com/comic/shapes-club/)!\n",
+        "args": [],
+        "cases": [
+          [
+            "Forbidden",
+            []
+          ],
+          [
+            "Optional",
+            []
+          ],
+          [
+            "Mandatory",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "list",
+        "comment": " Parse a comma-separated list like `[ 1, 2, 3 ]`. You provide\na parser for the spaces and for the list items. So if you want\nto parse a list of integers, you would say:\n\n    import Parser exposing (Parser)\n    import Parser.LanguageKit as Parser\n\n    intList : Parser (List Int)\n    intList =\n      Parser.list spaces Parser.int\n\n    spaces : Parser ()\n    spaces =\n      Parser.ignore zeroOrMore (\\char -> char == ' ')\n\n    -- run intList \"[]\"            == Ok []\n    -- run intList \"[ ]\"           == Ok []\n    -- run intList \"[1,2,3]\"       == Ok [1,2,3]\n    -- run intList \"[ 1, 2, 3 ]\"   == Ok [1,2,3]\n    -- run intList \"[ 1 , 2 , 3 ]\" == Ok [1,2,3]\n    -- run intList \"[ 1, 2, 3, ]\"  == Err ...\n    -- run intList \"[, 1, 2, 3 ]\"  == Err ...\n\n**Note:** If you want trailing commas, check out the\n[`sequence`](#sequence) function.\n",
+        "type": "Parser.Parser () -> Parser.Parser a -> Parser.Parser (List a)"
+      },
+      {
+        "name": "record",
+        "comment": " Help parse records like `{ a = 2, b = 2 }`. You provide\na parser for the spaces and for the list items, you might say:\n\n    import Parser exposing ( Parser, (|.), (|=), zeroOrMore )\n    import Parser.LanguageKit as Parser\n\n    record : Parser (List (String, Int))\n    record =\n      Parser.record spaces field\n\n    field : Parser (String, Int)\n    field =\n      Parser.succeed (,)\n        |= lowVar\n        |. spaces\n        |. Parser.symbol \"=\"\n        |. spaces\n        |= int\n\n    spaces : Parser ()\n    spaces =\n      Parser.ignore zeroOrMore (\\char -> char == ' ')\n\n    -- run record \"{}\"               == Ok []\n    -- run record \"{ }\"              == Ok []\n    -- run record \"{ x = 3 }\"        == Ok [ (\"x\",3) ]\n    -- run record \"{ x = 3, }\"       == Err ...\n    -- run record \"{ x = 3, y = 4 }\" == Ok [ (\"x\",3), (\"y\",4) ]\n    -- run record \"{ x = 3, y = }\"   == Err ...\n\n**Note:** If you want trailing commas, check out the\n[`sequence`](#sequence) function.\n",
+        "type": "Parser.Parser () -> Parser.Parser a -> Parser.Parser (List a)"
+      },
+      {
+        "name": "sequence",
+        "comment": " Handle things *like* lists and records, but you can customize the\ndetails however you need. Say you want to parse C-style code blocks:\n\n    import Parser exposing (Parser)\n    import Parser.LanguageKit as Parser exposing (Trailing(..))\n\n    block : Parser (List Stmt)\n    block =\n      Parser.sequence\n        { start = \"{\"\n        , separator = \";\"\n        , end = \"}\"\n        , spaces = spaces\n        , item = statement\n        , trailing = Mandatory -- demand a trailing semi-colon\n        }\n\n    -- spaces : Parser ()\n    -- statement : Parser Stmt\n\n**Note:** If you need something more custom, do not be afraid to check\nout the implementation and customize it for your case. It is better to\nget nice error messages with a lower-level implementation than to try\nto hack high-level parsers to do things they are not made for.\n",
+        "type": "{ start : String , separator : String , end : String , spaces : Parser.Parser () , item : Parser.Parser a , trailing : Parser.LanguageKit.Trailing } -> Parser.Parser (List a)"
+      },
+      {
+        "name": "tuple",
+        "comment": " Help parse tuples like `(3, 4)`. Works just like [`list`](#list)\nand [`record`](#record). And if you need something custom, check out\nthe [`sequence`](#sequence) function.\n",
+        "type": "Parser.Parser () -> Parser.Parser a -> Parser.Parser (List a)"
+      },
+      {
+        "name": "variable",
+        "comment": " Create a parser for variables. It takes two `Char` checkers. The\nfirst one is for the first character. The second one is for all the\nother characters.\n\nIn Elm, we distinguish between upper and lower case variables, so we\ncan do something like this:\n\n    import Char\n    import Parser exposing (..)\n    import Parser.LanguageKit exposing (variable)\n    import Set\n\n    lowVar : Parser String\n    lowVar =\n      variable Char.isLower isVarChar keywords\n\n    capVar : Parser String\n    capVar =\n      variable Char.isUpper isVarChar keywords\n\n    isVarChar : Char -> Bool\n    isVarChar char =\n      Char.isLower char\n      || Char.isUpper char\n      || Char.isDigit char\n      || char == '_'\n\n    keywords : Set.Set String\n    keywords =\n      Set.fromList [ \"let\", \"in\", \"case\", \"of\" ]\n",
+        "type": "(Char -> Bool) -> (Char -> Bool) -> Set.Set String -> Parser.Parser String"
+      },
+      {
+        "name": "whitespace",
+        "comment": " Create a custom whitespace parser. It will always chomp the\n`' '`, `'\\r'`, and `'\\n'` characters, but you can customize some\nother things. Here are some examples:\n\n    elm : Parser ()\n    elm =\n      whitespace\n        { allowTabs = False\n        , lineComment = LineComment \"--\"\n        , multiComment = NestableComment \"{-\" \"-}\"\n        }\n\n    js : Parser ()\n    js =\n      whitespace\n        { allowTabs = True\n        , lineComment = LineComment \"//\"\n        , multiComment = UnnestableComment \"/*\" \"*/\"\n        }\n\nIf you need further customization, please open an issue describing your\nscenario or check out the source code and write it yourself. This is all\nbuilt using stuff from the root `Parser` module.\n",
+        "type": "{ allowTabs : Bool , lineComment : Parser.LanguageKit.LineComment , multiComment : Parser.LanguageKit.MultiComment } -> Parser.Parser ()"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Parser",
+    "comment": "\n\n# Parsers\n@docs Parser, run\n\n# Numbers and Keywords\n@docs int, float, symbol, keyword, end\n\n# Repeat Parsers\n@docs Count, zeroOrMore, oneOrMore, keep, ignore, repeat\n\n# Combining Parsers\n@docs succeed, fail, map, oneOf, (|=), (|.), map2, lazy, andThen\n\n# Delayed Commits\n@docs delayedCommit, delayedCommitMap\n\n# Efficiency Tricks\n@docs source, sourceMap, ignoreUntil\n\n# Errors\n@docs Error, Problem, Context, inContext\n",
+    "aliases": [
+      {
+        "name": "Context",
+        "comment": " Most parsers only let you know the row and column where the error\noccurred. But what if you could *also* say “the error occured **while\nparsing a list**” and let folks know what the *parser* thinks it is\ndoing?!\n\nThe error messages would be a lot nicer! That is what Elm compiler does,\nand it is what `Context` helps you do in this library! **See the\n[`inContext`](#inContext) docs for a nice example!**\n\nAbout the actual fields:\n\n  - `description` is set by [`inContext`](#inContext)\n  - `row` and `col` are where [`inContext`](#inContext) began\n\nSay you use `inContext` in your list parser. And say get an error trying\nto parse `[ 1, 23zm5, 3 ]`. In addition to error information about `23zm5`,\nyou would have `Context` with the row and column of the starting `[` symbol.\n",
+        "args": [],
+        "type": "{ row : Int, col : Int, description : String }"
+      },
+      {
+        "name": "Error",
+        "comment": " Parse errors as data. You can format it however makes the most\nsense for your application. Maybe that is all text, or maybe it is fancy\ninteractive HTML. Up to you!\n\nYou get:\n\n  - The `row` and `col` of the error.\n  - The full `source` provided to the [`run`](#run) function.\n  - The actual `problem` you ran into.\n  - A stack of `context` that describes where the error is *conceptually*.\n\n**Note:** `context` is a stack. That means [`inContext`](#inContext)\nadds to the *front* of this list, not the back. So if you want the\n[`Context`](#Context) closest to the error, you want the first element\nof the `context` stack.\n",
+        "args": [],
+        "type": "{ row : Int , col : Int , source : String , problem : Parser.Problem , context : List Parser.Context }"
+      },
+      {
+        "name": "Parser",
+        "comment": " A parser! If you have a `Parser Int`, it is a parser that turns\nstrings into integers.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Parser.Internal.Parser Parser.Context Parser.Problem a"
+      }
+    ],
+    "types": [
+      {
+        "name": "Count",
+        "comment": " How many characters to [`keep`](#keep) or [`ignore`](#ignore).\n",
+        "args": [],
+        "cases": [
+          [
+            "AtLeast",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Exactly",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Problem",
+        "comment": " The particular problem you ran into.\n\nThe tricky one here is `BadRepeat`. That means that you are running\n`zeroOrMore parser` where `parser` can succeed without consuming any\ninput. That means it will just loop forever, consuming no input until\nthe program crashes.\n",
+        "args": [],
+        "cases": [
+          [
+            "BadOneOf",
+            [
+              "List Parser.Problem"
+            ]
+          ],
+          [
+            "BadInt",
+            []
+          ],
+          [
+            "BadFloat",
+            []
+          ],
+          [
+            "BadRepeat",
+            []
+          ],
+          [
+            "ExpectingEnd",
+            []
+          ],
+          [
+            "ExpectingSymbol",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ExpectingKeyword",
+            [
+              "String"
+            ]
+          ],
+          [
+            "ExpectingVariable",
+            []
+          ],
+          [
+            "ExpectingClosing",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Fail",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Run a parser *and then* run another parser!\n",
+        "type": "(a -> Parser.Parser b) -> Parser.Parser a -> Parser.Parser b"
+      },
+      {
+        "name": "delayedCommit",
+        "comment": " Only commit if `Parser a` succeeds and `Parser value` makes some progress.\n\nThis is very important for generating high quality error messages! Read more\nabout this [here][1] and [here][2].\n\n[1]: https://github.com/elm-tools/parser/blob/master/README.md#delayed-commits\n[2]: https://github.com/elm-tools/parser/blob/master/comparison.md\n",
+        "type": "Parser.Parser a -> Parser.Parser value -> Parser.Parser value"
+      },
+      {
+        "name": "delayedCommitMap",
+        "comment": " Like [`delayedCommit`](#delayedCommit), but lets you extract values from\nboth parsers. Read more about it [here][1] and [here][2].\n\n[1]: https://github.com/elm-tools/parser/blob/master/README.md#delayed-commits\n[2]: https://github.com/elm-tools/parser/blob/master/comparison.md\n",
+        "type": "(a -> b -> value) -> Parser.Parser a -> Parser.Parser b -> Parser.Parser value"
+      },
+      {
+        "name": "end",
+        "comment": " Check if you have reached the end of the string you are parsing.\n\n    justAnInt : Parser Int\n    justAnInt =\n      succeed identity\n        |= int\n        |. end\n\n    -- run justAnInt \"90210\" == Ok 90210\n    -- run justAnInt \"1 + 2\" == Err ...\n    -- run int       \"1 + 2\" == Ok 1\n\nParsers can succeed without parsing the whole string. Ending your parser\nwith `end` guarantees that you have successfully parsed the whole string.\n",
+        "type": "Parser.Parser ()"
+      },
+      {
+        "name": "fail",
+        "comment": " A parser always fails.\n\n    run (fail \"bad list\") \"[1,2,3]\" == Err ..\n\nSeems weird, but it is often useful in combination with\n[`oneOf`](#oneOf) or [`andThen`](#andThen).\n",
+        "type": "String -> Parser.Parser a"
+      },
+      {
+        "name": "float",
+        "comment": " Parse floats.\n\n    run float \"123\"       == Ok 123\n    run float \"3.1415\"    == Ok 3.1415\n    run float \"0.1234\"    == Ok 0.1234\n    run float \".1234\"     == Ok 0.1234\n    run float \"1e-42\"     == Ok 1e-42\n    run float \"6.022e23\"  == Ok 6.022e23\n    run float \"6.022E23\"  == Ok 6.022e23\n    run float \"6.022e+23\" == Ok 6.022e23\n    run float \"6.022e\"    == Err ..\n    run float \"6.022n\"    == Err ..\n    run float \"6.022.31\"  == Err ..\n\n**Note:** If you want a parser for both `Int` and `Float` literals,\ncheck out [`Parser.LanguageKit.number`](Parser-LanguageKit#number).\nIt does not backtrack, so it should be faster and give better error\nmessages than using `oneOf` and combining `int` and `float` yourself.\n\n**Note:** If you want to disable literals like `.123` like Elm,\ncheck out [`Parser.LanguageKit.float`](Parser-LanguageKit#float).\n",
+        "type": "Parser.Parser Float"
+      },
+      {
+        "name": "ignore",
+        "comment": " Ignore some characters. If you want to ignore one or more\nspaces, you might say:\n\n    spaces : Parser ()\n    spaces =\n      ignore oneOrMore (\\c -> c == ' ')\n\n",
+        "type": "Parser.Count -> (Char -> Bool) -> Parser.Parser ()"
+      },
+      {
+        "name": "ignoreUntil",
+        "comment": " Ignore characters until *after* the given string.\nSo maybe we want to parse Elm-style single-line comments:\n\n    elmComment : Parser ()\n    elmComment =\n      symbol \"--\"\n        |. ignoreUntil \"\\n\"\n\nOr maybe you want to parse JS-style multi-line comments:\n\n    jsComment : Parser ()\n    jsComment =\n      symbol \"/*\"\n        |. ignoreUntil \"*/\"\n\n**Note:** You must take more care when parsing Elm-style multi-line\ncomments. Elm can recognize nested comments, but the `jsComment` parser\ncannot. See [`Parser.LanguageKit.whitespace`](Parser-LanguageKit#whitespace)\nfor help with this.\n",
+        "type": "String -> Parser.Parser ()"
+      },
+      {
+        "name": "inContext",
+        "comment": " Specify what you are parsing right now. So if you have a parser\nfor lists like `[ 1, 2, 3 ]` you could say:\n\n    list : Parser (List Int)\n    list =\n      inContext \"list\" <|\n        succeed identity\n          |. symbol \"[\"\n          |. spaces\n          |= commaSep int\n          |. spaces\n          |. symbol \"]\"\n\n    -- spaces : Parser ()\n    -- commaSep : Parser a -> Parser (List a)\n\nNow you get that extra context information if there is a parse error anywhere\nin the list. For example, if you have `[ 1, 23zm5, 3 ]` you could generate an\nerror message like this:\n\n    I ran into a problem while parsing this list:\n\n        [ 1, 23zm5, 3 ]\n             ^\n    Looking for a valid integer, like 6 or 90210.\n\nNotice that the error message knows you are parsing a list right now!\n",
+        "type": "String -> Parser.Parser a -> Parser.Parser a"
+      },
+      {
+        "name": "int",
+        "comment": " Parse integers. It accepts decimal and hexidecimal formats.\n\n    -- decimal\n    run int \"1234\" == Ok 1234\n    run int \"1.34\" == Err ...\n    run int \"1e31\" == Err ...\n    run int \"123a\" == Err ...\n    run int \"0123\" == Err ...\n\n    -- hexidecimal\n    run int \"0x001A\" == Ok 26\n    run int \"0x001a\" == Ok 26\n    run int \"0xBEEF\" == Ok 48879\n    run int \"0x12.0\" == Err ...\n    run int \"0x12an\" == Err ...\n\n**Note:** If you want a parser for both `Int` and `Float` literals,\ncheck out [`Parser.LanguageKit.number`](Parser-LanguageKit#number).\nIt does not backtrack, so it should be faster and give better error\nmessages than using `oneOf` and combining `int` and `float` yourself.\n\n**Note:** If you want to enable octal or binary `Int` literals,\ncheck out [`Parser.LanguageKit.int`](Parser-LanguageKit#int).\n",
+        "type": "Parser.Parser Int"
+      },
+      {
+        "name": "keep",
+        "comment": " Keep some characters. If you want a capital letter followed by\nzero or more lower case letters, you could say:\n\n    import Char\n\n    capitalized : Parser String\n    capitalized =\n      succeed (++)\n        |= keep (Exactly 1) Char.isUpper\n        |= keep zeroOrMore  Char.isLower\n\n    -- good: Cat, Tom, Sally\n    -- bad: cat, tom, TOM, tOm\n\n**Note:** Check out [`source`](#source) for a more efficient\nway to grab the underlying source of a complex parser.\n",
+        "type": "Parser.Count -> (Char -> Bool) -> Parser.Parser String"
+      },
+      {
+        "name": "keyword",
+        "comment": " Parse keywords like `let`, `case`, and `type`.\n\n    run (keyword \"let\") \"let\" == Ok ()\n    run (keyword \"let\") \"var\" == Err ... (ExpectingKeyword \"let\") ...\n",
+        "type": "String -> Parser.Parser ()"
+      },
+      {
+        "name": "lazy",
+        "comment": " Helper to define recursive parsers. Say we want a parser for simple\nboolean expressions:\n\n    true\n    false\n    (true || false)\n    (true || (true || false))\n\nNotice that a boolean expression might contain *other* boolean expressions.\nThat means we will want to define our parser in terms of itself:\n\n    type Boolean\n      = MyTrue\n      | MyFalse\n      | MyOr Boolean Boolean\n\n    boolean : Parser Boolean\n    boolean =\n      oneOf\n        [ succeed MyTrue\n            |. keyword \"true\"\n        , succeed MyFalse\n            |. keyword \"false\"\n        , succeed MyOr\n            |. symbol \"(\"\n            |. spaces\n            |= lazy (\\_ -> boolean)\n            |. spaces\n            |. symbol \"||\"\n            |. spaces\n            |= lazy (\\_ -> boolean)\n            |. spaces\n            |. symbol \")\"\n        ]\n\n    spaces : Parser ()\n    spaces =\n      ignore zeroOrMore (\\char -> char == ' ')\n\n**Notice that `boolean` uses `boolean` in its definition!** In Elm, you can\nonly define a value in terms of itself it is behind a function call. So\n`lazy` helps us define these self-referential parsers.\n\n**Note:** In some cases, it may be more natural or efficient to use\n`andThen` to hide a self-reference behind a function.\n",
+        "type": "(() -> Parser.Parser a) -> Parser.Parser a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the result of a parser. Maybe you have a value that is\nan integer or `null`:\n\n    nullOrInt : Parser (Maybe Int)\n    nullOrInt =\n      oneOf\n        [ map Just int\n        , map (\\_ -> Nothing) (keyword \"null\")\n        ]\n\n    -- run nullOrInt \"0\"    == Ok (Just 0)\n    -- run nullOrInt \"13\"   == Ok (Just 13)\n    -- run nullOrInt \"null\" == Ok Nothing\n    -- run nullOrInt \"zero\" == Err ...\n\n",
+        "type": "(a -> b) -> Parser.Parser a -> Parser.Parser b"
+      },
+      {
+        "name": "map2",
+        "comment": " **This function is not used much in practice.** It is nicer to use\nthe [parser pipeline][pp] operators [`(|.)`](#|.) and [`(|=)`](#|=)\ninstead.\n\n[pp]: https://github.com/elm-tools/parser/blob/master/README.md#parser-pipeline\n\nThat said, this function can combine two parsers. Maybe you\nwant to parse some spaces followed by an integer:\n\n    spacesThenInt : Parser Int\n    spacesThenInt =\n      map2 (\\_ n -> n) spaces int\n\n    spaces : Parser ()\n    spaces =\n      ignore zeroOrMore (\\char -> char == ' ')\n\nWe can also use `map2` to define `(|.)` and `(|=)` like this:\n\n    (|.) : Parser keep -> Parser ignore -> Parser keep\n    (|.) keepParser ignoreParser =\n      map2 (\\keep _ -> keep) keepParser ignoreParser\n\n    (|=) : Parser (a -> b) -> Parser a -> Parser b\n    (|=) funcParser argParser =\n      map2 (\\func arg -> func arg) funcParser argParser\n",
+        "type": "(a -> b -> value) -> Parser.Parser a -> Parser.Parser b -> Parser.Parser value"
+      },
+      {
+        "name": "oneOf",
+        "comment": " Try a bunch of different parsers. If a parser does not commit, we\nmove on and try the next one. If a parser *does* commit, we give up on any\nremaining parsers.\n\nThe idea is: if you make progress and commit to a parser, you want to\nget error messages from *that path*. If you bactrack and keep trying stuff\nyou will get a much less precise error.\n\nSo say we are parsing “language terms” that include integers and lists\nof integers:\n\n    term : Parser Expr\n    term =\n      oneOf\n        [ listOf int\n        , int\n        ]\n\n    listOf : Parser a -> Parser (List a)\n    listOf parser =\n      succeed identity\n        |. symbol \"[\"\n        |. spaces\n        ...\n\nWhen we get to `oneOf`, we first try the `listOf int` parser. If we see a\n`[` we *commit* to that parser. That means if something goes wrong, we do\nnot backtrack. Instead the parse fails! If we do not see a `[` we move on\nto the second option and just try the `int` parser.\n",
+        "type": "List (Parser.Parser a) -> Parser.Parser a"
+      },
+      {
+        "name": "oneOrMore",
+        "comment": " A simple alias for `AtLeast 1` so your code reads nicer:\n\n    import Char\n\n    lows : Parser String\n    lows =\n      keep oneOrMore Char.isLower\n\n    -- same as: keep (AtLeast 1) Char.isLower\n",
+        "type": "Parser.Count"
+      },
+      {
+        "name": "repeat",
+        "comment": " Try to use the parser as many times as possible. Say we want to parse\n`NaN` a bunch of times:\n\n    batman : Parser Int\n    batman =\n      map List.length (repeat zeroOrMore (keyword \"NaN\"))\n\n    -- run batman \"whatever\"       == Ok 0\n    -- run batman \"\"               == Ok 0\n    -- run batman \"NaN\"            == Ok 1\n    -- run batman \"NaNNaN\"         == Ok 2\n    -- run batman \"NaNNaNNaN\"      == Ok 3\n    -- run batman \"NaNNaN batman!\" == Ok 2\n\n**Note:** If you are trying to parse things like `[1,2,3]` or `{ x = 3 }`\ncheck out the [`list`](Parser-LanguageKit#list) and\n[`record`](Parser-LanguageKit#record) functions in the\n[`Parser.LanguageKit`](Parser-LanguageKit) module.\n",
+        "type": "Parser.Count -> Parser.Parser a -> Parser.Parser (List a)"
+      },
+      {
+        "name": "run",
+        "comment": " Actually run a parser.\n\n    run (keyword \"true\") \"true\"  == Ok ()\n    run (keyword \"true\") \"True\"  == Err ...\n    run (keyword \"true\") \"false\" == Err ...\n",
+        "type": "Parser.Parser a -> String -> Result.Result Parser.Error a"
+      },
+      {
+        "name": "source",
+        "comment": " Run a parser, but return the underlying source code that actually\ngot parsed.\n\n    -- run (source (ignore oneOrMore Char.isLower)) \"abc\" == Ok \"abc\"\n    -- keep count isOk = source (ignore count isOk)\n\nThis becomes a useful optimization when you need to [`keep`](#keep)\nsomething very specific. For example, say we want to parse capitalized\nwords:\n\n    import Char\n\n    variable : Parser String\n    variable =\n      succeed (++)\n        |= keep (Exactly 1) Char.isUpper\n        |= keep zeroOrMore Char.isLower\n\nIn this case, each `keep` allocates a string. Then we use `(++)` to create the\nfinal string. That means *three* strings are allocated.\n\nIn contrast, using `source` with `ignore` lets you grab the final string\ndirectly. It tracks where the parser starts and ends, so it can use\n`String.slice` to grab that part directly.\n\n    variable : Parser String\n    variable =\n      source <|\n        ignore (Exactly 1) Char.isUpper\n          |. ignore zeroOrMore Char.isLower\n\nThis version only allocates *one* string.\n",
+        "type": "Parser.Parser a -> Parser.Parser String"
+      },
+      {
+        "name": "sourceMap",
+        "comment": " Like `source`, but it allows you to combine the source string\nwith the value that is produced by the parser. So maybe you want\na float, but you also want to know exactly how it looked.\n\n    number : Parser (String, Float)\n    number =\n      sourceMap (,) float\n\n    -- run number \"100\" == Ok (\"100\", 100)\n    -- run number \"1e2\" == Ok (\"1e2\", 100)\n",
+        "type": "(String -> a -> b) -> Parser.Parser a -> Parser.Parser b"
+      },
+      {
+        "name": "succeed",
+        "comment": " A parser that succeeds without consuming any text.\n\n    run (succeed 90210  ) \"mississippi\" == Ok 90210\n    run (succeed 3.141  ) \"mississippi\" == Ok 3.141\n    run (succeed ()     ) \"mississippi\" == Ok ()\n    run (succeed Nothing) \"mississippi\" == Ok Nothing\n\nSeems weird, but it is often useful in combination with\n[`oneOf`](#oneOf) or [`andThen`](#andThen).\n",
+        "type": "a -> Parser.Parser a"
+      },
+      {
+        "name": "symbol",
+        "comment": " Parse symbols like `,`, `(`, and `&&`.\n\n    run (symbol \"[\") \"[\" == Ok ()\n    run (symbol \"[\") \"4\" == Err ... (ExpectingSymbol \"[\") ...\n",
+        "type": "String -> Parser.Parser ()"
+      },
+      {
+        "name": "zeroOrMore",
+        "comment": " A simple alias for `AtLeast 0` so your code reads nicer:\n\n    import Char\n\n    spaces : Parser String\n    spaces =\n      keep zeroOrMore (\\c -> c == ' ')\n\n    -- same as: keep (AtLeast 0) (\\c -> c == ' ')\n",
+        "type": "Parser.Count"
+      },
+      {
+        "name": "|.",
+        "comment": " **Ignore** a value in a parser pipeline.\n\nRead about parser pipelines **[here][]**. They are really nice!\n\n[here]: https://github.com/elm-tools/parser/blob/master/README.md#parser-pipeline\n",
+        "type": "Parser.Parser keep -> Parser.Parser ignore -> Parser.Parser keep",
+        "associativity": "left",
+        "precedence": 5
+      },
+      {
+        "name": "|=",
+        "comment": " **Keep** a value in a parser pipeline.\n\nRead about parser pipelines **[here][]**. They are really nice!\n\n[here]: https://github.com/elm-tools/parser/blob/master/README.md#parser-pipeline\n",
+        "type": "Parser.Parser (a -> b) -> Parser.Parser a -> Parser.Parser b",
+        "associativity": "left",
+        "precedence": 5
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Select",
+    "comment": " This module provides the `from` and `fromSelected` (and more\nflexible `from_` and `fromSelected_`) helpers to make working\nwith `select` elements in Elm easier.\n\n[See full examples in github](https://github.com/lgastako/elm-select/blob/master/src/Main.elm)\n\n@docs from, from_, fromSelected, fromSelected_\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "from",
+        "comment": " Convert a list of values and stringifying function for values of that type\ninto a `select` element which contains as its values the list of values.\n\n    from [North, South, East, West] Direction\n\nwould produce a select element with box option values and labels being the\nstring versions of four cardinal directions and which would send messages like\n`Direction North` or `Direction East` when the user selects new directions from\nthe drop down.\n\n",
+        "type": "List a -> (a -> msg) -> Html.Html msg"
+      },
+      {
+        "name": "fromSelected",
+        "comment": " Convert a list of values and stringifying function for values of that type\ninto a `select` element which contains as its values the list of values, with\na specified element currently selected.\n\n    from [North, South, East, West] Direction South\n\nwould produce a select element with box option values and labels being the\nstring versions of four cardinal directions and which would send messages like\n`Direction North` or `Direction East` when the user selects new directions from\nthe drop down. `South` would show up as the currently selected element.\n\n",
+        "type": "List a -> (a -> msg) -> a -> Html.Html msg"
+      },
+      {
+        "name": "fromSelected_",
+        "comment": " Convert a list of values and stringifying function for values of that type\ninto a `select` element which contains as its values the list of values, with\na specified element currently selected.\n\n    fromSelected_ [North, South, East, West] Direction toId toLabel South\n\nlike the `from` example above, this would produce a select element with box\noption values and labels being derived from the four cardinal directions and\nwhich would send messages like `Direction North` or `Direction East` when the\nuser selects new directions from the drop down only the ids and labels would be\nderived using the `toId` and `toLabel` functions provided instead of defaulting\nto `toString` like `from`. `South` would show up as the currently selected element.\n\n",
+        "type": "List a -> (a -> msg) -> (a -> String) -> (a -> String) -> a -> Html.Html msg"
+      },
+      {
+        "name": "from_",
+        "comment": " Convert a list of values and stringifying function for values of that type\ninto a `select` element which contains as its values the list of values.\n\n    from_ [North, South, East, West] Direction toId toLabel\n\nlike the `from` example above, this would produce a select element with box\noption values and labels being derived from the four cardinal directions and\nwhich would send messages like `Direction North` or `Direction East` when the\nuser selects new directions from the drop down only the ids and labels would be\nderived using the `toId` and `toLabel` functions provided instead of defaulting\nto `toString` like `from`.\n\n",
+        "type": "List a -> (a -> msg) -> (a -> String) -> (a -> String) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

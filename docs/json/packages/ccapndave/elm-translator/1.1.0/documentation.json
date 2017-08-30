@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Translator",
+    "comment": " A package to provide type safe internationalisation, where translations can be loaded at\nruntime.  Default translations, substitutions and pluralization are supported.\n\nSubstitutions are implemented by surrounding the literal in braces:\n\n    \"MyNameIs\": \"Je m'appelle {name}\"\n\nPluralization is implemented by having the singular case on the left of the pipe symbol, and all\nother cases on the right.  The number can be substituted using `{count}`.\n\n    \"MyAge\": \"I am only one year old|I'm {count} years old\"\n\nSee the `example/` directory for an example of the package being used.\n\n## Building Translators\n@docs Translator, makeDefaultTranslator, updateTranslations, getTranslations, decoderFromTranslationsWithDefault, decoderToUpdateTranslations\n\n## Using Translators\n@docs trans, text, placeholder\n",
+    "aliases": [
+      {
+        "name": "Translator",
+        "comment": " A Translator contains all the required information to translate strings into other languages.\n",
+        "args": [],
+        "type": "{ defaultTranslations : Translations.Translations , translations : Maybe.Maybe Translations.Translations }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decoderFromTranslationsWithDefault",
+        "comment": " This creates a Json Decoder that will decode Json of the form:\n\n    {\n        \"Yes\": \"Oui\",\n        \"No\": \"Non\"\n    }\n\ninto a valid Translator that can be used with the translation functions in this package.  You\nneed to provide a Translations parameter which contains the default translations, in case a\ntranslation can't be matched.\n",
+        "type": "Translations.Translations -> Json.Decode.Decoder Translator.Translator"
+      },
+      {
+        "name": "decoderToUpdateTranslations",
+        "comment": " This creates a Json Decoder that will decode Json of the form:\n\n    {\n        \"Yes\": \"Oui\",\n        \"No\": \"Non\"\n    }\n\ninto a valid Translator that can be used with the translation functions in this package.  You\nneed to provide a Translator parameter which contains an existing translator; the default translations\nwill be kept from this Translator.\n",
+        "type": "Translator.Translator -> Json.Decode.Decoder Translator.Translator"
+      },
+      {
+        "name": "getTranslations",
+        "comment": " Get the translations out of the Translator (if there are any).\n",
+        "type": "Translator.Translator -> Maybe.Maybe Translations.Translations"
+      },
+      {
+        "name": "makeDefaultTranslator",
+        "comment": " This creates a Translator with the given default Translations, but no loaded Translations.\nTypically this would be used when initializing your program's Model to make sure there are some\ntranslations on startup.\n",
+        "type": "Translations.Translations -> Translator.Translator"
+      },
+      {
+        "name": "placeholder",
+        "comment": " A translated version of Html.Attributes.placeholder for use directly in an Elm view\n",
+        "type": "Translator.Translator -> literal -> Html.Attribute msg"
+      },
+      {
+        "name": "text",
+        "comment": " A translated version of Html.text for use directly in an Elm view\n",
+        "type": "Translator.Translator -> literal -> Html.Html msg"
+      },
+      {
+        "name": "trans",
+        "comment": " Given an id and a Translator, translate to a String.  This can never fail, and in the event\nof being unable to match in either the loaded or default literals this will fall back to \"...\".\nThis supports substitutions and pluralization.\n\nSubstitutions and pluralization are supported (see the top-level package doumentation).\n",
+        "type": "literal -> Translator.Translator -> String"
+      },
+      {
+        "name": "updateTranslations",
+        "comment": " Update an existing Translator with the given loaded Translations.  Typically this would be\nused to update an existing Translator when you have loaded some Translations at runtime.\n",
+        "type": "Translations.Translations -> Translator.Translator -> Translator.Translator"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Translations",
+    "comment": " This represents a set of translations in a language.\n\n@docs Translations, decoder, encode\n",
+    "aliases": [
+      {
+        "name": "Translations",
+        "comment": "\n",
+        "args": [],
+        "type": "Dict.Dict String String"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decoder",
+        "comment": "\n",
+        "type": "Json.Decode.Decoder Translations.Translations"
+      },
+      {
+        "name": "encode",
+        "comment": "\n",
+        "type": "Translations.Translations -> Json.Encode.Value"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

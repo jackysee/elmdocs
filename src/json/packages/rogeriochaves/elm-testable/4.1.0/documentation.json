@@ -1,0 +1,1767 @@
+[
+  {
+    "name": "Testable.TestContext",
+    "comment": " A `TestContext` allows you to manage the lifecycle of an Elm component that\nuses `Testable.Effects`.  Using `TestContext`, you can write tests that exercise\nthe entire lifecycle of your component.\n\n@docs Component, TestContext, startForTest, update\n\n# Inspecting\n@docs currentModel, assertCurrentModel, assertHttpRequest, assertNoPendingHttpRequests, assertCalled\n\n# Html Matchers\n@docs find, thenFind, findAll, thenFindAll, trigger, assertText, assertNodeCount, assertPresent, assertAttribute\n\n# Simulating Effects\n@docs resolveHttpRequest, advanceTime\n",
+    "aliases": [
+      {
+        "name": "Component",
+        "comment": " A component that can be used to create a `TestContext`\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "type": "{ init : ( model, Testable.Cmd.Cmd msg ) , update : msg -> model -> ( model, Testable.Cmd.Cmd msg ) , view : model -> Testable.Html.Types.Node msg }"
+      }
+    ],
+    "types": [
+      {
+        "name": "TestContext",
+        "comment": " The representation of the current state of a testable component, including\na representaiton of any pending Effects.\n",
+        "args": [
+          "msg",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "advanceTime",
+        "comment": " Simulate the passing of time\n",
+        "type": "Time.Time -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "assertAttribute",
+        "comment": " Write an assetion based on the node text\n",
+        "type": "String -> (String -> Expect.Expectation) -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertCalled",
+        "comment": " Assert that a cmd was called\n",
+        "type": "Platform.Cmd.Cmd msg -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertCurrentModel",
+        "comment": " A convenient way to assert about the current state of the component under test\n",
+        "type": "model -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertHttpRequest",
+        "comment": " Assert that a given Http.Request has been made by the component under test\n",
+        "type": "Testable.Http.Settings -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertNoPendingHttpRequests",
+        "comment": " Ensure that there are no pending HTTP requests\n",
+        "type": "Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertNodeCount",
+        "comment": " Write an assetion based on the amount of nodes found\n",
+        "type": "(Int -> Expect.Expectation) -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertPresent",
+        "comment": " Assert that some node was found with the specified query\n",
+        "type": "Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "assertText",
+        "comment": " Write an assetion based on the node text\n",
+        "type": "(String -> Expect.Expectation) -> Testable.TestContext.TestContext msg model -> Expect.Expectation"
+      },
+      {
+        "name": "currentModel",
+        "comment": " Get the current state of the component under test\n",
+        "type": "Testable.TestContext.TestContext msg model -> Result.Result (List String) model"
+      },
+      {
+        "name": "find",
+        "comment": " Finds a single html node in the view\n",
+        "type": "List Testable.Html.Types.Selector -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "findAll",
+        "comment": " Finds all html nodes in the view\n",
+        "type": "List Testable.Html.Types.Selector -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "resolveHttpRequest",
+        "comment": " Simulate an HTTP response to a request made with the given Http settings\n",
+        "type": "Testable.Http.Settings -> Result.Result Testable.Http.Error (Testable.Http.Response String) -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "startForTest",
+        "comment": " Create a `TestContext` for the given Component\n",
+        "type": "Testable.TestContext.Component msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "thenFind",
+        "comment": " Finds a children node from the current found nodes\n",
+        "type": "List Testable.Html.Types.Selector -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "thenFindAll",
+        "comment": " Finds all children node from the current found nodes\n",
+        "type": "List Testable.Html.Types.Selector -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "trigger",
+        "comment": " Trigger node events\n",
+        "type": "String -> String -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      },
+      {
+        "name": "update",
+        "comment": " Apply an msg to the component in a given TestContext\n",
+        "type": "msg -> Testable.TestContext.TestContext msg model -> Testable.TestContext.TestContext msg model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable",
+    "comment": "\n\nThis module converts Testable things into real things.\n\n# Basics\n@docs cmd, task\n\n# StartApp helpers\n@docs init, update, view\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "cmd",
+        "comment": " Converts a `Testable.Cmd` into a `Cmd`\n\n    Testable.Cmd.none |> Testable.cmd\n        == Cmd.none\n",
+        "type": "Testable.Cmd.Cmd msg -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "init",
+        "comment": " Converts a testable StartApp-style init value into a standard StartApp init value\n",
+        "type": "( model, Testable.Cmd.Cmd msg ) -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "task",
+        "comment": " Converts a `Testable.Task` into an `Task`\n\n    Testable.Task.succeed \"A\" |> Testable.task\n        == Task.succeed \"A\"\n",
+        "type": "Testable.Task.Task error success -> Task.Task error success"
+      },
+      {
+        "name": "update",
+        "comment": " Converts a testable StartApp-style update function into a standard StartApp update function\n",
+        "type": "(msg -> model -> ( model, Testable.Cmd.Cmd msg )) -> msg -> model -> ( model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Converts a testable Html into a standard Html function\n",
+        "type": "(model -> Testable.Html.Html msg) -> model -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html",
+    "comment": " This file is organized roughly in order of popularity. The tags which you'd\nexpect to use frequently will be closer to the top.\n\n# Primitives\n@docs Html, Attribute, text, node, map\n\n# Programs\n@docs beginnerProgram, program, programWithFlags\n\n# Tags\n\n## Headers\n@docs h1, h2, h3, h4, h5, h6\n\n## Grouping Content\n@docs div, p, hr, pre, blockquote\n\n## Text\n@docs span, a, code, em, strong, i, b, u, sub, sup, br\n\n## Lists\n@docs ol, ul, li, dl, dt, dd\n\n## Emdedded Content\n@docs img, iframe, canvas, math\n\n## Inputs\n@docs form, input, textarea, button, select, option\n\n## Sections\n@docs section, nav, article, aside, header, footer, address, main_, body\n\n## Figures\n@docs figure, figcaption\n\n## Tables\n@docs table, caption, colgroup, col, tbody, thead, tfoot, tr, td, th\n\n\n## Less Common Elements\n\n### Less Common Inputs\n@docs fieldset, legend, label, datalist, optgroup, keygen, output, progress, meter\n\n### Audio and Video\n@docs audio, video, source, track\n\n### Embedded Objects\n@docs embed, object, param\n\n### Text Edits\n@docs ins, del\n\n### Semantic Text\n@docs small, cite, dfn, abbr, time, var, samp, kbd, s, q\n\n### Less Common Text Tags\n@docs mark, ruby, rt, rp, bdi, bdo, wbr\n\n## Interactive Elements\n@docs details, summary, menuitem, menu\n\n",
+    "aliases": [
+      {
+        "name": "Attribute",
+        "comment": " Set attributes on your `Html`. Learn more in the\n[`Html.Attributes`](Html-Attributes) module.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "Html",
+        "comment": " The core building block used to build up HTML. Here we create an `Html`\nvalue with no attributes and one child:\n\n    hello : Html msg\n    hello =\n      div [] [ text \"Hello!\" ]\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Testable.Html.Types.Node msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "a",
+        "comment": " Represents a hyperlink, linking to another resource.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "abbr",
+        "comment": " Represents an abbreviation or an acronym; the expansion of the\nabbreviation can be represented in the title attribute.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "address",
+        "comment": " Defines a section containing contact information.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "article",
+        "comment": " Defines self-contained content that could exist independently of the rest\nof the content.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "aside",
+        "comment": " Defines some content loosely related to the page content. If it is removed,\nthe remaining content still makes sense.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "audio",
+        "comment": " Represents a sound or audio stream.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "b",
+        "comment": " Represents a text which to which attention is drawn for utilitarian\npurposes. It doesn't convey extra importance and doesn't imply an alternate\nvoice.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "bdi",
+        "comment": " Represents text that must be isolated from its surrounding for\nbidirectional text formatting. It allows embedding a span of text with a\ndifferent, or unknown, directionality.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "bdo",
+        "comment": " Represents the directionality of its children, in order to explicitly\noverride the Unicode bidirectional algorithm.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "beginnerProgram",
+        "comment": " Create a [`Program`][program] that describes how your whole app works.\n\nRead about [The Elm Architecture][tea] to learn how to use this. Just do it.\nThe additional context is very worthwhile! (Honestly, it is best to just read\nthat guide from front to back instead of muddling around and reading it\npiecemeal.)\n\n[program]: http://package.elm-lang.org/packages/elm-lang/core/latest/Platform#Program\n[tea]: https://guide.elm-lang.org/architecture/\n",
+        "type": "{ model : model , view : model -> Html.Html msg , update : msg -> model -> model } -> Platform.Program Basics.Never model msg"
+      },
+      {
+        "name": "blockquote",
+        "comment": " Represents a content that is quoted from another source.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "body",
+        "comment": " Represents the content of an HTML document. There is only one `body`\nelement in a document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "br",
+        "comment": " Represents a line break.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "button",
+        "comment": " Represents a button.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "canvas",
+        "comment": " Represents a bitmap area for graphics rendering.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "caption",
+        "comment": " Represents the title of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "cite",
+        "comment": " Represents the title of a work.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "code",
+        "comment": " Represents computer code.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "col",
+        "comment": " Represents a column of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "colgroup",
+        "comment": " Represents a set of one or more columns of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "datalist",
+        "comment": " Represents a set of predefined options for other controls.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "dd",
+        "comment": " Represents the definition of the terms immediately listed before it.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "del",
+        "comment": " Defines a removal from the document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "details",
+        "comment": " Represents a widget from which the user can obtain additional information\nor controls.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "dfn",
+        "comment": " Represents a term whose definition is contained in its nearest ancestor\ncontent.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "div",
+        "comment": " Represents a generic container with no special meaning.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "dl",
+        "comment": " Defines a definition list, that is, a list of terms and their associated\ndefinitions.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "dt",
+        "comment": " Represents a term defined by the next `dd`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "em",
+        "comment": " Represents emphasized text, like a stress accent.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "embed",
+        "comment": " Represents a integration point for an external, often non-HTML,\napplication or interactive content.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "fieldset",
+        "comment": " Represents a set of controls.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "figcaption",
+        "comment": " Represents the legend of a figure.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "figure",
+        "comment": " Represents a figure illustrated as part of the document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "footer",
+        "comment": " Defines the footer for a page or section. It often contains a copyright\nnotice, some links to legal information, or addresses to give feedback.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "form",
+        "comment": " Represents a form, consisting of controls, that can be submitted to a\nserver for processing.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h1",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h2",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h3",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h4",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h5",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "h6",
+        "comment": " ",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "header",
+        "comment": " Defines the header of a page or section. It often contains a logo, the\ntitle of the web site, and a navigational table of content.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "hr",
+        "comment": " Represents a thematic break between paragraphs of a section or article or\nany longer content.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "i",
+        "comment": " Represents some text in an alternate voice or mood, or at least of\ndifferent quality, such as a taxonomic designation, a technical term, an\nidiomatic phrase, a thought, or a ship name.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "iframe",
+        "comment": " Embedded an HTML document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "img",
+        "comment": " Represents an image.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "input",
+        "comment": " Represents a typed data field allowing the user to edit the data.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "ins",
+        "comment": " Defines an addition to the document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "kbd",
+        "comment": " Represents user input, often from the keyboard, but not necessarily; it\nmay represent other input, like transcribed voice commands.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "keygen",
+        "comment": " Represents a key-pair generator control.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "label",
+        "comment": " Represents the caption of a form control.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "legend",
+        "comment": " Represents the caption for a `fieldset`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "li",
+        "comment": " Defines a item of an enumeration list.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "main_",
+        "comment": " Defines the main or important content in the document. There is only one\n`main` element in the document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the messages produced by some `Html`. In the following example,\nwe have `viewButton` that produces `()` messages, and we transform those values\ninto `Msg` values in `view`.\n\n    type Msg = Left | Right\n\n    view : model -> Html Msg\n    view model =\n      div []\n        [ map (\\_ -> Left) (viewButton \"Left\")\n        , map (\\_ -> Right) (viewButton \"Right\")\n        ]\n\n    viewButton : String -> Html ()\n    viewButton name =\n      button [ onClick () ] [ text name ]\n\nThis should not come in handy too often. Definitely read [this][reuse] before\ndeciding if this is what you want.\n\n[reuse]: https://guide.elm-lang.org/reuse/\n",
+        "type": "(a -> msg) -> Testable.Html.Types.Node a -> Testable.Html.Types.Node msg"
+      },
+      {
+        "name": "mark",
+        "comment": " Represents text highlighted for reference purposes, that is for its\nrelevance in another context.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "math",
+        "comment": " Defines a mathematical formula.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "menu",
+        "comment": " Represents a list of commands.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "menuitem",
+        "comment": " Represents a command that the user can invoke.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "meter",
+        "comment": " Represents a scalar measurement (or a fractional value), within a known\nrange.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "nav",
+        "comment": " Defines a section that contains only navigation links.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "node",
+        "comment": " General way to create HTML nodes. It is used to define all of the helper\nfunctions in this library.\n\n    div : List (Attribute msg) -> List (Html msg) -> Html msg\n    div attributes children =\n        node \"div\" attributes children\n\nYou can use this to create custom nodes if you need to create something that\nis not covered by the helper functions in this library.\n",
+        "type": "String -> List (Testable.Html.Attribute msg) -> List (Testable.Html.Types.Node msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "object",
+        "comment": " Represents an external resource, which is treated as an image, an HTML\nsub-document, or an external resource to be processed by a plug-in.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "ol",
+        "comment": " Defines an ordered list of items.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "optgroup",
+        "comment": " Represents a set of options, logically grouped.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "option",
+        "comment": " Represents an option in a `select` element or a suggestion of a `datalist`\nelement.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "output",
+        "comment": " Represents the result of a calculation.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "p",
+        "comment": " Defines a portion that should be displayed as a paragraph.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "param",
+        "comment": " Defines parameters for use by plug-ins invoked by `object` elements.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "pre",
+        "comment": " Indicates that its content is preformatted and that this format must be\npreserved.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "program",
+        "comment": " Create a [`Program`][program] that describes how your whole app works.\n\nRead about [The Elm Architecture][tea] to learn how to use this. Just do it.\nCommands and subscriptions make way more sense when you work up to them\ngradually and see them in context with examples.\n\n[program]: http://package.elm-lang.org/packages/elm-lang/core/latest/Platform#Program\n[tea]: https://guide.elm-lang.org/architecture/\n",
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> Platform.Program Basics.Never model msg"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Create a [`Program`][program] that describes how your whole app works.\n\nIt works just like `program` but you can provide &ldquo;flags&rdquo; from\nJavaScript to configure your application. Read more about that [here][].\n\n[program]: http://package.elm-lang.org/packages/elm-lang/core/latest/Platform#Program\n[here]: https://guide.elm-lang.org/interop/javascript.html\n",
+        "type": "{ init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg } -> Platform.Program flags model msg"
+      },
+      {
+        "name": "progress",
+        "comment": " Represents the completion progress of a task.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "q",
+        "comment": " Represents an inline quotation.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "rp",
+        "comment": " Represents parenthesis around a ruby annotation, used to display the\nannotation in an alternate way by browsers not supporting the standard display\nfor annotations.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "rt",
+        "comment": " Represents the text of a ruby annotation.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "ruby",
+        "comment": " Represents content to be marked with ruby annotations, short runs of text\npresented alongside the text. This is often used in conjunction with East Asian\nlanguage where the annotations act as a guide for pronunciation, like the\nJapanese furigana.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "s",
+        "comment": " Represents content that is no longer accurate or relevant.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "samp",
+        "comment": " Represents the output of a program or a computer.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "section",
+        "comment": " Defines a section in a document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "select",
+        "comment": " Represents a control allowing selection among a set of options.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "small",
+        "comment": " Represents a side comment, that is, text like a disclaimer or a\ncopyright, which is not essential to the comprehension of the document.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "source",
+        "comment": " Allows authors to specify alternative media resources for media elements\nlike `video` or `audio`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "span",
+        "comment": " Represents text with no specific meaning. This has to be used when no other\ntext-semantic element conveys an adequate meaning, which, in this case, is\noften brought by global attributes like `class`, `lang`, or `dir`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "strong",
+        "comment": " Represents especially important text.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "sub",
+        "comment": " Represent a subscript.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "summary",
+        "comment": " Represents a summary, caption, or legend for a given `details`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "sup",
+        "comment": " Represent a superscript.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "table",
+        "comment": " Represents data with more than one dimension.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "tbody",
+        "comment": " Represents the block of rows that describes the concrete data of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "td",
+        "comment": " Represents a data cell in a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "text",
+        "comment": " Just put plain text in the DOM. It will escape the string so that it appears\nexactly as you specify.\n\n    text \"Hello World!\"\n",
+        "type": "String -> Testable.Html.Html msg"
+      },
+      {
+        "name": "textarea",
+        "comment": " Represents a multiline text edit control.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "tfoot",
+        "comment": " Represents the block of rows that describes the column summaries of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "th",
+        "comment": " Represents a header cell in a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "thead",
+        "comment": " Represents the block of rows that describes the column labels of a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "time",
+        "comment": " Represents a date and time value; the machine-readable equivalent can be\nrepresented in the datetime attribute.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "tr",
+        "comment": " Represents a row of cells in a table.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "track",
+        "comment": " Allows authors to specify timed text track for media elements like `video`\nor `audio`.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "u",
+        "comment": " Represents a non-textual annoatation for which the conventional\npresentation is underlining, such labeling the text as being misspelt or\nlabeling a proper name in Chinese text.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "ul",
+        "comment": " Defines an unordered list of items.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "var",
+        "comment": " Represents a variable. Specific cases where it should be used include an\nactual mathematical expression or programming context, an identifier\nrepresenting a constant, a symbol identifying a physical quantity, a function\nparameter, or a mere placeholder in prose.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "video",
+        "comment": " Represents a video, the associated audio and captions, and controls.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      },
+      {
+        "name": "wbr",
+        "comment": " Represents a line break opportunity, that is a suggested point for\nwrapping text in order to improve readability of text split on several lines.\n",
+        "type": "List (Testable.Html.Attribute msg) -> List (Testable.Html.Html msg) -> Testable.Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Http",
+    "comment": " Create and send HTTP requests.\n\n# Send Requests\n@docs Request, send, Error\n\n# GET\n@docs getString, get\n\n# POST\n@docs post\n\n# Custom Requests\n@docs request\n\n## Headers\n@docs Header, header\n\n## Request Bodies\n@docs Body, emptyBody, jsonBody, stringBody, multipartBody, Part, stringPart\n\n## Responses\n@docs Response\n\n# Low-Level\n@docs encodeUri, decodeUri, toTask\n\n# Helpers\n@docs Settings, defaultSettings, getRequest, ok, serverError\n\n",
+    "aliases": [
+      {
+        "name": "Body",
+        "comment": " Represents the body of a `Request`.\n",
+        "args": [],
+        "type": "Http.Body"
+      },
+      {
+        "name": "Error",
+        "comment": " A Request can fail in a couple ways:\n\n- BadUrl means you did not provide a valid URL.\n- Timeout means it took too long to get a response.\n- NetworkError means the user turned off their wifi, went in a cave, etc.\n- BadStatus means you got a response back, but the status code indicates failure.\n- BadPayload means you got a response back with a nice status code, but the body of the response was something unexpected. The String in this case is a debugging message that explains what went wrong with your JSON decoder or whatever.\n",
+        "args": [],
+        "type": "Http.Error"
+      },
+      {
+        "name": "Header",
+        "comment": " An HTTP header for configuring requests. See a bunch of common headers\n[here][].\n\n[here]: https://en.wikipedia.org/wiki/List_of_HTTP_header_fields\n",
+        "args": [],
+        "type": "Http.Header"
+      },
+      {
+        "name": "Part",
+        "comment": " Contents of a multi-part body. Right now it only supports strings, but we\nwill support blobs and files when we get an API for them in Elm.\n",
+        "args": [],
+        "type": "Http.Part"
+      },
+      {
+        "name": "Request",
+        "comment": " Describes an HTTP request.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Testable.Internal.Request a"
+      },
+      {
+        "name": "Response",
+        "comment": " The response from a `Request`.\n",
+        "args": [
+          "a"
+        ],
+        "type": "Http.Response a"
+      },
+      {
+        "name": "Settings",
+        "comment": " Specific Settings that you can send to your request when you\n  want a more custom request, like with differente headers or a timeout.\n",
+        "args": [],
+        "type": "Testable.Internal.Settings"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeUri",
+        "comment": " Use this to unescape query parameters. It converts things like `%2F` to\n`/`. It can fail in some cases. For example, there is no way to unescape `%`\nbecause it could never appear alone in a properly escaped string.\n\nIt works just like `decodeURIComponent` in JavaScript.\n",
+        "type": "String -> Maybe.Maybe String"
+      },
+      {
+        "name": "defaultSettings",
+        "comment": " The default settings used by `get` and `post`. The url must be changed.\n    { method = \"GET\"\n    , headers = []\n    , body = Http.emptyBody\n    , timeout = Nothing\n    , url = \"\"\n    , withCredentials = False\n    }\n",
+        "type": "Testable.Http.Settings"
+      },
+      {
+        "name": "emptyBody",
+        "comment": " Create an empty body for your `Request`. This is useful for GET requests\nand POST requests where you are not sending any data.\n",
+        "type": "Testable.Http.Body"
+      },
+      {
+        "name": "encodeUri",
+        "comment": " Use this to escape query parameters. Converts characters like `/` to `%2F`\nso that it does not clash with normal URL\n\nIt work just like `encodeURIComponent` in JavaScript.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "get",
+        "comment": " Create a `GET` request and try to decode the response body from JSON to\nsome Elm value.\n\n    import Http\n    import Json.Decode exposing (list, string)\n\n    getBooks : Http.Request (List String)\n    getBooks =\n      Http.get \"https://example.com/books\" (list string)\n\nYou can learn more about how JSON decoders work [here][] in the guide.\n\n[here]: https://guide.elm-lang.org/interop/json.html\n",
+        "type": "String -> Json.Decode.Decoder value -> Testable.Http.Request value"
+      },
+      {
+        "name": "getRequest",
+        "comment": " A convenient way to make a `Request` corresponding to the request made by `get`\n",
+        "type": "String -> Testable.Internal.Settings"
+      },
+      {
+        "name": "getString",
+        "comment": " Create a `GET` request and interpret the response body as a `String`.\n\n    import Http\n\n    getWarAndPeace : Http.Request String\n    getWarAndPeace =\n      Http.getString \"https://example.com/books/war-and-peace\"\n",
+        "type": "String -> Testable.Http.Request String"
+      },
+      {
+        "name": "header",
+        "comment": " Create a `Header`.\n\n    header \"If-Modified-Since\" \"Sat 29 Oct 1994 19:43:31 GMT\"\n    header \"Max-Forwards\" \"10\"\n    header \"X-Requested-With\" \"XMLHttpRequest\"\n\n**Note:** In the future, we may split this out into an `Http.Headers` module\nand provide helpers for cases that are common on the client-side. If this\nsounds nice to you, open an issue [here][] describing the helper you want and\nwhy you need it.\n\n[here]: https://github.com/elm-lang/http/issues\n",
+        "type": "String -> String -> Http.Header"
+      },
+      {
+        "name": "jsonBody",
+        "comment": " Put some JSON value in the body of your `Request`. This will automatically\nadd the `Content-Type: application/json` header.\n",
+        "type": "Json.Encode.Value -> Testable.Http.Body"
+      },
+      {
+        "name": "multipartBody",
+        "comment": " Create multi-part bodies for your `Request`, automatically adding the\n`Content-Type: multipart/form-data` header.\n",
+        "type": "List Testable.Http.Part -> Testable.Http.Body"
+      },
+      {
+        "name": "ok",
+        "comment": " A convenient way to create a 200 OK repsonse\n",
+        "type": "String -> Result.Result Testable.Http.Error (Testable.Http.Response String)"
+      },
+      {
+        "name": "post",
+        "comment": " Create a `POST` request and try to decode the response body from JSON to\nan Elm value. For example, if we want to send a POST without any data in the\nrequest body, it would be like this:\n\n    import Http\n    import Json.Decode exposing (list, string)\n\n    postBooks : Http.Request (List String)\n    postBooks =\n      Http.post \"https://example.com/books\" Http.emptyBody (list string)\n\nSee [`jsonBody`](#jsonBody) to learn how to have a more interesting request\nbody. And check out [this section][here] of the guide to learn more about\nJSON decoders.\n\n[here]: https://guide.elm-lang.org/interop/json.html\n\n",
+        "type": "String -> Testable.Http.Body -> Json.Decode.Decoder a -> Testable.Http.Request a"
+      },
+      {
+        "name": "request",
+        "comment": " Create a custom request. For example, a custom PUT request would look like\nthis:\n\n    put : String -> Body -> Request ()\n    put url body =\n      request\n        { method = \"PUT\"\n        , headers = []\n        , url = url\n        , body = body\n        , expect = expectStringResponse (\\_ -> Ok ())\n        , timeout = Nothing\n        , withCredentials = False\n        }\n",
+        "type": "Testable.Http.Settings -> Json.Decode.Decoder a -> Testable.Http.Request a"
+      },
+      {
+        "name": "send",
+        "comment": " Send a `Request`. We could get the text of “War and Peace” like this:\n\n    import Http\n\n    type Msg = Click | NewBook (Result Http.Error String)\n\n    update : Msg -> Model -> Model\n    update msg model =\n      case msg of\n        Click ->\n          ( model, getWarAndPeace )\n\n        NewBook (Ok book) ->\n          ...\n\n        NewBook (Err _) ->\n          ...\n\n    getWarAndPeace : Cmd Msg\n    getWarAndPeace =\n      Http.send NewBook <|\n        Http.getString \"https://example.com/books/war-and-peace.md\"\n",
+        "type": "(Result.Result Testable.Http.Error a -> msg) -> Testable.Http.Request a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "serverError",
+        "comment": " A convenient way to create a response representing a 500 error\n",
+        "type": "Result.Result Testable.Http.Error (Testable.Http.Response String)"
+      },
+      {
+        "name": "stringBody",
+        "comment": " Put some string in the body of your `Request`. Defining `jsonBody` looks\nlike this:\n\n    import Json.Encode as Encode\n\n    jsonBody : Encode.Value -> Body\n    jsonBody value =\n      stringBody \"application/json\" (Encode.encode 0 value)\n\nNotice that the first argument is a [MIME type][mime] so we know to add\n`Content-Type: application/json` to our request headers. Make sure your\nMIME type matches your data. Some servers are strict about this!\n\n[mime]: https://en.wikipedia.org/wiki/Media_type\n",
+        "type": "String -> String -> Testable.Http.Body"
+      },
+      {
+        "name": "stringPart",
+        "comment": " A named chunk of string data.\n\n    body =\n      multipartBody\n        [ stringPart \"user\" \"tom\"\n        , stringPart \"payload\" \"42\"\n        ]\n",
+        "type": "String -> String -> Testable.Http.Part"
+      },
+      {
+        "name": "toTask",
+        "comment": " Convert a `Request` into a `Task`. This is only really useful if you want\nto chain together a bunch of requests (or any other tasks) in a single command.\n",
+        "type": "Testable.Http.Request a -> Testable.Internal.Task Testable.Http.Error a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Cmd",
+    "comment": "\n`Testable.Cmd` is a replacement for the core `Cmd` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Cmd` into a core `Cmd` with the `Testable` module.\n\n@docs Cmd, map, batch, none, wrap\n",
+    "aliases": [
+      {
+        "name": "Cmd",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "Testable.Internal.Cmd msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "batch",
+        "comment": " ",
+        "type": "List (Testable.Cmd.Cmd msg) -> Testable.Cmd.Cmd msg"
+      },
+      {
+        "name": "map",
+        "comment": " ",
+        "type": "(a -> b) -> Testable.Cmd.Cmd a -> Testable.Cmd.Cmd b"
+      },
+      {
+        "name": "none",
+        "comment": " ",
+        "type": "Testable.Cmd.Cmd never"
+      },
+      {
+        "name": "wrap",
+        "comment": " ",
+        "type": "Platform.Cmd.Cmd msg -> Testable.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html.Selectors",
+    "comment": "\nA selector is used to find html nodes when testing\n\n# Selectors\n@docs tag, attribute, id, class\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "attribute",
+        "comment": " Find elements by any attribute with the specified value\n",
+        "type": "String -> String -> Testable.Html.Types.Selector"
+      },
+      {
+        "name": "class",
+        "comment": " Finds elements that have the given class (and possibly others as well).\n",
+        "type": "String -> Testable.Html.Types.Selector"
+      },
+      {
+        "name": "id",
+        "comment": " Find elements by id\n",
+        "type": "String -> Testable.Html.Types.Selector"
+      },
+      {
+        "name": "tag",
+        "comment": " Find elements by tag name\n",
+        "type": "String -> Testable.Html.Types.Selector"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html.Keyed",
+    "comment": " A keyed node helps optimize cases where children are getting added, moved,\nremoved, etc. Common examples include:\n\n  - The user can delete items from a list.\n  - The user can create new items in a list.\n  - You can sort a list based on name or date or whatever.\n\nWhen you use a keyed node, every child is paired with a string identifier. This\nmakes it possible for the underlying diffing algorithm to reuse nodes more\nefficiently.\n\n# Keyed Nodes\n@docs node\n\n# Commonly Keyed Nodes\n@docs ol, ul\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "node",
+        "comment": " Works just like `Html.node`, but you add a unique identifier to each child\nnode. You want this when you have a list of nodes that is changing: adding\nnodes, removing nodes, etc. In these cases, the unique identifiers help make\nthe DOM modifications more efficient.\n",
+        "type": "String -> List (Testable.Html.Types.Attribute msg) -> List ( String, Testable.Html.Types.Node msg ) -> Testable.Html.Types.Node msg"
+      },
+      {
+        "name": "ol",
+        "comment": " ",
+        "type": "List (Testable.Html.Types.Attribute msg) -> List ( String, Testable.Html.Types.Node msg ) -> Testable.Html.Types.Node msg"
+      },
+      {
+        "name": "ul",
+        "comment": " ",
+        "type": "List (Testable.Html.Types.Attribute msg) -> List ( String, Testable.Html.Types.Node msg ) -> Testable.Html.Types.Node msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html.Events",
+    "comment": "\nIt is often helpful to create an [Union Type][] so you can have many different kinds\nof events as seen in the [TodoMVC][] example.\n\n[Union Type]: http://elm-lang.org/learn/Union-Types.elm\n[TodoMVC]: https://github.com/evancz/elm-todomvc/blob/master/Todo.elm\n\n# Mouse Helpers\n@docs onClick, onDoubleClick,\n      onMouseDown, onMouseUp,\n      onMouseEnter, onMouseLeave,\n      onMouseOver, onMouseOut\n\n# Form Helpers\n@docs onInput, onCheck, onSubmit\n\n# Focus Helpers\n@docs onBlur, onFocus\n\n# Custom Event Handlers\n@docs on, onWithOptions, Options, defaultOptions\n\n# Custom Decoders\n@docs targetValue, targetChecked, keyCode\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options for an event listener. If `stopPropagation` is true, it means the\nevent stops traveling through the DOM so it will not trigger any other event\nlisteners. If `preventDefault` is true, any built-in browser behavior related\nto the event is prevented. For example, this is used with touch events when you\nwant to treat them as gestures of your own, not as scrolls.\n",
+        "args": [],
+        "type": "Testable.Html.Types.Options"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Everything is `False` by default.\n    defaultOptions =\n        { stopPropagation = False\n        , preventDefault = False\n        }\n",
+        "type": "Testable.Html.Events.Options"
+      },
+      {
+        "name": "keyCode",
+        "comment": " A `Json.Decoder` for grabbing `event.keyCode`. This helps you define\nkeyboard listeners like this:\n    import Json.Decode as Json\n    onKeyUp : (Int -> msg) -> Attribute msg\n    onKeyUp tagger =\n      on \"keyup\" (Json.map tagger keyCode)\n**Note:** It looks like the spec is moving away from `event.keyCode` and\ntowards `event.key`. Once this is supported in more browsers, we may add\nhelpers here for `onKeyUp`, `onKeyDown`, `onKeyPress`, etc.\n",
+        "type": "Json.Decode.Decoder Int"
+      },
+      {
+        "name": "on",
+        "comment": " Create a custom event listener. Normally this will not be necessary, but\nyou have the power! Here is how `onClick` is defined for example:\n    import Json.Decode as Json\n    onClick : msg -> Attribute msg\n    onClick message =\n      on \"click\" (Json.succeed message)\nThe first argument is the event name in the same format as with JavaScript's\n[`addEventListener`][aEL] function.\nThe second argument is a JSON decoder. Read more about these [here][decoder].\nWhen an event occurs, the decoder tries to turn the event object into an Elm\nvalue. If successful, the value is routed to your `update` function. In the\ncase of `onClick` we always just succeed with the given `message`.\nIf this is confusing, work through the [Elm Architecture Tutorial][tutorial].\nIt really does help!\n[aEL]: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener\n[decoder]: http://package.elm-lang.org/packages/elm-lang/core/latest/Json-Decode\n[tutorial]: https://github.com/evancz/elm-architecture-tutorial/\n",
+        "type": "String -> Json.Decode.Decoder msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onBlur",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onCheck",
+        "comment": " Capture [change](https://developer.mozilla.org/en-US/docs/Web/Events/change)\nevents on checkboxes. It will grab the boolean value from `event.target.checked`\non any input event.\nCheck out [targetChecked](#targetChecked) for more details on how this works.\n",
+        "type": "(Bool -> msg) -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onClick",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onDoubleClick",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onFocus",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onInput",
+        "comment": " Capture [input](https://developer.mozilla.org/en-US/docs/Web/Events/input)\nevents for things like text fields or text areas.\nIt grabs the **string** value at `event.target.value`, so it will not work if\nyou need some other type of information. For example, if you want to track\ninputs on a range slider, make a custom handler with [`on`](#on).\nFor more details on how `onInput` works, check out [targetValue](#targetValue).\n",
+        "type": "(String -> msg) -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseEnter",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseLeave",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseOut",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseOver",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onMouseUp",
+        "comment": " ",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onSubmit",
+        "comment": " Capture a [submit](https://developer.mozilla.org/en-US/docs/Web/Events/submit)\nevent with [`preventDefault`](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault)\nin order to prevent the form from changing the page’s location. If you need\ndifferent behavior, use `onWithOptions` to create a customized version of\n`onSubmit`.\n",
+        "type": "msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "onWithOptions",
+        "comment": " Same as `on` but you can set a few options.\n",
+        "type": "String -> Testable.Html.Events.Options -> Json.Decode.Decoder msg -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "targetChecked",
+        "comment": " A `Json.Decoder` for grabbing `event.target.checked`. We use this to define\n`onCheck` as follows:\n    import Json.Decode as Json\n    onCheck : (Bool -> msg) -> Attribute msg\n    onCheck tagger =\n      on \"input\" (Json.map tagger targetChecked)\n",
+        "type": "Json.Decode.Decoder Bool"
+      },
+      {
+        "name": "targetValue",
+        "comment": " A `Json.Decoder` for grabbing `event.target.value`. We use this to define\n`onInput` as follows:\n    import Json.Decode as Json\n    onInput : (String -> msg) -> Attribute msg\n    onInput tagger =\n      on \"input\" (Json.map tagger targetValue)\nYou probably will never need this, but hopefully it gives some insights into\nhow to make custom event handlers.\n",
+        "type": "Json.Decode.Decoder String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html.Attributes",
+    "comment": " Helper functions for HTML attributes. They are organized roughly by\ncategory. Each attribute is labeled with the HTML tags it can be used with, so\njust search the page for `video` if you want video stuff.\n\nIf you cannot find what you are looking for, go to the [Custom\nAttributes](#custom-attributes) section to learn how to create new helpers.\n\n# Primitives\n@docs style, property, attribute, map\n\n# Super Common Attributes\n@docs class, classList, id, title, hidden\n\n# Inputs\n@docs type_, value, defaultValue, checked, placeholder, selected\n\n## Input Helpers\n@docs accept, acceptCharset, action, autocomplete, autofocus,\n    disabled, enctype, formaction, list, maxlength, minlength, method, multiple,\n    name, novalidate, pattern, readonly, required, size, for, form\n\n## Input Ranges\n@docs max, min, step\n\n## Input Text Areas\n@docs cols, rows, wrap\n\n\n# Links and Areas\n@docs href, target, download, downloadAs, hreflang, media, ping, rel\n\n## Maps\n@docs ismap, usemap, shape, coords\n\n\n# Embedded Content\n@docs src, height, width, alt\n\n## Audio and Video\n@docs autoplay, controls, loop, preload, poster, default, kind, srclang\n\n## iframes\n@docs sandbox, seamless, srcdoc\n\n# Ordered Lists\n@docs reversed, start\n\n# Tables\n@docs align, colspan, rowspan, headers, scope\n\n# Header Stuff\n@docs async, charset, content, defer, httpEquiv, language, scoped\n\n# Less Common Global Attributes\nAttributes that can be attached to any HTML tag but are less commonly used.\n@docs accesskey, contenteditable, contextmenu, dir, draggable, dropzone,\n      itemprop, lang, spellcheck, tabindex\n\n# Key Generation\n@docs challenge, keytype\n\n# Miscellaneous\n@docs cite, datetime, pubdate, manifest\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "accept",
+        "comment": " List of types the server accepts, typically a file type.\nFor `form` and `input`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "acceptCharset",
+        "comment": " List of supported charsets in a `form`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "accesskey",
+        "comment": " Defines a keyboard shortcut to activate or add focus to the element.\n",
+        "type": "Char -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "action",
+        "comment": " The URI of a program that processes the information submitted via a `form`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "align",
+        "comment": " Specifies the horizontal alignment of a `caption`, `col`, `colgroup`,\n`hr`, `iframe`, `img`, `table`, `tbody`,  `td`,  `tfoot`, `th`, `thead`, or\n`tr`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "alt",
+        "comment": " Alternative text in case an image can't be displayed. Works with `img`,\n`area`, and `input`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "async",
+        "comment": " Indicates that the `script` should be executed asynchronously.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "attribute",
+        "comment": " Create *attributes*, like saying `domNode.setAttribute('class', 'greeting')`\nin JavaScript.\n\n    class : String -> Attribute msg\n    class name =\n      attribute \"class\" name\n\nRead more about the difference between properties and attributes [here][].\n\n[here]: https://github.com/elm-lang/html/blob/master/properties-vs-attributes.md\n",
+        "type": "String -> String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "autocomplete",
+        "comment": " Indicates whether a `form` or an `input` can have their values automatically\ncompleted by the browser.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "autofocus",
+        "comment": " The element should be automatically focused after the page loaded.\nFor `button`, `input`, `keygen`, `select`, and `textarea`.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "autoplay",
+        "comment": " The `audio` or `video` should play as soon as possible.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "challenge",
+        "comment": " A challenge string that is submitted along with the public key in a `keygen`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "charset",
+        "comment": " Declares the character encoding of the page or script. Common values include:\n\n  * UTF-8 - Character encoding for Unicode\n  * ISO-8859-1 - Character encoding for the Latin alphabet\n\nFor `meta` and `script`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "checked",
+        "comment": " Indicates whether an `input` of type checkbox is checked.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "cite",
+        "comment": " Contains a URI which points to the source of the quote or change in a\n`blockquote`, `del`, `ins`, or `q`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "class",
+        "comment": " Often used with CSS to style elements with common properties.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "classList",
+        "comment": " This function makes it easier to build a space-separated class attribute.\nEach class can easily be added and removed depending on the boolean value it\nis paired with. For example, maybe we want a way to view notices:\n\n    viewNotice : Notice -> Html msg\n    viewNotice notice =\n      div\n        [ classList\n            [ (\"notice\", True)\n            , (\"notice-important\", notice.isImportant)\n            , (\"notice-seen\", notice.isSeen)\n            ]\n        ]\n        [ text notice.content ]\n",
+        "type": "List ( String, Bool ) -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "cols",
+        "comment": " Defines the number of columns in a `textarea`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "colspan",
+        "comment": " The colspan attribute defines the number of columns a cell should span.\nFor `td` and `th`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "content",
+        "comment": " A value associated with http-equiv or name depending on the context. For\n`meta`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "contenteditable",
+        "comment": " Indicates whether the element's content is editable.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "contextmenu",
+        "comment": " Defines the ID of a `menu` element which will serve as the element's\ncontext menu.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "controls",
+        "comment": " Indicates whether the browser should show playback controls for the `audio`\nor `video`.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "coords",
+        "comment": " A set of values specifying the coordinates of the hot-spot region in an\n`area`. Needs to be paired with a `shape` attribute to be meaningful.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "datetime",
+        "comment": " Indicates the date and time associated with the element.\nFor `del`, `ins`, `time`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "default",
+        "comment": " Indicates that the `track` should be enabled unless the user's preferences\nindicate something different.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "defaultValue",
+        "comment": " Defines an initial value which will be displayed in an `input` when that\n`input` is added to the DOM. Unlike `value`, altering `defaultValue` after the\n`input` element has been added to the DOM has no effect.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "defer",
+        "comment": " Indicates that a `script` should be executed after the page has been\nparsed.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "dir",
+        "comment": " Defines the text direction. Allowed values are ltr (Left-To-Right) or rtl\n(Right-To-Left).\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "disabled",
+        "comment": " Indicates whether the user can interact with a `button`, `fieldset`,\n`input`, `keygen`, `optgroup`, `option`, `select` or `textarea`.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "download",
+        "comment": " Indicates that clicking an `a` and `area` will download the resource\ndirectly.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "downloadAs",
+        "comment": " Indicates that clicking an `a` and `area` will download the resource\ndirectly, and that the downloaded resource with have the given filename.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "draggable",
+        "comment": " Defines whether the element can be dragged.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "dropzone",
+        "comment": " Indicates that the element accept the dropping of content on it.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "enctype",
+        "comment": " How `form` data should be encoded when submitted with the POST method.\nOptions include: application/x-www-form-urlencoded, multipart/form-data, and\ntext/plain.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "for",
+        "comment": " The element ID described by this `label` or the element IDs that are used\nfor an `output`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "form",
+        "comment": " Indicates the element ID of the `form` that owns this particular `button`,\n`fieldset`, `input`, `keygen`, `label`, `meter`, `object`, `output`,\n`progress`, `select`, or `textarea`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "formaction",
+        "comment": " Indicates the action of an `input` or `button`. This overrides the action\ndefined in the surrounding `form`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "headers",
+        "comment": " A space separated list of element IDs indicating which `th` elements are\nheaders for this cell. For `td` and `th`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "height",
+        "comment": " Declare the height of a `canvas`, `embed`, `iframe`, `img`, `input`,\n`object`, or `video`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "hidden",
+        "comment": " Indicates the relevance of an element.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "href",
+        "comment": " The URL of a linked resource, such as `a`, `area`, `base`, or `link`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "hreflang",
+        "comment": " Two-letter language code of the linked resource of an `a`, `area`, or `link`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "httpEquiv",
+        "comment": " This attribute is an indicator that is paired with the `content` attribute,\nindicating what that content means. `httpEquiv` can take on three different\nvalues: content-type, default-style, or refresh. For `meta`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "id",
+        "comment": " Often used with CSS to style a specific element. The value of this\nattribute must be unique.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "ismap",
+        "comment": " When an `img` is a descendent of an `a` tag, the `ismap` attribute\nindicates that the click location should be added to the parent `a`'s href as\na query string.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "itemprop",
+        "comment": " ",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "keytype",
+        "comment": " Specifies the type of key generated by a `keygen`. Possible values are:\nrsa, dsa, and ec.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "kind",
+        "comment": " Specifies the kind of text `track`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "lang",
+        "comment": " Defines the language used in the element.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "language",
+        "comment": " Defines the script language used in a `script`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "list",
+        "comment": " Associates an `input` with a `datalist` tag. The datalist gives some\npre-defined options to suggest to the user as they interact with an input.\nThe value of the list attribute must match the id of a `datalist` node.\nFor `input`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "loop",
+        "comment": " Indicates whether the `audio` or `video` should start playing from the\nstart when it's finished.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "manifest",
+        "comment": " Specifies the URL of the cache manifest for an `html` tag.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "map",
+        "comment": " Transform the messages produced by an `Attribute`.\n",
+        "type": "(a -> msg) -> Testable.Html.Types.Attribute a -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "max",
+        "comment": " Indicates the maximum value allowed. When using an input of type number or\ndate, the max value must be a number or date. For `input`, `meter`, and `progress`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "maxlength",
+        "comment": " Defines the maximum number of characters allowed in an `input` or\n`textarea`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "media",
+        "comment": " Specifies a hint of the target media of a `a`, `area`, `link`, `source`,\nor `style`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "method",
+        "comment": " Defines which HTTP method to use when submitting a `form`. Can be GET\n(default) or POST.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "min",
+        "comment": " Indicates the minimum value allowed. When using an input of type number or\ndate, the min value must be a number or date. For `input` and `meter`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "minlength",
+        "comment": " Defines the minimum number of characters allowed in an `input` or\n`textarea`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "multiple",
+        "comment": " Indicates whether multiple values can be entered in an `input` of type\nemail or file. Can also indicate that you can `select` many options.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "name",
+        "comment": " Name of the element. For example used by the server to identify the fields\nin form submits. For `button`, `form`, `fieldset`, `iframe`, `input`, `keygen`,\n`object`, `output`, `select`, `textarea`, `map`, `meta`, and `param`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "novalidate",
+        "comment": " This attribute indicates that a `form` shouldn't be validated when\nsubmitted.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "pattern",
+        "comment": " Defines a regular expression which an `input`'s value will be validated\nagainst.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "ping",
+        "comment": " Specify a URL to send a short POST request to when the user clicks on an\n`a` or `area`. Useful for monitoring and tracking.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "placeholder",
+        "comment": " Provides a hint to the user of what can be entered into an `input` or\n`textarea`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "poster",
+        "comment": " A URL indicating a poster frame to show until the user plays or seeks the\n`video`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "preload",
+        "comment": " Control how much of an `audio` or `video` resource should be preloaded.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "property",
+        "comment": " Create *properties*, like saying `domNode.className = 'greeting'` in\nJavaScript.\n\n    import Json.Encode as Encode\n\n    class : String -> Attribute msg\n    class name =\n      property \"className\" (Encode.string name)\n\nRead more about the difference between properties and attributes [here][].\n\n[here]: https://github.com/elm-lang/html/blob/master/properties-vs-attributes.md\n",
+        "type": "String -> Json.Encode.Value -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "pubdate",
+        "comment": " Indicates whether this date and time is the date of the nearest `article`\nancestor element. For `time`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "readonly",
+        "comment": " Indicates whether an `input` or `textarea` can be edited.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "rel",
+        "comment": " Specifies the relationship of the target object to the link object.\nFor `a`, `area`, `link`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "required",
+        "comment": " Indicates whether this element is required to fill out or not.\nFor `input`, `select`, and `textarea`.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "reversed",
+        "comment": " Indicates whether an ordered list `ol` should be displayed in a descending\norder instead of a ascending.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "rows",
+        "comment": " Defines the number of rows in a `textarea`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "rowspan",
+        "comment": " Defines the number of rows a table cell should span over.\nFor `td` and `th`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "sandbox",
+        "comment": " A space separated list of security restrictions you'd like to lift for an\n`iframe`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "scope",
+        "comment": " Specifies the scope of a header cell `th`. Possible values are: col, row,\ncolgroup, rowgroup.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "scoped",
+        "comment": " Indicates that a `style` should only apply to its parent and all of the\nparents children.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "seamless",
+        "comment": " Make an `iframe` look like part of the containing document.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "selected",
+        "comment": " Defines which `option` will be selected on page load.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "shape",
+        "comment": " Declare the shape of the clickable area in an `a` or `area`. Valid values\ninclude: default, rect, circle, poly. This attribute can be paired with\n`coords` to create more particular shapes.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "size",
+        "comment": " For `input` specifies the width of an input in characters.\n\nFor `select` specifies the number of visible options in a drop-down list.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "spellcheck",
+        "comment": " Indicates whether spell checking is allowed for the element.\n",
+        "type": "Bool -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "src",
+        "comment": " The URL of the embeddable content. For `audio`, `embed`, `iframe`, `img`,\n`input`, `script`, `source`, `track`, and `video`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "srcdoc",
+        "comment": " An HTML document that will be displayed as the body of an `iframe`. It will\noverride the content of the `src` attribute if it has been specified.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "srclang",
+        "comment": " A two letter language code indicating the language of the `track` text data.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "start",
+        "comment": " Defines the first number of an ordered list if you want it to be something\nbesides 1.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "step",
+        "comment": " Add a step size to an `input`. Use `step \"any\"` to allow any floating-point\nnumber to be used in the input.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "style",
+        "comment": " Specify a list of styles.\n\n    myStyle : Attribute msg\n    myStyle =\n      style\n        [ (\"backgroundColor\", \"red\")\n        , (\"height\", \"90px\")\n        , (\"width\", \"100%\")\n        ]\n\n    greeting : Html msg\n    greeting =\n      div [ myStyle ] [ text \"Hello!\" ]\n\nThere is no `Html.Styles` module because best practices for working with HTML\nsuggest that this should primarily be specified in CSS files. So the general\nrecommendation is to use this function lightly.\n",
+        "type": "List ( String, String ) -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "tabindex",
+        "comment": " Overrides the browser's default tab order and follows the one specified\ninstead.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "target",
+        "comment": " Specify where the results of clicking an `a`, `area`, `base`, or `form`\nshould appear. Possible special values include:\n\n  * _blank &mdash; a new window or tab\n  * _self &mdash; the same frame (this is default)\n  * _parent &mdash; the parent frame\n  * _top &mdash; the full body of the window\n\nYou can also give the name of any `frame` you have created.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "title",
+        "comment": " Text to be displayed in a tooltip when hovering over the element.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "type_",
+        "comment": " Defines the type of a `button`, `input`, `embed`, `object`, `script`,\n`source`, `style`, or `menu`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "usemap",
+        "comment": " Specify the hash name reference of a `map` that should be used for an `img`\nor `object`. A hash name reference is a hash symbol followed by the element's name or id.\nE.g. `\"#planet-map\"`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "value",
+        "comment": " Defines a default value which will be displayed in a `button`, `option`,\n`input`, `li`, `meter`, `progress`, or `param`.\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "width",
+        "comment": " Declare the width of a `canvas`, `embed`, `iframe`, `img`, `input`,\n`object`, or `video`.\n",
+        "type": "Int -> Testable.Html.Types.Attribute msg"
+      },
+      {
+        "name": "wrap",
+        "comment": " Indicates whether the text should be wrapped in a `textarea`. Possible\nvalues are \"hard\" and \"soft\".\n",
+        "type": "String -> Testable.Html.Types.Attribute msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Task",
+    "comment": "\n`Testable.Task` is a replacement for the core `Task` module.  You can use it\nto create components that can be tested with `Testable.TestContext`.  You can\nconvert `Testable.Task` into a core `Task` with the `Testable` module.\n\n# Basics\n@docs Task, succeed, fail\n\n# Mapping\n@docs map\n\n# Chaining\n@docs andThen, sequence\n\n# Errors\n@docs onError, mapError\n\n# Commands\n@docs perform, attempt\n",
+    "aliases": [
+      {
+        "name": "Task",
+        "comment": " Represents asynchronous effects that may fail. It is useful for stuff like\nHTTP.\n\nFor example, maybe we have a task with the type (`Task String User`). This means\nthat when we perform the task, it will either fail with a `String` message or\nsucceed with a `User`. So this could represent a task that is asking a server\nfor a certain user.\n",
+        "args": [
+          "error",
+          "success"
+        ],
+        "type": "Testable.Internal.Task error success"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "andThen",
+        "comment": " Chain together a task and a callback. The first task will run, and if it is\nsuccessful, you give the result to the callback resulting in another task. This\ntask then gets run.\n\n    succeed 2\n      |> andThen (\\n -> succeed (n + 2))\n      -- succeed 4\n\nThis is useful for chaining tasks together. Maybe you need to get a user from\nyour servers *and then* lookup their picture once you know their name.\n",
+        "type": "(a -> Testable.Task.Task x b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "attempt",
+        "comment": " Command the Elm runtime to attempt a task that might fail!\n",
+        "type": "(Result.Result x a -> msg) -> Testable.Task.Task x a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "fail",
+        "comment": " A task that fails immediately when run.\n\n    fail \"file not found\" : Task String a\n",
+        "type": "x -> Testable.Task.Task x a"
+      },
+      {
+        "name": "map",
+        "comment": " Transform a task.\n\n    map sqrt (succeed 9) == succeed 3\n",
+        "type": "(a -> b) -> Testable.Task.Task x a -> Testable.Task.Task x b"
+      },
+      {
+        "name": "mapError",
+        "comment": " Transform the error value. This can be useful if you need a bunch of error\ntypes to match up.\n\n    type Error = Http Http.Error | WebGL WebGL.Error\n\n    getResources : Task Error Resource\n    getResources =\n      sequence [ mapError Http serverTask, mapError WebGL textureTask ]\n",
+        "type": "(x -> y) -> Testable.Task.Task x a -> Testable.Task.Task y a"
+      },
+      {
+        "name": "onError",
+        "comment": " Recover from a failure in a task. If the given task fails, we use the\ncallback to recover.\n\n    fail \"file not found\"\n      |> onError (\\msg -> succeed 42)\n      -- succeed 42\n\n    succeed 9\n      |> onError (\\msg -> succeed 42)\n      -- succeed 9\n",
+        "type": "(x -> Testable.Task.Task y a) -> Testable.Task.Task x a -> Testable.Task.Task y a"
+      },
+      {
+        "name": "perform",
+        "comment": " The only way to *do* things in Elm is to give commands to the Elm runtime.\nSo we describe some complex behavior with a `Task` and then command the runtime\nto `perform` that task. For example, getting the current time looks like this:\n\n    import Task\n    import Time exposing (Time)\n\n    type Msg = Click | NewTime Time\n\n    update : Msg -> Model -> Model\n    update msg model =\n      case msg of\n        Click ->\n          ( model, Task.perform NewTime Time.now )\n\n        NewTime time ->\n          ...\n",
+        "type": "(a -> msg) -> Testable.Task.Task Basics.Never a -> Testable.Internal.Cmd msg"
+      },
+      {
+        "name": "sequence",
+        "comment": " Start with a list of tasks, and turn them into a single task that returns a list. The tasks will be run in order one-by-one and if any task fails the whole sequence fails.\n\n    sequence [ succeed 1, succeed 2 ] -- succeed [ 1, 2 ]\n\nThis can be useful if you need to make a bunch of HTTP requests one-by-one.}\n",
+        "type": "List (Testable.Task.Task x a) -> Testable.Task.Task x (List a)"
+      },
+      {
+        "name": "succeed",
+        "comment": " A task that succeeds immediately when run.\n\n    succeed 42    -- results in 42\n",
+        "type": "a -> Testable.Task.Task x a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Process",
+    "comment": "\n# Processes\n@docs sleep\n\n## Future Plans\n\nRight now, this library is pretty sparse. For example, there is no public API\nfor processes to communicate with each other. This is a really important\nability, but it is also something that is extraordinarily easy to get wrong!\n\nI think the trend will be towards an Erlang style of concurrency, where every\nprocess has an “event queue” that anyone can send messages to. I currently\nthink the API will be extended to be more like this:\n\n    type Id exit msg\n\n    spawn : Task exit a -> Task x (Id exit Never)\n\n    kill : Id exit msg -> Task x ()\n\n    send : Id exit msg -> msg -> Task x ()\n\nA process `Id` will have two type variables to make sure all communication is\nvalid. The `exit` type describes the messages that are produced if the process\nfails because of user code. So if processes are linked and trapping errors,\nthey will need to handle this. The `msg` type just describes what kind of\nmessages this process can be sent by strangers.\n\nWe shall see though! This is just a draft that does not cover nearly everything\nit needs to, so the long-term vision for concurrency in Elm will be rolling out\nslowly as I get more data and experience.\n\nI ask that people bullish on compiling to node.js keep this in mind. I think we\ncan do better than the hopelessly bad concurrency model of node.js, and I hope\nthe Elm community will be supportive of being more ambitious, even if it takes\nlonger. That’s kind of what Elm is all about.\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "sleep",
+        "comment": " Block progress on the current process for a given amount of time. The\nJavaScript equivalent of this is [`setTimeout`][setTimeout] which lets you\ndelay work until later.\n\n[setTimeout]: https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setTimeout\n",
+        "type": "Time.Time -> Testable.Internal.Task x ()"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Testable.Html.Types",
+    "comment": "\nTypes used for elm-testable html selectors and matchers\n\n# Types\n@docs Node, Attribute, Selector, Query, Options\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options for Attributes Events with Options\n",
+        "args": [],
+        "type": "{ stopPropagation : Bool, preventDefault : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Attribute",
+        "comment": " Html Attributes\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "Property",
+            [
+              "String",
+              "Json.Encode.Value"
+            ]
+          ],
+          [
+            "Style",
+            [
+              "List ( String, String )"
+            ]
+          ],
+          [
+            "On",
+            [
+              "String",
+              "Json.Decode.Decoder msg"
+            ]
+          ],
+          [
+            "OnWithOptions",
+            [
+              "String",
+              "Testable.Html.Types.Options",
+              "Json.Decode.Decoder msg"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Node",
+        "comment": " Html Nodes\n",
+        "args": [
+          "msg"
+        ],
+        "cases": [
+          [
+            "Node",
+            [
+              "String",
+              "List (Testable.Html.Types.Attribute msg)",
+              "List (Testable.Html.Types.Node msg)"
+            ]
+          ],
+          [
+            "KeyedNode",
+            [
+              "String",
+              "List (Testable.Html.Types.Attribute msg)",
+              "List ( String, Testable.Html.Types.Node msg )"
+            ]
+          ],
+          [
+            "Text",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Query",
+        "comment": " Html Queries, for composing selectors to find, findAll and thenFind/thenFindAll\n",
+        "args": [],
+        "cases": [
+          [
+            "Single",
+            [
+              "List Testable.Html.Types.Selector"
+            ]
+          ],
+          [
+            "Multiple",
+            [
+              "List Testable.Html.Types.Selector"
+            ]
+          ],
+          [
+            "Children",
+            [
+              "Testable.Html.Types.Query",
+              "Testable.Html.Types.Query"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Selector",
+        "comment": " Html Selector\n",
+        "args": [],
+        "cases": [
+          [
+            "Tag",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Attribute",
+            [
+              "String",
+              "String"
+            ]
+          ],
+          [
+            "Class",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

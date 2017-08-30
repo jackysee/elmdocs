@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Retroactive",
+    "comment": " This library lets you have a retroactive model. This means you can undo / redo\nchanges in your model. Retroactive means you can have different branches of future (redo).\n\nThe library can be use as a [`Program`](#using-program), so all your model will be retroactive, or\n[`not using Program`](#not-using-program), where you decide what parts of your model you want to make retroactive.\n\n# Actions and Operations\n\nThis library forces you to do all updates to your model through actions (see [`Action`](#Action)).\nThis means the only way of updating your model is to return an [`Action`](#Action) in your `update` function.\n\n@docs Action, Operation, operation\n\n# History and HistoryOptions\n@docs History, HistoryOptions\n\n# Using program\n\nThe easiest way to use this library is to use [`program`](#program). You then provide\nyour `init`, `update`, `view` and `subscriptions` as you would do with `Html.Program`.\n\nNote that there are some differences, for more info check [`program`](#program).\n\nYou can check `Counter.elm` for an example.\n\n@docs program, programWithFlags\n\n# Not using program\n\nIf you don't want to use [`program`](#program), you can also follow the next steps to\nintegrate it your existing app.\n\n- Store in your model a `[`program`](#program) Op SubModel`, being `SubModel` the part of your model you want to make retroactive\n- Use [`init`](#init), [`update`](#update), [`view`](#view), [`subscriptions`](#subscriptions) of this module when you need to deal with `SubModel`\n\nThis usually means you end up building `initSubModel`, `updateSubModel` and so on, and use them like:\n\n    type alias Model =\n        { subModel : History Op SubModel\n        }\n\n    updateSubModel historyOptions msg subModel =\n        -- Some update that returns (Action Op SubModel, Cmd msg)\n\n    update msg model =\n        case msg of\n            SubModelMsg subMsg ->\n                let\n                    (newSubModel, cmd) =\n                        Retroactive.update subModelUpdate subMsg model.subModel\n                in\n                    ({model | subModel = newSubModel}, Cmd.map SubModelMsg cmd)\n\n    subModelView historyOptions subModel =\n        -- Some view\n\n    view model =\n        Html.map SubModelMsg <| Retroactive.view subModelView model.subModel\n\nYou can check `CounterNoProgram.elm` for an example.\n\n@docs init, update, view, subscriptions\n\n",
+    "aliases": [
+      {
+        "name": "HistoryOptions",
+        "comment": " Represents the valid operations you can undo / redo on your model.\nIt will be passed to your `update` and `view` functions.\n\nYou can use this information to only show / try to perform the valid operations.\n\nThere is at most one undo operation, but there can be multiple redo operations.\nThis is because you can undo to a certain point, and then start another branch to the future.\n",
+        "args": [
+          "op"
+        ],
+        "type": "{ undo : Maybe.Maybe op, redo : List op }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Represents an action on your model. It can be:\n\n- `Do operation`: performs the [`Operation`](#Operation) `operation`.\n- `Undo`: undoes the last operation.\n- `Redo opId`: redoes the operation with identifier `opId`.\n\n    type Op\n        = Inc\n        | Dec\n\n    type alias Model = Int\n\n    inc =\n        operation Inc (\\m -> m + 1) (\\m -> m - 1)\n    dec =\n        operation Dec (\\m -> m 1 1) (\\m -> m + 1)\n\n    update historyOptions msg model =\n        case msg of\n            Msg1 ->\n                (Do inc, Cmd.none)\n            UndoMsg ->\n                (Undo, Cmd.none)\n            RedoMsg op ->\n                (Redo op, Cmd.none)\n",
+        "args": [
+          "op",
+          "model"
+        ],
+        "cases": [
+          [
+            "Do",
+            [
+              "Retroactive.Operation op model"
+            ]
+          ],
+          [
+            "Undo",
+            []
+          ],
+          [
+            "Redo",
+            [
+              "op"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "History",
+        "comment": " Stores the History of your model.\n",
+        "args": [
+          "op",
+          "model"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Operation",
+        "comment": " Represents an operation on your model. It will carry information to know how to do / undo the operation.\n\nTo create operations you use [`operation`](#operation).\n",
+        "args": [
+          "op",
+          "model"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "init",
+        "comment": " Initializes a [`History`](#History) from the initial model.\n\nYou should only need this if you are using the library [`not using program`](#not-using-program)\n",
+        "type": "model -> Retroactive.History op model"
+      },
+      {
+        "name": "operation",
+        "comment": " Creates an [`Operation`](#Operation) for your model. You need to provide a value of a custom type as identifier, a function to\nperform the operation in your model, and a function to undo the operation.\n\n    type Op\n        = Inc\n        | Dec\n\n    type alias Model = Int\n\n    operation Inc (\\m -> m + 1) (\\m -> m - 1)\n    operation Dec (\\m -> m 1 1) (\\m -> m + 1)\n\n",
+        "type": "op -> (model -> model) -> (model -> model) -> Retroactive.Operation op model"
+      },
+      {
+        "name": "program",
+        "comment": " Creates a program using Retroactive. Note that the signature of the provided `update` and `view` are different\nfrom [`Html.program`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#program)\n\nThe first difference is your `update` function needs to return [`Action`](#Action) instead of the usual `Model`.\n\nThe second difference is your `update` and `view` functions will receive a [`HistoryOptions`](#HistoryOptions) as first\nparameter.\n",
+        "type": "{ init : ( model, Platform.Cmd.Cmd msg ) , update : Retroactive.HistoryOptions op -> msg -> model -> ( Retroactive.Action op model, Platform.Cmd.Cmd msg ) , view : Retroactive.HistoryOptions op -> model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program Basics.Never (Retroactive.History op model) msg"
+      },
+      {
+        "name": "programWithFlags",
+        "comment": " Works the same as [`program`](#program), but it can also handle flags. See\n[`Html.programWithFlags`](http://package.elm-lang.org/packages/elm-lang/html/latest/Html#programWithFlags)\nfor more information.\n",
+        "type": "{ init : flags -> ( model, Platform.Cmd.Cmd msg ) , update : Retroactive.HistoryOptions op -> msg -> model -> ( Retroactive.Action op model, Platform.Cmd.Cmd msg ) , view : Retroactive.HistoryOptions op -> model -> Html.Html msg , subscriptions : model -> Platform.Sub.Sub msg } -> Platform.Program flags (Retroactive.History op model) msg"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " Get Subscriptions from [`History`](#History).\n\nYou should only need this if you are using the library [`not using program`](#not-using-program)\n",
+        "type": "(model -> Platform.Sub.Sub msg) -> Retroactive.History op model -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "update",
+        "comment": " Updates a [`History`](#History).\n\nYou pass your `update` as first parameter, A [`HistoryOptions`](#HistoryOptions) will be passed to your `update`.\n\nYou should only need this if you are using the library [`not using program`](#not-using-program)\n",
+        "type": "(Retroactive.HistoryOptions op -> msg -> model -> ( Retroactive.Action op model, Platform.Cmd.Cmd msg )) -> msg -> Retroactive.History op model -> ( Retroactive.History op model, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "view",
+        "comment": " View for a [`History`](#History).\n\nYou pass your `view` as first parameter, A [`HistoryOptions`](#HistoryOptions) will be passed to your `view`.\n\nYou should only need this if you are using the library [`not using program`](#not-using-program)\n",
+        "type": "(Retroactive.HistoryOptions op -> model -> Html.Html msg) -> Retroactive.History op model -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

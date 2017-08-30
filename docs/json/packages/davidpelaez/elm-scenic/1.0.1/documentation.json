@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Scenic",
+    "comment": " Single page apps usually require animations and have common layouts. This package is an experimental wrap of ProgramWithFlags to a good starter for SPA including routing, basic transitions and layouts. Work in progress.\n\n# Misc\n@docs programWithFlags, ProgramWithFlags, Outcome, LayoutState, Transition\n",
+    "aliases": [
+      {
+        "name": "ProgramWithFlags",
+        "comment": " This is the Type describing what Sceninc expects to build a managed program. Currently only a wrapper for a program with flags exists since SPA usually need access to LocalStorage so this is how you'd pass the initial data to boot.\n",
+        "args": [
+          "flags",
+          "msg",
+          "page"
+        ],
+        "type": "{ init : flags -> Navigation.Location -> ( page, Platform.Cmd.Cmd msg, Scenic.Outcome page ) , update : msg -> page -> ( page, Platform.Cmd.Cmd msg, Scenic.Outcome page ) , subscriptions : page -> Platform.Sub.Sub msg , view : page -> Html.Html msg , pageToUrl : page -> String , parseLocation : Navigation.Location -> page }"
+      }
+    ],
+    "types": [
+      {
+        "name": "LayoutState",
+        "comment": " Internal representation, only exposed so you can write any required program signatures on your main module\n",
+        "args": [
+          "page"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Outcome",
+        "comment": " Describe what Scenic should do to your layout after an update\n",
+        "args": [
+          "page"
+        ],
+        "cases": [
+          [
+            "ChangePage",
+            [
+              "page",
+              "Scenic.Transition"
+            ]
+          ],
+          [
+            "KeepCurrentPage",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Transition",
+        "comment": " Possible transitions that you can use when the outcome of an update is ChangePage\n",
+        "args": [],
+        "cases": [
+          [
+            "SlideInRight",
+            []
+          ],
+          [
+            "SlideOutLeft",
+            []
+          ],
+          [
+            "NoTransition",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "programWithFlags",
+        "comment": " use this to build a Scenic managed program.\n",
+        "type": "Scenic.ProgramWithFlags flags msg page -> Platform.Program flags (Scenic.LayoutState page) (Scenic.Msg page msg)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

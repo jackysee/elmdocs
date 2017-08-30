@@ -1,0 +1,60 @@
+[
+  {
+    "name": "View.Utils",
+    "comment": "\n\n# Conditional views\n@docs viewIf, viewHiddenIf, viewJust, viewMaybe\n\n# Patterned views\n@docs Position, viewElementByPosition\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Position",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Singleton",
+            []
+          ],
+          [
+            "First",
+            []
+          ],
+          [
+            "Middle",
+            []
+          ],
+          [
+            "Last",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "viewElementByPosition",
+        "comment": " View the element differently based on it's position.\n",
+        "type": "(View.Utils.Position -> a -> Html.Html msg) -> List a -> List (Html.Html msg)"
+      },
+      {
+        "name": "viewHiddenIf",
+        "comment": " Hide with `display: none` if condition is _not_ met.\n",
+        "type": "Html.Html msg -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "viewIf",
+        "comment": " View only if condition is met.\n",
+        "type": "Html.Html msg -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "viewJust",
+        "comment": " View only if `Maybe` is a `Just`.\n",
+        "type": "(a -> Html.Html msg) -> Maybe.Maybe a -> Html.Html msg"
+      },
+      {
+        "name": "viewMaybe",
+        "comment": " Use a view based on the `Maybe` value.\n\n    view : Maybe Feedback -> Html msg\n    view feedback =\n      div []\n        [ h1 [] [ text \"Feedback\" ]\n        , viewMaybe viewFeedback viewNoFeedbackYet feedback\n        ]\n\n",
+        "type": "(a -> Html.Html msg) -> Html.Html msg -> Maybe.Maybe a -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

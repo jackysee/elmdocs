@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Test.Extra",
+    "comment": " Extends `Test` with specialized test and describe function.\n\n## Describing JSON Decoders\n\nWrite concise test for JSON decoders\n\n@docs DecoderExpectation, describeDecoder, testDecoder\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "DecoderExpectation",
+        "comment": " Expectation for a decoder result.\n\n* `FailsToDecode` - expect the decoder to fail, the failure message can be anything\n* `FailsToDecodeWith String` - expect the decoder to fail with a specific message\n* `DecodesTo a` - expect the decoder to succeed, decoding to the provided value\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "FailsToDecode",
+            []
+          ],
+          [
+            "FailsToDecodeWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "DecodesTo",
+            [
+              "a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "describeDecoder",
+        "comment": " Exercise a decoder over a list of input/expectation pairs.\n\nFor example\n\n```elm\ndescribeDecoder \"int\"\n  Json.Decode.int\n  [ ( \"\", FailsToDecode )\n  , ( \"foo\", FailsToDecode )\n  , ( \"1\", DecodesTo 1 )\n  , ( \"1.5\", FailsToDecode )\n  ]\n```\n",
+        "type": "String -> Json.Decode.Decoder a -> List ( String, Test.Extra.DecoderExpectation a ) -> Test.Test"
+      },
+      {
+        "name": "testDecoder",
+        "comment": " Exercise a decoder with a JSON encoded string.\n\nFor example\n\n```elm\ntestDecoder Json.Decode.string\n  \"\\\"foo\\\"\"\n  (DecodesTo \"foo\")\n```\n",
+        "type": "Json.Decode.Decoder a -> ( String, Test.Extra.DecoderExpectation a ) -> Test.Test"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Fuzz.Extra",
+    "comment": " Extends `Fuzz` with more `Fuzzer`s.\n\n@docs eitherOr, uniformOrCrash, stringMaxLength, sequence\n\n## Deprecated\n\nDo not use this. It will be deprecated in version 2.\n\n@docs union\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "eitherOr",
+        "comment": " Combine two fuzzers.\n\n    fuzzMaybeInt : Fuzzer (Maybe Int)\n    fuzzMaybeInt =\n        Fuzz.Extra.eitherOr\n            (Fuzz.constant Nothing)\n            (Fuzz.int |> Fuzz.map Just)\n",
+        "type": "Fuzz.Fuzzer a -> Fuzz.Fuzzer a -> Fuzz.Fuzzer a"
+      },
+      {
+        "name": "sequence",
+        "comment": " Sequence a list of fuzzers into a fuzzer of a list.\n",
+        "type": "List (Fuzz.Fuzzer a) -> Fuzz.Fuzzer (List a)"
+      },
+      {
+        "name": "stringMaxLength",
+        "comment": " Generates random printable ASCII with a maximum length.\n",
+        "type": "Int -> Fuzz.Fuzzer String"
+      },
+      {
+        "name": "uniformOrCrash",
+        "comment": " Generates among the provided values with uniform distribution\n\nLike `Fuzz.frequencyOrCrash` but with uniform distribution.\n\n    httpMethod : Fuzzer Method\n    httpMethod =\n        [ GET, POST, PUT, DELETE, OPTIONS ]\n            |> List.map Fuzz.constant\n            |> uniformOrCrash\n\nSame as for `frequencyOrCrash`: \"This is useful in tests, where a crash will\nsimply cause the test run to fail. There is no danger to a production system\nthere.\"\n",
+        "type": "List (Fuzz.Fuzzer a) -> Fuzz.Fuzzer a"
+      },
+      {
+        "name": "union",
+        "comment": " Create a fuzzer for a union type.\n\n__Deprecated__: use `uniformOrCrash`\n",
+        "type": "List a -> a -> Shrink.Shrinker a -> Fuzz.Fuzzer a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Expect.Extra",
+    "comment": " Extends `Expect` with more `Expectation`s.\n\n## Strings\n\n@docs match, MatchPattern, stringPattern, regexPattern\n\n## Lists\n\n@docs contain, member\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "MatchPattern",
+        "comment": " An expectation represented as a pattern to match a string.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "contain",
+        "comment": " Alias of `member`.\n\nReads better with bdd style tests.\n\n    expect [0, 1, 2] to contain 1\n\n    -- Passes because [0, 1, 2] contains 1\n",
+        "type": "a -> List a -> Expect.Expectation"
+      },
+      {
+        "name": "match",
+        "comment": " Passes if the given pattern matches the actual string.\n\n    -- Match with regular expressions\n    match (regexPattern \"^[0-9a-f]+$\") \"deadbeef\"\n\n    -- Or just plain strings\n    match (stringPattern \"foo\") \"foo bar\"\n\n",
+        "type": "Expect.Extra.MatchPattern -> String -> Expect.Expectation"
+      },
+      {
+        "name": "member",
+        "comment": " Passes if value is a member of list.\n\n    member 1 [0, 1, 2]\n\n    -- Passes because 1 is a member of [0, 1, 2]\n",
+        "type": "a -> List a -> Expect.Expectation"
+      },
+      {
+        "name": "regexPattern",
+        "comment": " Matches if the regular expression matches the actual string value.\n",
+        "type": "String -> Expect.Extra.MatchPattern"
+      },
+      {
+        "name": "stringPattern",
+        "comment": " Matches if the pattern is contained within the actual string value.\n",
+        "type": "String -> Expect.Extra.MatchPattern"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

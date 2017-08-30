@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Ntriples.Filter",
+    "comment": " This library provides an easy way of filtering a list of simplified n-triples.\nMore about RDF n-triples: https://en.wikipedia.org/wiki/N-Triples\n\n# Basics\n@docs  createTriple, filter\n\n# Definition\n@docs FilterExpr, FieldComparator\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "FieldComparator",
+        "comment": " A boolean comparator for a string that can be used as part of filter query.\nThis comparator can be applied to any field: either the subject (WithSubject), the predicate (WithPredicate) or the object (WithObject).\n\n## IsEmpty\nDetermine if the field is empty.\n\n    WithObject (IsEmpty)\n\n## Equals\nDetermine if the field is equal to the given value.\n\n    WithSubject (Equals \"http://example.org/show/211\")\n\n## StartsWith\nDetermine if the field starts with the given value.\n\n    WithSubject (StartsWith \"http://example.org\")\n\n## EndsWith\nDetermine if the field ends with the given value.\n\n    WithSubject (EndsWith \"show/211\")\n\n## Contains\nDetermine if the field contains the given value.\n\n    WithSubject (Contains \"show\")\n\n\n## Regx\nDetermine if the field satisfies the given regular expression.\n\n    WithObject (Regx (regex \"[Ss]eventies\" ))\n\n## IsTrue\nDetermine if the field is true (contains the string \"true\").\n\n    WithObject (IsTrue)\n\n## IsFalse\nDetermine if the field is true (contains the string \"false\").\n\n    WithObject (IsFalse)\n\n## EqualsAny\nDetermine if the field is equal any of the given values.\n\n    WithObject (EqualsAny [\"subject1\", \"subject4\"])\n\n## GreaterThan\nDetermine if the field is greater than the given float value.\n\n    WithObject (GreaterThan 6.3)\n    WithObject (GreaterThan -2)\n\n## GreaterThanOrEqual\nDetermine if the field is greater or equal to the given float value.\n\n    WithObject (GreaterThanOrEqual 6.3)\n\n## LessThan\nDetermine if the field is less than the given float value.\n\n    WithObject (LessThan 0)\n\n## LessThanOrEqual\nDetermine if the field is less or equal to the given float value.\n\n    WithObject (LessThanOrEqual 6.3)\n\n## Custom\nDetermine if the field satisfies a custom function against the given value.\n\n    custom: String -> String -> Bool\n    custom a b = a == b\n    WithObject (Custom custom \"subject4\")\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Ignore",
+            []
+          ],
+          [
+            "IsEmpty",
+            []
+          ],
+          [
+            "Equals",
+            [
+              "String"
+            ]
+          ],
+          [
+            "StartsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "EndsWith",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Contains",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Regx",
+            [
+              "Regex.Regex"
+            ]
+          ],
+          [
+            "IsTrue",
+            []
+          ],
+          [
+            "IsFalse",
+            []
+          ],
+          [
+            "EqualsAny",
+            [
+              "List String"
+            ]
+          ],
+          [
+            "GreaterThan",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "GreaterThanOrEqual",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "LessThan",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "LessThanOrEqual",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Custom",
+            [
+              "String -> String -> Bool",
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "FilterExpr",
+        "comment": " A filter expression that can be used to query the list of triples.\nIn short, you define your expectation (criteria) for each field (WithSubject, WithPredicate, WithObject), and you can compine these criteria by using boolean operators (Or, And, Not).\n\n## WithSubject\nSpecify a criteria for the subject field.\n\n    WithSubject (Equals \"http://example.org/show/211\")\n\n## WithPredicate\nSpecify a criteria for the predicate field.\n\n    WithPredicate (Equals \"http://www.w3.org/2000/01/rdf-schema#label\")\n\n## WithObject\nSpecify a criteria for the object field.\n\n    WithObject (Contains \"this term\")\n\n## Not\nInverts the effect of a filter expression and returns a list of triples that does not match it.\n\n    -- with subject NOT equal to http://example.org/show/211\n    Not(WithSubject (Equals \"http://example.org/show/211\"))\n\n## And\nJoins filter expressions clauses with a logical AND returns all the triples that match the conditions of both clauses.\n\n    -- with predicate equals \"name\" and object \"subject4\"\n    And (WithPredicate (Equals \"name\"))(WithObject (Equals \"subject4\"))\n\n## Or\nJoins filter expressions clauses with a logical OR returns all the triples that match the conditions of either clauses.\n\n    -- with object equals \"subject1\" or \"subject4\"\n    filter (Or (WithObject (Equals \"subject1\"))(WithObject (Equals \"subject4\")) ) allTriples\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Boolean",
+            [
+              "Bool"
+            ]
+          ],
+          [
+            "Not",
+            [
+              "Ntriples.Filter.FilterExpr"
+            ]
+          ],
+          [
+            "And",
+            [
+              "Ntriples.Filter.FilterExpr",
+              "Ntriples.Filter.FilterExpr"
+            ]
+          ],
+          [
+            "Or",
+            [
+              "Ntriples.Filter.FilterExpr",
+              "Ntriples.Filter.FilterExpr"
+            ]
+          ],
+          [
+            "WithSubject",
+            [
+              "Ntriples.Filter.FieldComparator"
+            ]
+          ],
+          [
+            "WithPredicate",
+            [
+              "Ntriples.Filter.FieldComparator"
+            ]
+          ],
+          [
+            "WithObject",
+            [
+              "Ntriples.Filter.FieldComparator"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "createTriple",
+        "comment": " Create a simplified n-triple with a subject, a predicate and an object.\nIt is simplified because it does not discriminate between URI, blank node, language or datatype.\nMore about rdf n-triples. https://en.wikipedia.org/wiki/N-Triples).\n\n    createTriple \"http://example.org/show/218\" \"http://www.w3.org/2000/01/rdf-schema#label\" \"That Seventies Show\"\n\nPlease note that intentionally this library has a very casual approach to the specs, and any string will be accepted.\n",
+        "type": "String -> String -> String -> Ntriples.Filter.Triple"
+      },
+      {
+        "name": "filter",
+        "comment": " filter a list of n-triples based on a filter expression.\n\n    -- Select only the triples which have a given subject\n    filter (WithSubject (Equals \"http://example.org/show/218\")) listOfTriples\n\n    -- Select only the triples which have a label and which starts with \"That\"\n    filter (And (WithPredicate (Equals \"http://www.w3.org/2000/01/rdf-schema#label\"))(WithObject (StartsWith \"That\")) ) listOfTriples\n\n",
+        "type": "Ntriples.Filter.FilterExpr -> List Ntriples.Filter.Triple -> List Ntriples.Filter.Triple"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,269 @@
+[
+  {
+    "name": "ActionCable",
+    "comment": "\n\n# Types\n@docs ActionCable, CableStatus, ActionCableError\n\n# Constructor\n@docs initCable\n\n# Callbacks/Configuration\n@docs onWelcome, onPing, onConfirm, onRejection, onDidReceiveData, withDebug\n\n# Outgoing Actions\n@docs subscribeTo, unsubscribeFrom, perform\n\n# Update helper\n@docs update\n\n# Subscriptions\n@docs listen\n\n# Helpers\n@docs drop, errorToString, subscriptions, getSubscription, status\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ActionCable",
+        "comment": " Describes an ActionCable wrapper strtucture.\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "ActionCableError",
+        "comment": " Errors this library might raise.\n",
+        "args": [],
+        "cases": [
+          [
+            "CableDisonnectedError",
+            []
+          ],
+          [
+            "ChannelNotSubscribedError",
+            []
+          ],
+          [
+            "AlreadySubscribedError",
+            []
+          ],
+          [
+            "AlreadyTryingToSubscribeError",
+            []
+          ],
+          [
+            "GeneralCableError",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "CableStatus",
+        "comment": " Describes the connection status of the ActionCable.\n\n**Note:** Currently, this will only go from `Disconnected` to `Connected`. It\nwill never go from `Connected` to `Disconnected`. This is a limitation with how\nthis library interfaces with the core WebSocket library, and it may be fixed in\na later version.\n",
+        "args": [],
+        "cases": [
+          [
+            "Disconnected",
+            []
+          ],
+          [
+            "Connected",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "drop",
+        "comment": " Drop a `Subscription` from the internal list of subscriptions. If the\nchannel is currently subscribed, it will also send an \"unsubscribe\" message to\nthe server.\n\n**Note:** This exists so that you can keep a rejected subscription around in\norder to, perhaps, show an error message. To do that, with a delayed dismissal:\n\n    update msg model =\n        case msg of\n            WasRejected identifier ->\n                ( model\n                , Task.perform\n                    (always <| DismissRejection identifier)\n                    (sleep (5 * seconds))\n                )\n\n            DismissRejection identifier ->\n                ActionCable.drop identifier model.cable\n                    |> (\\(cable, cmd) -> ({ model | cable = cable}, cmd))\n",
+        "type": "ActionCable.Identifier.Identifier -> ActionCable.ActionCable a -> ( ActionCable.ActionCable a, Platform.Cmd.Cmd a )"
+      },
+      {
+        "name": "errorToString",
+        "comment": " Convert an error value to a String. Write your own version if you'd like\nto provide other (or perhaps localized) error messages.\n",
+        "type": "ActionCable.ActionCableError -> String"
+      },
+      {
+        "name": "getSubscription",
+        "comment": " Maybe get one subscription.\n",
+        "type": "ActionCable.Identifier.Identifier -> ActionCable.ActionCable msg -> Maybe.Maybe ActionCable.Subscription.Subscription"
+      },
+      {
+        "name": "initCable",
+        "comment": " Initialize an ActionCable with a URL.\n\nBe sure the URL starts with \"ws://\" or \"wss://\".\n",
+        "type": "String -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "listen",
+        "comment": " Listens for ActionCable messages and converts them into type `msg`\n\n    import ActionCable.Msg as ACMsg\n\n    type Msg\n        = CableMsg ACMsg.Msg\n        | ...\n\n    subscriptions : Model -> Sub Msg\n    subscriptions model =\n        ActionCable.listen CableMsg model.cable\n",
+        "type": "(ActionCable.Msg.Msg -> msg) -> ActionCable.ActionCable msg -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "onConfirm",
+        "comment": " Hook for when your subscription to a channel is confirmed. See also\n[`onRejection`](#onRejection).\n\n    type Msg = SubscriptionConfirmed ID.Identifier | ...\n\n    initCable : ActionCable.ActionCable Msg\n    initCable =\n      ActionCable.initCable myUrl\n        |> ActionCable.onConfirm (Just SubscriptionConfirmed)\n\nPass `Nothing` if you previously subscribed to `onConfirm` but you don't want\nto anymore.\n",
+        "type": "Maybe.Maybe (ActionCable.Identifier.Identifier -> msg) -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "onDidReceiveData",
+        "comment": " Hook for receiving data. Almost definitely the most important hook you'll\nwant to use.\n\n    type Msg = HandleData ID.Identifier Json.Decode.Value | ...\n\n    initCable : ActionCable.ActionCable Msg\n    initCable =\n      ActionCable.initCable myUrl\n        |> ActionCable.onDidReceiveData (Just HandleData)\n\nPass `Nothing` if you previously subscribed to `onDidReceiveData` but you don't\nwant to anymore.\n",
+        "type": "Maybe.Maybe (ActionCable.Identifier.Identifier -> Json.Decode.Value -> msg) -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "onPing",
+        "comment": " Hook for receiving pings every 3 seconds from the server. It's unlikely\nyou'll want to use this. The `Int` parameter is a timestamp.\n\nPass `Nothing` if you previously subscribed to `onPing` but you don't want\nto anymore.\n",
+        "type": "Maybe.Maybe (Int -> msg) -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "onRejection",
+        "comment": " Hook for when your subscription to a channel is rejected. See also\n[`onConfirm`](#onConfirm).\n\n    type Msg = SubscriptionRejected ID.Identifier | ...\n\n    initCable : ActionCable.ActionCable Msg\n    initCable =\n      ActionCable.initCable myUrl\n        |> ActionCable.onRejection (Just SubscriptionRejected)\n\nPass `Nothing` if you previously subscribed to `onRejection` but you don't want\nto anymore.\n",
+        "type": "Maybe.Maybe (ActionCable.Identifier.Identifier -> msg) -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "onWelcome",
+        "comment": " Hook for when ActionCable initially connects. Perhaps you'd want to\nsubscribe to a default channel that will help you bootstrap the rest of your\nsubscriptions.\n\n    type Msg = SubscribeToInitialChannel () | ...\n\n    initCable : ActionCable.ActionCable Msg\n    initCable =\n      ActionCable.initCable myUrl\n        |> ActionCable.onWelcome (Just SubscribeToInitialChannel)\n\nPass `Nothing` if you previously subscribed to `onWelcome` but you don't want\nto anymore (this will be rare).\n",
+        "type": "Maybe.Maybe (() -> msg) -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      },
+      {
+        "name": "perform",
+        "comment": " Perform an action on the Rails server. The `action` parameter is the name\nof the action in the `ApplicationCable::Channel` subclass that you've\nimplemented. If you want to use a REST-like pattern, then `action` might be\n`\"index\"` or `\"update\"`.\n\nThe second parameter is a list of `( String, Json.Encode.Value )` tuples, which\nare the data you want to send to the `Channel` on the server. **Note:** Take\ncare not to provide `\"action\"` as one of the `String`s, as that will collide\nwith the `action` parameter.\n\nThe third paramter is an `Identifier`, which can be constructed with\n`ActionCable.Identifier.newIdentifier`.\n",
+        "type": "String -> List ( String, Json.Encode.Value ) -> ActionCable.Identifier.Identifier -> ActionCable.ActionCable msg -> Result.Result ActionCable.ActionCableError (Platform.Cmd.Cmd msg)"
+      },
+      {
+        "name": "status",
+        "comment": " Status of the `ActionCable`, either `Connected` or `Disconnected`.\n",
+        "type": "ActionCable.ActionCable msg -> ActionCable.CableStatus"
+      },
+      {
+        "name": "subscribeTo",
+        "comment": " Subscribe to a channel.\n\n    update : Msg -> Model -> (Model, Cmd Msg)\n    update msg model =\n        case msg of\n            SubscribeToRoom roomName ->\n                ActionCable.subscribeTo\n                    (ID.newIdentifier \"ChatChannel\" [(\"id\", roomName)])\n                    model.cable\n                  |> Result.map (\\(cable, cmd) -> ({model | cable = cable}, cmd))\n                  |> Result.withDefault (model, Cmd.none) -- or actually handle the error\n",
+        "type": "ActionCable.Identifier.Identifier -> ActionCable.ActionCable msg -> Result.Result ActionCable.ActionCableError ( ActionCable.ActionCable msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " List of subscriptions. See `Subscription`\n",
+        "type": "ActionCable.ActionCable msg -> Dict.Dict ActionCable.Identifier.Identifier ActionCable.Subscription.Subscription"
+      },
+      {
+        "name": "unsubscribeFrom",
+        "comment": " Unsubscribe from a channel.\n\n    update : Msg -> Model -> (Model, Cmd Msg)\n    update msg model =\n        case msg of\n            UnsubscribeFrom roomName ->\n                ActionCable.unsubscribeFrom\n                    (ID.newIdentifier \"ChatChannel\" [(\"id\", roomName)])\n                    model.cable\n                  |> Result.map (\\(cable, cmd) -> ({model | cable = cable}, cmd))\n                  |> Result.withDefault (model, Cmd.none) -- or actually handle the error\n",
+        "type": "ActionCable.Identifier.Identifier -> ActionCable.ActionCable msg -> Result.Result ActionCable.ActionCableError ( ActionCable.ActionCable msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "update",
+        "comment": " Forward a raw message from the underlying [`WebSocket.listen`][wslisten] to\nthe ActionCable. If you've subscribed to any of the `on*` events like\n[`onDidReceiveData`](#onDidReceiveData) or [`onWelcome`](#onWelcome), this\nfunction will return a `Cmd` that will trigger your `Msg` on the next loop.\n\n[wslisten]: http://package.elm-lang.org/packages/elm-lang/websocket/latest/WebSocket#listen\n",
+        "type": "ActionCable.Msg.Msg -> ActionCable.ActionCable msg -> ( ActionCable.ActionCable msg, Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "withDebug",
+        "comment": " Turn on or off console debugging.\n\n    initCable : ActionCable.ActionCable Msg\n    initCable =\n      ActionCable.initCable myUrl\n        |> ActionCable.withDebug True\n",
+        "type": "Bool -> ActionCable.ActionCable msg -> ActionCable.ActionCable msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ActionCable.Msg",
+    "comment": "\n\n# Types\n@docs Msg\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The message types you might receive from the server.\n",
+        "args": [],
+        "cases": [
+          [
+            "Welcome",
+            []
+          ],
+          [
+            "Ping",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Confirm",
+            [
+              "ActionCable.Identifier.Identifier"
+            ]
+          ],
+          [
+            "ReceiveData",
+            [
+              "ActionCable.Identifier.Identifier",
+              "Json.Decode.Value"
+            ]
+          ],
+          [
+            "Rejected",
+            [
+              "ActionCable.Identifier.Identifier"
+            ]
+          ],
+          [
+            "NoOp",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ActionCable.Subscription",
+    "comment": "\n\n# Types\n@docs Subscription, SubscriptionStatus\n\n# Constructor\n@docs newSubscription\n\n# Helper\n@docs isActive\n",
+    "aliases": [
+      {
+        "name": "Subscription",
+        "comment": " The subscription type.\n",
+        "args": [],
+        "type": "ActionCable.Subscription.SubscriptionStatus"
+      }
+    ],
+    "types": [
+      {
+        "name": "SubscriptionStatus",
+        "comment": " The various states of a subscription.\n",
+        "args": [],
+        "cases": [
+          [
+            "SubscriptionAttempted",
+            []
+          ],
+          [
+            "Subscribed",
+            []
+          ],
+          [
+            "SubscriptionRejected",
+            []
+          ],
+          [
+            "Unsubscribed",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "isActive",
+        "comment": " True if the subscription is currently being attempted or is\nsuccessfully subscribed.\n",
+        "type": "ActionCable.Subscription.Subscription -> Bool"
+      },
+      {
+        "name": "newSubscription",
+        "comment": " Construct a new subscription (SubscriptionAttempted)\n",
+        "type": "ActionCable.Subscription.Subscription"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ActionCable.Identifier",
+    "comment": "\n\n# Types\n@docs Identifier\n\n# Constructors\n@docs newIdentifier\n",
+    "aliases": [
+      {
+        "name": "Identifier",
+        "comment": " Identifier for ActionCable. First item in the tuple is the channel\nname, like `BoardChannel`. The second item is a list of `(String, String)`\ntuples representing the params. For example, you might provide\n`[(\"roomName\", \"general\")]`\n",
+        "args": [],
+        "type": "( String, List ( String, String ) )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "newIdentifier",
+        "comment": " Construct a new Identifier.\n",
+        "type": "a -> b -> ( a, b )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

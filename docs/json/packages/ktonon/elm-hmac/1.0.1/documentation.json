@@ -1,0 +1,34 @@
+[
+  {
+    "name": "HMAC",
+    "comment": " Basic HMAC hashing.\n\nKey and message are `Bytes`, a type provided by `spisemisu/elm-bytes`.\n\n    import Bytes\n\n@docs sha1, sha256\n\n\n## Aliases\n\n@docs Key, Message\n\n",
+    "aliases": [
+      {
+        "name": "Key",
+        "comment": " Secret key\n",
+        "args": [],
+        "type": "Bytes.Bytes"
+      },
+      {
+        "name": "Message",
+        "comment": " Message to be hashed\n",
+        "args": [],
+        "type": "Bytes.Bytes"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "sha1",
+        "comment": " HMAC SHA1 digest\n\n    sha1 Bytes.empty Bytes.empty\n    --> Ok \"fbdb1d1b18aa6c08324b7d64b71fb76370690e1d\"\n\n    sha1\n        (Bytes.fromBytes \"key\")\n        (Bytes.fromBytes \"The quick brown fox jumps over the lazy dog\")\n    --> Ok \"de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9\"\n\n",
+        "type": "HMAC.Key -> HMAC.Message -> Result.Result String String"
+      },
+      {
+        "name": "sha256",
+        "comment": " HMAC SHA256 digest.\n\n    sha256 Bytes.empty Bytes.empty\n    --> Ok \"b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad\"\n\n    sha256\n        (Bytes.fromBytes \"key\")\n        (Bytes.fromBytes \"The quick brown fox jumps over the lazy dog\")\n    --> Ok \"f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8\"\n\n",
+        "type": "HMAC.Key -> HMAC.Message -> Result.Result String String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

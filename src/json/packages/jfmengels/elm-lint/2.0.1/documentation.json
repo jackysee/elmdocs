@@ -1,0 +1,375 @@
+[
+  {
+    "name": "Lint.Rules.SimplifyPiping",
+    "comment": "\n@docs rule\n\n# Fail\n\n    a = values\n        |> List.map foo\n        |> List.map bar\n\n# Success\n\n    a = values\n        |> List.map (foo >> bar)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Simplify piped functions like `List.map f >> List.map g` to `List.map (f >> g)`\n\n    rules =\n        [ SimplifyPiping.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoUnusedVariables",
+    "comment": "\n@docs rule\n\n# Fail\n\n    module Main exposing (a)\n    a n =\n        n + 1\n    b = a 2\n\n# Success\n\n    module Main exposing (a)\n    a n =\n        n + 1\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Reports variables that are declared but never used.\n\n    rules =\n        [ NoUnusedVariables.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoUselessPatternMatching",
+    "comment": "\n@docs rule\n\n# Fail\n\n    -- Useless pattern matching\n    case value of\n        Foo -> 1\n        Bar -> 1\n        _ -> 1\n\n    -- Useless pattern `Bar`, it's the same as the default pattern\n    case value of\n        Foo -> 2\n        Bar -> 1\n        _ -> 1\n\n# Success\n\n    case value of\n        Foo -> 1\n        Bar -> 2\n        _ -> 3\n\n    case value of\n        Foo n -> n\n        Bar n -> n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Reports case expressions that can be simplified. Either when all patterns will lead to the same value, or when a\npattern will lead to the same value as the default pattern.\n\n    rules =\n        [ NoUselessPatternMatching.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoWarningComments",
+    "comment": "\n@docs rule\n\n# Fail\n\n    -- TODO Refactor this part of the code\n    -- FIXME Broken because of...\n    -- XXX This should not be done like this\n\n# Success\n\n    -- Regular comment\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Detect comments containing words like `TODO`, `FIXME` and `XXX`.\n\n    rules =\n        [ NoWarningComments.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.SimplifyPropertyAccess",
+    "comment": "\n@docs rule\n\n# Fail\n\n    a = List.map (\\x -> x.foo) values\n\n# Success\n\n    a = List.map .foo values\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Simplify functions that return the property of a record by using an access function\n\n    rules =\n        [ SimplifyPropertyAccess.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.ElmTest.NoDuplicateTestBodies",
+    "comment": "\n@docs rule\n\n# Fail\n\n    module Addition exposing (..)\n\n    import Test exposing (test)\n\n    tests =\n        [ test \"foo\" <|\n            \\() -> 1 + 1\n                |> Expect.equal 2\n        , test \"bar\" <|\n            \\() -> 1 + 1\n                |> Expect.equal 2\n        ]\n\n# Success\n\n    module Addition exposing (..)\n\n    import Test exposing (test)\n\n    tests =\n        [ test \"foo\" <|\n            \\() -> 1 + 1\n                |> Expect.equal 2\n        , test \"bar\" <|\n            \\() -> 1 + 2\n                |> Expect.equal 3\n        ]\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid dupicate test bodies.\nWhen copy-pasting tests, it can happen that the title is changed but the developer forgets to update the test body.\nThis may result in specifications that are thought to be implemented but are not enforced by tests.\n\n    rules =\n        [ ElmTest.NoDuplicateTestBodies.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoDebug",
+    "comment": "\n@docs rule\n\n# Fail\n\n    if Debug.log \"condition\" condition then a else b\n    if condition then\n        Debug.crash \"Nooo!\"\n    else\n        value\n\n# Success\n\n    if condition then\n        a\n    else\n        b\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid the use of `Debug` before it goes into production.\n\n    rules =\n        [ NoDebug.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoUselessIf",
+    "comment": "\n@docs rule\n\n# Fail\n\n    if condition then\n        value\n    else\n        value\n\n# Success\n\n    if condition then\n        value1\n    else\n        value2\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Reports when both paths of an If expression result will lead to the same value.\n\n    rules =\n        [ NoUselessIf.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoDuplicateImports",
+    "comment": "\n@docs rule\n\n# Fail\n\n    import Set\n    import Set exposing (Set)\n\n# Success\n\n    import Set exposing (Set)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid importing the same module several times in a file.\n\n    rules =\n        [ NoDuplicateImports.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoNestedLet",
+    "comment": "\n@docs rule\n\n# Fail\n\n    a = let b = 1\n        in  let c = 2\n            in b + c\n\n# Success\n\n    a = let\n          b = 1\n          c = 2\n        in\n          b + c\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid nesting let expressions directly.\n\n    rules =\n        [ NoNestedLet.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoUnannotatedFunction",
+    "comment": "\n@docs rule\n\n# Fail\n\n    a n =\n        n + 1\n\n# Success\n\n    a : Int -> Int\n    a n =\n        n + 1\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Ensure every top-level function declaration has a type annotation.\n\n    rules =\n        [ NoUnannotatedFunction.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoExposingEverything",
+    "comment": "\n@docs rule\n\n# Fail\n\n    module Main exposing (..)\n\n# Success\n\n    module Main exposing (a, b, C)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid exporting everything in your modules `module Main exposing (..)`, to make your module explicit in what it exposes.\n\n    rules =\n        [ NoExposingEverything.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoImportingEverything",
+    "comment": "\n@docs rule, Configuration\n\n# Fail\n\n    import Html exposing (..)\n\n# Success\n\n    import Html exposing (div, p, textarea)\n",
+    "aliases": [
+      {
+        "name": "Configuration",
+        "comment": " Configuration for the rule.\n",
+        "args": [],
+        "type": "{ exceptions : List String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid importing everything from your module. This can especially be confusing to newcomers when the exposed\nfunctions and types are unknown to them.\n\n    rules =\n        [ NoImportingEverything.rule { exceptions = [\"Html\"]}\n        ]\n",
+        "type": "Lint.Rules.NoImportingEverything.Configuration -> Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.NoConstantCondition",
+    "comment": "\n@docs rule\n\n# Fail\n\n    if True then a else b\n    if False then a else b\n    if foo == foo then a else b\n\n# Success\n\n    if foo == bar then a else b\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Forbid the use of expressions in an If condition whose value are always the same.\n\n    rules =\n        [ NoConstantCondition.rule\n        ]\n",
+        "type": "Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Rules.DefaultPatternPosition",
+    "comment": "\n@docs rule, Configuration, PatternPosition\n\n# Fail\n\n    rules =\n        [ DefaultPatternPosition.rule { position = Lint.Rules.DefaultPatternPosition.Last }\n        ]\n\n    case value of\n      -- LintError, this pattern should appear last\n      _ -> result\n      Foo -> bar\n\n    -- --------------------\n\n    rules =\n        [ DefaultPatternPosition.rule { position = Lint.Rules.DefaultPatternPosition.First }\n        ]\n\n    case value of\n      Foo -> bar\n      -- LintError, this pattern should appear first\n      _ -> result\n\n# Success\n\n    rules =\n        [ DefaultPatternPosition.rule { position = Lint.Rules.DefaultPatternPosition.Last }\n        ]\n\n    case value of\n      Foo -> bar\n      _ -> result\n\n    case value of\n      -- No default pattern\n      Foo -> bar\n      Bar -> foo\n\n    -- --------------------\n\n    rules =\n        [ DefaultPatternPosition.rule { position = Lint.Rules.DefaultPatternPosition.First }\n        ]\n\n    case value of\n      _ -> result\n      Foo -> bar\n",
+    "aliases": [
+      {
+        "name": "Configuration",
+        "comment": " Configuration for the rule.\n",
+        "args": [],
+        "type": "{ position : Lint.Rules.DefaultPatternPosition.PatternPosition }"
+      }
+    ],
+    "types": [
+      {
+        "name": "PatternPosition",
+        "comment": " Configures whether the default pattern should appear first or last.\n",
+        "args": [],
+        "cases": [
+          [
+            "First",
+            []
+          ],
+          [
+            "Last",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "rule",
+        "comment": " Enforce the default pattern to always appear first or last.\n",
+        "type": "Lint.Rules.DefaultPatternPosition.Configuration -> Lint.Types.LintRule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint",
+    "comment": " A linter for Elm.\n\nSee Lint.Rules for available rules.\nTo define the rules you wish to use:\n\n    rules =\n        [ Lint.Rules.NoDebug.rule\n        , Lint.Rules.NoUnusedVariables\n        ]\n\nTo run the rules on a source code and get a list of errors:\n\n    lint : String -> List String\n    lint source =\n        let\n            errors =\n                List.concatMap (\\rule -> rule source) rules\n        in\n            if List.isEmpty errors then\n                [ \"No errors.\" ]\n            else\n                List.map (\\err -> err.rule ++ \": \" ++ err.message) errors\n\n# Implementation\n@docs lintSource\n\n# Rule creation functions\n@docs lint, doNothing, visitExpression\n\n# Internal\n@docs countErrors, parseSource\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "countErrors",
+        "comment": " Count the number of errors of a given Severity in the list of errors.\n",
+        "type": "Lint.Types.Severity -> List ( Lint.Types.File , List ( Lint.Types.Severity, Lint.Types.LintError ) ) -> Int"
+      },
+      {
+        "name": "doNothing",
+        "comment": " Basic implementation of a visitor function that does nothing, i.e. return an empty list of errors and an untouched\ncontext. This is used to avoid a bit of boilerplate for visitor functions whose node types we are not interested in.\n\n    implementation : LintRuleImplementation Context\n    implementation =\n        { statementFn = doNothing\n        , typeFn = doNothing\n        , expressionFn = expressionFn\n        , moduleEndFn = (\\ctx -> ( [], ctx ))\n        , initialContext = Context\n        }\n",
+        "type": "Lint.Types.LintImplementation a context"
+      },
+      {
+        "name": "lint",
+        "comment": " Lints source code using a given rule implementation, and gives back a list of errors that were found.\n\n    rule : LintRule\n    rule input =\n        lint input implementation\n\n    implementation : LintRuleImplementation Context\n    implementation =\n        { statementFn = doNothing\n        , typeFn = doNothing\n        , expressionFn = expressionFn\n        , moduleEndFn = (\\ctx -> ( [], ctx ))\n        , initialContext = Context\n        }\n",
+        "type": "List Ast.Statement.Statement -> Lint.Types.LintRuleImplementation context -> List Lint.Types.LintError"
+      },
+      {
+        "name": "lintSource",
+        "comment": " Lints a file and gives back the errors raised by the given rules.\n\n    errors =\n        lintSource rules source\n",
+        "type": "List ( Lint.Types.Severity, Lint.Types.LintRule ) -> String -> Result.Result (List String) (List ( Lint.Types.Severity, Lint.Types.LintError ))"
+      },
+      {
+        "name": "parseSource",
+        "comment": " Parse source code into a AST\n",
+        "type": "String -> Result.Result (List String) (List Ast.Statement.Statement)"
+      },
+      {
+        "name": "visitExpression",
+        "comment": " Visit an expression using a sub rule implementation. The use of this function is not encouraged, but it can make\npart of the implementation of complex rules much easier. It gives back a list of errors and a context.\n\n    expressionFn : Context -> Direction Expression -> ( List LintError, Context )\n    expressionFn ctx node =\n        case node of\n            Enter (Case expr patterns) ->\n                visitExpression subimplementation expr\n            _ ->\n                ( [], ctx )\n\n    subimplementation : LintRuleImplementation Subcontext\n    subimplementation =\n        { statementFn = doNothing\n        , typeFn = doNothing\n        , expressionFn = subexpressionFn\n        , moduleEndFn = (\\ctx -> ( [], ctx ))\n        , initialContext = Subcontext\n        }\n",
+        "type": "Lint.Types.LintRuleImplementation context -> Ast.Expression.Expression -> ( List Lint.Types.LintError, context )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Lint.Types",
+    "comment": " This module contains types that are used for writing rules.\n\n# Elementary types\n@docs LintError, Direction\n\n# Configuration\n@docs LintRule, Severity, Reporter\n\n# Writing rules\n@docs LintRuleImplementation, LintImplementation\n\n# Internal types\n@docs Visitor, LintResult, File\n",
+    "aliases": [
+      {
+        "name": "File",
+        "comment": " Description of an Elm file.\n",
+        "args": [],
+        "type": "{ filename : String, source : String }"
+      },
+      {
+        "name": "LintError",
+        "comment": " Value that describes an error found by a given rule, that contains the name of the rule that raised the error, and\na description of the error.\n\n    error : LintError\n    error =\n        LintError \"NoDebug\" \"Forbidden use of Debug\"\n",
+        "args": [],
+        "type": "{ rule : String, message : String }"
+      },
+      {
+        "name": "LintImplementation",
+        "comment": " A LintImplementation is a function that takes a given Context object, as defined by each rule, a node (with a\nDirection) and returns a list of errors and an updated Context.\nEvery rule should implement three LintImplementation functions, one for every Node type (Statement, Type and\nExpression).\nThe Context is there to accumulate information about the source code as the AST is being visited and is shared by all\nthe LintImplementation functions of your rule.\nIt must return a list of errors which will be reported to the user, that are violations of the thing the rule wants to\nenforce.\n\n    rule : LintRule\n    rule input =\n        lint input implementation\n\n    implementation : LintRuleImplementation Context\n    implementation =\n        { statementFn = doNothing\n        , typeFn = doNothing\n        , expressionFn = expressionFn\n        , moduleEndFn = (\\ctx -> ( [], ctx ))\n        , initialContext = Context\n        }\n",
+        "args": [
+          "nodeType",
+          "context"
+        ],
+        "type": "context -> Lint.Types.Direction nodeType -> ( List Lint.Types.LintError, context )"
+      },
+      {
+        "name": "LintResult",
+        "comment": " Shortcut to the result of a lint rule\n",
+        "args": [],
+        "type": "Result.Result (List String) (List Lint.Types.LintError)"
+      },
+      {
+        "name": "LintRule",
+        "comment": " Shortcut to a lint rule\n",
+        "args": [],
+        "type": "List Ast.Statement.Statement -> List Lint.Types.LintError"
+      },
+      {
+        "name": "LintRuleImplementation",
+        "comment": " A LintRuleImplementation is the implementation of a rule. It is a record that contains:\n- initialContext: An initial context\n- statementFn: A LintImplementation for Statement nodes\n- typeFn: A LintImplementation for Type nodes\n- expressionFn: A LintImplementation for Expression nodes\n- moduleEndFn: A function that takes a context and returns a list of error. Similar to a LintImplementation, but will\nbe called after visiting the whole AST.\n\n    rule : LintRule\n    rule input =\n        lint input implementation\n\n    implementation : LintRuleImplementation Context\n    implementation =\n        { statementFn = doNothing\n        , typeFn = doNothing\n        , expressionFn = expressionFn\n        , moduleEndFn = (\\ctx -> ( [], ctx ))\n        , initialContext = Context\n        }\n",
+        "args": [
+          "context"
+        ],
+        "type": "{ statementFn : Lint.Types.LintImplementation Ast.Statement.Statement context , typeFn : Lint.Types.LintImplementation Ast.Statement.Type context , expressionFn : Lint.Types.LintImplementation Ast.Expression.Expression context , moduleEndFn : context -> ( List Lint.Types.LintError, context ) , initialContext : context }"
+      },
+      {
+        "name": "Reporter",
+        "comment": " Function that summarizes the result of the linting process.\n",
+        "args": [
+          "a"
+        ],
+        "type": "List ( Lint.Types.File , List ( Lint.Types.Severity, Lint.Types.LintError ) ) -> a"
+      },
+      {
+        "name": "Visitor",
+        "comment": " Shorthand for a function that takes a rule's implementation, a context and returns ( List LintError, context ).\nA Visitor represents a node and calls the appropriate function for the given node type.\n\nNote: this is internal API, and will be removed in a future version.\n",
+        "args": [
+          "context"
+        ],
+        "type": "Lint.Types.LintRuleImplementation context -> context -> ( List Lint.Types.LintError, context )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Direction",
+        "comment": " When visiting the AST, nodes are visited twice:\n- on Enter, before the children of the node will be visited\n- on Exit, after the children of the node have been visited\n\n    expressionFn : Context -> Direction Expression -> ( List LintError, Context )\n    expressionFn ctx node =\n        case node of\n            Enter (Variable names) ->\n                ( [], markVariableAsUsed ctx names )\n\n            -- Find variables declared in `let .. in ..` expression\n            Enter (Let declarations body) ->\n                ( [], registerVariables ctx declarations )\n\n            -- When exiting the `let .. in ..` expression, report the variables that were not used.\n            Exit (Let _ _) ->\n                ( unusedVariables ctx |> List.map createError, ctx )\n",
+        "args": [
+          "node"
+        ],
+        "cases": [
+          [
+            "Enter",
+            [
+              "node"
+            ]
+          ],
+          [
+            "Exit",
+            [
+              "node"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Severity",
+        "comment": " Severity associated to a rule.\n\n- Critical: Transgressions reported by the rule will make the linting process fail.\n- Warning: Transgressions reported by the rule will not make the linting process fail.\n- Disabled: Rule will not be enforced.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

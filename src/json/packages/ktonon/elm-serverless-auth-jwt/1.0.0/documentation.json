@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Serverless.JWT",
+    "comment": " Authorization middleware for elm-serverless using JSON Web Tokens.\n\nExamples assume the following:\n\n    import Json.Decode\n    import Serverless.Conn as Conn\n    import Serverless.Plug as Plug exposing (pipeline, plug)\n\n@docs auth, configDecoder, Config\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Authorization configuration.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "auth",
+        "comment": " Authorization middleware.\n\n    pipeline\n        |> plug\n            (Serverless.JWT.auth\n                -- Store the JWT secret in your config and\n                -- tell the middleware how to get it\n                .authJWT\n                -- Define the structure of the JWT payload\n                -- using a JSON decoder\n                Json.Decode.string\n                -- Store the decoded payload in your model\n                (\\payload model -> { model | payload = payload })\n            )\n        |> Plug.size\n    --> 1\n\n",
+        "type": "(config -> Serverless.JWT.Config) -> Json.Decode.Decoder payload -> (payload -> model -> model) -> Serverless.Conn.Conn config model route interop -> Serverless.Conn.Conn config model route interop"
+      },
+      {
+        "name": "configDecoder",
+        "comment": " Configuration decoder.\n\n    import Json.Decode exposing (decodeString)\n\n    decodeString configDecoder \"\"\"{ \"secret\": \"foobar\" }\"\"\"\n        |> toString\n    --> \"\"\"Ok (Config { secret = \"foobar\" })\"\"\"\n\n",
+        "type": "Json.Decode.Decoder Serverless.JWT.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

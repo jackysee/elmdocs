@@ -1,0 +1,70 @@
+[
+  {
+    "name": "String.UTF8",
+    "comment": " Need UTF-8 bytes for your algorithm? Don't want to waste time investigating\nhow to go back and forth between UTF-16 and UTF-8? I hear ya.\n\nExamples in the documentation assume an import like this:\n\n    import String.UTF8 as UTF8\n\n@docs length, toBytes, toString, foldl\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "foldl",
+        "comment": " Fold over a string, left to right, accumulating UTF-8 bytes along the way.\n",
+        "type": "(Int -> a -> a) -> a -> String -> a"
+      },
+      {
+        "name": "length",
+        "comment": " Number of UTF-8 codepoints in a string.\n\n    UTF8.length \"a\"\n    --> 1\n\n    UTF8.length \"à\"\n    --> 2\n\n    UTF8.length \"✓\"\n    --> 3\n\n    UTF8.length \"💩\"\n    --> 4\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "toBytes",
+        "comment": " Convert a `String` to a sequence of UTF-8 bytes. The inverse of `toString`.\n\n    UTF8.toBytes \"✓ a-ok\"\n    --> [ 0xe2, 0x9c, 0x93, 0x20, 0x61, 0x2D, 0x6F, 0x6B ]\n\n",
+        "type": "String -> List Int"
+      },
+      {
+        "name": "toString",
+        "comment": " Convert a sequence of UTF-8 bytes to an Elm UTF-16 `String`.\n\n    UTF8.toString [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]\n    --> Ok \"hello\"\n\n    UTF8.toString [ 0xF0, 0x9F, 0x92, 0xA9 ]\n    --> Ok \"💩\"\n\nIf the input is not a valid UTF-8 sequence, you'll receive an error.\n\n    UTF8.toString [ 0xF0]\n    --> Err \"invalid UTF-8 sequence\"\n\n",
+        "type": "List Int -> Result.Result String String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "String.UTF32",
+    "comment": " Need to work in unicode codepoints? Tired of UTF-8's silliness? You came to\nthe right place!\n\nExamples in the documentation assume an import like this:\n\n    import String.UTF32 as UTF32\n\n@docs length, toBytes, toString, byteToString, foldl, foldlUTF8\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "byteToString",
+        "comment": " Convert a single codepoint to the equivalent Elm string.\n\n    byteToString 0x0001F4A9\n    --> \"💩\"\n\n",
+        "type": "Int -> String"
+      },
+      {
+        "name": "foldl",
+        "comment": " Fold over a string, left to right, accumulating unicode codepoints.\n",
+        "type": "(Int -> a -> a) -> a -> String -> a"
+      },
+      {
+        "name": "foldlUTF8",
+        "comment": " Fold over a list of UTF-8 bytes, converting them to unicode codepoints and\nfeeding those to your accumulator. If the input contains invalid sequences,\nyou'll receive an `invalid UTF-8 sequence` error.\n",
+        "type": "(Int -> a -> a) -> a -> List Int -> Result.Result String a"
+      },
+      {
+        "name": "length",
+        "comment": " Calculates the number UTF-32 characters in a `String`.\n\n    String.length \"💩\"\n    --> 2\n\n    UTF32.length \"💩\"\n    --> 1\n\n",
+        "type": "String -> Int"
+      },
+      {
+        "name": "toBytes",
+        "comment": " Converts a String to a list of unicode codepoints. The inverse of `toString`\n\n    UTF32.toBytes \"hello\"\n    --> [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]\n\n    UTF32.toBytes \"💩\"\n    --> [ 0x0001F4A9 ]\n\n",
+        "type": "String -> List Int"
+      },
+      {
+        "name": "toString",
+        "comment": " Build an UTF-16 `String` from a list of unicode codepoints.\n\n    UTF32.toString [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]\n    --> \"hello\"\n\n    UTF32.toString [ 0x0001F4A9 ]\n    --> \"💩\"\n\n",
+        "type": "List Int -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

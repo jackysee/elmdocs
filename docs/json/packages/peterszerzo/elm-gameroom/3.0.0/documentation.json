@@ -1,0 +1,139 @@
+[
+  {
+    "name": "Gameroom",
+    "comment": " This is a framework for creating [multiplayer Guessing games by the boatloads](https://www.youtube.com/watch?v=sBCz6atTRZk), all within the comfort of Elm. Specify only what is unique to a game, write no logic on the back-end, and have it all wired up and ready to play.\n\n`elm-gameroom` takes care of calling game rounds, generating problems and reconciling scores, as well as talking to either a generic real-time database such as Firebase (JS adapter provided), with have clients sort things out amongst themselves via WebRTC (JavaScript glue code provided).\n\n# The main game program\n@docs game, gameWith\n\n# Game spec\n@docs Spec\n\nUse these `Msg` and `Model` types to annotate your program when using the [game](/Gameroom#game) or [gameWith](/Gameroom#gameWith) methods.\n@docs Model, Msg\n\n# Ports\n@docs Ports\n\n# Settings\n@docs basePath, name, subheading, instructions, unicodeIcon, clearWinner, roundDuration, cooldownDuration, noInlineStyle, noPeripheralUi, responsiblePorts\n\n# Miscellaneous\n@docs css\n\n# Utils\n@docs generatorFromList\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model type alias for the game program.\n",
+        "args": [
+          "problem",
+          "guess"
+        ],
+        "type": "Models.Model problem guess"
+      },
+      {
+        "name": "Msg",
+        "comment": " Msg type alias for the game program.\n",
+        "args": [
+          "problem",
+          "guess"
+        ],
+        "type": "Messages.Msg problem guess"
+      },
+      {
+        "name": "Ports",
+        "comment": " The Ports record contains incoming and outgoing ports necessary for a guessing game, like so:\n\n    port outgoing : Json.Encode.Value -> Cmd msg\n\n    port incoming : (Json.Encode.Value -> msg) -> Sub msg\n\n    ports = { incoming = incoming, outgoing = outgoing }\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Data.Ports.Ports msg"
+      },
+      {
+        "name": "Spec",
+        "comment": " Define the unique bits and pieces to your game, all generalized over a type variable representing a `problem`, and one representing a `guess`. It's going to look a little heavy, but it'll make sense very quickly, I promise. Here it goes:\n\n    type alias Spec problem guess =\n        { view : Context guess -> problem -> Html guess\n        , evaluate : problem -> guess -> Float\n        , problemGenerator : Random.Generator problem\n        , problemEncoder : problem -> Encode.Value\n        , problemDecoder : Decode.Decoder problem\n        , guessEncoder : guess -> Encode.Value\n        , guessDecoder : Decode.Decoder guess\n        }\n\n* view: The core of the user interface corresponding to the current game round, excluding all navigation, notifications and the score boards. Emits guesses. The first argument is a view context containing peripheral information such as window size, round time, already recorded guesses etc., and it's [documented on its own](/Gameroom-Context). The second, main argument is the current game problem.\n* evaluate: given a problem and a guess, returns a numerical evaluation of the guess. The player with the highest evaluation wins a given round. Note that this is affected by the [clearWinner](/Gameroom#clearWinner) setting, which specifies that only by attaining a certain highest evaluation can a player win.\n* problemGenerator: a random generator churning out new problems. If your problems are a simple list, there is a [convenient helper](/Gameroom#generatorFromList).\n",
+        "args": [
+          "problem",
+          "guess"
+        ],
+        "type": "Data.Spec.Spec problem guess"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "basePath",
+        "comment": " If your game doesn't start at the root route, you need to tell the package so the routing is done correctly, e.g. `basePath \"/game1\"`. This is useful if you want to host multiple games on the same domain, and have them share data stores. This is how the demo site is set up :).\n\nYou can omit the leading slash or have an extra trailing slash. However, base paths with inner slashes such as `/games/game1` are currently not supported.\n",
+        "type": "String -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "clearWinner",
+        "comment": " In the most general case, players compete in getting as close as possible to a given goal. However, sometimes you might want to simplify the game and designate winners only if they attained a specific evaluation value specified by `Spec.evaluate`.\n\nIf you use the clearWinner setting, make sure `evaluate` does not depend on the timestamp.\n",
+        "type": "Float -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "cooldownDuration",
+        "comment": " Set the duration of the cooldown phase after a game round is over.\n",
+        "type": "Time.Time -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "css",
+        "comment": " Gives access to the app's elm-css stylesheet, so you can compile it yourself if you like. Note that an inline stylesheet is inserted by default, so if you use the compiled css file, make sure you use the [noInlineStyle](/Gameroom#noInlineStyle) setting.\n",
+        "type": "Css.Stylesheet"
+      },
+      {
+        "name": "game",
+        "comment": " Create a game program from a spec object, using any data type you can dream up for `problem` and `guess`. The [spec](/Gameroom#Spec) is the declarative definition of the basic game logic and views powering your game.\n\nAs it is, this program doesn't work in multiplayer. For that, you have to set up outside communication with the back-end of your choice. See [responsiblePorts](/Gameroom#responsiblePorts) for instructions.\n\nNotice you don't have to supply any `init`, `update` or `subscriptions` field yourself. All that is taken care of, and you wind up with a working interface that allows you to create game rooms, invite others, and play. Timers, scoreboards etc. all come straight out of the box.\n",
+        "type": "Gameroom.Spec problem guess -> Platform.Program Basics.Never (Gameroom.Model problem guess) (Gameroom.Msg problem guess)"
+      },
+      {
+        "name": "gameWith",
+        "comment": " Game program with a list of settings. For example, this program:\n\n    gameWith\n        [ name \"MyCoolGame\"\n        , roundDuration (10 * Time.second)\n        , cooldownDuration (4 * Time.second)\n        , clearWinner 100\n        , noPeripheralUi\n        ]\n        { -- spec object from before\n        }\n\nThis produces a game with a custom name, custom round duration, custom cooldown duration between rounds, a clear winner at evaluation 100 (meaning no player can win unless their guess evaluates to exactly 100), and disable the peripheral ui - the score board, timer and winner notifications - so you can build those yourself in whichever design you prefer.\n",
+        "type": "List (Data.Spec.Setting problem guess) -> Gameroom.Spec problem guess -> Platform.Program Basics.Never (Gameroom.Model problem guess) (Gameroom.Msg problem guess)"
+      },
+      {
+        "name": "generatorFromList",
+        "comment": " Create a generator from a discrete list of problems, the first of which is supplied separately to make sure the list is not empty. For example,\n\n    generatorFromList \"apples\" [ \"oranges\", \"lemons\" ]\n\ncreates a generator that yields a random problems the list [\"apples\", \"oranges\", \"lemons\"]. Note that one default item must present by default, in order to still be able to generate an entry when an empty list is passed.\n",
+        "type": "problem -> List problem -> Random.Generator problem"
+      },
+      {
+        "name": "instructions",
+        "comment": " Instructions displayed in the tutorial section.\n",
+        "type": "String -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "name",
+        "comment": " The name of your game, e.g. `name \"YouWillSurelyLose\"`.\n",
+        "type": "String -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "noInlineStyle",
+        "comment": " By default, the game interface renders an inline <style> tag within the Elm app's view. If you want to compile and add the CSS yourself (and add intermediate steps like autoprefixing), use this setting to disable the tag. See [css](/Gameroom#css) for instructions on how to compile the CSS yourself.\n",
+        "type": "Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "noPeripheralUi",
+        "comment": " Do not render any peripheral ui such as scoreboards and game notifications.\n",
+        "type": "Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "responsiblePorts",
+        "comment": " Handle communication with the outside world through ports.\n\n    port outgoing : Json.Encode.Value -> Cmd msg\n\n    port incoming : (Json.Encode.Value -> msg) -> Sub msg\n\n    main =\n      gameWith\n        [ responsiblePorts\n            { incoming = incoming\n            , outgoing = outgoing\n            }\n        ]\n        spec\n\nWhy responsible? Because you need to talk to them appropriately. For more details on wiring up ports to a generic backend, see the [JS documentation](/src/js/README.md). Don't worry, it is all razorthin boilerplate.\n",
+        "type": "Gameroom.Ports (Gameroom.Msg problem guess) -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "roundDuration",
+        "comment": " Set the duration of the game round (how long players have to make their guesses).\n",
+        "type": "Time.Time -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "subheading",
+        "comment": " A subheading to go under the name on the home page.\n",
+        "type": "String -> Data.Spec.Setting problem guess"
+      },
+      {
+        "name": "unicodeIcon",
+        "comment": " A unicode icon for your game.\n",
+        "type": "String -> Data.Spec.Setting problem guess"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Gameroom.Context",
+    "comment": " When developing elm-gameroom games, the [Spec](/Gameroom-Spec) object requires a view function that controls how the problem should be represented. This function takes a context as a first parameter, which you can use to display additional clues in your game, such as feedback when a guess is made or when the correct guess may be revealed. It also gives you access the current round's timer so you can get all animated and even WebGL-y, if that strikes your fancy.\n\n# The Context type\n@docs Context\n",
+    "aliases": [
+      {
+        "name": "Context",
+        "comment": " The context object, containing the following fields:\n\n* `windowSize`: the size of the window, as per `elm-lang/window`.\n* `roundTime`: time since the current round started.\n* `ownGuess`: the guess made by the current client, if any.\n* `opponentGuesses`: a `( String, guess )` tuple listing any guesses made by opponents.\n* `isRoundOver`: states whether the current game round has been decided. At this point, you can reveal the correct answer while the round is in cooldown.\n* `scores`: lists the scores of each player as a `List ( String, Int )`. Use if the [noPeripheralUi](/Gameroom#noPeripheralUi) setting is enabled, and you want to render a custom-styles scoreboard on your own.\n",
+        "args": [
+          "guess"
+        ],
+        "type": "{ windowSize : Window.Size , roundTime : Time.Time , ownGuess : Maybe.Maybe guess , opponentGuesses : List ( String, guess ) , isRoundOver : Bool , scores : List ( String, Int ) }"
+      }
+    ],
+    "types": [],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

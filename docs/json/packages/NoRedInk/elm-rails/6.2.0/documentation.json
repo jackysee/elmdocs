@@ -1,0 +1,88 @@
+[
+  {
+    "name": "Rails",
+    "comment": "\n\n## Requests\n@docs Error, get, post, put, patch, delete, decodeErrors, decodeRawErrors, request\n\n## Customizing\n@docs csrfToken\n\n",
+    "aliases": [
+      {
+        "name": "Error",
+        "comment": " The kinds of errors a Rails server may return.\n",
+        "args": [
+          "error"
+        ],
+        "type": "{ http : Http.Error, rails : Maybe.Maybe error }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "csrfToken",
+        "comment": " If there was a `<meta name=\"csrf-token\">` tag in the page's `<head>` when\n    elm-rails loaded, returns the value its `content` attribute had at that time.\n\n    Rails expects this value in the `X-CSRF-Token` header for non-`GET` requests as\n    a [CSRF countermeasure](http://guides.rubyonrails.org/security.html#csrf-countermeasures).\n",
+        "type": "Result.Result String String"
+      },
+      {
+        "name": "decodeErrors",
+        "comment": " Decode Rails-specific error information from a [`BadStatus`](http://package.elm-lang.org/packages/elm-lang/http/latest/Http#Error)\nresponse. (That is, a response whose status code is outside the 200 range.)\n\nThis is intended to be used with [`Http.send`](http://package.elm-lang.org/packages/elm-lang/http/1.0.0/Http#send)\nlike so:\n\n    import Dict\n    import Json.Decode exposing (list, string, at)\n    import Json.Encode as Encode\n    import Http\n    import Rails.Decode\n    import Rails\n\n\n    requestHats : HatStyle -> Cmd Msg\n    requestHats style =\n        let\n            body =\n                [ ( \"style\", encodeHatStyle style ) ]\n                    |> Encode.object\n                    |> Http.jsonBody\n\n            getErrors =\n                at [ \"errors\", \"style\" ] string\n                    |> Rails.decodeErrors\n        in\n            list string\n                |> Rails.post url body\n                |> Http.send (getErrors >> HandleResponse)\n",
+        "type": "Json.Decode.Decoder railsError -> Result.Result Http.Error success -> Result.Result (Rails.Error railsError) success"
+      },
+      {
+        "name": "decodeRawErrors",
+        "comment": " Decode Rails-specific error information from a [`BadStatus`](http://package.elm-lang.org/packages/elm-lang/http/latest/Http#Error)\nresponse. (That is, a response whose status code is outside the 200 range.)\n\nSee also, `decodeErrors`.\n",
+        "type": "Json.Decode.Decoder railsError -> Http.Error -> Rails.Error railsError"
+      },
+      {
+        "name": "delete",
+        "comment": " Send a DELETE request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    hats : Cmd msg\n    hats =\n        list hatDecoder\n            |> Rails.delete \"http://example.com/hat-categories/5\" Http.emptyBody\n            |> Http.send HandleResponse\n\n",
+        "type": "String -> Http.Body -> Json.Decode.Decoder val -> Http.Request val"
+      },
+      {
+        "name": "get",
+        "comment": " Send a GET request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    getHats : Cmd msg\n    getHats =\n        list hatDecoder\n            |> Rails.get \"http://example.com/hat-categories.json\"\n            |> Http.send HandleGetHatsResponse\n",
+        "type": "String -> Json.Decode.Decoder val -> Http.Request val"
+      },
+      {
+        "name": "patch",
+        "comment": " Send a PATCH request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    hats : Cmd msg\n    hats =\n        list hatDecoder\n            |> Rails.patch \"http://example.com/hat-categories/5\" revisedHatData\n            |> Http.send HandleResponse\n\n",
+        "type": "String -> Http.Body -> Json.Decode.Decoder val -> Http.Request val"
+      },
+      {
+        "name": "post",
+        "comment": " Send a POST request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    hats : Cmd msg\n    hats =\n        list hatDecoder\n            |> Rails.post \"http://example.com/hat-categories/new\" Http.emptyBody\n            |> Http.send HandleResponse\n\n",
+        "type": "String -> Http.Body -> Json.Decode.Decoder val -> Http.Request val"
+      },
+      {
+        "name": "put",
+        "comment": " Send a PUT request to the given URL. Specify how to decode the response.\n\n    import Json.Decode exposing (list, string, succeed)\n    import Http\n    import Rails\n\n\n    hats : Cmd msg\n    hats =\n        list hatDecoder\n            |> Rails.put \"http://example.com/hat-categories/5\" revisedHatData\n            |> Http.send HandleResponse\n\n",
+        "type": "String -> Http.Body -> Json.Decode.Decoder val -> Http.Request val"
+      },
+      {
+        "name": "request",
+        "comment": " Wraps `Http.request` while adding the following default headers:\n\n* `X-CSRF-Token` - set to `csrfToken` if it's an `Ok` and this request isn't a `GET`\n* `Content-Type` - `\"application/json\"`\n* `Accept` - `\"application/json, text/javascript, */*; q=0.01\"`\n* `X-Requested-With` - `\"XMLHttpRequest\"`\n\nYou can specify additional headers in the `headers` field of the configuration record.\n\n    import Dict\n    import Json.Decode exposing (list, string)\n    import Json.Encode as Encode\n    import Http\n    import Rails.Decode\n    import Rails\n\n\n    hatRequest : HatStyle -> Request (Result (ErrorList Field) Hat)\n    hatRequest style =\n        let\n            body =\n                [ ( \"style\", encodeHatStyle style ) ]\n                    |> Encode.object\n                    |> Http.jsonBody\n        in\n            Rails.request\n                { method = \"POST\"\n                , headers = []\n                , url = url\n                , body = body\n                , expect = Http.expectJson (list string)\n                , timeout = Nothing\n                , withCredentials = False\n                }\n",
+        "type": "{ method : String , headers : List Http.Header , url : String , body : Http.Body , expect : Http.Expect a , timeout : Maybe.Maybe Time.Time , withCredentials : Bool } -> Http.Request a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Rails.Decode",
+    "comment": "\n\nTypes\n@docs ErrorList\n\n# Decoding\n@docs errors\n\n",
+    "aliases": [
+      {
+        "name": "ErrorList",
+        "comment": " ErrorList is a type alias for a list of `( fields, String )` pairs,\nwhere `field` is a type we can use to reference which fields had errors.\n\n```\ntype Field = Name | Password\n\ndecode : ErrorList Field\n```\n",
+        "args": [
+          "field"
+        ],
+        "type": "List ( field, String )"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "errors",
+        "comment": " Decodes errors passed from rails formatted like this:\n\n`{ errors: {errorName: [\"Error String\"] } }`.\n\nThis function takes a Dict that is a map of all the fields you need decoded.\nIt should look like this:\n\n```\nDict.fromList\n    [ ( \"school\", School )\n    , ( \"school.name\", SchoolName )\n    , ( \"school.address\", SchoolAddress )\n    , ( \"school.city\", City )\n    , ( \"school.state\", State )\n    , ( \"school.zip\", Zip )\n    , ( \"school.country\", Country )\n    ]\n```\n",
+        "type": "Dict.Dict String field -> Json.Decode.Decoder (Rails.Decode.ErrorList field)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

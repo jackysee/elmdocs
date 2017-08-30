@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Cron.Decoder",
+    "comment": " This module contains the function to turn a Crontab `String` into `CronSchedule`\n@docs decodeCronTab\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "decodeCronTab",
+        "comment": " Function to decode the standard CronTab.\n\n        decodeCronTab \"* * * * *\" =\n        Just (\n        CronSchedule\n          ([CronField Star Nothing])\n          ([CronField Star Nothing])\n          ([CronField Star Nothing])\n          ([CronField Star Nothing])\n          ([CronField Star Nothing])\n        )\n\n        decodeCronTab \"12-27/3 * * JAN MON-FRI\" =\n        Just (\n        CronSchedule\n          ([CronField (RangeField 12 27) (Just 3)])\n          ([CronField Star Nothing])\n          ([CronField Star Nothing])\n          ([CronField (SpecificField 1) Nothing])\n          ([CronField (RangeField 1 5) Nothing])\n        )\n\n        decodeCronTab \"12-27/3 * JAN MON-FRI *\" =\n        Nothing -- Invalid syntax\n\n",
+        "type": "String -> Maybe.Maybe Cron.Types.CronSchedule"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Cron.Describe",
+    "comment": " This module contains the functions to describe the `CronSchedule`\n\n@docs describeSchedule, scheduleDescription\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "describeSchedule",
+        "comment": " A function that puts a `CronSchedule` into a more-or-less readable format.\n\n        Maybe.map describeSchedule <| decodeCronTab \"* * * * *\" =\n        Just {\n        minuteDescription = \"every minute\"\n      , hourDescription = \"every hour\"\n      , dayDescription = \"every day\"\n      , monthDescription = \"every month\"\n      , dayOfWeekDescription = \"every day of the week\"\n     }\n\n        Maybe.map describeSchedule <| decodeCronTab \"12-27/3 * * JAN MON-FRI\" =\n        Just {\n        minuteDescription = \"every 3 minute between 12 and 27\"\n      , hourDescription = \"every hour\"\n      , dayDescription = \"every day\"\n      , monthDescription = \"at month 1\"\n      , dayOfWeekDescription = \"every day of the week between 1 and 5\" }\n\n        Maybe.map describeSchedule <| decodeCronTab \"12-27/3 * JAN MON-FRI *\" =\n        Nothing -- Invalid syntax\n\n",
+        "type": "Cron.Types.CronSchedule -> Cron.Types.DescribedCronSchedule"
+      },
+      {
+        "name": "scheduleDescription",
+        "comment": " A function that puts a `CronSchedule` into a more-or-less readable format.\n\n        Maybe.map scheduleDescription <| decodeCronTab \"* * * * *\" =\n        Just \"every minute; every hour; every day; every month; every day of the week\"\n     }\n\n        Maybe.map scheduleDescription <| decodeCronTab \"12-27/3 * * JAN MON-FRI\" =\n        Just \"every 3 minute between 12 and 27; every hour; every day; at month 1; every day of the week between 1 and 5\"\n\n        Maybe.map scheduleDescription <| decodeCronTab \"12-27/3 * JAN MON-FRI *\" =\n        Nothing -- Invalid syntax\n\n",
+        "type": "Cron.Types.CronSchedule -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Cron.Types",
+    "comment": " This module contains the types used in parsing cron expressions.\n\n@docs BaseField, CronField, CronSchedule, DescribedCronSchedule\n\n",
+    "aliases": [
+      {
+        "name": "DescribedCronSchedule",
+        "comment": " A record containing readable descriptions for the Crontab fields.\n",
+        "args": [],
+        "type": "{ minuteDescription : String , hourDescription : String , dayDescription : String , monthDescription : String , dayOfWeekDescription : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "BaseField",
+        "comment": " Basic unit of Crontab. It can be one of the following three cases:\n\n  - `Star` corresponds to `*`\n  - `SpecificField n` describes a specific value given by an integer `n`\n  - `RangeField m n` describes the range `m`-`n` with `m`<`n`\n\n",
+        "args": [],
+        "cases": [
+          [
+            "Star",
+            []
+          ],
+          [
+            "SpecificField",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "RangeField",
+            [
+              "Int",
+              "Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "CronField",
+        "comment": " `CronField` includes the `BaseField` and a possible step. For example, a field `*/12`\nwill be rendered as\n\n    sF : CronField\n\n    sf =\n        CronField Star (Just 12)\n\n",
+        "args": [],
+        "cases": [
+          [
+            "CronField",
+            [
+              "Cron.Types.BaseField",
+              "Maybe.Maybe Int"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "CronSchedule",
+        "comment": " `CronSchedule` contains the `CronField`'s for the five parameters:\n\n    cS : CronSchedule\n    cS =\n        CronSchedule minutes hours days months day_of_week\n\n",
+        "args": [],
+        "cases": [
+          [
+            "CronSchedule",
+            [
+              "List Cron.Types.CronField",
+              "List Cron.Types.CronField",
+              "List Cron.Types.CronField",
+              "List Cron.Types.CronField",
+              "List Cron.Types.CronField"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

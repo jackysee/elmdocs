@@ -1,0 +1,161 @@
+[
+  {
+    "name": "Date.Distance",
+    "comment": "\n# Basics\n@docs inWords\n\n# Custom Config\n@docs inWordsWithConfig\n@docs defaultConfig\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultConfig",
+        "comment": " Default configuration. Use with `inWordsWithConfig`.\n",
+        "type": "Date.Distance.Types.Config"
+      },
+      {
+        "name": "inWords",
+        "comment": " Returns the distance between two dates in words.\n\n    date1 = Date.fromParts 2017 May 5 10 20 0 0\n    date2 = Date.fromParts 2017 May 7 10 20 0 0\n\n    inWords date1 date2 == \"2 days\"\n",
+        "type": "Date.Date -> Date.Date -> String"
+      },
+      {
+        "name": "inWordsWithConfig",
+        "comment": " Like `inWords` but configurable.\n\n    inWords = { defaultConfig | includeSeconds = True }\n        |> inWordsWithConfig\n\n    -- use it\n    inWords date1 date2\n\nRead the documentation on `Config` for a full run down\nof the available options.\n",
+        "type": "Date.Distance.Types.Config -> Date.Date -> Date.Date -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Distance.I18n.En",
+    "comment": " English locale. Used by default.\n@docs LocaleConfig\n@docs locale\n",
+    "aliases": [
+      {
+        "name": "LocaleConfig",
+        "comment": " Configure the localization function.\n\n  - `addSuffix` – turns `2 days` into `2 days ago` or `in 2 days`\n\n",
+        "args": [],
+        "type": "{ addSuffix : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "locale",
+        "comment": " Configure the English locale.\n\n    locale =\n        I18n.En.locale { addSuffix = True }\n\n    inWords =\n        { defaultConfig | locale = locale }\n            |> inWordsWithConfig\n\n",
+        "type": "Date.Distance.I18n.En.LocaleConfig -> Date.Distance.Types.Locale"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Distance.I18n.Fr",
+    "comment": " French locale.\n@docs LocaleConfig\n@docs locale\n",
+    "aliases": [
+      {
+        "name": "LocaleConfig",
+        "comment": " Configure the localization function.\n\n  - `addPrefix` – turns `2 jours` into `il y a 2 jours` or `dans 2 jours`\n\n",
+        "args": [],
+        "type": "{ addPrefix : Bool }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "locale",
+        "comment": " Configure the French locale.\n\n    locale =\n        I18n.Fr.locale { addPrefix = True }\n\n    inWords =\n        { defaultConfig | locale = locale }\n            |> inWordsWithConfig\n\n",
+        "type": "Date.Distance.I18n.Fr.LocaleConfig -> Date.Distance.Types.Locale"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Date.Distance.Types",
+    "comment": "\n@docs Config\n@docs Locale\n@docs DistanceLocale\n",
+    "aliases": [
+      {
+        "name": "Config",
+        "comment": " To be used with `inWordsWithConfig`.\n\n* `locale` – localization function (see `I18n.En`)\n* `includeSeconds` – get more precise results for distances under a minute\n",
+        "args": [],
+        "type": "{ locale : Date.Distance.Types.Locale, includeSeconds : Bool }"
+      },
+      {
+        "name": "Locale",
+        "comment": " A localization function takes two arguments:\n* `Order` – determines if the first date passed to `inWords`\nis after the second date (useful for relative distances)\n\n* `DistanceLocale` – distance between the two dates\n",
+        "args": [],
+        "type": "Basics.Order -> Date.Distance.Types.DistanceLocale -> String"
+      }
+    ],
+    "types": [
+      {
+        "name": "DistanceLocale",
+        "comment": " Data type used by localization functions\nto produce a string.\n",
+        "args": [],
+        "cases": [
+          [
+            "LessThanXSeconds",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "HalfAMinute",
+            []
+          ],
+          [
+            "LessThanXMinutes",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "XMinutes",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "AboutXHours",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "XDays",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "AboutXMonths",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "XMonths",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "AboutXYears",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "OverXYears",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "AlmostXYears",
+            [
+              "Int"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

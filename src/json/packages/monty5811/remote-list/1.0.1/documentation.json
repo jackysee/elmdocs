@@ -1,0 +1,88 @@
+[
+  {
+    "name": "RemoteList",
+    "comment": " This library provides helpers for working with lists of remote data.\n\n@docs RemoteList\n\n\n# Helpers\n\n@docs toList, map, filter, apply, hasFailed, hasFinished\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "RemoteList",
+        "comment": " Represent a list of remote (paged) data as one of 6 possible states:\n\n  - `NotAsked` - We haven't asked for anything yet.\n  - `WaitingForFirstResp` - We've asked, but we are waiting for the first response.\n  - `WaitingForPage` - We asked for another page and are waiting.\n  - `FinalPageReceived` - Everything worked, all the pages have been received.\n  - `WaitingOnRefresh` - All the data has been loaded and we are waiting before refreshing.\n  - `RespFailed` - Something went wrong, here is the error and the data we have so far.\n\n",
+        "args": [
+          "a"
+        ],
+        "cases": [
+          [
+            "NotAsked",
+            [
+              "List a"
+            ]
+          ],
+          [
+            "WaitingForFirstResp",
+            [
+              "List a"
+            ]
+          ],
+          [
+            "WaitingForPage",
+            [
+              "List a"
+            ]
+          ],
+          [
+            "FinalPageReceived",
+            [
+              "List a"
+            ]
+          ],
+          [
+            "WaitingOnRefresh",
+            [
+              "List a"
+            ]
+          ],
+          [
+            "RespFailed",
+            [
+              "String",
+              "List a"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "apply",
+        "comment": " Apply a function to the list.\n\n    apply List.sort (WaitingForPage [3, 1, 2]) --> (WaitingForPage [1, 2, 3])\n\n    apply (List.take 2 >> List.reverse) (FinalPageReceived [1, 2, 3]) --> FinalPageReceived [2, 1]\n\n",
+        "type": "(List a -> List a) -> RemoteList.RemoteList a -> RemoteList.RemoteList a"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep only elements that satisfy the predicate.\n\n    filter (\\i -> i > 1) (WaitingForPage [1, 2, 3]) --> (WaitingForPage [2, 3])\n\n",
+        "type": "(a -> Bool) -> RemoteList.RemoteList a -> RemoteList.RemoteList a"
+      },
+      {
+        "name": "hasFailed",
+        "comment": " Check if the fetching has failed.\n\n    hasFailed (NotAsked [1, 2]) --> False\n\n    hasFailed (RespFailed \"Server did not respond\" [1, 2]) --> True\n\n",
+        "type": "RemoteList.RemoteList a -> Bool"
+      },
+      {
+        "name": "hasFinished",
+        "comment": " Check if the fetching has finished.\n\n    hasFinished (NotAsked [1, 2]) --> False\n\n    hasFinished (RespFailed \"Server did not respond\" [1, 2])  --> False\n\n    hasFinished (FinalPageReceived [1, 2])  --> True\n\n",
+        "type": "RemoteList.RemoteList a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function to every element of the list.\n\n    map sqrt (WaitingForPage [4, 9, 16]) --> (WaitingForPage [2, 3, 4])\n\n",
+        "type": "(a -> a) -> RemoteList.RemoteList a -> RemoteList.RemoteList a"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert a remote list into a normal list\n\n    toList (FinalPageReceived [1, 2, 3]) --> [1, 2, 3]\n\n",
+        "type": "RemoteList.RemoteList a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

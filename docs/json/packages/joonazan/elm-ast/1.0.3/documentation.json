@@ -1,0 +1,392 @@
+[
+  {
+    "name": "Ast",
+    "comment": " This module exposes functions for parsing Elm code.\n\n# Parsers\n@docs parseExpression, parseStatement, parseOpTable, parseModule, parse\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "parse",
+        "comment": " Parse an Elm module, scanning for infix declarations first. ",
+        "type": "String -> Result.Result (Combine.ParseErr ()) (Combine.ParseOk () (List Ast.Statement.Statement))"
+      },
+      {
+        "name": "parseExpression",
+        "comment": " Parse an Elm expression. ",
+        "type": "Ast.BinOp.OpTable -> String -> Result.Result (Combine.ParseErr ()) (Combine.ParseOk () Ast.Expression.Expression)"
+      },
+      {
+        "name": "parseModule",
+        "comment": " Parse an Elm module. ",
+        "type": "Ast.BinOp.OpTable -> String -> Result.Result (Combine.ParseErr ()) (Combine.ParseOk () (List Ast.Statement.Statement))"
+      },
+      {
+        "name": "parseOpTable",
+        "comment": " Parse an OpTable from a module. ",
+        "type": "Ast.BinOp.OpTable -> String -> Result.Result (Combine.ParseErr ()) (Combine.ParseOk () Ast.BinOp.OpTable)"
+      },
+      {
+        "name": "parseStatement",
+        "comment": " Parse an Elm statement. ",
+        "type": "Ast.BinOp.OpTable -> String -> Result.Result (Combine.ParseErr ()) (Combine.ParseOk () Ast.Statement.Statement)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Ast.Statement",
+    "comment": " This module exposes parsers for Elm statements.\n\n# Types\n@docs ExportSet, Type, Statement\n\n# Parsers\n@docs statement, statements, infixStatements, opTable\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ExportSet",
+        "comment": " Representations for modules' exports. ",
+        "args": [],
+        "cases": [
+          [
+            "AllExport",
+            []
+          ],
+          [
+            "SubsetExport",
+            [
+              "List Ast.Statement.ExportSet"
+            ]
+          ],
+          [
+            "FunctionExport",
+            [
+              "Ast.Helpers.Name"
+            ]
+          ],
+          [
+            "TypeExport",
+            [
+              "Ast.Helpers.Name",
+              "Maybe.Maybe Ast.Statement.ExportSet"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Statement",
+        "comment": " Representations for Elm's statements. ",
+        "args": [],
+        "cases": [
+          [
+            "ModuleDeclaration",
+            [
+              "Ast.Helpers.ModuleName",
+              "Ast.Statement.ExportSet"
+            ]
+          ],
+          [
+            "PortModuleDeclaration",
+            [
+              "Ast.Helpers.ModuleName",
+              "Ast.Statement.ExportSet"
+            ]
+          ],
+          [
+            "ImportStatement",
+            [
+              "Ast.Helpers.ModuleName",
+              "Maybe.Maybe Ast.Helpers.Alias",
+              "Maybe.Maybe Ast.Statement.ExportSet"
+            ]
+          ],
+          [
+            "TypeAliasDeclaration",
+            [
+              "Ast.Statement.Type",
+              "Ast.Statement.Type"
+            ]
+          ],
+          [
+            "TypeDeclaration",
+            [
+              "Ast.Statement.Type",
+              "List Ast.Statement.Type"
+            ]
+          ],
+          [
+            "PortTypeDeclaration",
+            [
+              "Ast.Helpers.Name",
+              "Ast.Statement.Type"
+            ]
+          ],
+          [
+            "PortDeclaration",
+            [
+              "Ast.Helpers.Name",
+              "List Ast.Helpers.Name",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "FunctionTypeDeclaration",
+            [
+              "Ast.Helpers.Name",
+              "Ast.Statement.Type"
+            ]
+          ],
+          [
+            "FunctionDeclaration",
+            [
+              "Ast.Helpers.Name",
+              "List Ast.Helpers.Name",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "InfixDeclaration",
+            [
+              "Ast.BinOp.Assoc",
+              "Int",
+              "Ast.Helpers.Name"
+            ]
+          ],
+          [
+            "Comment",
+            [
+              "String"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Type",
+        "comment": " Representations for Elm's type syntax. ",
+        "args": [],
+        "cases": [
+          [
+            "TypeConstructor",
+            [
+              "Ast.Helpers.QualifiedType",
+              "List Ast.Statement.Type"
+            ]
+          ],
+          [
+            "TypeVariable",
+            [
+              "Ast.Helpers.Name"
+            ]
+          ],
+          [
+            "TypeRecordConstructor",
+            [
+              "Ast.Statement.Type",
+              "List ( Ast.Helpers.Name, Ast.Statement.Type )"
+            ]
+          ],
+          [
+            "TypeRecord",
+            [
+              "List ( Ast.Helpers.Name, Ast.Statement.Type )"
+            ]
+          ],
+          [
+            "TypeTuple",
+            [
+              "List Ast.Statement.Type"
+            ]
+          ],
+          [
+            "TypeApplication",
+            [
+              "Ast.Statement.Type",
+              "Ast.Statement.Type"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "infixStatements",
+        "comment": " A scanner for infix statements. This is useful for performing a\nfirst pass over a module to find all of the infix declarations in it.\n",
+        "type": "Combine.Parser s (List Ast.Statement.Statement)"
+      },
+      {
+        "name": "opTable",
+        "comment": " A scanner that returns an updated OpTable based on the infix\ndeclarations in the input. ",
+        "type": "Ast.BinOp.OpTable -> Combine.Parser s Ast.BinOp.OpTable"
+      },
+      {
+        "name": "statement",
+        "comment": " A parser for stand-alone Elm statements. ",
+        "type": "Ast.BinOp.OpTable -> Combine.Parser s Ast.Statement.Statement"
+      },
+      {
+        "name": "statements",
+        "comment": " A parser for a series of Elm statements. ",
+        "type": "Ast.BinOp.OpTable -> Combine.Parser s (List Ast.Statement.Statement)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Ast.Expression",
+    "comment": " This module exposes parsers for Elm expressions.\n\n# Types\n@docs Expression\n\n# Parsers\n@docs expression\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Expression",
+        "comment": " Representations for Elm's expressions. ",
+        "args": [],
+        "cases": [
+          [
+            "Character",
+            [
+              "Char"
+            ]
+          ],
+          [
+            "String",
+            [
+              "String"
+            ]
+          ],
+          [
+            "Integer",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Float",
+            [
+              "Float"
+            ]
+          ],
+          [
+            "Variable",
+            [
+              "List Ast.Helpers.Name"
+            ]
+          ],
+          [
+            "List",
+            [
+              "List Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "Access",
+            [
+              "Ast.Expression.Expression",
+              "List Ast.Helpers.Name"
+            ]
+          ],
+          [
+            "Record",
+            [
+              "List ( Ast.Helpers.Name, Ast.Expression.Expression )"
+            ]
+          ],
+          [
+            "RecordUpdate",
+            [
+              "Ast.Helpers.Name",
+              "List ( Ast.Helpers.Name, Ast.Expression.Expression )"
+            ]
+          ],
+          [
+            "If",
+            [
+              "Ast.Expression.Expression",
+              "Ast.Expression.Expression",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "Let",
+            [
+              "List ( Ast.Helpers.Name , List Ast.Helpers.Name , Ast.Expression.Expression )",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "Case",
+            [
+              "Ast.Expression.Expression",
+              "List ( Ast.Expression.Expression, Ast.Expression.Expression )"
+            ]
+          ],
+          [
+            "Lambda",
+            [
+              "List Ast.Helpers.Name",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "Application",
+            [
+              "Ast.Expression.Expression",
+              "Ast.Expression.Expression"
+            ]
+          ],
+          [
+            "BinOp",
+            [
+              "Ast.Expression.Expression",
+              "Ast.Expression.Expression",
+              "Ast.Expression.Expression"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "expression",
+        "comment": " A parser for Elm expressions. ",
+        "type": "Ast.BinOp.OpTable -> Combine.Parser s Ast.Expression.Expression"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Ast.BinOp",
+    "comment": " This module exposes functions and types for working with operator\nprecedence tables.\n\n# Types\n@docs Assoc, OpTable\n\n# Misc\n@docs operators\n\n",
+    "aliases": [
+      {
+        "name": "OpTable",
+        "comment": " FIXME ",
+        "args": [],
+        "type": "Dict.Dict Ast.Helpers.Name ( Ast.BinOp.Assoc, Int )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Assoc",
+        "comment": " FIXME ",
+        "args": [],
+        "cases": [
+          [
+            "N",
+            []
+          ],
+          [
+            "L",
+            []
+          ],
+          [
+            "R",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "operators",
+        "comment": " The default operator precedence table. ",
+        "type": "Ast.BinOp.OpTable"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Queue",
+    "comment": " Queue is simple FIFO (first in, first out) datastructure.\n\n# Type\n\n@docs Queue, empty\n\n# Query\n\n@docs isEmpty, size, enqueue, dequeue, front\n\n# Lists\n\n@docs fromList, toList\n\n# Transformations\n\n@docs map, filter\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Queue",
+        "comment": " Equality checks (`==`) on `Queue` are unreliable due to dynamic distribution of elements.\n\nIf you need need qeuality checks use [`toList`](#toList).\n\n```\nQueue.toList firstQueue == Queue.toList secondQueue\n```\n ",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "dequeue",
+        "comment": " Take item from `Queue`\n\n```\nQueue.dequeue Queue.empty == ( Nothing, Queue.empty )\nQueue.dequeue (Queue.fromList [ 1 ]) == ( Just 1, Queue.empty )\n```\n",
+        "type": "Queue.Queue a -> ( Maybe.Maybe a, Queue.Queue a )"
+      },
+      {
+        "name": "empty",
+        "comment": " Construct empty `Queue`\n",
+        "type": "Queue.Queue a"
+      },
+      {
+        "name": "enqueue",
+        "comment": " Add item to `Queue`\n\n```\nQueue.length (Queue.enqueue 1 Queue.empty) == 1\nQueue.length (Queue.enqueue 1 (Queue.fromList [ 1, 2 ])) == 3\n```\n",
+        "type": "a -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "filter",
+        "comment": " Filter items items in `Queue`\n\n```\nQueue.toList (Queue.filter identity (Queue.fromList [ True, False ])) == [ True ]\nQueue.toList (Queue.filter ((<) 1) (Queue.fromList [ 1, 2 ])) == [ 2 ]\n```\n",
+        "type": "(a -> Bool) -> Queue.Queue a -> Queue.Queue a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Build `Queue` from `List`\n\n```\nQueue.fromList [] == Queue.empty\nQueue.length (Queue.fromList [ 1, 2, 3 ])) == 3\n```\n",
+        "type": "List a -> Queue.Queue a"
+      },
+      {
+        "name": "front",
+        "comment": " Ask for front item without removing it from `Queue`\n\n```\nQueue.front Queue.empty == Nothing\nQueue.front (Queue.fromList [ 1, 2 ]) == Just 1\n```\n",
+        "type": "Queue.Queue a -> Maybe.Maybe a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if `Queue` is empty\n\n```\nQueue.isEmpty Queue.empty == True\nQueue.isEmpty (Queue.fromList [ 1, 2 ]) == False\n```\n",
+        "type": "Queue.Queue a -> Bool"
+      },
+      {
+        "name": "map",
+        "comment": " Map function over `Queue`\n\n```\nQueue.toList (Queue.map identity (Queue.fromList [ 1, 2 ])) == [ 1, 2 ]\nQueue.toList (Queue.map ((+) 1) (Queue.fromList [ 1, 2 ])) == [ 2, 3 ]\n```\n",
+        "type": "(a -> b) -> Queue.Queue a -> Queue.Queue b"
+      },
+      {
+        "name": "size",
+        "comment": " Get size of `Queue`\n\n```\nQueue.size empty == 0\nQueue.size (Queue.fromList [ 1, 2 ]) = 2\n```\n",
+        "type": "Queue.Queue a -> Int"
+      },
+      {
+        "name": "toList",
+        "comment": " Convert `Queue` to `List`\n\n```\nQueue.toList (Queue.fromList []) == []\nQueue.toList (Queue.fromList [ 1, 2, 3 ]) == [ 1, 2, 3 ]\n```\n",
+        "type": "Queue.Queue a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

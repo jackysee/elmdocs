@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Order",
+    "comment": " A type to arrange things an order\n\n# Order\n\n@docs Order\n\n# Basics\n\n@docs empty, isEmpty, fromList, toList, length, reverse, member, getOrderOf\n\n# Modifying Orders\n\n@docs remove, addFirst, addBefore, addAfter, isBefore, isAfter\n\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Order",
+        "comment": " An arrangement of things in an order. An Order is kind of like a list, except there cant be duplicate elements. And, its kind of like a Set, except an Orders elements go from first to last.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addAfter",
+        "comment": " Add an element to an order before another element\n\n    addAfter `b` `c` (Order.fromList [ `a`, `b`, `d` ])\n        == Order.fromList [ `a`, `b`, `c`, `d` ]\n\n",
+        "type": "a -> a -> Order.Order a -> Order.Order a"
+      },
+      {
+        "name": "addBefore",
+        "comment": " Add an element to an order before another element\n\n    addBefore `c` `b` (Order.fromList [ `a`, `c`, `d` ])\n        == Order.fromList [ `a`, `b`, `c`, `d` ]\n\n",
+        "type": "a -> a -> Order.Order a -> Order.Order a"
+      },
+      {
+        "name": "addFirst",
+        "comment": " Add an element to an order, making it the first one\n",
+        "type": "a -> Order.Order a -> Order.Order a"
+      },
+      {
+        "name": "empty",
+        "comment": " Create an empty order\n\n    Order.empty == Order.fromList []\n\n",
+        "type": "Order.Order a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create an `Order` from a `List`\n",
+        "type": "List a -> Order.Order a"
+      },
+      {
+        "name": "getOrderOf",
+        "comment": " If the element is in the order, return what place it is in\n",
+        "type": "a -> Order.Order a -> Maybe.Maybe Int"
+      },
+      {
+        "name": "isAfter",
+        "comment": " Check if an element is after another in order, if it is in the order at all.\n",
+        "type": "a -> a -> Order.Order a -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "isBefore",
+        "comment": " Check if an element is before another in order, if it is in the order at all.\n\n    germanStates = Order.fromList [ \"Bavaria\", \"Brandenberg\" ]\n\n    (\"Bavaria\" |> Order.isBefore \"Brandenberg\") germanStates == Just True\n\n    (\"Bavaria\" |> Order.isBefore \"New York City\") germanStates == Nothing\n",
+        "type": "a -> a -> Order.Order a -> Maybe.Maybe Bool"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Check if an Order is empty\n\n    Order.isEmpty Order.empty == True\n",
+        "type": "Order.Order a -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": " Get the length of an Order\n\n    nobleGases = Order.fromList\n        [ helium\n        , neon\n        , argon\n        , krypton\n        , xenon\n        , radon\n        ]\n\n    Order.length nobleGases == 6\n",
+        "type": "Order.Order a -> Int"
+      },
+      {
+        "name": "member",
+        "comment": " Check if an Order contains a member\n\n    Order.member \"Grover Cleveland\" usPresidents == True\n\n",
+        "type": "a -> Order.Order a -> Bool"
+      },
+      {
+        "name": "remove",
+        "comment": " Remove an element from an Order\n",
+        "type": "a -> Order.Order a -> Order.Order a"
+      },
+      {
+        "name": "reverse",
+        "comment": " Reverse an order\n\n    bestCoffeeDrinks ==\n        Order.fromList\n            [ cortado\n            , latte\n            , coldbrew\n            , coffee\n            , mocha\n            ]\n\n    worstCoffeeDrinks : Order Coffee\n    worstCoffeeDrinks =\n        Order.reverse bestCoffeeDrinks\n\n",
+        "type": "Order.Order a -> Order.Order a"
+      },
+      {
+        "name": "toList",
+        "comment": " Turn an `Order` into a `List`\n\n    [ 'u' ] == Order.toList <| Order.fromList [ 'u', 'u' ]\n\n",
+        "type": "Order.Order a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

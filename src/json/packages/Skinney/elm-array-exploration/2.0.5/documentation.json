@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Array.Hamt",
+    "comment": " Fast immutable arrays. The elements in an array must have the same type.\n\n\n# Arrays\n\n@docs Array\n\n\n# Creation\n\n@docs empty, initialize, repeat, fromList\n\n\n# Query\n\n@docs isEmpty, length, get\n\n\n# Manipulate\n\n@docs set, push, append, slice\n\n\n# Lists\n\n@docs toList, toIndexedList\n\n\n# Transform\n\n@docs foldl, foldr, filter, map, indexedMap\n\n\n# Display\n\n@docs toString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Array",
+        "comment": " Representation of fast immutable arrays. You can create arrays of integers\n(`Array Int`) or strings (`Array String`) or any other type of value you can\ndream up.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "append",
+        "comment": " Append two arrays to a new one.\n\n    append (repeat 2 42) (repeat 3 81) == fromList [42,42,81,81,81]\n\n",
+        "type": "Array.Hamt.Array a -> Array.Hamt.Array a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "empty",
+        "comment": " Return an empty array.\n\n    length empty == 0\n\n",
+        "type": "Array.Hamt.Array a"
+      },
+      {
+        "name": "filter",
+        "comment": " Keep only elements that satisfy the predicate.\n\n    filter isEven (fromList [1,2,3]) == (fromList [2])\n\n",
+        "type": "(a -> Bool) -> Array.Hamt.Array a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "foldl",
+        "comment": " Reduce an array from the left. Read `foldl` as fold from the left.\n\n    foldl (::) [] (fromList [1,2,3]) == [3,2,1]\n\n",
+        "type": "(a -> b -> b) -> b -> Array.Hamt.Array a -> b"
+      },
+      {
+        "name": "foldr",
+        "comment": " Reduce an array from the right. Read `foldr` as fold from the right.\n\n    foldr (+) 0 (repeat 3 5) == 15\n\n",
+        "type": "(a -> b -> b) -> b -> Array.Hamt.Array a -> b"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create an array from a `List`.\n",
+        "type": "List a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "get",
+        "comment": " Return `Just` the element at the index or `Nothing`` if the index is out of\nrange.\n\n    get  0 (fromList [0,1,2]) == Just 0\n    get  2 (fromList [0,1,2]) == Just 2\n    get  5 (fromList [0,1,2]) == Nothing\n    get -1 (fromList [0,1,2]) == Nothing\n\n",
+        "type": "Int -> Array.Hamt.Array a -> Maybe.Maybe a"
+      },
+      {
+        "name": "indexedMap",
+        "comment": " Apply a function on every element with its index as first argument.\n\n    indexedMap (*) (fromList [5,5,5]) == fromList [0,5,10]\n\n",
+        "type": "(Int -> a -> b) -> Array.Hamt.Array a -> Array.Hamt.Array b"
+      },
+      {
+        "name": "initialize",
+        "comment": " Initialize an array. `initialize n f` creates an array of length `n` with\nthe element at index `i` initialized to the result of `(f i)`.\n\n    initialize 4 identity    == fromList [0,1,2,3]\n    initialize 4 (\\n -> n*n) == fromList [0,1,4,9]\n    initialize 4 (always 0)  == fromList [0,0,0,0]\n\n",
+        "type": "Int -> (Int -> a) -> Array.Hamt.Array a"
+      },
+      {
+        "name": "isEmpty",
+        "comment": " Determine if an array is empty.\n\n    isEmpty empty == True\n\n",
+        "type": "Array.Hamt.Array a -> Bool"
+      },
+      {
+        "name": "length",
+        "comment": " Return the length of an array.\n\n    length (fromList [1,2,3]) == 3\n\n",
+        "type": "Array.Hamt.Array a -> Int"
+      },
+      {
+        "name": "map",
+        "comment": " Apply a function on every element in an array.\n\n    map sqrt (fromList [1,4,9]) == fromList [1,2,3]\n\n",
+        "type": "(a -> b) -> Array.Hamt.Array a -> Array.Hamt.Array b"
+      },
+      {
+        "name": "push",
+        "comment": " Push an element onto the end of an array.\n\n    push 3 (fromList [1,2]) == fromList [1,2,3]\n\n",
+        "type": "a -> Array.Hamt.Array a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "repeat",
+        "comment": " Creates an array with a given length, filled with a default element.\n\n    repeat 5 0     == fromList [0,0,0,0,0]\n    repeat 3 \"cat\" == fromList [\"cat\",\"cat\",\"cat\"]\n\nNotice that `repeat 3 x` is the same as `initialize 3 (always x)`.\n\n",
+        "type": "Int -> a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "set",
+        "comment": " Set the element at a particular index. Returns an updated array.\nIf the index is out of range, the array is unaltered.\n\n    set 1 7 (fromList [1,2,3]) == fromList [1,7,3]\n\n",
+        "type": "Int -> a -> Array.Hamt.Array a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "slice",
+        "comment": " Get a sub-section of an array: `(slice start end array)`. The `start` is a\nzero-based index where we will start our slice. The `end` is a zero-based index\nthat indicates the end of the slice. The slice extracts up to but not including\n`end`.\n\n    slice  0  3 (fromList [0,1,2,3,4]) == fromList [0,1,2]\n    slice  1  4 (fromList [0,1,2,3,4]) == fromList [1,2,3]\n\nBoth the `start` and `end` indexes can be negative, indicating an offset from\nthe end of the array.\n\n    slice  1 -1 (fromList [0,1,2,3,4]) == fromList [1,2,3]\n    slice -2  5 (fromList [0,1,2,3,4]) == fromList [3,4]\n\nThis makes it pretty easy to `pop` the last element off of an array:\n`slice 0 -1 array`\n\n",
+        "type": "Int -> Int -> Array.Hamt.Array a -> Array.Hamt.Array a"
+      },
+      {
+        "name": "toIndexedList",
+        "comment": " Create an indexed list from an array. Each element of the array will be\npaired with its index.\n\n    toIndexedList (fromList [\"cat\",\"dog\"]) == [(0,\"cat\"), (1,\"dog\")]\n\n",
+        "type": "Array.Hamt.Array a -> List ( Int, a )"
+      },
+      {
+        "name": "toList",
+        "comment": " Create a list of elements from an array.\n\n    toList (fromList [3,5,8]) == [3,5,8]\n\n",
+        "type": "Array.Hamt.Array a -> List a"
+      },
+      {
+        "name": "toString",
+        "comment": " Return the array represented as a string.\n\n    (toString <| Array.fromList [1,2,3]) == \"Array [1,2,3]\"\n\n",
+        "type": "Array.Hamt.Array a -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Touch",
+    "comment": " Early stages of gesture recognition for touch-events.\n\nThis is intended to be used in qualified form.\n\n\n# Hooking it up\n\nIn your model:\n\n    { gesture : Touch.Gesture }\n\nIn your init:\n\n    { gesture = Touch.blanco }\n\nIn your Msg:\n\n    type Msg\n        = Swipe Touch.Event\n        | SwipeEnd Touch.Event\n\nIn your view:\n\n    Html.div\n        [ Touch.onStart Swipe\n        , Touch.onMove Swipe\n        , Touch.onEnd SwipeEnd\n        ]\n        [ Html.text \"Swipe me!\" ]\n\nIn your update:\n\n    Swipe touch ->\n        { model | gesture = Touch.record touch model.gesture }\n\n    SwipeEnd touch ->\n        let\n            gesture : Touch.Gesture\n            gesture =\n                Touch.record touch model.gesture\n\n            -- use inspection functions like `isTap` and `isLeftSwipe`\n        in\n        { model | gesture = Touch.blanco }\n\n\n# Events stuff\n\n@docs onMove, onEnd, onStart\n\n\n# Keep some state around\n\n@docs Gesture, Event, blanco, record\n\n\n# Get yourself some info\n\n@docs deltaX, deltaY, isTap, isUpSwipe, isDownSwipe, isLeftSwipe, isRightSwipe\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Event",
+        "comment": " A single `Touch.Event`. Gestures are made up of these, internally.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Gesture",
+        "comment": " A `Gesture`! You'll want to keep one of these around in your model and\nupdate it whenever applicable.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "blanco",
+        "comment": " Get yourself a blanco gesture, as if no touches have happened at all.\n\nAfter a touchend event, you'll probably want to reset to this, too.\n\n",
+        "type": "Touch.Gesture"
+      },
+      {
+        "name": "deltaX",
+        "comment": " For a finished move, checks how much you move horizontally, from start to\nfinish.\n",
+        "type": "Touch.Gesture -> Maybe.Maybe Float"
+      },
+      {
+        "name": "deltaY",
+        "comment": " For a finished move, checks how much you move vertically, from start to\nfinish.\n",
+        "type": "Touch.Gesture -> Maybe.Maybe Float"
+      },
+      {
+        "name": "isDownSwipe",
+        "comment": " Is this gesture finished and did we move more than `sensitivity` to the bottom?\n",
+        "type": "Float -> Touch.Gesture -> Bool"
+      },
+      {
+        "name": "isLeftSwipe",
+        "comment": " Is this gesture finished and did we move more than `sensitivity` to the left?\n",
+        "type": "Float -> Touch.Gesture -> Bool"
+      },
+      {
+        "name": "isRightSwipe",
+        "comment": " Is this gesture finished and did we move more than `sensitivity` to the right?\n",
+        "type": "Float -> Touch.Gesture -> Bool"
+      },
+      {
+        "name": "isTap",
+        "comment": " Checks if a given gesture is actually a (single) tap\n",
+        "type": "Touch.Gesture -> Bool"
+      },
+      {
+        "name": "isUpSwipe",
+        "comment": " Is this gesture finished and did we move more than `sensitivity` to the top?\n",
+        "type": "Float -> Touch.Gesture -> Bool"
+      },
+      {
+        "name": "onEnd",
+        "comment": " Record the end of a touch gesture.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onMove",
+        "comment": " Record an ongoing touch gesture.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "onStart",
+        "comment": " Record the start of a touch gesture.\n",
+        "type": "(Touch.Event -> msg) -> Html.Attribute msg"
+      },
+      {
+        "name": "record",
+        "comment": " Our cute little `update`-like function!\n",
+        "type": "Touch.Event -> Touch.Gesture -> Touch.Gesture"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

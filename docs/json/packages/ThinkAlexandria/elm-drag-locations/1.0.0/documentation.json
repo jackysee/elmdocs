@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Drag",
+    "comment": " Open sourced this snippet so I could hack on new idea on train laptop. TODO:\nfill in readme details.\n\n\n@docs State, Msg, onMouseDown, subscriptions, update, init, delta\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [
+          "interactionLocation"
+        ],
+        "cases": [
+          [
+            "Start",
+            [
+              "interactionLocation",
+              "Mouse.Position"
+            ]
+          ],
+          [
+            "Moved",
+            [
+              "interactionLocation",
+              "Mouse.Position"
+            ]
+          ],
+          [
+            "End",
+            [
+              "interactionLocation",
+              "Mouse.Position"
+            ]
+          ],
+          [
+            "Click",
+            [
+              "interactionLocation",
+              "Mouse.Position"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "State",
+        "comment": " ",
+        "args": [
+          "interactionLocation"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "delta",
+        "comment": " ",
+        "type": "Drag.Msg interactionLocation -> Drag.State interactionLocation -> ( Int, Int )"
+      },
+      {
+        "name": "init",
+        "comment": " ",
+        "type": "Drag.State interactionLocation"
+      },
+      {
+        "name": "onMouseDown",
+        "comment": " ",
+        "type": "VirtualDom.Options -> location -> VirtualDom.Property (Drag.Msg location)"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "Drag.State interactionLocation -> Platform.Sub.Sub (Drag.Msg interactionLocation)"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "Drag.Msg interactionLocation -> Drag.State interactionLocation -> Drag.State interactionLocation"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

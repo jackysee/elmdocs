@@ -1,0 +1,317 @@
+[
+  {
+    "name": "Collage.Program",
+    "comment": " Gradual introduction to interactive graphics programs.\n\n# Draw\n@docs DrawingProgram, drawingProgram\n\n# Draw with Time\n@docs AnimationProgram, animationProgram\n\n# Draw with Time and Model\n@docs SimulationProgram, simulationProgram\n\n# Draw with Model and Messages\n@docs InteractiveProgram, interactiveProgram, Msg, Mouse, Key, Window\n",
+    "aliases": [
+      {
+        "name": "AnimationProgram",
+        "comment": " ",
+        "args": [],
+        "type": "Platform.Program Basics.Never (Collage.Program.Model ()) Collage.Program.Msg"
+      },
+      {
+        "name": "DrawingProgram",
+        "comment": " ",
+        "args": [],
+        "type": "Platform.Program Basics.Never (Collage.Program.Model ()) Collage.Program.Msg"
+      },
+      {
+        "name": "InteractiveProgram",
+        "comment": " ",
+        "args": [
+          "model"
+        ],
+        "type": "Platform.Program Basics.Never (Collage.Program.Model model) Collage.Program.Msg"
+      },
+      {
+        "name": "Mouse",
+        "comment": " ",
+        "args": [],
+        "type": "{ x : Float, y : Float }"
+      },
+      {
+        "name": "SimulationProgram",
+        "comment": " ",
+        "args": [
+          "model"
+        ],
+        "type": "Platform.Program Basics.Never (Collage.Program.Model model) Collage.Program.Msg"
+      },
+      {
+        "name": "Window",
+        "comment": " ",
+        "args": [],
+        "type": "{ top : Float, bottom : Float, left : Float, right : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Key",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "Tab",
+            []
+          ],
+          [
+            "Enter",
+            []
+          ],
+          [
+            "Shift",
+            []
+          ],
+          [
+            "Space",
+            []
+          ],
+          [
+            "Left",
+            []
+          ],
+          [
+            "Up",
+            []
+          ],
+          [
+            "Right",
+            []
+          ],
+          [
+            "Down",
+            []
+          ],
+          [
+            "Zero",
+            []
+          ],
+          [
+            "One",
+            []
+          ],
+          [
+            "Two",
+            []
+          ],
+          [
+            "Three",
+            []
+          ],
+          [
+            "Four",
+            []
+          ],
+          [
+            "Five",
+            []
+          ],
+          [
+            "Six",
+            []
+          ],
+          [
+            "Seven",
+            []
+          ],
+          [
+            "Eight",
+            []
+          ],
+          [
+            "Nine",
+            []
+          ],
+          [
+            "A",
+            []
+          ],
+          [
+            "B",
+            []
+          ],
+          [
+            "C",
+            []
+          ],
+          [
+            "D",
+            []
+          ],
+          [
+            "E",
+            []
+          ],
+          [
+            "F",
+            []
+          ],
+          [
+            "G",
+            []
+          ],
+          [
+            "H",
+            []
+          ],
+          [
+            "I",
+            []
+          ],
+          [
+            "J",
+            []
+          ],
+          [
+            "K",
+            []
+          ],
+          [
+            "L",
+            []
+          ],
+          [
+            "M",
+            []
+          ],
+          [
+            "N",
+            []
+          ],
+          [
+            "O",
+            []
+          ],
+          [
+            "P",
+            []
+          ],
+          [
+            "Q",
+            []
+          ],
+          [
+            "R",
+            []
+          ],
+          [
+            "S",
+            []
+          ],
+          [
+            "T",
+            []
+          ],
+          [
+            "U",
+            []
+          ],
+          [
+            "V",
+            []
+          ],
+          [
+            "W",
+            []
+          ],
+          [
+            "X",
+            []
+          ],
+          [
+            "Y",
+            []
+          ],
+          [
+            "Z",
+            []
+          ],
+          [
+            "Other",
+            [
+              "Keyboard.KeyCode"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": [
+          [
+            "TimeTick",
+            [
+              "Time.Time"
+            ]
+          ],
+          [
+            "MouseClick",
+            [
+              "Collage.Program.Mouse"
+            ]
+          ],
+          [
+            "MouseDown",
+            [
+              "Collage.Program.Mouse"
+            ]
+          ],
+          [
+            "MouseUp",
+            [
+              "Collage.Program.Mouse"
+            ]
+          ],
+          [
+            "MouseMove",
+            [
+              "Collage.Program.Mouse"
+            ]
+          ],
+          [
+            "KeyDown",
+            [
+              "Collage.Program.Key"
+            ]
+          ],
+          [
+            "KeyUp",
+            [
+              "Collage.Program.Key"
+            ]
+          ],
+          [
+            "WindowResize",
+            [
+              "Collage.Program.Window"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "animationProgram",
+        "comment": " ",
+        "type": "(Time.Time -> Collage.Form) -> Collage.Program.AnimationProgram"
+      },
+      {
+        "name": "drawingProgram",
+        "comment": " ",
+        "type": "Collage.Form -> Collage.Program.DrawingProgram"
+      },
+      {
+        "name": "interactiveProgram",
+        "comment": " ",
+        "type": "{ init : model , view : model -> Collage.Form , update : Collage.Program.Msg -> model -> model } -> Collage.Program.InteractiveProgram model"
+      },
+      {
+        "name": "simulationProgram",
+        "comment": " ",
+        "type": "{ init : model , view : model -> Collage.Form , update : Time.Time -> model -> model } -> Collage.Program.SimulationProgram model"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Rating",
+    "comment": " A Rating for Elm\n\n# The exposes\n@docs defaultModel, Msg, update, view, Model\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " The type of The Rating.\n",
+        "args": [],
+        "type": "{ rating : Maybe.Maybe Int , quantity : Int , svgDefault : Svg.Svg Rating.Msg , svgSelected : Svg.Svg Rating.Msg , svgOver : Svg.Svg Rating.Msg , svgParentAtributes : List ( String, String ) , svgParentClass : List ( String, Bool ) , ratingPercent : Float , isOver : Bool , ratingOver : Maybe.Maybe Int , readOnly : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " The type representing messages that are passed inside the Rating.\n",
+        "args": [],
+        "cases": [
+          [
+            "Click",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "MouseOver",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "MouseOut",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultModel",
+        "comment": " ",
+        "type": "Rating.Model"
+      },
+      {
+        "name": "update",
+        "comment": " Simple Update for the do work.\n",
+        "type": "Rating.Msg -> Rating.Model -> ( Rating.Model, Platform.Cmd.Cmd Rating.Msg )"
+      },
+      {
+        "name": "view",
+        "comment": " Simple View\n",
+        "type": "Rating.Model -> Html.Html Rating.Msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

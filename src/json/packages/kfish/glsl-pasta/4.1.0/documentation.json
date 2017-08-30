@@ -1,0 +1,351 @@
+[
+  {
+    "name": "GLSLPasta.Lighting",
+    "comment": "\n\n# Complete vertex shaders\n\n@docs vertexReflection, vertexNormal, vertexNoNormal, vertexSimple\n\n\n# Vertex shader components\n\n@docs vertex_position4, vertex_gl_Position, vertex_vTexCoord, vertex_SphericalEnvironmentMapping, vertexTBN, vertexNoTangent\n\n\n# Complete fragment shaders\n\n@docs fragmentReflection, fragmentNormal, fragmentNoNormal, fragmentSimple\n\n\n# Fragment shader components\n\n@docs fragment_lightDir, fragment_textureNormal, fragment_interpolatedNormal, fragment_lambert, fragment_lightIntensities, fragment_textureDiffuse, fragment_constantDiffuse, fragment_diffuse, fragment_ambient_02, fragment_ambient_03, fragment_specular, fragment_attenuation, fragment_phong\n\n@docs vertex_clipPosition, lightenDistance\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "fragmentNoNormal",
+        "comment": " same as the normal mapping shader, but without deforming normals.\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragmentNormal",
+        "comment": " normal mapping according to:\n<http://www.gamasutra.com/blogs/RobertBasler/20131122/205462/Three_Normal_Mapping_Techniques_Explained_For_the_Mathematically_Uninclined.php?print=1>\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragmentReflection",
+        "comment": " This shader uses Spherical Environment Mapping (SEM).\nHere are some relevant links:\n\n  - [very cool demo](https://www.clicktorelease.com/code/spherical-normal-mapping/#)\n  - <https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader>\n  - <http://www.ozone3d.net/tutorials/glsl_texturing_p04.php>\n\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragmentSimple",
+        "comment": " same as above, but without any textures.\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_ambient_02",
+        "comment": " Provides constant ambient\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_ambient_03",
+        "comment": " Provides constant ambient\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_attenuation",
+        "comment": " Provides attenuation\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_constantDiffuse",
+        "comment": " Provides a constant diffuseColor\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_diffuse",
+        "comment": " Provides diffuse, given some diffuseColor\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_interpolatedNormal",
+        "comment": " Provides pixelNormal by interpolating vertex normals\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_lambert",
+        "comment": " Provides lambert, given some pixelNormal\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_lightDir",
+        "comment": " Provides lightDir\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_lightIntensities",
+        "comment": " Provides constant lightIntensities\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_phong",
+        "comment": " Provides gl_FragColor, according to the Phong shading model\n\n  - <https://en.wikipedia.org/wiki/Phong_reflection_model>\n\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_specular",
+        "comment": " Provides specular\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_textureDiffuse",
+        "comment": " Provides diffuseColor given by an input diffuse texture\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "fragment_textureNormal",
+        "comment": " Provides pixelNormal given by an input normal texture\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "lightenDistance",
+        "comment": " Red-shift, and lighten far objects\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexNoNormal",
+        "comment": " same as the normal mapping shader, but without deforming normals.\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexNoTangent",
+        "comment": " same as the normal mapping shader, but without deforming normals.\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexNormal",
+        "comment": " normal mapping according to:\n<http://www.gamasutra.com/blogs/RobertBasler/20131122/205462/Three_Normal_Mapping_Techniques_Explained_For_the_Mathematically_Uninclined.php?print=1>\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexReflection",
+        "comment": " This shader uses Spherical Environment Mapping (SEM).\nHere are some relevant links:\n\n  - [very cool demo](https://www.clicktorelease.com/code/spherical-normal-mapping/#)\n  - <https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader>\n  - <http://www.ozone3d.net/tutorials/glsl_texturing_p04.php>\n\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexSimple",
+        "comment": " same as above, but without any textures.\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertexTBN",
+        "comment": " normal mapping according to:\n<http://www.gamasutra.com/blogs/RobertBasler/20131122/205462/Three_Normal_Mapping_Techniques_Explained_For_the_Mathematically_Uninclined.php?print=1>\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertex_SphericalEnvironmentMapping",
+        "comment": " This shader uses Spherical Environment Mapping (SEM).\nHere are some relevant links:\n\n  - [very cool demo](https://www.clicktorelease.com/code/spherical-normal-mapping/#)\n  - <https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader>\n  - <http://www.ozone3d.net/tutorials/glsl_texturing_p04.php>\n\nGenerates vNormal\n\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertex_clipPosition",
+        "comment": " Forward the position in clip space (ie. gl_Position) to the fragment shader, as clipPosition\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertex_gl_Position",
+        "comment": " Generates gl_Position\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertex_position4",
+        "comment": " Generates position4\n",
+        "type": "GLSLPasta.Types.Component"
+      },
+      {
+        "name": "vertex_vTexCoord",
+        "comment": " Forward the texture coordinate to the fragment shader, as vTexCoord\n",
+        "type": "GLSLPasta.Types.Component"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "GLSLPasta.Math",
+    "comment": " Math components\n\n@docs transposeMat3\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "transposeMat3",
+        "comment": " mat3 transpose\n",
+        "type": "GLSLPasta.Types.Component"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "GLSLPasta",
+    "comment": "\n\n@docs combine, combineUsingTemplate\n\n@docs defaultTemplate\n\n@docs empty\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "combine",
+        "comment": " Combine Components into the code for a Shader, that can be passed to WebGL.unsafeShader.\nErrors are logged to the Javascript console.\n",
+        "type": "GLSLPasta.Types.ComponentId -> List GLSLPasta.Types.Component -> String"
+      },
+      {
+        "name": "combineUsingTemplate",
+        "comment": " Combine Components into the code for a Shader, that can be passed to WebGL.unsafeShader.\nErrors are logged to the Javascript console.\n\nThe template is specified as a string containing placeholders `__PASTA_GLOBALS__`,\n`__PASTA_FUNCTIONS__` and `__PASTA_SPLICES__`. For a concrete example, see the definition\nof `defaultTemplate`.\n\n",
+        "type": "GLSLPasta.Types.Template -> GLSLPasta.Types.ComponentId -> List GLSLPasta.Types.Component -> String"
+      },
+      {
+        "name": "defaultTemplate",
+        "comment": " The default template used by combine\n",
+        "type": "GLSLPasta.Types.Template"
+      },
+      {
+        "name": "empty",
+        "comment": " An empty Component\n",
+        "type": "GLSLPasta.Types.Component"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "GLSLPasta.Core",
+    "comment": "\n\n@docs empty\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "empty",
+        "comment": " An empty Component\n",
+        "type": "GLSLPasta.Types.Component"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "GLSLPasta.Types",
+    "comment": "\n\n# Types\n\n@docs Feature, Error, Function, Global, Name, Component, ComponentId, Splice, Type, Value, Template\n\n@docs Dependencies, none\n\n",
+    "aliases": [
+      {
+        "name": "Component",
+        "comment": " A Component\n",
+        "args": [],
+        "type": "{ id : GLSLPasta.Types.ComponentId , dependencies : GLSLPasta.Types.Dependencies , provides : List GLSLPasta.Types.Feature , requires : List GLSLPasta.Types.Feature , globals : List GLSLPasta.Types.Global , functions : List GLSLPasta.Types.Function , splices : List GLSLPasta.Types.Splice }"
+      },
+      {
+        "name": "ComponentId",
+        "comment": " An identifier for a Component\nEach Component is labelled with a ComponentId for use in error messages.\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Feature",
+        "comment": " An abstract feature provided by a Component, often the name of a\nvariable.\n\nFor example, a shader that initially sets gl_FragColor might specify\n\n    provides =\n        [ \"gl_FragColor\" ]\n\nand another shader that modifies gl_FragColor might specify\n\n    requires =\n        [ \"gl_FragColor\" ]\n\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Function",
+        "comment": " Text for a function\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Name",
+        "comment": " The name of a global\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Splice",
+        "comment": " Text to splice into main()\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Template",
+        "comment": " A Template\n",
+        "args": [],
+        "type": "{ id : GLSLPasta.Types.ComponentId , globals : List GLSLPasta.Types.Global , template : String }"
+      },
+      {
+        "name": "Type",
+        "comment": " The type of a global\n",
+        "args": [],
+        "type": "String"
+      },
+      {
+        "name": "Value",
+        "comment": " The value of a global constant\n",
+        "args": [],
+        "type": "String"
+      }
+    ],
+    "types": [
+      {
+        "name": "Dependencies",
+        "comment": " Dependencies\n",
+        "args": [],
+        "cases": [
+          [
+            "Dependencies",
+            [
+              "List GLSLPasta.Types.Component"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Error",
+        "comment": " Errors returned during combine\n",
+        "args": [],
+        "cases": [
+          [
+            "GlobalConflict",
+            [
+              "{ what : String , parentComponentId : GLSLPasta.Types.ComponentId , newComponentId : GLSLPasta.Types.ComponentId , oldComponentIds : List GLSLPasta.Types.ComponentId , newGlobal : GLSLPasta.Types.Global , oldGlobal : GLSLPasta.Types.Global }"
+            ]
+          ],
+          [
+            "MissingRequirement",
+            [
+              "{ parentComponentId : GLSLPasta.Types.ComponentId , componentId : GLSLPasta.Types.ComponentId , requirement : GLSLPasta.Types.Feature }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Global",
+        "comment": " A Global\n",
+        "args": [],
+        "cases": [
+          [
+            "Attribute",
+            [
+              "GLSLPasta.Types.Type",
+              "GLSLPasta.Types.Name"
+            ]
+          ],
+          [
+            "Uniform",
+            [
+              "GLSLPasta.Types.Type",
+              "GLSLPasta.Types.Name"
+            ]
+          ],
+          [
+            "Varying",
+            [
+              "GLSLPasta.Types.Type",
+              "GLSLPasta.Types.Name"
+            ]
+          ],
+          [
+            "Const",
+            [
+              "GLSLPasta.Types.Type",
+              "GLSLPasta.Types.Name",
+              "GLSLPasta.Types.Value"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "none",
+        "comment": " Shorthand for no dependencies\n",
+        "type": "GLSLPasta.Types.Dependencies"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

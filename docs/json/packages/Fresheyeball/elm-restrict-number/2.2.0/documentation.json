@@ -1,0 +1,330 @@
+[
+  {
+    "name": "Convert",
+    "comment": "\nThere are some assumptions that can be made about these types.\n\nOdds can be Even and Even can be Odd if we add or remove 1\n@docs addOneEven, addOneOdd, subtraceOneEven, subtraceOneOdd\n\nNatural numbers are always Whole, Positive, and not Zero\n@docs naturalToWhole, naturalToPositive, naturalToNonZero\n\nWhole numbers are always Positive\n@docs wholeToPositive\n\nPrime numbers are always Positive, Whole, Natural and not Zero\n@docs primeToWhole, primeToPositive, primeToNatural, primeToNonZero\n\nPositive, Negative and Odd numbers are never Zero\n@docs positiveToNonZero, negativeToNonZero, oddToNonZero\n\nPositive and Negative numbers are the negation of each other\n@docs positiveToNegativeInt, positiveToNegativeFloat, negativeToPositiveInt, negativeToPositiveFloat\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "addOneEven",
+        "comment": " ",
+        "type": "Even.Even -> Odd.Odd"
+      },
+      {
+        "name": "addOneOdd",
+        "comment": " ",
+        "type": "Odd.Odd -> Even.Even"
+      },
+      {
+        "name": "naturalToNonZero",
+        "comment": " ",
+        "type": "Natural.Natural -> NonZero.NonZero Int"
+      },
+      {
+        "name": "naturalToPositive",
+        "comment": " ",
+        "type": "Natural.Natural -> Positive.Positive Int"
+      },
+      {
+        "name": "naturalToWhole",
+        "comment": " ",
+        "type": "Natural.Natural -> Whole.Whole"
+      },
+      {
+        "name": "negativeToNonZero",
+        "comment": " ",
+        "type": "Negative.Negative number -> NonZero.NonZero number"
+      },
+      {
+        "name": "negativeToPositiveFloat",
+        "comment": " ",
+        "type": "Negative.Negative Float -> Positive.Positive Float"
+      },
+      {
+        "name": "negativeToPositiveInt",
+        "comment": " ",
+        "type": "Negative.Negative Int -> Positive.Positive Int"
+      },
+      {
+        "name": "oddToNonZero",
+        "comment": " ",
+        "type": "Odd.Odd -> NonZero.NonZero Int"
+      },
+      {
+        "name": "positiveToNegativeFloat",
+        "comment": " ",
+        "type": "Positive.Positive Float -> Negative.Negative Float"
+      },
+      {
+        "name": "positiveToNegativeInt",
+        "comment": " ",
+        "type": "Positive.Positive Int -> Negative.Negative Int"
+      },
+      {
+        "name": "positiveToNonZero",
+        "comment": " ",
+        "type": "Positive.Positive number -> NonZero.NonZero number"
+      },
+      {
+        "name": "primeToNatural",
+        "comment": " ",
+        "type": "Prime.Prime -> Natural.Natural"
+      },
+      {
+        "name": "primeToNonZero",
+        "comment": " ",
+        "type": "Prime.Prime -> NonZero.NonZero Int"
+      },
+      {
+        "name": "primeToPositive",
+        "comment": " ",
+        "type": "Prime.Prime -> Positive.Positive Int"
+      },
+      {
+        "name": "primeToWhole",
+        "comment": " ",
+        "type": "Prime.Prime -> Whole.Whole"
+      },
+      {
+        "name": "subtraceOneEven",
+        "comment": " ",
+        "type": "Even.Even -> Odd.Odd"
+      },
+      {
+        "name": "subtraceOneOdd",
+        "comment": " ",
+        "type": "Odd.Odd -> Even.Even"
+      },
+      {
+        "name": "wholeToPositive",
+        "comment": " ",
+        "type": "Whole.Whole -> Positive.Positive Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Positive",
+    "comment": "\nPositive numbers exclude zero.\nBecause the constructor for `Positive` is not exported, you can be\nconfident that if you are using a `Positive`, then its `Positive`.\n\n@docs Positive, fromInt, fromFloat, toNum\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Positive",
+        "comment": " ",
+        "args": [
+          "number"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromFloat",
+        "comment": " ",
+        "type": "Float -> Maybe.Maybe (Positive.Positive Float)"
+      },
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe (Positive.Positive Int)"
+      },
+      {
+        "name": "toNum",
+        "comment": " ",
+        "type": "Positive.Positive number -> number"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "NonZero",
+    "comment": "\nNonZero numbers are numbers excluding zero.\nBecause the constructor for `NonZero` is not exported, you can be\nconfident that if you are using a `NonZero`, then its `NonZero`.\n\n@docs NonZero, fromNum, toNum\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "NonZero",
+        "comment": " ",
+        "args": [
+          "number"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromNum",
+        "comment": " ",
+        "type": "number -> Maybe.Maybe (NonZero.NonZero number)"
+      },
+      {
+        "name": "toNum",
+        "comment": " ",
+        "type": "NonZero.NonZero number -> number"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Odd",
+    "comment": "\nBecause the constructor for `Odd` is not exported, you can be\nconfident that if you are using a `Odd`, then its `Odd`.\n\n@docs Odd, fromInt, toInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Odd",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe Odd.Odd"
+      },
+      {
+        "name": "toInt",
+        "comment": " ",
+        "type": "Odd.Odd -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Negative",
+    "comment": "\nNegative numbers exclude zero.\nBecause the constructor for `Negative` is not exported, you can be\nconfident that if you are using a `Negative`, then its `Negative`.\n\n@docs Negative, fromInt, fromFloat, toNum\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Negative",
+        "comment": " ",
+        "args": [
+          "number"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromFloat",
+        "comment": " ",
+        "type": "Float -> Maybe.Maybe (Negative.Negative Float)"
+      },
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe (Negative.Negative Int)"
+      },
+      {
+        "name": "toNum",
+        "comment": " ",
+        "type": "Negative.Negative number -> number"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Prime",
+    "comment": "\nPrime numbers are divisble by themselves and 1.\nBecause the constructor for `Prime` is not exported, you can be\nconfident that if you are using a `Prime`, then its `Prime`.\n\n@docs Prime, fromInt, toInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Prime",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe Prime.Prime"
+      },
+      {
+        "name": "toInt",
+        "comment": " ",
+        "type": "Prime.Prime -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Whole",
+    "comment": "\nWhole numbers are positive numbers including zero.\nBecause the constructor for `Whole` is not exported, you can be\nconfident that if you are using a `Whole`, then its `Whole`.\n\n@docs Whole, fromInt, toInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Whole",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe Whole.Whole"
+      },
+      {
+        "name": "toInt",
+        "comment": " ",
+        "type": "Whole.Whole -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Even",
+    "comment": "\nBecause the constructor for `Even` is not exported, you can be\nconfident that if you are using a `Even`, then its `Even`.\n\n@docs Even, fromInt, toInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Even",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe Even.Even"
+      },
+      {
+        "name": "toInt",
+        "comment": " ",
+        "type": "Even.Even -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Natural",
+    "comment": "\nNatural numbers are positive whole numbers excluding zero.\nBecause the constructor for `Natural` is not exported, you can be\nconfident that if you are using a `Natural`, then its `Natural`.\n\n@docs Natural, fromInt, toInt\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Natural",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "fromInt",
+        "comment": " ",
+        "type": "Int -> Maybe.Maybe Natural.Natural"
+      },
+      {
+        "name": "toInt",
+        "comment": " ",
+        "type": "Natural.Natural -> Int"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

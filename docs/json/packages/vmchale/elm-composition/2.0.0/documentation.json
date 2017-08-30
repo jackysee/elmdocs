@@ -1,0 +1,101 @@
+[
+  {
+    "name": "Data.Composition",
+    "comment": " Data.Composition essentially ports Haskell's [composition](https://hackage.haskell.org/package/composition-1.0.2.1/docs/Data-Composition.html) package to Elm.\n\n#Convencience functions\n\n@docs (.)\n\n@docs ($)\n\n@docs const\n\n\n# Common combinators\n\n@docs (.*)\n\n@docs (.**)\n\n@docs (.***)\n\n@docs on\n\n@docs (&)\n\n@docs (-$)\n\n@docs (-.*)\n\n\n# Arrows\n\n@docs (&&&)\n\n@docs (***)\n\n@docs first\n\n@docs second\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "$",
+        "comment": " See type signature\n",
+        "type": "(a -> b) -> a -> b",
+        "associativity": "right",
+        "precedence": 0
+      },
+      {
+        "name": "&",
+        "comment": " See type signature\n",
+        "type": "a -> (a -> b) -> b",
+        "associativity": "left",
+        "precedence": 1
+      },
+      {
+        "name": "&&&",
+        "comment": " Combinator for arrows; essentially a limited form of what was proposed in John Hughes' *Generalising Monads to Arrows*\n",
+        "type": "(b -> c) -> (b -> d) -> b -> ( c, d )",
+        "associativity": "right",
+        "precedence": 3
+      },
+      {
+        "name": "***",
+        "comment": " Another arrow combinator\n",
+        "type": "(b -> c) -> (d -> e) -> ( b, d ) -> ( c, e )",
+        "associativity": "right",
+        "precedence": 3
+      },
+      {
+        "name": "-$",
+        "comment": " See type signature\n",
+        "type": "(a -> b -> c) -> a -> b -> c",
+        "associativity": "right",
+        "precedence": 0
+      },
+      {
+        "name": "-.*",
+        "comment": " Oedipus combinator\n",
+        "type": "(b -> c) -> (a -> c -> d) -> a -> b -> d",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": ".",
+        "comment": " This is provided for people familiar with Haskell/Idris' composition operator, though it is not any different from '<<'\n",
+        "type": "(b -> c) -> (a -> b) -> a -> c",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": ".*",
+        "comment": " See type signature\n",
+        "type": "(c -> d) -> (a -> b -> c) -> a -> b -> d",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": ".**",
+        "comment": " See type signature\n",
+        "type": "(d -> e) -> (a -> b -> c -> d) -> a -> b -> c -> e",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": ".***",
+        "comment": " See type signature\n",
+        "type": "(e -> f) -> (a -> b -> c -> d -> e) -> a -> b -> c -> d -> f",
+        "associativity": "right",
+        "precedence": 9
+      },
+      {
+        "name": "const",
+        "comment": " Return a constant\n",
+        "type": "a -> b -> a"
+      },
+      {
+        "name": "first",
+        "comment": " Map a function over the first argument of a tuple\n",
+        "type": "(a -> b) -> ( a, d ) -> ( b, d )"
+      },
+      {
+        "name": "on",
+        "comment": " Precompose both inputs to a binary operator with some function\n",
+        "type": "(b -> b -> c) -> (a -> b) -> a -> a -> c"
+      },
+      {
+        "name": "second",
+        "comment": " See type signature\n",
+        "type": "(c -> d) -> ( a, c ) -> ( a, d )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

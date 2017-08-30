@@ -1,0 +1,88 @@
+[
+  {
+    "name": "FormBuilder.FieldBuilder.Autocomplete",
+    "comment": " Creates an autocomplete field, able to search accross the web from multiple sources.\n\n@docs AutocompleteAttributes\n@docs get\n@docs input\n@docs update\n@docs subscriptions\n@docs Msg\n@docs searchQuery\n@docs withLabels\n@docs withHover\n@docs State\n@docs autocompleteState\n@docs minChars\n@docs maxResults\n\n",
+    "aliases": [
+      {
+        "name": "AutocompleteAttributes",
+        "comment": " ",
+        "args": [
+          "element"
+        ],
+        "type": "{ labels : Maybe.Maybe (element -> String) , hoverStyle : List (Elegant.Style -> Elegant.Style) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [
+          "elements"
+        ],
+        "cases": []
+      },
+      {
+        "name": "State",
+        "comment": " ",
+        "args": [
+          "element",
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "autocompleteState",
+        "comment": " ",
+        "type": "(FormBuilder.FieldBuilder.Autocomplete.Msg (List element) -> msg) -> (element -> msg) -> List ( String, Json.Decode.Decoder (List element) ) -> FormBuilder.FieldBuilder.Autocomplete.State element msg"
+      },
+      {
+        "name": "get",
+        "comment": " ",
+        "type": "String -> Json.Decode.Decoder element -> ( String, Json.Decode.Decoder element )"
+      },
+      {
+        "name": "input",
+        "comment": " ",
+        "type": "FormBuilder.FieldBuilder.Autocomplete.State element msg -> (element -> Html.Html msg) -> List (FormBuilder.FieldBuilder.Attributes.AttributesModifier (FormBuilder.FieldBuilder.Autocomplete.AutocompleteAttributes element) msg) -> Html.Html msg"
+      },
+      {
+        "name": "maxResults",
+        "comment": " ",
+        "type": "Int -> FormBuilder.FieldBuilder.Autocomplete.State element msg -> FormBuilder.FieldBuilder.Autocomplete.State element msg"
+      },
+      {
+        "name": "minChars",
+        "comment": " Set the minimum number of character before launch of requests.\nIt can't be less than 1.\n",
+        "type": "Int -> FormBuilder.FieldBuilder.Autocomplete.State element msg -> FormBuilder.FieldBuilder.Autocomplete.State element msg"
+      },
+      {
+        "name": "searchQuery",
+        "comment": " ",
+        "type": "FormBuilder.FieldBuilder.Autocomplete.State element msg -> String"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "FormBuilder.FieldBuilder.Autocomplete.State element msg -> Float -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "FormBuilder.FieldBuilder.Autocomplete.Msg (List element) -> FormBuilder.FieldBuilder.Autocomplete.State element msg -> ( FormBuilder.FieldBuilder.Autocomplete.State element msg , Platform.Cmd.Cmd msg )"
+      },
+      {
+        "name": "withHover",
+        "comment": " ",
+        "type": "List (Elegant.Style -> Elegant.Style) -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.FieldBuilder.Autocomplete.AutocompleteAttributes element) msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.FieldBuilder.Autocomplete.AutocompleteAttributes element) msg"
+      },
+      {
+        "name": "withLabels",
+        "comment": " ",
+        "type": "(element -> String) -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.FieldBuilder.Autocomplete.AutocompleteAttributes element) msg -> FormBuilder.FieldBuilder.Attributes.FieldAttributes (FormBuilder.FieldBuilder.Autocomplete.AutocompleteAttributes element) msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

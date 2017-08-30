@@ -1,0 +1,702 @@
+[
+  {
+    "name": "ClarityUI.Grid",
+    "comment": " Clarity UI Uses the Bootstrap Flex-grid. This module is borrowed from `elm-bootstrap`\n\nBootstrap includes a powerful mobile-first flexbox grid system for building layouts of all shapes and sizes. It’s based on a 12 column layout and has multiple tiers, one for each media query range.\nGrid.container\n[ Grid.row\n[ Row.topXs ][ Grid.col\n[ Col.xs4 ]\n[ text \"col1-row1\"]\n, Grid.col\n[ Col.xs8 ]\n[ text \"col2-row1\"]\n]\n, Grid.simpleRow\n[ Grid.col\n[ Col.xs4 ][ text \"col1-row2\"]\n, Grid.col\n[ Col.xs6 ][ text \"col2-row2\"]\n][ Grid.col\n[ Col.xs4 ]\n[ text \"col1-row2\"]\n, Grid.col\n[ Col.xs6 ]\n[ text \"col2-row2\"]\n]\n][ Grid.row\n[ Row.topXs ]\n[ Grid.col\n[ Col.xs4 ]\n[ text \"col1-row1\"]\n, Grid.col\n[ Col.xs8 ]\n[ text \"col2-row1\"]\n]\n, Grid.simpleRow\n[ Grid.col\n[ Col.xs4 ]\n[ text \"col1-row2\"]\n, Grid.col\n[ Col.xs6 ]\n[ text \"col2-row2\"]\n]\n]\n\n\n# Containers\n\n@docs container, containerFluid\n\n\n# Rows\n\n@docs row, simpleRow, keyedRow\n\n\n# Columns\n\n@docs col, colBreak, keyedCol, Column\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Column",
+        "comment": " Opaque type representing a column element\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "col",
+        "comment": " Create a column\n\n  - `options` List of column options\n  - `children` List of child elments\n\n",
+        "type": "List (ClarityUI.Grid.Col.Option msg) -> List (Html.Html msg) -> ClarityUI.Grid.Column msg"
+      },
+      {
+        "name": "colBreak",
+        "comment": " Creates a full width column with no content. Handy for creating equal width multi-row columns.\n",
+        "type": "List (Html.Attribute msg) -> ClarityUI.Grid.Column msg"
+      },
+      {
+        "name": "container",
+        "comment": " Responsive fixed width container, which changes its max-width at breakpoint\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "containerFluid",
+        "comment": " Full width container spanning the entire viewport\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "keyedCol",
+        "comment": " Create a column with keyed children\n\n  - `options` List of column options\n  - `keyedChildren` List of key,element child element tuples\n\n",
+        "type": "List (ClarityUI.Grid.Col.Option msg) -> List ( String, Html.Html msg ) -> ClarityUI.Grid.Column msg"
+      },
+      {
+        "name": "keyedRow",
+        "comment": " Create a row with keyed columns. Handy when you need to move columns around without getting massive rerenders.\n\n  - `options` List of row options\n  - `keydCols` List of key, column tuples\n\n",
+        "type": "List (ClarityUI.Grid.Row.Option msg) -> List ( String, ClarityUI.Grid.Column msg ) -> Html.Html msg"
+      },
+      {
+        "name": "row",
+        "comment": " Create a row\n\n  - `options` List of row options\n  - `cols` List of columns\n\n",
+        "type": "List (ClarityUI.Grid.Row.Option msg) -> List (ClarityUI.Grid.Column msg) -> Html.Html msg"
+      },
+      {
+        "name": "simpleRow",
+        "comment": " Create a row with no configuration options\n",
+        "type": "List (ClarityUI.Grid.Column msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Header",
+    "comment": " Clarity Header.\n\nHelper function for producing the header of the application.\n\nFor mor documentation on Clarity Header: <https://vmware.github.io/clarity/documentation/header>\n\n\n# Usage\n\n@docs header\n\n\n# Options\n\n@docs HeaderSections, Branding, HeaderColor\n\n",
+    "aliases": [
+      {
+        "name": "Branding",
+        "comment": " Branding Section of the header.\n",
+        "args": [],
+        "type": "{ icon : String, title : String }"
+      },
+      {
+        "name": "HeaderSections",
+        "comment": " Determines the structure of the header\n",
+        "args": [
+          "m"
+        ],
+        "type": "{ branding : ClarityUI.Header.Branding , nav : List (Html.Html m) , search : List (Html.Html m) , actions : List (Html.Html m) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "HeaderColor",
+        "comment": " Sets the Color Pallette of the header\n",
+        "args": [],
+        "cases": [
+          [
+            "HC1",
+            []
+          ],
+          [
+            "HC2",
+            []
+          ],
+          [
+            "HC3",
+            []
+          ],
+          [
+            "HC4",
+            []
+          ],
+          [
+            "HC5",
+            []
+          ],
+          [
+            "HC6",
+            []
+          ],
+          [
+            "HC7",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "header",
+        "comment": " Main entry point for header.\n\nTakes a HeaderSections object and returns a clarity header.\n\n    import ClarityUI.Header as Header\n\n",
+        "type": "ClarityUI.Header.HeaderColor -> ClarityUI.Header.HeaderSections msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Sidenav",
+    "comment": " Clarity Sidenav\n\nFor more documentation on clairty sidenav: <https://vmware.github.io/clarity/documentation/sidenav>\n\n\n# Use\n\n@docs sidenav\n\n\n# Data\n\n@docs NavLink, NavGroup, NavItem\n\n",
+    "aliases": [
+      {
+        "name": "NavGroup",
+        "comment": " A NavGroup is a grouped set of links with a section label,\nif it is collapsible, then the menu can be collapsed.\n",
+        "args": [],
+        "type": "{ label : String , id : String , navList : List ClarityUI.Sidenav.NavLink , collapsible : Bool }"
+      },
+      {
+        "name": "NavLink",
+        "comment": " A Single nav link\n",
+        "args": [],
+        "type": "{ link : String, text : String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "NavItem",
+        "comment": " Union type of NavLink and NavGroup\n",
+        "args": [],
+        "cases": [
+          [
+            "Link",
+            [
+              "ClarityUI.Sidenav.NavLink"
+            ]
+          ],
+          [
+            "Group",
+            [
+              "ClarityUI.Sidenav.NavGroup"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "sidenav",
+        "comment": " Main sidenav entry point.\n\nTakes a list of Nav items and renders out a layout compliant sidenav\n\n",
+        "type": "List ClarityUI.Sidenav.NavItem -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Spinner",
+    "comment": " Clarity UI Spinner.\n\nCreate loading spinners for either page or inline.\n\nFor more documentation on spinners: <https://vmware.github.io/clarity/documentation/spinners>\n\n\n# Use\n\n@docs spinner, inlineSpinner, inverseSpinner, sizedSpinner\n\n\n# Options\n\n@docs SpinnerSize\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "SpinnerSize",
+        "comment": " Set a spinners size\n",
+        "args": [],
+        "cases": [
+          [
+            "Small",
+            []
+          ],
+          [
+            "Medium",
+            []
+          ],
+          [
+            "Large",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "inlineSpinner",
+        "comment": " Create an inline spinner\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "inverseSpinner",
+        "comment": " Create an inverse spinner for pages with dark backgrounds\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "sizedSpinner",
+        "comment": " Create a spinner of a certain size\n",
+        "type": "ClarityUI.Spinner.SpinnerSize -> Html.Html msg"
+      },
+      {
+        "name": "spinner",
+        "comment": " Creates a page spinner\n",
+        "type": "Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Subnav",
+    "comment": " Clarity Header Subnav\n\nFor more documenation on the clarity subnav : <https://vmware.github.io/clarity/documentation/header#subnav>\n\n\n# Usage\n\n@docs subnav\n\n\n# Data\n\n@docs NavItem\n\n",
+    "aliases": [
+      {
+        "name": "NavItem",
+        "comment": " NavItem\n\nDescribes A single nav element.\n\n",
+        "args": [],
+        "type": "{ link : String, text : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "subnav",
+        "comment": " Main subnav entry point.\n\nTakes a list of NavItems and renders out a subnav compatible ul\n\n",
+        "type": "List ClarityUI.Subnav.NavItem -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Layout",
+    "comment": " Clarity Application Layout.\n\nDefines the Page Layout and basic structure.\n\nFor more on Clarity Application Layout: <https://vmware.github.io/clarity/documentation/app-layout>\n\n\n# Usage\n\n@docs layout\n\n\n# Options\n\n@docs LayoutComponents\n\n",
+    "aliases": [
+      {
+        "name": "LayoutComponents",
+        "comment": " Layout Component Options.\n\nPass the body of each section to its property. Recommend calling functions that return them\ninside of each of the.\n\n",
+        "args": [
+          "m"
+        ],
+        "type": "{ alerts : List (Html.Html m) , header : Html.Html m , subnav : List (Html.Html m) , sidenav : List (Html.Html m) , main : List (Html.Html m) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "layout",
+        "comment": " Main Layout Entry Point.\n\nPass a LayoutComponents Record to it to layout the bas application.\n\n\n## Use\n\n        import Html exposing (Html, div)\n        import ClarityUI.Layout as Layout\n        import ClarityUI.Header as Header\n\n        view : Model -> Html msg\n        view model =\n            Layout.layout\n                { alerts = []\n                , header = viewHeader model\n                , subnav = viewSubnav model\n                , sidenav = viewSidenav model\n                , main = mainContent model\n                }\n\n",
+        "type": "ClarityUI.Layout.LayoutComponents msg -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Label",
+    "comment": "\n\n\n# Clarity UI Label\n\nFor more documentation on clarity ui labels : <https://vmware.github.io/clarity/documentation/labels>\n\n\n## Use\n\n@docs baseLabel\n\n\n## Shorthand\n\n@docs label, clickableLabel, successLabel, infoLabel, warningLabel, dangerLabel\n\n\n## Options\n\n@docs LabelColor\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "LabelColor",
+        "comment": " Label Colors\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Success",
+            []
+          ],
+          [
+            "Info",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Danger",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "baseLabel",
+        "comment": " Main entry point for label.\n",
+        "type": "ClarityUI.Label.LabelColor -> Bool -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "clickableLabel",
+        "comment": " Short hand for a clickable label\n",
+        "type": "List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "dangerLabel",
+        "comment": " Shorthand for a danger label\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "infoLabel",
+        "comment": " Shorthand for a info label\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "label",
+        "comment": " Shorthand for a default label\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "successLabel",
+        "comment": " Shorthand for a success label\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "warningLabel",
+        "comment": " Shorthand for a warning label\n",
+        "type": "List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.ProgressBar",
+    "comment": "\n\n\n# Clarity UI Progress bars\n\nWraps a progress bar in a helper function.\n\nFor more on Clarity UI Progress Bars: <https://vmware.github.io/clarity/documentation/progress>\n\n\n## Use\n\n@docs baseProgress\n\n\n## Shorthands\n\n@docs progressBar, labeledProgress\n\n\n## Options\n\n@docs ProgressColor, ProgressAnimation\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ProgressAnimation",
+        "comment": " Set Animation Type\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Fade",
+            []
+          ],
+          [
+            "Flash",
+            []
+          ],
+          [
+            "FlashDanger",
+            []
+          ],
+          [
+            "FlashFade",
+            []
+          ],
+          [
+            "FlashDangerFade",
+            []
+          ],
+          [
+            "Loop",
+            []
+          ],
+          [
+            "Static",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ProgressColor",
+        "comment": " Set Color\n",
+        "args": [],
+        "cases": [
+          [
+            "Success",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Danger",
+            []
+          ],
+          [
+            "Default",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "baseProgress",
+        "comment": " Main entry point to progress bars\n",
+        "type": "Maybe.Maybe String -> ClarityUI.ProgressBar.ProgressAnimation -> ClarityUI.ProgressBar.ProgressColor -> Int -> Html.Html msg"
+      },
+      {
+        "name": "labeledProgress",
+        "comment": " Shorthand for a labeled default progress bar\n",
+        "type": "String -> Int -> Html.Html msg"
+      },
+      {
+        "name": "progressBar",
+        "comment": " Shorthand for a default progress bar\n",
+        "type": "Int -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Icon",
+    "comment": " Wrapper around Clarity Icons Custom Element.\n\nFor the full Icon Font, see <https://vmware.github.io/clarity/documentation/iconography>\n\n\n# Use\n\n@docs baseIcon, icon, iconMd\n\n\n# Options\n\n@docs IconColor, IconSize\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "IconColor",
+        "comment": " Icon Color.\n\nSets the icon color class\n\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "IconSize",
+        "comment": " Icon Size.\n\nSets the Icon Size:\n\nS1 = 12px\nS2 = 16px\nS3 = 36px\nS4 = 48px\nS5 = 64px\nS6 = 72px\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseIcon",
+        "comment": " Base Icon Function.\nExposes a lot of the clarity icon capabilities\n\nDocumentation on Clarity Icons : <https://vmware.github.io/clarity/documentation/iconography>\n\n",
+        "type": "ClarityUI.Icon.IconColor -> ClarityUI.Icon.IconSize -> String -> Html.Html msg"
+      },
+      {
+        "name": "icon",
+        "comment": " Curried Shortcut Function.\n\nCreates a default size and color Icon.\n\n",
+        "type": "String -> Html.Html msg"
+      },
+      {
+        "name": "iconMd",
+        "comment": " Curried Shortcut Function.\n\nCreates a medium size and default color Icon.\n\n",
+        "type": "String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Card",
+    "comment": " Wrapper around Clarity Cards\n\nfor More on clarity cards: <https://vmware.github.io/clarity/documentation/cards>\n\n\n# Methods\n\n@docs baseCard, card, clickableCard\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "baseCard",
+        "comment": " Base Card Function.\nImplements clarity card.\n\nDocumentation about clarity card : <https://vmware.github.io/clarity/documentation/cards>\n\n",
+        "type": "Maybe.Maybe String -> List (List (Html.Html msg)) -> List (Html.Html msg) -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "card",
+        "comment": " Card Function\nCurried Base Card Function.\n",
+        "type": "Maybe.Maybe String -> List (List (Html.Html msg)) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "clickableCard",
+        "comment": " Clickable Card Function\nCurried Base Card Function for a clickable card.\n",
+        "type": "Maybe.Maybe String -> List (List (Html.Html msg)) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.CDN",
+    "comment": " CDN module.\nIncludes the clarity assets from a CDN for easy use with Elm Reactor.\n\n@docs styles, icons, iconsJS\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "icons",
+        "comment": " Adds a link to an [unpkg](https://unpkg.com/#/) mirror of the clarify-icons css\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "iconsJS",
+        "comment": " Adds a script to an unpkg](<https://unpkg.com/#/>) mirror of the clarify-icons js\n",
+        "type": "Html.Html msg"
+      },
+      {
+        "name": "styles",
+        "comment": " Adds a link to an [unpkg](https://unpkg.com/#/) mirror of the clarify-ui css\n\n    import ClarityUI.CDN\n\n    view : Model -> Html Msg\n    view model =\n        div []\n            [ CDN.styles -- css embedded inline\n            ]\n\n",
+        "type": "Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Button",
+    "comment": "\n\n\n## Clarity UI Buttons.\n\nWraps buttons in simple methods.\n\nFor more documentation on clarity ui buttons: <https://vmware.github.io/clarity/documentation/buttons>\n\n\n# Base\n\n@docs baseButton\n\n\n# Shortcuts\n\n@docs solidButton, outlineButton, flatButton\n\n\n# Options\n\n@docs ButtonType, ButtonColor\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "ButtonColor",
+        "comment": " Button Color.\n",
+        "args": [],
+        "cases": [
+          [
+            "Primary",
+            []
+          ],
+          [
+            "Success",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Danger",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "ButtonType",
+        "comment": " Button Type. See clarity UI for use\n",
+        "args": [],
+        "cases": [
+          [
+            "Solid",
+            []
+          ],
+          [
+            "Outline",
+            []
+          ],
+          [
+            "Flat",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "baseButton",
+        "comment": " Base Button Function.\nWrapper around clarity buttons\n\nDocumentation for Clarity buttons : <https://vmware.github.io/clarity/documentation/buttons>\n\n",
+        "type": "ClarityUI.Button.ButtonType -> ClarityUI.Button.ButtonColor -> Bool -> Bool -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "flatButton",
+        "comment": " Shortcut for creating a flat button\n",
+        "type": "ClarityUI.Button.ButtonColor -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "outlineButton",
+        "comment": " Shortcut for creating a outline button\n",
+        "type": "ClarityUI.Button.ButtonColor -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      },
+      {
+        "name": "solidButton",
+        "comment": " Shortcut for creating a solid button\n",
+        "type": "ClarityUI.Button.ButtonColor -> List (Html.Attribute msg) -> List (Html.Html msg) -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Alert",
+    "comment": " Clarity UI's Alerts.\n\nFor more documentation on clarity alerts: <https://vmware.github.io/clarity/documentation/alerts>\n\n\n# Alerts\n\n@docs alert\n\n\n# Shorthand Inline Alerts\n\n@docs alertDanger, alertWarning, alertInfo, alertSuccess\n\n\n# App Alerts\n\n@docs alertAppDanger, alertAppWarning, alertAppInfo, alertAppSuccess\n\n\n# Options\n\n@docs AlertType\n\n\n# Data\n\n@docs AlertItem, AlertAction\n\n",
+    "aliases": [
+      {
+        "name": "AlertAction",
+        "comment": " Actions for an alert\n",
+        "args": [],
+        "type": "{ text : String, link : String }"
+      },
+      {
+        "name": "AlertItem",
+        "comment": " Item to pass to an alert\n",
+        "args": [],
+        "type": "{ text : String, actions : List ClarityUI.Alert.AlertAction }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AlertType",
+        "comment": " Alert Type. Either Danger, Warning, Info or Success\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "alert",
+        "comment": " Main Alert Entry Point. Creates a clarity alert.\n\nDocumentation about Clarity Alerts: <https://vmware.github.io/clarity/documentation/alerts#top>\n\n",
+        "type": "ClarityUI.Alert.AlertType -> Bool -> Bool -> Bool -> ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertAppDanger",
+        "comment": " Alert App Danger.\nCurried Shortcut for a dismissible danger app alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertAppInfo",
+        "comment": " Alert App Info.\nCurried Shortcut for a dismissible Info app alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertAppSuccess",
+        "comment": " Alert App Success.\nCurried Shortcut for a dismissible Success app alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertAppWarning",
+        "comment": " Alert App Warning.\nCurried Shortcut for a dismissible warning app alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertDanger",
+        "comment": " Alert Danger.\nCurried Shortcut for a dismissible danger alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertInfo",
+        "comment": " Alert Info.\nCurried Shortcut for a dismissible Info alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertSuccess",
+        "comment": " Alert Success.\nCurried Shortcut for a dismissible Success alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      },
+      {
+        "name": "alertWarning",
+        "comment": " Alert Warning.\nCurried Shortcut for a dismissible warning alert.\n",
+        "type": "ClarityUI.Alert.AlertItem -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "ClarityUI.Badge",
+    "comment": "\n\n\n# Clarity UI Badge\n\nFor more documentation on clarity UI badges: <https://vmware.github.io/clarity/documentation/badges>\n\n\n## Use\n\n@docs baseBadge\n\n\n## Shorthands\n\n@docs badge\n\n\n## Options\n\n@docs BadgeColor\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "BadgeColor",
+        "comment": " Badge colors\n",
+        "args": [],
+        "cases": [
+          [
+            "None",
+            []
+          ],
+          [
+            "Info",
+            []
+          ],
+          [
+            "Success",
+            []
+          ],
+          [
+            "Warning",
+            []
+          ],
+          [
+            "Danger",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "badge",
+        "comment": " Shorthand for a default badge\n",
+        "type": "val -> Html.Html msg"
+      },
+      {
+        "name": "baseBadge",
+        "comment": " Main entry point to the badge\n",
+        "type": "ClarityUI.Badge.BadgeColor -> val -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

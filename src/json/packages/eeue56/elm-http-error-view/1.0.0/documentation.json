@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Http.Error.View.Welsh",
+    "comment": " Dangos iaith cyfeillgar i eich defnyddwyr mewn Cymraeg\n\nMae popeth sy'n gweld fel bod yn rhi tecnegol ddim am dangos i nhw, dim ond negeseuon sy'n helpu.\n\n@docs view\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " Trwy Http.Error i Html.\n\n    view (BadUrl \"blob\")\n        --> Html.text \"Roedd i'n edrych am URL, ond ges i: blob\"\n\n    view Timeout\n        --> Html.text \"Roedd yr wefan cymryd gormod o amswer!\"\n\n    view NetworkError\n        --> \"Nac ydw i'n galli cysylltu gyda yr we. Ydy yr we yn gweitho am chi?\"\n\n    view (BadStatus { url = \"http://blob.com\", status = { code = 500, message = \"oops\"}})\n        --> Html.text \" Fy ceisio cwrdd http://blob.com\"\n        --> \" ond fy ges i yr error code: 500\"\n        --> \" sy'n nabod fel: \\\"oops\\\"\"\n\n\n    view (BadPayload ((\"no such field name\")) { url = \"http://blob.com\", status = { code = 505, message = \"oops\"}})\n        --> Html.text \"Mae anffodus ganddo i, ond rwy'n methu gweitho oherwydd: no such field name\"\n        --> \" ac Fy ceisio cwrdd http://blob.com\"\n        --> \" ond fy ges i yr error code: 505\"\n        --> \" sy'n nabod fel: \\\"oops\\\"\"\n\n",
+        "type": "Http.Error -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Http.Error.View",
+    "comment": " Provide a simple English view for when a network error happens via HTTP\n\nThis is intended to be user-friendly and not give too much techinical info to the user.\n\n@docs view\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "view",
+        "comment": " Turn a Http.Error into a Html view\n\n    view (BadUrl \"blob\")\n        --> Html.text \"I was expecting a valid URL, but I got the url: blob\"\n\n    view Timeout\n        --> Html.text \"It took too long to get a response from the server!\"\n\n    view NetworkError\n        --> \"Unable to make a connection. Is your network working?\"\n\n    view (BadStatus { url = \"http://blob.com\", status = { code = 500, message = \"oops\"}})\n        --> Html.text \"I tried to connect to http://blob.com\"\n        --> \" but the response gave me the error code 500\"\n        --> \" which is known as \\\"oops\\\"\"\n\n\n    view (BadPayload ((\"no such field name\")) { url = \"http://blob.com\", status = { code = 505, message = \"oops\"}})\n        --> Html.text \"I failed because of no such field name\"\n        --> \" and I tried to connect to http://blob.com\"\n        --> \" but the response gave me the error code 505\"\n        --> \" which is known as \\\"oops\\\"\"\n\n",
+        "type": "Http.Error -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

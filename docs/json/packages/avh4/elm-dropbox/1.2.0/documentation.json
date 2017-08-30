@@ -1,0 +1,363 @@
+[
+  {
+    "name": "Dropbox",
+    "comment": "\n\n\n## Dropbox API\n\nSee the official Dropbox documentation at\n<https://www.dropbox.com/developers/documentation/http/documentation>\n\n@docs program, Msg\n\n\n### Authorization\n\n@docs AuthorizeRequest, Role, authorize, AuthorizeResult, AuthorizeError, UserAuth, encodeUserAuth, decodeUserAuth\n@docs authorizationUrl, redirectUriFromLocation, authorizationFromAccessToken, parseAuthorizeResult\n\n\n### Auth\n\n@docs tokenRevoke\n\n\n### Files\n\n@docs download, DownloadRequest, DownloadResponse, DownloadError, LookupError\n@docs upload, UploadRequest, WriteMode, UploadResponse, UploadError, UploadWriteFailed, WriteError\n\n@docs MediaInfo, MediaMetadata, PhotoMetadata, VideoMetadata, Dimensions, GpsCoordinates, FileSharingInfo, PropertyGroup\n\n",
+    "aliases": [
+      {
+        "name": "AuthorizeError",
+        "comment": " Return value of the `authorize` endpoint when authentication fails. See `AuthorizeResult`.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n\n",
+        "args": [],
+        "type": "{ error : String , errorDescription : String , state : Maybe.Maybe String }"
+      },
+      {
+        "name": "AuthorizeRequest",
+        "comment": " Request parameters for Dropbox OAuth 2.0 authorization requests.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n\nNote: `redirect_uri` is not present here because it is provided directly to\n`Dropbox.authorize` or `Dropbox.authorizationUrl`.\n\n",
+        "args": [],
+        "type": "{ clientId : String , state : Maybe.Maybe String , requireRole : Maybe.Maybe Dropbox.Role , forceReapprove : Bool , disableSignup : Bool , locale : Maybe.Maybe String , forceReauthentication : Bool }"
+      },
+      {
+        "name": "Dimensions",
+        "comment": " Dimensions for a photo or video.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n**WARNING**: elm-dropbox may give the incorrect values,\nsince Elm currently does not provide a way to parse and represent 64-bit integers.\n\n",
+        "args": [],
+        "type": "{ height : Int, width : Int }"
+      },
+      {
+        "name": "DownloadRequest",
+        "comment": " Request parameteres for `download`\n\nNote: there is no `rev` field because it is deprecated.\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-download>\n\n",
+        "args": [],
+        "type": "{ path : String }"
+      },
+      {
+        "name": "DownloadResponse",
+        "comment": " Return value for `download`\n\n**WARNING**: elm-dropbox may give the incorrect values for `size`,\nsince Elm currently does not provide a way to parse and represent 64-bit integers.\n\n",
+        "args": [],
+        "type": "{ content : String , name : String , id : String , clientModified : Date.Date , serverModified : Date.Date , rev : String , size : Int , pathLower : Maybe.Maybe String , pathDisplay : Maybe.Maybe String , parentSharedFolderId : Maybe.Maybe String , mediaInfo : Maybe.Maybe Dropbox.MediaInfo , sharingInfo : Maybe.Maybe Dropbox.FileSharingInfo , propertyGroups : Maybe.Maybe (List Dropbox.PropertyGroup) , hasExplicitSharedMembers : Maybe.Maybe Bool , contentHash : Maybe.Maybe String }"
+      },
+      {
+        "name": "FileSharingInfo",
+        "comment": " Sharing info for a file which is contained by a shared folder.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "type": "{ readOnly : Bool , parentSharedFolderId : String , modifiedBy : Maybe.Maybe String }"
+      },
+      {
+        "name": "GpsCoordinates",
+        "comment": " The GPS coordinate of the photo/video.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "type": "{ latitude : Float, longitude : Float }"
+      },
+      {
+        "name": "PhotoMetadata",
+        "comment": " Metadata for a photo.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "type": "{ dimensions : Maybe.Maybe Dropbox.Dimensions , location : Maybe.Maybe Dropbox.GpsCoordinates , timeTaken : Maybe.Maybe Date.Date }"
+      },
+      {
+        "name": "PropertyGroup",
+        "comment": " Collection of custom properties in filled property templates.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "type": "{ templateId : String, fields : Dict.Dict String String }"
+      },
+      {
+        "name": "UploadRequest",
+        "comment": " Request parameters for `upload`\n",
+        "args": [],
+        "type": "{ path : String , mode : Dropbox.WriteMode , autorename : Bool , clientModified : Maybe.Maybe Date.Date , mute : Bool , content : String }"
+      },
+      {
+        "name": "UploadResponse",
+        "comment": " Return value for `upload`\n\n**WARNING**: elm-dropbox may give the incorrect values for `size`,\nsince Elm currently does not provide a way to parse and represent 64-bit integers.\n\n",
+        "args": [],
+        "type": "{ name : String , id : String , clientModified : Date.Date , serverModified : Date.Date , rev : String , size : Int , pathLower : Maybe.Maybe String , pathDisplay : Maybe.Maybe String , parentSharedFolderId : Maybe.Maybe String , mediaInfo : Maybe.Maybe Dropbox.MediaInfo , sharingInfo : Maybe.Maybe Dropbox.FileSharingInfo , propertyGroups : Maybe.Maybe (List Dropbox.PropertyGroup) , hasExplicitSharedMembers : Maybe.Maybe Bool , contentHash : Maybe.Maybe String }"
+      },
+      {
+        "name": "UploadWriteFailed",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n",
+        "args": [],
+        "type": "{ reason : Dropbox.WriteError, uploadSessionId : String }"
+      },
+      {
+        "name": "VideoMetadata",
+        "comment": " Metadata for a video.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n**WARNING**: elm-dropbox may give the incorrect values for `duration`,\nsince Elm currently does not provide a way to parse and represent 64-bit integers.\n\n",
+        "args": [],
+        "type": "{ dimensions : Maybe.Maybe Dropbox.Dimensions , location : Maybe.Maybe Dropbox.GpsCoordinates , timeTaken : Maybe.Maybe Date.Date , duration : Maybe.Maybe Int }"
+      }
+    ],
+    "types": [
+      {
+        "name": "AuthorizeResult",
+        "comment": " Return value of the `authorize` endpoint, which is the data Dropbox returns via\nthe redirect URL.\n\nYou can get the `AuthorizeResult` by using `Dropbox.program`,\nor by using `parseAuthorizeResult` if you need to manually parse the redirect URL.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n\nNote: `uid` is not provided because it is deprecated.\nSee <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n\n",
+        "args": [],
+        "cases": [
+          [
+            "DropboxAuthorizeErr",
+            [
+              "Dropbox.AuthorizeError"
+            ]
+          ],
+          [
+            "AuthorizeOk",
+            [
+              "{ userAuth : Dropbox.UserAuth , accountId : String , state : Maybe.Maybe String }"
+            ]
+          ],
+          [
+            "UnknownAccessTokenErr",
+            [
+              "{ accessToken : String , tokenType : String , accountId : String , state : Maybe.Maybe String }"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "DownloadError",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#files-download>\n",
+        "args": [],
+        "cases": [
+          [
+            "PathDownloadError",
+            [
+              "Dropbox.LookupError"
+            ]
+          ],
+          [
+            "OtherDownloadError",
+            [
+              "String",
+              "Json.Encode.Value"
+            ]
+          ],
+          [
+            "OtherDownloadFailure",
+            [
+              "Http.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "LookupError",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#files-download>\n",
+        "args": [],
+        "cases": [
+          [
+            "MalformedPathLookup",
+            [
+              "Maybe.Maybe String"
+            ]
+          ],
+          [
+            "NotFound",
+            []
+          ],
+          [
+            "NotFile",
+            []
+          ],
+          [
+            "NotFolder",
+            []
+          ],
+          [
+            "RestrictedContent",
+            []
+          ],
+          [
+            "OtherLookupError",
+            [
+              "String",
+              "Json.Encode.Value"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "MediaInfo",
+        "comment": " Additional information if the file is a photo or video.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "MediaMetadata",
+        "comment": " Metadata for a photo or video.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " The message type for an app that uses `Dropbox.program`\n",
+        "args": [
+          "msg"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Role",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n",
+        "args": [],
+        "cases": [
+          [
+            "Personal",
+            []
+          ],
+          [
+            "Work",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "UploadError",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n",
+        "args": [],
+        "cases": [
+          [
+            "Path",
+            [
+              "Dropbox.UploadWriteFailed"
+            ]
+          ],
+          [
+            "OtherUploadError",
+            [
+              "String",
+              "Json.Encode.Value"
+            ]
+          ],
+          [
+            "OtherUploadFailure",
+            [
+              "Http.Error"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "UserAuth",
+        "comment": " A user authentication token that can be used to authenticate API calls\n\nSee <https://www.dropbox.com/developers/reference/auth-types#user>\n\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "WriteError",
+        "comment": " See <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n",
+        "args": [],
+        "cases": [
+          [
+            "MalformedPathWrite",
+            [
+              "Maybe.Maybe String"
+            ]
+          ],
+          [
+            "Conflict",
+            [
+              "Dropbox.WriteConflictError"
+            ]
+          ],
+          [
+            "NoWritePermission",
+            []
+          ],
+          [
+            "InsufficientSpace",
+            []
+          ],
+          [
+            "DisallowedName",
+            []
+          ],
+          [
+            "TeamFolder",
+            []
+          ],
+          [
+            "OtherWriteError",
+            [
+              "String",
+              "Json.Encode.Value"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "WriteMode",
+        "comment": " Your intent when writing a file to some path.\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n",
+        "args": [],
+        "cases": [
+          [
+            "Add",
+            []
+          ],
+          [
+            "Overwrite",
+            []
+          ],
+          [
+            "Update",
+            [
+              "String"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "authorizationFromAccessToken",
+        "comment": " Create a `UserAuth` from a Dropbox access token.\n\nYou can use this during development, using the \"generated access token\" from the settings page of [your Dropbox app](https://www.dropbox.com/developers/apps).\n\nYou should not use this in a production app.\nInstead, you should use the normal authorization flow and use [`program`](#program) or [`parseAuthorizeResult`](#parseAuthorizeResult).\n\n",
+        "type": "String -> Dropbox.UserAuth"
+      },
+      {
+        "name": "authorizationUrl",
+        "comment": " The Dropbox OAuth 2.0 authorization URL.\nTypically you will just want to use `authorize` instead,\nwhich will initiate the authorization.\n\nSee <https://www.dropbox.com/developers/reference/oauth-guide>\n\n",
+        "type": "Dropbox.AuthorizeRequest -> String -> String"
+      },
+      {
+        "name": "authorize",
+        "comment": " <https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize>\n",
+        "type": "Dropbox.AuthorizeRequest -> Navigation.Location -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "decodeUserAuth",
+        "comment": " Decode a `UserAuth` encoded with `encodeUserAuth`.\n\nNOTE: See the security warning in `encodeUserAuth`.\n\nIf you have an auth token as a String and need to convert it to a `UserAuth`,\nsee [`authorizationFromAccessToken`](#authorizationFromAccessToken).\n\n",
+        "type": "Json.Decode.Decoder Dropbox.UserAuth"
+      },
+      {
+        "name": "download",
+        "comment": " Download a file from a user's Dropbox.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-download>\n\n",
+        "type": "Dropbox.UserAuth -> Dropbox.DownloadRequest -> Task.Task Dropbox.DownloadError Dropbox.DownloadResponse"
+      },
+      {
+        "name": "encodeUserAuth",
+        "comment": " Encode a `UserAuth` to JSON.\n\nYou should consider the resulting value to be opaque\nand only read it using `decodeUserAuth`.\n\nWARNING: To protect your users' security,\nyou must not transmit the resulting value off the user's device.\nThis function exists to allow persisting the auth token to localStorage\nor other storage that is local to the user's device _and_ private to your application.\nYou should not send this value to your own server\n(if you think you need that, you should use a different OAuth flow\ninvolving your Dropox app's app secret instead of using implicit grant).\n\n",
+        "type": "Dropbox.UserAuth -> Json.Encode.Value"
+      },
+      {
+        "name": "parseAuthorizeResult",
+        "comment": " Read an `AuthorizeResult` from the page location.\n\nTypically you will want to use [`Dropbox.program`](#program) instead, which will do this automatically.\nYou may want to use this if you need to manually manage the OAuth flow.\n\n",
+        "type": "Navigation.Location -> Maybe.Maybe Dropbox.AuthorizeResult"
+      },
+      {
+        "name": "program",
+        "comment": " This provides the simplest way to integrate Dropbox authentication.\nUsing `Dropbox.program` will handle parsing the authentication response from the\nauthentication redirect so that you don't have to do it manually.\n",
+        "type": "{ init : Navigation.Location -> ( model, Platform.Cmd.Cmd msg ) , update : msg -> model -> ( model, Platform.Cmd.Cmd msg ) , subscriptions : model -> Platform.Sub.Sub msg , view : model -> Html.Html msg , onAuth : Dropbox.AuthorizeResult -> msg } -> Platform.Program Basics.Never model (Dropbox.Msg msg)"
+      },
+      {
+        "name": "redirectUriFromLocation",
+        "comment": " Generate a redirect URI from a `Navigation.Location`.\n\nTypically you will want to use `Dropbox.authorize`, which will do this automatically.\nYou may want to use this if you need to manually manage the OAuth flow.\n\n",
+        "type": "Navigation.Location -> String"
+      },
+      {
+        "name": "tokenRevoke",
+        "comment": " Disables the access token used to authenticate the call.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#auth-token-revoke>\n\n",
+        "type": "Dropbox.UserAuth -> Http.Request ()"
+      },
+      {
+        "name": "upload",
+        "comment": " Create a new file with the contents provided in the request.\n\nSee <https://www.dropbox.com/developers/documentation/http/documentation#files-upload>\n\n",
+        "type": "Dropbox.UserAuth -> Dropbox.UploadRequest -> Task.Task Dropbox.UploadError Dropbox.UploadResponse"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

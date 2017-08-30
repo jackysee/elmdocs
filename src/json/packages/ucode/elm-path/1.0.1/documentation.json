@@ -1,0 +1,651 @@
+[
+  {
+    "name": "Path.Windows",
+    "comment": "\nSpecialized path manipulation functions for working with Windows paths. For documentation on the API refer to 'Path.Generic'.\n\nThis module is not very well tested. PLease make sure the functions you use work as expected.\n\nReexports all functions from the 'Path.Generic' module, specialized to Windows paths.\n\nSince operator reexport does not seem to work, <.> and -<.> have to be imported from the Generic module directly.\n\n# Separator predicates\n@docs pathSeparator, pathSeparators, isPathSeparator, extSeparator, isExtSeparator\n\n# Extension functions\n@docs splitExtension, takeExtension, replaceExtension, dropExtension, addExtension, hasExtension, splitExtensions, dropExtensions, takeExtensions\n\n# Filename/directory functions\n@docs splitFileName, takeFileName, replaceFileName, dropFileName, takeBaseName, replaceBaseName, takeDirectory, replaceDirectory, combine, splitPath, joinPath\n\n# Trailing slash functions\n@docs hasTrailingPathSeparator, addTrailingPathSeparator, dropTrailingPathSeparator\n\n# Specialized operators\n@docs (</>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "</>",
+        "comment": "\n  Operator Version of 'combine'\n",
+        "type": "String -> String -> String",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": "addExtension",
+        "comment": "\nAdd an extension, even if there is already one there, equivalent to `<.>`.\n\n    addExtension \"/directory/path\" \"ext\" == \"/directory/path.ext\"\n    addExtension \"file.txt\" \"bib\" == \"file.txt.bib\"\n    addExtension \"file.\" \".bib\" == \"file..bib\"\n    addExtension \"file\" \".bib\" == \"file.bib\"\n    addExtension \"/\" \"x\" == \"/.x\"\n    Valid x => takeFileName (addExtension (addTrailingPathSeparator x) \"ext\") == \".ext\"\n    Windows: addExtension \"\\\\\\\\share\" \".txt\" == \"\\\\\\\\share\\\\.txt\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "addTrailingPathSeparator",
+        "comment": "\nAdd a trailing file path separator if one is not already present.\n\n    hasTrailingPathSeparator (addTrailingPathSeparator x)\n    hasTrailingPathSeparator x ==> addTrailingPathSeparator x == x\n    Posix:    addTrailingPathSeparator \"test/rest\" == \"test/rest/\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "combine",
+        "comment": "\nCombine two paths, if the second path starts with a path separator then it returns the second.\n\n    Valid x => combine (takeDirectory x) (takeFileName x) `equalFilePath` x\n\nCombined:\n\n    Posix:   combine \"/\" \"test\" == \"/test\"\n    Posix:   combine \"home\" \"bob\" == \"home/bob\"\n    Posix:   combine \"x:\" \"foo\" == \"x:/foo\"\n    Windows: combine \"C:\\\\foo\" \"bar\" == \"C:\\\\foo\\\\bar\"\n    Windows: combine \"home\" \"bob\" == \"home\\\\bob\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "dropExtension",
+        "comment": "\nRemove last extension, and the \".\" preceding it.\n\n    dropExtension \"/directory/path.ext\" == \"/directory/path\"\n    dropExtension x == Tuple.first (splitExtension x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropExtensions",
+        "comment": "\nDrop all extensions.\n\n    dropExtensions \"/directory/path.ext\" == \"/directory/path\"\n    dropExtensions \"file.tar.gz\" == \"file\"\n    not <| hasExtension <| dropExtensions x\n    not <| any isExtSeparator <| takeFileName <| dropExtensions x\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropFileName",
+        "comment": "\nDrop the filename. Unlike `takeDirectory`, this function will leave\na trailing path separator on the directory.\n\n    dropFileName \"/directory/file.ext\" == \"/directory/\"\n    dropFileName x == Tuple.first (splitFileName x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropTrailingPathSeparator",
+        "comment": "\nRemove any trailing path separators\n\n    dropTrailingPathSeparator \"file/test/\" == \"file/test\"\n              dropTrailingPathSeparator \"/\" == \"/\"\n    Windows:  dropTrailingPathSeparator \"\\\\\" == \"\\\\\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extSeparator",
+        "comment": "\nFile extension character\n\n    extSeparator == '.'\n",
+        "type": "String"
+      },
+      {
+        "name": "hasExtension",
+        "comment": "\nDoes the given filename have an extension?\n\n    hasExtension \"/directory/path.ext\" == True\n    hasExtension \"/directory/path\" == False\n    ull (takeExtension x) == not (hasExtension x)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "hasTrailingPathSeparator",
+        "comment": "\nIs an item either a directory or the last character a path separator?\n\n    hasTrailingPathSeparator \"test\" == False\n    hasTrailingPathSeparator \"test/\" == True\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isExtSeparator",
+        "comment": "\nIs the character an extension character?\n\n    isExtSeparator a == (a == extSeparator)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isPathSeparator",
+        "comment": "\nRather than using `== pathSeparator`, use this. Test if somethin is a path separator.\n\n    isPathSeparator a == (a `elem` pathSeparators)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "joinPath",
+        "comment": "\nJoin path elements back together.\n\n    joinPath [\"/\",\"directory/\",\"file.ext\"] == \"/directory/file.ext\"\n    Valid x => joinPath (splitPath x) == x\n    joinPath [] == \"\"\n    Posix: joinPath [\"test\",\"file\",\"path\"] == \"test/file/path\"\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "pathSeparator",
+        "comment": "\nThe character that separates directories. In the case where more than\none character is possible, `pathSeparator` is the 'ideal' one.\n\n    Windows: pathSeparator == '\\\\'\n    Posix:   pathSeparator ==  '/'\n    isPathSeparator pathSeparator\n",
+        "type": "String"
+      },
+      {
+        "name": "pathSeparators",
+        "comment": "\nThe list of all possible separators.\n\n    Windows: pathSeparators == ['\\\\', '/']\n    Posix:   pathSeparators == ['/']\n    pathSeparator `elem` pathSeparators\n",
+        "type": "List String"
+      },
+      {
+        "name": "replaceBaseName",
+        "comment": "\nSet the base name.\n\n    replaceBaseName \"/directory/other.ext\" \"file\" == \"/directory/file.ext\"\n    replaceBaseName \"file/test.txt\" \"bob\" == \"file/bob.txt\"\n    replaceBaseName \"fred\" \"bill\" == \"bill\"\n    replaceBaseName \"/dave/fred/bob.gz.tar\" \"new\" == \"/dave/fred/new.tar\"\n    Valid x => replaceBaseName x (takeBaseName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceDirectory",
+        "comment": "\nSet the directory, keeping the filename the same.\n\n    replaceDirectory \"root/file.ext\" \"/directory/\" == \"/directory/file.ext\"\n    Valid x => replaceDirectory x (takeDirectory x) `equalFilePath` x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceExtension",
+        "comment": "\nSet the extension of a file, overwriting one if already present, equivalent to `-<.>`.\n\n    replaceExtension \"/directory/path.txt\" \"ext\" == \"/directory/path.ext\"\n    replaceExtension \"/directory/path.txt\" \".ext\" == \"/directory/path.ext\"\n    replaceExtension \"file.txt\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"bob\" == \"file.bob\"\n    replaceExtension \"file\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"\" == \"file\"\n    replaceExtension \"file.fred.bob\" \"txt\" == \"file.fred.txt\"\n    replaceExtension x y == addExtension (dropExtension x) y\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceFileName",
+        "comment": "\nSet the filename.\n\n    replaceFileName \"/directory/other.txt\" \"file.ext\" == \"/directory/file.ext\"\n    Valid x => replaceFileName x (takeFileName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "splitExtension",
+        "comment": "\nSplit on the extension. `addExtension` is the inverse.\n\n    splitExtension \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    uncurry (++) (splitExtension x) == x\n    Valid x => uncurry addExtension (splitExtension x) == x\n    splitExtension \"file.txt\" == (\"file\",\".txt\")\n    splitExtension \"file\" == (\"file\",\"\")\n    splitExtension \"file/file.txt\" == (\"file/file\",\".txt\")\n    splitExtension \"file.txt/boris\" == (\"file.txt/boris\",\"\")\n    splitExtension \"file.txt/boris.ext\" == (\"file.txt/boris\",\".ext\")\n    splitExtension \"file/path.txt.bob.fred\" == (\"file/path.txt.bob\",\".fred\")\n    splitExtension \"file/path.txt/\" == (\"file/path.txt/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitExtensions",
+        "comment": "\nSplit on all extensions.\n\n    splitExtensions \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n    uncurry (++) (splitExtensions x) == x\n    Valid x => uncurry addExtension (splitExtensions x) == x\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitFileName",
+        "comment": "\nOperations on a filepath, as a list of directories\n\nSplit a filename into directory and file. `combine` is the inverse.\nThe first component will often end with a trailing slash.\n\n    splitFileName \"/directory/file.ext\" == (\"/directory/\",\"file.ext\")\n    Valid x => isValid (Tuple.first (splitFileName x))\n    splitFileName \"file/bob.txt\" == (\"file/\", \"bob.txt\")\n    splitFileName \"file/\" == (\"file/\", \"\")\n    splitFileName \"bob\" == (\"\", \"bob\")\n    Posix:   splitFileName \"/\" == (\"/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitPath",
+        "comment": "\nSplit a path by the directory separator.\n\n    splitPath \"/directory/file.ext\" == [\"/\",\"directory/\",\"file.ext\"]\n    concat (splitPath x) == x\n    splitPath \"test//item/\" == [\"test//\",\"item/\"]\n    splitPath \"test/item/file\" == [\"test/\",\"item/\",\"file\"]\n    splitPath \"\" == []\n    Windows: splitPath \"c:\\\\test\\\\path\" == [\"c:\\\\\",\"test\\\\\",\"path\"]\n    Posix:   splitPath \"/file/test\" == [\"/\",\"file/\",\"test\"]\n",
+        "type": "String -> List String"
+      },
+      {
+        "name": "takeBaseName",
+        "comment": "\nGet the base name, without an extension or path.\n\n    takeBaseName \"/directory/file.ext\" == \"file\"\n    takeBaseName \"file/test.txt\" == \"test\"\n    takeBaseName \"dave.ext\" == \"dave\"\n    takeBaseName \"\" == \"\"\n    takeBaseName \"test\" == \"test\"\n    takeBaseName (addTrailingPathSeparator x) == \"\"\n    takeBaseName \"file/file.tar.gz\" == \"file.tar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeDirectory",
+        "comment": "\nGet the directory name, move up one level.\n\n              takeDirectory \"/directory/other.ext\" == \"/directory\"\n              takeDirectory x `isPrefixOf` x || takeDirectory x == \".\"\n              takeDirectory \"foo\" == \".\"\n              takeDirectory \"/\" == \"/\"\n              takeDirectory \"/foo\" == \"/\"\n              takeDirectory \"/foo/bar/baz\" == \"/foo/bar\"\n              takeDirectory \"/foo/bar/baz/\" == \"/foo/bar/baz\"\n              takeDirectory \"foo/bar/baz\" == \"foo/bar\"\n    Windows:  takeDirectory \"foo\\\\bar\" == \"foo\"\n    Windows:  takeDirectory \"foo\\\\bar\\\\\\\\\" == \"foo\\\\bar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtension",
+        "comment": "\nGet the extension of a file, returns \"\" for no extension, .ext otherwise.\n\n    takeExtension \"/directory/path.ext\" == \".ext\"\n    takeExtension x == Tuple.second (splitExtension x)\n    Valid x => takeExtension (addExtension x \"ext\") == \".ext\"\n    Valid x => takeExtension (replaceExtension x \"ext\") == \".ext\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtensions",
+        "comment": "\nGet all extensions.\n\n    takeExtensions \"/directory/path.ext\" == \".ext\"\n    takeExtensions \"file.tar.gz\" == \".tar.gz\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeFileName",
+        "comment": "\nGet the file name.\n\n    takeFileName \"/directory/file.ext\" == \"file.ext\"\n    takeFileName \"test/\" == \"\"\n    takeFileName x `isSuffixOf` x\n    takeFileName x == Tuple.second (splitFileName x)\n    Valid x => takeFileName (replaceFileName x \"fred\") == \"fred\"\n    Valid x => takeFileName (x </> \"fred\") == \"fred\"\n    Valid x => isRelative (takeFileName x)\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Path.Url",
+    "comment": "\nSpecialized path manipulation functions for working with filepaths as found on the web. For documentation on the API refer to 'Path.Generic'.\n\nReexports all functions from the 'Path.Generic' module, specialized to web related paths.\n\nSince operator reexport does not seem to work, <.> and -<.> have to be imported from the Generic module directly.\n\n# Separator predicates\n@docs pathSeparator, pathSeparators, isPathSeparator, extSeparator, isExtSeparator\n\n# Extension functions\n@docs splitExtension, takeExtension, replaceExtension, dropExtension, addExtension, hasExtension, splitExtensions, dropExtensions, takeExtensions\n\n# Filename/directory functions\n@docs splitFileName, takeFileName, replaceFileName, dropFileName, takeBaseName, replaceBaseName, takeDirectory, replaceDirectory, combine, splitPath, joinPath\n\n# Trailing slash functions\n@docs hasTrailingPathSeparator, addTrailingPathSeparator, dropTrailingPathSeparator\n\n# Specialized operators\n@docs (</>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "</>",
+        "comment": "\n  Operator Version of 'combine'\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "addExtension",
+        "comment": "\nAdd an extension, even if there is already one there, equivalent to `<.>`.\n\n    addExtension \"/directory/path\" \"ext\" == \"/directory/path.ext\"\n    addExtension \"file.txt\" \"bib\" == \"file.txt.bib\"\n    addExtension \"file.\" \".bib\" == \"file..bib\"\n    addExtension \"file\" \".bib\" == \"file.bib\"\n    addExtension \"/\" \"x\" == \"/.x\"\n    Valid x => takeFileName (addExtension (addTrailingPathSeparator x) \"ext\") == \".ext\"\n    Windows: addExtension \"\\\\\\\\share\" \".txt\" == \"\\\\\\\\share\\\\.txt\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "addTrailingPathSeparator",
+        "comment": "\nAdd a trailing file path separator if one is not already present.\n\n    hasTrailingPathSeparator (addTrailingPathSeparator x)\n    hasTrailingPathSeparator x ==> addTrailingPathSeparator x == x\n    Posix:    addTrailingPathSeparator \"test/rest\" == \"test/rest/\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "combine",
+        "comment": "\nCombine two paths, if the second path starts with a path separator then it returns the second.\n\n    Valid x => combine (takeDirectory x) (takeFileName x) `equalFilePath` x\n\nCombined:\n\n    Posix:   combine \"/\" \"test\" == \"/test\"\n    Posix:   combine \"home\" \"bob\" == \"home/bob\"\n    Posix:   combine \"x:\" \"foo\" == \"x:/foo\"\n    Windows: combine \"C:\\\\foo\" \"bar\" == \"C:\\\\foo\\\\bar\"\n    Windows: combine \"home\" \"bob\" == \"home\\\\bob\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "dropExtension",
+        "comment": "\nRemove last extension, and the \".\" preceding it.\n\n    dropExtension \"/directory/path.ext\" == \"/directory/path\"\n    dropExtension x == Tuple.first (splitExtension x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropExtensions",
+        "comment": "\nDrop all extensions.\n\n    dropExtensions \"/directory/path.ext\" == \"/directory/path\"\n    dropExtensions \"file.tar.gz\" == \"file\"\n    not <| hasExtension <| dropExtensions x\n    not <| any isExtSeparator <| takeFileName <| dropExtensions x\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropFileName",
+        "comment": "\nDrop the filename. Unlike `takeDirectory`, this function will leave\na trailing path separator on the directory.\n\n    dropFileName \"/directory/file.ext\" == \"/directory/\"\n    dropFileName x == Tuple.first (splitFileName x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropTrailingPathSeparator",
+        "comment": "\nRemove any trailing path separators\n\n    dropTrailingPathSeparator \"file/test/\" == \"file/test\"\n              dropTrailingPathSeparator \"/\" == \"/\"\n    Windows:  dropTrailingPathSeparator \"\\\\\" == \"\\\\\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extSeparator",
+        "comment": "\nFile extension character\n\n    extSeparator == '.'\n",
+        "type": "String"
+      },
+      {
+        "name": "hasExtension",
+        "comment": "\nDoes the given filename have an extension?\n\n    hasExtension \"/directory/path.ext\" == True\n    hasExtension \"/directory/path\" == False\n    ull (takeExtension x) == not (hasExtension x)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "hasTrailingPathSeparator",
+        "comment": "\nIs an item either a directory or the last character a path separator?\n\n    hasTrailingPathSeparator \"test\" == False\n    hasTrailingPathSeparator \"test/\" == True\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isExtSeparator",
+        "comment": "\nIs the character an extension character?\n\n    isExtSeparator a == (a == extSeparator)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isPathSeparator",
+        "comment": "\nRather than using `== pathSeparator`, use this. Test if somethin is a path separator.\n\n    isPathSeparator a == (a `elem` pathSeparators)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "joinPath",
+        "comment": "\nJoin path elements back together.\n\n    joinPath [\"/\",\"directory/\",\"file.ext\"] == \"/directory/file.ext\"\n    Valid x => joinPath (splitPath x) == x\n    joinPath [] == \"\"\n    Posix: joinPath [\"test\",\"file\",\"path\"] == \"test/file/path\"\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "pathSeparator",
+        "comment": "\nThe character that separates directories. In the case where more than\none character is possible, `pathSeparator` is the 'ideal' one.\n\n    Windows: pathSeparator == '\\\\'\n    Posix:   pathSeparator ==  '/'\n    isPathSeparator pathSeparator\n",
+        "type": "String"
+      },
+      {
+        "name": "pathSeparators",
+        "comment": "\nThe list of all possible separators.\n\n    Windows: pathSeparators == ['\\\\', '/']\n    Posix:   pathSeparators == ['/']\n    pathSeparator `elem` pathSeparators\n",
+        "type": "List String"
+      },
+      {
+        "name": "replaceBaseName",
+        "comment": "\nSet the base name.\n\n    replaceBaseName \"/directory/other.ext\" \"file\" == \"/directory/file.ext\"\n    replaceBaseName \"file/test.txt\" \"bob\" == \"file/bob.txt\"\n    replaceBaseName \"fred\" \"bill\" == \"bill\"\n    replaceBaseName \"/dave/fred/bob.gz.tar\" \"new\" == \"/dave/fred/new.tar\"\n    Valid x => replaceBaseName x (takeBaseName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceDirectory",
+        "comment": "\nSet the directory, keeping the filename the same.\n\n    replaceDirectory \"root/file.ext\" \"/directory/\" == \"/directory/file.ext\"\n    Valid x => replaceDirectory x (takeDirectory x) `equalFilePath` x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceExtension",
+        "comment": "\nSet the extension of a file, overwriting one if already present, equivalent to `-<.>`.\n\n    replaceExtension \"/directory/path.txt\" \"ext\" == \"/directory/path.ext\"\n    replaceExtension \"/directory/path.txt\" \".ext\" == \"/directory/path.ext\"\n    replaceExtension \"file.txt\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"bob\" == \"file.bob\"\n    replaceExtension \"file\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"\" == \"file\"\n    replaceExtension \"file.fred.bob\" \"txt\" == \"file.fred.txt\"\n    replaceExtension x y == addExtension (dropExtension x) y\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceFileName",
+        "comment": "\nSet the filename.\n\n    replaceFileName \"/directory/other.txt\" \"file.ext\" == \"/directory/file.ext\"\n    Valid x => replaceFileName x (takeFileName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "splitExtension",
+        "comment": "\nSplit on the extension. `addExtension` is the inverse.\n\n    splitExtension \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    uncurry (++) (splitExtension x) == x\n    Valid x => uncurry addExtension (splitExtension x) == x\n    splitExtension \"file.txt\" == (\"file\",\".txt\")\n    splitExtension \"file\" == (\"file\",\"\")\n    splitExtension \"file/file.txt\" == (\"file/file\",\".txt\")\n    splitExtension \"file.txt/boris\" == (\"file.txt/boris\",\"\")\n    splitExtension \"file.txt/boris.ext\" == (\"file.txt/boris\",\".ext\")\n    splitExtension \"file/path.txt.bob.fred\" == (\"file/path.txt.bob\",\".fred\")\n    splitExtension \"file/path.txt/\" == (\"file/path.txt/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitExtensions",
+        "comment": "\nSplit on all extensions.\n\n    splitExtensions \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n    uncurry (++) (splitExtensions x) == x\n    Valid x => uncurry addExtension (splitExtensions x) == x\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitFileName",
+        "comment": "\nOperations on a filepath, as a list of directories\n\nSplit a filename into directory and file. `combine` is the inverse.\nThe first component will often end with a trailing slash.\n\n    splitFileName \"/directory/file.ext\" == (\"/directory/\",\"file.ext\")\n    Valid x => isValid (Tuple.first (splitFileName x))\n    splitFileName \"file/bob.txt\" == (\"file/\", \"bob.txt\")\n    splitFileName \"file/\" == (\"file/\", \"\")\n    splitFileName \"bob\" == (\"\", \"bob\")\n    Posix:   splitFileName \"/\" == (\"/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitPath",
+        "comment": "\nSplit a path by the directory separator.\n\n    splitPath \"/directory/file.ext\" == [\"/\",\"directory/\",\"file.ext\"]\n    concat (splitPath x) == x\n    splitPath \"test//item/\" == [\"test//\",\"item/\"]\n    splitPath \"test/item/file\" == [\"test/\",\"item/\",\"file\"]\n    splitPath \"\" == []\n    Windows: splitPath \"c:\\\\test\\\\path\" == [\"c:\\\\\",\"test\\\\\",\"path\"]\n    Posix:   splitPath \"/file/test\" == [\"/\",\"file/\",\"test\"]\n",
+        "type": "String -> List String"
+      },
+      {
+        "name": "takeBaseName",
+        "comment": "\nGet the base name, without an extension or path.\n\n    takeBaseName \"/directory/file.ext\" == \"file\"\n    takeBaseName \"file/test.txt\" == \"test\"\n    takeBaseName \"dave.ext\" == \"dave\"\n    takeBaseName \"\" == \"\"\n    takeBaseName \"test\" == \"test\"\n    takeBaseName (addTrailingPathSeparator x) == \"\"\n    takeBaseName \"file/file.tar.gz\" == \"file.tar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeDirectory",
+        "comment": "\nGet the directory name, move up one level.\n\n              takeDirectory \"/directory/other.ext\" == \"/directory\"\n              takeDirectory x `isPrefixOf` x || takeDirectory x == \".\"\n              takeDirectory \"foo\" == \".\"\n              takeDirectory \"/\" == \"/\"\n              takeDirectory \"/foo\" == \"/\"\n              takeDirectory \"/foo/bar/baz\" == \"/foo/bar\"\n              takeDirectory \"/foo/bar/baz/\" == \"/foo/bar/baz\"\n              takeDirectory \"foo/bar/baz\" == \"foo/bar\"\n    Windows:  takeDirectory \"foo\\\\bar\" == \"foo\"\n    Windows:  takeDirectory \"foo\\\\bar\\\\\\\\\" == \"foo\\\\bar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtension",
+        "comment": "\nGet the extension of a file, returns \"\" for no extension, .ext otherwise.\n\n    takeExtension \"/directory/path.ext\" == \".ext\"\n    takeExtension x == Tuple.second (splitExtension x)\n    Valid x => takeExtension (addExtension x \"ext\") == \".ext\"\n    Valid x => takeExtension (replaceExtension x \"ext\") == \".ext\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtensions",
+        "comment": "\nGet all extensions.\n\n    takeExtensions \"/directory/path.ext\" == \".ext\"\n    takeExtensions \"file.tar.gz\" == \".tar.gz\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeFileName",
+        "comment": "\nGet the file name.\n\n    takeFileName \"/directory/file.ext\" == \"file.ext\"\n    takeFileName \"test/\" == \"\"\n    takeFileName x `isSuffixOf` x\n    takeFileName x == Tuple.second (splitFileName x)\n    Valid x => takeFileName (replaceFileName x \"fred\") == \"fred\"\n    Valid x => takeFileName (x </> \"fred\") == \"fred\"\n    Valid x => isRelative (takeFileName x)\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Path.Posix",
+    "comment": "\nSpecialized path manipulation functions for working with Posix paths. For documentation on the API refer to 'Path.Generic'.\n\nReexports all functions from the 'Path.Generic' module, specialized to Posix paths.\n\nSince operator reexport does not seem to work, <.> and -<.> have to be imported from the Generic module directly.\n\n# Separator predicates\n@docs pathSeparator, pathSeparators, isPathSeparator, extSeparator, isExtSeparator\n\n# Extension functions\n@docs splitExtension, takeExtension, replaceExtension, dropExtension, addExtension, hasExtension, splitExtensions, dropExtensions, takeExtensions\n\n# Filename/directory functions\n@docs splitFileName, takeFileName, replaceFileName, dropFileName, takeBaseName, replaceBaseName, takeDirectory, replaceDirectory, combine, splitPath, joinPath\n\n# Trailing slash functions\n@docs hasTrailingPathSeparator, addTrailingPathSeparator, dropTrailingPathSeparator\n\n# Specialized operators\n@docs (</>)\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "</>",
+        "comment": "\n  Operator Version of 'combine'\n",
+        "type": "String -> String -> String",
+        "associativity": "right",
+        "precedence": 5
+      },
+      {
+        "name": "addExtension",
+        "comment": "\nAdd an extension, even if there is already one there, equivalent to `<.>`.\n\n    addExtension \"/directory/path\" \"ext\" == \"/directory/path.ext\"\n    addExtension \"file.txt\" \"bib\" == \"file.txt.bib\"\n    addExtension \"file.\" \".bib\" == \"file..bib\"\n    addExtension \"file\" \".bib\" == \"file.bib\"\n    addExtension \"/\" \"x\" == \"/.x\"\n    Valid x => takeFileName (addExtension (addTrailingPathSeparator x) \"ext\") == \".ext\"\n    Windows: addExtension \"\\\\\\\\share\" \".txt\" == \"\\\\\\\\share\\\\.txt\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "addTrailingPathSeparator",
+        "comment": "\nAdd a trailing file path separator if one is not already present.\n\n    hasTrailingPathSeparator (addTrailingPathSeparator x)\n    hasTrailingPathSeparator x ==> addTrailingPathSeparator x == x\n    Posix:    addTrailingPathSeparator \"test/rest\" == \"test/rest/\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "combine",
+        "comment": "\nCombine two paths, if the second path starts with a path separator then it returns the second.\n\n    Valid x => combine (takeDirectory x) (takeFileName x) `equalFilePath` x\n\nCombined:\n\n    Posix:   combine \"/\" \"test\" == \"/test\"\n    Posix:   combine \"home\" \"bob\" == \"home/bob\"\n    Posix:   combine \"x:\" \"foo\" == \"x:/foo\"\n    Windows: combine \"C:\\\\foo\" \"bar\" == \"C:\\\\foo\\\\bar\"\n    Windows: combine \"home\" \"bob\" == \"home\\\\bob\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "dropExtension",
+        "comment": "\nRemove last extension, and the \".\" preceding it.\n\n    dropExtension \"/directory/path.ext\" == \"/directory/path\"\n    dropExtension x == Tuple.first (splitExtension x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropExtensions",
+        "comment": "\nDrop all extensions.\n\n    dropExtensions \"/directory/path.ext\" == \"/directory/path\"\n    dropExtensions \"file.tar.gz\" == \"file\"\n    not <| hasExtension <| dropExtensions x\n    not <| any isExtSeparator <| takeFileName <| dropExtensions x\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropFileName",
+        "comment": "\nDrop the filename. Unlike `takeDirectory`, this function will leave\na trailing path separator on the directory.\n\n    dropFileName \"/directory/file.ext\" == \"/directory/\"\n    dropFileName x == Tuple.first (splitFileName x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropTrailingPathSeparator",
+        "comment": "\nRemove any trailing path separators\n\n    dropTrailingPathSeparator \"file/test/\" == \"file/test\"\n              dropTrailingPathSeparator \"/\" == \"/\"\n    Windows:  dropTrailingPathSeparator \"\\\\\" == \"\\\\\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extSeparator",
+        "comment": "\nFile extension character\n\n    extSeparator == '.'\n",
+        "type": "String"
+      },
+      {
+        "name": "hasExtension",
+        "comment": "\nDoes the given filename have an extension?\n\n    hasExtension \"/directory/path.ext\" == True\n    hasExtension \"/directory/path\" == False\n    ull (takeExtension x) == not (hasExtension x)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "hasTrailingPathSeparator",
+        "comment": "\nIs an item either a directory or the last character a path separator?\n\n    hasTrailingPathSeparator \"test\" == False\n    hasTrailingPathSeparator \"test/\" == True\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isExtSeparator",
+        "comment": "\nIs the character an extension character?\n\n    isExtSeparator a == (a == extSeparator)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isPathSeparator",
+        "comment": "\nRather than using `== pathSeparator`, use this. Test if somethin is a path separator.\n\n    isPathSeparator a == (a `elem` pathSeparators)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "joinPath",
+        "comment": "\nJoin path elements back together.\n\n    joinPath [\"/\",\"directory/\",\"file.ext\"] == \"/directory/file.ext\"\n    Valid x => joinPath (splitPath x) == x\n    joinPath [] == \"\"\n    Posix: joinPath [\"test\",\"file\",\"path\"] == \"test/file/path\"\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "pathSeparator",
+        "comment": "\nThe character that separates directories. In the case where more than\none character is possible, `pathSeparator` is the 'ideal' one.\n\n    Windows: pathSeparator == '\\\\'\n    Posix:   pathSeparator ==  '/'\n    isPathSeparator pathSeparator\n",
+        "type": "String"
+      },
+      {
+        "name": "pathSeparators",
+        "comment": "\nThe list of all possible separators.\n\n    Windows: pathSeparators == ['\\\\', '/']\n    Posix:   pathSeparators == ['/']\n    pathSeparator `elem` pathSeparators\n",
+        "type": "List String"
+      },
+      {
+        "name": "replaceBaseName",
+        "comment": "\nSet the base name.\n\n    replaceBaseName \"/directory/other.ext\" \"file\" == \"/directory/file.ext\"\n    replaceBaseName \"file/test.txt\" \"bob\" == \"file/bob.txt\"\n    replaceBaseName \"fred\" \"bill\" == \"bill\"\n    replaceBaseName \"/dave/fred/bob.gz.tar\" \"new\" == \"/dave/fred/new.tar\"\n    Valid x => replaceBaseName x (takeBaseName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceDirectory",
+        "comment": "\nSet the directory, keeping the filename the same.\n\n    replaceDirectory \"root/file.ext\" \"/directory/\" == \"/directory/file.ext\"\n    Valid x => replaceDirectory x (takeDirectory x) `equalFilePath` x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceExtension",
+        "comment": "\nSet the extension of a file, overwriting one if already present, equivalent to `-<.>`.\n\n    replaceExtension \"/directory/path.txt\" \"ext\" == \"/directory/path.ext\"\n    replaceExtension \"/directory/path.txt\" \".ext\" == \"/directory/path.ext\"\n    replaceExtension \"file.txt\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"bob\" == \"file.bob\"\n    replaceExtension \"file\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"\" == \"file\"\n    replaceExtension \"file.fred.bob\" \"txt\" == \"file.fred.txt\"\n    replaceExtension x y == addExtension (dropExtension x) y\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceFileName",
+        "comment": "\nSet the filename.\n\n    replaceFileName \"/directory/other.txt\" \"file.ext\" == \"/directory/file.ext\"\n    Valid x => replaceFileName x (takeFileName x) == x\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "splitExtension",
+        "comment": "\nSplit on the extension. `addExtension` is the inverse.\n\n    splitExtension \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    uncurry (++) (splitExtension x) == x\n    Valid x => uncurry addExtension (splitExtension x) == x\n    splitExtension \"file.txt\" == (\"file\",\".txt\")\n    splitExtension \"file\" == (\"file\",\"\")\n    splitExtension \"file/file.txt\" == (\"file/file\",\".txt\")\n    splitExtension \"file.txt/boris\" == (\"file.txt/boris\",\"\")\n    splitExtension \"file.txt/boris.ext\" == (\"file.txt/boris\",\".ext\")\n    splitExtension \"file/path.txt.bob.fred\" == (\"file/path.txt.bob\",\".fred\")\n    splitExtension \"file/path.txt/\" == (\"file/path.txt/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitExtensions",
+        "comment": "\nSplit on all extensions.\n\n    splitExtensions \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n    uncurry (++) (splitExtensions x) == x\n    Valid x => uncurry addExtension (splitExtensions x) == x\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitFileName",
+        "comment": "\nOperations on a filepath, as a list of directories\n\nSplit a filename into directory and file. `combine` is the inverse.\nThe first component will often end with a trailing slash.\n\n    splitFileName \"/directory/file.ext\" == (\"/directory/\",\"file.ext\")\n    Valid x => isValid (Tuple.first (splitFileName x))\n    splitFileName \"file/bob.txt\" == (\"file/\", \"bob.txt\")\n    splitFileName \"file/\" == (\"file/\", \"\")\n    splitFileName \"bob\" == (\"\", \"bob\")\n    Posix:   splitFileName \"/\" == (\"/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitPath",
+        "comment": "\nSplit a path by the directory separator.\n\n    splitPath \"/directory/file.ext\" == [\"/\",\"directory/\",\"file.ext\"]\n    concat (splitPath x) == x\n    splitPath \"test//item/\" == [\"test//\",\"item/\"]\n    splitPath \"test/item/file\" == [\"test/\",\"item/\",\"file\"]\n    splitPath \"\" == []\n    Windows: splitPath \"c:\\\\test\\\\path\" == [\"c:\\\\\",\"test\\\\\",\"path\"]\n    Posix:   splitPath \"/file/test\" == [\"/\",\"file/\",\"test\"]\n",
+        "type": "String -> List String"
+      },
+      {
+        "name": "takeBaseName",
+        "comment": "\nGet the base name, without an extension or path.\n\n    takeBaseName \"/directory/file.ext\" == \"file\"\n    takeBaseName \"file/test.txt\" == \"test\"\n    takeBaseName \"dave.ext\" == \"dave\"\n    takeBaseName \"\" == \"\"\n    takeBaseName \"test\" == \"test\"\n    takeBaseName (addTrailingPathSeparator x) == \"\"\n    takeBaseName \"file/file.tar.gz\" == \"file.tar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeDirectory",
+        "comment": "\nGet the directory name, move up one level.\n\n              takeDirectory \"/directory/other.ext\" == \"/directory\"\n              takeDirectory x `isPrefixOf` x || takeDirectory x == \".\"\n              takeDirectory \"foo\" == \".\"\n              takeDirectory \"/\" == \"/\"\n              takeDirectory \"/foo\" == \"/\"\n              takeDirectory \"/foo/bar/baz\" == \"/foo/bar\"\n              takeDirectory \"/foo/bar/baz/\" == \"/foo/bar/baz\"\n              takeDirectory \"foo/bar/baz\" == \"foo/bar\"\n    Windows:  takeDirectory \"foo\\\\bar\" == \"foo\"\n    Windows:  takeDirectory \"foo\\\\bar\\\\\\\\\" == \"foo\\\\bar\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtension",
+        "comment": "\nGet the extension of a file, returns \"\" for no extension, .ext otherwise.\n\n    takeExtension \"/directory/path.ext\" == \".ext\"\n    takeExtension x == Tuple.second (splitExtension x)\n    Valid x => takeExtension (addExtension x \"ext\") == \".ext\"\n    Valid x => takeExtension (replaceExtension x \"ext\") == \".ext\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtensions",
+        "comment": "\nGet all extensions.\n\n    takeExtensions \"/directory/path.ext\" == \".ext\"\n    takeExtensions \"file.tar.gz\" == \".tar.gz\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeFileName",
+        "comment": "\nGet the file name.\n\n    takeFileName \"/directory/file.ext\" == \"file.ext\"\n    takeFileName \"test/\" == \"\"\n    takeFileName x `isSuffixOf` x\n    takeFileName x == Tuple.second (splitFileName x)\n    Valid x => takeFileName (replaceFileName x \"fred\") == \"fred\"\n    Valid x => takeFileName (x </> \"fred\") == \"fred\"\n    Valid x => isRelative (takeFileName x)\n",
+        "type": "String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Path.Generic",
+    "comment": "\nFunctions for working with paths, parameterized over the platform.\n\nIf you use the specialized versions from 'Path.Windows', 'Path.Posix' or 'Path.Url' the 'Platform' parameter is to be omitted.\n\n# Platforms\n@docs Platform\n\n# Separator predicates\n@docs pathSeparator, pathSeparators, isPathSeparator, extSeparator, isExtSeparator\n\n# Extension functions\n@docs splitExtension, takeExtension, replaceExtension, (-<.>), dropExtension, addExtension, hasExtension, (<.>), splitExtensions, dropExtensions, takeExtensions\n\n# Filename/directory functions\n@docs splitFileName, takeFileName, replaceFileName, dropFileName, takeBaseName, replaceBaseName, takeDirectory, replaceDirectory, combine, splitPath, joinPath\n\n# Trailing slash functions\n@docs hasTrailingPathSeparator, addTrailingPathSeparator, dropTrailingPathSeparator\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Platform",
+        "comment": "\nAvailable platforms for path manipulations.\n\n'Windows', 'Posix' are relatively self explanatory\n\n'Url' is specialized to filepaths as used on the web\n",
+        "args": [],
+        "cases": [
+          [
+            "Posix",
+            []
+          ],
+          [
+            "Windows",
+            []
+          ],
+          [
+            "Url",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "-<.>",
+        "comment": "\nOperator version of `replaceExtension`\n",
+        "type": "String -> String -> String",
+        "associativity": "right",
+        "precedence": 7
+      },
+      {
+        "name": "<.>",
+        "comment": "\nOperator version of `addExtension`\n",
+        "type": "String -> String -> String",
+        "associativity": "right",
+        "precedence": 7
+      },
+      {
+        "name": "addExtension",
+        "comment": "\nAdd an extension, even if there is already one there, equivalent to `<.>`.\n\n    addExtension \"/directory/path\" \"ext\" == \"/directory/path.ext\"\n    addExtension \"file.txt\" \"bib\" == \"file.txt.bib\"\n    addExtension \"file.\" \".bib\" == \"file..bib\"\n    addExtension \"file\" \".bib\" == \"file.bib\"\n    addExtension \"/\" \"x\" == \"/.x\"\n    Valid x => takeFileName (addExtension (addTrailingPathSeparator x) \"ext\") == \".ext\"\n    Windows: addExtension \"\\\\\\\\share\" \".txt\" == \"\\\\\\\\share\\\\.txt\"\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "addTrailingPathSeparator",
+        "comment": "\nAdd a trailing file path separator if one is not already present.\n\n    hasTrailingPathSeparator (addTrailingPathSeparator x)\n    hasTrailingPathSeparator x ==> addTrailingPathSeparator x == x\n    Posix:    addTrailingPathSeparator \"test/rest\" == \"test/rest/\"\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      },
+      {
+        "name": "combine",
+        "comment": "\nCombine two paths, if the second path starts with a path separator then it returns the second.\n\n    Valid x => combine (takeDirectory x) (takeFileName x) `equalFilePath` x\n\nCombined:\n\n    Posix:   combine \"/\" \"test\" == \"/test\"\n    Posix:   combine \"home\" \"bob\" == \"home/bob\"\n    Posix:   combine \"x:\" \"foo\" == \"x:/foo\"\n    Windows: combine \"C:\\\\foo\" \"bar\" == \"C:\\\\foo\\\\bar\"\n    Windows: combine \"home\" \"bob\" == \"home\\\\bob\"\n",
+        "type": "Path.Generic.Platform -> String -> String -> String"
+      },
+      {
+        "name": "dropExtension",
+        "comment": "\nRemove last extension, and the \".\" preceding it.\n\n    dropExtension \"/directory/path.ext\" == \"/directory/path\"\n    dropExtension x == Tuple.first (splitExtension x)\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropExtensions",
+        "comment": "\nDrop all extensions.\n\n    dropExtensions \"/directory/path.ext\" == \"/directory/path\"\n    dropExtensions \"file.tar.gz\" == \"file\"\n    not <| hasExtension <| dropExtensions x\n    not <| any isExtSeparator <| takeFileName <| dropExtensions x\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "dropFileName",
+        "comment": "\nDrop the filename. Unlike `takeDirectory`, this function will leave\na trailing path separator on the directory.\n\n    dropFileName \"/directory/file.ext\" == \"/directory/\"\n    dropFileName x == Tuple.first (splitFileName x)\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      },
+      {
+        "name": "dropTrailingPathSeparator",
+        "comment": "\nRemove any trailing path separators\n\n    dropTrailingPathSeparator \"file/test/\" == \"file/test\"\n              dropTrailingPathSeparator \"/\" == \"/\"\n    Windows:  dropTrailingPathSeparator \"\\\\\" == \"\\\\\"\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      },
+      {
+        "name": "extSeparator",
+        "comment": "\nFile extension character\n\n    extSeparator == '.'\n",
+        "type": "String"
+      },
+      {
+        "name": "hasExtension",
+        "comment": "\nDoes the given filename have an extension?\n\n    hasExtension \"/directory/path.ext\" == True\n    hasExtension \"/directory/path\" == False\n    ull (takeExtension x) == not (hasExtension x)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "hasTrailingPathSeparator",
+        "comment": "\nIs an item either a directory or the last character a path separator?\n\n    hasTrailingPathSeparator \"test\" == False\n    hasTrailingPathSeparator \"test/\" == True\n",
+        "type": "Path.Generic.Platform -> String -> Bool"
+      },
+      {
+        "name": "isExtSeparator",
+        "comment": "\nIs the character an extension character?\n\n    isExtSeparator a == (a == extSeparator)\n",
+        "type": "String -> Bool"
+      },
+      {
+        "name": "isPathSeparator",
+        "comment": "\nRather than using `== pathSeparator`, use this. Test if somethin is a path separator.\n\n    isPathSeparator a == (a `elem` pathSeparators)\n",
+        "type": "Path.Generic.Platform -> String -> Bool"
+      },
+      {
+        "name": "joinPath",
+        "comment": "\nJoin path elements back together.\n\n    joinPath [\"/\",\"directory/\",\"file.ext\"] == \"/directory/file.ext\"\n    Valid x => joinPath (splitPath x) == x\n    joinPath [] == \"\"\n    Posix: joinPath [\"test\",\"file\",\"path\"] == \"test/file/path\"\n",
+        "type": "Path.Generic.Platform -> List String -> String"
+      },
+      {
+        "name": "pathSeparator",
+        "comment": "\nThe character that separates directories. In the case where more than\none character is possible, `pathSeparator` is the 'ideal' one.\n\n    Windows: pathSeparator == '\\\\'\n    Posix:   pathSeparator ==  '/'\n    isPathSeparator pathSeparator\n",
+        "type": "Path.Generic.Platform -> String"
+      },
+      {
+        "name": "pathSeparators",
+        "comment": "\nThe list of all possible separators.\n\n    Windows: pathSeparators == ['\\\\', '/']\n    Posix:   pathSeparators == ['/']\n    pathSeparator `elem` pathSeparators\n",
+        "type": "Path.Generic.Platform -> List String"
+      },
+      {
+        "name": "replaceBaseName",
+        "comment": "\nSet the base name.\n\n    replaceBaseName \"/directory/other.ext\" \"file\" == \"/directory/file.ext\"\n    replaceBaseName \"file/test.txt\" \"bob\" == \"file/bob.txt\"\n    replaceBaseName \"fred\" \"bill\" == \"bill\"\n    replaceBaseName \"/dave/fred/bob.gz.tar\" \"new\" == \"/dave/fred/new.tar\"\n    Valid x => replaceBaseName x (takeBaseName x) == x\n",
+        "type": "Path.Generic.Platform -> String -> String -> String"
+      },
+      {
+        "name": "replaceDirectory",
+        "comment": "\nSet the directory, keeping the filename the same.\n\n    replaceDirectory \"root/file.ext\" \"/directory/\" == \"/directory/file.ext\"\n    Valid x => replaceDirectory x (takeDirectory x) `equalFilePath` x\n",
+        "type": "Path.Generic.Platform -> String -> String -> String"
+      },
+      {
+        "name": "replaceExtension",
+        "comment": "\nSet the extension of a file, overwriting one if already present, equivalent to `-<.>`.\n\n    replaceExtension \"/directory/path.txt\" \"ext\" == \"/directory/path.ext\"\n    replaceExtension \"/directory/path.txt\" \".ext\" == \"/directory/path.ext\"\n    replaceExtension \"file.txt\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"bob\" == \"file.bob\"\n    replaceExtension \"file\" \".bob\" == \"file.bob\"\n    replaceExtension \"file.txt\" \"\" == \"file\"\n    replaceExtension \"file.fred.bob\" \"txt\" == \"file.fred.txt\"\n    replaceExtension x y == addExtension (dropExtension x) y\n",
+        "type": "String -> String -> String"
+      },
+      {
+        "name": "replaceFileName",
+        "comment": "\nSet the filename.\n\n    replaceFileName \"/directory/other.txt\" \"file.ext\" == \"/directory/file.ext\"\n    Valid x => replaceFileName x (takeFileName x) == x\n",
+        "type": "Path.Generic.Platform -> String -> String -> String"
+      },
+      {
+        "name": "splitExtension",
+        "comment": "\nSplit on the extension. `addExtension` is the inverse.\n\n    splitExtension \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    uncurry (++) (splitExtension x) == x\n    Valid x => uncurry addExtension (splitExtension x) == x\n    splitExtension \"file.txt\" == (\"file\",\".txt\")\n    splitExtension \"file\" == (\"file\",\"\")\n    splitExtension \"file/file.txt\" == (\"file/file\",\".txt\")\n    splitExtension \"file.txt/boris\" == (\"file.txt/boris\",\"\")\n    splitExtension \"file.txt/boris.ext\" == (\"file.txt/boris\",\".ext\")\n    splitExtension \"file/path.txt.bob.fred\" == (\"file/path.txt.bob\",\".fred\")\n    splitExtension \"file/path.txt/\" == (\"file/path.txt/\",\"\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitExtensions",
+        "comment": "\nSplit on all extensions.\n\n    splitExtensions \"/directory/path.ext\" == (\"/directory/path\",\".ext\")\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n    uncurry (++) (splitExtensions x) == x\n    Valid x => uncurry addExtension (splitExtensions x) == x\n    splitExtensions \"file.tar.gz\" == (\"file\",\".tar.gz\")\n",
+        "type": "String -> ( String, String )"
+      },
+      {
+        "name": "splitFileName",
+        "comment": "\nOperations on a filepath, as a list of directories\n\nSplit a filename into directory and file. `combine` is the inverse.\nThe first component will often end with a trailing slash.\n\n    splitFileName \"/directory/file.ext\" == (\"/directory/\",\"file.ext\")\n    Valid x => isValid (Tuple.first (splitFileName x))\n    splitFileName \"file/bob.txt\" == (\"file/\", \"bob.txt\")\n    splitFileName \"file/\" == (\"file/\", \"\")\n    splitFileName \"bob\" == (\"\", \"bob\")\n    Posix:   splitFileName \"/\" == (\"/\",\"\")\n",
+        "type": "Path.Generic.Platform -> String -> ( String, String )"
+      },
+      {
+        "name": "splitPath",
+        "comment": "\nSplit a path by the directory separator.\n\n    splitPath \"/directory/file.ext\" == [\"/\",\"directory/\",\"file.ext\"]\n    concat (splitPath x) == x\n    splitPath \"test//item/\" == [\"test//\",\"item/\"]\n    splitPath \"test/item/file\" == [\"test/\",\"item/\",\"file\"]\n    splitPath \"\" == []\n    Windows: splitPath \"c:\\\\test\\\\path\" == [\"c:\\\\\",\"test\\\\\",\"path\"]\n    Posix:   splitPath \"/file/test\" == [\"/\",\"file/\",\"test\"]\n",
+        "type": "Path.Generic.Platform -> String -> List String"
+      },
+      {
+        "name": "takeBaseName",
+        "comment": "\nGet the base name, without an extension or path.\n\n    takeBaseName \"/directory/file.ext\" == \"file\"\n    takeBaseName \"file/test.txt\" == \"test\"\n    takeBaseName \"dave.ext\" == \"dave\"\n    takeBaseName \"\" == \"\"\n    takeBaseName \"test\" == \"test\"\n    takeBaseName (addTrailingPathSeparator x) == \"\"\n    takeBaseName \"file/file.tar.gz\" == \"file.tar\"\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      },
+      {
+        "name": "takeDirectory",
+        "comment": "\nGet the directory name, move up one level.\n\n              takeDirectory \"/directory/other.ext\" == \"/directory\"\n              takeDirectory x `isPrefixOf` x || takeDirectory x == \".\"\n              takeDirectory \"foo\" == \".\"\n              takeDirectory \"/\" == \"/\"\n              takeDirectory \"/foo\" == \"/\"\n              takeDirectory \"/foo/bar/baz\" == \"/foo/bar\"\n              takeDirectory \"/foo/bar/baz/\" == \"/foo/bar/baz\"\n              takeDirectory \"foo/bar/baz\" == \"foo/bar\"\n    Windows:  takeDirectory \"foo\\\\bar\" == \"foo\"\n    Windows:  takeDirectory \"foo\\\\bar\\\\\\\\\" == \"foo\\\\bar\"\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      },
+      {
+        "name": "takeExtension",
+        "comment": "\nGet the extension of a file, returns \"\" for no extension, .ext otherwise.\n\n    takeExtension \"/directory/path.ext\" == \".ext\"\n    takeExtension x == Tuple.second (splitExtension x)\n    Valid x => takeExtension (addExtension x \"ext\") == \".ext\"\n    Valid x => takeExtension (replaceExtension x \"ext\") == \".ext\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeExtensions",
+        "comment": "\nGet all extensions.\n\n    takeExtensions \"/directory/path.ext\" == \".ext\"\n    takeExtensions \"file.tar.gz\" == \".tar.gz\"\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "takeFileName",
+        "comment": "\nGet the file name.\n\n    takeFileName \"/directory/file.ext\" == \"file.ext\"\n    takeFileName \"test/\" == \"\"\n    takeFileName x `isSuffixOf` x\n    takeFileName x == Tuple.second (splitFileName x)\n    Valid x => takeFileName (replaceFileName x \"fred\") == \"fred\"\n    Valid x => takeFileName (x </> \"fred\") == \"fred\"\n    Valid x => isRelative (takeFileName x)\n",
+        "type": "Path.Generic.Platform -> String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

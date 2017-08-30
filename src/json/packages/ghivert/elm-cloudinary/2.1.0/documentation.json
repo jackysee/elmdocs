@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Cloudinary",
+    "comment": " This library provides a user friendly interface to upload your photos to Cloudinary.\n\n# Definition\n@docs Settings\n\n# Upload\n@docs uploadPhoto\n@docs trackUploadPhoto\n\n# Access Uploaded Images\n@docs toUrl\n\n",
+    "aliases": [
+      {
+        "name": "Settings",
+        "comment": " Handle all Cloudinary settings used in upload request to Cloudinary API.\nThe signature must be produced by the backend, using public API key, and timestamp. It is a SHA1 algorithm, consisting of the string \"timestamp=XXXXXXX{APIKEY}\", where XXXXXXX is the timestamp, and {APIKEY} is your private API key (which should not be released on your website). Such a signature remains valid one hour after the timestamp.\n",
+        "args": [],
+        "type": "{ username : String , apiKey : String , timestamp : Int , signature : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "toUrl",
+        "comment": " Access the uploaded photo on Cloudinary servers. Provide the ID to get the\naccess link. Does not handle transformation on the fly for the moment. ",
+        "type": "Cloudinary.Settings -> Cloudinary.Id -> Cloudinary.Url"
+      },
+      {
+        "name": "trackUploadPhoto",
+        "comment": " Upload the photo provided into parameter, and returns it's public ID.\ntrackUploadPhoto accepts any file, encoded in base64. You can get it easily via ports for your uploads.\ntrackUploadPhoto allows to track the HTTP transfer. You should provide a msg to get those informations. ",
+        "type": "Cloudinary.Settings -> (Http.Progress.Progress String -> msg) -> String -> Platform.Sub.Sub msg"
+      },
+      {
+        "name": "uploadPhoto",
+        "comment": " Upload the photo provided into parameter, and returns it's public ID.\nAt the moment, only the public ID is returned, but it can be improved in a near future.\nuploadPhoto accepts any file, encoded in base64. You can get it easily via ports for your uploads. ",
+        "type": "Cloudinary.Settings -> (Result.Result Http.Error String -> msg) -> String -> Platform.Cmd.Cmd msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

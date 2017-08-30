@@ -1,0 +1,36 @@
+[
+  {
+    "name": "View.Extra",
+    "comment": "\n\n\n# Conditional views\n\n@docs viewIf, viewHiddenIf, viewJust, viewMaybe, viewIfElements\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "viewHiddenIf",
+        "comment": " Add `display: none` to view if condition is _not_ met.\n",
+        "type": "Html.Html msg -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "viewIf",
+        "comment": " View only if condition is met.\n",
+        "type": "(() -> Html.Html msg) -> Bool -> Html.Html msg"
+      },
+      {
+        "name": "viewIfElements",
+        "comment": " View if resulting list has elements.\n",
+        "type": "(() -> Html.Html msg) -> List b -> Html.Html msg"
+      },
+      {
+        "name": "viewJust",
+        "comment": " View value of if `Maybe` is a `Just`, otherwise show nothing.\n",
+        "type": "(a -> Html.Html msg) -> Maybe.Maybe a -> Html.Html msg"
+      },
+      {
+        "name": "viewMaybe",
+        "comment": " Use a view based on the `Maybe` value.\n\n    view : Maybe Feedback -> Html msg\n    view feedback =\n        div []\n            [ h1 [] [ text \"Feedback\" ]\n            , viewMaybe viewFeedback viewPlaceholder feedback\n            ]\n\n",
+        "type": "(a -> Html.Html msg) -> (() -> Html.Html msg) -> Maybe.Maybe a -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

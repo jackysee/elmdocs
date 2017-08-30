@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Loop",
+    "comment": " Repeatedly apply a function to a value while or until a predicate holds.\n\n# Looping\n@docs while, until\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "until",
+        "comment": " Repeatedly apply a function to a value *until* a predicate holds.\n\n    until (\\ n -> n > 10) ((+) 5) 2 == 12\n",
+        "type": "(a -> Bool) -> (a -> a) -> a -> a"
+      },
+      {
+        "name": "while",
+        "comment": " Repeatedly apply a function to a value *while* a predicate holds.\n\n    while (\\ n -> n < 10) ((+) 5) 2 == 12\n",
+        "type": "(a -> Bool) -> (a -> a) -> a -> a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

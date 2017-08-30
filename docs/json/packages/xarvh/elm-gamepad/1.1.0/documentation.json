@@ -1,0 +1,436 @@
+[
+  {
+    "name": "Gamepad.Remap",
+    "comment": " This module contains the [Elm Architecture](#https://guide.elm-lang.org/architecture/)\nfunctions and types that you can use to quickly add bare bones gamepad\nremapping capabilities to your app.\n\nIf you prefer to write your own remapping tool, you can use this as a guide.\n\nYou give the tool the list of `Gamepad.Destination`s your application needs\nand the index of the gamepad to remap: the tool will then show the destinations\none by one, and associate each with whatever button/stick the user moves.\n\nYou can abort the remapping simply by stopping to show it and ignoring its `Msg`s.\n\nRemember that, once added to a Database, the remap will affect all gamepads of the same\ntype (ie, with the same id).\n\n\n# Elm Architecture\n\n@docs Model, Msg, init, update, Outcome, view, subscriptions, PortSubscription\n\n\n# Utility\n\n@docs getCurrentButton, getTargetGamepadIndex, skipCurrentButton, testMsg\n\n",
+    "aliases": [
+      {
+        "name": "PortSubscription",
+        "comment": " This is the type that the gamepad port should have.\nIt matches the one you will find in [port/GamepadPort.elm](https://github.com/xarvh/elm-gamepad/blob/master/port/GamepadPort.elm)\n",
+        "args": [
+          "msg"
+        ],
+        "type": "(( Time.Time, Gamepad.Blob ) -> msg) -> Platform.Sub.Sub msg"
+      }
+    ],
+    "types": [
+      {
+        "name": "Model",
+        "comment": " This describes the state of the tool.\n`presentation` is whatever type you want to use to present a\n`Gamepad.Destination` to the user.\n",
+        "args": [
+          "presentation"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Outcome",
+        "comment": " This describes the outcome of a change in the Model.\n\n`StillOpen` means that the user is still remapping.\n\n`Error` means that something went wrong.\n\n`UpdateDatabase` means that the user is done; we can use the provided\nfunction `Database -> Database` to insert the new map in our database.\n\n    updatedModel =\n        case Gamepad.Remap.update remapMsg remapModel of\n            StillOpen updatedRemapModel ->\n                { model | maybeRemapModel = Just updatedRemapModel }\n\n            Error message ->\n                { model\n                    | maybeRemapModel = Nothing\n                    , maybeErrorMessage = Just message\n                }\n\n            UpdateDatabase updateDatabase ->\n                { model\n                    | maybeRemapModel = Nothing\n                    , gamepadDatabase = updateDatabase model.gamepadDatabase\n                }\n\n",
+        "args": [
+          "presentation"
+        ],
+        "cases": [
+          [
+            "StillOpen",
+            [
+              "Gamepad.Remap.Model presentation"
+            ]
+          ],
+          [
+            "Error",
+            [
+              "String"
+            ]
+          ],
+          [
+            "UpdateDatabase",
+            [
+              "Gamepad.Database -> Gamepad.Database"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "getCurrentButton",
+        "comment": " Returns the `presentation` of the input that the tool is currently\nwaiting for.\nYou have to use this instead of `view` if your presentation type is not String.\n",
+        "type": "Gamepad.Remap.Model presentation -> Maybe.Maybe presentation"
+      },
+      {
+        "name": "getTargetGamepadIndex",
+        "comment": " Returns the index of the gamepad that's being reconfigured.\n",
+        "type": "Gamepad.Remap.Model presentation -> Int"
+      },
+      {
+        "name": "init",
+        "comment": " The first argument is the index of the gamepad you want to remap.\n\nThe second is a list of the inputs you app needs: each is a tuple with\na `Gamepad.Destination` and any object you want to use to present\nthat destination to the user, such as a String or Svg or an animation\nthat explains to the user what that button is used for in your app.\n\n",
+        "type": "Int -> List ( Gamepad.Destination, presentation ) -> Gamepad.Remap.Model presentation"
+      },
+      {
+        "name": "skipCurrentButton",
+        "comment": " You can use this function to allow the user to skip mapping the current\ndestination.\n\nFor example, you can trigger it when the user presses the Space key, or create a\n\"Skip\" `<button>` and trigger it `onClick`.\n\n",
+        "type": "Gamepad.Remap.Model presentation -> Gamepad.Remap.Outcome presentation"
+      },
+      {
+        "name": "subscriptions",
+        "comment": " ",
+        "type": "Gamepad.Remap.PortSubscription Gamepad.Remap.Msg -> Platform.Sub.Sub Gamepad.Remap.Msg"
+      },
+      {
+        "name": "testMsg",
+        "comment": " This is for testing only. Don't use it.\n",
+        "type": "Gamepad.Blob -> Gamepad.Remap.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " ",
+        "type": "Gamepad.Remap.Msg -> Gamepad.Remap.Model presentation -> Gamepad.Remap.Outcome presentation"
+      },
+      {
+        "name": "view",
+        "comment": " You can use this only if your presentation type is `String`.\nIt will return the presentation corresponding to the input that the\ntool is currently waiting for.\n\nIf you want to use a presentation type different than String, you should use\n`getCurrentButton` instead.\n\n",
+        "type": "Gamepad.Remap.Model String -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Gamepad",
+    "comment": " A library to make sense of\n[navigator.getGamepads()](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getGamepads)\n\nFirst things first: you need a JavaScript port to get the return value of\n`navigator.getGamepads()` inside Elm.\nYou can copy the port files from [port/](https://github.com/xarvh/elm-gamepad/tree/master/port).\n\nWithin the library, the raw gamepad information produced by the port is called [Blob](#Blob).\n\nYou can get a list of all recognised and connected gamepads with [getGamepads](#getGamepads).\n\nTo access the information of each [Gamepad](#Gamepad), you can use the button\ngetters: [aIsPressed](#aIsPressed), [leftX](#leftX),\n[rightTriggerValue](#rightTriggerValue) and so on...\n\nMany gamepads have [a standard mapping](https://www.w3.org/TR/gamepad/#remapping)\nand will be recognised automatically, but for all other gamepads, or for custom\nmappings, you will need a button maps [Database](#Database):\nyou can default to [emptyDatabase](#emptyDatabase), and include a remapping\ntool in your app to allow the user to create the mapping.\n\nYou can use the bare bones remapping tool provided in\n[Gamepad.Remap](#Gamepad-Remap) or [build your own](#mapping);\n[getUnknownGamepads](#getUnknownGamepads) will give you a list of connected\ngamepads that need to be mapped.\n\n\n# Blob\n\n@docs Blob\n\n\n# Database\n\n@docs Database, emptyDatabase, databaseFromString, databaseToString\n\n\n# Unknown Gamepads\n\n@docs UnknownGamepad, getUnknownGamepads, unknownGetId, unknownGetIndex\n\n\n# Gamepads\n\nDepending on the hardware, the drivers and the browser, some input values\nwill be digital (True or False) and some will be analog (0 to 1 or -1 to 1).\n\nThe library hides this complexity and converts the values as necessary.\n\n@docs Gamepad, getGamepads, getIndex\n\n\n### Face buttons\n\n@docs aIsPressed, bIsPressed, xIsPressed, yIsPressed\n\n\n### Utility buttons\n\n@docs startIsPressed, backIsPressed, homeIsPressed\n\n\n### Directional pad\n\n@docs dpadUpIsPressed, dpadDownIsPressed, dpadLeftIsPressed, dpadRightIsPressed, dpadX, dpadY\n\n\n### Left thumbstick\n\n@docs leftX, leftY, leftStickIsPressed, leftBumperIsPressed, leftTriggerIsPressed, leftTriggerValue\n\n\n### Right thumbstick\n\n@docs rightX, rightY, rightStickIsPressed, rightBumperIsPressed, rightTriggerIsPressed, rightTriggerValue\n\n\n# Mapping\n\nThese are the functions used to write the remapping tool in [Gamepad.Remap](#Gamepad-Remap).\nYou need them only if instead of [Gamepad.Remap](#Gamepad-Remap) you want to\nwrite your own remapping tool.\n\nA button map associates a raw gamepad input, the [Origin](#Origin), with a\nbutton name, the [Destination](#Destination).\n\nThe steps to create a button map are roughly:\n\n1.  For every [Destination](#Destination) your application requires, you should:\n      - Ask the user to press/push it.\n      - Use [estimateOrigin](#estimateOrigin) to know which [Origin](#Origin) is being activated.\n      - Store this [Origin](#Origin) in a tuple together with its [Destination](#Destination).\n2.  Pass the list of `(Destination, Origin)` tuples to [buttonMapToUpdateDatabase](#buttonMapToUpdateDatabase)\n    to add the new mapping to your [Database](#Database).\n\n@docs getAllGamepadsAsUnknown, Origin, Destination, estimateOrigin, buttonMapToUpdateDatabase\n\n\n# Test\n\n@docs RawGamepad\n\n",
+    "aliases": [
+      {
+        "name": "Blob",
+        "comment": " A Blob describes the raw return value of `navigator.getGamepads()`.\n\nThe whole point of this library is to transform the Blob into something\nthat is nice to use with Elm.\n\n",
+        "args": [],
+        "type": "List (Maybe.Maybe Gamepad.RawGamepad)"
+      },
+      {
+        "name": "RawGamepad",
+        "comment": " This type is exposed only for testing purposes. Don't use it.\n",
+        "args": [],
+        "type": "{ axes : Array.Array Float , buttons : Array.Array ( Bool, Float ) , connected : Bool , id : String , index : Int , mapping : String , timestamp : Float }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Database",
+        "comment": " A collection of button maps, by gamepad Id.\n\nIf you change the mapping for one gamepad, the mapping will change for all the\ngamepads of that type (ie, all the gamepads that share that Id).\n\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Destination",
+        "comment": " A Destination is just a way to reference a gamepad input that is understandable for the user.\n",
+        "args": [],
+        "cases": [
+          [
+            "A",
+            []
+          ],
+          [
+            "B",
+            []
+          ],
+          [
+            "X",
+            []
+          ],
+          [
+            "Y",
+            []
+          ],
+          [
+            "Start",
+            []
+          ],
+          [
+            "Back",
+            []
+          ],
+          [
+            "Home",
+            []
+          ],
+          [
+            "LeftLeft",
+            []
+          ],
+          [
+            "LeftRight",
+            []
+          ],
+          [
+            "LeftUp",
+            []
+          ],
+          [
+            "LeftDown",
+            []
+          ],
+          [
+            "LeftStick",
+            []
+          ],
+          [
+            "LeftBumper",
+            []
+          ],
+          [
+            "LeftTrigger",
+            []
+          ],
+          [
+            "RightLeft",
+            []
+          ],
+          [
+            "RightRight",
+            []
+          ],
+          [
+            "RightUp",
+            []
+          ],
+          [
+            "RightDown",
+            []
+          ],
+          [
+            "RightStick",
+            []
+          ],
+          [
+            "RightBumper",
+            []
+          ],
+          [
+            "RightTrigger",
+            []
+          ],
+          [
+            "DpadUp",
+            []
+          ],
+          [
+            "DpadDown",
+            []
+          ],
+          [
+            "DpadLeft",
+            []
+          ],
+          [
+            "DpadRight",
+            []
+          ]
+        ]
+      },
+      {
+        "name": "Gamepad",
+        "comment": " A recognised gamepad, whose buttons mapping was found in the Database.\nYou can use all control getters to query its state.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Origin",
+        "comment": " An Origin references an input in the javascript [gamepad](https://w3c.github.io/gamepad/)\nobject.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "UnknownGamepad",
+        "comment": " A gamepad that was not found in the Database.\nBecause of the sheer diversity of gamepads in the wild, there isn't much that\nyou can reliably do with it.\n\nHowever, you can remap it and add its entry to the database, so that next time\nit will be recognised!\n\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "aIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "bIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "backIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "buttonMapToUpdateDatabase",
+        "comment": " This function inserts a button map for a given gamepad Id in a [Database](#Database),\nreplacing any previous mapping for that gamepad Id.\n\nThe first argument is the gamepad the map is for.\n\nThe second argument is the map itself: a List of [Destination](#Destination)s vs\n[Origin](#Origin)s.\n\nThe third argument is the [Database](#Database) to update.\n\n",
+        "type": "Gamepad.UnknownGamepad -> List ( Gamepad.Destination, Gamepad.Origin ) -> Gamepad.Database -> Gamepad.Database"
+      },
+      {
+        "name": "databaseFromString",
+        "comment": " Decodes a Database from a String, useful to load a persisted Database.\n\n    gamepadDatabase =\n        flags.gamepadDatabaseAsString\n            |> Gamepad.databaseFromString\n            |> Result.withDefault Gamepad.emptyDatabase\n\n",
+        "type": "String -> Result.Result String Gamepad.Database"
+      },
+      {
+        "name": "databaseToString",
+        "comment": " Encodes a Database into a String, useful to persist the Database.\n\n    saveDatabaseToLocalStorageCmd =\n        gamepadDatabase\n            |> databaseToString\n            |> LocalStoragePort.set model.gamepadDatabaseKey\n\n",
+        "type": "Gamepad.Database -> String"
+      },
+      {
+        "name": "dpadDownIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "dpadLeftIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "dpadRightIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "dpadUpIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "dpadX",
+        "comment": " -1 means left, 0 means center, 1 means right\n",
+        "type": "Gamepad.Gamepad -> Int"
+      },
+      {
+        "name": "dpadY",
+        "comment": " -1 means down, 0 means center, 1 means up\n",
+        "type": "Gamepad.Gamepad -> Int"
+      },
+      {
+        "name": "emptyDatabase",
+        "comment": " An empty Database.\n",
+        "type": "Gamepad.Database"
+      },
+      {
+        "name": "estimateOrigin",
+        "comment": " This function guesses the Origin currently activated by the user.\n",
+        "type": "Gamepad.UnknownGamepad -> Maybe.Maybe Gamepad.Origin"
+      },
+      {
+        "name": "getAllGamepadsAsUnknown",
+        "comment": " Get a List of all connected gamepads, whether they are recognised or not.\n",
+        "type": "Gamepad.Blob -> List Gamepad.UnknownGamepad"
+      },
+      {
+        "name": "getGamepads",
+        "comment": " Get a List of all recognised Gamepads (ie, those that can be found in the Database).\n",
+        "type": "Gamepad.Database -> Gamepad.Blob -> List Gamepad.Gamepad"
+      },
+      {
+        "name": "getIndex",
+        "comment": " Get the index of a known gamepad.\nIndexes start from 0.\n\n    getIndex gamepad == 2\n\n",
+        "type": "Gamepad.Gamepad -> Int"
+      },
+      {
+        "name": "getUnknownGamepads",
+        "comment": " Get a List of all gamepads that do not have a mapping.\nIf there are any, you need to run the remapping tool to create a Database\nentry for them, otherwise the user won't be able to use them.\n",
+        "type": "Gamepad.Database -> Gamepad.Blob -> List Gamepad.UnknownGamepad"
+      },
+      {
+        "name": "homeIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "leftBumperIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "leftStickIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "leftTriggerIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "leftTriggerValue",
+        "comment": " 0.0 means not pressed, 1.0 means fully pressed\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "leftX",
+        "comment": " -1.0 means full left, 1.0 means full right\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "leftY",
+        "comment": " -1.0 means full down, 1.0 means full up\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "rightBumperIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "rightStickIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "rightTriggerIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "rightTriggerValue",
+        "comment": " 0.0 means not pressed, 1.0 means fully pressed\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "rightX",
+        "comment": " -1.0 means full left, 1.0 means full right\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "rightY",
+        "comment": " -1.0 means full down, 1.0 means full up\n",
+        "type": "Gamepad.Gamepad -> Float"
+      },
+      {
+        "name": "startIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "unknownGetId",
+        "comment": " Get the identifier String of an unknown gamepad, as provided by the browser\n\n    unknownGetId unknownGamepad == \"Microsoft Corporation. Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)\"\n\n",
+        "type": "Gamepad.UnknownGamepad -> String"
+      },
+      {
+        "name": "unknownGetIndex",
+        "comment": " Get the index of an unknown gamepad.\nIndexes start from 0.\n\n    unknownGetIndex unknownGamepad == 0\n\n",
+        "type": "Gamepad.UnknownGamepad -> Int"
+      },
+      {
+        "name": "xIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      },
+      {
+        "name": "yIsPressed",
+        "comment": " ",
+        "type": "Gamepad.Gamepad -> Bool"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

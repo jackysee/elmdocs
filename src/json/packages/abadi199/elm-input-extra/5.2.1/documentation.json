@@ -1,0 +1,252 @@
+[
+  {
+    "name": "MaskedInput.Text",
+    "comment": " Masked Text input\n\n# State\n@docs State, initialState\n\n# View\n@docs input, Options, defaultOptions\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `pattern` is the pattern used to format the input value. e.g.: (###) ###-####\n * `inputCharacter`: is the special character used to represent user input. Default value: `#`\n * `toMsg`: is the Msg for updating internal `State` of the element.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ pattern : String , inputCharacter : Char , onInput : String -> msg , toMsg : MaskedInput.Text.State -> msg , hasFocus : Maybe.Maybe (Bool -> msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "State",
+        "comment": " Opaque type for storing local State\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\n * `onInput` (type: `String -> msg`) : The onInput Msg tagger\n * `toMsg` (type: `String -> msg`) : The Msg for updating internal `State` of the element.\n\nValue:\n\n    { pattern = \"\"\n    , inputCharacter = '#'\n    , onInput = onInput\n    , toMsg = toMsg\n    , hasFocus = Nothing\n    }\n\n",
+        "type": "(String -> msg) -> (MaskedInput.Text.State -> msg) -> MaskedInput.Text.Options msg"
+      },
+      {
+        "name": "initialState",
+        "comment": " Initial state\n",
+        "type": "MaskedInput.Text.State"
+      },
+      {
+        "name": "input",
+        "comment": " Text input element\n\nExample:\n\n    type Msg = InputUpdated String | StateUpdated MaskedInput.State | FocusUpdated Bool\n\n    MaskedInput.Text.input\n        { pattern = \"(###) ###-####\"\n        , inputCharacter = '#'\n        , onInput = InputUpdated\n        , toMsg = StateUpdated\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"masked-input\"\n        ...\n        ]\n        model.currentState\n        model.currentValue\n\n",
+        "type": "MaskedInput.Text.Options msg -> List (Html.Attribute msg) -> MaskedInput.Text.State -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "MaskedInput.Number",
+    "comment": " Masked Number input, similar to Masked Text input, but only accepting numeric input\n\n# State\n@docs State, initialState\n\n# View\n@docs input, Options, defaultOptions\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `pattern` is the pattern used to format the input value. e.g.: (###) ###-####\n * `inputCharacter`: is the special character used to represent user input. Default value: `#`\n * `toMsg`: is the Msg for updating internal `State` of the element.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ pattern : String , inputCharacter : Char , onInput : Maybe.Maybe Int -> msg , toMsg : MaskedInput.Number.State -> msg , hasFocus : Maybe.Maybe (Bool -> msg) }"
+      }
+    ],
+    "types": [
+      {
+        "name": "State",
+        "comment": " Opaque type for storing local State\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\n * `onInput` (type: `Maybe Int -> msg`) : The onInput Msg tagger\n * `toMsg` (type: `String -> msg`) : The Msg for updating internal `State` of the element.\n\nValue:\n\n    { pattern = \"\"\n    , inputCharacter = '#'\n    , onInput = onInput\n    , toMsg = toMsg\n    , hasFocus = Nothing\n    }\n\n",
+        "type": "(Maybe.Maybe Int -> msg) -> (MaskedInput.Number.State -> msg) -> MaskedInput.Number.Options msg"
+      },
+      {
+        "name": "initialState",
+        "comment": " Initial state\n",
+        "type": "MaskedInput.Number.State"
+      },
+      {
+        "name": "input",
+        "comment": " Masked Number input element\n\nExample:\n\n    type Msg = InputUpdated (Maybe Int) | StateUpdated MaskedInput.State | FocusUpdated Bool\n\n    MaskedInput.Number.input\n        { pattern = \"(###) ###-####\"\n        , inputCharacter = '#'\n        , onInput = InputUpdated\n        , toMsg = StateUpdated\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"masked-input\"\n        ...\n        ]\n        model.currentState\n        model.currentValue\n\n",
+        "type": "MaskedInput.Number.Options msg -> List (Html.Attribute msg) -> MaskedInput.Number.State -> Maybe.Maybe Int -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Input.Text",
+    "comment": " Text input\n\n# View\n@docs input, Options, defaultOptions\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n * `type_` is the type of the HTML input element.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ maxLength : Maybe.Maybe Int , onInput : String -> msg , hasFocus : Maybe.Maybe (Bool -> msg) , type_ : String }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\n * `onInput` (type: `String -> msg`) : The onInput Msg tagger\n\nValue:\n\n    { maxLength = Nothing\n    , onInput = onInput\n    , hasFocus = Nothing\n    , type_ = \"text\"\n    }\n\n",
+        "type": "(String -> msg) -> Input.Text.Options msg"
+      },
+      {
+        "name": "input",
+        "comment": " Text input element\n\nExample:\n\n    type Msg = InputUpdated String | FocusUpdated Bool\n\n    Input.Text.input\n        { maxLength = 10\n        , onInput = InputUpdated\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"textInput\"\n        ...\n        ]\n        model.currentValue\n\n",
+        "type": "Input.Text.Options msg -> List (Html.Attribute msg) -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Input.Number",
+    "comment": " Number input\n# Options\n@docs StringOptions, Options, defaultStringOptions, defaultOptions\n\n# View\n@docs input, inputString\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n * `maxValue` is the maximum number value allowed in this input. Set to `Nothing` for no limit.\n * `minValue` is the minimum number value allowed in this input. Set to `Nothing` for no limit.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ maxLength : Maybe.Maybe Int , maxValue : Maybe.Maybe Int , minValue : Maybe.Maybe Int , onInput : Maybe.Maybe Int -> msg , hasFocus : Maybe.Maybe (Bool -> msg) }"
+      },
+      {
+        "name": "StringOptions",
+        "comment": " Options of the input component with `String` value.\n\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n * `maxValue` is the maximum number value allowed in this input. Set to `Nothing` for no limit.\n * `minValue` is the minimum number value allowed in this input. Set to `Nothing` for no limit.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ maxLength : Maybe.Maybe Int , maxValue : Maybe.Maybe Int , minValue : Maybe.Maybe Int , onInput : String -> msg , hasFocus : Maybe.Maybe (Bool -> msg) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\nParams:\n * `onInput` (type: `Maybe Int -> msg`) : The onInput Msg tagger\n\nValue:\n\n    { onInput = onInput\n    , maxLength = Nothing\n    , maxValue = Nothing\n    , minValue = Nothing\n    , hasFocus = Nothing\n    }\n\n",
+        "type": "(Maybe.Maybe Int -> msg) -> Input.Number.Options msg"
+      },
+      {
+        "name": "defaultStringOptions",
+        "comment": " Default options for input with `String` value\nParams:\n * `onInput` (type: `String -> msg`) : The onInput Msg tagger\n\nValue:\n\n    { onInput = onInput\n    , maxLength = Nothing\n    , maxValue = Nothing\n    , minValue = Nothing\n    , hasFocus = Nothing\n    }\n\n",
+        "type": "(String -> msg) -> Input.Number.StringOptions msg"
+      },
+      {
+        "name": "input",
+        "comment": " View function\n\nExample:\n\n    type alias Model = { currentValue : Maybe Int }\n\n    type Msg = InputUpdated (Maybe Int) | FocusUpdated Bool\n\n    Input.Number.input\n        { onInput = InputUpdated\n        , maxLength = Nothing\n        , maxValue = 1000\n        , minValue = 10\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"numberInput\"\n        ...\n        ]\n        model.currentValue\n\n",
+        "type": "Input.Number.Options msg -> List (Html.Attribute msg) -> Maybe.Maybe Int -> Html.Html msg"
+      },
+      {
+        "name": "inputString",
+        "comment": " View function for input with `String` value\n\nExample:\n\n    type alias Model = { currentValue : String }\n\n    type Msg = InputUpdated String | FocusUpdated Bool\n\n    Input.Number.inputString\n        { onInput = InputUpdated\n        , maxLength = Nothing\n        , maxValue = 1000\n        , minValue = 10\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"numberInput\"\n        ...\n        ]\n        model.currentValue\n\n",
+        "type": "Input.Number.StringOptions msg -> List (Html.Attribute msg) -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Input.BigNumber",
+    "comment": " Big Number input.\nThis is a number input for big number values that can't be stored using `Int` and uses `String` instead.\n\n# View\n@docs input, Options, defaultOptions\n",
+    "aliases": [
+      {
+        "name": "Options",
+        "comment": " Options of the input component.\n\n * `maxLength` is the maximum number of character allowed in this input. Set to `Nothing` for no limit.\n * `onInput` is the Msg tagger for the onInput event.\n * `hasFocus` is an optional Msg tagger for onFocus/onBlur event.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ maxLength : Maybe.Maybe Int , onInput : String -> msg , hasFocus : Maybe.Maybe (Bool -> msg) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default value for `Options`.\nParams:\n * `onInput` (type: `String -> msg`) : The onInput Msg tagger\n\nValue:\n\n    { onInput = onInput\n    , maxLength = Nothing\n    , hasFocus = Nothing\n    }\n\n",
+        "type": "(String -> msg) -> Input.BigNumber.Options msg"
+      },
+      {
+        "name": "input",
+        "comment": " View function\n\nExample:\n\n    type Msg = InputUpdated String | FocusUpdated Bool\n\n    Input.Number.input\n        { onInput = InputUpdated\n        , maxLength = Nothing\n        , maxValue = 1000\n        , minValue = 10\n        , hasFocus = Just FocusUpdated\n        }\n        [ class \"numberInput\"\n        ...\n        ]\n        model.currentValue\n\n",
+        "type": "Input.BigNumber.Options msg -> List (Html.Attribute msg) -> String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "MultiSelect",
+    "comment": " MultiSelect\n\n`<select>` element with multiple selection.\nThis will properly give you the selected values for `onChange` event since the core `onChange` on `select` doesn't.\n\nOptions\n@docs Item, Options, defaultOptions\n\n# View\n@docs multiSelect\n",
+    "aliases": [
+      {
+        "name": "Item",
+        "comment": " Item is the individual content of the dropdown.\n\n * `value` is the item value or `id`\n * `text` is the display text of the multi-select item.\n * `enabled` is a flag to indicate whether the item is enabled or disabled.\n",
+        "args": [],
+        "type": "{ value : String, text : String, enabled : Bool }"
+      },
+      {
+        "name": "Options",
+        "comment": " Options for the dropdown.\n\n * `items` is content of the dropdown.\n * `onChange` is the message for when the selected value in the multi-select is changed.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ items : List MultiSelect.Item, onChange : List String -> msg }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default Options, will give you empty multi-select with no empty item\n",
+        "type": "(List String -> msg) -> MultiSelect.Options msg"
+      },
+      {
+        "name": "multiSelect",
+        "comment": " Html element.\n\nPut this in your view's Html content.\nExample:\n\n    type Msg = MultiSelectChanged (List String)\n\n    Html.div []\n        [ multiSelect\n            (defaultOptions MultiSelectChanged)\n            [ class \"my-multiSelect\" ]\n            model.selectedValues\n        ]\n",
+        "type": "MultiSelect.Options msg -> List (Html.Attribute msg) -> List String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Dropdown",
+    "comment": " Dropdown\n\nOptions\n@docs Item, Options, defaultOptions\n\n# View\n@docs dropdown\n",
+    "aliases": [
+      {
+        "name": "Item",
+        "comment": " Item is the individual content of the dropdown.\n\n * `value` is the item value or `id`\n * `text` is the display text of the dropdown item.\n * `enabled` is a flag to indicate whether the item is enabled or disabled.\n",
+        "args": [],
+        "type": "{ value : String, text : String, enabled : Bool }"
+      },
+      {
+        "name": "Options",
+        "comment": " Options for the dropdown.\n\n * `items` is content of the dropdown.\n * `emptyItem` is the item for when the nothing is selected. Set to `Nothing` for no empty item.\n * `onChange` is the message for when the selected value in the dropdown is changed.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "{ items : List Dropdown.Item , emptyItem : Maybe.Maybe Dropdown.Item , onChange : Maybe.Maybe String -> msg }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "defaultOptions",
+        "comment": " Default Options, will give you empty dropdown with no empty item\n",
+        "type": "(Maybe.Maybe String -> msg) -> Dropdown.Options msg"
+      },
+      {
+        "name": "dropdown",
+        "comment": " Html element.\n\nPut this in your view's Html content.\nExample:\n\n    type Msg = DropdownChanged String\n\n    Html.div []\n        [ Dropdown.dropdown\n            (Dropdown.defaultOptions DropdownChanged)\n            [ class \"my-dropdown\" ]\n            model.selectedDropdownValue\n        ]\n",
+        "type": "Dropdown.Options msg -> List (Html.Attribute msg) -> Maybe.Maybe String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

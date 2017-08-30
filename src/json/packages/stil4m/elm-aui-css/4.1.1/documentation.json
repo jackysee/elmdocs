@@ -1,0 +1,1994 @@
+[
+  {
+    "name": "Aui.Dropdown",
+    "comment": " Functions to present AUI buttons and groups.\n\n\n# Alignment\n\n@docs Alignment, leftAlignment, rightAlignment\n\n\n# Types\n\n@docs Config\n\n\n# Model\n\n@docs Model, Msg, initialModel, open, close\n\n\n# Update\n\n@docs update\n\n\n# Presentation\n\n@docs dropdown, dropdownSection\n\n\n# Utility\n\n@docs baseConfig, withAlignment, withStyle\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model for the dropdown component.\n",
+        "args": [],
+        "type": "{ open : Bool }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Alignment",
+        "comment": " Alignment relative to the button for the dropdown container.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Config",
+        "comment": " Configuration type to show a dropdown component.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages being sent by the dropdown component\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Create a base configuration with a Msg mapping function.\n\n    type Msg = DropdownMsg Aui.Dropdown.Msg\n\n    dropdown (baseConfig DropdownMsg) ...\n\n",
+        "type": "(Aui.Dropdown.Msg -> a) -> Aui.Dropdown.Config a"
+      },
+      {
+        "name": "close",
+        "comment": " Change a dropdown to a closed state. Convenient when you handle an action from an item in the dropdown in your own update function.\n",
+        "type": "Aui.Dropdown.Model -> Aui.Dropdown.Model"
+      },
+      {
+        "name": "dropdown",
+        "comment": " Present a dropdown given a configuration, button content, dropdown content and a model.\n\n    dropdown (baseConfig DropdownMsg |> withStyle Primary |> withAlignment Right)\n        [ text \"Open me\"]\n        [ dropdownSection (Just \"Section Title\")\n            [ ul []\n                [ li [] a [] [text \"Item 1\"]\n                , li [] a [] [text \"Item 2\"]\n                ]\n            ]\n        ]\n        dropdownModel\n\n",
+        "type": "Aui.Dropdown.Config a -> List (Html.Html Aui.Dropdown.Msg) -> List (Html.Html a) -> Aui.Dropdown.Model -> Html.Html a"
+      },
+      {
+        "name": "dropdownSection",
+        "comment": " Creates a section for within a dropdown container.\n",
+        "type": "Maybe.Maybe String -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Default model for a dropdown component\n",
+        "type": "Aui.Dropdown.Model"
+      },
+      {
+        "name": "leftAlignment",
+        "comment": " Left alignment of the dropdown respectively to the button\n",
+        "type": "Aui.Dropdown.Alignment"
+      },
+      {
+        "name": "open",
+        "comment": " Change a dropdown to an opened state.\n",
+        "type": "Aui.Dropdown.Model -> Aui.Dropdown.Model"
+      },
+      {
+        "name": "rightAlignment",
+        "comment": " Right alignment of the dropdown respectively to the button\n",
+        "type": "Aui.Dropdown.Alignment"
+      },
+      {
+        "name": "update",
+        "comment": " Update function for the dropdown component. This should be called from within your update function when handling `Msg`\n",
+        "type": "Aui.Dropdown.Msg -> Aui.Dropdown.Model -> Aui.Dropdown.Model"
+      },
+      {
+        "name": "withAlignment",
+        "comment": " Align the container for the dropdown to the side of the dropdown button.\n",
+        "type": "Aui.Dropdown.Alignment -> Aui.Dropdown.Config a -> Aui.Dropdown.Config a"
+      },
+      {
+        "name": "withStyle",
+        "comment": " Set the style of the dropdown button.\n",
+        "type": "Aui.Buttons.Style -> Aui.Dropdown.Config a -> Aui.Dropdown.Config a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Select",
+    "comment": " Functions to present AUI select.\n\n\n# Type\n\n@docs Msg, Config\n\n\n# Model\n\n@docs Model, initialModel\n\n\n# Update\n\n@docs update\n\n\n# Presentation\n\n@docs singleSelect\n\n\n# Config\n\n@docs Config, baseConfig, withPlaceholder, withZIndex\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model for the select component.\n",
+        "args": [],
+        "type": "{ open : Bool , query : Maybe.Maybe String , items : List String , value : Maybe.Maybe String , identifier : String , highlighted : Maybe.Maybe String }"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration record to show a dropdown component.\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages being sent by the select component\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Create a base configuration for presenting a select.\n",
+        "type": "Aui.Select.Config"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Initial model for a select.\n",
+        "type": "String -> List String -> ( Aui.Select.Model, Platform.Cmd.Cmd Aui.Select.Msg )"
+      },
+      {
+        "name": "singleSelect",
+        "comment": " Create a single select with a configuration and a model.\n",
+        "type": "Aui.Select.Config -> Aui.Select.Model -> Html.Html Aui.Select.Msg"
+      },
+      {
+        "name": "update",
+        "comment": " Update function for the select component. This should be called from within your update function when handling `Msg`\n",
+        "type": "Aui.Select.Msg -> Aui.Select.Model -> ( Aui.Select.Model, Platform.Cmd.Cmd Aui.Select.Msg )"
+      },
+      {
+        "name": "withPlaceholder",
+        "comment": " Change placeholder of select\n",
+        "type": "String -> Aui.Select.Config -> Aui.Select.Config"
+      },
+      {
+        "name": "withZIndex",
+        "comment": " Change backdrop z index of select\n",
+        "type": "Int -> Aui.Select.Config -> Aui.Select.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Toolbar",
+    "comment": " Functions to present AUI toolbars.\n\n\n# Presentation\n\n@docs toolbar, toolbarPrimary, toolbarSecondary, toolbarGroup\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toolbar",
+        "comment": " Create a toolbar:\n\n    toolbar\n        [ toolbarPrimary\n            [ buttonGroup [ button baseConfig Edit [ text \"Edit\" ] ]\n            , buttonGroup\n                [ button baseConfig Assign [ text \"Assign\" ]\n                , button baseConfig AssignMe [ text \"Assign to me\" ]\n                ]\n            ]\n        , toolbarSecondary [ button baseConfig Configure [ icon Small Configure ] ]\n        ]\n\n",
+        "type": "List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "toolbarGroup",
+        "comment": " Create toolbar button group\n",
+        "type": "List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "toolbarPrimary",
+        "comment": " Create primary part of toolbar.\n",
+        "type": "List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "toolbarSecondary",
+        "comment": " Create secondary part of toolbar.\n",
+        "type": "List (Html.Html a) -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Tabs",
+    "comment": " Functions to present AUI tabs.\n\n\n# Types\n\n@docs Msg, Config\n\n\n# Model\n\n@docs Model, modelWithActive\n\n\n# Update\n\n@docs update\n\n\n# Presentation\n\n@docs tabs\n\n\n# ITems\n\n@docs Item, item\n\n\n# Config\n\n@docs Config, baseConfig, horizontal, vertical, withItems\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model for the tabs component.\n",
+        "args": [
+          "itemId"
+        ],
+        "type": "Maybe.Maybe itemId"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration record to show a tabs component.\n",
+        "args": [
+          "a",
+          "itemId"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Item",
+        "comment": " Representation of a single tab.\n",
+        "args": [
+          "itemId"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages being sent by the tabs component\n",
+        "args": [
+          "itemId"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Basic configuration for the tabs\n",
+        "type": "(Aui.Tabs.Msg itemId -> a) -> Aui.Tabs.Config a itemId"
+      },
+      {
+        "name": "horizontal",
+        "comment": " Make configuration have horizontal tabs\n",
+        "type": "Aui.Tabs.Config a itemId -> Aui.Tabs.Config a itemId"
+      },
+      {
+        "name": "item",
+        "comment": " Creates an item\n",
+        "type": "itemId -> String -> Aui.Tabs.Item itemId"
+      },
+      {
+        "name": "modelWithActive",
+        "comment": " Create a model with a active item\n",
+        "type": "itemId -> Aui.Tabs.Model itemId"
+      },
+      {
+        "name": "tabs",
+        "comment": " Create a tabs component with a given configuration, a mapper from itemId to tab content and a model\n",
+        "type": "Aui.Tabs.Config a itemId -> (itemId -> Html.Html a) -> Aui.Tabs.Model itemId -> Html.Html a"
+      },
+      {
+        "name": "update",
+        "comment": " Update function for the tabs component. This should be called from within your update function when handling `Msg`.\n",
+        "type": "Aui.Tabs.Msg itemId -> Aui.Tabs.Model itemId -> Aui.Tabs.Model itemId"
+      },
+      {
+        "name": "vertical",
+        "comment": " Make configuration have vertical tabs\n",
+        "type": "Aui.Tabs.Config a itemId -> Aui.Tabs.Config a itemId"
+      },
+      {
+        "name": "withItems",
+        "comment": " Set items for tab\n",
+        "type": "List (Aui.Tabs.Item itemId) -> Aui.Tabs.Config a itemId -> Aui.Tabs.Config a itemId"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Toggle",
+    "comment": " Functions to present AUI toggle.\n\n\n# Presentation\n\n@docs toggle\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "toggle",
+        "comment": " Create a toggle with if it is enabled, a message and its state.\n\n    toggle isEnabled\n        ToggleClicked\n        isOn\n\n",
+        "type": "Bool -> (Bool -> a) -> Bool -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.ProgressIndicator",
+    "comment": " Functions to present AUI progress indicator.\n\n\n# Presentation\n\n@docs progressIndicator, activeProgressIndicator\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "activeProgressIndicator",
+        "comment": " Create a progress indicator that represents an active loading state.\n",
+        "type": "Html.Html a"
+      },
+      {
+        "name": "progressIndicator",
+        "comment": " Create a progress indicator with a value between 0.0 and 1.0.\n",
+        "type": "Float -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.ProgressTracker",
+    "comment": " Functions to present AUI progress tracker.\n\n\n# Presentation\n\n@docs progressTracker, invertedProgressTracker\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "invertedProgressTracker",
+        "comment": " Create an inverted progress tracker with items and a given active index.\n",
+        "type": "List String -> Int -> Html.Html a"
+      },
+      {
+        "name": "progressTracker",
+        "comment": " Create a progress tracker with items and a given active index (zero based).\n\n    progressTracker [\"Step 1\", \"Step 2\", \"Step 3\"] 1\n\n",
+        "type": "List String -> Int -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Avatars",
+    "comment": " Functions to present AUI avatars.\n\n\n# Types\n\n@docs Config\n\n\n# Presentation\n\n@docs avatar\n\n\n# Utiltity\n\n@docs config, xsmall, small, medium, large, xlarge, xxlarge, xxxlarge, project\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " A type for rendering an avatar\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "avatar",
+        "comment": " Function to convert a configuration record and an source url to an HTML element\n\n    avatar {size = Large, project = False}\n        \"http://myimage.net\"\n\n",
+        "type": "Aui.Avatars.Config -> String -> Html.Html msg"
+      },
+      {
+        "name": "config",
+        "comment": " Default configuration for an avatar\n",
+        "type": "Aui.Avatars.Config"
+      },
+      {
+        "name": "large",
+        "comment": " Set the configuration to render a large avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "medium",
+        "comment": " Set the configuration to render a medium avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "project",
+        "comment": " Set the configuration to render as a project avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "small",
+        "comment": " Set the configuration to render a small avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "xlarge",
+        "comment": " Set the configuration to render a extra large avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "xsmall",
+        "comment": " Set the configuration to render an extra small avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "xxlarge",
+        "comment": " Set the configuration to render a extra-extra large avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      },
+      {
+        "name": "xxxlarge",
+        "comment": " Set the configuration to render a extra-extra-extra large avatar\n",
+        "type": "Aui.Avatars.Config -> Aui.Avatars.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Labels",
+    "comment": " Functions to present AUI labels.\n\n\n# Presentation\n\n@docs label\n\n\n# Actions\n\n@docs Action, navigate, trigger\n\n\n# Types\n\n@docs Config\n\n\n# Utility\n\n@docs baseConfig, onClick, onRemove\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Actions that can be bound to a label\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Config",
+        "comment": " Configuration to present a label.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Base configuration to show a label. No actions are bound by default.\n",
+        "type": "Aui.Labels.Config a"
+      },
+      {
+        "name": "label",
+        "comment": " Show a label with a given configuration and content .\n\n    label (baseConfig\n            |> withNavigate \"http://elm-lang.org/\"\n            |> withRemove RemovedLabel)\n        [ text \"Please remove or click me!\" ]\n\n",
+        "type": "Aui.Labels.Config a -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "navigate",
+        "comment": " Action to navigate to an url\n",
+        "type": "String -> Aui.Labels.Action a"
+      },
+      {
+        "name": "onClick",
+        "comment": " Bind action to click on label\n",
+        "type": "Aui.Labels.Action a -> Aui.Labels.Config a -> Aui.Labels.Config a"
+      },
+      {
+        "name": "onRemove",
+        "comment": " Allow the label to be removed triggering the given message.\n",
+        "type": "a -> Aui.Labels.Config a -> Aui.Labels.Config a"
+      },
+      {
+        "name": "trigger",
+        "comment": " Action to trigger an action on click\n",
+        "type": "a -> Aui.Labels.Action a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Lozenge",
+    "comment": " Functions to present AUI lozenges.\n\n\n# Presentation\n\n@docs lozenge\n\n\n# Types\n\n@docs Type, generic, success, error, current, complete, moved\n\n\n# Presense\n\n@docs Presense, normal,subtle\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Presense",
+        "comment": " Presense style for a lozenge\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Type",
+        "comment": " Types for a lozenge\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "complete",
+        "comment": " Comlete type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      },
+      {
+        "name": "current",
+        "comment": " Current type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      },
+      {
+        "name": "error",
+        "comment": " Error type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      },
+      {
+        "name": "generic",
+        "comment": " Generic type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      },
+      {
+        "name": "lozenge",
+        "comment": " Create a lozenge with presense and type\n",
+        "type": "Aui.Lozenge.Presense -> Aui.Lozenge.Type -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "moved",
+        "comment": " Moved type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      },
+      {
+        "name": "normal",
+        "comment": " Normal presence\n",
+        "type": "Aui.Lozenge.Presense"
+      },
+      {
+        "name": "subtle",
+        "comment": " Subtle presence\n",
+        "type": "Aui.Lozenge.Presense"
+      },
+      {
+        "name": "success",
+        "comment": " Success type for lozenge\n",
+        "type": "Aui.Lozenge.Type"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Expander",
+    "comment": " Functions to present AUI expander.\n\n\n# Config\n\n@docs Config, withMinHeight, withMoreText, withLessText`\n\n\n# Model\n\n@docs Model, Msg, initialModel\n\n\n# Update\n\n@docs update\n\n\n# Presentation\n\n@docs expander\n\n\n# Utility\n\n@docs baseConfig\n\n",
+    "aliases": [
+      {
+        "name": "Model",
+        "comment": " Model for the expander comonent.\n",
+        "args": [],
+        "type": "Bool"
+      }
+    ],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration record for presenting an expander.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Msg",
+        "comment": " Messages being sent by the expander component.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Create a default configuration with sane defaults to present an expander.\n",
+        "type": "(Aui.Expander.Msg -> a) -> Aui.Expander.Config a"
+      },
+      {
+        "name": "expander",
+        "comment": " Present a expander given a configuration, content and model.\n\n    view model =\n        expander (baseConfig ExpanderMsg)\n            \"Lorem ipsum...\"\n            model.expander\n\n",
+        "type": "Aui.Expander.Config a -> String -> Aui.Expander.Model -> Html.Html a"
+      },
+      {
+        "name": "initialModel",
+        "comment": " Default model for a expander component\n",
+        "type": "Aui.Expander.Model"
+      },
+      {
+        "name": "update",
+        "comment": " Update function for the expander component. This should be called from within your update function when handling `Msg`\n",
+        "type": "Aui.Expander.Msg -> Aui.Expander.Model -> Aui.Expander.Model"
+      },
+      {
+        "name": "withLessText",
+        "comment": " Set less text for configuration\n",
+        "type": "String -> Aui.Expander.Config a -> Aui.Expander.Config a"
+      },
+      {
+        "name": "withMinHeight",
+        "comment": " Set less text for configuration\n",
+        "type": "String -> Aui.Expander.Config a -> Aui.Expander.Config a"
+      },
+      {
+        "name": "withMoreText",
+        "comment": " Set more text for configuration\n",
+        "type": "String -> Aui.Expander.Config a -> Aui.Expander.Config a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Icons",
+    "comment": " Functions to present AUI icons.\n\n\n# Types\n\n@docs Icon, customIcon, Size, large, small\n\n\n# Presentation\n\n@docs icon, iconSmall, iconLarge\n\n\n# Predefined Icons\n\n@docs addIcon, addCommentIcon, addSmallIcon, approveIcon, appswitcherIcon, arrowsDownIcon, arrowsLeftIcon, arrowsRightIcon, arrowsUpIcon, attachmentIcon, attachmentSmallIcon, autocompleteDateIcon, backPageIcon, blogrollIcon, bpDecisionsIcon, bpDefaultIcon, bpFilesIcon, bpRequirementsIcon, bpHowtoIcon, bpJiraIcon, bpMeetingIcon, bpRetrospectiveIcon, bpSharedlinksIcon, bpTroubleshootingIcon, buildIcon, calendarIcon, closeDialogIcon, collapsedIcon, commentIcon, configureIcon, confluenceIcon, copyClipboardIcon, customBulletIcon, deleteIcon, deployIcon, detailsIcon, docIcon, downIcon, dragVerticalIcon, editIcon, editSmallIcon, emailIcon, errorIcon, expandedIcon, fileCodeIcon, fileDocIcon, fileJavaIcon, filePdfIcon, filePptIcon, fileTxtIcon, fileWavIcon, fileXlsIcon, fileZipIcon, flagIcon, focusIcon, groupIcon, handleHorizontalIcon, helpIcon, hipchatIcon, homepageIcon, imageIcon, imageExtrasmallIcon, imageSmallIcon, infoIcon, likeIcon, likeSmallIcon, weblinkIcon, linkIcon, listAddIcon, listRemoveIcon, lockedIcon, lockedSmallIcon, macroCodeIcon, macroDefaultIcon, macroGalleryIcon, macroStatusIcon, moreIcon, navChildrenIcon, pageBlankIcon, pageBlogpostIcon, pageDefaultIcon, pageTemplateIcon, pagesIcon, quoteIcon, redoIcon, removeIcon, removeLabelIcon, reviewIcon, rssIcon, searchIcon, searchSmallIcon, shareIcon, sidebarLinkIcon, sourcetreeIcon, spaceDefaultIcon, spacePersonalIcon, starIcon, successIcon, tableBgIcon, tableColLeftIcon, tableColRemoveIcon, tableColRightIcon, tableCopyRowIcon, tableCutRowIcon, tableHeaderColumnIcon, tableHeaderRowIcon, tableMergeIcon, tableNoBgIcon, tablePasteRowIcon, tableRemoveIcon, tableRowDownIcon, tableRowRemoveIcon, tableRowUpIcon, tableSplitIcon, teamcalsIcon, timeIcon, undoIcon, unfocusIcon, unlockedIcon, unstarIcon, unwatchIcon, upIcon, userIcon, userStatusIcon, viewIcon, viewCardIcon, viewListIcon, viewTableIcon, warningIcon, watchIcon, workboxIcon, workboxEmptyIcon, configureColumnsIcon, exportIcon, exportListIcon, fileImageIcon, adminFusionIcon, adminJiraFieldsIcon, adminIssueIcon, adminNotificationsIcon, adminRolesIcon, adminJiraScreensIcon, pauseIcon, priorityHighestIcon, priorityHighIcon, priorityMediumIcon, priorityLowIcon, priorityLowestIcon, refreshSmallIcon, shareListIcon, switchSmallIcon, versionIcon, workflowIcon, adminJiraSettingsIcon, componentIcon, reopenIcon, roadmapIcon, deploySuccessIcon, deployFailIcon, fileGenericIcon, arrowDownIcon, arrowUpIcon, fileVideoIcon, blogrollLargeIcon, emailLargeIcon, layout1ColLargeIcon, layout2ColLargeIcon, layout2ColLeftLargeIcon, layout2ColRightLargeIcon, layout3ColCenterLargeIcon, layout3ColLargeIcon, navChildrenLargeIcon, pagesLargeIcon, sidebarLinkLargeIcon, teamcalsLargeIcon, userLargeIcon, jiraIssuesIcon, devtoolsArrowLeftIcon, devtoolsArrowRightIcon, devtoolsBranchIcon, devtoolsBranchSmallIcon, devtoolsBrowseUpIcon, devtoolsCheckoutIcon, devtoolsCloneIcon, devtoolsCommitIcon, devtoolsCompareIcon, devtoolsFileIcon, devtoolsFileBinaryIcon, devtoolsFileCommentedIcon, devtoolsFolderClosedIcon, devtoolsFolderOpenIcon, devtoolsForkIcon, devtoolsPullRequestIcon, devtoolsRepositoryIcon, devtoolsRepositoryForkedIcon, devtoolsRepositoryLockedIcon, devtoolsSideDiffIcon, devtoolsSubmoduleIcon, devtoolsTagIcon, devtoolsTagSmallIcon, devtoolsTaskCancelledIcon, devtoolsTaskDisabledIcon, devtoolsTaskInProgressIcon, bitbucketIcon, editorAlignCenterIcon, editorAlignLeftIcon, editorAlignRightIcon, editorBoldIcon, editorColorIcon, editorEmoticonIcon, editorHelpIcon, editorHrIcon, editorIndentIcon, editorItalicIcon, editorLayoutIcon, editorListBulletIcon, editorListNumberIcon, editorMacroTocIcon, editorMentionIcon, editorOutdentIcon, editorStylesIcon, editorSymbolIcon, editorTableIcon, editorTaskIcon, editorUnderlineIcon, jiraIcon, jiraCompletedTaskIcon, jiraTestSessionIcon\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Icon",
+        "comment": " Opaque icon type\n",
+        "args": [],
+        "cases": []
+      },
+      {
+        "name": "Size",
+        "comment": " Sizes for icon\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "addCommentIcon",
+        "comment": " Predefined icon for add-comment\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "addIcon",
+        "comment": " Predefined icon for add\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "addSmallIcon",
+        "comment": " Predefined icon for add-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminFusionIcon",
+        "comment": " Predefined icon for admin-fusion\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminIssueIcon",
+        "comment": " Predefined icon for admin-issue\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminJiraFieldsIcon",
+        "comment": " Predefined icon for admin-jira-fields\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminJiraScreensIcon",
+        "comment": " Predefined icon for admin-jira-screens\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminJiraSettingsIcon",
+        "comment": " Predefined icon for admin-jira-settings\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminNotificationsIcon",
+        "comment": " Predefined icon for admin-notifications\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "adminRolesIcon",
+        "comment": " Predefined icon for admin-roles\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "approveIcon",
+        "comment": " Predefined icon for approve\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "appswitcherIcon",
+        "comment": " Predefined icon for appswitcher\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowDownIcon",
+        "comment": " Predefined icon for arrow-down\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowUpIcon",
+        "comment": " Predefined icon for arrow-up\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowsDownIcon",
+        "comment": " Predefined icon for arrows-down\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowsLeftIcon",
+        "comment": " Predefined icon for arrows-left\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowsRightIcon",
+        "comment": " Predefined icon for arrows-right\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "arrowsUpIcon",
+        "comment": " Predefined icon for arrows-up\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "attachmentIcon",
+        "comment": " Predefined icon for attachment\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "attachmentSmallIcon",
+        "comment": " Predefined icon for attachment-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "autocompleteDateIcon",
+        "comment": " Predefined icon for autocomplete-date\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "backPageIcon",
+        "comment": " Predefined icon for back-page\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bitbucketIcon",
+        "comment": " Predefined icon for bitbucket\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "blogrollIcon",
+        "comment": " Predefined icon for blogroll\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "blogrollLargeIcon",
+        "comment": " Predefined icon for blogroll-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpDecisionsIcon",
+        "comment": " Predefined icon for bp-decisions\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpDefaultIcon",
+        "comment": " Predefined icon for bp-default\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpFilesIcon",
+        "comment": " Predefined icon for bp-files\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpHowtoIcon",
+        "comment": " Predefined icon for bp-howto\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpJiraIcon",
+        "comment": " Predefined icon for bp-jira\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpMeetingIcon",
+        "comment": " Predefined icon for bp-meeting\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpRequirementsIcon",
+        "comment": " Predefined icon for bp-requirements\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpRetrospectiveIcon",
+        "comment": " Predefined icon for bp-retrospective\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpSharedlinksIcon",
+        "comment": " Predefined icon for bp-sharedlinks\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "bpTroubleshootingIcon",
+        "comment": " Predefined icon for bp-troubleshooting\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "buildIcon",
+        "comment": " Predefined icon for build\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "calendarIcon",
+        "comment": " Predefined icon for calendar\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "closeDialogIcon",
+        "comment": " Predefined icon for close-dialog\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "collapsedIcon",
+        "comment": " Predefined icon for collapsed\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "commentIcon",
+        "comment": " Predefined icon for comment\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "componentIcon",
+        "comment": " Predefined icon for component\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "configureColumnsIcon",
+        "comment": " Predefined icon for configure-columns\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "configureIcon",
+        "comment": " Predefined icon for configure\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "confluenceIcon",
+        "comment": " Predefined icon for confluence\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "copyClipboardIcon",
+        "comment": " Predefined icon for copy-clipboard\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "customBulletIcon",
+        "comment": " Predefined icon for custom-bullet\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "customIcon",
+        "comment": " Create an icon with a custom icon class. You loose the safety that you have with the predefined icons.\nOnly use this when there are new items that are not yet predefined.\n\n    customIcon \"my-custom-icon\"\n\n",
+        "type": "String -> Aui.Icons.Icon"
+      },
+      {
+        "name": "deleteIcon",
+        "comment": " Predefined icon for delete\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "deployFailIcon",
+        "comment": " Predefined icon for deploy-fail\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "deployIcon",
+        "comment": " Predefined icon for deploy\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "deploySuccessIcon",
+        "comment": " Predefined icon for deploy-success\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "detailsIcon",
+        "comment": " Predefined icon for details\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsArrowLeftIcon",
+        "comment": " Predefined icon for devtools-arrow-left\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsArrowRightIcon",
+        "comment": " Predefined icon for devtools-arrow-right\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsBranchIcon",
+        "comment": " Predefined icon for devtools-branch\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsBranchSmallIcon",
+        "comment": " Predefined icon for devtools-branch-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsBrowseUpIcon",
+        "comment": " Predefined icon for devtools-browse-up\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsCheckoutIcon",
+        "comment": " Predefined icon for devtools-checkout\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsCloneIcon",
+        "comment": " Predefined icon for devtools-clone\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsCommitIcon",
+        "comment": " Predefined icon for devtools-commit\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsCompareIcon",
+        "comment": " Predefined icon for devtools-compare\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsFileBinaryIcon",
+        "comment": " Predefined icon for devtools-file-binary\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsFileCommentedIcon",
+        "comment": " Predefined icon for devtools-file-commented\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsFileIcon",
+        "comment": " Predefined icon for devtools-file\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsFolderClosedIcon",
+        "comment": " Predefined icon for devtools-folder-closed\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsFolderOpenIcon",
+        "comment": " Predefined icon for devtools-folder-open\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsForkIcon",
+        "comment": " Predefined icon for devtools-fork\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsPullRequestIcon",
+        "comment": " Predefined icon for devtools-pull-request\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsRepositoryForkedIcon",
+        "comment": " Predefined icon for devtools-repository-forked\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsRepositoryIcon",
+        "comment": " Predefined icon for devtools-repository\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsRepositoryLockedIcon",
+        "comment": " Predefined icon for devtools-repository-locked\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsSideDiffIcon",
+        "comment": " Predefined icon for devtools-side-diff\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsSubmoduleIcon",
+        "comment": " Predefined icon for devtools-submodule\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsTagIcon",
+        "comment": " Predefined icon for devtools-tag\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsTagSmallIcon",
+        "comment": " Predefined icon for devtools-tag-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsTaskCancelledIcon",
+        "comment": " Predefined icon for devtools-task-cancelled\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsTaskDisabledIcon",
+        "comment": " Predefined icon for devtools-task-disabled\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "devtoolsTaskInProgressIcon",
+        "comment": " Predefined icon for devtools-task-in-progress\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "docIcon",
+        "comment": " Predefined icon for doc\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "downIcon",
+        "comment": " Predefined icon for down\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "dragVerticalIcon",
+        "comment": " Predefined icon for drag-vertical\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editIcon",
+        "comment": " Predefined icon for edit\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editSmallIcon",
+        "comment": " Predefined icon for edit-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorAlignCenterIcon",
+        "comment": " Predefined icon for editor-align-center\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorAlignLeftIcon",
+        "comment": " Predefined icon for editor-align-left\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorAlignRightIcon",
+        "comment": " Predefined icon for editor-align-right\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorBoldIcon",
+        "comment": " Predefined icon for editor-bold\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorColorIcon",
+        "comment": " Predefined icon for editor-color\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorEmoticonIcon",
+        "comment": " Predefined icon for editor-emoticon\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorHelpIcon",
+        "comment": " Predefined icon for editor-help\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorHrIcon",
+        "comment": " Predefined icon for editor-hr\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorIndentIcon",
+        "comment": " Predefined icon for editor-indent\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorItalicIcon",
+        "comment": " Predefined icon for editor-italic\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorLayoutIcon",
+        "comment": " Predefined icon for editor-layout\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorListBulletIcon",
+        "comment": " Predefined icon for editor-list-bullet\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorListNumberIcon",
+        "comment": " Predefined icon for editor-list-number\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorMacroTocIcon",
+        "comment": " Predefined icon for editor-macro-toc\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorMentionIcon",
+        "comment": " Predefined icon for editor-mention\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorOutdentIcon",
+        "comment": " Predefined icon for editor-outdent\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorStylesIcon",
+        "comment": " Predefined icon for editor-styles\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorSymbolIcon",
+        "comment": " Predefined icon for editor-symbol\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorTableIcon",
+        "comment": " Predefined icon for editor-table\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorTaskIcon",
+        "comment": " Predefined icon for editor-task\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "editorUnderlineIcon",
+        "comment": " Predefined icon for editor-underline\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "emailIcon",
+        "comment": " Predefined icon for email\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "emailLargeIcon",
+        "comment": " Predefined icon for email-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "errorIcon",
+        "comment": " Predefined icon for error\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "expandedIcon",
+        "comment": " Predefined icon for expanded\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "exportIcon",
+        "comment": " Predefined icon for export\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "exportListIcon",
+        "comment": " Predefined icon for export-list\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileCodeIcon",
+        "comment": " Predefined icon for file-code\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileDocIcon",
+        "comment": " Predefined icon for file-doc\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileGenericIcon",
+        "comment": " Predefined icon for file-generic\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileImageIcon",
+        "comment": " Predefined icon for file-image\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileJavaIcon",
+        "comment": " Predefined icon for file-java\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "filePdfIcon",
+        "comment": " Predefined icon for file-pdf\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "filePptIcon",
+        "comment": " Predefined icon for file-ppt\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileTxtIcon",
+        "comment": " Predefined icon for file-txt\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileVideoIcon",
+        "comment": " Predefined icon for file-video\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileWavIcon",
+        "comment": " Predefined icon for file-wav\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileXlsIcon",
+        "comment": " Predefined icon for file-xls\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "fileZipIcon",
+        "comment": " Predefined icon for file-zip\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "flagIcon",
+        "comment": " Predefined icon for flag\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "focusIcon",
+        "comment": " Predefined icon for focus\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "groupIcon",
+        "comment": " Predefined icon for group\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "handleHorizontalIcon",
+        "comment": " Predefined icon for handle-horizontal\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "helpIcon",
+        "comment": " Predefined icon for help\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "hipchatIcon",
+        "comment": " Predefined icon for hipchat\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "homepageIcon",
+        "comment": " Predefined icon for homepage\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "icon",
+        "comment": " Create an icon with a given size and type.\n\n    icon Small Configure\n\n",
+        "type": "Aui.Icons.Size -> Aui.Icons.Icon -> Html.Html a"
+      },
+      {
+        "name": "iconLarge",
+        "comment": " Shortcut for `icon Large`\n",
+        "type": "Aui.Icons.Icon -> Html.Html a"
+      },
+      {
+        "name": "iconSmall",
+        "comment": " Shortcut for `icon Small`\n",
+        "type": "Aui.Icons.Icon -> Html.Html a"
+      },
+      {
+        "name": "imageExtrasmallIcon",
+        "comment": " Predefined icon for image-extrasmall\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "imageIcon",
+        "comment": " Predefined icon for image\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "imageSmallIcon",
+        "comment": " Predefined icon for image-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "infoIcon",
+        "comment": " Predefined icon for info\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "jiraCompletedTaskIcon",
+        "comment": " Predefined icon for jira-completed-task\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "jiraIcon",
+        "comment": " Predefined icon for jira\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "jiraIssuesIcon",
+        "comment": " Predefined icon for jira-issues\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "jiraTestSessionIcon",
+        "comment": " Predefined icon for jira-test-session\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "large",
+        "comment": " Large sized icon\n",
+        "type": "Aui.Icons.Size"
+      },
+      {
+        "name": "layout1ColLargeIcon",
+        "comment": " Predefined icon for layout-1col-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "layout2ColLargeIcon",
+        "comment": " Predefined icon for layout-2col-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "layout2ColLeftLargeIcon",
+        "comment": " Predefined icon for layout-2col-left-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "layout2ColRightLargeIcon",
+        "comment": " Predefined icon for layout-2col-right-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "layout3ColCenterLargeIcon",
+        "comment": " Predefined icon for layout-3col-center-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "layout3ColLargeIcon",
+        "comment": " Predefined icon for layout-3col-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "likeIcon",
+        "comment": " Predefined icon for like\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "likeSmallIcon",
+        "comment": " Predefined icon for like-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "linkIcon",
+        "comment": " Predefined icon for link\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "listAddIcon",
+        "comment": " Predefined icon for list-add\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "listRemoveIcon",
+        "comment": " Predefined icon for list-remove\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "lockedIcon",
+        "comment": " Predefined icon for locked\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "lockedSmallIcon",
+        "comment": " Predefined icon for locked-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "macroCodeIcon",
+        "comment": " Predefined icon for macro-code\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "macroDefaultIcon",
+        "comment": " Predefined icon for macro-default\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "macroGalleryIcon",
+        "comment": " Predefined icon for macro-gallery\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "macroStatusIcon",
+        "comment": " Predefined icon for macro-status\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "moreIcon",
+        "comment": " Predefined icon for more\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "navChildrenIcon",
+        "comment": " Predefined icon for nav-children\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "navChildrenLargeIcon",
+        "comment": " Predefined icon for nav-children-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pageBlankIcon",
+        "comment": " Predefined icon for page-blank\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pageBlogpostIcon",
+        "comment": " Predefined icon for page-blogpost\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pageDefaultIcon",
+        "comment": " Predefined icon for page-default\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pageTemplateIcon",
+        "comment": " Predefined icon for page-template\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pagesIcon",
+        "comment": " Predefined icon for pages\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pagesLargeIcon",
+        "comment": " Predefined icon for pages-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "pauseIcon",
+        "comment": " Predefined icon for pause\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "priorityHighIcon",
+        "comment": " Predefined icon for priority-high\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "priorityHighestIcon",
+        "comment": " Predefined icon for priority-highest\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "priorityLowIcon",
+        "comment": " Predefined icon for priority-low\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "priorityLowestIcon",
+        "comment": " Predefined icon for priority-lowest\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "priorityMediumIcon",
+        "comment": " Predefined icon for priority-medium\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "quoteIcon",
+        "comment": " Predefined icon for quote\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "redoIcon",
+        "comment": " Predefined icon for redo\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "refreshSmallIcon",
+        "comment": " Predefined icon for refresh-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "removeIcon",
+        "comment": " Predefined icon for remove\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "removeLabelIcon",
+        "comment": " Predefined icon for remove-label\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "reopenIcon",
+        "comment": " Predefined icon for reopen\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "reviewIcon",
+        "comment": " Predefined icon for review\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "roadmapIcon",
+        "comment": " Predefined icon for roadmap\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "rssIcon",
+        "comment": " Predefined icon for rss\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "searchIcon",
+        "comment": " Predefined icon for search\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "searchSmallIcon",
+        "comment": " Predefined icon for search-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "shareIcon",
+        "comment": " Predefined icon for share\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "shareListIcon",
+        "comment": " Predefined icon for share-list\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "sidebarLinkIcon",
+        "comment": " Predefined icon for sidebar-link\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "sidebarLinkLargeIcon",
+        "comment": " Predefined icon for sidebar-link-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "small",
+        "comment": " Small sized icon\n",
+        "type": "Aui.Icons.Size"
+      },
+      {
+        "name": "sourcetreeIcon",
+        "comment": " Predefined icon for sourcetree\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "spaceDefaultIcon",
+        "comment": " Predefined icon for space-default\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "spacePersonalIcon",
+        "comment": " Predefined icon for space-personal\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "starIcon",
+        "comment": " Predefined icon for star\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "successIcon",
+        "comment": " Predefined icon for success\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "switchSmallIcon",
+        "comment": " Predefined icon for switch-small\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableBgIcon",
+        "comment": " Predefined icon for table-bg\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableColLeftIcon",
+        "comment": " Predefined icon for table-col-left\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableColRemoveIcon",
+        "comment": " Predefined icon for table-col-remove\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableColRightIcon",
+        "comment": " Predefined icon for table-col-right\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableCopyRowIcon",
+        "comment": " Predefined icon for table-copy-row\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableCutRowIcon",
+        "comment": " Predefined icon for table-cut-row\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableHeaderColumnIcon",
+        "comment": " Predefined icon for table-header-column\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableHeaderRowIcon",
+        "comment": " Predefined icon for table-header-row\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableMergeIcon",
+        "comment": " Predefined icon for table-merge\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableNoBgIcon",
+        "comment": " Predefined icon for table-no-bg\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tablePasteRowIcon",
+        "comment": " Predefined icon for table-paste-row\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableRemoveIcon",
+        "comment": " Predefined icon for table-remove\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableRowDownIcon",
+        "comment": " Predefined icon for table-row-down\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableRowRemoveIcon",
+        "comment": " Predefined icon for table-row-remove\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableRowUpIcon",
+        "comment": " Predefined icon for table-row-up\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "tableSplitIcon",
+        "comment": " Predefined icon for table-split\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "teamcalsIcon",
+        "comment": " Predefined icon for teamcals\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "teamcalsLargeIcon",
+        "comment": " Predefined icon for teamcals-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "timeIcon",
+        "comment": " Predefined icon for time\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "undoIcon",
+        "comment": " Predefined icon for undo\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "unfocusIcon",
+        "comment": " Predefined icon for unfocus\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "unlockedIcon",
+        "comment": " Predefined icon for unlocked\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "unstarIcon",
+        "comment": " Predefined icon for unstar\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "unwatchIcon",
+        "comment": " Predefined icon for unwatch\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "upIcon",
+        "comment": " Predefined icon for up\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "userIcon",
+        "comment": " Predefined icon for user\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "userLargeIcon",
+        "comment": " Predefined icon for user-large\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "userStatusIcon",
+        "comment": " Predefined icon for user-status\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "versionIcon",
+        "comment": " Predefined icon for version\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "viewCardIcon",
+        "comment": " Predefined icon for view-card\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "viewIcon",
+        "comment": " Predefined icon for view\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "viewListIcon",
+        "comment": " Predefined icon for view-list\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "viewTableIcon",
+        "comment": " Predefined icon for view-table\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "warningIcon",
+        "comment": " Predefined icon for warning\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "watchIcon",
+        "comment": " Predefined icon for watch\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "weblinkIcon",
+        "comment": " Predefined icon for weblink\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "workboxEmptyIcon",
+        "comment": " Predefined icon for workbox-empty\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "workboxIcon",
+        "comment": " Predefined icon for workbox\n",
+        "type": "Aui.Icons.Icon"
+      },
+      {
+        "name": "workflowIcon",
+        "comment": " Predefined icon for workflow\n",
+        "type": "Aui.Icons.Icon"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Backdrop",
+    "comment": " Functions to create a backdrop that is needed for several AUI Components.\n\n\n# Presentation\n\n@docs backdrop\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "backdrop",
+        "comment": " Present a backdrop with a click handler.\n\n    backdrop 1000 ClickedBackdrop True\n\n",
+        "type": "Int -> a -> Bool -> Html.Html a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.PaginationBar",
+    "comment": " Functions to present AUI pagination bar (navigation).\n\n\n# Presentation\n\n@docs paginationBar\n\n\n# Config\n\n@docs Config, baseConfig, prev, next, first, last\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Opaque type for PaginationBar configuration\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " Default configuration for pagination bar\n",
+        "type": "Aui.PaginationBar.Config"
+      },
+      {
+        "name": "first",
+        "comment": " Function to change the text presented for the first item in the pagination bar\n\n    baseConfig |> last \"Beginning\"\n\n",
+        "type": "String -> Aui.PaginationBar.Config -> Aui.PaginationBar.Config"
+      },
+      {
+        "name": "last",
+        "comment": " Function to change the text presented for the last item in the pagination bar\n\n    baseConfig |> last \"End\"\n\n",
+        "type": "String -> Aui.PaginationBar.Config -> Aui.PaginationBar.Config"
+      },
+      {
+        "name": "next",
+        "comment": " Function to change the text presented for the next item in the pagination bar\n\n    baseConfig |> next \"Continue\"\n\n",
+        "type": "String -> Aui.PaginationBar.Config -> Aui.PaginationBar.Config"
+      },
+      {
+        "name": "paginationBar",
+        "comment": " Present a pagination bar providing it a configuration object, a message map, spacing, the total and the current. For example:\n\n    paginationBar config GoToPage 1 100 42\n\nThis will present a bar with the current page set to 42.\nWhen another page is clicked, a message is produced and mapped to `GoToPage` which has to be of the type `(Int -> a)`.\nThe spacing indicates the amount of number presented prior and after the current number before presenting an ellipsis.\n\n",
+        "type": "Aui.PaginationBar.Config -> (Int -> a) -> Int -> Int -> Int -> Html.Html a"
+      },
+      {
+        "name": "prev",
+        "comment": " Function to change the text presented for the previous item in the pagination bar\n\n    baseConfig |> prev \"Back\"\n\n",
+        "type": "String -> Aui.PaginationBar.Config -> Aui.PaginationBar.Config"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Badges",
+    "comment": " Functions to present AUI badges.\n\n\n# Presentation\n\n@docs badge\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "badge",
+        "comment": " Present a badge with a given content\n\n    badge \"Hello world!\"\n\n",
+        "type": "String -> Html.Html msg"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Buttons",
+    "comment": " Functions to present AUI buttons and groups.\n\n\n# Style\n\n@docs Style, primaryStyle, normalStyle, subtleStyle, lightStyle, linkStyle\n\n\n# Config\n\n@docs Config, baseConfig, disable, withStyle, withHref, withAction, withActive, withAdditionalClass, forceAnchor\n\n\n# Config\n\n\n# Presentation\n\n@docs button, buttonGroup\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Config",
+        "comment": " Configuration type for presenting a button.\n",
+        "args": [
+          "a"
+        ],
+        "cases": []
+      },
+      {
+        "name": "Style",
+        "comment": " Different styles available for a button.\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "baseConfig",
+        "comment": " A configuration with sane defaults (no style, no anchor, enable, ect.).\n",
+        "type": "Aui.Buttons.Config a"
+      },
+      {
+        "name": "button",
+        "comment": " Render an AUI button.\n\n    button (baseConfig |> withStyle Primary |> withHref \"http://elm-lang.org/\")\n        ButtonClicked\n        [ text \"Click me!\"]\n\n",
+        "type": "Aui.Buttons.Config a -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "buttonGroup",
+        "comment": " Button container that will add the correct classes to make a button group.\n\n    buttonGroup\n        [ button config Clicked1 [text \"First\"]\n        , button config Clicked2 [text \"Second\"]\n        , button config Clicked3 [text \"Third\"]\n        ]\n\n",
+        "type": "List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "disable",
+        "comment": " Add the disabled state to a button.\n\n    baseConfig |> disable\n\n",
+        "type": "Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "forceAnchor",
+        "comment": " Forces the anchor tag to be used instead of the default button tag (only if no href is specified).\n\n    baseConfig |> forceAnchor\n\n",
+        "type": "Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "lightStyle",
+        "comment": " ",
+        "type": "Aui.Buttons.Style"
+      },
+      {
+        "name": "linkStyle",
+        "comment": " ",
+        "type": "Aui.Buttons.Style"
+      },
+      {
+        "name": "normalStyle",
+        "comment": " ",
+        "type": "Aui.Buttons.Style"
+      },
+      {
+        "name": "primaryStyle",
+        "comment": " ",
+        "type": "Aui.Buttons.Style"
+      },
+      {
+        "name": "subtleStyle",
+        "comment": " ",
+        "type": "Aui.Buttons.Style"
+      },
+      {
+        "name": "withAction",
+        "comment": " Add an action to the buttons configuration.\n\n    baseConfig |> withAction MyAction\n\n",
+        "type": "a -> Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "withActive",
+        "comment": " Make a button active or not active.\n\n    baseConfig |> withActive True\n\n",
+        "type": "Bool -> Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "withAdditionalClass",
+        "comment": " Add additional classes to the button\n\n    baseConfig |> additionalClass \"my-button\"\n\n",
+        "type": "String -> Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "withHref",
+        "comment": " Add a href to the buttons configuration.\n\n    baseConfig |> withHref \"http://elm-lang.org/\"\n\n",
+        "type": "String -> Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      },
+      {
+        "name": "withStyle",
+        "comment": " Add a button style to the configuration.\n\n    baseConfig |> withStyle Subtle\n\n",
+        "type": "Aui.Buttons.Style -> Aui.Buttons.Config a -> Aui.Buttons.Config a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Aui.Messages",
+    "comment": " Functions to present AUI messages.\n\n\n# Presentation\n\n@docs message, closableMessage\n\n\n# Types\n\n@docs Type, generic, error, warning, success, info, hint\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Type",
+        "comment": " Different message types\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "closableMessage",
+        "comment": " Create a message dialog that has a close button and triggers a message.\n\n    closableMessage Warning\n        Closed\n        [ text \"Title\" ]\n        [ text \"There is a warning\" ]\n\n",
+        "type": "Aui.Messages.Type -> a -> List (Html.Html a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "error",
+        "comment": " Error type for message\n",
+        "type": "Aui.Messages.Type"
+      },
+      {
+        "name": "generic",
+        "comment": " Generic type for message\n",
+        "type": "Aui.Messages.Type"
+      },
+      {
+        "name": "hint",
+        "comment": " Hint type for message\n",
+        "type": "Aui.Messages.Type"
+      },
+      {
+        "name": "info",
+        "comment": " Info type for message\n",
+        "type": "Aui.Messages.Type"
+      },
+      {
+        "name": "message",
+        "comment": " Create a message.\n\n    message Warning\n        [ text \"Title\" ]\n        [ text \"There is a warning\" ]\n\n",
+        "type": "Aui.Messages.Type -> List (Html.Html a) -> List (Html.Html a) -> Html.Html a"
+      },
+      {
+        "name": "success",
+        "comment": " Success type for message\n",
+        "type": "Aui.Messages.Type"
+      },
+      {
+        "name": "warning",
+        "comment": " Warning type for message\n",
+        "type": "Aui.Messages.Type"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

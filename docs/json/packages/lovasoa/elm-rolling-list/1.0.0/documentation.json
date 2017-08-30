@@ -1,0 +1,40 @@
+[
+  {
+    "name": "RollingList",
+    "comment": " Module description\n\n## Functions\n@docs fromList, roll, current, toList\n\n## Definition\n@docs RollingList\n\n",
+    "aliases": [
+      {
+        "name": "RollingList",
+        "comment": " The rolling list type.\n",
+        "args": [
+          "a"
+        ],
+        "type": "{ previous : List a, next : List a }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "current",
+        "comment": " Returns the currently selected element in the list\n\n    >>> current (fromList [1,2,3])\n    Just 1\n",
+        "type": "RollingList.RollingList a -> Maybe.Maybe a"
+      },
+      {
+        "name": "fromList",
+        "comment": " Create a rolling list from a normal list\n\n    >>> toList (fromList [1,2,3])\n    [1,2,3]\n",
+        "type": "List a -> RollingList.RollingList a"
+      },
+      {
+        "name": "roll",
+        "comment": " Return a New RollingList, with the current element set to the next element\n\n    >>> toList (roll (fromList [1,2,3]))\n    [2,3,1]\n\n    >>> current (roll (fromList [1,2,3]))\n    Just 2\n",
+        "type": "RollingList.RollingList a -> RollingList.RollingList a"
+      },
+      {
+        "name": "toList",
+        "comment": " Create a normal list from a rolling list\n\n    >>> toList (fromList [1,2])\n    [1,2]\n",
+        "type": "RollingList.RollingList a -> List a"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Genetic",
+    "comment": " An implementation of a genetic algorithm. A single function `evolveSolution` is exposed and when\ninvoked with the appropriate callbacks it will attempt to find an optimal solution.\n\n@docs Method, evolveSolution\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Method",
+        "comment": " For simple use cases the genetic algorithm will be doing one of two things:\n* Maximizing a score\n* Minimizing a penalty or cost\n\nYour `evaluateSolution` function is used to assign a value to an entire generation of possible solutions. `Method` tells the algorithm whether to keep and \"breed\" the solutions with a higher value or a lower value.\n",
+        "args": [],
+        "cases": [
+          [
+            "MaximizeScore",
+            []
+          ],
+          [
+            "MinimizePenalty",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "evolveSolution",
+        "comment": " Kicks off the genetic algorithm.\n\nThere are a handful of callbacks required because the algorithm needs the following information:\n* How to generate a random solution\n* Given a potential solution, how should it be evaluated?\n* How to breed two solutions\n* Is the current best solution good enough?\n* An initial random seed\n* Are we maximizing a score or minimizing a penalty?\n\nThese details are captured in the following record:\n\n    { randomDnaGenerator : Generator dna\n    , evaluateSolution : dna -> Float\n    , crossoverDnas : dna -> dna -> dna\n    , mutateDna : dna -> Generator dna\n    , isDoneEvolving : dna -> Float -> Int -> Bool\n    , initialSeed : Seed\n    , method : Method\n    }\n\nThe [Hello world](https://github.com/ckoster22/elm-genetic/tree/master/examples/helloworld) example is a good starting point for better understanding these functions.\n\nWhen the algorithm is finished it'll return the best solution (dna) it could find, the value associated with that solution from `evaluateSolution`, and the next random `Seed` to be used in subsequent `Random` calls.\n",
+        "type": "{ randomDnaGenerator : Random.Generator dna , evaluateSolution : dna -> Float , crossoverDnas : dna -> dna -> dna , mutateDna : dna -> Random.Generator dna , isDoneEvolving : dna -> Float -> Int -> Bool , initialSeed : Random.Seed , method : Genetic.Method } -> ( dna, Float, Random.Seed )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]
