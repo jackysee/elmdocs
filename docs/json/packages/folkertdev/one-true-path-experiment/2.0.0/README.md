@@ -18,7 +18,7 @@ Lines can be composed in two "obvious" ways: concatenation and layering.
 concatenation happens on the subpath level, using the functions
 
 
-<img style="max-width: 100%;" src="https://rawgit.com/folkertdev/one-true-path-experiment/master/docs/subpath-composition.svg" /> 
+<img style="max-width: 100%;" src="https://cdn.jsdelivr.net/gh/folkertdev/one-true-path-experiment/docs/subpath-composition.svg" /> 
 
 * `connect:` draws a straight line connecting two subpaths (end to start)
 * `continue:` make the start and end point of two subpaths coincide 
