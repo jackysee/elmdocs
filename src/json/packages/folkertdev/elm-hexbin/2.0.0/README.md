@@ -1,6 +1,6 @@
 # HexBin for Elm
 
-<img style="max-width: 100%;" src="https://rawgit.com/folkertdev/elm-hexbin/master/examples/colorEncoding.svg" /> 
+<img style="max-width: 100%;" src="https://cdn.jsdelivr.net/gh/folkertdev/elm-hexbin/examples/colorEncoding.svg" /> 
 
 A HexBin plot is a scatter plot where the data is distributed over a grid of regular hexagons. This clustering makes 
 it easier to spot the density of your data. 
