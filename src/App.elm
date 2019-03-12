@@ -33,7 +33,7 @@ init value location =
             updateNavList
                 { allPackages = []
                 , newPackages = []
-                , pinnedDocs = storeModel.docs
+                , pinnedDocs = sortDocs storeModel.docs
                 , navList = []
                 , page = Home
                 , searchIndex = storeModel.searchIndex
@@ -51,6 +51,58 @@ init value location =
                 }
     in
         model ! [ getAllPackages (value == Nothing) location ]
+
+
+sortDocs : List Doc -> List Doc
+sortDocs docs =
+    --List.sortBy .packageName docs
+    List.sortWith biasedSort docs
+
+
+biasedSort : Doc -> Doc -> Order
+biasedSort docA docB =
+    case ( toBias docA, toBias docB ) of
+        ( Lang a_, Lang b_ ) ->
+            compare a_ b_
+
+        ( Lang _, _ ) ->
+            LT
+
+        ( _, Lang b ) ->
+            GT
+
+        ( Community a_, Community b_ ) ->
+            compare a_ b_
+
+        ( Community _, _ ) ->
+            LT
+
+        ( _, Community _ ) ->
+            GT
+
+        ( Other a_, Other b_ ) ->
+            compare a_ b_
+
+
+toBias : Doc -> Bias
+toBias doc =
+    bias <| String.toLower doc.packageName
+
+
+bias : String -> Bias
+bias str =
+    if String.startsWith "elm-lang" str then
+        Lang str
+    else if String.startsWith "elm-community" str then
+        Community str
+    else
+        Other str
+
+
+type Bias
+    = Lang String
+    | Community String
+    | Other String
 
 
 getAllPackages : Bool -> Location -> Cmd Msg
@@ -199,7 +251,7 @@ update msg model =
 
         PinDoc rest (Ok doc) ->
             { model
-                | pinnedDocs = List.sortBy .packageName <| doc :: model.pinnedDocs
+                | pinnedDocs = sortDocs <| doc :: model.pinnedDocs
                 , searchIndex =
                     buildSearchIndex
                         model.searchIndex
